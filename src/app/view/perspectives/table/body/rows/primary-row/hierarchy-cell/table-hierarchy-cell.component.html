@@ -1,0 +1,13 @@
+<div [contextMenu]="contextMenuComponent?.contextMenu">
+  <i *ngFor="let space of spacesBefore"
+     class="far fa-fw fa-ellipsis-v text-secondary">
+  </i>
+
+  <i class="far fa-fw fa-minus-square"></i>
+
+  <i *ngFor="let space of spacesAfter"
+     class="far fa-fw fa-ellipsis-h text-secondary">
+  </i>
+</div>
+
+<table-hierarchy-cell-menu [cursor]="cursor"></table-hierarchy-cell-menu>

@@ -476,3 +476,9 @@ function getTableHeaderCursor(columns: TableColumn[], attributeName: string, cur
     return getTableHeaderCursor(compoundColumn.children, attributeName, currentCursor);
   }, null);
 }
+
+export function getTableRowCursor(cursor: TableBodyCursor, indexDelta: number): TableBodyCursor {
+  const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+  const rowPath = parentPath.concat(rowIndex + indexDelta);
+  return {...cursor, rowPath};
+}

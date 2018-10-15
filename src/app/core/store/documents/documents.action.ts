@@ -18,8 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
+import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {QueryModel} from '../navigation/query.model';
-import {DocumentModel} from './document.model';
+import {DocumentMetaData, DocumentModel} from './document.model';
 
 export enum DocumentsActionType {
 
@@ -149,7 +150,7 @@ export namespace DocumentsAction {
   export class PatchMetaData implements Action {
     public readonly type = DocumentsActionType.PATCH_META_DATA;
 
-    public constructor(public payload: { document: DocumentModel }) {
+    public constructor(public payload: { collectionId: string, documentId: string, metaData: DocumentMetaData }) {
     }
   }
 

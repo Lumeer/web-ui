@@ -25,6 +25,7 @@ import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {DocumentDto} from '../dto';
+import {DocumentMetaDataDto} from '../dto/document.dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -64,8 +65,8 @@ export class DocumentService {
     return this.httpClient.put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/meta`, document.metaData);
   }
 
-  public patchDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/meta`, document.metaData);
+  public patchDocumentMetaData(collectionId: string, documentId: string, metaData: DocumentMetaDataDto): Observable<DocumentDto> {
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}/meta`, metaData);
   }
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {

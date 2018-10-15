@@ -22,6 +22,7 @@ import {filterDirectAttributeChildren, findAttributeByName, generateAttributeNam
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {DocumentModel} from '../documents/document.model';
+import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
 import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableCursor} from './table-cursor';
@@ -405,10 +406,11 @@ export function getTableElement(tableId: string): HTMLElement {
   return document.getElementById(`table-${tableId}`);
 }
 
-export function createEmptyTableRow(): TableConfigRow {
+export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {
   return {
     correlationId: generateCorrelationId(),
-    linkedRows: []
+    linkedRows: [],
+    parentDocumentId
   };
 }
 
@@ -433,4 +435,72 @@ export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): b
   }
 
   return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
+}
+
+export function calculateRowHierarchyLevel(row: TableConfigRow, documentIds: Set<string>, documentsMap: { [id: string]: DocumentModel }): number {
+  if (!row.documentId && !row.parentDocumentId) {
+    return 0;
+  }
+
+  const document = documentsMap[row.documentId];
+  const parentDocumentId = document && document.metaData ? document.metaData['parentId'] : row.parentDocumentId;
+  return calculateDocumentHierarchyLevel(parentDocumentId, documentIds, documentsMap);
+}
+
+export function isValidHierarchicalRowOrder(rows: TableConfigRow[], documentsMap: { [id: string]: DocumentModel }): boolean {
+  const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
+  let documentIdsStack: string[] = [];
+
+  for (const row of rows) {
+    const parentDocumentId = getRowParentDocumentId(row, documentIds, documentsMap);
+    if (documentIds.has(parentDocumentId) && !documentIdsStack.includes(parentDocumentId)) {
+      return false;
+    }
+    documentIdsStack = updateDocumentIdsStack(row.documentId, parentDocumentId, documentIdsStack, documentIds);
+  }
+
+  return true;
+}
+
+function updateDocumentIdsStack(documentId: string, parentDocumentId: string, documentIdsStack: string[], documentIdsFilter: Set<string>): string[] {
+  if (!parentDocumentId || !documentIdsFilter.has(parentDocumentId)) {
+    return documentId ? [documentId] : [];
+  }
+
+  if (!documentId) {
+    return documentIdsStack;
+  }
+
+  return documentIdsStack.slice(0, documentIdsStack.indexOf(parentDocumentId) + 1).concat(documentId);
+}
+
+export function sortTableRowsByHierarchy(rows: TableConfigRow[], documentsMap: { [id: string]: DocumentModel }): TableConfigRow[] {
+  const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
+
+  const rowsMap = createRowsMapByParentDocumentId(rows, documentIds, documentsMap);
+  return createRowsFromRowsMap(null, rowsMap);
+}
+
+function createRowsMapByParentDocumentId(rows: TableConfigRow[],
+                                         documentIdsFilter: Set<string>,
+                                         documentsMap: { [id: string]: DocumentModel }): { [parentDocumentId: string]: TableConfigRow[] } {
+  return rows.reduce((map, row) => {
+    const parentDocumentId = getRowParentDocumentId(row, documentIdsFilter, documentsMap) || null;
+    const siblingRows = map[parentDocumentId] || [];
+    map[parentDocumentId] = siblingRows.concat(row);
+    return map;
+  }, {});
+}
+
+function createRowsFromRowsMap(documentId: string, rowsMap: { [parentDocumentId: string]: TableConfigRow[] }): TableConfigRow[] {
+  const rows = rowsMap[documentId] || [];
+  return rows.reduce((orderedRows, row) => {
+    return orderedRows.concat(row).concat(row.documentId ? createRowsFromRowsMap(row.documentId, rowsMap) : []);
+  }, []);
+}
+
+export function getRowParentDocumentId(row: TableConfigRow, documentIdsFilter: Set<string>, documentsMap: { [id: string]: DocumentModel }): string {
+  const document = documentsMap[row && row.documentId];
+  const parentDocumentId = (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
+  return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
 }

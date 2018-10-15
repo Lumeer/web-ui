@@ -20,10 +20,12 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow, TablePart} from '../../../../../../core/store/tables/table.model';
 import {isTableRowStriped} from '../../../../../../core/store/tables/table.utils';
-import {selectHasNextTableParts, selectTablePart} from '../../../../../../core/store/tables/tables.selector';
+import {TablesAction} from '../../../../../../core/store/tables/tables.action';
+import {selectHasNextTableParts, selectTableHierarchyMaxLevel, selectTablePart, selectTableRowWithHierarchyLevel} from '../../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-primary-row',
@@ -53,6 +55,8 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   private intersectionObserver: IntersectionObserver;
 
   public hasNextParts$: Observable<boolean>;
+  public hierarchyLevel$: Observable<number>;
+  public hierarchyMaxLevel$: Observable<number>;
   public striped: boolean;
   public part$: Observable<TablePart>;
 
@@ -65,7 +69,20 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
       this.striped = isTableRowStriped(this.cursor.rowPath);
       this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(this.cursor)));
       this.part$ = this.store$.pipe(select(selectTablePart(this.cursor)));
+      this.bindHierarchy(this.cursor);
     }
+  }
+
+  private bindHierarchy(cursor: TableBodyCursor) {
+    this.hierarchyMaxLevel$ = this.store$.pipe(
+      select(selectTableHierarchyMaxLevel(cursor.tableId)),
+      distinctUntilChanged()
+    );
+    this.hierarchyLevel$ = this.store$.pipe(
+      select(selectTableRowWithHierarchyLevel(cursor)),
+      map(row => row && row.level),
+      distinctUntilChanged()
+    );
   }
 
   public ngAfterViewInit() {
@@ -96,6 +113,10 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
     }
+  }
+
+  public onHierarchyToggle() {
+    this.store$.dispatch(new TablesAction.ToggleChildRows({cursor: this.cursor}));
   }
 
 }

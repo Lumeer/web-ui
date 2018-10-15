@@ -23,7 +23,7 @@ import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.util
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
 import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
-import {createEmptyTableRow, maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
+import {createEmptyTableRow, isValidHierarchicalRowOrder, maxColumnDepth, moveTableColumn, replaceTableColumns, sortTableRowsByHierarchy, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
 
@@ -47,14 +47,16 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return initRows(state, action);
     case TablesActionType.CLEAN_ROWS:
       return cleanRows(state, action);
+    case TablesActionType.ORDER_PRIMARY_ROWS:
+      return orderPrimaryRows(state, action);
     case TablesActionType.REPLACE_ROWS:
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
-    case TablesActionType.EXPAND_ROWS:
-      return expandRows(state, action);
-    case TablesActionType.COLLAPSE_ROWS:
-      return collapseRows(state, action);
+    // case TablesActionType.TOGGLE_CHILD_ROWS:
+    //   return toggleChildRows(state, action);
+    case TablesActionType.TOGGLE_LINKED_ROWS:
+      return toggleLinkedRows(state, action);
     case TablesActionType.MOVE_CURSOR:
       return {...state, moveCursorDown: action.payload.direction === Direction.Down};
     case TablesActionType.SET_CURSOR:
@@ -179,7 +181,8 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
         ...row,
         correlationId: null,
         documentId: document.id,
-        linkInstanceId: linkInstance && linkInstance.id
+        linkInstanceId: linkInstance && linkInstance.id,
+        parentDocumentId: null
       };
     });
 
@@ -222,6 +225,19 @@ function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesSt
   });
 
   const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
+}
+
+function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryRows): TablesState {
+  const {cursor, documents} = action.payload;
+  const {table} = getTablePart(state, cursor);
+  const documentsMap = documents.reduce((map, document) => document.id ? ({...map, [document.id]: document}) : map, {});
+
+  if (isValidHierarchicalRowOrder(table.config.rows, documentsMap)) {
+    return state;
+  }
+
+  const config = {...table.config, rows: sortTableRowsByHierarchy(table.config.rows, documentsMap)};
   return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
 }
 
@@ -283,20 +299,24 @@ function removeLinkedRow(rows: TableConfigRow[], rowPath: number[]): TableConfig
   return updatedRows;
 }
 
-function expandRows(state: TablesState, action: TablesAction.ExpandRows): TablesState {
-  return toggleExpandedRows(state, action.payload.cursor, true);
-}
+// function toggleChildRows(state: TablesState, action: TablesAction.ToggleChildRows): TablesState {
+//   const {cursor} = action.payload;
+//   const {table} = getTablePart(state, cursor);
+//   const [rowIndex] = cursor.rowPath;
+//
+//   const rows = table.config.rows.map((row, index) => index === rowIndex ? {...row, collapsedChildren: !row.collapsedChildren} : row);
+//
+//   const config = {...table.config, rows};
+//   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
+// }
 
-function collapseRows(state: TablesState, action: TablesAction.CollapseRows): TablesState {
-  return toggleExpandedRows(state, action.payload.cursor, false);
-}
-
-function toggleExpandedRows(state: TablesState, cursor: TableBodyCursor, expanded: boolean): TablesState {
+function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedRows): TablesState {
+  const {cursor} = action.payload;
   const {table} = getTablePart(state, cursor);
   const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
 
   const rows = updateRows(table.config.rows, parentPath, updatedRows => {
-    return updatedRows.map((row, index) => index === rowIndex ? {...row, expanded} : row);
+    return updatedRows.map((row, index) => index === rowIndex ? {...row, expanded: !row.expanded} : row);
   });
 
   const config = {...table.config, rows};

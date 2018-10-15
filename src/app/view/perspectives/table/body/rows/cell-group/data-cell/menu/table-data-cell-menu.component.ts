@@ -17,20 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {Dictionary} from 'lodash';
 import {ContextMenuComponent} from 'ngx-contextmenu';
+import {combineLatest, Observable} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
+import {selectDocumentsDictionary} from '../../../../../../../../core/store/documents/documents.state';
 import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
-import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableModel} from '../../../../../../../../core/store/tables/table.model';
-import {createEmptyTableRow, findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
+import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableConfigRow, TableModel} from '../../../../../../../../core/store/tables/table.model';
+import {createEmptyTableRow, findTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
+import {selectTableRow, selectTableRowIndentable, selectTableRowOutdentable} from '../../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../../shared/direction';
-import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -63,6 +68,9 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public created: boolean;
 
+  public indentable$: Observable<boolean>;
+  public outdentable$: Observable<boolean>;
+
   public constructor(private store$: Store<AppState>) {
   }
 
@@ -73,24 +81,59 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (changes.linkInstance && this.linkInstance) {
       this.created = !!this.linkInstance.id;
     }
+    if (changes.cursor && this.cursor) {
+      this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
+      this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
+    }
   }
 
   public onAddRow(indexDelta: number) {
-    const {parentPath, rowIndex} = splitRowPath(this.cursor.rowPath);
-    const rowPath = parentPath.concat(rowIndex + indexDelta);
-    const cursor = {...this.cursor, rowPath};
-
-    const emptyRow = createEmptyTableRow();
-
     if (this.cursor.partIndex === 0) {
-      this.store$.dispatch(new TablesAction.AddPrimaryRows({cursor, rows: [emptyRow]}));
+      this.addPrimaryRow(indexDelta);
     } else {
-      this.store$.dispatch(new TablesAction.AddLinkedRows({cursor, linkedRows: [emptyRow]}));
+      this.addLinkedRow(indexDelta);
     }
 
     if (indexDelta > 0) {
       this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
     }
+  }
+
+  private addPrimaryRow(indexDelta: number) {
+    combineLatest(
+      this.store$.pipe(select(selectTableRow(this.cursor))),
+      this.store$.pipe(select(selectTableRow(getTableRowCursor(this.cursor, 1)))),
+      this.store$.pipe(select(selectDocumentsDictionary))
+    ).pipe(
+      first()
+    ).subscribe(([row, nextRow, documentsMap]) => {
+      const parentDocumentId = this.getParentDocumentId(row, nextRow, Boolean(indexDelta), documentsMap);
+
+      this.store$.dispatch(new TablesAction.AddPrimaryRows({
+        cursor: getTableRowCursor(this.cursor, indexDelta),
+        rows: [createEmptyTableRow(parentDocumentId)]
+      }));
+    });
+  }
+
+  private getParentDocumentId(row: TableConfigRow, nextRow: TableConfigRow, below: boolean, documentsMap: Dictionary<DocumentModel>): string {
+    const nextRowDocument = documentsMap[nextRow && nextRow.documentId];
+    const nextRowParentDocumentId = (nextRowDocument && nextRowDocument.metaData && nextRowDocument.metaData.parentId)
+      || (nextRow && nextRow.parentDocumentId);
+
+    if (below && row && row.documentId === nextRowParentDocumentId) {
+      return nextRowParentDocumentId;
+    } else {
+      const document = documentsMap[row && row.documentId];
+      return (document && document.metaData && document.metaData.parentId) || (row && row.parentDocumentId);
+    }
+  }
+
+  private addLinkedRow(indexDelta: number) {
+    this.store$.dispatch(new TablesAction.AddLinkedRows({
+      cursor: getTableRowCursor(this.cursor, indexDelta),
+      linkedRows: [createEmptyTableRow()]
+    }));
   }
 
   public onRemoveRow() {
@@ -115,6 +158,14 @@ export class TableDataCellMenuComponent implements OnChanges {
     const linkInstanceId = findTableRow(this.table.config.rows, this.cursor.rowPath).linkInstanceId;
     const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
     this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+  }
+
+  public onIndent() {
+    this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+  }
+
+  public onOutdent() {
+    this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
   }
 
 }
