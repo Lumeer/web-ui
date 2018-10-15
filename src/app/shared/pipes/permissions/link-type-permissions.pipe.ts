@@ -59,9 +59,9 @@ export class LinkTypePermissionsPipe implements PipeTransform {
               read: ap1.read && ap2.read,
               write: ap1.write && ap2.write,
               manage: ap1.manage && ap2.manage,
-              readView: ap1.readWithView && ap2.readWithView,
-              writeView: ap1.writeWithView && ap2.writeWithView,
-              manageView: ap1.manageWithView && ap2.manageWithView
+              readWithView: ap1.readWithView && ap2.readWithView,
+              writeWithView: ap1.writeWithView && ap2.writeWithView,
+              manageWithView: ap1.manageWithView && ap2.manageWithView
             };
           })
         );
