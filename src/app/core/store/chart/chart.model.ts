@@ -17,10 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AxisSelectModel {
+export interface ChartConfig {
+  type: ChartType;
+  xAxis?: ChartAxisModel;
+  y1Axis?: ChartAxisModel;
+  y2Axis?: ChartAxisModel;
+}
 
-  collectionIcon: string;
+export interface ChartAxisModel {
+
+  collectionId: string;
   attributeId: string;
-  attributeName: string;
 
+}
+
+export enum ChartType {
+  Line = 'line',
+  Bar = 'bar',
+  Pie = 'pie'
+}
+
+export const chartTypesMap: { [id: string]: ChartType } = {
+  [ChartType.Line]: ChartType.Line,
+  [ChartType.Bar]: ChartType.Bar,
+  [ChartType.Pie]: ChartType.Pie
+};
+
+export const chartTypesIconsMap: { [id: string]: string } = {
+  [ChartType.Line]: 'far fa-chart-line',
+  [ChartType.Bar]: 'far fa-chart-bar',
+  [ChartType.Pie]: 'far fa-chart-pie'
+};
+
+export enum ChartAxisType {
+  X = 'x',
+  Y1 = 'y1',
+  Y2 = 'y2'
 }

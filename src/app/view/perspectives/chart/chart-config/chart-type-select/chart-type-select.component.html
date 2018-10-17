@@ -1,0 +1,31 @@
+<div class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text">
+      <i class="fa-fw {{chartPerspective | perspectiveIcon}}"></i>
+    </span>
+  </div>
+
+  <button aria-expanded="false"
+          aria-haspopup="true"
+          class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+          data-toggle="dropdown"
+          id="chartTypeDropdown"
+          type="button">
+    <i class="fa-fw {{chartType | chartTypeIcon}}"></i>
+    <span class="ml-sm-1 text-nowrap"
+          i18n="@@chart.type.name">{chartType, select, line {Line} bar {Bar} pie {Pie}}</span>
+  </button>
+
+  <div aria-labelledby="chartTypeDropdown"
+       class="dropdown-menu">
+    <a *ngFor="let achartType of chartTypes"
+       [class.active]="chartType === achartType"
+       (click)="onSelect(achartType)"
+       class="dropdown-item">
+      <i class="fa-fw {{achartType | chartTypeIcon}}"></i>
+      <span class="ml-sm-1 text-nowrap"
+            i18n="@@chart.type.name">{achartType, select, line {Line} bar {Bar} pie {Pie}}</span>
+    </a>
+  </div>
+
+</div>

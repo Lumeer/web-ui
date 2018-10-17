@@ -18,117 +18,64 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {Subscription, combineLatest} from 'rxjs';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {AxisSelectModel} from './model/axis-select-model';
-import {animate, style, transition, trigger} from '@angular/animations';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable, Subscription} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {QueryModel} from '../../../core/store/navigation/query.model';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {map} from 'rxjs/operators';
+import {ChartConfig} from '../../../core/store/chart/chart.model';
+import {selectChartConfig} from '../../../core/store/chart/chart.state';
 
 @Component({
   selector: 'chart-perspective',
   templateUrl: './chart-perspective.component.html',
-  styleUrls: ['./chart-perspective.component.scss'],
-  animations: [
-    trigger('slide', [
-      transition(':enter', [
-        style({width: 0}),
-        animate(200, style({width: '*'}))
-      ]),
-      transition(':leave', [
-        animate(200, style({width: 0}))
-      ])
-    ])
-  ]
+  styleUrls: ['./chart-perspective.component.scss']
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
-  public documents: DocumentModel[];
+  public documents$: Observable<DocumentModel[]>;
+  public collection$: Observable<CollectionModel>;
+  public config$: Observable<ChartConfig>;
 
-  public collections: CollectionModel[];
+  public query: QueryModel;
 
-  public axisSelectModel: AxisSelectModel[];
+  private subscriptions = new Subscription();
 
-  private subscriptions: Subscription;
-
-  public attributeX: string;
-
-  public attributeY: string;
-
-  public chartHovered: boolean;
-
-  public pickerHovered: boolean;
-
-  private query: QueryModel;
-
-  constructor(private store: Store<AppState>,
-              private i18n: I18n) {
+  constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.subscribeOnData();
+    this.subscribeToQuery();
+    this.subscribeData();
   }
 
-  private subscribeOnData() {
-    const navigationSubscription = this.navigationSubscription();
-    const dataSubscription = this.dataSubscription();
-
-    this.subscriptions = navigationSubscription;
-    this.subscriptions.add(dataSubscription);
+  private subscribeToQuery() {
+    const subscription = this.store$.pipe(select(selectQuery))
+      .subscribe(query => {
+        this.query = query;
+        this.fetchDocuments();
+      });
+    this.subscriptions.add(subscription);
   }
 
-  private navigationSubscription() {
-    return this.store.select(selectNavigation).subscribe(navigation => {
-      if (this.validWorkspace(navigation.workspace)) {
-        this.getData(navigation.query);
-        this.query = navigation.query;
-      }
-    });
+  private fetchDocuments() {
+    this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
   }
 
-  private validWorkspace(workspace: Workspace): boolean {
-    return Boolean(workspace && workspace.organizationCode && workspace.projectCode);
-  }
-
-  private getData(query: QueryModel) {
-    this.store.dispatch(new DocumentsAction.Get({query}));
-  }
-
-  private dataSubscription() {
-    return combineLatest(this.store.select(selectDocumentsByQuery),
-      this.store.select(selectCollectionsByQuery)
-    ).subscribe(([documents, collections]) => {
-      this.documents = documents;
-      this.collections = collections;
-      this.axisSelectModel = collections.reduce((acc, collection) => {
-        return acc.concat(collection.attributes.map(attr => ({attributeId: attr.id, attributeName: attr.name, collectionIcon: collection.icon})));
-      }, []);
-    });
-  }
-
-  public xAxisTitle(): string {
-    return this.i18n({id: 'chart.axis.x.name', value: 'X Axis'});
-  }
-
-  public yAxisTitle(): string {
-    return this.i18n({id: 'chart.axis.y.name', value: 'Y Axis'});
-  }
-
-  public isDisplayable(): boolean {
-    return this.query && this.query.collectionIds && this.query.collectionIds.length === 1;
+  private subscribeData() {
+    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.collection$ = this.store$.pipe(select(selectCollectionsByQuery),
+      map(collections => collections[0]));
+    this.config$ = this.store$.pipe(select(selectChartConfig));
   }
 
   public ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
 }

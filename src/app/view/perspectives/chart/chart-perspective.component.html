@@ -1,66 +1,14 @@
-<div *ngIf="!isDisplayable()"
-     class="alert alert-warning"
-     role="alert"
-     i18n="@@chart.query.invalid">Your query results cannot be shown using chart perspective. The query
-  needs to specify exactly one collection.
+<div *ngIf="query | displayable; else notDisplayable" class="px-3">
+    <chart-config
+      [collection]="collection$ | async"
+      [config]="config$ | async">
+    </chart-config>
+
 </div>
 
-<ng-container *ngIf="isDisplayable()">
-  <div class="container">
-    <div class="row">
-      <div class="col text-center">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <i class="fa-2x far fa-exclamation-triangle float-left mt-2"></i>
-          <span class="text-center" i18n="@@perspective.underConstruction">
-            This perspective is currently under construction. It is highly experimental, buggy and not reliable.<br/>
-            Please use with caution. Do not use for any sensitive data.
-          </span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close" i18n-aria-label="@@button.close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
-    </div>
+<ng-template #notDisplayable>
+  <div class="alert alert-warning m-3"
+       role="alert"
+       i18n="@@chart.query.invalid">Chart perspective cannot show the results of your query. The query needs to have exactly one collection.
   </div>
-
-  <div *ngIf="documents; else loading" class="container">
-
-    <div class="d-flex"
-         (mouseenter)="chartHovered = true"
-         (mouseleave)="chartHovered = false">
-
-      <attribute-select
-        *ngIf="chartHovered || pickerHovered"
-        class="align-self-center mr-1"
-        [@slide]
-        [attributes]="axisSelectModel"
-        [preSelected]="attributeY"
-        [emptyDescription]="yAxisTitle()"
-        (attributeSelected)="attributeY = $event"
-        (mouseenter)="pickerHovered = true"
-        (mouseleave)="pickerHovered = false">
-      </attribute-select>
-
-      <chart-visualization
-        [collections]="collections"
-        [documents]="documents"
-        [attributeX]="attributeX"
-        [attributeY]="attributeY">
-      </chart-visualization>
-    </div>
-
-    <div class="text-center mt-2">
-      <attribute-select
-        [attributes]="axisSelectModel"
-        [emptyDescription]="xAxisTitle()"
-        (attributeSelected)="attributeX = $event">
-      </attribute-select>
-    </div>
-
-  </div>
-</ng-container>
-
-<ng-template #loading
-             i18n="@@chart.loading">
-  Loading...
 </ng-template>

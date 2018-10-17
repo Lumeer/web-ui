@@ -17,35 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AxisSelectModel} from '../../model/axis-select-model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Perspective} from '../../../perspective';
+import {ChartType} from '../../../../../core/store/chart/chart.model';
 
 @Component({
-  selector: 'attribute-select',
-  templateUrl: './attribute-select.component.html',
-  styleUrls: ['./attribute-select.component.scss']
+  selector: 'chart-type-select',
+  templateUrl: './chart-type-select.component.html',
+  styleUrls: ['../chart-dropdown-select.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeSelectComponent {
+export class ChartTypeSelectComponent {
 
   @Input()
-  public attributes: AxisSelectModel[];
-
-  @Input()
-  set preSelected(value: string) {
-    this.selectedAttribute = this.attributes && this.attributes.find(attribute => attribute.attributeId === value);
-  }
-
-  @Input()
-  public emptyDescription: string;
+  public chartType: ChartType;
 
   @Output()
-  public attributeSelected = new EventEmitter<string>();
+  public select = new EventEmitter<ChartType>();
 
-  public selectedAttribute: AxisSelectModel;
+  public readonly chartTypes = Object.values(ChartType);
 
-  public selectAttribute(attribute: AxisSelectModel) {
-    this.selectedAttribute = attribute;
-    this.attributeSelected.emit(this.selectedAttribute.attributeId);
+  public readonly chartPerspective = Perspective.Chart;
+
+  public onSelect(chartType: ChartType) {
+    this.select.emit(chartType);
   }
 
 }
