@@ -17,20 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Data, Layout} from 'plotly.js';
+import {ChartConfig, ChartType} from '../../../../../core/store/chart/chart.model';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
-export class CreationDateSorter {
+export abstract class PlotMaker {
 
-  public sortData(documents: DocumentModel[]): DocumentModel[] {
-    if (documents) {
-      return documents.slice().sort((a, b) => {
-        // return a.creationDate.localeCompare(b.creationDate);
-        return 1;
-      });
+  protected collections: CollectionModel[];
 
-    } else {
-      return [];
-    }
+  protected documents: DocumentModel[];
+
+  protected config: ChartConfig;
+
+  public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+    this.collections = collections;
+    this.documents = documents;
+    this.config = config;
   }
 
+  public abstract createData(): Data[];
+
+  public abstract createLayout(): Partial<Layout>;
+
+  public abstract getType(): ChartType;
 }

@@ -18,10 +18,11 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ChartAxisModel, ChartType} from './chart.model';
+import {ChartAxisModel, ChartConfig, ChartType} from './chart.model';
 
 export enum ChartActionType {
 
+  SET_CONFIG = '[Chart] Set config',
   SELECT_TYPE = '[Chart] Select type',
   SELECT_X_AXIS = '[Chart] Select X axis',
   SELECT_Y1_AXIS = '[Chart] Select Y1 axis',
@@ -31,6 +32,13 @@ export enum ChartActionType {
 }
 
 export namespace ChartAction {
+
+  export class SetConfig implements Action {
+    public readonly type = ChartActionType.SET_CONFIG;
+
+    public constructor(public payload: { config: ChartConfig }) {
+    }
+  }
 
   export class SelectType implements Action {
     public readonly type = ChartActionType.SELECT_TYPE;
@@ -64,6 +72,6 @@ export namespace ChartAction {
     public readonly type = ChartActionType.CLEAR;
   }
 
-  export type All = SelectType | SelectXAxis | SelectY1Axis | SelectY2Axis | Clear;
+  export type All = SetConfig | SelectType | SelectXAxis | SelectY1Axis | SelectY2Axis | Clear;
 
 }

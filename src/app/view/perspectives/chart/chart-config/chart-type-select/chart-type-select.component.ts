@@ -32,6 +32,9 @@ export class ChartTypeSelectComponent {
   @Input()
   public chartType: ChartType;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public select = new EventEmitter<ChartType>();
 

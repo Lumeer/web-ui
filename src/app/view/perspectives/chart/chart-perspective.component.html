@@ -1,9 +1,18 @@
 <div *ngIf="query | displayable; else notDisplayable" class="px-3">
+  <ng-container *ngIf="{collection: collection$ | async, config: config$ | async} as data">
     <chart-config
-      [collection]="collection$ | async"
-      [config]="config$ | async">
+      [collection]="data.collection"
+      [canManageConfig]="currentView$ | async | canManageConfig"
+      [config]="data.config">
     </chart-config>
 
+    <chart-visualization
+      [collection]="data.collection"
+      [documents]="documents$ | async"
+      [config]="data.config">
+    </chart-visualization>
+
+  </ng-container>
 </div>
 
 <ng-template #notDisplayable>

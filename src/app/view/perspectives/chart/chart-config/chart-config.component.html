@@ -1,6 +1,7 @@
 <div class="d-flex flex-row align-items-center flex-wrap">
   <chart-type-select
     class="mr-2"
+    [canManageConfig]="canManageConfig"
     [chartType]="config.type"
     (select)="onTypeSelect($event)">
   </chart-type-select>
@@ -9,17 +10,29 @@
     class="mr-2"
     [axes]="axes$ | async"
     [collection]="collection"
+    [canManageConfig]="canManageConfig"
     [axisType]="xAxis"
     [axis]="config.xAxis"
     (select)="onXAxisSelect($event)">
   </chart-attribute-select>
 
   <chart-attribute-select
+    class="mr-2"
     [axes]="axes$ | async"
     [collection]="collection"
+    [canManageConfig]="canManageConfig"
     [axisType]="y1Axis"
     [axis]="config.y1Axis"
     (select)="onY1AxisSelect($event)">
+  </chart-attribute-select>
+
+  <chart-attribute-select
+    [axes]="axes$ | async"
+    [collection]="collection"
+    [canManageConfig]="canManageConfig"
+    [axisType]="y2Axis"
+    [axis]="config.y2Axis"
+    (select)="onY2AxisSelect($event)">
   </chart-attribute-select>
 
 </div>

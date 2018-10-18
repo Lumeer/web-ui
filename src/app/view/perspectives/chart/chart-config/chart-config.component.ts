@@ -38,6 +38,9 @@ export class ChartConfigComponent implements OnChanges {
   @Input()
   public config: ChartConfig;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public axes$ = new BehaviorSubject<ChartAxisModel[]>([]);
 
   public readonly xAxis = ChartAxisType.X;

@@ -39,6 +39,9 @@ export class ChartAttributeSelectComponent implements OnChanges {
   public axis: ChartAxisModel;
 
   @Input()
+  public canManageConfig: boolean;
+
+  @Input()
   public axisType: ChartAxisType;
 
   @Output()
@@ -51,7 +54,8 @@ export class ChartAttributeSelectComponent implements OnChanges {
   }
 
   private checkCurrentAxis() {
-    const axisFound = this.axes.find(ax => ax === this.axis);
+    const axisFound = this.axes.find(ax =>
+      ax.collectionId === this.axis.collectionId && ax.attributeId === this.axis.attributeId);
     if (!axisFound) {
       this.select.emit(null);
     }

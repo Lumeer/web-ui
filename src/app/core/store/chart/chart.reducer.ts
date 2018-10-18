@@ -22,6 +22,8 @@ import {ChartAction, ChartActionType} from './chart.action';
 
 export function chartReducer(state: ChartState = initialChartState, action: ChartAction.All): ChartState {
   switch (action.type) {
+    case ChartActionType.SET_CONFIG:
+      return {...state, config: action.payload.config};
     case ChartActionType.SELECT_TYPE:
       return {...state, config: {...state.config, type: action.payload.type}};
     case ChartActionType.SELECT_X_AXIS:

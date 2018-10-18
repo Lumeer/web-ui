@@ -10,6 +10,8 @@
           class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
           data-toggle="dropdown"
           id="chartTypeDropdown"
+          [disabled]="!canManageConfig"
+          [ngClass]="canManageConfig ? 'cursor-pointer' : 'cursor-not-allowed'"
           type="button">
 
     <span *ngIf="!axis" i18n="@@chart.axis.x.select">Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis</span>

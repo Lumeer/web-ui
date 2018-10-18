@@ -10,10 +10,14 @@
           class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
           data-toggle="dropdown"
           id="chartTypeDropdown"
+          [disabled]="!canManageConfig"
+          [ngClass]="canManageConfig ? 'cursor-pointer' : 'cursor-not-allowed'"
           type="button">
+
     <i class="fa-fw {{chartType | chartTypeIcon}}"></i>
     <span class="ml-sm-1 text-nowrap"
           i18n="@@chart.type.name">{chartType, select, line {Line} bar {Bar} pie {Pie}}</span>
+
   </button>
 
   <div aria-labelledby="chartTypeDropdown"

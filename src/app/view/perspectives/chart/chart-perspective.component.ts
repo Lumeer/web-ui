@@ -27,9 +27,12 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ChartConfig} from '../../../core/store/chart/chart.model';
 import {selectChartConfig} from '../../../core/store/chart/chart.state';
+import {ViewModel} from '../../../core/store/views/view.model';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {ChartAction} from '../../../core/store/chart/chart.action';
 
 @Component({
   selector: 'chart-perspective',
@@ -41,6 +44,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
   public collection$: Observable<CollectionModel>;
   public config$: Observable<ChartConfig>;
+  public currentView$: Observable<ViewModel>;
 
   public query: QueryModel;
 
@@ -51,6 +55,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.subscribeToQuery();
+    this.subscribeToView();
     this.subscribeData();
   }
 
@@ -67,11 +72,22 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
   }
 
+  private subscribeToView() {
+    const subscription = this.store$.pipe(select(selectCurrentView),
+      take(1))
+      .subscribe(view => {
+        if (view && view.config && view.config.chart) {
+          this.store$.dispatch(new ChartAction.SetConfig({config: view.config.chart}));
+        }
+      });
+  }
+
   private subscribeData() {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.collection$ = this.store$.pipe(select(selectCollectionsByQuery),
       map(collections => collections[0]));
     this.config$ = this.store$.pipe(select(selectChartConfig));
+    this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
 
   public ngOnDestroy() {
