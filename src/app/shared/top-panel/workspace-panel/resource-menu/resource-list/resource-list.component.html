@@ -2,7 +2,7 @@
   <div class="dropdown-divider"></div>
   <ng-container *ngFor="let organization of organizations">
     <a *ngIf="organization.code !== currentCode" class="dropdown-item" (click)="selectResource(organization)">
-      <i class="{{organization.icon}}" [class.mr-1]="true" [style.color]="organization.color"></i>
+      <i class="fa-fw {{organization.icon}}" [class.mr-1]="true" [style.color]="organization.color"></i>
       [{{organization.code}}] {{organization.name}}
     </a>
   </ng-container>
@@ -12,7 +12,7 @@
   <div class="dropdown-divider"></div>
   <ng-container *ngFor="let project of projects">
     <a *ngIf="project.code !== currentCode" class="dropdown-item" (click)="selectResource(project)">
-      <i class="{{project.icon}}" [class.mr-1]="true" [style.color]="project.color"></i>
+      <i class="fa-fw {{project.icon}}" [class.mr-1]="true" [style.color]="project.color"></i>
       [{{project.code}}] {{project.name}}
     </a>
   </ng-container>
