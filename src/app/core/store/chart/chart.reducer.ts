@@ -17,21 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartState, initialChartState} from './chart.state';
+import {chartsAdapter, ChartState, initialChartState} from './chart.state';
 import {ChartAction, ChartActionType} from './chart.action';
 
 export function chartReducer(state: ChartState = initialChartState, action: ChartAction.All): ChartState {
   switch (action.type) {
+    case ChartActionType.ADD_CHART:
+      return chartsAdapter.addOne(action.payload.chart, state);
+    case ChartActionType.REMOVE_CHART:
+      return chartsAdapter.removeOne(action.payload.chartId, state);
     case ChartActionType.SET_CONFIG:
-      return {...state, config: action.payload.config};
-    case ChartActionType.SELECT_TYPE:
-      return {...state, config: {...state.config, type: action.payload.type}};
-    case ChartActionType.SELECT_X_AXIS:
-      return {...state, config: {...state.config, xAxis: action.payload.axis}};
-    case ChartActionType.SELECT_Y1_AXIS:
-      return {...state, config: {...state.config, y1Axis: action.payload.axis}};
-    case ChartActionType.SELECT_Y2_AXIS:
-      return {...state, config: {...state.config, y2Axis: action.payload.axis}};
+      return chartsAdapter.updateOne({id: action.payload.chartId, changes: {config: action.payload.config}}, state);
     case ChartActionType.CLEAR:
       return initialChartState;
     default:

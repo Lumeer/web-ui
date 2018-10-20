@@ -18,53 +18,39 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ChartAxisModel, ChartConfig, ChartType} from './chart.model';
+import {ChartConfig, ChartModel} from './chart.model';
 
 export enum ChartActionType {
 
+  ADD_CHART = '[Chart] Add chart',
+  REMOVE_CHART = '[Chart] Remove chart',
+
   SET_CONFIG = '[Chart] Set config',
-  SELECT_TYPE = '[Chart] Select type',
-  SELECT_X_AXIS = '[Chart] Select X axis',
-  SELECT_Y1_AXIS = '[Chart] Select Y1 axis',
-  SELECT_Y2_AXIS = '[Chart] Select Y2 axis',
+
   CLEAR = '[Chart] Clear'
 
 }
 
 export namespace ChartAction {
 
+  export class AddChart implements Action {
+    public readonly type = ChartActionType.ADD_CHART;
+
+    public constructor(public payload: { chart: ChartModel }) {
+    }
+  }
+
+  export class RemoveChart implements Action {
+    public readonly type = ChartActionType.REMOVE_CHART;
+
+    public constructor(public payload: { chartId: string }) {
+    }
+  }
+
   export class SetConfig implements Action {
     public readonly type = ChartActionType.SET_CONFIG;
 
-    public constructor(public payload: { config: ChartConfig }) {
-    }
-  }
-
-  export class SelectType implements Action {
-    public readonly type = ChartActionType.SELECT_TYPE;
-
-    public constructor(public payload: { type: ChartType }) {
-    }
-  }
-
-  export class SelectXAxis implements Action {
-    public readonly type = ChartActionType.SELECT_X_AXIS;
-
-    public constructor(public payload: { axis: ChartAxisModel }) {
-    }
-  }
-
-  export class SelectY1Axis implements Action {
-    public readonly type = ChartActionType.SELECT_Y1_AXIS;
-
-    public constructor(public payload: { axis: ChartAxisModel }) {
-    }
-  }
-
-  export class SelectY2Axis implements Action {
-    public readonly type = ChartActionType.SELECT_Y2_AXIS;
-
-    public constructor(public payload: { axis: ChartAxisModel }) {
+    public constructor(public payload: { chartId: string, config: ChartConfig }) {
     }
   }
 
@@ -72,6 +58,6 @@ export namespace ChartAction {
     public readonly type = ChartActionType.CLEAR;
   }
 
-  export type All = SetConfig | SelectType | SelectXAxis | SelectY1Axis | SelectY2Axis | Clear;
+  export type All = AddChart | RemoveChart | SetConfig | Clear;
 
 }

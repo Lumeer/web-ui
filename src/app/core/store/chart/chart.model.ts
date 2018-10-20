@@ -17,6 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const DEFAULT_CHART_ID = 'default';
+
+export interface ChartModel {
+  id: string;
+  config?: ChartConfig;
+}
+
 export interface ChartConfig {
   type: ChartType;
   xAxis?: ChartAxisModel;
@@ -25,10 +32,8 @@ export interface ChartConfig {
 }
 
 export interface ChartAxisModel {
-
   collectionId: string;
   attributeId: string;
-
 }
 
 export enum ChartType {

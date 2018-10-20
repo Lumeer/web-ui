@@ -1,7 +1,8 @@
 <div class="input-group">
   <div class="input-group-prepend">
-    <span class="input-group-text" i18n="@@chart.axis.type.name">
-      {axisType, select, x {X} y1 {Y1} y2 {Y2}}
+    <span class="input-group-text">
+      <i *ngIf="placeholderIcon" class="fa-fw {{placeholderIcon}}"></i>
+      {{placeholderText}}
     </span>
   </div>
 
@@ -9,35 +10,39 @@
           aria-haspopup="true"
           class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
           data-toggle="dropdown"
-          id="chartTypeDropdown"
-          [disabled]="!canManageConfig"
-          [ngClass]="canManageConfig ? 'cursor-pointer' : 'cursor-not-allowed'"
+          id="selectItemDropdown"
+          [disabled]="disabled"
+          [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
           type="button">
 
-    <span *ngIf="!axis" i18n="@@chart.axis.x.select">Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis</span>
+    <span *ngIf="!(selectedId | getSelectItem:items)">{{emptyValue}}</span>
 
-    <ng-container *ngIf="axis">
+    <ng-container *ngIf="selectedId | getSelectItem:items as selectedItem">
 
-      <icons-presenter [colors]="[collection] | colors"
-                       [icons]="[collection] | icons">
+      <icons-presenter *ngIf="selectedItem.icon && selectedItem.iconColor"
+                       [colors]="[selectedItem.iconColor]"
+                       [icons]="[selectedItem.icon]">
       </icons-presenter>
-      <span class="ml-sm-1 text-nowrap" [style.color]="collection.color">
-        {{collection | collectionAttributeName:axis.attributeId}}
+      <i *ngIf="selectedItem.icon && !selectedItem.iconColor" class="fa-fw {{selectedItem.icon}}"></i>
+      <span class="ml-sm-1 text-nowrap">
+        {{selectedItem.value}}
       </span>
     </ng-container>
   </button>
 
-  <div aria-labelledby="chartTypeDropdown"
+  <div aria-labelledby="selectItemDropdown"
        class="dropdown-menu">
-    <a *ngFor="let aaxis of axes"
-       [class.active]="axis === aaxis"
-       (click)="onSelect(aaxis)"
+    <a *ngFor="let item of items"
+       [class.active]="selectedId | areIdsEqual:item.id"
+       (click)="onSelect(item)"
        class="dropdown-item">
-      <icons-presenter [colors]="[collection] | colors"
-                       [icons]="[collection] | icons">
+      <icons-presenter *ngIf="item.icon && item.iconColor"
+                       [colors]="[item.iconColor]"
+                       [icons]="[item.icon]">
       </icons-presenter>
-      <span class="ml-sm-1 text-nowrap" [style.color]="collection.color">
-        {{collection | collectionAttributeName:aaxis.attributeId}}
+      <i *ngIf="item.icon && !item.iconColor" class="fa-fw {{item.icon}}"></i>
+      <span class="ml-sm-1 text-nowrap">
+        {{item.value}}
       </span>
     </a>
   </div>

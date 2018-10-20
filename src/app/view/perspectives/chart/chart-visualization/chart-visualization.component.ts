@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {ChartConfig} from '../../../../core/store/chart/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -27,7 +27,7 @@ import {ChartVisualizer} from '../visualizer/chart-visualizer';
   selector: 'chart-visualization',
   templateUrl: './chart-visualization.component.html'
 })
-export class ChartVisualizationComponent implements OnChanges, AfterViewInit {
+export class ChartVisualizationComponent implements OnChanges {
 
   @Input()
   public collection: CollectionModel;
@@ -44,20 +44,18 @@ export class ChartVisualizationComponent implements OnChanges, AfterViewInit {
   private chartVisualizer: ChartVisualizer;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.config) {
+    if (changes.documents || changes.config && this.config) {
       this.visualize();
     }
   }
 
-  public ngAfterViewInit() {
-    this.chartVisualizer = new ChartVisualizer(this.chartElement);
-  }
-
   private visualize() {
-    if (this.chartVisualizer) {
-      this.chartVisualizer.setData([this.collection], this.documents, this.config);
-      this.chartVisualizer.visualize();
+    if (!this.chartVisualizer) {
+      this.chartVisualizer = new ChartVisualizer(this.chartElement);
     }
+
+    this.chartVisualizer.setData([this.collection], this.documents, this.config);
+    this.chartVisualizer.visualize();
   }
 
 }

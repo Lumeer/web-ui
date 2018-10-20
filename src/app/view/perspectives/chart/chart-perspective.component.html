@@ -3,7 +3,8 @@
     <chart-config
       [collection]="data.collection"
       [canManageConfig]="currentView$ | async | canManageConfig"
-      [config]="data.config">
+      [config]="data.config"
+      (configChange)="onConfigChanged($event)">
     </chart-config>
 
     <chart-visualization

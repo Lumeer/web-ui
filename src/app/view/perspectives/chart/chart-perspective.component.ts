@@ -28,7 +28,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {map, take} from 'rxjs/operators';
-import {ChartConfig} from '../../../core/store/chart/chart.model';
+import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/chart/chart.model';
 import {selectChartConfig} from '../../../core/store/chart/chart.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -48,14 +48,15 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public query: QueryModel;
 
+  private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
+    this.initChart();
     this.subscribeToQuery();
-    this.subscribeToView();
     this.subscribeData();
   }
 
@@ -72,14 +73,19 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
   }
 
-  private subscribeToView() {
+  private initChart() {
     const subscription = this.store$.pipe(select(selectCurrentView),
       take(1))
       .subscribe(view => {
-        if (view && view.config && view.config.chart) {
-          this.store$.dispatch(new ChartAction.SetConfig({config: view.config.chart}));
-        }
+        const config = view && view.config && view.config.chart || this.createDefaultConfig();
+        const chart = {id: this.chartId, config};
+        this.store$.dispatch(new ChartAction.AddChart({chart}));
       });
+    this.subscriptions.add(subscription);
+  }
+
+  private createDefaultConfig(): ChartConfig {
+    return {type: ChartType.Line};
   }
 
   private subscribeData() {
@@ -92,6 +98,11 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.store$.dispatch(new ChartAction.RemoveChart({chartId: this.chartId}));
+  }
+
+  public onConfigChanged(config: ChartConfig) {
+    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config}));
   }
 
 }

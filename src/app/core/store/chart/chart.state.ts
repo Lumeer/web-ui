@@ -19,18 +19,19 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {ChartConfig, ChartType} from './chart.model';
+import {ChartModel, DEFAULT_CHART_ID} from './chart.model';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface ChartState {
-  config: ChartConfig;
+export interface ChartState extends EntityState<ChartModel> {
 }
 
-export const initialChartState: ChartState = {
-  config: {type: ChartType.Line}
-};
+export const chartsAdapter = createEntityAdapter<ChartModel>({selectId: chart => chart.id});
+
+export const initialChartState: ChartState = chartsAdapter.getInitialState();
 
 export const selectChartState = (state: AppState) => state.chart;
+export const selectChartsDictionary = createSelector(selectChartState, chartsAdapter.getSelectors().selectEntities);
+export const selectChartById = (id) => createSelector(selectChartsDictionary, charts => charts[id]);
 
-export const selectChartConfig = createSelector(selectChartState, state => state.config);
-
-export const selectChartType = createSelector(selectChartConfig, config => config.type);
+export const selectDefaultChart = selectChartById(DEFAULT_CHART_ID);
+export const selectChartConfig = createSelector(selectDefaultChart, chart => chart && chart.config);

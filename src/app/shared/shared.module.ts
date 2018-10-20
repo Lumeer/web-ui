@@ -43,6 +43,7 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
+import {SelectModule} from './select/select.module';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     TopPanelModule,
     WarningMessageModule,
     DocumentHintsModule,
+    SelectModule
   ],
   declarations: [
     SizeSliderComponent,
@@ -99,6 +101,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     TopPanelModule,
     WarningMessageModule,
     DocumentHintsModule,
+    SelectModule
   ]
 })
 export class SharedModule {

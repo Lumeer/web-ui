@@ -21,7 +21,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {ElementRef} from '@angular/core';
 import {ChartConfig} from '../../../../core/store/chart/chart.model';
-import {Data, Layout, newPlot} from 'plotly.js';
+import {Config, Data, Layout, newPlot} from 'plotly.js';
 import {PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
 
@@ -30,6 +30,8 @@ export class ChartVisualizer {
   private data: Data[] = [];
 
   private layout: Partial<Layout> = {};
+
+  private config: Partial<Config> = this.createConfig();
 
   private plotMaker: PlotMaker;
 
@@ -46,9 +48,15 @@ export class ChartVisualizer {
     this.layout = this.plotMaker.createLayout();
   }
 
+  private createConfig(): Partial<Config> {
+    const config = {};
+    config['responsive'] = true;
+    return config;
+  }
+
   public visualize() {
     const element = this.chartElement.nativeElement;
-    newPlot(element, this.data, this.layout);
+    newPlot(element, this.data, this.layout, this.config);
   }
 
 }

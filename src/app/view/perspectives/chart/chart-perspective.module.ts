@@ -24,29 +24,23 @@ import {ChartPerspectiveRoutingModule} from './chart-perspective-routing.module'
 import {ChartPerspectiveComponent} from './chart-perspective.component';
 import {ChartConfigComponent} from './chart-config/chart-config.component';
 import {ChartAttributeSelectComponent} from './chart-config/chart-attribute-select/chart-attribute-select.component';
-import {ChartTypeSelectComponent} from './chart-config/chart-type-select/chart-type-select.component';
-import {DisplayablePipe} from './pipes/displayable.pipe';
-import {ChartTypeIconPipe} from './pipes/chart-type-icon.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
-import {AttributeNamePipe} from './pipes/attribute-name.pipe';
 import {ChartVisualizationComponent} from './chart-visualization/chart-visualization.component';
+import {ChartPipesModule} from './pipes/chart-pipes.module';
 
 @NgModule({
   imports: [
     SharedModule,
     RouterModule,
     PickerModule,
-    ChartPerspectiveRoutingModule
+    ChartPerspectiveRoutingModule,
+    ChartPipesModule
   ],
   declarations: [
     ChartPerspectiveComponent,
     ChartVisualizationComponent,
     ChartConfigComponent,
-    ChartAttributeSelectComponent,
-    ChartTypeSelectComponent,
-    DisplayablePipe,
-    ChartTypeIconPipe,
-    AttributeNamePipe
+    ChartAttributeSelectComponent
   ],
   entryComponents: [
     ChartPerspectiveComponent

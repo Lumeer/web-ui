@@ -24,20 +24,35 @@ import {Data, Layout} from 'plotly.js';
 export class LinePlotMaker extends PlotMaker {
 
   public createData(): Data[] {
-    const dataStyle = this.getDataStyle();
-
     const data: Data[] = [];
 
     if (this.config.xAxis || this.config.y1Axis) {
-      data.push(this.createAxesData(dataStyle, this.config.xAxis, this.config.y1Axis));
+      data.push(this.createAxis1Data(this.config.xAxis, this.config.y1Axis));
     }
 
     if (this.config.xAxis && this.config.y2Axis) {
-      const y2DataStyle = {...dataStyle, yaxis: 'y2'};
-      data.push(this.createAxesData(y2DataStyle, this.config.xAxis, this.config.y2Axis));
+      data.push(this.createAxis2Data(this.config.xAxis, this.config.y2Axis));
     }
 
     return data;
+  }
+
+  private createAxis1Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+    const dataStyle = this.getDataStyle();
+    return this.createAxesData(dataStyle, xAxis, yAxis);
+  }
+
+  private createAxis2Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+    const dataStyle = this.getDataStyle();
+    const data = this.createAxesData(dataStyle, xAxis, yAxis);
+    return {
+      ...data,
+      yaxis: 'y2',
+      line: {
+        dash: 'dot',
+        width: 4
+      }
+    };
   }
 
   private getDataStyle(): Data {
@@ -74,6 +89,11 @@ export class LinePlotMaker extends PlotMaker {
       }
     }
 
+    const name = yAxis && this.getAttributeName(yAxis.attributeId);
+    if (name) {
+      data['name'] = name;
+    }
+
     if (xAxis) {
       data['x'] = traceX;
     }
@@ -85,12 +105,23 @@ export class LinePlotMaker extends PlotMaker {
     return data;
   }
 
+  private getAttributeName(attributeId: string): string {
+    const collectionId = this.documents && this.documents[0] && this.documents[0].collectionId;
+    const collection = collectionId && this.collections.find(coll => coll.id === collectionId);
+    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
+    return attribute && attribute.name;
+  }
+
   public createLayout(): Partial<Layout> {
     if (this.config.y2Axis) {
       return {
         yaxis2: {
           overlaying: 'y',
           side: 'right'
+        },
+        legend: {
+          xanchor: 'left',
+          x: 1.1
         }
       };
     }

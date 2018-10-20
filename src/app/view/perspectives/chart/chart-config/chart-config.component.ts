@@ -17,13 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {BehaviorSubject} from 'rxjs';
-import {ChartAction} from '../../../../core/store/chart/chart.action';
 import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/chart/chart.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
+import {Perspective} from '../../perspective';
 
 @Component({
   selector: 'chart-config',
@@ -41,14 +39,14 @@ export class ChartConfigComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Output()
+  public configChange = new EventEmitter<ChartConfig>();
+
   public axes$ = new BehaviorSubject<ChartAxisModel[]>([]);
 
-  public readonly xAxis = ChartAxisType.X;
-  public readonly y1Axis = ChartAxisType.Y1;
-  public readonly y2Axis = ChartAxisType.Y2;
-
-  constructor(private store$: Store<AppState>) {
-  }
+  public readonly chartTypes = Object.values(ChartType);
+  public readonly chartPerspective = Perspective.Chart;
+  public readonly axes = Object.values(ChartAxisType);
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
@@ -64,19 +62,34 @@ export class ChartConfigComponent implements OnChanges {
   }
 
   public onTypeSelect(type: ChartType) {
-    this.store$.dispatch(new ChartAction.SelectType({type}));
+    const newConfig = {...this.config, type};
+    this.configChange.emit(newConfig);
   }
 
-  public onXAxisSelect(axis: ChartAxisModel) {
-    this.store$.dispatch(new ChartAction.SelectXAxis({axis}));
+  public onAxisSelect(type: ChartAxisType, axis: ChartAxisModel) {
+    switch (type) {
+      case ChartAxisType.X:
+        return this.onXAxisSelect(axis);
+      case ChartAxisType.Y1:
+        return this.onY1AxisSelect(axis);
+      case ChartAxisType.Y2:
+        return this.onY2AxisSelect(axis);
+    }
   }
 
-  public onY1AxisSelect(axis: ChartAxisModel) {
-    this.store$.dispatch(new ChartAction.SelectY1Axis({axis}));
+  private onXAxisSelect(axis: ChartAxisModel) {
+    const newConfig = {...this.config, xAxis: axis};
+    this.configChange.emit(newConfig);
   }
 
-  public onY2AxisSelect(axis: ChartAxisModel) {
-    this.store$.dispatch(new ChartAction.SelectY2Axis({axis}));
+  private onY1AxisSelect(axis: ChartAxisModel) {
+    const newConfig = {...this.config, y1Axis: axis};
+    this.configChange.emit(newConfig);
+  }
+
+  private onY2AxisSelect(axis: ChartAxisModel) {
+    const newConfig = {...this.config, y2Axis: axis};
+    this.configChange.emit(newConfig);
   }
 
 }
