@@ -17,16 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {chartTypesIconsMap} from '../../../../core/store/chart/chart.model';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-@Pipe({
-  name: 'chartTypeIcon'
+import {SelectItemComponent} from './select-item/select-item.component';
+import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
+import {PipesModule} from '../pipes/pipes.module';
+import {PickerModule} from '../picker/picker.module';
+import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    PickerModule
+  ],
+  declarations: [
+    SelectItemComponent,
+    GetSelectItemPipe,
+    AreIdsEqualPipe
+  ],
+  providers: [
+    AreIdsEqualPipe
+  ],
+  exports: [
+    SelectItemComponent
+  ]
 })
-export class ChartTypeIconPipe implements PipeTransform {
-
-  public transform(chartType: string): string {
-    return chartTypesIconsMap[chartType] || '';
-  }
-
+export class SelectModule {
 }

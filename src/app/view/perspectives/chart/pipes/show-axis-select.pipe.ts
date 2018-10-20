@@ -17,33 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Perspective} from '../../../perspective';
-import {ChartType} from '../../../../../core/store/chart/chart.model';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/chart/chart.model';
 
-@Component({
-  selector: 'chart-type-select',
-  templateUrl: './chart-type-select.component.html',
-  styleUrls: ['../chart-dropdown-select.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Pipe({
+  name: 'showAxisSelect'
 })
-export class ChartTypeSelectComponent {
+export class ShowAxisSelectPipe implements PipeTransform {
 
-  @Input()
-  public chartType: ChartType;
+  public transform(axisType: ChartAxisType, config: ChartConfig): boolean {
+    return !(config.type === ChartType.Pie && axisType === ChartAxisType.Y2);
 
-  @Input()
-  public canManageConfig: boolean;
-
-  @Output()
-  public select = new EventEmitter<ChartType>();
-
-  public readonly chartTypes = Object.values(ChartType);
-
-  public readonly chartPerspective = Perspective.Chart;
-
-  public onSelect(chartType: ChartType) {
-    this.select.emit(chartType);
   }
 
 }
