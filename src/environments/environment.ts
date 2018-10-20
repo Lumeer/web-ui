@@ -23,6 +23,7 @@ import {environmentVariables} from './environment-variables';
 export const environment: Environment = {
   analytics: false,
   auth: true,
+  mapQuestKey: 'Euq4lrG3ZlF3i0Fd1kCgfJIIIkZ8ebEb',
   production: false,
   storeDevtools: true,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',

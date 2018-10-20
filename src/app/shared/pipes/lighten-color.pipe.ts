@@ -18,8 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-
-import {HtmlModifier} from '../utils/html-modifier';
+import {shadeColor} from '../utils/html-modifier';
 
 @Pipe({
   name: 'lightenColor'
@@ -27,7 +26,7 @@ import {HtmlModifier} from '../utils/html-modifier';
 export class LightenColorPipe implements PipeTransform {
 
   public transform(color: string, percent: number): string {
-    return HtmlModifier.shadeColor(color, percent);
+    return shadeColor(color, percent);
   }
 
 }

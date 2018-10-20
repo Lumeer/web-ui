@@ -1,0 +1,15 @@
+<empty-state *ngIf="minCollections === 1 && !maxCollections"
+             icon="far fa-times-square">
+  <h3 i18n="@@invalid-query.at-least-one-collection">You need to select at least one collection.</h3>
+  <ng-container *ngTemplateOutlet="description"></ng-container>
+</empty-state>
+
+<empty-state *ngIf="minCollections === 1 && maxCollections === 1"
+             icon="far fa-times-square">
+  <h3 i18n="@@invalid-query.exactly-one-collection">You need to select exactly one collection.</h3>
+  <ng-container *ngTemplateOutlet="description"></ng-container>
+</empty-state>
+
+<ng-template #description>
+  <div i18n="@@invalid-query.description">Use search bar on top to modify your query.</div>
+</ng-template>

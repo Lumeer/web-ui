@@ -28,6 +28,7 @@ import {DocumentsAction} from '../../store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../store/documents/documents.state';
 import {selectQuery} from '../../store/navigation/navigation.state';
 import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
+import {queryIsEmpty} from '../../store/navigation/query.util';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,7 @@ export class DocumentsGuard implements Resolve<DocumentModel[]> {
       mergeMap(query => this.store$.select(selectCurrentQueryDocumentsLoaded).pipe(
         tap(loaded => {
           if (!loaded) {
-            const querySingleDocument = {...query, page: 0, pageSize: 1}; // TODO change count
+            const querySingleDocument = {...query, page: 0, pageSize: queryIsEmpty(query) ? 10 : 1000}; // TODO change count
             this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
           }
         }),

@@ -1,0 +1,24 @@
+<div class="input-group">
+  <div class="input-group-prepend">
+    <label class="input-group-text"
+           for="collection.id"
+           [title]="collection.name">
+      <icons-presenter [colors]="[collection.color]"
+                       [icons]="[collection.icon]">
+      </icons-presenter>
+    </label>
+  </div>
+  <select id="collection.id"
+          class="custom-select"
+          (change)="onChange($event)">
+    <option [attr.selected]="!attributeId || null"
+            i18n="@@map.attribute-select.placeholder"
+            value="">Choose...
+    </option>
+    <option *ngFor="let attribute of collection.attributes"
+            [attr.selected]="attribute.id === attributeId || null"
+            [value]="attribute.id">
+      {{ attribute.name }}
+    </option>
+  </select>
+</div>

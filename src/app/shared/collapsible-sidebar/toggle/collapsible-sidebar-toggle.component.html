@@ -1,0 +1,13 @@
+<ng-container *ngIf="collapsed; else expanded">
+  <button class="btn btn-light"
+          title="Expand" i18n-title="@@collapsible-sidebar.expand-button">
+    <i class="far fa-chevron-right"></i>
+  </button>
+</ng-container>
+
+<ng-template #expanded>
+  <button class="btn btn-light"
+          title="Collapse" i18n-title="@@collapsible-sidebar.collapse-button">
+    <i class="far fa-chevron-left"></i>
+  </button>
+</ng-template>

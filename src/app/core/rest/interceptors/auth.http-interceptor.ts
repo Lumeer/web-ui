@@ -24,6 +24,7 @@ import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {AuthService} from '../../../auth/auth.service';
+import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
@@ -33,7 +34,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!environment.auth) {
+    if (!environment.auth || !isBackendUrl(request.url)) {
       return next.handle(request);
     }
 
