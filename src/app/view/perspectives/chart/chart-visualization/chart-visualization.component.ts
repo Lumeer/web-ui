@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -25,7 +26,8 @@ import {ChartVisualizer} from '../visualizer/chart-visualizer';
 
 @Component({
   selector: 'chart-visualization',
-  templateUrl: './chart-visualization.component.html'
+  templateUrl: './chart-visualization.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartVisualizationComponent implements OnChanges {
 
