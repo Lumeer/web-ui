@@ -18,31 +18,35 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/chart/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
-import {hex2rgba} from '../../../../../shared/util';
+import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
 export class BarPlotMaker extends PlotMaker {
 
   public createData(): Data[] {
     const data: Data[] = [];
 
-    if (this.config.xAxis && this.config.y1Axis && this.config.y2Axis) {
-      data.push(this.createAxis1Data(this.config.xAxis, this.config.y1Axis));
+    const xAxis = this.config.axes[ChartAxisType.X];
+    const y1Axis = this.config.axes[ChartAxisType.Y1];
+    const y2Axis = this.config.axes[ChartAxisType.Y2];
+
+    if (xAxis && y1Axis && y2Axis) {
+      data.push(this.createAxis1Data(xAxis, y1Axis));
       // workaround data to group columns with multiple values
-      data.push(...this.createHelperData());
-      data.push(this.createAxis2Data(this.config.xAxis, this.config.y2Axis));
-    } else if (this.config.xAxis || this.config.y2Axis) {
-      data.push(this.createAxis2Data(this.config.xAxis, this.config.y2Axis));
-    } else if (this.config.xAxis || this.config.y1Axis) {
-      data.push(this.createAxis1Data(this.config.xAxis, this.config.y1Axis));
+      data.push(...this.createHelperData(xAxis, y2Axis, y2Axis));
+      data.push(this.createAxis2Data(xAxis, y2Axis));
+    } else if (!y1Axis && (xAxis || y2Axis)) {
+      data.push(this.createAxis2Data(xAxis, y2Axis));
+    } else if (xAxis || y1Axis) {
+      data.push(this.createAxis1Data(xAxis, y1Axis));
     }
 
     return data;
   }
 
-  private createHelperData(): any[] {
-    const names = this.findAxesNonNullAttributeValues(this.config.xAxis.attributeId, this.config.y1Axis.attributeId, this.config.y2Axis.attributeId);
+  private createHelperData(xAxis: ChartAxisModel, y1Axis: ChartAxisModel, y2Axis: ChartAxisModel): any[] {
+    const names = this.findAxesNonNullAttributeValues(xAxis.attributeId, y1Axis.attributeId, y2Axis.attributeId);
     if (names.length < 2) {
       return [];
     }
@@ -140,7 +144,7 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    if (this.config.y2Axis) {
+    if (this.config.axes[ChartAxisType.Y2]) {
       return {
         barmode: 'group',
         yaxis2: {

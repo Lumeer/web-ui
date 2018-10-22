@@ -17,11 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function hex2rgba(hex: string, opacity: number) {
-  hex = hex.replace('#', '');
-  const r = parseInt(hex.substring(0, hex.length / 3), 16);
-  const g = parseInt(hex.substring(hex.length / 3, 2 * hex.length / 3), 16);
-  const b = parseInt(hex.substring(2 * hex.length / 3, 3 * hex.length / 3), 16);
+import {chartsAdapter, ChartsState, initialChartsState} from './charts.state';
+import {ChartAction, ChartActionType} from './charts.action';
 
-  return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+export function chartsReducer(state: ChartsState = initialChartsState, action: ChartAction.All): ChartsState {
+  switch (action.type) {
+    case ChartActionType.ADD_CHART:
+      return chartsAdapter.addOne(action.payload.chart, state);
+    case ChartActionType.REMOVE_CHART:
+      return chartsAdapter.removeOne(action.payload.chartId, state);
+    case ChartActionType.SET_CONFIG:
+      return chartsAdapter.updateOne({id: action.payload.chartId, changes: {config: action.payload.config}}, state);
+    case ChartActionType.CLEAR:
+      return initialChartsState;
+    default:
+      return state;
+  }
 }

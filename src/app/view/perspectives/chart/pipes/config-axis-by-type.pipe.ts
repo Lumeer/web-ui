@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisModel, ChartAxisType, ChartConfig} from '../../../../core/store/chart/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart.model';
 
 @Pipe({
   name: 'configAxisByType'
@@ -26,14 +26,7 @@ import {ChartAxisModel, ChartAxisType, ChartConfig} from '../../../../core/store
 export class ConfigAxisByTypePipe implements PipeTransform {
 
   public transform(type: ChartAxisType, config: ChartConfig): ChartAxisModel {
-    switch (type) {
-      case ChartAxisType.X:
-        return config.xAxis;
-      case ChartAxisType.Y1:
-        return config.y1Axis;
-      case ChartAxisType.Y2:
-        return config.y2Axis;
-    }
+    return config.axes[type];
   }
 
 }

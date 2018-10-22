@@ -28,7 +28,7 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {areConfigsEqual} from './view.utils';
-import {selectChartConfig} from '../chart/chart.state';
+import {selectChartConfig} from '../charts/charts.state';
 
 export interface ViewsState extends EntityState<ViewModel> {
 

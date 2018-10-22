@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {BehaviorSubject} from 'rxjs';
-import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/chart/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart.model';
 import {Perspective} from '../../perspective';
 
 @Component({
@@ -67,28 +67,8 @@ export class ChartConfigComponent implements OnChanges {
   }
 
   public onAxisSelect(type: ChartAxisType, axis: ChartAxisModel) {
-    switch (type) {
-      case ChartAxisType.X:
-        return this.onXAxisSelect(axis);
-      case ChartAxisType.Y1:
-        return this.onY1AxisSelect(axis);
-      case ChartAxisType.Y2:
-        return this.onY2AxisSelect(axis);
-    }
-  }
-
-  private onXAxisSelect(axis: ChartAxisModel) {
-    const newConfig = {...this.config, xAxis: axis};
-    this.configChange.emit(newConfig);
-  }
-
-  private onY1AxisSelect(axis: ChartAxisModel) {
-    const newConfig = {...this.config, y1Axis: axis};
-    this.configChange.emit(newConfig);
-  }
-
-  private onY2AxisSelect(axis: ChartAxisModel) {
-    const newConfig = {...this.config, y2Axis: axis};
+    const axes = {...this.config.axes, [type]: axis};
+    const newConfig = {...this.config, axes: axes};
     this.configChange.emit(newConfig);
   }
 

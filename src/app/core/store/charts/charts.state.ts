@@ -22,14 +22,14 @@ import {AppState} from '../app.state';
 import {ChartModel, DEFAULT_CHART_ID} from './chart.model';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface ChartState extends EntityState<ChartModel> {
+export interface ChartsState extends EntityState<ChartModel> {
 }
 
 export const chartsAdapter = createEntityAdapter<ChartModel>({selectId: chart => chart.id});
 
-export const initialChartState: ChartState = chartsAdapter.getInitialState();
+export const initialChartsState: ChartsState = chartsAdapter.getInitialState();
 
-export const selectChartState = (state: AppState) => state.chart;
+export const selectChartState = (state: AppState) => state.charts;
 export const selectChartsDictionary = createSelector(selectChartState, chartsAdapter.getSelectors().selectEntities);
 export const selectChartById = (id) => createSelector(selectChartsDictionary, charts => charts[id]);
 

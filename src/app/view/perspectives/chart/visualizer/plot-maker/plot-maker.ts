@@ -18,7 +18,7 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartConfig, ChartType} from '../../../../../core/store/chart/chart.model';
+import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 

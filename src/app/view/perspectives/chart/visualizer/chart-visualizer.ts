@@ -20,7 +20,7 @@
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {ElementRef} from '@angular/core';
-import {ChartConfig} from '../../../../core/store/chart/chart.model';
+import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {Config, Data, Layout, newPlot} from 'plotly.js';
 import {PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';

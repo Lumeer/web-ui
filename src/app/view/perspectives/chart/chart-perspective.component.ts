@@ -28,11 +28,11 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {map, take} from 'rxjs/operators';
-import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/chart/chart.model';
-import {selectChartConfig} from '../../../core/store/chart/chart.state';
+import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart.model';
+import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {ChartAction} from '../../../core/store/chart/chart.action';
+import {ChartAction} from '../../../core/store/charts/charts.action';
 
 @Component({
   selector: 'chart-perspective',
@@ -85,7 +85,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): ChartConfig {
-    return {type: ChartType.Line};
+    return {type: ChartType.Line, axes: {}};
   }
 
   private subscribeData() {

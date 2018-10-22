@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisModel} from '../../../../core/store/chart/chart.model';
+import {ChartAxisModel} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 

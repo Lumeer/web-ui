@@ -57,7 +57,7 @@ import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
 import {postItReducer} from './postit/postit.reducer';
-import {chartReducer} from './chart/chart.reducer';
+import {chartsReducer} from './charts/charts.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -76,7 +76,7 @@ const reducers: ActionReducerMap<AppState> = {
   users: usersReducer,
   views: viewsReducer,
   postIts: postItReducer,
-  chart: chartReducer
+  charts: chartsReducer
 };
 
 const effects = [

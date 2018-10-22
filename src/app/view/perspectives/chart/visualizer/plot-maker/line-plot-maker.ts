@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartType} from '../../../../../core/store/chart/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 
 export class LinePlotMaker extends PlotMaker {
@@ -26,12 +26,14 @@ export class LinePlotMaker extends PlotMaker {
   public createData(): Data[] {
     const data: Data[] = [];
 
-    if (this.config.xAxis || this.config.y1Axis) {
-      data.push(this.createAxis1Data(this.config.xAxis, this.config.y1Axis));
+    const xAxis = this.config.axes[ChartAxisType.X];
+
+    if (xAxis || this.config.axes[ChartAxisType.Y1]) {
+      data.push(this.createAxis1Data(xAxis, this.config.axes[ChartAxisType.Y1]));
     }
 
-    if (this.config.xAxis && this.config.y2Axis) {
-      data.push(this.createAxis2Data(this.config.xAxis, this.config.y2Axis));
+    if (xAxis && this.config.axes[ChartAxisType.Y2]) {
+      data.push(this.createAxis2Data(xAxis, this.config.axes[ChartAxisType.Y2]));
     }
 
     return data;
@@ -113,7 +115,7 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    if (this.config.y2Axis) {
+    if (this.config.axes[ChartAxisType.Y2]) {
       return {
         yaxis2: {
           overlaying: 'y',

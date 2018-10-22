@@ -23,7 +23,6 @@ import {SharedModule} from '../../../shared/shared.module';
 import {ChartPerspectiveRoutingModule} from './chart-perspective-routing.module';
 import {ChartPerspectiveComponent} from './chart-perspective.component';
 import {ChartConfigComponent} from './chart-config/chart-config.component';
-import {ChartAttributeSelectComponent} from './chart-config/chart-attribute-select/chart-attribute-select.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {ChartVisualizationComponent} from './chart-visualization/chart-visualization.component';
 import {ChartPipesModule} from './pipes/chart-pipes.module';
@@ -39,8 +38,7 @@ import {ChartPipesModule} from './pipes/chart-pipes.module';
   declarations: [
     ChartPerspectiveComponent,
     ChartVisualizationComponent,
-    ChartConfigComponent,
-    ChartAttributeSelectComponent
+    ChartConfigComponent
   ],
   entryComponents: [
     ChartPerspectiveComponent

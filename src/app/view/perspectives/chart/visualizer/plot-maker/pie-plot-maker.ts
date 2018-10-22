@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartType} from '../../../../../core/store/chart/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 
 export class PiePlotMaker extends PlotMaker {
@@ -26,7 +26,7 @@ export class PiePlotMaker extends PlotMaker {
   public createData(): Data[] {
     const dataStyle = this.getDataStyle();
 
-    const data = this.createAxesData(dataStyle, this.config.xAxis, this.config.y1Axis);
+    const data = this.createAxesData(dataStyle, this.config.axes[ChartAxisType.X], this.config.axes[ChartAxisType.Y1]);
     return [data];
   }
 

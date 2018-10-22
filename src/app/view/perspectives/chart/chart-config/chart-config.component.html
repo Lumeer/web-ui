@@ -16,7 +16,7 @@
         [class.mr-2]="!isLast"
         [disabled]="!canManageConfig"
         [items]="selectItems"
-        [selectedId]="axis | configAxisByType:config"
+        [selectedId]="config.axes[axis]"
         [placeholderText]="axis | axisSelectPlaceholder"
         [emptyValue]="axis | axisSelectEmptyValue"
         (select)="onAxisSelect(axis, $event)">

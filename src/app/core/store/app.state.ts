@@ -34,7 +34,7 @@ import {ContactsState, initialContactsState} from './organizations/contact/conta
 import {initialServiceLimitsState, ServiceLimitsState} from './organizations/service-limits/service-limits.state';
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
 import {initialPostItState, PostItState} from './postit/postit.state';
-import {ChartState, initialChartState} from './chart/chart.state';
+import {ChartsState, initialChartsState} from './charts/charts.state';
 
 export interface AppState {
 
@@ -54,7 +54,7 @@ export interface AppState {
   users: UsersState;
   views: ViewsState;
   postIts: PostItState;
-  chart: ChartState;
+  charts: ChartsState;
 }
 
 export function initialAppState(): AppState {
@@ -75,6 +75,6 @@ export function initialAppState(): AppState {
     users: initialUsersState,
     views: initialViewsState,
     postIts: initialPostItState,
-    chart: initialChartState
+    charts: initialChartsState
   };
 }

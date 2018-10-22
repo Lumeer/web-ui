@@ -26,9 +26,7 @@ export interface ChartModel {
 
 export interface ChartConfig {
   type: ChartType;
-  xAxis?: ChartAxisModel;
-  y1Axis?: ChartAxisModel;
-  y2Axis?: ChartAxisModel;
+  axes: { [type: string]: ChartAxisModel };
 }
 
 export interface ChartAxisModel {

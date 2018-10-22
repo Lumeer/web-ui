@@ -18,7 +18,7 @@
  */
 
 import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {ChartConfig} from '../../../../core/store/chart/chart.model';
+import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from '../visualizer/chart-visualizer';
