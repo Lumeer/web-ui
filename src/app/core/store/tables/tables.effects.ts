@@ -19,16 +19,21 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
-import {concatMap, filter, first, flatMap, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {concatMap, debounceTime, filter, first, flatMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {Direction} from '../../../shared/direction';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} from '../collections/collections.state';
+import {selectDocumentsByCustomQuery} from '../common/permissions.selectors';
+import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
+import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
+import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
@@ -39,13 +44,13 @@ import {QueryModel} from '../navigation/query.model';
 import {RouterAction} from '../router/router.action';
 import {ViewCursor} from '../views/view.model';
 import {ViewsAction} from '../views/views.action';
-import {selectViewTableConfig} from '../views/views.state';
 import {moveTableCursor, TableCursor} from './table-cursor';
-import {convertTableToConfig} from './table.converter';
-import {DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
-import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {convertTablePartsToConfig} from './table.converter';
+import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
+import {isValidHierarchicalRowOrder, createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {selectTableById, selectTableCursor} from './tables.state';
+import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
+import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -58,14 +63,13 @@ export class TablesEffects {
       return query && query.collectionIds && query.collectionIds.length === 1;
     }),
     withLatestFrom(
-      this.store$.select(selectViewTableConfig),
       this.store$.select(selectCollectionsLoaded).pipe(
         filter(loaded => loaded),
         mergeMap(() => this.store$.select(selectAllCollections))
       )
     ),
-    flatMap(([action, config, collections]) => {
-      const query: QueryModel = action.payload.query;
+    flatMap(([action, collections]) => {
+      const {config, query} = action.payload;
 
       const collection = collections.find(col => col.id === query.collectionIds[0]);
       const last = !query.linkTypeIds || query.linkTypeIds.length === 0;
@@ -75,8 +79,10 @@ export class TablesEffects {
         table: {
           id: action.payload.tableId,
           parts: [part],
-          documentIds: new Set<string>(),
-          rows: [EMPTY_TABLE_ROW]
+          config: config || {
+            parts: convertTablePartsToConfig([part]),
+            rows: [createEmptyTableRow()]
+          }
         }
       });
 
@@ -161,12 +167,6 @@ export class TablesEffects {
         new LinkInstancesAction.Get({
           query: {
             linkTypeIds: [linkType.id]
-          }
-        }),
-        new TablesAction.SaveConfig({
-          cursor: {
-            tableId: action.payload.tableId,
-            partIndex: lastIndex + 2
           }
         })
       ];
@@ -291,8 +291,7 @@ export class TablesEffects {
 
       return [
         firstChildAttributeAction,
-        new TablesAction.SetCursor({cursor: null}),
-        new TablesAction.SaveConfig({cursor})
+        new TablesAction.SetCursor({cursor: null})
       ];
     })
   );
@@ -347,7 +346,7 @@ export class TablesEffects {
         }));
       }
 
-      return actions.concat(new TablesAction.SaveConfig({cursor}));
+      return actions;
     })
   );
 
@@ -373,7 +372,7 @@ export class TablesEffects {
         );
       }
     }),
-    mergeMap(({action, part, attributes}) => {
+    map(({action, part, attributes}) => {
       const {cursor, attributeIds} = action.payload;
 
       const hiddenColumn = findTableColumn(part.columns, cursor.columnPath) as TableHiddenColumn;
@@ -386,14 +385,11 @@ export class TablesEffects {
         columns.push(updatedHiddenColumn);
       }
 
-      return [
-        new TablesAction.ReplaceColumns({
-          cursor: action.payload.cursor,
-          deleteCount: 1,
-          columns
-        }),
-        new TablesAction.SaveConfig({cursor})
-      ];
+      return new TablesAction.ReplaceColumns({
+        cursor: action.payload.cursor,
+        deleteCount: 1,
+        columns
+      });
     })
   );
 
@@ -412,8 +408,7 @@ export class TablesEffects {
 
       return [
         new TablesAction.ReplaceColumns({cursor, deleteCount: 1}),
-        new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}),
-        new TablesAction.SaveConfig({cursor})
+        new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId})
       ];
     })
   );
@@ -422,20 +417,17 @@ export class TablesEffects {
   public resizeColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
+    map(({action, table}) => {
       const {cursor} = action.payload;
       const part: TablePart = table.parts[cursor.partIndex];
       const column = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
       const resizedColumn = resizeLastColumnChild(column, action.payload.delta);
 
-      return [
-        new TablesAction.ReplaceColumns({
-          cursor,
-          deleteCount: 1,
-          columns: [resizedColumn]
-        }),
-        new TablesAction.SaveConfig({cursor})
-      ];
+      return new TablesAction.ReplaceColumns({
+        cursor,
+        deleteCount: 1,
+        columns: [resizedColumn]
+      });
     })
   );
 
@@ -460,49 +452,164 @@ export class TablesEffects {
         actions.push(new TablesAction.AddColumn({cursor: {...cursor, columnPath: [cursor.columnPath[0] + 1]}}));
       }
 
-      return actions.concat(new TablesAction.SaveConfig({cursor}));
+      return actions;
     })
   );
 
   @Effect()
-  public collapseRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CollapseRows>(TablesActionType.COLLAPSE_ROWS),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const {cursor} = action.payload;
+  public syncPrimaryRows$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
+    debounceTime(100), // otherwise unwanted parallel syncing occurs
+    switchMap(action => combineLatest(
+      this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
+      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query))), // TODO maybe remove links from query
+      this.store$.pipe(select(selectMoveTableCursorDown))
+    ).pipe(
+      first(),
+      mergeMap(([rows, documents, moveCursorDown]) => {
+        const {cursor} = action.payload;
 
-      const row = findTableRow(table.rows, cursor.rowPath);
-      if (!row) {
-        return [];
-      }
+        const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
+        const unknownDocuments = filterUnknownDocuments(rows, documents);
 
-      const updatedRow: TableRow = {...row, linkedRows: [], expanded: false};
-      return [
-        new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1}),
-        new TablesAction.SaveConfig({cursor})
-      ];
-    })
+        const actions: Action[] = [];
+
+        if (createdDocuments.length > 0) {
+          actions.push(new TablesAction.InitRows({
+            cursor: {...cursor, rowPath: []},
+            documents: createdDocuments,
+            linkInstances: []
+          }));
+          if (moveCursorDown) {
+            actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
+          }
+        }
+
+        const documentIds = new Set(documents.map(doc => doc.id));
+        if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
+          actions.push(new TablesAction.CleanRows({cursor, documents, linkInstances: []}));
+        }
+
+        if (unknownDocuments.length > 0) {
+          actions.push(new TablesAction.AddPrimaryRows({
+            cursor,
+            rows: unknownDocuments.map(document => createTableRow(document)),
+            append: true
+          }));
+        }
+
+        return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
+      })
+    ))
   );
 
   @Effect()
-  public expandRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.ExpandRows>(TablesActionType.EXPAND_ROWS),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const {cursor} = action.payload;
+  public syncLinkedRows$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
+    mergeMap(action => combineLatest(
+      this.store$.pipe(select(selectTablePart(action.payload.cursor))),
+      this.store$.pipe(select(selectTableRow(action.payload.cursor)))
+    ).pipe(
+      first(),
+      filter(([part, row]) => !!part && !!row),
+      mergeMap(([part, row]) => {
+        const linkedRows = row.linkedRows || [];
+        return this.store$.pipe(
+          select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, [row.documentId])),
+          first(),
+          mergeMap(linkInstances => {
+            const documentIds = linkInstances.reduce((ids, linkInstance) => {
+              const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, row.documentId);
+              return ids.includes(documentId) ? ids : ids.concat(documentId);
+            }, []);
+            return this.store$.pipe(
+              select(selectDocumentsByIds(documentIds)),
+              first(),
+              mergeMap(documents => {
+                const createdDocuments = filterNewlyCreatedDocuments(linkedRows, documents);
+                const unknownDocuments = filterUnknownDocuments(linkedRows, documents);
 
-      const row = findTableRow(table.rows, cursor.rowPath);
-      if (!row) {
-        return [];
-      }
+                const actions: Action[] = [];
 
-      const updatedRow: TableRow = {...row, linkedRows: [], expanded: true};
+                if (createdDocuments.length > 0) {
+                  actions.push(new TablesAction.InitRows({
+                    cursor: action.payload.cursor,
+                    documents: createdDocuments,
+                    linkInstances
+                  }));
+                }
 
-      return [
-        new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1}),
-        new TablesAction.SaveConfig({cursor})
-      ];
-    })
+                if (unknownDocuments.length > 0 && unknownDocuments.some(document => !!findLinkInstanceByDocumentId(linkInstances, document.id))) {
+                  actions.push(new TablesAction.AddLinkedRows({
+                    cursor: action.payload.cursor,
+                    linkedRows: unknownDocuments.reduce((rows, document) => {
+                      const linkInstance = findLinkInstanceByDocumentId(linkInstances, document.id);
+                      return linkInstance ? rows.concat(createTableRow(document, linkInstance)) : rows;
+                    }, []),
+                    append: true
+                  }));
+                }
+
+                return actions;
+              })
+            );
+          }),
+        );
+      })
+    ))
+  );
+
+  @Effect()
+  public indentRow$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
+    map(action => action.payload.cursor),
+    filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([cursor, documentsMap]) => this.store$.pipe(
+      select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+      first(),
+      map((rows) => {
+        const rowIndex = cursor.rowPath[0];
+        const {row, level} = rows[rowIndex];
+        const {row: newParentRow = undefined} = rows.slice(0, cursor.rowPath[0]).reverse().find(hierarchyRow => hierarchyRow.level === level) || {};
+        const parentDocumentId = newParentRow && newParentRow.documentId;
+
+        if (row.documentId) {
+          const {collectionId, id: documentId} = documentsMap[row.documentId];
+          return new DocumentsAction.PatchMetaData({collectionId, documentId, metaData: {parentId: parentDocumentId}});
+        } else {
+          const updatedRow: TableConfigRow = {...row, parentDocumentId};
+          return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+        }
+      })
+    ))
+  );
+
+  @Effect()
+  public outdentRow$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
+    map(action => action.payload.cursor),
+    filter(cursor => cursor.partIndex === 0),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([cursor, documentsMap]) => this.store$.pipe(
+      select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+      first(),
+      map((rows) => {
+        const rowIndex = cursor.rowPath[0];
+        const {row, level} = rows[rowIndex];
+        const {row: previousParentRow = undefined} = rows.slice(0, cursor.rowPath[0]).reverse().find(hierarchyRow => hierarchyRow.level === level - 1) || {};
+        const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
+        const parentDocumentId = (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) || null;
+
+        if (row.documentId) {
+          const {collectionId, id: documentId} = documentsMap[row.documentId];
+          return new DocumentsAction.PatchMetaData({collectionId, documentId, metaData: {parentId: parentDocumentId}});
+        } else {
+          const updatedRow: TableConfigRow = {...row, parentDocumentId};
+          return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+        }
+      })
+    ))
   );
 
   @Effect()
@@ -521,14 +628,6 @@ export class TablesEffects {
     })
   );
 
-  @Effect()
-  public saveConfig$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SaveConfig>(TablesActionType.SAVE_CONFIG),
-    filter(action => action.payload.cursor.tableId === DEFAULT_TABLE_ID),
-    mergeMap(action => this.getLatestTable(action)),
-    map(({table}) => new ViewsAction.ChangeTableConfig({config: convertTableToConfig(table)}))
-  );
-
   public constructor(private actions$: Actions,
                      private store$: Store<AppState>) {
   }
@@ -536,6 +635,7 @@ export class TablesEffects {
   private getLatestTable<A extends TablesAction.TableCursorAction>(action: A): Observable<{ action: A, table: TableModel }> {
     return this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
+      filter(table => !!table),
       map(table => ({action, table}))
     );
   }
@@ -556,21 +656,21 @@ export class TablesEffects {
     }
 
     const {attributeId} = (column as TableCompoundColumn).parent;
-    const row = findTableRow(table.rows, cursor.rowPath);
-    if (!row || !row.documentIds || row.documentIds.length !== 1) {
+    const row = findTableRow(table.config.rows, cursor.rowPath);
+    if (!row || !row.documentId) {
       return of(null);
     }
 
     if (cursor.rowPath.length > 1) {
-      const linkedRow = findTableRow(table.rows, cursor.rowPath);
+      const linkedRow = findTableRow(table.config.rows, cursor.rowPath);
       const {linkTypeId} = table.parts[cursor.partIndex - 1];
-      const linkedDocumentId = linkedRow.documentIds[0];
+      const linkedDocumentId = linkedRow.documentId;
       return this.store$.select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [linkedDocumentId])).pipe(
         first(),
         map(linkInstances => ({
           linkInstanceId: linkInstances.length ? linkInstances[0].id : null,
           collectionId: part.collectionId,
-          documentId: row.documentIds[0],
+          documentId: row.documentId,
           attributeId
         }))
       );
@@ -578,7 +678,7 @@ export class TablesEffects {
 
     return of({
       collectionId: part.collectionId,
-      documentId: row.documentIds[0],
+      documentId: row.documentId,
       attributeId
     });
   }
@@ -637,4 +737,17 @@ function createFirstChildAttributeAction(collection: CollectionModel,
     attribute: {...oldAttribute, id: `${oldAttribute.id}.${name}`, name},
     nextAction
   });
+}
+
+function filterNewlyCreatedDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
+  const rowCorrelationIds = rows.filter(row => row.correlationId && !row.documentId)
+    .map(row => row.correlationId);
+  return documents.filter(document => !!document.id && !!document.correlationId)
+    .filter(document => rowCorrelationIds.includes(document.correlationId));
+}
+
+function filterUnknownDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
+  return documents.filter(document => !rows.some(row => {
+    return row.documentId === document.id || (row.correlationId && row.correlationId === document.correlationId);
+  }));
 }

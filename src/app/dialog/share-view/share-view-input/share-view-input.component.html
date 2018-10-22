@@ -1,0 +1,27 @@
+<div class="mt-2">
+
+  <!-- TODO remove once Angular supports ICU messages in attributes -->
+  <div hidden>
+      <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
+        Enter users' emails...
+      </span>
+  </div>
+
+  <input class="form-control flex-grow-1"
+         [ngModel]="text"
+         (keydown)="onKeyDown($event)"
+         (input)="onInputChanged($event.target.value); onSuggest()"
+         (focus)="onSuggest()"
+         [placeholder]="inputPlaceholder | removeHtmlComments"/>
+
+  <div class="dropdown" *ngIf="text && suggestions.length > 0">
+    <div class="dropdown-menu show suggestions">
+      <div class="dropdown-item"
+           *ngFor="let suggestion of suggestions; let index = index"
+           [class.selected]="index === selectedIndex"
+           (click)="onSuggestionClick(suggestion)">
+        {{suggestion}}
+      </div>
+    </div>
+  </div>
+</div>

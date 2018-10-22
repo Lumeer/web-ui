@@ -9,7 +9,7 @@ cache:
     - ~/.m2
   timeout: 900
 jdk:
-  - oraclejdk10
+  - oraclejdk11
 addons:
   apt:
     packages:
@@ -19,8 +19,8 @@ before_install:
   - "nvm install v8.11.4"
   - "nvm use v8.11.4"
   - "npm i -g npm@latest"
-install:
-  - "npm install"
+#install:
+#  - "npm install"
 node_js:
   - "lts/*"
 script:

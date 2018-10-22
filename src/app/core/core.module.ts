@@ -43,7 +43,6 @@ import {SearchService} from './rest/search.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
 import {AppStoreModule} from './store/app-store.module';
-import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
@@ -75,7 +74,6 @@ import {ProjectValidators} from './validators/project.validators';
     OrganizationService,
     ProjectService,
     SearchService,
-    UserSettingsService,
     ImportService,
     UserService,
     GroupService,

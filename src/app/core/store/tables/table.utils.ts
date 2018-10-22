@@ -19,10 +19,14 @@
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
 import {filterDirectAttributeChildren, findAttributeByName, generateAttributeName, splitAttributeName} from '../../../shared/utils/attribute.utils';
+import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
+import {DocumentModel} from '../documents/document.model';
+import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
+import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableCursor} from './table-cursor';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
 
 export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
   const index = getColumnIndex(path);
@@ -291,23 +295,23 @@ export function resizeLastColumnChild(column: TableCompoundColumn, delta: number
 
 export const HIDDEN_COLUMN_WIDTH = 10;
 
-export function getTableColumnWidth(column: TableColumn): number {
+export function getTableColumnWidth(column: TableColumn, showHiddenColumns: boolean): number {
   switch (column.type) {
     case TableColumnType.COMPOUND:
-      return getCompoundColumnWidth(column as TableCompoundColumn);
+      return getCompoundColumnWidth(column as TableCompoundColumn, showHiddenColumns);
     case TableColumnType.HIDDEN:
-      return HIDDEN_COLUMN_WIDTH;
+      return showHiddenColumns ? HIDDEN_COLUMN_WIDTH : 0;
     case TableColumnType.SINGLE:
       return (column as TableSingleColumn).width;
   }
 }
 
-function getCompoundColumnWidth(column: TableCompoundColumn): number {
+function getCompoundColumnWidth(column: TableCompoundColumn, showHiddenColumns: boolean): number {
   if (column.children.length === 0) {
     return column.parent.width;
   }
 
-  return column.children.reduce((sum, child) => sum + getTableColumnWidth(child), 0);
+  return column.children.reduce((sum, child) => sum + getTableColumnWidth(child, showHiddenColumns), 0);
 }
 
 export function hasTableColumnChildren(column: TableCompoundColumn): boolean {
@@ -353,11 +357,11 @@ export function filterLeafColumns(columns: TableColumn[]): TableColumn[] {
   }, []);
 }
 
-export function calculateColumnsWidth(columns: TableColumn[]): number {
-  return columns.reduce((width, column) => width + getTableColumnWidth(column), 0);
+export function calculateColumnsWidth(columns: TableColumn[], showHiddenColumns: boolean): number {
+  return columns.reduce((width, column) => width + getTableColumnWidth(column, showHiddenColumns), 0);
 }
 
-export function findTableRow(rows: TableRow[], rowPath: number[]): TableRow {
+export function findTableRow(rows: TableConfigRow[], rowPath: number[]): TableConfigRow {
   if (!rowPath || rowPath.length === 0) {
     return null;
   }
@@ -372,30 +376,8 @@ export function findTableRow(rows: TableRow[], rowPath: number[]): TableRow {
   return row && findTableRow(row.linkedRows, childPath);
 }
 
-export function getTableRowsByPart(rows: TableRow[], currentIndex: number, partIndex: number): TableRow[] {
-  if (currentIndex === partIndex) {
-    return rows;
-  }
-
-  return rows.reduce((linkedRows, row) => {
-    if (row.linkedRows && row.linkedRows.length > 0) {
-      return linkedRows.concat(row.linkedRows);
-    }
-    return linkedRows;
-  }, []);
-}
-
-export function calculateRowNumber(table: TableModel, rowIndex: number): number {
-  if (rowIndex === 0) {
-    return 1;
-  }
-
-  const previousRow = table.rows[rowIndex - 1];
-  return calculateRowNumber(table, rowIndex - 1) + countLinkedRows(previousRow);
-}
-
-export function countLinkedRows(row: TableRow): number {
-  if (!row.linkedRows || row.linkedRows.length === 0) {
+export function countLinkedRows(row: TableConfigRow): number {
+  if (!row || !row.linkedRows || row.linkedRows.length === 0 || !row.expanded) {
     return 1;
   }
 
@@ -416,14 +398,109 @@ export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean
     (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1);
 }
 
-export function isLastTableRow(cursor: TableCursor, table: TableModel): boolean {
-  return cursor.rowPath && cursor.rowPath.length === 1 && cursor.rowPath[0] === table.rows.length - 1;
-}
-
 export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
   return table.parts[cursor.partIndex];
 }
 
 export function getTableElement(tableId: string): HTMLElement {
   return document.getElementById(`table-${tableId}`);
+}
+
+export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {
+  return {
+    correlationId: generateCorrelationId(),
+    linkedRows: [],
+    parentDocumentId
+  };
+}
+
+export function createTableRow(document: DocumentModel, linkInstance?: LinkInstanceModel): TableConfigRow {
+  return {
+    documentId: document.id,
+    linkInstanceId: linkInstance && linkInstance.id,
+    linkedRows: []
+  };
+}
+
+export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): boolean {
+  if (rowPath.length === 0) {
+    return true;
+  }
+
+  const [index, ...childPath] = rowPath;
+  const row = rows[index];
+
+  if (childPath.length === 0) {
+    return row.linkedRows.length === 0 || row.expanded;
+  }
+
+  return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
+}
+
+export function calculateRowHierarchyLevel(row: TableConfigRow, documentIds: Set<string>, documentsMap: { [id: string]: DocumentModel }): number {
+  if (!row.documentId && !row.parentDocumentId) {
+    return 0;
+  }
+
+  const document = documentsMap[row.documentId];
+  const parentDocumentId = document && document.metaData ? document.metaData['parentId'] : row.parentDocumentId;
+  return calculateDocumentHierarchyLevel(parentDocumentId, documentIds, documentsMap);
+}
+
+export function isValidHierarchicalRowOrder(rows: TableConfigRow[], documentsMap: { [id: string]: DocumentModel }): boolean {
+  const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
+  let documentIdsStack: string[] = [];
+
+  for (const row of rows) {
+    const parentDocumentId = getRowParentDocumentId(row, documentIds, documentsMap);
+    if (documentIds.has(parentDocumentId) && !documentIdsStack.includes(parentDocumentId)) {
+      return false;
+    }
+    documentIdsStack = updateDocumentIdsStack(row.documentId, parentDocumentId, documentIdsStack, documentIds);
+  }
+
+  return true;
+}
+
+function updateDocumentIdsStack(documentId: string, parentDocumentId: string, documentIdsStack: string[], documentIdsFilter: Set<string>): string[] {
+  if (!parentDocumentId || !documentIdsFilter.has(parentDocumentId)) {
+    return documentId ? [documentId] : [];
+  }
+
+  if (!documentId) {
+    return documentIdsStack;
+  }
+
+  return documentIdsStack.slice(0, documentIdsStack.indexOf(parentDocumentId) + 1).concat(documentId);
+}
+
+export function sortTableRowsByHierarchy(rows: TableConfigRow[], documentsMap: { [id: string]: DocumentModel }): TableConfigRow[] {
+  const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
+
+  const rowsMap = createRowsMapByParentDocumentId(rows, documentIds, documentsMap);
+  return createRowsFromRowsMap(null, rowsMap);
+}
+
+function createRowsMapByParentDocumentId(rows: TableConfigRow[],
+                                         documentIdsFilter: Set<string>,
+                                         documentsMap: { [id: string]: DocumentModel }): { [parentDocumentId: string]: TableConfigRow[] } {
+  return rows.reduce((map, row) => {
+    const parentDocumentId = getRowParentDocumentId(row, documentIdsFilter, documentsMap) || null;
+    const siblingRows = map[parentDocumentId] || [];
+    map[parentDocumentId] = siblingRows.concat(row);
+    return map;
+  }, {});
+}
+
+function createRowsFromRowsMap(documentId: string, rowsMap: { [parentDocumentId: string]: TableConfigRow[] }): TableConfigRow[] {
+  const rows = rowsMap[documentId] || [];
+  return rows.reduce((orderedRows, row) => {
+    return orderedRows.concat(row).concat(row.documentId ? createRowsFromRowsMap(row.documentId, rowsMap) : []);
+  }, []);
+}
+
+export function getRowParentDocumentId(row: TableConfigRow, documentIdsFilter: Set<string>, documentsMap: { [id: string]: DocumentModel }): string {
+  const document = documentsMap[row && row.documentId];
+  const parentDocumentId = (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
+  return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
 }

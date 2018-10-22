@@ -18,9 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {TableConfig} from '../tables/table.model';
-import {DetailConfigModel, PostItConfigModel, SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 
 export enum ViewsActionType {
 
@@ -176,31 +175,10 @@ export namespace ViewsAction {
     }
   }
 
-  export class ChangeDetailConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_DETAIL_CONFIG;
-
-    public constructor(public payload: { config: DetailConfigModel }) {
-    }
-  }
-
-  export class ChangePostItConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_POSTIT_CONFIG;
-
-    public constructor(public payload: { config: PostItConfigModel }) {
-    }
-  }
-
   export class ChangeSearchConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
 
     public constructor(public payload: { config: SearchConfigModel }) {
-    }
-  }
-
-  export class ChangeTableConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_TABLE_CONFIG;
-
-    public constructor(public payload: { config: TableConfig }) {
     }
   }
 
@@ -220,7 +198,7 @@ export namespace ViewsAction {
     SetPermissions | SetPermissionsSuccess | SetPermissionsFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
-    ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeTableConfig |
+    ChangeConfig | ChangeSearchConfig |
     SetCursor |
     Clear;
 

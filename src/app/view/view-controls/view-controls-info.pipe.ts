@@ -18,22 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {areQueriesEqual} from '../../core/store/navigation/query.helper';
-import {QueryModel} from '../../core/store/navigation/query.model';
-import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
-import {Perspective} from '../perspectives/perspective';
-import {PermissionsPipe} from '../../shared/pipes/permissions.pipe';
-import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
-import {Role} from '../../core/model/role';
-import {map} from 'rxjs/operators';
-import {getCollectionsIdsFromView} from '../../core/store/collections/collection.util';
-import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
-import {selectAllDocuments} from '../../core/store/documents/documents.state';
-import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
-import {selectCurrentUser} from '../../core/store/users/users.state';
-import {userHasRoleInResource} from '../../shared/utils/resource.utils';
-import {AppState} from '../../core/store/app.state';
 import {Store} from '@ngrx/store';
+import {combineLatest as observableCombineLatest, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Role} from '../../core/model/role';
+import {AppState} from '../../core/store/app.state';
+import {getCollectionsIdsFromView} from '../../core/store/collections/collection.util';
+import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
+import {selectAllDocuments} from '../../core/store/documents/documents.state';
+import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
+import {QueryModel} from '../../core/store/navigation/query.model';
+import {selectCurrentUser} from '../../core/store/users/users.state';
+import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
+import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
+import {userHasRoleInResource} from '../../shared/utils/resource.utils';
+import {Perspective} from '../perspectives/perspective';
 
 @Pipe({
   name: 'viewControlsInfo'
@@ -45,16 +44,14 @@ export class ViewControlsInfoPipe implements PipeTransform {
   }
 
   public transform(view: ViewModel, name: string, config: ViewConfigModel, perspective: Perspective, query: QueryModel)
-    : Observable<{ viewChanged: boolean, canClone: boolean, canManage: boolean }> {
+    : Observable<{ canClone: boolean, canManage: boolean }> {
     if (!view || !view.code) {
-      return of({viewChanged: !!name, canClone: false, canManage: true});
+      return of({canClone: false, canManage: true});
     }
-
-    const viewChanged = isNameChanged(view, name) || isConfigChanged(view, config, perspective) || isQueryChanged(view, query);
 
     return observableCombineLatest(this.hasDirectAccessToView(view),
       this.permissionsPipe.transform(view, Role.Manage)).pipe(
-      map(([canClone, canManage]) => ({viewChanged, canClone, canManage}))
+      map(([canClone, canManage]) => ({canClone, canManage}))
     );
   }
 
@@ -71,16 +68,4 @@ export class ViewControlsInfoPipe implements PipeTransform {
       })
     );
   }
-}
-
-function isNameChanged(view: ViewModel, name: string): boolean {
-  return view.name !== name;
-}
-
-function isConfigChanged(view: ViewModel, config: ViewConfigModel, perspective: Perspective): boolean {
-  return JSON.stringify(config[perspective]) !== JSON.stringify(view.config[perspective]);
-}
-
-function isQueryChanged(view: ViewModel, query: QueryModel): boolean {
-  return !areQueriesEqual(view.query, query);
 }

@@ -19,6 +19,7 @@
 
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {CollectionQueryItem} from './collection.query-item';
 
 export class DocumentQueryItem implements QueryItem {
 
@@ -34,6 +35,10 @@ export class DocumentQueryItem implements QueryItem {
 
   public get text(): string {
     return this.documentId;
+  }
+
+  public dependsOn(queryItem: QueryItem): boolean {
+    return false;
   }
 
 }

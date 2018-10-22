@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableRow} from '../../../../../core/store/tables/table.model';
+import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({
@@ -27,9 +27,9 @@ import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table
 })
 export class PreviousLinkedRowPipe implements PipeTransform {
 
-  public transform(table: TableModel, cursor: TableBodyCursor): TableRow {
+  public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {
     const {parentPath} = splitRowPath(cursor.rowPath);
-    return findTableRow(table.rows, parentPath);
+    return findTableRow(table.config.rows, parentPath);
   }
 
 }

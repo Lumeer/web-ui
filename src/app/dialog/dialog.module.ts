@@ -27,17 +27,14 @@ import {DialogService} from './dialog.service';
 import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
-import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
-import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component';
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 import {ResourceCodeInputComponent} from './create-resource/resource-code-input/resource-code-input.component';
 import {ResourceNameInputComponent} from './create-resource/resource-name-input/resource-name-input.component';
-import { FeedbackDialogComponent } from './dialog/feedback-dialog.component';
-import {ShareUserComponent} from './share-view/share-user/share-user.component';
-import {ViewPermissionsChangedPipe} from './share-view/view-permissions-changed.pipe';
-import {UserRolesPipe} from './share-view/user-roles.pipe';
+import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
+import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
+import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 
 @NgModule({
   imports: [
@@ -45,24 +42,21 @@ import {UserRolesPipe} from './share-view/user-roles.pipe';
     FormsModule,
     ReactiveFormsModule,
     PickerModule,
-    DialogRoutingModule
+    DialogRoutingModule,
+    DialogWrapperModule,
+    ShareViewDialogModule
   ],
   declarations: [
-    DialogWrapperComponent,
     CreateCollectionDialogComponent,
     CollectionNameInputComponent,
     LinkNameInputComponent,
     CreateLinkDialogComponent,
     DialogBaseComponent,
-    ShareViewDialogComponent,
-    ShareUserComponent,
     OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
-    FeedbackDialogComponent,
-    ViewPermissionsChangedPipe,
-    UserRolesPipe
+    FeedbackDialogComponent
   ],
   providers: [
     DialogService
@@ -70,7 +64,6 @@ import {UserRolesPipe} from './share-view/user-roles.pipe';
   entryComponents: [
     CreateCollectionDialogComponent,
     CreateLinkDialogComponent,
-    ShareViewDialogComponent,
     OverwriteViewDialogComponent,
     CreateResourceDialogComponent
   ],

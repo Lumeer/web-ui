@@ -24,8 +24,14 @@ export function convertTableToConfig(table: TableModel): TableConfig {
     return null;
   }
 
-  const parts: TableConfigPart[] = table.parts.map(part => convertTablePartToConfig(part));
-  return {parts};
+  return {
+    parts: convertTablePartsToConfig(table.parts),
+    rows: table.config.rows
+  };
+}
+
+export function convertTablePartsToConfig(parts: TablePart[]): TableConfigPart[] {
+  return parts.map(part => convertTablePartToConfig(part));
 }
 
 function convertTablePartToConfig(part: TablePart): TableConfigPart {

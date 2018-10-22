@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
-import {TableModel} from '../../../../core/store/tables/table.model';
+import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
@@ -32,19 +32,34 @@ import {TableRowsComponent} from './rows/table-rows.component';
   styleUrls: ['./table-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableBodyComponent implements AfterViewInit {
+export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   @Input()
-  public table: TableModel;
+  public tableId: string;
 
   @Input()
   public query: QueryModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @ViewChild(TableRowsComponent)
   public rowsComponent: TableRowsComponent;
 
+  public cursor: TableBodyCursor;
+
   public constructor(private element: ElementRef,
                      private store: Store<AppState>) {
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.tableId && this.tableId) {
+      this.cursor = {
+        tableId: this.tableId,
+        partIndex: 0,
+        rowPath: []
+      };
+    }
   }
 
   public ngAfterViewInit() {
@@ -63,7 +78,7 @@ export class TableBodyComponent implements AfterViewInit {
     const element = this.element.nativeElement as HTMLElement;
     const scrollbarWidth = element.offsetWidth - element.clientWidth;
 
-    const tableElement = getTableElement(this.table.id);
+    const tableElement = getTableElement(this.tableId);
     tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
   }
 

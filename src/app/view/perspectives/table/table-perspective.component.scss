@@ -1,8 +1,9 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
-.table-wrapper {
-  height: calc(100vh - var(--browser-warning-height, 0px) - var(--top-panel-height, 0px));
+.overflow-x-auto {
   overflow-x: auto;
 }

@@ -2,16 +2,16 @@
 
   <ng-container *ngIf="collections.length; else noCollections">
 
-    <div class="d-flex mt-2">
+    <div class="d-flex mt-2" *ngIf="{write : project | permissions:'write' | async} as projectPermissions">
       <post-it-collection-add-button
         class="ml-1"
-        [disabled]="!(project | permissions:'write' | async)"
+        [disabled]="!projectPermissions.write"
         (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
       <post-it-collection-import-button
         class="ml-2"
-        [disabled]="!(project | permissions:'write' | async)"
+        [disabled]="!projectPermissions.write"
         (error)="notifyOfError($event)"
         (import)="onImportCollection($event)">
       </post-it-collection-import-button>

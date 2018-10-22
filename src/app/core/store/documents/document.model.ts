@@ -21,10 +21,10 @@ export interface DocumentModel {
 
   id?: string;
   collectionId: string;
-  data: { [attributeId: string]: any };
-  newData?: { [attributeName: string]: {value: any, correlationId?: string} };
+  data: DocumentData;
+  newData?: { [attributeName: string]: { value: any, correlationId?: string } };
 
-  metaData?: { [key: string]: any };
+  metaData?: DocumentMetaData;
 
   favorite?: boolean;
 
@@ -35,6 +35,17 @@ export interface DocumentModel {
   dataVersion?: number;
 
   correlationId?: string;
+
+}
+
+export type DocumentData = {
+
+  [attributeId: string]: any
+
+};
+
+export interface DocumentMetaData {
+
   parentId?: string;
 
 }

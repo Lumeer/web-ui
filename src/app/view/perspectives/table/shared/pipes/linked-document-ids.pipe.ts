@@ -18,15 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableRow} from '../../../../../core/store/tables/table.model';
+import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'linkedDocumentIds'
 })
 export class LinkedDocumentIdsPipe implements PipeTransform {
 
-  public transform(row: TableRow): string[] {
-    return row && row.linkedRows ? row.linkedRows.reduce<string[]>((ids, linkedRow) => ids.concat(...linkedRow.documentIds), []) : [];
+  public transform(row: TableConfigRow): string[] {
+    return row && row.linkedRows ? row.linkedRows.map(linkedRow => linkedRow.documentId) : [];
   }
 
 }

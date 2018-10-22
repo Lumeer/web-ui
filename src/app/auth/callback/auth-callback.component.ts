@@ -18,7 +18,7 @@
  */
 
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter, take} from 'rxjs/operators';
@@ -40,9 +40,10 @@ import {AuthService} from '../auth.service';
     ])
   ]
 })
-export class AuthCallbackComponent implements OnInit {
+export class AuthCallbackComponent implements OnInit, AfterViewChecked {
 
   public constructor(private authService: AuthService,
+                     private element: ElementRef,
                      private router: Router,
                      private store: Store<AppState>) {
   }
@@ -70,6 +71,20 @@ export class AuthCallbackComponent implements OnInit {
     const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
 
     this.router.navigate([urls[0]], queryParams);
+  }
+
+  public ngAfterViewChecked() {
+    this.setAuthCallbackOffsetTop();
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.setAuthCallbackOffsetTop();
+  }
+
+  private setAuthCallbackOffsetTop() {
+    const element = this.element.nativeElement as HTMLElement;
+    element.style.setProperty('--auth-callback-offset-top', `${element.offsetTop}px`);
   }
 
 }

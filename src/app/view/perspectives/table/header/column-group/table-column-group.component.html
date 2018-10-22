@@ -10,18 +10,20 @@
              [enableGhostResize]="true"
              [ghostElementPositioning]="'absolute'"
              [resizeCursorPrecision]="column?.parent?.attributeId ? 8 : 0"
-             [resizeEdges]="column | resizeEdges:table:cursor"
+             [resizeEdges]="canManageConfig ? (column | resizeEdges:table:cursor) : {}"
              [resizeSnapGrid]="{left: 10, right: 10}"
-             [style.width.px]="column | columnWidth"
-             [validateResize]="column | resizeValidate"
+             [style.width.px]="column | columnWidth:canManageConfig"
+             [validateResize]="column | resizeValidate:canManageConfig"
              (resizeStart)="onResizeStart(columnIndex, $event)"
              (resizeEnd)="onResizeEnd(columnCursor, $event)"
-             class="resizable-column">
+             [class.resizable-column]="canManageConfig">
           <div class="d-flex flex-column">
             <table-single-column [table]="table"
                                  [cursor]="columnCursor"
                                  [column]="column.parent"
+                                 [allowedPermissions]="allowedPermissions"
                                  [collection]="collection"
+                                 [canManageConfig]="canManageConfig"
                                  [linkType]="linkType"
                                  [leaf]="!column.children.length"
                                  [style.height.px]="column | columnHeight:table:cursor"
@@ -31,6 +33,8 @@
                                 [table]="table"
                                 [cursor]="columnCursor"
                                 [columns]="column.children"
+                                [canManageConfig]="canManageConfig"
+                                [allowedPermissions]="allowedPermissions"
                                 [collection]="collection"
                                 [linkType]="linkType"
                                 class="d-block">
@@ -38,7 +42,7 @@
           </div>
         </div>
 
-        <table-hidden-column *ngIf="column | isHiddenColumn"
+        <table-hidden-column *ngIf="(column | isHiddenColumn) && canManageConfig"
                              [table]="table"
                              [column]="column"
                              [cursor]="columnCursor"

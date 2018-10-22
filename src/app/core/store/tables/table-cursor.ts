@@ -19,8 +19,8 @@
 
 import {Direction} from '../../../shared/direction';
 import {arrayStartsWith, deepArrayEquals, getLastFromArray} from '../../../shared/utils/array.utils';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableModel, TablePart, TableRow} from './table.model';
-import {containCompoundColumn, filterLeafColumns, findTableColumn, findTableColumnByIndex, findTableRow, getTableColumns, splitColumnPath, splitRowPath} from './table.utils';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableModel, TablePart} from './table.model';
+import {containCompoundColumn, filterLeafColumns, findTableColumn, findTableColumnByIndex, findTableRow, getTableColumns, isTableRowExpanded, splitColumnPath, splitRowPath} from './table.utils';
 
 export interface TableHeaderCursor {
 
@@ -54,6 +54,8 @@ export function moveTableCursor(table: TableModel, cursor: TableCursor, directio
   }
 }
 
+const COLLAPSED_ROWS_INCLUDED = true;
+
 function moveTableCursorUp(table: TableModel, cursor: TableCursor): TableCursor {
   if (cursor.columnPath) {
     return moveTableHeaderCursorUp(cursor);
@@ -63,8 +65,8 @@ function moveTableCursorUp(table: TableModel, cursor: TableCursor): TableCursor 
 }
 
 function moveTableBodyCursorUp(table: TableModel, cursor: TableBodyCursor): TableCursor {
-  const parentRowPath = getPreviousParentRowPath(cursor.rowPath);
-  const parentRow = findTableRow(table.rows, parentRowPath);
+  const parentRowPath = getPreviousParentRowPath(table.config.rows, cursor.rowPath);
+  const parentRow = findTableRow(table.config.rows, parentRowPath);
 
   if (!parentRow) {
     return {
@@ -75,28 +77,33 @@ function moveTableBodyCursorUp(table: TableModel, cursor: TableBodyCursor): Tabl
   }
 
   const {rowPath} = findLastLinkedRow(parentRow, parentRowPath, cursor.rowPath.length);
-  return {...cursor, rowPath};
+  if (!COLLAPSED_ROWS_INCLUDED || rowPath.length === 1 || isTableRowExpanded(table.config.rows, parentRowPath)) {
+    return {...cursor, rowPath};
+  } else {
+    return {...cursor, rowPath: parentRowPath.concat(0)};
+  }
 }
 
-function getPreviousParentRowPath(rowPath: number[]): number[] {
+function getPreviousParentRowPath(rows: TableConfigRow[], rowPath: number[]): number[] {
   if (rowPath.length === 0) {
     return null;
   }
 
   const {parentPath, rowIndex} = splitRowPath(rowPath);
 
-  if (rowIndex > 0) {
+  if (rowIndex > 0 && (!COLLAPSED_ROWS_INCLUDED || isTableRowExpanded(rows, parentPath))) {
     return parentPath.concat(rowIndex - 1);
   }
 
-  return getPreviousParentRowPath(parentPath);
+  return getPreviousParentRowPath(rows, parentPath);
 }
 
-function findLastLinkedRow(row: TableRow, rowPath: number[], depth: number): { row: TableRow, rowPath: number[] } {
+function findLastLinkedRow(row: TableConfigRow, rowPath: number[], depth: number): { row: TableConfigRow, rowPath: number[] } {
   if (rowPath.length === depth) {
     return {row, rowPath};
   }
 
+  // if (!COLLAPSED_ROWS_INCLUDED || isTableRowExpanded(table.config.rows, parentRowPath)) {
   // TODO just workaround for not existing rows
   if (!row.linkedRows || row.linkedRows.length === 0) {
     const tail = Array(depth - rowPath.length).fill(0);
@@ -142,10 +149,13 @@ function getNextParentRowPath(table: TableModel, rowPath: number[]): number[] {
   }
 
   const {parentPath, rowIndex} = splitRowPath(rowPath);
-  const nextRowPath = parentPath.concat(rowIndex + 1);
-  const row = findTableRow(table.rows, nextRowPath);
-  if (row) {
-    return nextRowPath;
+
+  if (!COLLAPSED_ROWS_INCLUDED || isTableRowExpanded(table.config.rows, parentPath)) {
+    const nextRowPath = parentPath.concat(rowIndex + 1);
+    const row = findTableRow(table.config.rows, nextRowPath);
+    if (row) {
+      return nextRowPath;
+    }
   }
 
   return getNextParentRowPath(table, parentPath);
@@ -465,4 +475,10 @@ function getTableHeaderCursor(columns: TableColumn[], attributeName: string, cur
 
     return getTableHeaderCursor(compoundColumn.children, attributeName, currentCursor);
   }, null);
+}
+
+export function getTableRowCursor(cursor: TableBodyCursor, indexDelta: number): TableBodyCursor {
+  const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+  const rowPath = parentPath.concat(rowIndex + indexDelta);
+  return {...cursor, rowPath};
 }

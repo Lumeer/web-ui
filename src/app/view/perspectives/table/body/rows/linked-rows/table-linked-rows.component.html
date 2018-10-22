@@ -1,0 +1,33 @@
+<ng-container *ngIf="{linkedRows: linkedRows$ | async} as table">
+  <table-link-cell [row]="rows && rows.length === 1 ? rows[0] : null"
+                   [striped]="striped"
+                   (toggle)="onToggle()">
+  </table-link-cell>
+  <div class="d-flex flex-column">
+    <ng-container *ngIf="table.linkedRows && table.linkedRows.length > 0; else emptyRows">
+      <ng-container *ngIf="rows && rows.length === 1 && rows[0].expanded; else collapsedRows">
+        <table-linked-row *ngFor="let linkedRow of table.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
+                          [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
+                          [rows]="[linkedRow]"
+                          [canManageConfig]="canManageConfig"
+                          class="h-100">
+        </table-linked-row>
+      </ng-container>
+      <ng-template #collapsedRows>
+        <table-linked-row [cursor]="cursor | nextPartCursor | nextRowCursor:0"
+                          [rows]="table.linkedRows"
+                          [canManageConfig]="canManageConfig"
+                          class="h-100">
+        </table-linked-row>
+      </ng-template>
+    </ng-container>
+    <ng-template #emptyRows>
+      <table-linked-row *ngIf="!table.linkedRows || table.linkedRows.length === 0"
+                        [cursor]="cursor | nextPartCursor | nextRowCursor:0"
+                        [rows]="[emptyLinkedRow]"
+                        [canManageConfig]="canManageConfig"
+                        class="h-100">
+      </table-linked-row>
+    </ng-template>
+  </div>
+</ng-container>

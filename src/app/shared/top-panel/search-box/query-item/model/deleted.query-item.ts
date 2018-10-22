@@ -19,6 +19,7 @@
 
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {CollectionQueryItem} from './collection.query-item';
 
 export class DeletedQueryItem implements QueryItem {
 
@@ -35,6 +36,10 @@ export class DeletedQueryItem implements QueryItem {
 
   public get text(): string {
     return '';
+  }
+
+  public dependsOn(queryItem: QueryItem): boolean {
+    return false;
   }
 
 }

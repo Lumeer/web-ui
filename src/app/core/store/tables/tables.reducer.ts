@@ -19,13 +19,15 @@
 
 import {Direction} from '../../../shared/direction';
 import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
-import {TableHeaderCursor} from './table-cursor';
-import {TableColumn, TableModel, TablePart, TableRow} from './table.model';
-import {maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
+import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.utils';
+import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
+import {convertTablePartsToConfig} from './table.converter';
+import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
+import {createEmptyTableRow, isValidHierarchicalRowOrder, maxColumnDepth, moveTableColumn, replaceTableColumns, sortTableRowsByHierarchy, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
 
-export function tablesReducer(state = initialTablesState(), action: TablesAction.All): TablesState {
+export function tablesReducer(state = initialTablesState, action: TablesAction.All): TablesState {
   switch (action.type) {
     case TablesActionType.ADD_TABLE:
       return tablesAdapter.addOne(action.payload.table, state);
@@ -37,14 +39,24 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
       return replaceColumn(state, action);
     case TablesActionType.MOVE_COLUMN:
       return moveColumn(state, action);
-    case TablesActionType.ADD_ROWS:
-      return addRows(state, action);
+    case TablesActionType.ADD_PRIMARY_ROWS:
+      return addPrimaryRows(state, action);
     case TablesActionType.ADD_LINKED_ROWS:
       return addLinkedRows(state, action);
+    case TablesActionType.INIT_ROWS:
+      return initRows(state, action);
+    case TablesActionType.CLEAN_ROWS:
+      return cleanRows(state, action);
+    case TablesActionType.ORDER_PRIMARY_ROWS:
+      return orderPrimaryRows(state, action);
     case TablesActionType.REPLACE_ROWS:
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
+    // case TablesActionType.TOGGLE_CHILD_ROWS:
+    //   return toggleChildRows(state, action);
+    case TablesActionType.TOGGLE_LINKED_ROWS:
+      return toggleLinkedRows(state, action);
     case TablesActionType.MOVE_CURSOR:
       return {...state, moveCursorDown: action.payload.direction === Direction.Down};
     case TablesActionType.SET_CURSOR:
@@ -59,21 +71,34 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
 function addPart(state: TablesState, action: TablesAction.AddPart): TablesState {
   const table = state.entities[action.payload.tableId];
   const parts = table.parts.concat(action.payload.parts);
-  return tablesAdapter.updateOne({id: table.id, changes: {parts}}, state);
+  const config = {...table.config, parts: convertTablePartsToConfig(parts)};
+  return tablesAdapter.updateOne({id: table.id, changes: {parts, config}}, state);
 }
 
 function replaceColumn(state: TablesState, action: TablesAction.ReplaceColumns): TablesState {
-  return updateColumns(state, action.payload.cursor, (columns) => {
+  const newState = updateColumns(state, action.payload.cursor, (columns) => {
     return replaceTableColumns(columns, action.payload.cursor.columnPath, action.payload.deleteCount, action.payload.columns);
   });
+
+  const {tableId} = action.payload.cursor;
+  return savePartsConfig(newState, tableId);
 }
 
 function moveColumn(state: TablesState, action: TablesAction.MoveColumn): TablesState {
-  return updateColumns({...state, cursor: null}, action.payload.cursor, (columns) => {
+  const newState = updateColumns({...state, cursor: null}, action.payload.cursor, (columns) => {
     const fromPath = action.payload.cursor.columnPath;
     const toPath = fromPath.slice(0, fromPath.length - 1).concat(action.payload.toIndex);
     return moveTableColumn(columns, fromPath, toPath);
   });
+
+  const {tableId} = action.payload.cursor;
+  return savePartsConfig(newState, tableId);
+}
+
+function savePartsConfig(state: TablesState, tableId: string): TablesState {
+  const table = state.entities[tableId];
+  const config = {...table.config, parts: convertTablePartsToConfig(table.parts)};
+  return tablesAdapter.updateOne({id: tableId, changes: {config}}, state);
 }
 
 function updateColumns(state: TablesState,
@@ -88,92 +113,178 @@ function updateColumns(state: TablesState,
   return tablesAdapter.updateOne({id: table.id, changes: {parts}}, state);
 }
 
-function addRows(state: TablesState, action: TablesAction.AddRows): TablesState {
-  const cursor = action.payload.cursor;
+function addPrimaryRows(state: TablesState, action: TablesAction.AddPrimaryRows): TablesState {
+  const {cursor, rows, append} = action.payload;
   const {table} = getTablePart(state, cursor);
 
-  // TODO sort
-  // TODO linked rows (get through path)
-  const previousRow = table.rows[cursor.rowPath[0] - 1];
-  const rows = [...table.rows];
-  const addedRows = action.payload.rows.filter(row => !table.documentIds.has(row.documentIds[0]));
+  return tablesAdapter.updateOne({
+    id: cursor.tableId,
+    changes: {
+      config: append ? appendPrimaryRows(table.config, cursor, rows) : insertPrimaryRows(table.config, cursor, rows)
+    }
+  }, state);
+}
 
-  if (previousRow.documentIds.length > 0) {
-    rows.splice(cursor.rowPath[0], 0, ...addedRows);
+function appendPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: TableConfigRow[]): TableConfig {
+  const existingRows = config.rows || [];
+  const lastRow = existingRows[existingRows.length - 1];
+  if (!lastRow || lastRow.documentId) {
+    return {...config, rows: existingRows.concat(rows)};
   } else {
-    rows.splice(cursor.rowPath[0] - 1, 1, ...addedRows);
+    return {...config, rows: existingRows.slice(0, existingRows.length - 1).concat(rows).concat(createEmptyTableRow())};
   }
+}
 
-  const documentIds = new Set(table.documentIds);
-  addedRows.filter(row => row.documentIds.length > 0)
-    .forEach(row => documentIds.add(row.documentIds[0]));
-
-  return tablesAdapter.updateOne({id: table.id, changes: {rows, documentIds}}, state);
+function insertPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: TableConfigRow[]): TableConfig {
+  const updatedRows = [...config.rows];
+  updatedRows.splice(cursor.rowPath[0], 0, ...rows);
+  return {...config, rows: updatedRows};
 }
 
 function addLinkedRows(state: TablesState, action: TablesAction.AddLinkedRows): TablesState {
-  const {cursor, linkedRows} = action.payload;
+  const {cursor, linkedRows, append} = action.payload;
   const {table} = getTablePart(state, cursor);
 
-  const rows = updateLinkedRows(table.rows, linkedRows, cursor.rowPath);
-  return tablesAdapter.updateOne({id: table.id, changes: {rows}}, state);
-}
+  const config = {...table.config};
 
-function updateLinkedRows(rows: TableRow[], linkedRows: TableRow[], rowPath: number[]): TableRow[] {
-  if (rowPath.length === 0) {
-    return linkedRows;
+  if (append) {
+    config.rows = updateRows(config.rows, cursor.rowPath, rows => rows.concat(linkedRows));
+  } else {
+    const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+    config.rows = updateRows(config.rows, parentPath, rows => {
+      const updatedRows = [...rows];
+      updatedRows.splice(rowIndex, 0, ...linkedRows);
+      return updatedRows;
+    }, true);
   }
 
-  const [index, ...childPath] = rowPath;
-  // TODO just add, do not override
-  const row = {...rows[index], linkedRows: updateLinkedRows(rows[index].linkedRows, linkedRows, childPath)};
-  const newRows = [...rows];
-  newRows.splice(index, 1, row);
-  return newRows;
+  return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
+}
+
+function initRows(state: TablesState, action: TablesAction.InitRows): TablesState {
+  const {cursor, documents, linkInstances} = action.payload;
+  const {table} = getTablePart(state, cursor);
+
+  const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
+    const newRows = oldRows.map(row => {
+      if (!row.correlationId) {
+        return row;
+      }
+
+      const document = documents.find(doc => doc.correlationId === row.correlationId);
+      if (!document) {
+        return row;
+      }
+
+      const linkInstance = findLinkInstanceByDocumentId(linkInstances, document.id);
+      return {
+        ...row,
+        correlationId: null,
+        documentId: document.id,
+        linkInstanceId: linkInstance && linkInstance.id,
+        parentDocumentId: null
+      };
+    });
+
+    const lastRow = newRows[newRows.length - 1];
+    if (cursor.partIndex === 0 && lastRow && lastRow.documentId) {
+      return newRows.concat(createEmptyTableRow());
+    }
+
+    return newRows;
+  });
+
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
+}
+
+function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesState {
+  const {cursor, documents, linkInstances} = action.payload;
+  const {table} = getTablePart(state, cursor);
+
+  const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
+    return oldRows.reduce((cleanedRows, row) => {
+      if (!row.documentId) {
+        return cleanedRows.concat(row);
+      }
+
+      const document = documents.find(doc => doc.id === row.documentId);
+      if (!document) {
+        return cleanedRows;
+      }
+
+      if (row.linkInstanceId) {
+        const linkInstance = linkInstances.find(instance => instance.id === row.linkInstanceId);
+        if (!linkInstance) {
+          return cleanedRows;
+        }
+      }
+
+      return cleanedRows.concat(row);
+    }, []);
+  });
+
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
+}
+
+function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryRows): TablesState {
+  const {cursor, documents} = action.payload;
+  const {table} = getTablePart(state, cursor);
+  const documentsMap = documents.reduce((map, document) => document.id ? ({...map, [document.id]: document}) : map, {});
+
+  if (isValidHierarchicalRowOrder(table.config.rows, documentsMap)) {
+    return state;
+  }
+
+  const config = {...table.config, rows: sortTableRowsByHierarchy(table.config.rows, documentsMap)};
+  return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
 }
 
 function replaceRows(state: TablesState, action: TablesAction.ReplaceRows): TablesState {
-  const cursor = action.payload.cursor;
+  const {cursor, rows: addedRows} = action.payload;
   const {table} = getTablePart(state, cursor);
 
-  const addedRows = action.payload.rows;
-  const rows = updateRows(table.rows, cursor.rowPath, updatedRows => {
-    const {rowIndex} = splitRowPath(cursor.rowPath);
+  const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+  const rows = updateRows(table.config.rows, parentPath, updatedRows => {
     updatedRows.splice(rowIndex, action.payload.deleteCount, ...addedRows);
     return updatedRows;
   });
 
-  const documentIds = new Set(table.documentIds);
-  if (cursor.partIndex === 0) {
-    addedRows.forEach(row => documentIds.add(row.documentIds[0]));
-  }
-
-  return tablesAdapter.updateOne({id: table.id, changes: {rows, documentIds}}, state);
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function updateRows(rows: TableRow[],
+function updateRows(rows: TableConfigRow[],
                     rowPath: number[],
-                    transformation: (rows: TableRow[]) => TableRow[]): TableRow[] {
-  if (rowPath.length === 1) {
+                    transformation: (rows: TableConfigRow[]) => TableConfigRow[],
+                    expand?: boolean): TableConfigRow[] {
+  if (rowPath.length === 0) {
     return transformation([...rows]);
   }
 
   const [index, ...childPath] = rowPath;
-  const row = {...rows[index], linkedRows: updateRows(rows[index].linkedRows, childPath, transformation)};
+  const row = {
+    ...rows[index],
+    linkedRows: updateRows(rows[index].linkedRows, childPath, transformation),
+    expanded: expand || (rows[index] && rows[index].expanded)
+  };
+
   const updatedRows = [...rows];
   updatedRows.splice(index, 1, row);
   return updatedRows;
 }
 
 export function removeRow(state: TablesState, action: TablesAction.RemoveRow): TablesState {
-  const cursor = action.payload.cursor;
+  const {cursor} = action.payload;
   const {table} = getTablePart(state, cursor);
 
-  const rows = removeLinkedRow(table.rows, cursor.rowPath);
-  return tablesAdapter.updateOne({id: table.id, changes: {rows}}, state);
+  const rows = removeLinkedRow(table.config.rows, cursor.rowPath);
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function removeLinkedRow(rows: TableRow[], rowPath: number[]): TableRow[] {
+function removeLinkedRow(rows: TableConfigRow[], rowPath: number[]): TableConfigRow[] {
   const updatedRows = [...rows];
   const rowIndex = rowPath[0];
 
@@ -186,6 +297,30 @@ function removeLinkedRow(rows: TableRow[], rowPath: number[]): TableRow[] {
   row.linkedRows = removeLinkedRow(row.linkedRows, rowPath.slice(1));
   updatedRows.splice(rowIndex, 1, row);
   return updatedRows;
+}
+
+// function toggleChildRows(state: TablesState, action: TablesAction.ToggleChildRows): TablesState {
+//   const {cursor} = action.payload;
+//   const {table} = getTablePart(state, cursor);
+//   const [rowIndex] = cursor.rowPath;
+//
+//   const rows = table.config.rows.map((row, index) => index === rowIndex ? {...row, collapsedChildren: !row.collapsedChildren} : row);
+//
+//   const config = {...table.config, rows};
+//   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
+// }
+
+function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedRows): TablesState {
+  const {cursor} = action.payload;
+  const {table} = getTablePart(state, cursor);
+  const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+
+  const rows = updateRows(table.config.rows, parentPath, updatedRows => {
+    return updatedRows.map((row, index) => index === rowIndex ? {...row, expanded: !row.expanded} : row);
+  });
+
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
 function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {

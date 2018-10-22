@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
@@ -41,9 +41,6 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @Input()
   public searchBoxShown: boolean;
 
-  @Output()
-  public heightChange = new EventEmitter();
-
   @ViewChild(LumeerLogoComponent)
   public logo: LumeerLogoComponent;
 
@@ -63,12 +60,12 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
     this.workspace$ = this.store$.select(selectWorkspace);
 
     this.store$.dispatch(new OrganizationsAction.Get());
+    this.store$.dispatch(new OrganizationsAction.GetCodes());
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.mobile) {
       this.controlsShown$.next(!this.mobile);
-      setTimeout(() => this.heightChange.emit());
     }
   }
 
@@ -91,7 +88,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   }
 
   private setTopPanelSideWidth() {
-    if (this.mobile) {
+    if (this.mobile || !this.logo) {
       return;
     }
 
@@ -103,7 +100,6 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
   public onToggleControls() {
     this.controlsShown$.next(!this.controlsShown$.getValue());
-    setTimeout(() => this.heightChange.emit());
   }
 
 }

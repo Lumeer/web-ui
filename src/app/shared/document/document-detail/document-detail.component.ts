@@ -35,7 +35,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
-import {PerspectiveService} from '../../../core/perspective.service';
+import {PerspectiveService} from '../../../core/service/perspective.service';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';

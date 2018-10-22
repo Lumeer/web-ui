@@ -35,9 +35,12 @@ export class TableHeaderComponent {
   @Input()
   public table: TableModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public cursor: TableHeaderCursor;
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -59,7 +62,7 @@ export class TableHeaderComponent {
   }
 
   public onRowNumberColumnClick() {
-    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 
 }

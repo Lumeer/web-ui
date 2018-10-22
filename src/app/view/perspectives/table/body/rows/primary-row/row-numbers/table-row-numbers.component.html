@@ -1,0 +1,7 @@
+<div *ngFor="let rowIndex of rowIndexes; trackBy: trackByIndex"
+     #rowNumber
+     [class.border-top]="rowIndex > 0"
+     [class.border-white]="rowIndex > 0"
+     [ngClass]="!!row?.documentId ? 'text-secondary' : 'text-light'"
+     class="row-number p-1 text-right">
+</div>

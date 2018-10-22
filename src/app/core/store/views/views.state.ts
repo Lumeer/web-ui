@@ -19,11 +19,15 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
-import {selectNavigation, selectQuery} from '../navigation/navigation.state';
-import {ViewFilters} from './view.filters';
-import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
+import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
+import {selectTableConfig} from '../tables/tables.selector';
+import {filterViewsByQuery, sortViewsById} from './view.filters';
+import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {areConfigsEqual} from './view.utils';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
@@ -55,8 +59,29 @@ export const selectViewsLoaded = createSelector(selectViewsState, state => state
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
-export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => ViewFilters.filterByQuery(views, query));
+export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query)));
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
 export const selectCurrentViewConfig = createSelector(selectViewConfig, selectPostItConfig, (config, postItConfig) => ({...config, postit: postItConfig}));
+
+export const selectPerspectiveConfig = createSelector(
+  selectPerspective, selectPostItConfig, selectTableConfig,
+  (perspective, postItConfig, tableConfig) => ({
+    [Perspective.PostIt]: postItConfig,
+    [Perspective.Table]: tableConfig,
+  }[perspective])
+);
+export const selectPerspectiveViewConfig = createSelector(
+  selectCurrentView, selectPerspective,
+  (view, perspective) => view && view.config && view.config[perspective]
+);
+export const selectViewConfigChanged = createSelector(
+  selectPerspectiveConfig, selectPerspectiveViewConfig,
+  (perspectiveConfig, viewConfig) => perspectiveConfig && viewConfig && !areConfigsEqual(perspectiveConfig, viewConfig)
+);
+
+export const selectViewQueryChanged = createSelector(
+  selectCurrentView, selectQuery,
+  (view, query) => view && query && !areQueriesEqual(view.query, query)
+);

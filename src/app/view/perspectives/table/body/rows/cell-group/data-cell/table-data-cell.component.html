@@ -1,0 +1,37 @@
+<table-data-cell-menu *ngIf="selected"
+                      [cursor]="cursor"
+                      [document]="document"
+                      [linkInstance]="linkInstance"
+                      [table]="table"
+                      [allowedPermissions]="allowedPermissions"
+                      (edit)="onEdit()">
+</table-data-cell-menu>
+
+<div tableEditableCell
+     [affected]="affected$ | async"
+     [selected]="selected"
+     [readonly]="!allowedPermissions?.writeWithView"
+     [value]="(document | extractValue:column) || (linkInstance | extractValue:column) || ''"
+     (valueChange)="onValueChange($event)"
+     (editKeyDown)="onEditKeyDown($event)"
+     (editStart)="onEditStart()"
+     (editEnd)="onEditEnd($event)"
+     (contextmenu)="onContextMenu($event)"
+     (mousedown)="onMouseDown($event)"
+     (keydown)="onKeyDown($event)"
+     [class.uninitialized-column]="!column?.attributeId"
+     [style.width]="column | columnWidth:canManageConfig | pixel"
+     class="table-border-right table-border-bottom data-input">
+</div>
+
+<document-hints *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"
+                [attributeId]="column.attributeId"
+                [collectionId]="(table | part:cursor)?.collectionId"
+                [columns]="table | documentHintColumns:cursor:canManageConfig"
+                [createLinkCallback]="createLinkCallback.bind(this)"
+                [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
+                [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
+                [linkTypeId]="table.parts[cursor.partIndex - 1].linkTypeId"
+                [value]="editedValue"
+                (linkCreate)="onLinkCreate()">
+</document-hints>

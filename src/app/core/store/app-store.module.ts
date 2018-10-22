@@ -50,6 +50,8 @@ import {serviceLimitsReducer} from './organizations/service-limits/service-limit
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
+import {TablesEffects} from './tables/tables.effects';
+import {tablesReducer} from './tables/tables.reducer';
 import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
@@ -69,6 +71,7 @@ const reducers: ActionReducerMap<AppState> = {
   payments: paymentsReducer,
   projects: projectsReducer,
   router: routerReducer,
+  tables: tablesReducer,
   users: usersReducer,
   views: viewsReducer,
   postIts: postItReducer
@@ -89,6 +92,7 @@ const effects = [
   PaymentsEffects,
   ProjectsEffects,
   RouterEffects,
+  TablesEffects,
   UsersEffects,
   ViewsEffects
 ];
@@ -97,7 +101,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 25}) : []
+    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
   ],
   declarations: []
 })

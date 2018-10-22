@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableModel} from '../../../../../core/store/tables/table.model';
+import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {countLinkedRows} from '../../../../../core/store/tables/table.utils';
 
 const TABLE_ROW_HEIGHT = 31;
@@ -28,12 +28,12 @@ const TABLE_ROW_HEIGHT = 31;
 })
 export class RowPositionTopPipe implements PipeTransform {
 
-  public transform(table: TableModel, rowIndex: number): number {
-    if (table.parts.length === 1) {
-      return rowIndex * TABLE_ROW_HEIGHT;
+  public transform(rows: TableConfigRow[], rowIndex: number): number {
+    if (!rows) {
+      return 0;
     }
 
-    return table.rows.slice(0, rowIndex).reduce((count, row) => count + countLinkedRows(row), 0) * TABLE_ROW_HEIGHT;
+    return rows.slice(0, rowIndex).reduce((count, row) => count + countLinkedRows(row), 0) * TABLE_ROW_HEIGHT;
   }
 
 }

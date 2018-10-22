@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {withLatestFrom} from 'rxjs/operators';
+import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {combineLatest, Observable} from 'rxjs';
+import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery} from '../../../../../core/store/common/permissions.selectors';
+import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {EMPTY_TABLE_ROW, TableModel, TableRow} from '../../../../../core/store/tables/table.model';
+import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {selectMoveTableCursorDown} from '../../../../../core/store/tables/tables.state';
-import {Direction} from '../../../../../shared/direction';
+import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-rows',
@@ -37,20 +36,18 @@ import {Direction} from '../../../../../shared/direction';
   styleUrls: ['./table-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableRowsComponent implements OnChanges, OnDestroy {
+export class TableRowsComponent implements OnChanges {
 
   @Input()
-  public firstRowNumber = 1;
-
-  @Input()
-  public table: TableModel;
+  public cursor: TableBodyCursor;
 
   @Input()
   public query: QueryModel;
 
-  public cursor: TableBodyCursor;
+  @Input()
+  public canManageConfig: boolean;
 
-  private subscriptions = new Subscription();
+  public rows$: Observable<TableConfigRow[]>;
 
   public constructor(public element: ElementRef,
                      private store$: Store<AppState>) {
@@ -58,75 +55,46 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.query) {
-      this.resetSubscriptions();
-      this.retrieveDocuments();
-      this.bindDocuments();
+      this.retrieveDocuments(this.query); // TODO move to guard
     }
-    if (changes.table && this.table && hasTableIdChanged(changes.table)) {
-      this.cursor = this.createRootBodyCursor();
+    if (changes.cursor || changes.query) {
+      this.bindRows(this.cursor, this.query);
     }
   }
 
-  private createRootBodyCursor(): TableBodyCursor {
-    return {
-      tableId: this.table.id,
-      rowPath: [],
-      partIndex: 0,
-      columnIndex: undefined
-    };
-  }
-
-  private resetSubscriptions() {
-    this.subscriptions.unsubscribe();
-    this.subscriptions = new Subscription();
-  }
-
-  private retrieveDocuments() {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
-  }
-
-  private bindDocuments() {
-    this.subscriptions.add(
-      this.store$.select(selectDocumentsByQuery).pipe(
-        withLatestFrom(this.store$.select(selectMoveTableCursorDown))
-      ).subscribe(([documents, moveCursorDown]) => {
-        const cursor: TableBodyCursor = {
-          tableId: this.table.id,
-          rowPath: [this.table.rows.length - 1],
-          partIndex: 0
-        };
-
-        const rows: TableRow[] = documents.filter(document => document.collectionId === this.table.parts[0].collectionId)
-          .filter(document => !this.table.documentIds.has(document.id))
-          .map(document => ({...EMPTY_TABLE_ROW, documentIds: [document.id]}))
-          .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
-        if (rows.length > 1) {
-          this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
-          if (moveCursorDown) {
-            this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
-          }
-        }
-      })
+  private bindRows(cursor: TableBodyCursor, query: QueryModel) {
+    this.rows$ = combineLatest(
+      this.store$.pipe(select(selectTableRows(cursor.tableId))),
+      this.store$.pipe(
+        select(selectDocumentsByCustomQuery(query)),
+        map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
+      )
+    ).pipe(
+      debounceTime(10), // fixes not shown linked records after linked part is added
+      map(([rows, existingDocumentIds]) => {
+        return rows.filter(row => row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId);
+      }),
+      tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query})))
     );
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+  private retrieveDocuments(query: QueryModel) {
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
     if (event.target === this.element.nativeElement) {
-      this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+      this.unsetCursor();
     }
   }
 
-  public trackByDocumentId(index: number, row: TableRow): string {
-    return row.documentIds[0] || row.rowId;
+  public trackByDocumentId(index: number, row: TableConfigRow): string {
+    return row.correlationId || row.documentId;
   }
 
-}
+  public unsetCursor() {
+    this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
 
-function hasTableIdChanged(change: SimpleChange): boolean {
-  return !change.previousValue || change.previousValue.id !== change.currentValue.id;
 }

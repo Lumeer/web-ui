@@ -26,7 +26,7 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
   host: {
     '[attr.spellcheck]': 'false',
     '[attr.tabindex]': 'selected ? 1 : null',
-    '[attr.contenteditable]': 'true',
+    '[attr.contenteditable]': '!readonly',
     '[attr.disabled]': '!edited',
     '[class.affected]': 'affected && !selected',
     '[class.selected]': 'selected',
@@ -53,7 +53,7 @@ export class TableEditableCellDirective implements OnChanges {
   public disabledCharacters: string[];
 
   @Input()
-  public readonly: boolean;
+  public readonly: boolean = true;
 
   @Input()
   public selected: boolean;
@@ -114,6 +114,7 @@ export class TableEditableCellDirective implements OnChanges {
 
     switch (event.code) {
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         this.stopEditing();
         event.preventDefault();
@@ -149,19 +150,23 @@ export class TableEditableCellDirective implements OnChanges {
     document.execCommand('insertHTML', false, value);
   }
 
-  public startEditing() {
+  public startEditing(clear?: boolean) {
     if (this.edited || this.readonly) {
       return;
     }
 
     this.edited = true;
 
-    const {nativeElement} = this.element;
+    const element = this.element.nativeElement as HTMLElement;
+
+    if (clear) {
+      element.textContent = '';
+    }
 
     this.editStart.emit();
     setTimeout(() => {
-      nativeElement.scrollLeft = nativeElement.scrollWidth - nativeElement.clientWidth + 5;
-      HtmlModifier.setCursorAtTextContentEnd(nativeElement);
+      element.scrollLeft = element.scrollWidth - element.clientWidth + 5;
+      HtmlModifier.setCursorAtTextContentEnd(element);
     });
   }
 
@@ -172,17 +177,17 @@ export class TableEditableCellDirective implements OnChanges {
 
     this.edited = false;
 
-    const {nativeElement} = this.element;
+    const element = this.element.nativeElement as HTMLElement;
     if (cancel) {
-      nativeElement.textContent = this.value;
+      element.textContent = this.value;
       this.valueChange.emit(this.value);
       this.editEnd.emit();
     } else {
-      const value = nativeElement.textContent;
+      const value = element.textContent;
       this.editEnd.emit(value);
     }
 
-    nativeElement.scrollLeft = 0;
+    element.scrollLeft = 0;
   }
 
   private isCharacterDisabled(character: string): boolean {

@@ -67,28 +67,6 @@ export class WorkspacePanelComponent implements OnInit {
     this.project$ = this.store$.select(selectProjectByWorkspace);
   }
 
-  public goToWorkspaceOrganization(organization: OrganizationModel, project: ProjectModel): void {
-    this.goToWorkspace(organization, project, false);
-  }
-
-  public goToWorkspaceProject(organization: OrganizationModel, project: ProjectModel): void {
-    this.goToWorkspace(organization, project, true);
-  }
-
-  private goToWorkspace(organization: OrganizationModel, project: ProjectModel, selectProject: boolean) {
-    if (organization && project) {
-      this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
-      this.store$.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-      this.store$.dispatch(new RouterAction.Go({path: ['workspace']}));
-    }
-  }
-
-  public goToOrganizationDetail() {
-    if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
-    }
-  }
-
   public goToProject(organization: OrganizationModel, project: ProjectModel) {
     if (organization && project) {
       this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
@@ -99,6 +77,7 @@ export class WorkspacePanelComponent implements OnInit {
 
   public selectOrganization(organization: OrganizationModel): void {
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+    this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: organization.id}));
 
     this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
       filter(loaded => loaded),

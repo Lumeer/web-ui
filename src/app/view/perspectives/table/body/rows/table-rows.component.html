@@ -1,15 +1,16 @@
-<ng-container *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;">
-  <table-row *ngIf="cursor | nextRowCursor:rowIndex as rowCursor"
-             [table]="table"
-             [cursor]="rowCursor"
-             [row]="row"
-             class="position-absolute"
-             [style.top.px]="table | rowPositionTop : rowIndex"
-             [style.contain]="'layout'">
-  </table-row>
-</ng-container>
+<ng-container *ngIf="{rows: rows$ | async} as table">
+  <table-primary-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
+                     [cursor]="cursor | nextRowCursor : rowIndex"
+                     [row]="row"
+                     [canManageConfig]="canManageConfig"
+                     (unsetCursor)="unsetCursor()"
+                     class="position-absolute"
+                     [style.top.px]="table.rows | rowPositionTop : rowIndex"
+                     [style.contain]="'layout'">
+  </table-primary-row>
 
-<div class="position-absolute"
-     [style.top.px]="table | rowPositionTop : table.rows.length">
-  &nbsp;
-</div>
+  <div class="position-absolute"
+       [style.top.px]="table.rows | rowPositionTop : table.rows?.length">
+    &nbsp;
+  </div>
+</ng-container>

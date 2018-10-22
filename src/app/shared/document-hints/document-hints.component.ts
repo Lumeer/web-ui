@@ -47,7 +47,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public columns: DocumentHintColumn[];
 
   @Input()
-  public createLinkCallback: (linkInstanceId: string) => void;
+  public createLinkCallback: (linkInstanceId: string, documentId: string) => void;
 
   @Input()
   public excludedDocumentIds: string[] = [];
@@ -116,7 +116,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
         linkTypeId: this.linkTypeId,
         documentIds: [this.linkedDocumentId, document.id]
       },
-      callback: this.createLinkCallback ? (linkInstanceId) => this.createLinkCallback(linkInstanceId) : null
+      callback: this.createLinkCallback ? (linkInstanceId) => this.createLinkCallback(linkInstanceId, document.id) : null
     }));
   }
 

@@ -21,10 +21,11 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {map, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {QueryConverter} from '../store/navigation/query.converter';
+import {ViewsAction} from '../store/views/views.action';
 import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
 
@@ -32,18 +33,23 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class ViewRedirectGuard implements CanActivate {
 
   public constructor(private router: Router,
-                     private store: Store<AppState>) {
+                     private store$: Store<AppState>) {
   }
 
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
 
-    return this.store.select(selectViewsLoaded).pipe(
+    return this.store$.select(selectViewsLoaded).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          this.store$.dispatch(new ViewsAction.Get());
+        }
+      }),
       skipWhile((loaded) => !loaded),
-      switchMap(() => this.store.select(selectViewByCode(viewCode))),
+      switchMap(() => this.store$.select(selectViewByCode(viewCode))),
       take(1),
-      withLatestFrom(this.store.select(selectWorkspace)),
+      withLatestFrom(this.store$.select(selectWorkspace)),
       map(([view, workspace]) => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? QueryConverter.toString(view.query) : null;

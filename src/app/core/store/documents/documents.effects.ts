@@ -21,10 +21,10 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, first, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
@@ -241,10 +241,18 @@ export class DocumentsEffects {
   public patchMetaData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
     mergeMap(action => {
-      const documentDto = convertDocumentModelToDto(action.payload.document);
-      return this.documentService.patchDocumentMetaData(documentDto).pipe(
-        map(dto => new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(dto)})),
-        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+      const {collectionId, documentId, metaData} = action.payload;
+      return this.store$.pipe(
+        select(selectDocumentById(documentId)),
+        first(),
+        mergeMap(document => {
+          return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
+            map(dto => new DocumentsAction.UpdateSuccess({
+              document: {...convertDocumentDtoToModel(dto), data: document.data}
+            })),
+            catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+          );
+        })
       );
     })
   );

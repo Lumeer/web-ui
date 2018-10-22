@@ -1,0 +1,18 @@
+<table-cell-group [cursor]="cursor"
+                  [rows]="rows"
+                  [canManageConfig]="canManageConfig"
+                  [style.width]="linkInstancePart$ | async | partWidth:canManageConfig | pixel">
+</table-cell-group>
+
+<table-cell-group [cursor]="cursor | nextPartCursor"
+                  [rows]="rows"
+                  [canManageConfig]="canManageConfig"
+                  [style.width]="documentPart$ | async | partWidth:canManageConfig | pixel">
+</table-cell-group>
+
+<table-linked-rows *ngIf="hasNextParts$ | async"
+                   [cursor]="cursor | nextPartCursor"
+                   [rows]="rows"
+                   [canManageConfig]="canManageConfig"
+                   [striped]="striped">
+</table-linked-rows>

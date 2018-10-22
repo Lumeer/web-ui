@@ -1,0 +1,11 @@
+<small i18n="@@view.share.dialog.link.title">Only team members in the table below can open this link</small>
+<div class="input-group mt-2">
+  <input type="text" class="link form-control"
+         #urlInput (focus)="urlInput.select()"
+         [ngModel]="viewShareUrl" readonly/>
+  <div class="input-group-append">
+    <button class="btn btn-primary" type="button" (click)="onCopyClick()">
+      <i class="fas fa-copy"></i>
+    </button>
+  </div>
+</div>

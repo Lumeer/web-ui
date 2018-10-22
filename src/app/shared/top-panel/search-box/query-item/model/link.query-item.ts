@@ -20,6 +20,7 @@
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {CollectionQueryItem} from './collection.query-item';
 
 export class LinkQueryItem implements QueryItem {
 
@@ -27,10 +28,12 @@ export class LinkQueryItem implements QueryItem {
 
   public icons: string[];
   public colors: string[];
+  public collectionIds: string[];
 
   public constructor(public linkType: LinkTypeModel) {
     this.icons = linkType.collections.map(collection => collection.icon);
     this.colors = linkType.collections.map(collection => collection.color);
+    this.collectionIds = linkType.collections.map(collection => collection.id);
   }
 
   public get text(): string {
@@ -39,6 +42,13 @@ export class LinkQueryItem implements QueryItem {
 
   public get value(): string {
     return this.linkType.id;
+  }
+
+  public dependsOn(queryItem: QueryItem): boolean {
+    if (queryItem.type === QueryItemType.Collection) {
+      return (queryItem as CollectionQueryItem).collection.id === this.collectionIds[0];
+    }
+    return false;
   }
 
 }

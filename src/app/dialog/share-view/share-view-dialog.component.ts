@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {combineLatest as observableCombineLatest, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
@@ -35,7 +35,7 @@ import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
 import {KeyCode} from '../../shared/key-code';
-import {HtmlModifier} from '../../shared/utils/html-modifier';
+import {ClipboardService} from '../../core/service/clipboard.service';
 
 @Component({
   selector: 'share-view-dialog',
@@ -47,17 +47,20 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public selectedUsers: UserModel[] = [];
   public userRoles: { [id: string]: string[] };
   public initialUserRoles: { [id: string]: string[] };
-  public text = '';
-  public selectedIndex: number;
   public users: UserModel[] = [];
-  public suggestions: string[];
   public view: ViewModel;
   public currentUser: UserModel;
+
+  public text$ = new BehaviorSubject<string>('');
+  public suggestions$ = new BehaviorSubject<string[]>([]);
+  public selectedIndex$ = new BehaviorSubject<number>(null);
+  public viewShareUrl$ = new BehaviorSubject<string>('');
 
   private organization: OrganizationModel;
   private subscriptions = new Subscription();
 
   public constructor(private i18n: I18n,
+                     private clipboardService: ClipboardService,
                      private route: ActivatedRoute,
                      private store: Store<AppState>) {
   }
@@ -65,10 +68,15 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.subscribeToView();
     this.subscribeData();
+    this.parseViewShareUrl();
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public copyToClipboard() {
+    this.clipboardService.copy(this.viewShareUrl$.getValue());
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -94,32 +102,38 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
-    if (this.suggestions.length === 0) {
+    const suggestions = this.suggestions$.getValue();
+    if (suggestions.length === 0) {
       return;
     }
 
     event.preventDefault();
     const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
 
-    const newIndex = isNullOrUndefined(this.selectedIndex) ? 0 : this.selectedIndex + direction;
-    if (newIndex >= 0 && newIndex < this.suggestions.length) {
-      this.selectedIndex = newIndex;
+    const selectedIndex = this.selectedIndex$.getValue();
+    const newIndex = isNullOrUndefined(selectedIndex) ? 0 : selectedIndex + direction;
+    if (newIndex >= 0 && newIndex < suggestions.length) {
+      this.selectedIndex$.next(newIndex);
     }
   }
 
   private addItemOrShare() {
-    if (this.text.trim() === '') {
+    const text = this.text$.getValue();
+    if (text.trim() === '') {
       if (this.selectedUsers.length > 0) {
         this.share();
       }
     } else {
-      this.addItem(this.text);
+      this.addItem(text);
     }
   }
 
   private addItem(text: string) {
-    if (!isNullOrUndefined(this.selectedIndex) && this.selectedIndex < this.suggestions.length) {
-      this.addUserWithEmail(this.suggestions[this.selectedIndex]);
+    const selectedIndex = this.selectedIndex$.getValue();
+    const suggestions = this.suggestions$.getValue();
+
+    if (!isNullOrUndefined(selectedIndex) && selectedIndex < suggestions.length) {
+      this.addUserWithEmail(suggestions[selectedIndex]);
     } else {
       const userChosen = this.selectedUsers.find(u => u.email.toLowerCase() === text.toLowerCase());
       const user = this.users.find(u => u.email.toLowerCase() === text.toLowerCase());
@@ -139,24 +153,34 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   private addUser(user: UserModel) {
     this.userRoles = {...this.userRoles, [user.id]: []};
     this.selectedUsers = [...this.selectedUsers, user];
-    this.text = '';
+    this.text$.next('');
   }
 
   public suggest() {
-    this.suggestions = this.users
+    const textLowerCase = this.text$.getValue().toLowerCase();
+    const newSuggestions = this.users
       .map(user => user.email)
-      .filter(email => email.toLowerCase().includes(this.text.toLowerCase()))
+      .filter(email => email.toLowerCase().includes(textLowerCase))
       .filter(email => !this.selectedUsers.find(user => user.email === email));
 
+    this.suggestions$.next(newSuggestions);
     this.recomputeSelectedIndex();
   }
 
   private recomputeSelectedIndex() {
-    if (this.suggestions.length === 0 || !this.text) {
-      this.selectedIndex = null;
-    } else if (!isNullOrUndefined(this.selectedIndex)) {
-      this.selectedIndex = Math.min(this.selectedIndex, this.suggestions.length - 1);
+    const text = this.text$.getValue();
+    const selectedIndex = this.selectedIndex$.getValue();
+    const suggestions = this.suggestions$.getValue();
+
+    if (suggestions.length === 0 || !text) {
+      this.selectedIndex$.next(null);
+    } else if (!isNullOrUndefined(selectedIndex)) {
+      this.selectedIndex$.next(Math.min(selectedIndex, suggestions.length - 1));
     }
+  }
+
+  public onInputChanged(value: string) {
+    this.text$.next(value);
   }
 
   public onSuggestionClick(text: string) {
@@ -166,10 +190,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public share() {
     const permissions = Object.keys(this.userRoles).map(id => ({id, roles: this.userRoles[id]}));
     this.store.dispatch(new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions}));
-  }
-
-  public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
   }
 
   private subscribeToView() {
@@ -194,6 +214,14 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
       }, {});
       this.initialUserRoles = {...this.userRoles};
     }));
+  }
+
+  private parseViewShareUrl() {
+    const currentUrl = window.location.href;
+    const match = currentUrl.match('.+\\/ui\\/w\\/.+\\/.+\\/view;vc=[^/]+');
+    if (match && match[0]) {
+      this.viewShareUrl$.next(match[0]);
+    }
   }
 
   private subscribeData() {

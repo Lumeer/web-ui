@@ -4,6 +4,7 @@
     <resource-header
       [resource]="project"
       [resourceType]="getResourceType()"
+      [restrictedValues]="projectCodes$ | async"
       (back)="goBack()"
       (delete)="onDelete()"
       (colorChange)="onNewColor($event)"

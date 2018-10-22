@@ -18,24 +18,24 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ActivatedRoute, NavigationExtras} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {NavigationExtras} from '@angular/router';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {debounceTime, map, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPerspective, selectQuery, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {areQueriesEqual} from '../../core/store/navigation/query.helper';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
-import {selectCurrentViewConfig} from '../../core/store/views/views.state';
+import {selectPerspectiveViewConfig, selectViewConfigChanged, selectViewQueryChanged} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
-import {tap} from 'rxjs/operators';
-import {areQueriesEqual} from '../../core/store/navigation/query.helper';
-import {NavigationAction} from '../../core/store/navigation/navigation.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -62,6 +62,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public perspective$: Observable<Perspective>;
   public query$: Observable<QueryModel>;
 
+  public nameChanged$ = new BehaviorSubject(false);
+  public viewChanged$: Observable<boolean>;
+
   private currentQuery: QueryModel;
   private currentPerspective: Perspective;
   private currentConfig: ViewConfigModel;
@@ -75,35 +78,35 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private dialogService: DialogService,
               private notificationService: NotificationService,
               private i18n: I18n,
-              private route: ActivatedRoute,
-              private store: Store<AppState>) {
+              private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
     this.subscriptions.add(this.subscribeToSearchTab());
 
-    this.config$ = this.store.select(selectCurrentViewConfig).pipe(
+    this.config$ = this.store$.select(selectPerspectiveViewConfig).pipe(
       tap(config => this.currentConfig = config)
     );
-    this.perspective$ = this.store.select(selectPerspective).pipe(
+    this.perspective$ = this.store$.select(selectPerspective).pipe(
       tap(perspective => this.currentPerspective = perspective),
     );
-    this.query$ = this.store.select(selectQuery).pipe(
+    this.query$ = this.store$.select(selectQuery).pipe(
       tap(query => this.currentQuery = query)
     );
   }
 
   private subscribeToWorkspace(): Subscription {
-    return this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    return this.store$.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   private subscribeToSearchTab(): Subscription {
-    return this.store.select(selectSearchTab).subscribe(tab => this.searchTab = tab);
+    return this.store$.select(selectSearchTab).subscribe(tab => this.searchTab = tab);
   }
 
   public onNameInput(name: string) {
     this.name = name;
+    this.nameChanged$.next(this.view && name && this.view.name !== name);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -120,7 +123,21 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         this.name = '';
       }
+
+      this.nameChanged$.next(false);
+      this.bindViewChanged(this.view);
     }
+  }
+
+  private bindViewChanged(view: ViewModel) {
+    this.viewChanged$ = combineLatest(
+      this.nameChanged$,
+      this.store$.pipe(select(selectViewConfigChanged)),
+      this.store$.pipe(select(selectViewQueryChanged))
+    ).pipe(
+      debounceTime(100),
+      map(([nameChanged, configChanged, queryChanged]) => nameChanged || configChanged || queryChanged)
+    );
   }
 
   public ngOnDestroy() {
@@ -138,7 +155,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     if (queryChanged || configChanged) {
       this.askToDiscardChanges();
     } else {
-      this.navigateToUrlWithoutView();
+      this.navigateToUrlWithoutView({});
     }
   }
 
@@ -154,8 +171,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     ]);
   }
 
-  public navigateToUrlWithoutView() {
-    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({keepQuery: false}));
+  public navigateToUrlWithoutView(query?: QueryModel) {
+    this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 
   public onSelectPerspective(perspective: string, canManage: boolean) {
@@ -173,7 +190,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     }
     path.push(perspective);
 
-    this.store.dispatch(new RouterAction.Go({path, extras}));
+    this.store$.dispatch(new RouterAction.Go({path, extras}));
   }
 
   private workspacePaths(): any[] {
@@ -186,7 +203,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public onCopy() {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.view.perspective];
-    this.store.dispatch(new RouterAction.Go({
+    this.store$.dispatch(new RouterAction.Go({
       path, queryParams: {
         query: QueryConverter.toString(this.view.query),
         viewName: `${this.view.name}`

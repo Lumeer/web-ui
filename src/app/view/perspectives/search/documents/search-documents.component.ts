@@ -29,12 +29,12 @@ import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/document
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
-import {UserSettingsService} from '../../../../core/user-settings.service';
+import {UserSettingsService} from '../../../../core/service/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../../core/store/common/permissions.selectors';
-import {PerspectiveService} from '../../../../core/perspective.service';
+import {PerspectiveService} from '../../../../core/service/perspective.service';
 import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';

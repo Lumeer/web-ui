@@ -130,7 +130,7 @@ export class NavigationEffects {
         path.push(searchTab);
       }
 
-      const extras: NavigationExtras = action.payload.keepQuery ? {queryParamsHandling: 'merge'} : null;
+      const extras: NavigationExtras = action.payload.setQuery ? {queryParams: action.payload.setQuery} : {queryParamsHandling: 'merge'};
       return new RouterAction.Go({path, extras});
     })
   );

@@ -17,41 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Validator} from '../../../core/validators/validator';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {UserModel} from '../../../core/store/users/user.model';
 
 @Component({
   selector: 'new-user',
   templateUrl: './new-user.component.html',
-  styleUrls: [ './new-user.component.scss' ]
+  styleUrls: ['./new-user.component.scss']
 })
 export class NewUserComponent {
 
-  @Output() public userCreated = new EventEmitter<string>();
+  @Input()
+  public users: UserModel[];
+
+  @Output()
+  public userCreated = new EventEmitter<string>();
 
   public email: string;
-  public showEmailWarning: boolean = false;
+  public isDuplicate: boolean = false;
 
   constructor(private i18n: I18n) {
   }
 
   public onAddUser() {
-    if (!this.email || !Validator.validateEmail(this.email)) {
-      this.showEmailWarning = true;
-      return;
-    }
-    this.addUser();
-  }
-
-  public onEmailFocus() {
-    this.showEmailWarning = false;
-  }
-
-  private addUser() {
     this.userCreated.emit(this.email);
     this.clearInputs();
+  }
+
+  public checkDuplicates() {
+    this.isDuplicate = !!this.users.find(user => user.email === this.email);
   }
 
   private clearInputs() {

@@ -20,7 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs/index';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from './store/app.state';
 import {OrganizationModel} from './store/organizations/organization.model';
@@ -31,6 +31,9 @@ import {ProjectsAction} from './store/projects/projects.action';
 import {selectAllProjects, selectProjectsLoaded} from './store/projects/projects.state';
 import {DefaultWorkspaceModel} from './store/users/user.model';
 import {selectCurrentUser} from './store/users/users.state';
+import {DialogService} from '../dialog/dialog.service';
+import {NotificationService} from './notifications/notification.service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   template: ''
@@ -38,6 +41,9 @@ import {selectCurrentUser} from './store/users/users.state';
 export class HomeComponent implements OnInit {
 
   public constructor(private router: Router,
+                     private dialogService: DialogService,
+                     private i18n: I18n,
+                     private notificationService: NotificationService,
                      private store$: Store<AppState>) {
   }
 
@@ -58,8 +64,10 @@ export class HomeComponent implements OnInit {
         } else {
           this.navigateToAnyProject(organizations, projects);
         }
+      } else if (organizations.length === 0) {
+        this.createNewOrganization();
       } else {
-        this.navigateToWorkspaceChooser();
+        this.createNewProject(organizations[0]);
       }
     });
   }
@@ -84,20 +92,20 @@ export class HomeComponent implements OnInit {
 
   private navigateToAnyProject(organizations: OrganizationModel[], projects: ProjectModel[]) {
     const organization = organizations.find(org => projects.some(proj => proj.organizationId === org.id));
-    if (!organization) {
-      this.navigateToWorkspaceChooser();
-    } else {
+    if (organization) {
       const project = projects.find(proj => proj.organizationId === organization.id);
-      this.navigateToProject(organization, project);
+      if (project) {
+        this.navigateToProject(organization, project);
+      } else {
+        this.createNewProject(organization);
+      }
+    } else {
+      this.createNewOrganization();
     }
   }
 
   private navigateToProject(organization: OrganizationModel, project: ProjectModel) {
     this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search']);
-  }
-
-  private navigateToWorkspaceChooser() {
-    this.router.navigate(['/', 'workspace']);
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
@@ -131,6 +139,35 @@ export class HomeComponent implements OnInit {
         map((projects: ProjectModel[]) => ({organizations, projects}))
       ))
     );
+  }
+
+  public createNewOrganization(): void {
+    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
+  }
+
+  public createNewProject(parentOrganization: OrganizationModel): void {
+    this.dialogService.openCreateProjectDialog(parentOrganization.id, project => this.onCreateProject(parentOrganization, project));
+  }
+
+  private onCreateOrganization(organization: OrganizationModel) {
+    const successMessage = this.i18n({
+      id: 'organization.create.success',
+      value: 'Organization was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+    this.createNewProject(organization);
+  }
+
+  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
+    const successMessage = this.i18n({
+      id: 'project.create.success',
+      value: 'Project was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+    this.dialogService.closeDialog();
+    this.navigateToProject(organization, project);
   }
 
 }
