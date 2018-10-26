@@ -47,7 +47,7 @@ import {ViewsAction} from '../views/views.action';
 import {moveTableCursor, TableCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
 import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
-import {isValidHierarchicalRowOrder, createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
@@ -622,17 +622,21 @@ export class TablesEffects {
       first(),
       map(table => ({action, cursor, table}))
     )),
-    map(({action, cursor, table}) => {
-      const nextCursor = moveTableCursor(table, cursor, action.payload.direction);
-      return new TablesAction.SetCursor({cursor: nextCursor});
+    mergeMap(({action, cursor, table}) => {
+      try {
+        const nextCursor = moveTableCursor(table, cursor, action.payload.direction);
+        return [new TablesAction.SetCursor({cursor: nextCursor})];
+      } catch (error) {
+        return [];
+      }
     })
   );
 
   public constructor(private actions$: Actions,
-                     private store$: Store<AppState>) {
+    private store$: Store<AppState>) {
   }
 
-  private getLatestTable<A extends TablesAction.TableCursorAction>(action: A): Observable<{ action: A, table: TableModel }> {
+  private getLatestTable<A extends TablesAction.TableCursorAction>(action: A): Observable<{action: A, table: TableModel}> {
     return this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       filter(table => !!table),
@@ -685,8 +689,8 @@ export class TablesEffects {
 }
 
 function createReplaceColumnAction(splitAction: TablesAction.SplitColumn,
-                                   oldColumn: TableCompoundColumn,
-                                   childNames: string[]): TablesAction.ReplaceColumns {
+  oldColumn: TableCompoundColumn,
+  childNames: string[]): TablesAction.ReplaceColumns {
   const parent = oldColumn.parent;
   const children: TableColumn[] = childNames.map(name => {
     return new TableCompoundColumn(new TableSingleColumn(`${parent.attributeId}.${name}`), []); // TODO fix attribute ID
@@ -697,8 +701,8 @@ function createReplaceColumnAction(splitAction: TablesAction.SplitColumn,
 }
 
 function createParentAttributeAction(collection: CollectionModel,
-                                     oldAttribute: AttributeModel,
-                                     nextAction: TablesAction.ReplaceColumns): CollectionsAction.ChangeAttribute {
+  oldAttribute: AttributeModel,
+  nextAction: TablesAction.ReplaceColumns): CollectionsAction.ChangeAttribute {
   return new CollectionsAction.ChangeAttribute({
     collectionId: collection.id,
     attributeId: oldAttribute.id,
@@ -712,9 +716,9 @@ function createParentAttributeAction(collection: CollectionModel,
 }
 
 function createSecondChildAttributeAction(collection: CollectionModel,
-                                          oldAttribute: AttributeModel,
-                                          name: string,
-                                          nextAction: CollectionsAction.ChangeAttribute): CollectionsAction.ChangeAttribute {
+  oldAttribute: AttributeModel,
+  name: string,
+  nextAction: CollectionsAction.ChangeAttribute): CollectionsAction.ChangeAttribute {
   return new CollectionsAction.ChangeAttribute({
     collectionId: collection.id,
     attributeId: `${oldAttribute.id}.${name}`,
@@ -728,9 +732,9 @@ function createSecondChildAttributeAction(collection: CollectionModel,
 }
 
 function createFirstChildAttributeAction(collection: CollectionModel,
-                                         oldAttribute: AttributeModel,
-                                         name: string,
-                                         nextAction: CollectionsAction.ChangeAttribute): CollectionsAction.ChangeAttribute {
+  oldAttribute: AttributeModel,
+  name: string,
+  nextAction: CollectionsAction.ChangeAttribute): CollectionsAction.ChangeAttribute {
   return new CollectionsAction.ChangeAttribute({
     collectionId: collection.id,
     attributeId: `${oldAttribute.id}.${name}`,
