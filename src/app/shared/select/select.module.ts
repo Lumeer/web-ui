@@ -17,20 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-export class CreationDateSorter {
+import {SelectItemComponent} from './select-item/select-item.component';
+import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
+import {PipesModule} from '../pipes/pipes.module';
+import {PickerModule} from '../picker/picker.module';
+import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
 
-  public sortData(documents: DocumentModel[]): DocumentModel[] {
-    if (documents) {
-      return documents.slice().sort((a, b) => {
-        // return a.creationDate.localeCompare(b.creationDate);
-        return 1;
-      });
-
-    } else {
-      return [];
-    }
-  }
-
+@NgModule({
+  imports: [
+    CommonModule,
+    PickerModule
+  ],
+  declarations: [
+    SelectItemComponent,
+    GetSelectItemPipe,
+    AreIdsEqualPipe
+  ],
+  providers: [
+    AreIdsEqualPipe
+  ],
+  exports: [
+    SelectItemComponent
+  ]
+})
+export class SelectModule {
 }

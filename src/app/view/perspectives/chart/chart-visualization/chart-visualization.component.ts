@@ -17,30 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {ChartVisualizer} from '../../visualizer/chart-visualizer';
-import {LineVisualizer} from '../../visualizer/line-visualizer';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+
+import {ChartConfig} from '../../../../core/store/charts/chart.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {ChartVisualizer} from '../visualizer/chart-visualizer';
 
 @Component({
   selector: 'chart-visualization',
   templateUrl: './chart-visualization.component.html',
-  styleUrls: ['./chart-visualization.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartVisualizationComponent implements OnChanges {
 
   @Input()
-  public collections: CollectionModel[];
+  public collection: CollectionModel;
 
   @Input()
   public documents: DocumentModel[];
 
   @Input()
-  public attributeX: string;
-
-  @Input()
-  public attributeY: string;
+  public config: ChartConfig;
 
   @ViewChild('chart')
   private chartElement: ElementRef;
@@ -48,26 +46,18 @@ export class ChartVisualizationComponent implements OnChanges {
   private chartVisualizer: ChartVisualizer;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attributeX || changes.attributeY) {
-      this.visualizeNewData();
+    if (changes.documents || changes.config && this.config) {
+      this.visualize();
     }
   }
 
-  private visualizeNewData() {
+  private visualize() {
     if (!this.chartVisualizer) {
-      this.initializeVisualizer();
+      this.chartVisualizer = new ChartVisualizer(this.chartElement);
     }
 
-    this.show();
-  }
-
-  private initializeVisualizer() {
-    this.chartVisualizer = new LineVisualizer(this.chartElement);
-  }
-
-  public show() {
-    this.chartVisualizer.update(this.collections, this.documents, this.attributeX, this.attributeY);
-    this.chartVisualizer.showChart();
+    this.chartVisualizer.setData([this.collection], this.documents, this.config);
+    this.chartVisualizer.visualize();
   }
 
 }

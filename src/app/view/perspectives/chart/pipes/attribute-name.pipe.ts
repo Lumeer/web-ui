@@ -17,10 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AxisSelectModel {
+import {Pipe, PipeTransform} from '@angular/core';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
-  collectionIcon: string;
-  attributeId: string;
-  attributeName: string;
+@Pipe({
+  name: 'collectionAttributeName'
+})
+export class AttributeNamePipe implements PipeTransform {
+
+  public transform(collection: CollectionModel, attributeId: string): string {
+    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
+    return attribute && attribute.name || '';
+  }
 
 }

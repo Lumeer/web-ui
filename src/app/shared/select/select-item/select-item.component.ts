@@ -17,35 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AxisSelectModel} from '../../model/axis-select-model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {SelectItemModel} from './select-item.model';
 
 @Component({
-  selector: 'attribute-select',
-  templateUrl: './attribute-select.component.html',
-  styleUrls: ['./attribute-select.component.scss']
+  selector: 'select-item',
+  templateUrl: './select-item.component.html',
+  styleUrls: ['./select-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeSelectComponent {
+export class SelectItemComponent {
 
   @Input()
-  public attributes: AxisSelectModel[];
+  public items: SelectItemModel[];
 
   @Input()
-  set preSelected(value: string) {
-    this.selectedAttribute = this.attributes && this.attributes.find(attribute => attribute.attributeId === value);
-  }
+  public selectedId: any;
 
   @Input()
-  public emptyDescription: string;
+  public placeholderIcon: string;
+
+  @Input()
+  public placeholderText: string = '';
+
+  @Input()
+  public emptyValue: string = '';
+
+  @Input()
+  public disabled: boolean;
 
   @Output()
-  public attributeSelected = new EventEmitter<string>();
+  public select = new EventEmitter<any>();
 
-  public selectedAttribute: AxisSelectModel;
-
-  public selectAttribute(attribute: AxisSelectModel) {
-    this.selectedAttribute = attribute;
-    this.attributeSelected.emit(this.selectedAttribute.attributeId);
+  public onSelect(item: SelectItemModel) {
+    this.select.emit(item.id);
   }
 
 }

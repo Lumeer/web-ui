@@ -28,6 +28,7 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {areConfigsEqual} from './view.utils';
+import {selectChartConfig} from '../charts/charts.state';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
@@ -63,13 +64,12 @@ export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (v
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
-export const selectCurrentViewConfig = createSelector(selectViewConfig, selectPostItConfig, (config, postItConfig) => ({...config, postit: postItConfig}));
-
 export const selectPerspectiveConfig = createSelector(
-  selectPerspective, selectPostItConfig, selectTableConfig,
-  (perspective, postItConfig, tableConfig) => ({
+  selectPerspective, selectPostItConfig, selectTableConfig, selectChartConfig,
+  (perspective, postItConfig, tableConfig, chartConfig) => ({
     [Perspective.PostIt]: postItConfig,
     [Perspective.Table]: tableConfig,
+    [Perspective.Chart]: chartConfig
   }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(

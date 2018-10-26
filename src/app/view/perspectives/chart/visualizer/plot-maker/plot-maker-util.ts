@@ -17,10 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {ChartType} from '../../../../../core/store/charts/chart.model';
+import {PlotMaker} from './plot-maker';
+import {PiePlotMaker} from './pie-plot-maker';
+import {BarPlotMaker} from './bar-plot-maker';
+import {LinePlotMaker} from './line-plot-maker';
 
-export abstract class DataSorter {
-
-  public abstract sortData(documents: DocumentModel[]): DocumentModel[];
-
+export function createPlotMakerByType(type: ChartType): PlotMaker {
+  switch (type) {
+    case ChartType.Pie:
+      return new PiePlotMaker();
+    case ChartType.Bar:
+      return new BarPlotMaker();
+    case ChartType.Line:
+      return new LinePlotMaker();
+  }
 }

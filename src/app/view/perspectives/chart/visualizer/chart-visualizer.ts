@@ -18,27 +18,45 @@
  */
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CreationDateSorter} from '../sorter/creation-date-sorter';
-import {DataSorter} from '../sorter/data-sorter';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {ElementRef} from '@angular/core';
+import {ChartConfig} from '../../../../core/store/charts/chart.model';
+import {Config, Data, Layout, newPlot} from 'plotly.js';
+import {PlotMaker} from './plot-maker/plot-maker';
+import {createPlotMakerByType} from './plot-maker/plot-maker-util';
 
-export abstract class ChartVisualizer {
+export class ChartVisualizer {
 
-  protected data = [];
+  private data: Data[] = [];
 
-  protected style = {};
+  private layout: Partial<Layout> = {};
 
-  protected sorter: DataSorter = new CreationDateSorter();
+  private config: Partial<Config> = this.createConfig();
 
-  constructor(protected chartElement) {
+  private plotMaker: PlotMaker;
+
+  constructor(private chartElement: ElementRef) {
   }
 
-  public abstract update(collections: CollectionModel[], documents: DocumentModel[], attributeX: string, attributeY: string);
+  public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+    if (!this.plotMaker || this.plotMaker.getType() !== config.type) {
+      this.plotMaker = createPlotMakerByType(config.type);
+    }
 
-  public setSorter(newSorter: DataSorter) {
-    this.sorter = newSorter;
+    this.plotMaker.updateData(collections, documents, config);
+    this.data = this.plotMaker.createData();
+    this.layout = this.plotMaker.createLayout();
   }
 
-  public abstract showChart();
+  private createConfig(): Partial<Config> {
+    const config = {};
+    config['responsive'] = true;
+    return config;
+  }
+
+  public visualize() {
+    const element = this.chartElement.nativeElement;
+    newPlot(element, this.data, this.layout, this.config);
+  }
 
 }

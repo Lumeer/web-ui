@@ -22,6 +22,7 @@ import {ResourceModel} from '../../model/resource.model';
 import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
+import {ChartConfig} from '../charts/chart.model';
 
 export interface ViewModel extends ResourceModel {
 
@@ -47,6 +48,7 @@ export interface ViewConfigModel {
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfig;
+  chart?: ChartConfig;
 
 }
 
