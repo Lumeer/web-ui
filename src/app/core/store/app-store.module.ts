@@ -36,6 +36,7 @@ import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
 import {LinkTypesEffects} from './link-types/link-types.effects';
 import {linkTypesReducer} from './link-types/link-types.reducer';
+import {mapsReducer} from './maps/maps.reducer';
 import {NavigationEffects} from './navigation/navigation.effects';
 import {navigationReducer} from './navigation/navigation.reducer';
 import {NotificationsEffects} from './notifications/notifications.effects';
@@ -65,6 +66,7 @@ const reducers: ActionReducerMap<AppState> = {
   groups: groupsReducer,
   linkInstances: linkInstancesReducer,
   linkTypes: linkTypesReducer,
+  maps: mapsReducer,
   navigation: navigationReducer,
   organizations: organizationsReducer,
   contacts: contactsReducer,

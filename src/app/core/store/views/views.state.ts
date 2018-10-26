@@ -21,6 +21,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
+import {selectChartConfig} from '../charts/charts.state';
+import {selectMapConfig} from '../maps/maps.state';
 import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
@@ -28,7 +30,6 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {areConfigsEqual} from './view.utils';
-import {selectChartConfig} from '../charts/charts.state';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
@@ -65,8 +66,9 @@ export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (v
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
 export const selectPerspectiveConfig = createSelector(
-  selectPerspective, selectPostItConfig, selectTableConfig, selectChartConfig,
-  (perspective, postItConfig, tableConfig, chartConfig) => ({
+  selectPerspective, selectPostItConfig, selectTableConfig, selectChartConfig, selectMapConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) => ({
+    [Perspective.Map]: mapConfig,
     [Perspective.PostIt]: postItConfig,
     [Perspective.Table]: tableConfig,
     [Perspective.Chart]: chartConfig

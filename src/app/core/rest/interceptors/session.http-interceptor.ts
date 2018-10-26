@@ -23,6 +23,7 @@ import {Router} from '@angular/router';
 import {EMPTY, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
+import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class SessionHttpInterceptor implements HttpInterceptor {
@@ -35,6 +36,10 @@ export class SessionHttpInterceptor implements HttpInterceptor {
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!isBackendUrl(request.url)) {
+      return next.handle(request);
+    }
+
     if (new Date() > this.sessionExpirationTime) {
       this.handleExpiredSession();
       return EMPTY;

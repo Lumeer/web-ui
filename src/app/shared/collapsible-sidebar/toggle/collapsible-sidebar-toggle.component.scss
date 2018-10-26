@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  z-index: 500; // show above map (400)
+}
+
+button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 50px
+}

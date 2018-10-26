@@ -22,6 +22,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {DocumentsGuard} from '../core/guards/data/documents.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.service';
@@ -39,6 +40,7 @@ const viewRoutes: Routes = [
     canDeactivate: [ViewConfigCleanUpGuard],
     resolve: {
       collections: CollectionsGuard,
+      documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
       views: ViewsGuard
     },
@@ -55,6 +57,10 @@ const viewRoutes: Routes = [
       {
         path: Perspective.Chart,
         loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule'
+      },
+      {
+        path: Perspective.Map,
+        loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule'
       },
       {
         path: Perspective.Search,

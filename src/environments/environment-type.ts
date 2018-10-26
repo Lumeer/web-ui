@@ -23,6 +23,7 @@ export interface Environment extends EnvironmentVariables {
 
   analytics: boolean;
   auth: boolean;
+  mapQuestKey: string;
   production: boolean;
   storeDevtools: boolean;
   name?: string;

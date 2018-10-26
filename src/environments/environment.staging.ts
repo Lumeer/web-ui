@@ -23,6 +23,7 @@ import {environmentVariables} from './environment-variables';
 export const environment: Environment = {
   analytics: false,
   auth: true,
+  mapQuestKey: 'LSnxyU8MAt1Apnl0y7bM6e4Kg6NlPBhb',
   production: false,
   storeDevtools: true,
   name: 'staging',

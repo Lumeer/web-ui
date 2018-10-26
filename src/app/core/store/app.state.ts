@@ -23,6 +23,7 @@ import {DocumentsState, initialDocumentsState} from './documents/documents.state
 import {GroupsState, initialGroupsState} from './groups/groups.state';
 import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
 import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.state';
+import {initialMapsState, MapsState} from './maps/maps.state';
 import {initialNavigationState, NavigationState} from './navigation/navigation.state';
 import {initialOrganizationsState, OrganizationsState} from './organizations/organizations.state';
 import {initialProjectsState, ProjectsState} from './projects/projects.state';
@@ -43,6 +44,7 @@ export interface AppState {
   groups: GroupsState;
   linkInstances: LinkInstancesState;
   linkTypes: LinkTypesState;
+  maps: MapsState;
   navigation: NavigationState;
   organizations: OrganizationsState;
   contacts: ContactsState;
@@ -64,6 +66,7 @@ export function initialAppState(): AppState {
     groups: initialGroupsState,
     linkInstances: initialLinkInstancesState,
     linkTypes: initialLinkTypesState,
+    maps: initialMapsState,
     navigation: initialNavigationState,
     organizations: initialOrganizationsState,
     contacts: initialContactsState,

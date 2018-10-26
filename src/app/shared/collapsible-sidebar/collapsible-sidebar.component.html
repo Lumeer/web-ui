@@ -1,0 +1,15 @@
+<ng-container *ngIf="{collapsed: collapsed$ | async} as state">
+  <collapsible-sidebar-toggle *ngIf="collapsible"
+                              [collapsed]="state.collapsed"
+                              (toggle)="onToggle()"
+                              class="position-absolute"
+                              [style.left.px]="state.collapsed ? 0 : width"
+                              [style.top.px]="20">
+  </collapsible-sidebar-toggle>
+
+  <div [attr.hidden]="state.collapsed || null"
+       [style.width.px]="width"
+       class="h-100 overflow-auto">
+    <ng-content></ng-content>
+  </div>
+</ng-container>

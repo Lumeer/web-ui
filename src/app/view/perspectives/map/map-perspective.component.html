@@ -1,0 +1,18 @@
+<ng-container *ngIf="validQuery$ | async; else invalidQuery">
+  <ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async, map: map$ | async} as data">
+    <map-panel [collections]="data.collections"
+               [map]="data.map"
+               class="mx-3 mb-3">
+    </map-panel>
+
+    <map-content [collections]="data.collections"
+                 [documents]="data.documents"
+                 [map]="data.map"
+                 class="flex-grow-1">
+    </map-content>
+  </ng-container>
+</ng-container>
+
+<ng-template #invalidQuery>
+  <invalid-query [minCollections]="1"></invalid-query>
+</ng-template>
