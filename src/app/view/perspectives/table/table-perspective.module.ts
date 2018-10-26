@@ -57,6 +57,7 @@ import {TablePerspectiveRoutingModule} from './table-perspective-routing.module'
 import {TablePerspectiveComponent} from './table-perspective.component';
 import { TableHierarchyColumnComponent } from './header/hierarchy-column/table-hierarchy-column.component';
 import { TableHierarchyCellMenuComponent } from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
+import { TableHeaderAddButtonComponent } from './header/add-button/table-header-add-button.component';
 
 @NgModule({
   imports: [
@@ -101,6 +102,7 @@ import { TableHierarchyCellMenuComponent } from './body/rows/primary-row/hierarc
     TableHierarchyCellComponent,
     TableHierarchyColumnComponent,
     TableHierarchyCellMenuComponent,
+    TableHeaderAddButtonComponent,
   ],
   exports: [
     TablePerspectiveComponent

@@ -22,7 +22,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
-import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
