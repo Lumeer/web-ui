@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {MapQuestResponse} from './mapquest-response.dto';
 
-const MAPQUEST_API_URL = 'http://www.mapquestapi.com/geocoding/v1/';
+const MAPQUEST_API_URL = 'https://www.mapquestapi.com/geocoding/v1/';
 
 @Injectable({
   providedIn: 'root'
