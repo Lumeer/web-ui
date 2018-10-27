@@ -28,6 +28,7 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 //import {DEFAULT_MAP_ID, selectMapById} from "../../../core/store/maps/maps.state";
 import {map} from 'rxjs/operators';
+import { CalendarEvent } from 'angular-calendar';
 
 @Component({
   selector: 'calendar',
@@ -36,6 +37,14 @@ import {map} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent implements OnInit {
+
+  view: string = 'month';
+
+  viewDate: Date = new Date();
+
+  events: CalendarEvent[] = [];
+
+  clickedDate: Date;
 
   @Input()
   public query: QueryModel;

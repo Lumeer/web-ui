@@ -70,7 +70,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Calendar,
-        loadChildren: './perspectives/calendar/calendar.module#CalendarModule'
+        loadChildren: './perspectives/calendar/calendar.module#CalendarModules'
       },
       {
         path: Perspective.Search,
