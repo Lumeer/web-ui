@@ -71,4 +71,8 @@ export class PiePlotMaker extends PlotMaker {
     return ChartType.Pie;
   }
 
+  public initDrag() {
+    // TODO
+  }
+
 }

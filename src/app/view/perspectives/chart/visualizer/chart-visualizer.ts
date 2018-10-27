@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ElementRef} from '@angular/core';
+
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {ElementRef} from '@angular/core';
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
-import {Config, Data, Layout, newPlot} from 'plotly.js';
+import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
 
@@ -35,17 +36,25 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
-  constructor(private chartElement: ElementRef) {
+  constructor(private chartElement: ElementRef,
+              private onValueChanged?: (documentId: string, attributeId: string, value: string) => void) {
   }
 
   public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     if (!this.plotMaker || this.plotMaker.getType() !== config.type) {
       this.plotMaker = createPlotMakerByType(config.type);
+      this.plotMaker.setOnValueChanged(this.onValueChanged);
+      this.plotMaker.setOnDataChanged((data) => this.onDataChanged(data));
     }
 
-    this.plotMaker.updateData(collections, documents, config);
+    this.plotMaker.updateData(this.chartElement, collections, documents, config);
     this.data = this.plotMaker.createData();
     this.layout = this.plotMaker.createLayout();
+  }
+
+  public onDataChanged(data: Data[]) {
+    this.data = data;
+    react(this.chartElement.nativeElement, data, this.layout);
   }
 
   private createConfig(): Partial<Config> {
@@ -55,8 +64,8 @@ export class ChartVisualizer {
   }
 
   public visualize() {
-    const element = this.chartElement.nativeElement;
-    newPlot(element, this.data, this.layout, this.config);
+    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
+    this.plotMaker.initDrag();
   }
 
 }

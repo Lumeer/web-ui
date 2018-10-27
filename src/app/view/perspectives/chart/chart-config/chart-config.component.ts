@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {BehaviorSubject} from 'rxjs';
 import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart.model';
 import {Perspective} from '../../perspective';
 
@@ -28,7 +27,7 @@ import {Perspective} from '../../perspective';
   templateUrl: './chart-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartConfigComponent implements OnChanges {
+export class ChartConfigComponent {
 
   @Input()
   public collection: CollectionModel;
@@ -42,24 +41,9 @@ export class ChartConfigComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<ChartConfig>();
 
-  public axes$ = new BehaviorSubject<ChartAxisModel[]>([]);
-
   public readonly chartTypes = Object.values(ChartType);
   public readonly chartPerspective = Perspective.Chart;
   public readonly axes = Object.values(ChartAxisType);
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.createAxesFromCollections();
-    }
-  }
-
-  private createAxesFromCollections() {
-    if (this.collection) {
-      const newAxes = this.collection.attributes.map(attribute => ({collectionId: this.collection.id, attributeId: attribute.id}));
-      this.axes$.next(newAxes);
-    }
-  }
 
   public onTypeSelect(type: ChartType) {
     const newConfig = {...this.config, type};
@@ -68,6 +52,13 @@ export class ChartConfigComponent implements OnChanges {
 
   public onAxisSelect(type: ChartAxisType, axis: ChartAxisModel) {
     const axes = {...this.config.axes, [type]: axis};
+    const newConfig = {...this.config, axes: axes};
+    this.configChange.emit(newConfig);
+  }
+
+  public onAxisRemoved(type: ChartAxisType) {
+    const axes = {...this.config.axes};
+    delete axes[type];
     const newConfig = {...this.config, axes: axes};
     this.configChange.emit(newConfig);
   }

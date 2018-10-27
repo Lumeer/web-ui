@@ -33,7 +33,7 @@ export class BarPlotMaker extends PlotMaker {
 
     if (xAxis && y1Axis && y2Axis) {
       data.push(this.createAxis1Data(xAxis, y1Axis));
-      // workaround data to group columns with multiple values
+      // workaround data to group columns with multiple axes
       data.push(...this.createHelperData(xAxis, y2Axis, y2Axis));
       data.push(this.createAxis2Data(xAxis, y2Axis));
     } else if (!y1Axis && (xAxis || y2Axis)) {
@@ -162,6 +162,10 @@ export class BarPlotMaker extends PlotMaker {
 
   public getType(): ChartType {
     return ChartType.Bar;
+  }
+
+  public initDrag() {
+    // TODO
   }
 
 }

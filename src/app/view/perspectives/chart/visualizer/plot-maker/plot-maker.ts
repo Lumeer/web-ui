@@ -21,6 +21,7 @@ import {Data, Layout} from 'plotly.js';
 import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {ElementRef} from '@angular/core';
 
 export abstract class PlotMaker {
 
@@ -30,15 +31,32 @@ export abstract class PlotMaker {
 
   protected config: ChartConfig;
 
-  public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+  protected element: ElementRef;
+
+  protected onValueChanged?: (documentId: string, attributeId: string, value: string) => void;
+
+  protected onDataChanged?: (data: Data[]) => void;
+
+  public updateData(element: ElementRef, collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+    this.element = element;
     this.collections = collections;
     this.documents = documents;
     this.config = config;
   }
 
+  public setOnValueChanged(onValueChanged: (documentId: string, attributeId: string, value: string) => void) {
+    this.onValueChanged = onValueChanged;
+  }
+
+  public setOnDataChanged(onDataChanged: (data: Data[]) => void) {
+    this.onDataChanged = onDataChanged;
+  }
+
   public abstract createData(): Data[];
 
   public abstract createLayout(): Partial<Layout>;
+
+  public abstract initDrag();
 
   public abstract getType(): ChartType;
 }

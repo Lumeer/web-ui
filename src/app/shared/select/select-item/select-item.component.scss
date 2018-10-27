@@ -9,3 +9,11 @@
   }
 }
 
+.clear {
+  color: $primary;
+
+  &:hover {
+    color: $primary-hover;
+  }
+}
+

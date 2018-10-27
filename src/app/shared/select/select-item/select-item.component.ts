@@ -46,11 +46,21 @@ export class SelectItemComponent {
   @Input()
   public disabled: boolean;
 
+  @Input()
+  public removable: boolean = false;
+
   @Output()
   public select = new EventEmitter<any>();
 
+  @Output()
+  public removed = new EventEmitter();
+
   public onSelect(item: SelectItemModel) {
     this.select.emit(item.id);
+  }
+
+  public onRemove() {
+    this.removed.emit();
   }
 
 }

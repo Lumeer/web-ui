@@ -1,0 +1,7 @@
+:host ::ng-deep .scatterlayer .trace:last-child .points path {
+  pointer-events: all;
+}
+
+:host ::ng-deep .js-plotly-plot .plotly .modebar {
+  z-index: 999;
+}

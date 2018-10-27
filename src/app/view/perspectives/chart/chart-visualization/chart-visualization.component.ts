@@ -23,10 +23,14 @@ import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from '../visualizer/chart-visualizer';
+import {AppState} from '../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 
 @Component({
   selector: 'chart-visualization',
   templateUrl: './chart-visualization.component.html',
+  styleUrls: ['./chart-visualization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartVisualizationComponent implements OnChanges {
@@ -45,6 +49,9 @@ export class ChartVisualizationComponent implements OnChanges {
 
   private chartVisualizer: ChartVisualizer;
 
+  public constructor(private store$: Store<AppState>) {
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.config && this.config) {
       this.visualize();
@@ -53,11 +60,22 @@ export class ChartVisualizationComponent implements OnChanges {
 
   private visualize() {
     if (!this.chartVisualizer) {
-      this.chartVisualizer = new ChartVisualizer(this.chartElement);
+      const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
+      this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
     }
 
     this.chartVisualizer.setData([this.collection], this.documents, this.config);
     this.chartVisualizer.visualize();
+  }
+
+  private onValueChanged(documentId: string, attributeId: string, value: string) {
+    const changedDocument = this.documents.find(document => document.id === documentId);
+    if (!changedDocument) {
+      return;
+    }
+
+    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
+    this.store$.dispatch(new DocumentsAction.PatchData({document: patchDocument}));
   }
 
 }

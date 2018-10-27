@@ -19,7 +19,7 @@
 
 import {PlotMaker} from './plot-maker';
 import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
-import {Data, Layout} from 'plotly.js';
+import {Data, Layout, d3} from 'plotly.js';
 
 export class LinePlotMaker extends PlotMaker {
 
@@ -27,13 +27,16 @@ export class LinePlotMaker extends PlotMaker {
     const data: Data[] = [];
 
     const xAxis = this.config.axes[ChartAxisType.X];
+    const y1Axis = this.config.axes[ChartAxisType.Y1];
+    const y2Axis = this.config.axes[ChartAxisType.Y2];
 
-    if (xAxis || this.config.axes[ChartAxisType.Y1]) {
-      data.push(this.createAxis1Data(xAxis, this.config.axes[ChartAxisType.Y1]));
-    }
-
-    if (xAxis && this.config.axes[ChartAxisType.Y2]) {
-      data.push(this.createAxis2Data(xAxis, this.config.axes[ChartAxisType.Y2]));
+    if (y1Axis && y2Axis) {
+      data.push(this.createAxis1Data(xAxis, y1Axis));
+      data.push(this.createAxis2Data(xAxis, y2Axis));
+    } else if (!y1Axis && (xAxis || y2Axis)) {
+      data.push(this.createAxis2Data(xAxis, y2Axis));
+    } else if (xAxis || y1Axis) {
+      data.push(this.createAxis1Data(xAxis, y1Axis));
     }
 
     return data;
@@ -132,6 +135,88 @@ export class LinePlotMaker extends PlotMaker {
 
   public getType(): ChartType {
     return ChartType.Line;
+  }
+
+  public initDrag() {
+    const drag = d3.behavior.drag();
+    const plotMaker = this;
+    drag.origin(function () {
+      this.yScale = plotMaker.createScale(this.traceIndex);
+      return plotMaker.getPointPosition(this);
+    });
+    drag.on('drag', function (d) {
+      const xmouse = d3.event.x, ymouse = d3.event.y;
+      const currentPosition = plotMaker.getPointPosition(this);
+      d3.select(this).attr('transform', 'translate(' + [currentPosition.x, ymouse] + ')');
+
+      const index = d.i;
+      const newData = plotMaker.createData();
+      newData[this.traceIndex]['y'][index] = this.yScale(ymouse).toString();
+
+      plotMaker.onDataChanged && plotMaker.onDataChanged(newData);
+    });
+    drag.on('dragend', function () {
+      const currentPosition = plotMaker.getPointPosition(this);
+      const documentId = this.pointId && this.pointId.docId;
+      const attributeId = this.pointId && this.pointId.attrId;
+      const value = this.yScale(currentPosition.y).toString();
+
+      if (documentId && attributeId && plotMaker.onValueChanged) {
+        plotMaker.onValueChanged(documentId, attributeId, value);
+      }
+
+    });
+
+    d3.selectAll('.scatterlayer .trace:last-of-type .points path').call(drag);
+
+    this.setDragPointsIds();
+  }
+
+  private getPointPosition(point: any): { x: number, y: number } {
+    const transform = d3.select(point).attr('transform');
+    const translate = transform.substring(10, transform.length - 1).split(/,| /);
+    return {x: translate[0], y: translate[1]};
+  }
+
+  private createScale(traceIndex: number): any {
+    const range = this.getRangeForTrace(traceIndex);
+    return d3.scale.linear()
+      .domain([270, 0])
+      .range(range);
+  }
+
+  private getRangeForTrace(index: number): any {
+    if (index === 1) {
+      return this.element.nativeElement._fullLayout.yaxis2.range;
+    }
+    return this.element.nativeElement._fullLayout.yaxis.range;
+  }
+
+  private setDragPointsIds() {
+    const points = d3.selectAll('.scatterlayer .trace:last-of-type .points path')[0];
+    const y1Axis = this.config.axes[ChartAxisType.Y1];
+    let pointIndex = 0;
+    if (y1Axis) {
+      for (const document of this.documents) {
+        if (document.data[y1Axis.attributeId] && points[pointIndex]) {
+          const point = points[pointIndex];
+          point.pointId = {docId: document.id, attrId: y1Axis.attributeId};
+          point.traceIndex = 0;
+          pointIndex++;
+        }
+      }
+    }
+    const y2Axis = this.config.axes[ChartAxisType.Y2];
+    if (y2Axis) {
+      for (const document of this.documents) {
+        if (document.data[y2Axis.attributeId] && points[pointIndex]) {
+          const point = points[pointIndex];
+          point.pointId = {docId: document.id, attrId: y2Axis.attributeId};
+          point.traceIndex = 1;
+          pointIndex++;
+        }
+      }
+    }
   }
 
 }
