@@ -1,10 +1,10 @@
 <div class="d-flex position-fixed pl-3">
-  <div (click)="onRowNumberColumnClick()"
+  <div (click)="unsetCursor()"
        class="row-number-header">
   </div>
 
   <table-hierarchy-column [cursor]="cursor"
-                          (click)="onRowNumberColumnClick()"
+                          (click)="unsetCursor()"
                           class="table-border-bottom">
   </table-hierarchy-column>
 
@@ -22,6 +22,12 @@
                        [part]="part">
     </table-header-link>
   </ng-container>
+
+  <table-header-add-button *ngIf="canManageConfig"
+                           [cursor]="cursor"
+                           (click)="unsetCursor()"
+                           class="align-self-end">
+  </table-header-add-button>
 
   <div class="px-2"></div>
   <div class="scrollbar-placeholder"></div>

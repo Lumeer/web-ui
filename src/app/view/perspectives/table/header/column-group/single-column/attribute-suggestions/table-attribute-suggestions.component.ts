@@ -25,9 +25,9 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../../../../../core/store/collections/collections.state';
+import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
-import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
@@ -79,7 +79,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public selectedIndex$ = new BehaviorSubject(-1);
 
   public constructor(private dialogService: DialogService,
-                     private store$: Store<AppState>) {
+    private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -116,7 +116,6 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public useLinkType(linkType: LinkTypeModel) {
-    this.store$.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 

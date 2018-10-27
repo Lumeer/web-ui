@@ -23,6 +23,7 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
@@ -40,10 +41,9 @@ import {extractAttributeLastName, extractAttributeParentName, filterAttributesBy
 import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
+import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-import {EDITABLE_EVENT} from '../../../table-perspective.component';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-single-column',
@@ -102,12 +102,12 @@ export class TableSingleColumnComponent implements OnChanges {
   private selectedSubscriptions = new Subscription();
 
   public constructor(private actions$: Actions,
-                     private attributeNameChangedPipe: AttributeNameChangedPipe,
-                     private changeDetector: ChangeDetectorRef,
-                     private columnBackgroundPipe: ColumnBackgroundPipe,
-                     private dialogService: DialogService,
-                     private i18n: I18n,
-                     private store$: Store<AppState>) {
+    private attributeNameChangedPipe: AttributeNameChangedPipe,
+    private changeDetector: ChangeDetectorRef,
+    private columnBackgroundPipe: ColumnBackgroundPipe,
+    private dialogService: DialogService,
+    private i18n: I18n,
+    private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -170,7 +170,10 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
-      .subscribe(() => this.onRemove());
+      .subscribe(() => {
+        this.lastName = '';
+        this.editableCellDirective.startEditing(true);
+      });
   }
 
   public ngOnDestroy() {

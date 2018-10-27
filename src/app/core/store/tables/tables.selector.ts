@@ -89,3 +89,8 @@ export const selectTableRowOutdentable = (cursor: TableBodyCursor) => cursor && 
     return Boolean((document && document.metaData && document.metaData.parentId) || row.parentDocumentId);
   }
 );
+
+export const selectTableLastCollectionId = (tableId: string) => createSelector(
+  selectTableById(tableId),
+  table => table && table.parts && table.parts[table.parts.length - 1].collectionId
+);

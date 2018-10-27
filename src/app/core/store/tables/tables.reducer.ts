@@ -22,7 +22,7 @@ import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
 import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.utils';
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
-import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
+import {TableColumn, TableCompoundColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
 import {createEmptyTableRow, isValidHierarchicalRowOrder, maxColumnDepth, moveTableColumn, replaceTableColumns, sortTableRowsByHierarchy, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
@@ -39,6 +39,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return replaceColumn(state, action);
     case TablesActionType.MOVE_COLUMN:
       return moveColumn(state, action);
+    case TablesActionType.REMOVE_EMPTY_COLUMNS:
+      return removeEmptyColumns(state, action);
     case TablesActionType.ADD_PRIMARY_ROWS:
       return addPrimaryRows(state, action);
     case TablesActionType.ADD_LINKED_ROWS:
@@ -95,6 +97,16 @@ function moveColumn(state: TablesState, action: TablesAction.MoveColumn): Tables
   return savePartsConfig(newState, tableId);
 }
 
+function removeEmptyColumns(state: TablesState, action: TablesAction.RemoveEmptyColumns): TablesState {
+  const {cursor} = action.payload;
+
+  const newState = updateColumns(state, cursor, (columns) => {
+    return columns.filter(column => !(column instanceof TableCompoundColumn && !column.parent.attributeId));
+  });
+
+  return savePartsConfig(newState, cursor.tableId);
+}
+
 function savePartsConfig(state: TablesState, tableId: string): TablesState {
   const table = state.entities[tableId];
   const config = {...table.config, parts: convertTablePartsToConfig(table.parts)};
@@ -102,8 +114,8 @@ function savePartsConfig(state: TablesState, tableId: string): TablesState {
 }
 
 function updateColumns(state: TablesState,
-                       cursor: TableHeaderCursor,
-                       transformation: (columns: TableColumn[]) => TableColumn[]) {
+  cursor: TableHeaderCursor,
+  transformation: (columns: TableColumn[]) => TableColumn[]) {
   const {table, part} = getTablePart(state, cursor);
 
   const columns = transformation(part.columns);
@@ -256,9 +268,9 @@ function replaceRows(state: TablesState, action: TablesAction.ReplaceRows): Tabl
 }
 
 function updateRows(rows: TableConfigRow[],
-                    rowPath: number[],
-                    transformation: (rows: TableConfigRow[]) => TableConfigRow[],
-                    expand?: boolean): TableConfigRow[] {
+  rowPath: number[],
+  transformation: (rows: TableConfigRow[]) => TableConfigRow[],
+  expand?: boolean): TableConfigRow[] {
   if (rowPath.length === 0) {
     return transformation([...rows]);
   }
@@ -323,7 +335,7 @@ function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedR
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {
+function getTablePart(state: TablesState, cursor: TableHeaderCursor): {table: TableModel, part: TablePart} {
   const table = state.entities[cursor.tableId];
   const part = table.parts[cursor.partIndex];
   return {table, part};
