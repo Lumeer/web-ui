@@ -23,6 +23,7 @@ import {DocumentsState, initialDocumentsState} from './documents/documents.state
 import {GroupsState, initialGroupsState} from './groups/groups.state';
 import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
 import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.state';
+import {initialMapsState, MapsState} from './maps/maps.state';
 import {initialNavigationState, NavigationState} from './navigation/navigation.state';
 import {initialOrganizationsState, OrganizationsState} from './organizations/organizations.state';
 import {initialProjectsState, ProjectsState} from './projects/projects.state';
@@ -34,6 +35,7 @@ import {ContactsState, initialContactsState} from './organizations/contact/conta
 import {initialServiceLimitsState, ServiceLimitsState} from './organizations/service-limits/service-limits.state';
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
 import {initialPostItState, PostItState} from './postit/postit.state';
+import {ChartsState, initialChartsState} from './charts/charts.state';
 
 export interface AppState {
 
@@ -42,6 +44,7 @@ export interface AppState {
   groups: GroupsState;
   linkInstances: LinkInstancesState;
   linkTypes: LinkTypesState;
+  maps: MapsState;
   navigation: NavigationState;
   organizations: OrganizationsState;
   contacts: ContactsState;
@@ -53,6 +56,7 @@ export interface AppState {
   users: UsersState;
   views: ViewsState;
   postIts: PostItState;
+  charts: ChartsState;
 }
 
 export function initialAppState(): AppState {
@@ -62,6 +66,7 @@ export function initialAppState(): AppState {
     groups: initialGroupsState,
     linkInstances: initialLinkInstancesState,
     linkTypes: initialLinkTypesState,
+    maps: initialMapsState,
     navigation: initialNavigationState,
     organizations: initialOrganizationsState,
     contacts: initialContactsState,
@@ -72,6 +77,7 @@ export function initialAppState(): AppState {
     tables: initialTablesState,
     users: initialUsersState,
     views: initialViewsState,
-    postIts: initialPostItState
+    postIts: initialPostItState,
+    charts: initialChartsState
   };
 }

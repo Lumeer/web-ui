@@ -29,7 +29,7 @@ import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllViews, selectCurrentViewConfig, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
+import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
 
 @Component({

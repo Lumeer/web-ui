@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-
-import {EmptyStateComponent} from './empty-state/empty-state.component';
-import {EmptySearchComponent} from './empty-search/empty-search.component';
-import {EmptyRecordsComponent} from './empty-records/empty-records.component';
 import {PipesModule} from '../pipes/pipes.module';
+import {EmptyRecordsComponent} from './empty-records/empty-records.component';
+import {EmptySearchComponent} from './empty-search/empty-search.component';
+import {EmptyStateComponent} from './empty-state/empty-state.component';
+import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
 
 @NgModule({
   imports: [
@@ -35,12 +35,14 @@ import {PipesModule} from '../pipes/pipes.module';
   declarations: [
     EmptySearchComponent,
     EmptyStateComponent,
-    EmptyRecordsComponent
+    EmptyRecordsComponent,
+    InvalidQueryComponent
   ],
   exports: [
     EmptySearchComponent,
     EmptyStateComponent,
-    EmptyRecordsComponent
+    EmptyRecordsComponent,
+    InvalidQueryComponent
   ]
 })
 export class WarningMessageModule {

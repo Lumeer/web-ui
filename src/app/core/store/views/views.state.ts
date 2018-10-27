@@ -21,6 +21,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
+import {selectChartConfig} from '../charts/charts.state';
+import {selectMapConfig} from '../maps/maps.state';
 import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
@@ -63,13 +65,13 @@ export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (v
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
-export const selectCurrentViewConfig = createSelector(selectViewConfig, selectPostItConfig, (config, postItConfig) => ({...config, postit: postItConfig}));
-
 export const selectPerspectiveConfig = createSelector(
-  selectPerspective, selectPostItConfig, selectTableConfig,
-  (perspective, postItConfig, tableConfig) => ({
+  selectPerspective, selectPostItConfig, selectTableConfig, selectChartConfig, selectMapConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) => ({
+    [Perspective.Map]: mapConfig,
     [Perspective.PostIt]: postItConfig,
     [Perspective.Table]: tableConfig,
+    [Perspective.Chart]: chartConfig
   }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(

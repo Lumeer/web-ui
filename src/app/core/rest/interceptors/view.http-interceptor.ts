@@ -19,10 +19,11 @@
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {first, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../store/app.state';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {first, mergeMap} from 'rxjs/operators';
+import {isBackendUrl} from '../../api/api.utils';
+import {AppState} from '../../store/app.state';
 import {selectViewCode} from '../../store/navigation/navigation.state';
 
 @Injectable()
@@ -32,10 +33,13 @@ export class ViewHttpInterceptor implements HttpInterceptor {
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!isBackendUrl(request.url)) {
+      return next.handle(request);
+    }
+
     return this.store.select(selectViewCode).pipe(
       first(),
       mergeMap(viewCode => {
-
         if (viewCode) {
           const viewRequest = request.clone({
             setHeaders: {view_code: viewCode},

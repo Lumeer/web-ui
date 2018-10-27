@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {shadeColor} from '../../utils/html-modifier';
 
 @Pipe({
   name: 'highlightColor'
@@ -27,11 +27,11 @@ export class HighlightColorPipe implements PipeTransform {
 
   public transform(color: string, selected: string, current: string): string {
     if (color === selected) {
-      return HtmlModifier.shadeColor(color, -0.3);
+      return shadeColor(color, -0.3);
     }
 
     if (color === current) {
-      return HtmlModifier.shadeColor(color, -0.2);
+      return shadeColor(color, -0.2);
     }
 
     return 'transparent';

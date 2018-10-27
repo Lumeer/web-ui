@@ -37,6 +37,8 @@ function canShowPerspective(perspective: Perspective, query: QueryModel): boolea
     case Perspective.Table:
     case Perspective.Chart:
       return isSingleCollectionInQuery(query);
+    case Perspective.Map:
+      return isAnyCollectionInQuery(query);
     case Perspective.SmartDoc:
       return false;
     default:
@@ -46,4 +48,8 @@ function canShowPerspective(perspective: Perspective, query: QueryModel): boolea
 
 function isSingleCollectionInQuery(query: QueryModel): boolean {
   return query && query.collectionIds && query.collectionIds.length === 1;
+}
+
+function isAnyCollectionInQuery(query: QueryModel): boolean {
+  return query && query.collectionIds && query.collectionIds.length > 0;
 }

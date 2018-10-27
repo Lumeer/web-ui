@@ -22,6 +22,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
 import {CommentsComponent} from './comments/comments.component';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
@@ -36,6 +37,7 @@ import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholde
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
+import {SelectModule} from './select/select.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
@@ -65,6 +67,8 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     TopPanelModule,
     WarningMessageModule,
     DocumentHintsModule,
+    SelectModule,
+    CollapsibleSidebarModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -99,6 +103,8 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     TopPanelModule,
     WarningMessageModule,
     DocumentHintsModule,
+    SelectModule,
+    CollapsibleSidebarModule,
   ]
 })
 export class SharedModule {

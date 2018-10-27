@@ -1,0 +1,28 @@
+<div class="d-flex flex-row align-items-center flex-wrap" *ngIf="config">
+
+  <select-item class="mr-2"
+               [disabled]="!canManageConfig"
+               [placeholderIcon]="chartPerspective | perspectiveIcon"
+               [items]="chartTypes | chartTypesToSelect"
+               [selectedId]="config.type"
+               (select)="onTypeSelect($event)">
+  </select-item>
+
+  <ng-container *ngIf="axes$ | async | chartAxesToSelectItem:[collection] as selectItems">
+
+    <ng-container *ngFor="let axis of axes; let isLast = last">
+      <select-item
+        *ngIf="axis | showAxisSelect:config"
+        [class.mr-2]="!isLast"
+        [disabled]="!canManageConfig"
+        [items]="selectItems"
+        [selectedId]="config.axes[axis]"
+        [placeholderText]="axis | axisSelectPlaceholder"
+        [emptyValue]="axis | axisSelectEmptyValue"
+        (select)="onAxisSelect(axis, $event)">
+      </select-item>
+    </ng-container>
+
+  </ng-container>
+
+</div>

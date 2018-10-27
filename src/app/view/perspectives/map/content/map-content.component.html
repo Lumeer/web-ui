@@ -1,0 +1,13 @@
+<ng-container *ngIf="{markers: markers$ | async} as data">
+  <ng-container *ngIf="data.markers && data.markers.length > 0; else placeholder">
+    <map-render *ngIf="map"
+                [map]="map"
+                [markers]="data.markers"
+                class="flex-grow-1">
+    </map-render>
+  </ng-container>
+
+  <ng-template #placeholder>
+    <empty-map class="flex-grow-1"></empty-map>
+  </ng-template>
+</ng-container>

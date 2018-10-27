@@ -1,0 +1,5 @@
+<map-attribute-group *ngFor="let collection of collections"
+                     [collection]="collection"
+                     [attributeIds]="map.config | mapAttributeIds : collection.id"
+                     (select)="onSelect(collection, $event)">
+</map-attribute-group>
