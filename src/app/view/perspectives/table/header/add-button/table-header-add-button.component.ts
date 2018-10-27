@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {first, map} from 'rxjs/operators';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {selectCollectionsByReadPermission, selectLinkTypesByReadPermission} from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
@@ -30,6 +28,7 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../dialog/dialog.service';
+import {CollectionModel} from './../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from './../../../../../core/store/link-types/link-type.model';
 
 const ITEMS_LIMIT = 5;
@@ -82,7 +81,9 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
         return linkTypes.filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
           .slice(0, ITEMS_LIMIT)
-          .map(linkType => [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]]);
+          .map<[LinkTypeModel, CollectionModel, CollectionModel]>(linkType => {
+            return [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
+          });
       })
     );
   }
