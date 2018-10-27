@@ -66,11 +66,11 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.GanttChart,
-        component: GanttChartComponent    //TODO
+        loadChildren: './perspectives/gantt-chart/gantt-chart.module#GanttChartModule'
       },
       {
         path: Perspective.Calendar,
-        component: CalendarComponent      //TODO
+        loadChildren: './perspectives/calendar/calendar.module#CalendarModule'
       },
       {
         path: Perspective.Search,
