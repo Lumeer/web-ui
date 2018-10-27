@@ -23,6 +23,8 @@ export enum Perspective {
   Table = 'table',
   PostIt = 'postit',
   Chart = 'chart',
+  Calendar = 'calendar',
+  GanttChart = 'ganttchart',
   SmartDoc = 'smartdoc',
 }
 
@@ -30,6 +32,8 @@ export const perspectivesMap: { [id: string]: Perspective } = {
   [Perspective.Detail]: Perspective.Detail,
   [Perspective.PostIt]: Perspective.PostIt,
   [Perspective.Chart]: Perspective.Chart,
+  [Perspective.Calendar]: Perspective.Calendar,
+  [Perspective.GanttChart]: Perspective.GanttChart,
   [Perspective.Search]: Perspective.Search,
   [Perspective.SmartDoc]: Perspective.SmartDoc,
   [Perspective.Table]: Perspective.Table
@@ -39,6 +43,8 @@ export const perspectiveIconsMap: { [id: string]: string } = {
   [Perspective.Detail]: 'far fa-map-marker-alt',
   [Perspective.PostIt]: 'far fa-sticky-note',
   [Perspective.Chart]: 'far fa-chart-area',
+  [Perspective.Calendar] : 'far fa-calendar-alt',
+  [Perspective.GanttChart] : 'fas fa-stream',
   [Perspective.Search]: 'far fa-search',
   [Perspective.SmartDoc]: 'far fa-file-alt',
   [Perspective.Table]: 'far fa-table'

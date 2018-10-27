@@ -47,6 +47,8 @@ export interface ViewConfigModel {
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfig;
+  ganttchart?: GanttChartConfigModel;
+  calendar?: CalendarConfigModel;
 
 }
 
@@ -64,4 +66,14 @@ export interface SearchConfigModel {
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
 
+}
+
+export interface GanttChartConfigModel {
+  //TODO
+  whateverConfig?: string;    //not sure
+}
+
+export interface CalendarConfigModel {
+  //TODO
+  whateverConfig?: string;    //not sure
 }

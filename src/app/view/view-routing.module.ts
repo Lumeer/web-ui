@@ -31,6 +31,8 @@ import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
+import {GanttChartComponent} from './perspectives/gantt-chart/gantt-chart.component';
+import {CalendarComponent} from './perspectives/calendar/calendar.component';
 
 const viewRoutes: Routes = [
   {
@@ -55,6 +57,14 @@ const viewRoutes: Routes = [
       {
         path: Perspective.Chart,
         loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule'
+      },
+      {
+        path: Perspective.GanttChart,
+        component: GanttChartComponent    //TODO
+      },
+      {
+        path: Perspective.Calendar,
+        component: CalendarComponent      //TODO
       },
       {
         path: Perspective.Search,
