@@ -149,11 +149,14 @@ export class TablesEffects {
       );
     }),
     mergeMap(({action, table, linkType, collection}) => {
-      const lastIndex = table.parts.length - 1;
-      const linkTypePart = createLinkPart(linkType, lastIndex + 1, action.payload.config);
-      const collectionPart = createCollectionPart(collection, lastIndex + 2, action.payload.last, action.payload.config);
+      const lastPartIndex = table.parts.length - 1;
+      const linkTypePart = createLinkPart(linkType, lastPartIndex + 1, action.payload.config);
+      const collectionPart = createCollectionPart(collection, lastPartIndex + 2, action.payload.last, action.payload.config);
 
       return [
+        new TablesAction.RemoveEmptyColumns({
+          cursor: {tableId: table.id, partIndex: lastPartIndex}
+        }),
         new TablesAction.AddPart({
           tableId: table.id,
           parts: [linkTypePart, collectionPart]

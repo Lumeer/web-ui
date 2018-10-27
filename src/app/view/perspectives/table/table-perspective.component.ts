@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Subscription, Observable, BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
@@ -31,6 +31,7 @@ import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableConfig} from '../../../core/store/tables/tables.selector';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
@@ -38,7 +39,6 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
-import {ViewModel} from '../../../core/store/views/view.model';
 
 declare let $: any;
 
@@ -70,7 +70,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   public constructor(private element: ElementRef,
-                     private store$: Store<AppState>) {
+    private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -178,7 +178,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private addTablePart(query: QueryModel) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
+    this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId, last: true}));
   }
 
   private refreshTable(query: QueryModel, config: TableConfig) {
