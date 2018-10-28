@@ -5,6 +5,7 @@
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 @import '../node_modules/flag-icon-css/sass/flag-icon';
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
