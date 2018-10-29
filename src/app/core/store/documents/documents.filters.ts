@@ -18,14 +18,14 @@
  */
 
 import {isNullOrUndefined} from 'util';
+import {getCollectionsIdsFromFilters} from '../collections/collection.util';
+import {QueryConverter} from '../navigation/query.converter';
 import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
-import {QueryConverter} from '../navigation/query.converter';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {getCollectionsIdsFromFilters} from '../collections/collection.util';
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  documents = documents.filter(document => typeof(document) === 'object')
+  documents = documents.filter(document => typeof (document) === 'object')
     .filter(document => document);
 
   if (!query || !containsDocumentsQueryField(query)) {
@@ -55,8 +55,10 @@ function filterDocumentsByDocumentsIds(documents: DocumentModel[], documentsIds:
 function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   const collectionIdsFromQuery = getCollectionIdsFromQuery(query);
 
+  const documentsMap = documents.reduce((docsMap, document) => ({...docsMap, [document.id]: document}), {});
+
   if (collectionIdsFromQuery.length === 0 && query.fulltext) {
-    return filterDocumentsByFulltext(documents, query.fulltext);
+    return filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
   }
 
   let filteredDocuments = [];
@@ -64,7 +66,7 @@ function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: 
 
   for (const collectionId of collectionIdsFromQuery) {
     const documentsByCollection = documentsByCollectionsMap[collectionId] || [];
-    filteredDocuments = mergeDocuments(filteredDocuments, filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query));
+    filteredDocuments = mergeDocuments(filteredDocuments, filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query, documentsMap));
   }
 
   return filteredDocuments;
@@ -75,14 +77,15 @@ function getCollectionIdsFromQuery(query: QueryModel): string[] {
   return collectionsIds.concat(getCollectionsIdsFromFilters(query.filters));
 }
 
-function filterCollectionDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+function filterCollectionDocumentsByFiltersAndFulltext(documents: DocumentModel[],
+  query: QueryModel, documentsMap: {[id: string]: DocumentModel}): DocumentModel[] {
   if (hasFiltersAndFulltext(query)) {
-    const filteredDocuments = filterDocumentsByFulltext(documents, query.fulltext);
-    return filterDocumentsByFilters(filteredDocuments, query.filters);
+    const filteredDocuments = filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
+    return filterDocumentsByFilters(filteredDocuments, query.filters, documentsMap);
   } else if (query.fulltext) {
-    return filterDocumentsByFulltext(documents, query.fulltext);
+    return filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
   } else if (query.filters && query.filters.length > 0) {
-    return filterDocumentsByFilters(documents, query.filters);
+    return filterDocumentsByFilters(documents, query.filters, documentsMap);
   }
 
   return documents;
@@ -92,16 +95,33 @@ function hasFiltersAndFulltext(query: QueryModel): boolean {
   return !!query.fulltext && (query.filters && query.filters.length > 0);
 }
 
-export function filterDocumentsByFulltext(documents: DocumentModel[], fulltext: string): DocumentModel[] {
+export function filterDocumentsByFulltext(documents: DocumentModel[], fulltext: string, documentsMap: {[id: string]: DocumentModel} = {}): DocumentModel[] {
   if (!fulltext) {
     return [];
   }
 
-  return documents.filter(document => Object.values(document.data).some(value => (value || '').toString().toLowerCase()
-    .includes(fulltext.toLowerCase())));
+  const matchingDocumentIds = new Set(
+    documents.filter(document => Object.values(document.data).some(value => (value || '').toString().toLowerCase()
+      .includes(fulltext.toLowerCase()))).map(document => document.id)
+  );
+
+  return documents.filter(document => matchingDocumentIds.has(document.id) || parentDocumentMatchesFulltext(document, matchingDocumentIds, documentsMap));
 }
 
-function filterDocumentsByFilters(documents: DocumentModel[], filters: string[]): DocumentModel[] {
+function parentDocumentMatchesFulltext(document: DocumentModel, matchingDocumentIds: Set<string>, documentsMap: {[id: string]: DocumentModel}): boolean {
+  if (!document || !document.metaData || !document.metaData.parentId) {
+    return false;
+  }
+
+  const parentDocument = documentsMap[document.metaData.parentId];
+  if (!parentDocument) {
+    return false;
+  }
+
+  return matchingDocumentIds.has(parentDocument.id) || parentDocumentMatchesFulltext(parentDocument, matchingDocumentIds, documentsMap);
+}
+
+function filterDocumentsByFilters(documents: DocumentModel[], filters: string[], documentsMap: {[id: string]: DocumentModel}): DocumentModel[] {
   if (!filters || filters.length === 0) {
     return [];
   }
@@ -109,11 +129,20 @@ function filterDocumentsByFilters(documents: DocumentModel[], filters: string[])
   const attributeFilters = filters.map(filter => QueryConverter.parseFilter(filter))
     .filter(filter => !isNullOrUndefined(filter));
 
-  return documents.filter(document => documentMeetsFilters(document, attributeFilters));
+  return documents.filter(document => documentMeetsFilters(document, attributeFilters, documentsMap));
 }
 
-function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
-  return filters.every(filter => documentMeetFilter(document, filter));
+function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[], documentsMap: {[id: string]: DocumentModel}): boolean {
+  return filters.every(filter => documentMeetFilter(document, filter)) || parentDocumentMeetsFilters(document, filters, documentsMap);
+}
+
+function parentDocumentMeetsFilters(document: DocumentModel, filters: AttributeFilter[], documentsMap: {[id: string]: DocumentModel}): boolean {
+  if (!document.metaData || !document.metaData.parentId) {
+    return false;
+  }
+
+  const parentDocument = documentsMap[document.metaData.parentId];
+  return parentDocument && documentMeetsFilters(parentDocument, filters, documentsMap);
 }
 
 function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): boolean {
