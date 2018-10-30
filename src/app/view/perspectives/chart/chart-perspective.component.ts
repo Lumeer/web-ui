@@ -105,4 +105,8 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config}));
   }
 
+  public patchDocumentData(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
 }

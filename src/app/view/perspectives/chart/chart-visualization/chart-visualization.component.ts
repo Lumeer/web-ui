@@ -17,15 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from '../visualizer/chart-visualizer';
-import {AppState} from '../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
@@ -48,13 +45,13 @@ export class ChartVisualizationComponent implements OnChanges {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
+  @Output()
+  public patchData = new EventEmitter<DocumentModel>();
+
   @ViewChild('chart')
   private chartElement: ElementRef;
 
   private chartVisualizer: ChartVisualizer;
-
-  public constructor(private store$: Store<AppState>) {
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.config && this.config) {
@@ -97,7 +94,7 @@ export class ChartVisualizationComponent implements OnChanges {
     }
 
     const patchDocument = {...changedDocument, data: {[attributeId]: value}};
-    this.store$.dispatch(new DocumentsAction.PatchData({document: patchDocument}));
+    this.patchData.emit(patchDocument);
   }
 
   private refreshChartPermissions() {
