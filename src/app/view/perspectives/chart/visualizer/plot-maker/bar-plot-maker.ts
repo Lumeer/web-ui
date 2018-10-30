@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
@@ -143,8 +143,8 @@ export class BarPlotMaker extends PlotMaker {
     return attribute && attribute.name;
   }
 
-  public createLayout(): Partial<Layout> {
-    if (this.config.axes[ChartAxisType.Y2]) {
+  public createLayout(config: ChartConfig): Partial<Layout> {
+    if (config.axes[ChartAxisType.Y2]) {
       return {
         barmode: 'group',
         yaxis2: {
@@ -160,7 +160,7 @@ export class BarPlotMaker extends PlotMaker {
     return {};
   }
 
-  public getType(): ChartType {
+  public currentType(): ChartType {
     return ChartType.Bar;
   }
 

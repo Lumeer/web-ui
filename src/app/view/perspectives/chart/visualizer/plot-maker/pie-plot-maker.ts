@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 
 export class PiePlotMaker extends PlotMaker {
@@ -63,11 +63,11 @@ export class PiePlotMaker extends PlotMaker {
     return data;
   }
 
-  public createLayout(): Partial<Layout> {
+  public createLayout(config: ChartConfig): Partial<Layout> {
     return {};
   }
 
-  public getType(): ChartType {
+  public currentType(): ChartType {
     return ChartType.Pie;
   }
 

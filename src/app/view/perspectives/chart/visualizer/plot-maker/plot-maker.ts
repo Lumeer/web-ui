@@ -52,11 +52,15 @@ export abstract class PlotMaker {
     this.onDataChanged = onDataChanged;
   }
 
+  public currentConfig(): ChartConfig {
+    return this.config ? {...this.config} : null;
+  }
+
   public abstract createData(): Data[];
 
-  public abstract createLayout(): Partial<Layout>;
+  public abstract createLayout(config: ChartConfig): Partial<Layout>;
 
   public abstract initDrag();
 
-  public abstract getType(): ChartType;
+  public abstract currentType(): ChartType;
 }

@@ -30,7 +30,7 @@ export class ChartVisualizer {
 
   private data: Data[] = [];
 
-  private layout: Partial<Layout> = {};
+  private layout: Partial<Layout>;
 
   private config: Partial<Config> = this.createConfig();
 
@@ -41,20 +41,33 @@ export class ChartVisualizer {
   }
 
   public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
-    if (!this.plotMaker || this.plotMaker.getType() !== config.type) {
+    const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
+    if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type);
       this.plotMaker.setOnValueChanged(this.onValueChanged);
       this.plotMaker.setOnDataChanged((data) => this.onDataChanged(data));
     }
 
+    if (shouldRefreshPlotMaker || this.shouldRefreshLayout(config)) {
+      this.layout = this.plotMaker.createLayout(config);
+    }
+
     this.plotMaker.updateData(this.chartElement, collections, documents, config);
     this.data = this.plotMaker.createData();
-    this.layout = this.plotMaker.createLayout();
+  }
+
+  private shouldRefreshPlotMaker(config: ChartConfig) {
+    return !this.plotMaker || this.plotMaker.currentType() !== config.type;
+  }
+
+  private shouldRefreshLayout(config: ChartConfig) {
+    return !this.plotMaker || !this.plotMaker.currentConfig()
+      || JSON.stringify(config) !== JSON.stringify(this.plotMaker.currentConfig());
   }
 
   public onDataChanged(data: Data[]) {
     this.data = data;
-    react(this.chartElement.nativeElement, data, this.layout);
+    this.refreshChart();
   }
 
   private createConfig(): Partial<Config> {
@@ -63,8 +76,25 @@ export class ChartVisualizer {
     return config;
   }
 
+  public createChartAndVisualize() {
+    this.createNewChart();
+    this.initDrag();
+  }
+
   public visualize() {
+    this.refreshChart();
+    this.initDrag();
+  }
+
+  private createNewChart() {
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
+  }
+
+  private refreshChart() {
+    react(this.chartElement.nativeElement, this.data, this.layout);
+  }
+
+  private initDrag() {
     this.plotMaker.initDrag();
   }
 

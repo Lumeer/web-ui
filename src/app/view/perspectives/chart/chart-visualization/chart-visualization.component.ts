@@ -59,13 +59,27 @@ export class ChartVisualizationComponent implements OnChanges {
   }
 
   private visualize() {
-    if (!this.chartVisualizer) {
-      const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
-      this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
+    if (this.chartVisualizer) {
+      this.refreshChart();
+    } else {
+      this.createChart();
     }
+  }
 
-    this.chartVisualizer.setData([this.collection], this.documents, this.config);
+  private createChart() {
+    const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
+    this.setChartData();
+    this.chartVisualizer.createChartAndVisualize();
+  }
+
+  private refreshChart() {
+    this.setChartData();
     this.chartVisualizer.visualize();
+  }
+
+  private setChartData() {
+    this.chartVisualizer.setData([this.collection], this.documents, this.config);
   }
 
   private onValueChanged(documentId: string, attributeId: string, value: string) {

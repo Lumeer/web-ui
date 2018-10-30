@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout, d3} from 'plotly.js';
 
 export class LinePlotMaker extends PlotMaker {
@@ -67,8 +67,10 @@ export class LinePlotMaker extends PlotMaker {
 
     if (this.documents && this.documents[0]) {
       const color = this.getCollectionColor(this.documents[0].collectionId);
-      trace['marker'] = {color};
+      trace['marker'] = {color, size: 10};
       trace['line'] = {color};
+    } else {
+      trace['marker'] = {size: 10};
     }
 
     return trace;
@@ -117,8 +119,8 @@ export class LinePlotMaker extends PlotMaker {
     return attribute && attribute.name;
   }
 
-  public createLayout(): Partial<Layout> {
-    if (this.config.axes[ChartAxisType.Y2]) {
+  public createLayout(config: ChartConfig): Partial<Layout> {
+    if (config.axes[ChartAxisType.Y2]) {
       return {
         yaxis2: {
           overlaying: 'y',
@@ -133,7 +135,7 @@ export class LinePlotMaker extends PlotMaker {
     return {};
   }
 
-  public getType(): ChartType {
+  public currentType(): ChartType {
     return ChartType.Line;
   }
 
@@ -141,7 +143,7 @@ export class LinePlotMaker extends PlotMaker {
     const drag = d3.behavior.drag();
     const plotMaker = this;
     drag.origin(function () {
-      this.yScale = plotMaker.createScale(this.traceIndex);
+      this.yScale = plotMaker.createScale(this.traceIx);
       return plotMaker.getPointPosition(this);
     });
     drag.on('drag', function (d) {
@@ -151,17 +153,19 @@ export class LinePlotMaker extends PlotMaker {
 
       const index = d.i;
       const newData = plotMaker.createData();
-      newData[this.traceIndex]['y'][index] = this.yScale(ymouse).toString();
+      const newValue = this.yScale(ymouse).toString();
+      newData[this.traceIx]['y'][index] = newValue;
+
+      this.newValue = newValue;
 
       plotMaker.onDataChanged && plotMaker.onDataChanged(newData);
     });
-    drag.on('dragend', function () {
-      const currentPosition = plotMaker.getPointPosition(this);
-      const documentId = this.pointId && this.pointId.docId;
-      const attributeId = this.pointId && this.pointId.attrId;
-      const value = this.yScale(currentPosition.y).toString();
+    drag.on('dragend', function (d) {
+      const documentId = plotMaker.documents[d.i].id;
+      const attributeId = this.attrId;
+      const value = this.newValue;
 
-      if (documentId && attributeId && plotMaker.onValueChanged) {
+      if (documentId && attributeId && value && plotMaker.onValueChanged) {
         plotMaker.onValueChanged(documentId, attributeId, value);
       }
 
@@ -181,12 +185,12 @@ export class LinePlotMaker extends PlotMaker {
   private createScale(traceIndex: number): any {
     const range = this.getRangeForTrace(traceIndex);
     return d3.scale.linear()
-      .domain([270, 0])
+      .domain([270, 0]) // TODO get height
       .range(range);
   }
 
   private getRangeForTrace(index: number): any {
-    if (index === 1) {
+    if (index === 1 || !this.config.axes[ChartAxisType.Y1]) {
       return this.element.nativeElement._fullLayout.yaxis2.range;
     }
     return this.element.nativeElement._fullLayout.yaxis.range;
@@ -194,25 +198,32 @@ export class LinePlotMaker extends PlotMaker {
 
   private setDragPointsIds() {
     const points = d3.selectAll('.scatterlayer .trace:last-of-type .points path')[0];
+    const xAxis = this.config.axes[ChartAxisType.X];
     const y1Axis = this.config.axes[ChartAxisType.Y1];
     let pointIndex = 0;
+    let traceIndex = 0;
     if (y1Axis) {
       for (const document of this.documents) {
-        if (document.data[y1Axis.attributeId] && points[pointIndex]) {
+        const checkedAttributesIds = xAxis ? [xAxis.attributeId, y1Axis.attributeId] : [y1Axis.attributeId];
+        const containsData = checkedAttributesIds.every(attributeId => !!document.data[attributeId]);
+        if (containsData && points[pointIndex]) {
           const point = points[pointIndex];
-          point.pointId = {docId: document.id, attrId: y1Axis.attributeId};
-          point.traceIndex = 0;
+          point.attrId = y1Axis.attributeId;
+          point.traceIx = traceIndex;
           pointIndex++;
         }
       }
+      traceIndex++;
     }
     const y2Axis = this.config.axes[ChartAxisType.Y2];
     if (y2Axis) {
       for (const document of this.documents) {
-        if (document.data[y2Axis.attributeId] && points[pointIndex]) {
+        const checkedAttributesIds = xAxis ? [xAxis.attributeId, y2Axis.attributeId] : [y2Axis.attributeId];
+        const containsData = checkedAttributesIds.every(attributeId => !!document.data[attributeId]);
+        if (containsData && points[pointIndex]) {
           const point = points[pointIndex];
-          point.pointId = {docId: document.id, attrId: y2Axis.attributeId};
-          point.traceIndex = 1;
+          point.attrId = y2Axis.attributeId;
+          point.traceIx = traceIndex;
           pointIndex++;
         }
       }
