@@ -168,4 +168,8 @@ export class BarPlotMaker extends PlotMaker {
     // TODO
   }
 
+  public destroyDrag() {
+    // TODO
+  }
+
 }

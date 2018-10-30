@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
+import {DEFAULT_GRID_HEIGHT, PlotMaker} from './plot-maker';
 import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout, d3} from 'plotly.js';
+import {isNumber} from 'util';
 
 export class LinePlotMaker extends PlotMaker {
 
@@ -140,40 +141,79 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   public initDrag() {
-    const drag = d3.behavior.drag();
+    if (!this.canDragPoints()) {
+      this.destroyDrag();
+      return;
+    }
+
     const plotMaker = this;
-    drag.origin(function () {
-      this.yScale = plotMaker.createScale(this.traceIx);
-      return plotMaker.getPointPosition(this);
-    });
-    drag.on('drag', function (d) {
-      const xmouse = d3.event.x, ymouse = d3.event.y;
-      const currentPosition = plotMaker.getPointPosition(this);
-      d3.select(this).attr('transform', 'translate(' + [currentPosition.x, ymouse] + ')');
+    const drag = d3.behavior.drag()
+      .origin(function () {
+        const traceIx = plotMaker.getTraceIndexForPoint(this);
+        this.yScale = plotMaker.createYScale(traceIx);
+        this.traceIx = traceIx;
+        return plotMaker.getPointPosition(this);
+      })
+      .on('drag', function (datum) {
+        const yMouse = d3.event.y;
+        const index = datum.i;
+        let newValue = this.yScale(yMouse);
+        if (isNumber(newValue)) {
+          newValue = Math.round(newValue);
+        } else {
+          newValue = newValue.toString();
+        }
+        this.newValue = newValue;
 
-      const index = d.i;
-      const newData = plotMaker.createData();
-      const newValue = this.yScale(ymouse).toString();
-      newData[this.traceIx]['y'][index] = newValue;
+        const dataChange = {trace: this.traceIx, axis: 'y', index, value: newValue};
+        plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
+      })
+      .on('dragend', function (datum) {
+        const documentId = plotMaker.documents[datum.i].id;
+        const attributeId = plotMaker.getAttributeIdForTrace(this.traceIx);
+        const value = this.newValue;
 
-      this.newValue = newValue;
+        if (documentId && attributeId && value && plotMaker.onValueChanged) {
+          plotMaker.onValueChanged({documentId, attributeId, value});
+        }
 
-      plotMaker.onDataChanged && plotMaker.onDataChanged(newData);
-    });
-    drag.on('dragend', function (d) {
-      const documentId = plotMaker.documents[d.i].id;
-      const attributeId = this.attrId;
-      const value = this.newValue;
+      });
 
-      if (documentId && attributeId && value && plotMaker.onValueChanged) {
-        plotMaker.onValueChanged(documentId, attributeId, value);
+    this.element.nativeElement.on('plotly_relayout', () => this.assignDrag(drag));
+    this.assignDrag(drag);
+  }
+
+  private canDragPoints(): boolean {
+    return this.config && (!!this.config.axes[ChartAxisType.Y1] || !!this.config.axes[ChartAxisType.Y2]);
+  }
+
+  public destroyDrag() {
+    this.getPoints().on('.drag', null);
+  }
+
+  private assignDrag(drag: any) {
+    this.getPoints().call(drag);
+  }
+
+  private getPoints(): any {
+    return d3.selectAll('.scatterlayer .trace:last-of-type .points path');
+  }
+
+  private getTraceIndexForPoint(point: any): number {
+    const traceIds = this.getLayoutElement()._traceUids;
+    const traceClasses = traceIds && traceIds.map(id => 'trace' + id) || [];
+    let node = d3.select(point).node();
+    while (node) {
+      const classList = node.classList;
+      for (let i = 0; i < traceClasses.length; i++) {
+        if (classList && classList.contains(traceClasses[i])) {
+          return i;
+        }
       }
+      node = node.parentNode;
+    }
 
-    });
-
-    d3.selectAll('.scatterlayer .trace:last-of-type .points path').call(drag);
-
-    this.setDragPointsIds();
+    return 0;
   }
 
   private getPointPosition(point: any): { x: number, y: number } {
@@ -182,52 +222,67 @@ export class LinePlotMaker extends PlotMaker {
     return {x: translate[0], y: translate[1]};
   }
 
-  private createScale(traceIndex: number): any {
-    const range = this.getRangeForTrace(traceIndex);
+  private createYScale(traceIndex: number): any {
+    const yAxisElement = this.getYAxisElementForTrace(traceIndex);
+    if (yAxisElement.type === 'category') {
+      return this.createYScaleOrdinal(yAxisElement);
+    }
+    return this.createYScaleLinear(yAxisElement);
+  }
+
+  private createYScaleLinear(yAxisElement: any): any {
     return d3.scale.linear()
-      .domain([270, 0]) // TODO get height
-      .range(range);
+      .domain([this.getGridHeight(), 0])
+      .range(yAxisElement.range);
   }
 
-  private getRangeForTrace(index: number): any {
+  private createYScaleOrdinal(yAxisElement: any): any {
+    const yAxisMargin = this.computeOrdinalYAxisMargin(yAxisElement);
+    const gridHeight = this.getGridHeight();
+    const categories = yAxisElement._categories;
+    const domainStep = (gridHeight - 2 * yAxisMargin) / (categories.length - 1);
+    const domainRange = d3.range(yAxisMargin + domainStep / 2, gridHeight - yAxisMargin, domainStep);
+    const domain = domainRange.reverse();
+
+    return (value) => {
+      for (let i = 0; i < domain.length; i++) { // TODO binary search
+        if (value > domain[i]) {
+          return categories[i];
+        }
+      }
+      return categories.length > 0 ? categories[categories.length - 1] : null;
+    };
+  }
+
+  private computeOrdinalYAxisMargin(yAxisElement: any): number {
+    const downRange = Math.abs(yAxisElement.range[0]);
+    const upRange = Math.abs(yAxisElement.range[1]);
+    const range = downRange + upRange;
+    return (this.getGridHeight() / range) * downRange;
+  }
+
+  private getGridHeight(): number {
+    const gridElement = d3.select('.gridlayer').node();
+    const boundingRect = gridElement && gridElement.getBoundingClientRect();
+    return boundingRect && boundingRect.height || DEFAULT_GRID_HEIGHT;
+  }
+
+  private getAttributeIdForTrace(index: number): string {
     if (index === 1 || !this.config.axes[ChartAxisType.Y1]) {
-      return this.element.nativeElement._fullLayout.yaxis2.range;
+      return this.config.axes[ChartAxisType.Y2].attributeId;
     }
-    return this.element.nativeElement._fullLayout.yaxis.range;
+    return this.config.axes[ChartAxisType.Y1].attributeId;
   }
 
-  private setDragPointsIds() {
-    const points = d3.selectAll('.scatterlayer .trace:last-of-type .points path')[0];
-    const xAxis = this.config.axes[ChartAxisType.X];
-    const y1Axis = this.config.axes[ChartAxisType.Y1];
-    let pointIndex = 0;
-    let traceIndex = 0;
-    if (y1Axis) {
-      for (const document of this.documents) {
-        const checkedAttributesIds = xAxis ? [xAxis.attributeId, y1Axis.attributeId] : [y1Axis.attributeId];
-        const containsData = checkedAttributesIds.every(attributeId => !!document.data[attributeId]);
-        if (containsData && points[pointIndex]) {
-          const point = points[pointIndex];
-          point.attrId = y1Axis.attributeId;
-          point.traceIx = traceIndex;
-          pointIndex++;
-        }
-      }
-      traceIndex++;
+  private getYAxisElementForTrace(index: number): any {
+    if (index === 1 || !this.config.axes[ChartAxisType.Y1]) {
+      return this.getLayoutElement().yaxis2;
     }
-    const y2Axis = this.config.axes[ChartAxisType.Y2];
-    if (y2Axis) {
-      for (const document of this.documents) {
-        const checkedAttributesIds = xAxis ? [xAxis.attributeId, y2Axis.attributeId] : [y2Axis.attributeId];
-        const containsData = checkedAttributesIds.every(attributeId => !!document.data[attributeId]);
-        if (containsData && points[pointIndex]) {
-          const point = points[pointIndex];
-          point.attrId = y2Axis.attributeId;
-          point.traceIx = traceIndex;
-          pointIndex++;
-        }
-      }
-    }
+    return this.getLayoutElement().yaxis;
+  }
+
+  private getLayoutElement(): any {
+    return this.element.nativeElement._fullLayout;
   }
 
 }

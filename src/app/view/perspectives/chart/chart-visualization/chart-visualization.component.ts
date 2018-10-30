@@ -26,6 +26,7 @@ import {ChartVisualizer} from '../visualizer/chart-visualizer';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'chart-visualization',
@@ -44,6 +45,9 @@ export class ChartVisualizationComponent implements OnChanges {
   @Input()
   public config: ChartConfig;
 
+  @Input()
+  public allowedPermissions: AllowedPermissions;
+
   @ViewChild('chart')
   private chartElement: ElementRef;
 
@@ -55,6 +59,9 @@ export class ChartVisualizationComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.config && this.config) {
       this.visualize();
+    }
+    if (changes.allowedPermissions) {
+      this.refreshChartPermissions();
     }
   }
 
@@ -68,7 +75,8 @@ export class ChartVisualizationComponent implements OnChanges {
 
   private createChart() {
     const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
-    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
+    const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, writable, onValueChange);
     this.setChartData();
     this.chartVisualizer.createChartAndVisualize();
   }
@@ -90,6 +98,18 @@ export class ChartVisualizationComponent implements OnChanges {
 
     const patchDocument = {...changedDocument, data: {[attributeId]: value}};
     this.store$.dispatch(new DocumentsAction.PatchData({document: patchDocument}));
+  }
+
+  private refreshChartPermissions() {
+    if (!this.chartVisualizer) {
+      return;
+    }
+
+    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+      this.chartVisualizer.enableWrite();
+    } else {
+      this.chartVisualizer.disableWrite();
+    }
   }
 
 }

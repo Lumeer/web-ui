@@ -9,6 +9,7 @@
 
     <chart-visualization
       [collection]="data.collection"
+      [allowedPermissions]="data.collection | collectionPermissions | async"
       [documents]="documents$ | async"
       [config]="data.config">
     </chart-visualization>

@@ -23,6 +23,8 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ElementRef} from '@angular/core';
 
+export const DEFAULT_GRID_HEIGHT = 270;
+
 export abstract class PlotMaker {
 
   protected collections: CollectionModel[];
@@ -33,9 +35,9 @@ export abstract class PlotMaker {
 
   protected element: ElementRef;
 
-  protected onValueChanged?: (documentId: string, attributeId: string, value: string) => void;
+  protected onValueChanged?: (valueChange: ValueChange) => void;
 
-  protected onDataChanged?: (data: Data[]) => void;
+  protected onDataChanged?: (dataChange: DataChange) => void;
 
   public updateData(element: ElementRef, collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     this.element = element;
@@ -44,11 +46,11 @@ export abstract class PlotMaker {
     this.config = config;
   }
 
-  public setOnValueChanged(onValueChanged: (documentId: string, attributeId: string, value: string) => void) {
+  public setOnValueChanged(onValueChanged: (valueChange: ValueChange) => void) {
     this.onValueChanged = onValueChanged;
   }
 
-  public setOnDataChanged(onDataChanged: (data: Data[]) => void) {
+  public setOnDataChanged(onDataChanged: (dataChange: DataChange) => void) {
     this.onDataChanged = onDataChanged;
   }
 
@@ -62,5 +64,20 @@ export abstract class PlotMaker {
 
   public abstract initDrag();
 
+  public abstract destroyDrag();
+
   public abstract currentType(): ChartType;
+}
+
+export interface ValueChange {
+  documentId: string;
+  attributeId: string;
+  value: string;
+}
+
+export interface DataChange {
+  trace: number;
+  axis: string;
+  index: number;
+  value: string;
 }

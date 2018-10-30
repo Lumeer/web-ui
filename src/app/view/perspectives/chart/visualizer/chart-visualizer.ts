@@ -23,7 +23,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
-import {PlotMaker} from './plot-maker/plot-maker';
+import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
 
 export class ChartVisualizer {
@@ -37,6 +37,7 @@ export class ChartVisualizer {
   private plotMaker: PlotMaker;
 
   constructor(private chartElement: ElementRef,
+              private writable: boolean,
               private onValueChanged?: (documentId: string, attributeId: string, value: string) => void) {
   }
 
@@ -44,8 +45,8 @@ export class ChartVisualizer {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type);
-      this.plotMaker.setOnValueChanged(this.onValueChanged);
-      this.plotMaker.setOnDataChanged((data) => this.onDataChanged(data));
+      this.plotMaker.setOnValueChanged((change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)));
+      this.plotMaker.setOnDataChanged((change) => this.onDataChanged(change));
     }
 
     if (shouldRefreshPlotMaker || this.shouldRefreshLayout(config)) {
@@ -54,6 +55,7 @@ export class ChartVisualizer {
 
     this.plotMaker.updateData(this.chartElement, collections, documents, config);
     this.data = this.plotMaker.createData();
+    this.incRevisionNumber();
   }
 
   private shouldRefreshPlotMaker(config: ChartConfig) {
@@ -65,9 +67,15 @@ export class ChartVisualizer {
       || JSON.stringify(config) !== JSON.stringify(this.plotMaker.currentConfig());
   }
 
-  public onDataChanged(data: Data[]) {
-    this.data = data;
+  public onDataChanged(change: DataChange) {
+    this.data[change.trace][change.axis][change.index] = change.value;
+    this.incRevisionNumber();
     this.refreshChart();
+  }
+
+  private incRevisionNumber() {
+    const rev = this.layout['datarevision'];
+    this.layout['datarevision'] = rev ? rev + 1 : 1;
   }
 
   private createConfig(): Partial<Config> {
@@ -78,12 +86,12 @@ export class ChartVisualizer {
 
   public createChartAndVisualize() {
     this.createNewChart();
-    this.initDrag();
+    this.initDragIfAllowed();
   }
 
   public visualize() {
     this.refreshChart();
-    this.initDrag();
+    this.initDragIfAllowed();
   }
 
   private createNewChart() {
@@ -94,8 +102,20 @@ export class ChartVisualizer {
     react(this.chartElement.nativeElement, this.data, this.layout);
   }
 
-  private initDrag() {
+  private initDragIfAllowed() {
+    if (this.writable) {
+      this.plotMaker.initDrag();
+    }
+  }
+
+  public enableWrite() {
+    this.writable = true;
     this.plotMaker.initDrag();
+  }
+
+  public disableWrite() {
+    this.writable = false;
+    this.plotMaker.destroyDrag();
   }
 
 }

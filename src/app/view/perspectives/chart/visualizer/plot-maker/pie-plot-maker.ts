@@ -75,4 +75,8 @@ export class PiePlotMaker extends PlotMaker {
     // TODO
   }
 
+  public destroyDrag() {
+    // TODO
+  }
+
 }
