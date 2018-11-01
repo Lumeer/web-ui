@@ -143,8 +143,8 @@ export class BarPlotMaker extends PlotMaker {
     return attribute && attribute.name;
   }
 
-  public createLayout(config: ChartConfig): Partial<Layout> {
-    if (config.axes[ChartAxisType.Y2]) {
+  public createLayout(): Partial<Layout> {
+    if (this.config.axes[ChartAxisType.Y2]) {
       return {
         barmode: 'group',
         yaxis2: {
@@ -169,6 +169,14 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   public destroyDrag() {
+    // TODO
+  }
+
+  public dragEnabledChange() {
+    // TODO
+  }
+
+  public onRelayout() {
     // TODO
   }
 

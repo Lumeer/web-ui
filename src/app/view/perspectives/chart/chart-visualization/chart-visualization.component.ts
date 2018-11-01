@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -53,11 +53,14 @@ export class ChartVisualizationComponent implements OnChanges {
 
   private chartVisualizer: ChartVisualizer;
 
+  constructor(private ngZone: NgZone) {
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.config && this.config) {
+    if ((changes.documents || changes.config) && this.config) {
       this.visualize();
     }
-    if (changes.allowedPermissions) {
+    if (changes.allowedPermissions && this.allowedPermissions) {
       this.refreshChartPermissions();
     }
   }
@@ -75,12 +78,12 @@ export class ChartVisualizationComponent implements OnChanges {
     const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
     this.chartVisualizer = new ChartVisualizer(this.chartElement, writable, onValueChange);
     this.setChartData();
-    this.chartVisualizer.createChartAndVisualize();
+    this.ngZone.runOutsideAngular(() => this.chartVisualizer.createChartAndVisualize());
   }
 
   private refreshChart() {
     this.setChartData();
-    this.chartVisualizer.visualize();
+    this.ngZone.runOutsideAngular(() => this.chartVisualizer.visualize());
   }
 
   private setChartData() {

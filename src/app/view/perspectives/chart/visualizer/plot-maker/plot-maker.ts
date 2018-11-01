@@ -33,14 +33,16 @@ export abstract class PlotMaker {
 
   protected config: ChartConfig;
 
-  protected element: ElementRef;
-
   protected onValueChanged?: (valueChange: ValueChange) => void;
 
   protected onDataChanged?: (dataChange: DataChange) => void;
 
-  public updateData(element: ElementRef, collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
-    this.element = element;
+  protected dragEnabled: boolean = false;
+
+  constructor(protected element: ElementRef) {
+  }
+
+  public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     this.collections = collections;
     this.documents = documents;
     this.config = config;
@@ -58,15 +60,27 @@ export abstract class PlotMaker {
     return this.config ? {...this.config} : null;
   }
 
+  public setDragEnabled(enabled: boolean) {
+    const changed = enabled !== this.dragEnabled;
+    this.dragEnabled = enabled;
+    if (changed) {
+      this.dragEnabledChange();
+    }
+  }
+
+  public abstract dragEnabledChange();
+
   public abstract createData(): Data[];
 
-  public abstract createLayout(config: ChartConfig): Partial<Layout>;
+  public abstract createLayout(): Partial<Layout>;
 
   public abstract initDrag();
 
   public abstract destroyDrag();
 
   public abstract currentType(): ChartType;
+
+  public abstract onRelayout();
 }
 
 export interface ValueChange {

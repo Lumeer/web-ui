@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -37,7 +37,8 @@ import {ChartAction} from '../../../core/store/charts/charts.action';
 @Component({
   selector: 'chart-perspective',
   templateUrl: './chart-perspective.component.html',
-  styleUrls: ['./chart-perspective.component.scss']
+  styleUrls: ['./chart-perspective.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
@@ -46,7 +47,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query: QueryModel;
+  public query$ = new BehaviorSubject<QueryModel>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
@@ -63,14 +64,14 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToQuery() {
     const subscription = this.store$.pipe(select(selectQuery))
       .subscribe(query => {
-        this.query = query;
-        this.fetchDocuments();
+        this.query$.next(query);
+        this.fetchDocuments(query);
       });
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments() {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
+  private fetchDocuments(query: QueryModel) {
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private initChart() {

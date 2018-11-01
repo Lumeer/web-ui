@@ -1,4 +1,4 @@
-<div *ngIf="query | displayable; else notDisplayable" class="px-3">
+<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
   <ng-container *ngIf="{collection: collection$ | async, config: config$ | async} as data">
     <chart-config
       [collection]="data.collection"

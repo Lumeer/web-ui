@@ -63,7 +63,7 @@ export class PiePlotMaker extends PlotMaker {
     return data;
   }
 
-  public createLayout(config: ChartConfig): Partial<Layout> {
+  public createLayout(): Partial<Layout> {
     return {};
   }
 
@@ -76,6 +76,14 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   public destroyDrag() {
+    // TODO
+  }
+
+  public dragEnabledChange() {
+    // TODO
+  }
+
+  public onRelayout() {
     // TODO
   }
 

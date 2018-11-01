@@ -44,17 +44,19 @@ export class ChartVisualizer {
   public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
-      this.plotMaker = createPlotMakerByType(config.type);
+      this.plotMaker = createPlotMakerByType(config.type, this.chartElement);
       this.plotMaker.setOnValueChanged((change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)));
       this.plotMaker.setOnDataChanged((change) => this.onDataChanged(change));
     }
 
-    if (shouldRefreshPlotMaker || this.shouldRefreshLayout(config)) {
-      this.layout = this.plotMaker.createLayout(config);
-    }
+    const currentConfig = this.plotMaker.currentConfig();
 
-    this.plotMaker.updateData(this.chartElement, collections, documents, config);
+    this.plotMaker.updateData(collections, documents, config);
     this.data = this.plotMaker.createData();
+
+    if (shouldRefreshPlotMaker || this.shouldRefreshLayout(config, currentConfig)) {
+      this.layout = this.plotMaker.createLayout();
+    }
     this.incRevisionNumber();
   }
 
@@ -62,9 +64,9 @@ export class ChartVisualizer {
     return !this.plotMaker || this.plotMaker.currentType() !== config.type;
   }
 
-  private shouldRefreshLayout(config: ChartConfig) {
-    return !this.plotMaker || !this.plotMaker.currentConfig()
-      || JSON.stringify(config) !== JSON.stringify(this.plotMaker.currentConfig());
+  private shouldRefreshLayout(newConfig: ChartConfig, currentConfig: ChartConfig) {
+    return !this.plotMaker || !currentConfig
+      || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
   }
 
   public onDataChanged(change: DataChange) {
@@ -86,12 +88,13 @@ export class ChartVisualizer {
 
   public createChartAndVisualize() {
     this.createNewChart();
-    this.initDragIfAllowed();
+    this.refreshDrag();
+    this.chartElement.nativeElement.on('plotly_relayout', () => this.plotMaker.onRelayout());
   }
 
   public visualize() {
     this.refreshChart();
-    this.initDragIfAllowed();
+    this.refreshDrag();
   }
 
   private createNewChart() {
@@ -102,20 +105,22 @@ export class ChartVisualizer {
     react(this.chartElement.nativeElement, this.data, this.layout);
   }
 
-  private initDragIfAllowed() {
+  private refreshDrag() {
     if (this.writable) {
       this.plotMaker.initDrag();
+    } else {
+      this.plotMaker.destroyDrag();
     }
   }
 
   public enableWrite() {
     this.writable = true;
-    this.plotMaker.initDrag();
+    this.plotMaker && this.plotMaker.setDragEnabled(true);
   }
 
   public disableWrite() {
     this.writable = false;
-    this.plotMaker.destroyDrag();
+    this.plotMaker && this.plotMaker.setDragEnabled(false);
   }
 
 }
