@@ -44,7 +44,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/leaflet/dist/leaflet.css"
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/frappe-gantt/dist/frappe-gantt.css"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
