@@ -1,4 +1,4 @@
-<div *ngIf="query | displayable; else notDisplayable" class="px-3">
+<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
   <ng-container *ngIf="{collection: collection$ | async, config: config$ | async} as data">
     <chart-config
       [collection]="data.collection"
@@ -9,8 +9,10 @@
 
     <chart-visualization
       [collection]="data.collection"
+      [allowedPermissions]="data.collection | collectionPermissions | async"
       [documents]="documents$ | async"
-      [config]="data.config">
+      [config]="data.config"
+      (patchData)="patchDocumentData($event)">
     </chart-visualization>
 
   </ng-container>

@@ -18,7 +18,7 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
@@ -33,7 +33,7 @@ export class BarPlotMaker extends PlotMaker {
 
     if (xAxis && y1Axis && y2Axis) {
       data.push(this.createAxis1Data(xAxis, y1Axis));
-      // workaround data to group columns with multiple values
+      // workaround data to group columns with multiple axes
       data.push(...this.createHelperData(xAxis, y2Axis, y2Axis));
       data.push(this.createAxis2Data(xAxis, y2Axis));
     } else if (!y1Axis && (xAxis || y2Axis)) {
@@ -160,8 +160,24 @@ export class BarPlotMaker extends PlotMaker {
     return {};
   }
 
-  public getType(): ChartType {
+  public currentType(): ChartType {
     return ChartType.Bar;
+  }
+
+  public initDrag() {
+    // TODO
+  }
+
+  public destroyDrag() {
+    // TODO
+  }
+
+  public dragEnabledChange() {
+    // TODO
+  }
+
+  public onRelayout() {
+    // TODO
   }
 
 }

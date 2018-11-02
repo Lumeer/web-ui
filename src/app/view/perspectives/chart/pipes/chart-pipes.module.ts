@@ -25,7 +25,7 @@ import {ShowAxisSelectPipe} from './show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
 import {AxisSelectEmptyValuePipe} from './axis-select-empty-value.pipe';
 import {AxisSelectPlaceholderPipe} from './axis-select-placeholder.pipe';
-import {ChartAxesToSelectItemPipe} from './chart-axes-to-select-item.pipe';
+import {AxisSelectItemsPipe} from './axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
 
 @NgModule({
@@ -39,7 +39,7 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
     AxisSelectPlaceholderPipe,
-    ChartAxesToSelectItemPipe,
+    AxisSelectItemsPipe,
     ConfigAxisByTypePipe
   ],
   exports: [
@@ -49,7 +49,7 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
     AxisSelectPlaceholderPipe,
-    ChartAxesToSelectItemPipe,
+    AxisSelectItemsPipe,
     ConfigAxisByTypePipe
   ]
 })
