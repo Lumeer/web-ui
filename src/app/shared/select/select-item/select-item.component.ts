@@ -53,14 +53,16 @@ export class SelectItemComponent {
   public select = new EventEmitter<any>();
 
   @Output()
-  public removed = new EventEmitter();
+  public remove = new EventEmitter();
 
   public onSelect(item: SelectItemModel) {
     this.select.emit(item.id);
   }
 
-  public onRemove() {
-    this.removed.emit();
+  public onRemove(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.remove.emit();
   }
 
 }
