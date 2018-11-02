@@ -465,7 +465,7 @@ export class TablesEffects {
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action => combineLatest(
       this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
-      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query))), // TODO maybe remove links from query
+      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))), // TODO maybe remove links from query
       this.store$.pipe(select(selectMoveTableCursorDown))
     ).pipe(
       first(),
