@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../../../core/store/projects/project.model';
-import {Resource} from '../../../../../core/dto/index';
+import {Resource} from '../../../../../core/dto';
 
 @Component({
   selector: 'resource-list',

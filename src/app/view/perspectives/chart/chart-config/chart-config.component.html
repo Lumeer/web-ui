@@ -8,21 +8,19 @@
                (select)="onTypeSelect($event)">
   </select-item>
 
-  <ng-container *ngIf="axes$ | async | chartAxesToSelectItem:[collection] as selectItems">
-
-    <ng-container *ngFor="let axis of axes; let isLast = last">
-      <select-item
-        *ngIf="axis | showAxisSelect:config"
-        [class.mr-2]="!isLast"
-        [disabled]="!canManageConfig"
-        [items]="selectItems"
-        [selectedId]="config.axes[axis]"
-        [placeholderText]="axis | axisSelectPlaceholder"
-        [emptyValue]="axis | axisSelectEmptyValue"
-        (select)="onAxisSelect(axis, $event)">
-      </select-item>
-    </ng-container>
-
+  <ng-container *ngFor="let axis of axes; let isLast = last">
+    <select-item
+      *ngIf="axis | showAxisSelect:config"
+      [class.mr-2]="!isLast"
+      [disabled]="!canManageConfig"
+      [items]="[collection] | axisSelectItems:axis:config"
+      [selectedId]="config.axes[axis]"
+      [placeholderText]="axis | axisSelectPlaceholder"
+      [emptyValue]="axis | axisSelectEmptyValue"
+      [removable]="true"
+      (select)="onAxisSelect(axis, $event)"
+      (remove)="onAxisRemoved(axis)">
+    </select-item>
   </ng-container>
 
 </div>

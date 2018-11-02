@@ -17,6 +17,8 @@
     "start": "npm run reset-env && ng serve",
     "start:cs": "npm run reset-env && ng serve --configuration=cs",
     "start:en": "npm run reset-env && ng serve --configuration=en",
+    "test": "ng test",
+    "test:watch": "ng test --watch",
     "workaround": "sed -i -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js",
     "cypress:run": "npx cypress run"
   },
@@ -110,7 +112,7 @@
   },
   "lint-staged": {
     "linters": {
-      "*.ts": [
+      "*.ts,!*.spec.ts": [
         "npm run tslint",
         "git add"
       ]

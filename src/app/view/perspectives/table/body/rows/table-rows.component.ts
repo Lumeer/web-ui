@@ -22,8 +22,8 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
@@ -50,7 +50,7 @@ export class TableRowsComponent implements OnChanges {
   public rows$: Observable<TableConfigRow[]>;
 
   public constructor(public element: ElementRef,
-                     private store$: Store<AppState>) {
+    private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -66,7 +66,7 @@ export class TableRowsComponent implements OnChanges {
     this.rows$ = combineLatest(
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query)),
+        select(selectDocumentsByCustomQuery(query, false, true)),
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
       )
     ).pipe(

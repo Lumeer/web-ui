@@ -93,13 +93,19 @@
               "aot": true,
               "i18nFile": "src/i18n/messages.cs.xlf",
               "i18nFormat": "xlf",
-              "i18nLocale": "cs"
+              "i18nLocale": "cs",
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": false
             },
             "en": {
               "aot": true,
               "i18nFile": "src/i18n/messages.en.xlf",
               "i18nFormat": "xlf",
-              "i18nLocale": "en"
+              "i18nLocale": "en",
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": false
             }
           }
         },
@@ -133,7 +139,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "assets": [
