@@ -18,144 +18,183 @@
  */
 
 import {} from 'jasmine';
+import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
 
 const documents: DocumentModel[] = [
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_0',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'IBM_DOCUMENT',
     data: {
       a1: 'IBM'
     }
   },
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_1',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'REDHAT_DOCUMENT',
     data: {
-      a1: 'Red Hat'
+      a1: 'Red Hat',
+      a2: 'aturing@lumeer.io'
     },
     metaData: {
-      parentId: 'DOCUMENT_0'
+      parentId: 'IBM_DOCUMENT'
     }
   },
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_2',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'JBOSS_DOCUMENT',
     data: {
       a1: 'JBoss'
     },
     metaData: {
-      parentId: 'DOCUMENT_1'
+      parentId: 'REDHAT_DOCUMENT'
     }
   },
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_3',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'SOFTLAYER_DOCUMENT',
     data: {
       a1: 'SoftLayer'
     },
     metaData: {
-      parentId: 'DOCUMENT_0'
+      parentId: 'IBM_DOCUMENT'
     }
   },
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_4',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'MICROSOFT_DOCUMENT',
     data: {
       a1: 'Microsoft'
     }
   },
   {
-    collectionId: 'COLLECTION_0',
-    id: 'DOCUMENT_5',
+    collectionId: 'COMPANIES_COLLECTION',
+    id: 'LINKEDIN_DOCUMENT',
     data: {
       a1: 'LinkedIn'
     },
     metaData: {
-      parentId: 'DOCUMENT_4'
+      parentId: 'MICROSOFT_DOCUMENT'
     }
   },
   {
-    collectionId: 'COLLECTION_1',
-    id: 'DOCUMENT_6',
+    collectionId: 'BANDS_COLLECTION',
+    id: 'RHCP_DOCUMENT',
     data: {
-      a1: 'Red Hot Chili Peppers'
+      a1: 'Red Hot Chili Peppers',
+      a2: 'music@lumeer.io'
     }
   },
   {
-    collectionId: 'COLLECTION_1',
-    id: 'DOCUMENT_7',
+    collectionId: 'BANDS_COLLECTION',
+    id: 'LINKIN_PARK_DOCUMENT',
     data: {
-      a1: 'Linkin Park'
+      a1: 'Linkin Park',
+      a2: 'music@lumeer.io'
     }
   },
 ];
 
+const turingUser: UserModel = {
+  email: 'aturing@lumeer.io',
+  groupsMap: {}
+};
+
+const musicUser: UserModel = {
+  email: 'music@lumeer.io',
+  groupsMap: {}
+};
+
 describe('Document filters', () => {
 
   it('should filter empty documents by undefined query', () => {
-    expect(filterDocumentsByQuery([], undefined)).toEqual([]);
+    expect(filterDocumentsByQuery([], undefined, undefined)).toEqual([]);
   });
 
   it('should filter empty documents by empty query', () => {
-    expect(filterDocumentsByQuery([], {})).toEqual([]);
+    expect(filterDocumentsByQuery([], {}, undefined)).toEqual([]);
   });
 
   it('should not filter documents by empty query', () => {
-    expect(filterDocumentsByQuery(documents, {})).toEqual(documents);
+    expect(filterDocumentsByQuery(documents, {}, undefined)).toEqual(documents);
   });
 
   it('should not filter documents by empty collections', () => {
-    expect(filterDocumentsByQuery(documents, {collectionIds: []})).toEqual(documents);
+    expect(filterDocumentsByQuery(documents, {collectionIds: []}, undefined)).toEqual(documents);
   });
 
   it('should not filter documents by all collections', () => {
-    expect(filterDocumentsByQuery(documents, {collectionIds: ['COLLECTION_0', 'COLLECTION_1']})).toEqual(documents);
+    expect(filterDocumentsByQuery(documents, {collectionIds: ['COMPANIES_COLLECTION', 'BANDS_COLLECTION']}, undefined)).toEqual(documents);
   });
 
   it('should filter documents by single collection', () => {
-    expect(filterDocumentsByQuery(documents, {collectionIds: ['COLLECTION_0']}).length).toBe(6);
+    expect(filterDocumentsByQuery(documents, {collectionIds: ['COMPANIES_COLLECTION']}, undefined).length).toBe(6);
   });
 
   it('should filter document by attribute value', () => {
-    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= IBM']}).map(document => document.id))
-      .toEqual(['DOCUMENT_0']);
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a1:= IBM']}, undefined).map(document => document.id))
+      .toEqual(['IBM_DOCUMENT']);
+  });
+
+  it('should filter by attribute value with userEmail() function and not existing user', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a2:= userEmail()']}, null).map(document => document.id))
+      .toEqual([]);
+  });
+
+  it('should filter document by attribute value with userEmail() function', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a2:= userEmail()']}, turingUser).map(document => document.id))
+      .toEqual(['REDHAT_DOCUMENT']);
+  });
+
+  it('should not filter document by attribute value from other collection with userEmail() function', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['BANDS_COLLECTION:a2:= userEmail()']}, turingUser).map(document => document.id))
+      .toEqual([]);
+  });
+
+  it('should filter two documents by attribute value with userEmail() function', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['BANDS_COLLECTION:a2:= userEmail()']}, musicUser).map(document => document.id))
+      .toEqual(['RHCP_DOCUMENT', 'LINKIN_PARK_DOCUMENT']);
+  });
+
+  it('should filter child documents by attribute value with userEmail() function', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a2:= userEmail()']}, turingUser, true).map(document => document.id))
+      .toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT']);
   });
 
   it('should filter children together with parent document by attribute values', () => {
-    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= IBM']}, true).map(document => document.id))
-      .toEqual(['DOCUMENT_0', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3']);
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a1:= IBM']}, undefined, true).map(document => document.id))
+      .toEqual(['IBM_DOCUMENT', 'REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'SOFTLAYER_DOCUMENT']);
   });
 
   it('should filter children together with nested parent document by attribute values', () => {
-    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= Red Hat']}, true).map(document => document.id))
-      .toEqual(['DOCUMENT_1', 'DOCUMENT_2']);
+    expect(filterDocumentsByQuery(documents, {filters: ['COMPANIES_COLLECTION:a1:= Red Hat']}, undefined, true).map(document => document.id))
+      .toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT']);
   });
 
   it('should filter documents from both collections by fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {fulltext: 'link'}).map(document => document.id))
-      .toEqual(['DOCUMENT_5', 'DOCUMENT_7']);
+    expect(filterDocumentsByQuery(documents, {fulltext: 'link'}, undefined).map(document => document.id))
+      .toEqual(['LINKEDIN_DOCUMENT', 'LINKIN_PARK_DOCUMENT']);
   });
 
   it('should filter documents from single collection by collection and fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {collectionIds: ['COLLECTION_0'], fulltext: 'link'}).map(document => document.id))
-      .toEqual(['DOCUMENT_5']);
+    expect(filterDocumentsByQuery(documents, {collectionIds: ['COMPANIES_COLLECTION'], fulltext: 'link'}, undefined).map(document => document.id))
+      .toEqual(['LINKEDIN_DOCUMENT']);
   });
 
   it('should filter children together with parent document by fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {fulltext: 'IBM'}, true).map(document => document.id))
-      .toEqual(['DOCUMENT_0', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3']);
+    expect(filterDocumentsByQuery(documents, {fulltext: 'IBM'}, undefined, true).map(document => document.id))
+      .toEqual(['IBM_DOCUMENT', 'REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'SOFTLAYER_DOCUMENT']);
   });
 
   it('should filter only matching document without children by fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {fulltext: 'red'}).map(document => document.id))
-      .toEqual(['DOCUMENT_1', 'DOCUMENT_6']);
+    expect(filterDocumentsByQuery(documents, {fulltext: 'red'}, undefined).map(document => document.id))
+      .toEqual(['REDHAT_DOCUMENT', 'RHCP_DOCUMENT']);
   });
 
   it('should filter children together with nested parent document by fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {fulltext: 'red'}, true).map(document => document.id))
-      .toEqual(['DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_6']);
+    expect(filterDocumentsByQuery(documents, {fulltext: 'red'}, undefined, true).map(document => document.id))
+      .toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'RHCP_DOCUMENT']);
   });
 
 });

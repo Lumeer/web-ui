@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
 import {isArraySubset} from '../../../shared/utils/array.utils';
 import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
@@ -50,12 +49,14 @@ export const selectDocumentsByReadPermission = createSelector(selectAllDocuments
   return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
 });
 
-export const selectDocumentsByQuery = createSelector(selectDocumentsByReadPermission, selectQuery,
-  (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
+export const selectDocumentsByQuery = createSelector(
+  selectDocumentsByReadPermission, selectQuery, selectCurrentUser,
+  (documents, query, currentUser): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query, currentUser)
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) => createSelector(selectDocumentsByReadPermission,
-  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, includeChildren)
+export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) => createSelector(
+  selectDocumentsByReadPermission, selectCurrentUser,
+  (documents, currentUser) => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, currentUser, includeChildren)
 );
 
 export const selectLinkTypesByReadPermission = createSelector(selectAllLinkTypes, selectCollectionsByReadPermission, (linkTypes, collections) => {
