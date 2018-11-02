@@ -24,7 +24,7 @@ import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.mo
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
 
-export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel, includeChildren?: boolean): DocumentModel[] {
   documents = documents.filter(document => typeof (document) === 'object')
     .filter(document => document);
 
@@ -33,7 +33,7 @@ export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryM
   }
 
   let filteredDocuments = filterDocumentsByDocumentsIds(documents, query.documentIds);
-  filteredDocuments = mergeDocuments(filteredDocuments, filterDocumentsByFiltersAndFulltext(documents, query));
+  filteredDocuments = mergeDocuments(filteredDocuments, filterDocumentsByFiltersAndFulltext(documents, query, includeChildren));
 
   return paginate(filteredDocuments, query);
 }
@@ -52,10 +52,10 @@ function filterDocumentsByDocumentsIds(documents: DocumentModel[], documentsIds:
   return documents.filter(document => documentsIds.includes(document.id));
 }
 
-function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel, includeChildren?: boolean): DocumentModel[] {
   const collectionIdsFromQuery = getCollectionIdsFromQuery(query);
 
-  const documentsMap = documents.reduce((docsMap, document) => ({...docsMap, [document.id]: document}), {});
+  const documentsMap = includeChildren ? documents.reduce((docsMap, document) => ({...docsMap, [document.id]: document}), {}) : {};
 
   if (collectionIdsFromQuery.length === 0 && query.fulltext) {
     return filterDocumentsByFulltext(documents, query.fulltext, documentsMap);

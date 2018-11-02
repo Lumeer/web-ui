@@ -18,21 +18,21 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {selectAllCollections} from '../collections/collections.state';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {selectCurrentView} from '../views/views.state';
-import {selectCurrentUser} from '../users/users.state';
-import {getCollectionsIdsFromView} from '../collections/collection.util';
+import {isArraySubset} from '../../../shared/utils/array.utils';
 import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
-import {selectAllDocuments} from '../documents/documents.state';
-import {selectQuery} from '../navigation/navigation.state';
+import {getCollectionsIdsFromView} from '../collections/collection.util';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
+import {selectAllCollections} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
-import {filterDocumentsByQuery} from '../documents/documents.filters';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
+import {filterDocumentsByQuery} from '../documents/documents.filters';
+import {selectAllDocuments} from '../documents/documents.state';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
-import {isArraySubset} from '../../../shared/utils/array.utils';
+import {selectCurrentUser} from '../users/users.state';
+import {selectCurrentView} from '../views/views.state';
 
 export const selectCollectionsByReadPermission = createSelector(selectAllDocuments, selectAllCollections, selectAllLinkTypes,
   selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
@@ -54,8 +54,8 @@ export const selectDocumentsByQuery = createSelector(selectDocumentsByReadPermis
   (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
-  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
+export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) => createSelector(selectDocumentsByReadPermission,
+  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, includeChildren)
 );
 
 export const selectLinkTypesByReadPermission = createSelector(selectAllLinkTypes, selectCollectionsByReadPermission, (linkTypes, collections) => {

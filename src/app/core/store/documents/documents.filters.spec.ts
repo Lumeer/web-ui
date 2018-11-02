@@ -92,7 +92,7 @@ const documents: DocumentModel[] = [
   },
 ];
 
-describe('documents.filters', () => {
+describe('Document filters', () => {
 
   it('should filter empty documents by undefined query', () => {
     expect(filterDocumentsByQuery([], undefined)).toEqual([]);
@@ -118,28 +118,43 @@ describe('documents.filters', () => {
     expect(filterDocumentsByQuery(documents, {collectionIds: ['COLLECTION_0']}).length).toBe(6);
   });
 
-  it('should filter children together with parent document by attribute values', () => {
+  it('should filter document by attribute value', () => {
     expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= IBM']}).map(document => document.id))
+      .toEqual(['DOCUMENT_0']);
+  });
+
+  it('should filter children together with parent document by attribute values', () => {
+    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= IBM']}, true).map(document => document.id))
       .toEqual(['DOCUMENT_0', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3']);
   });
 
   it('should filter children together with nested parent document by attribute values', () => {
-    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= Red Hat']}).map(document => document.id))
+    expect(filterDocumentsByQuery(documents, {filters: ['COLLECTION_0:a1:= Red Hat']}, true).map(document => document.id))
       .toEqual(['DOCUMENT_1', 'DOCUMENT_2']);
   });
 
-  it('should filter some by fulltext', () => {
+  it('should filter documents from both collections by fulltext', () => {
     expect(filterDocumentsByQuery(documents, {fulltext: 'link'}).map(document => document.id))
       .toEqual(['DOCUMENT_5', 'DOCUMENT_7']);
   });
 
+  it('should filter documents from single collection by collection and fulltext', () => {
+    expect(filterDocumentsByQuery(documents, {collectionIds: ['COLLECTION_0'], fulltext: 'link'}).map(document => document.id))
+      .toEqual(['DOCUMENT_5']);
+  });
+
   it('should filter children together with parent document by fulltext', () => {
-    expect(filterDocumentsByQuery(documents, {fulltext: 'IBM'}).map(document => document.id))
+    expect(filterDocumentsByQuery(documents, {fulltext: 'IBM'}, true).map(document => document.id))
       .toEqual(['DOCUMENT_0', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3']);
   });
 
-  it('should filter children together with nested parent document by fulltext', () => {
+  it('should filter only matching document without children by fulltext', () => {
     expect(filterDocumentsByQuery(documents, {fulltext: 'red'}).map(document => document.id))
+      .toEqual(['DOCUMENT_1', 'DOCUMENT_6']);
+  });
+
+  it('should filter children together with nested parent document by fulltext', () => {
+    expect(filterDocumentsByQuery(documents, {fulltext: 'red'}, true).map(document => document.id))
       .toEqual(['DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_6']);
   });
 
