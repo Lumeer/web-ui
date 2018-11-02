@@ -19,7 +19,6 @@
 
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -30,6 +29,7 @@ import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectCollectionById} from '../collections/collections.state';
+import {CommonAction} from '../common/common.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -245,11 +245,18 @@ export class DocumentsEffects {
       return this.store$.pipe(
         select(selectDocumentById(documentId)),
         first(),
-        mergeMap(document => {
+        mergeMap(oldDocument => {
           return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
-            map(dto => new DocumentsAction.UpdateSuccess({
-              document: {...convertDocumentDtoToModel(dto), data: document.data}
-            })),
+            mergeMap(dto => {
+              const document = {...convertDocumentDtoToModel(dto), data: oldDocument.data};
+              const actions: Action[] = [new DocumentsAction.UpdateSuccess({document})];
+
+              if (action.payload.onSuccess) {
+                actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)}));
+              }
+
+              return actions;
+            }),
             catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
           );
         })
@@ -324,18 +331,18 @@ export class DocumentsEffects {
   );
 
   constructor(private actions$: Actions,
-              private documentService: DocumentService,
-              private collectionService: CollectionService,
-              private i18n: I18n,
-              private searchService: SearchService,
-              private store$: Store<AppState>) {
+    private documentService: DocumentService,
+    private collectionService: CollectionService,
+    private i18n: I18n,
+    private searchService: SearchService,
+    private store$: Store<AppState>) {
   }
 
 }
 
 function createSyncCollectionAction(collection: CollectionModel,
-                                    newDocument: DocumentModel,
-                                    oldDocument: DocumentModel): CollectionsAction.UpdateSuccess {
+  newDocument: DocumentModel,
+  oldDocument: DocumentModel): CollectionsAction.UpdateSuccess {
   const newAttributeIds: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
   const oldAttributeIds: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
 
@@ -347,8 +354,8 @@ function createSyncCollectionAction(collection: CollectionModel,
 }
 
 function updateAttributes(attributes: AttributeModel[],
-                          newDocumentAttributeIds: string[],
-                          oldDocumentAttributeIds: string[]): AttributeModel[] {
+  newDocumentAttributeIds: string[],
+  oldDocumentAttributeIds: string[]): AttributeModel[] {
   const addedAttributeIds = newDocumentAttributeIds.filter(name => !oldDocumentAttributeIds.includes(name));
   const removedAttributeIds = oldDocumentAttributeIds.filter(name => !newDocumentAttributeIds.includes(name));
 

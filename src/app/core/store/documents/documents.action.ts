@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Action} from '@ngrx/store';
-import {DocumentMetaDataDto} from '../../dto/document.dto';
-import {QueryModel} from '../navigation/query.model';
-import {DocumentMetaData, DocumentModel} from './document.model';
+import { Action } from '@ngrx/store';
+import { QueryModel } from '../navigation/query.model';
+import { DocumentMetaData, DocumentModel } from './document.model';
 
 export enum DocumentsActionType {
 
@@ -108,7 +107,7 @@ export namespace DocumentsAction {
   export class Patch implements Action {
     public readonly type = DocumentsActionType.PATCH;
 
-    public constructor(public payload: { collectionId: string, documentId: string, document: Partial<DocumentModel>}) {
+    public constructor(public payload: { collectionId: string, documentId: string, document: Partial<DocumentModel> }) {
     }
   }
 
@@ -150,7 +149,12 @@ export namespace DocumentsAction {
   export class PatchMetaData implements Action {
     public readonly type = DocumentsActionType.PATCH_META_DATA;
 
-    public constructor(public payload: { collectionId: string, documentId: string, metaData: DocumentMetaData }) {
+    public constructor(public payload: {
+      collectionId: string,
+      documentId: string,
+      metaData: DocumentMetaData,
+      onSuccess?: (document: DocumentModel) => void
+    }) {
     }
   }
 
