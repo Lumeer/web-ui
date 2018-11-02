@@ -84,8 +84,8 @@ export class QueryConverter {
   public static parseFilter(filter: string): AttributeFilter {
     const [collectionId, attributeId, condition] = filter.split(':', 3);
 
-    const [conditionTypeString, value] = condition.replace(/ +/g, ' ').split(' ', 2);
-
+    const [conditionTypeString, ...values] = condition.replace(/ +/g, ' ').split(' ');
+    const value = values.join(' ');
     const conditionType = conditionFromString(conditionTypeString.trim().toLowerCase());
     if (conditionType == null) {
       return null;

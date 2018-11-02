@@ -21,6 +21,9 @@ import {Data, Layout} from 'plotly.js';
 import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {ElementRef} from '@angular/core';
+
+export const DEFAULT_GRID_HEIGHT = 270;
 
 export abstract class PlotMaker {
 
@@ -30,15 +33,65 @@ export abstract class PlotMaker {
 
   protected config: ChartConfig;
 
+  protected onValueChanged?: (valueChange: ValueChange) => void;
+
+  protected onDataChanged?: (dataChange: DataChange) => void;
+
+  protected dragEnabled: boolean = false;
+
+  constructor(protected element: ElementRef) {
+  }
+
   public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     this.collections = collections;
     this.documents = documents;
     this.config = config;
   }
 
+  public setOnValueChanged(onValueChanged: (valueChange: ValueChange) => void) {
+    this.onValueChanged = onValueChanged;
+  }
+
+  public setOnDataChanged(onDataChanged: (dataChange: DataChange) => void) {
+    this.onDataChanged = onDataChanged;
+  }
+
+  public currentConfig(): ChartConfig {
+    return this.config ? {...this.config} : null;
+  }
+
+  public setDragEnabled(enabled: boolean) {
+    const changed = enabled !== this.dragEnabled;
+    this.dragEnabled = enabled;
+    if (changed) {
+      this.dragEnabledChange();
+    }
+  }
+
+  public abstract dragEnabledChange();
+
   public abstract createData(): Data[];
 
   public abstract createLayout(): Partial<Layout>;
 
-  public abstract getType(): ChartType;
+  public abstract initDrag();
+
+  public abstract destroyDrag();
+
+  public abstract currentType(): ChartType;
+
+  public abstract onRelayout();
+}
+
+export interface ValueChange {
+  documentId: string;
+  attributeId: string;
+  value: string;
+}
+
+export interface DataChange {
+  trace: number;
+  axis: string;
+  index: number;
+  value: string;
 }

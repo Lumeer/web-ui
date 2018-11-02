@@ -61,7 +61,7 @@ export class TableHeaderComponent {
     return part.index + ':' + (part.collectionId || part.linkTypeId);
   }
 
-  public onRowNumberColumnClick() {
+  public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 

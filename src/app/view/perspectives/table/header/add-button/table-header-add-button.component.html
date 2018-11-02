@@ -1,0 +1,49 @@
+<div class="dropdown">
+  <button type="button"
+          class="add-part-button"
+          data-toggle="dropdown"
+          id="tableHeaderAddButton"
+          title="Add collection"
+          i18n-title="@@table.header.add-button"
+          aria-haspopup="true"
+          aria-expanded="false">
+    <i class="far fa-plus"></i>
+  </button>
+  <div *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async} as data"
+       class="dropdown-menu dropdown-menu-right"
+       aria-labelledby="tableHeaderAddButton">
+    <div *ngIf="data.linkTypes && data.linkTypes.length > 0"
+         class="dropdown-header cursor-not-allowed"
+         i18n="@@table.header.suggestion.link.existing">Use existing link
+    </div>
+    <a *ngFor="let linkType of data.linkTypes"
+       [title]="linkType[0]?.name"
+       class="dropdown-item"
+       (click)="onUseLinkType(linkType[0])">
+      <icons-presenter [colors]="[linkType[1]?.color, linkType[2]?.color]"
+                       [icons]="[linkType[1]?.icon, linkType[2]?.icon]"
+                       class="mr-1">
+      </icons-presenter>
+      <span>{{linkType[0]?.name | truncate:20}}</span>
+    </a>
+
+    <div *ngIf="data.collections && data.collections.length > 0 && data.linkTypes && data.linkTypes.length > 0"
+         class="dropdown-divider">
+    </div>
+
+    <div *ngIf="data.collections && data.collections.length > 0"
+         class="dropdown-header cursor-not-allowed"
+         i18n="@@create.new.link">Create new link
+    </div>
+    <a *ngFor="let collection of data.collections"
+       [title]="collection.name"
+       class="dropdown-item"
+       (click)="onUseCollection(collection)">
+      <icons-presenter [colors]="[collection.color]"
+                       [icons]="[collection.icon]"
+                       class="mx-2">
+      </icons-presenter>
+      <span>{{collection.name | truncate:20}}</span>
+    </a>
+  </div>
+</div>

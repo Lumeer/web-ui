@@ -21,8 +21,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {catchError, debounceTime, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
-import {Suggestions, SuggestionType} from '../../../../../core/dto/index';
-import {SearchService} from '../../../../../core/rest/index';
+import {Suggestions, SuggestionType} from '../../../../../core/dto';
+import {SearchService} from '../../../../../core/rest';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
 import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';

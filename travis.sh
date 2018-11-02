@@ -34,6 +34,9 @@ echo "Linting..."
 npm run lint #>> $BUILD_OUTPUT 2>&1
 #dump_output
 
+echo "Unit testing..."
+npm run test
+
 if false; then
 
   echo "Starting UI..."

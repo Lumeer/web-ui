@@ -1,0 +1,7 @@
+.scatterlayer .trace:last-child .points path {
+  pointer-events: all;
+}
+
+.js-plotly-plot .plotly .modebar {
+  z-index: 999;
+}
