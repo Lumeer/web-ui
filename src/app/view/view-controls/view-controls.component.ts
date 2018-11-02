@@ -33,7 +33,7 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
-import {selectPerspectiveViewConfig, selectViewConfigChanged, selectViewQueryChanged} from '../../core/store/views/views.state';
+import {selectPerspectiveViewConfig, selectViewConfigChanged, selectViewPerspectiveChanged, selectViewQueryChanged} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 
@@ -125,18 +125,19 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       this.nameChanged$.next(false);
-      this.bindViewChanged(this.view);
+      this.bindViewChanged();
     }
   }
 
-  private bindViewChanged(view: ViewModel) {
+  private bindViewChanged() {
     this.viewChanged$ = combineLatest(
       this.nameChanged$,
       this.store$.pipe(select(selectViewConfigChanged)),
-      this.store$.pipe(select(selectViewQueryChanged))
+      this.store$.pipe(select(selectViewQueryChanged)),
+      this.store$.pipe(select(selectViewPerspectiveChanged))
     ).pipe(
       debounceTime(100),
-      map(([nameChanged, configChanged, queryChanged]) => nameChanged || configChanged || queryChanged)
+      map(([nameChanged, configChanged, queryChanged, perspectiveChanged]) => nameChanged || configChanged || queryChanged || perspectiveChanged)
     );
   }
 

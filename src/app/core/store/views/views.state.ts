@@ -87,3 +87,8 @@ export const selectViewQueryChanged = createSelector(
   selectCurrentView, selectQuery,
   (view, query) => view && query && !areQueriesEqual(view.query, query)
 );
+
+export const selectViewPerspectiveChanged = createSelector(
+  selectCurrentView, selectPerspective,
+  (view, perspective) => view && perspective && view.perspective !== perspective
+);
