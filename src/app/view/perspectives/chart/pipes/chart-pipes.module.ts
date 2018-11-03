@@ -24,7 +24,6 @@ import {AttributeNamePipe} from './attribute-name.pipe';
 import {ShowAxisSelectPipe} from './show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
 import {AxisSelectEmptyValuePipe} from './axis-select-empty-value.pipe';
-import {AxisSelectPlaceholderPipe} from './axis-select-placeholder.pipe';
 import {AxisSelectItemsPipe} from './axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
 
@@ -38,7 +37,6 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
-    AxisSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe
   ],
@@ -48,7 +46,6 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
-    AxisSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe
   ]
