@@ -45,11 +45,10 @@ export class GanttChartComponent implements OnInit {
 
   public collections$: Observable<CollectionModel[]>;
   public documents$: Observable<DocumentModel[]>;
-  //public calendar$: Observable<MapModel>;
   public validQuery$: Observable<boolean>;
-  //private calendarId = DEFAULT_GANTT_ID;     //TODO
 
-  private subscriptions = new Subscription();
+  //public calendar$: Observable<MapModel>;
+  //private calendarId = DEFAULT_GANTT_ID;     //TODO
 
   constructor(private store$: Store<{}>) {
   }
@@ -70,6 +69,8 @@ export class GanttChartComponent implements OnInit {
   }
 
   private showGantt() {
+
+    // console.log(this.collections$.)
 
     const tasks = [
       {
@@ -148,6 +149,14 @@ export class GanttChartComponent implements OnInit {
       language: 'en'
     });
    // console.log(gantt_chart);
+
+
+
   }
+
+
+  // public printCollection(collection: Observable<CollectionModel[]>){
+  //   console.log(collection.)
+  // }
 
 }
