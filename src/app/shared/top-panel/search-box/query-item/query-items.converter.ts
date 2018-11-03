@@ -110,7 +110,8 @@ export class QueryItemsConverter {
   }
 
   private createLinkItems(linkTypeIds: string[]): QueryItem[] {
-    return this.data.linkTypes.filter(linkType => linkTypeIds.includes(linkType.id))
+    return linkTypeIds.map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
+      .filter(linkType => !!linkType)
       .map(linkType => {
         const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
         const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);

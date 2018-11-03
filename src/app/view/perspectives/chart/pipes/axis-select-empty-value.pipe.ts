@@ -31,7 +31,7 @@ export class AxisSelectEmptyValuePipe implements PipeTransform {
 
   public transform(axisType: ChartAxisType): string {
     return this.i18n({
-      id: 'chart.axis.placeholder',
+      id: 'chart.axis.placeholder.empty',
       value: 'Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis'
     }, {
       axisType
