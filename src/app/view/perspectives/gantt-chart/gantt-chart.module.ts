@@ -23,16 +23,18 @@ import {SharedModule} from '../../../shared/shared.module';
 import {GanttChartComponent} from './gantt-chart.component';
 //import {RouterModule} from '@angular/router';
 import {GanttChartRoutingModule} from './gantt-chart-routing.module';
+import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
+import {GanttChartConfigSelectComponent} from './config-select/gantt-chart-config-select.component';
 
 @NgModule({
   imports: [    //not sure
     SharedModule,
-
     GanttChartRoutingModule
-
   ],
   declarations: [
-    GanttChartComponent
+    GanttChartComponent,
+    GanttChartConfigComponent,
+    GanttChartConfigSelectComponent
   ]
 })
 export class GanttChartModule { }

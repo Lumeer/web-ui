@@ -3,3 +3,10 @@
 </p>
 
 <div class="gantt-target"></div>
+
+<ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async} as data">
+  <gantt-chart-config [collections]="data.collections"
+                       [documents]="data.documents"
+                        class="mx-3 mb-3">
+  </gantt-chart-config>
+</ng-container>
