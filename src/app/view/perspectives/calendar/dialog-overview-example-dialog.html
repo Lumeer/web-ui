@@ -1,13 +1,13 @@
-<h2 mat-dialog-title>{{description}}</h2>
+<h2 mat-dialog-title>{{title}}</h2>
 
-<mat-dialog-content [formGroup]="form">
-
-  <mat-form-field>
-    <input matInput
-           placeholder="Course Description"
-           formControlName="description">
-  </mat-form-field>
-  ....
+<mat-dialog-content>
+  <div>{{description}}</div>
+  <!--<mat-form-field>-->
+    <!--<input matInput-->
+           <!--placeholder="Course Description"-->
+           <!--formControlName="description">-->
+  <!--</mat-form-field>-->
+  <!--....-->
 
 </mat-dialog-content>
 

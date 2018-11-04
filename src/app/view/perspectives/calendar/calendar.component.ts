@@ -81,7 +81,8 @@ export class CalendarComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       id: 1,
-      title: 'Angular For Beginners'
+      title: 'Angular For Beginners',
+      description: this.events
     };
 
     this.dialog.open(CourseDialogComponent, dialogConfig);
@@ -140,22 +141,28 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 @Component({
   selector: 'course-dialog',
   templateUrl: './dialog-overview-example-dialog.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./dialog.css']
 })
 export class CourseDialogComponent implements OnInit {
 
 
   description:string;
+  title:string;
+
 
   constructor(
     private dialogRef: MatDialogRef<CourseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
 
     this.description = data.description;
+    this.title = data.title
   }
 
   ngOnInit() {
-    this.description = 'ahoj';
+    // this.form = fb.group({
+    //   description: [description, []],
+    //   ...
+    // });
   }
 
   save() {
