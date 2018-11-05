@@ -25,7 +25,10 @@ import {CollectionModel} from '../collections/collection.model';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];
-  return sortedDocuments.sort((a, b) => (a.creationDate.getTime() - b.creationDate.getTime()) * (sortDesc ? -1 : 1));
+  return sortedDocuments.sort((a, b) => {
+    const value = a.creationDate.getTime() - b.creationDate.getTime();
+    return (value !== 0 ? value : a.id.localeCompare(b.id))  * (sortDesc ? -1 : 1);
+  });
 }
 
 export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {
