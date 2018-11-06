@@ -218,7 +218,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   private parseViewShareUrl() {
     const currentUrl = window.location.href;
-    const match = currentUrl.match('.+\\/ui\\/w\\/.+\\/.+\\/view;vc=[^/]+');
+    const match = currentUrl.match('.+\/w\/.+\/.+\/view;vc=[^/]+');
     if (match && match[0]) {
       this.viewShareUrl$.next(match[0]);
     }
