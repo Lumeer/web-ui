@@ -228,24 +228,19 @@ export class LinePlotMaker extends PlotMaker {
   private createDrag(): any {
     const plotMaker = this;
     return d3.behavior.drag()
-      .origin(function () {
+      .origin(function (datum) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         this.yScale = plotMaker.createYScale(traceIx);
         this.traceIx = traceIx;
+        this.initialValue = plotMaker.getInitialValue(traceIx, datum.i);
         return plotMaker.getPointPosition(this);
       })
       .on('drag', function (datum) {
         const yMouse = d3.event.y;
         const index = datum.i;
-        let newValue = this.yScale(yMouse);
-        if (plotMaker.isNumeric(newValue)) {
-          newValue = Math.round(newValue);
-        } else {
-          newValue = newValue.toString();
-        }
-        this.newValue = newValue;
+        this.newValue = plotMaker.getNewValue(this, yMouse);
 
-        const dataChange = {trace: this.traceIx, axis: 'y', index, value: newValue};
+        const dataChange = {trace: this.traceIx, axis: 'y', index, value: this.newValue};
         plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
       })
       .on('dragend', function (datum) {
@@ -258,6 +253,26 @@ export class LinePlotMaker extends PlotMaker {
         }
 
       });
+  }
+
+  private getInitialValue(traceIx: number, index: number): any {
+    const attributeId = this.getAttributeIdForTrace(traceIx);
+    return this.documents[index].data[attributeId];
+  }
+
+  private getNewValue(point: any, y: number): any {
+    let newValue = point.yScale(y);
+    if (this.isNumeric(newValue)) {
+      const initialValue = point.initialValue;
+      if (this.isDecimal(initialValue)) {
+        newValue = Number.parseFloat(newValue).toFixed(2);
+      } else {
+        newValue = Math.round(newValue);
+      }
+    } else {
+      newValue = newValue.toString();
+    }
+    return newValue;
   }
 
   private canDragPoints(): boolean {
@@ -380,6 +395,10 @@ export class LinePlotMaker extends PlotMaker {
 
   private isNumeric(value: any): boolean {
     return !isNaN(value);
+  }
+
+  private isDecimal(value: number): boolean {
+    return value % 1 !== 0;
   }
 
 }
