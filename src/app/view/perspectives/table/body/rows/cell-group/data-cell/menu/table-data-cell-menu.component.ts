@@ -160,6 +160,16 @@ export class TableDataCellMenuComponent implements OnChanges {
     this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
   }
 
+  public onMoveUp() {
+    this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+  }
+
+  public onMoveDown() {
+    this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+  }
+
   public onIndent() {
     this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
   }

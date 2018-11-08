@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -44,10 +43,10 @@ import {QueryModel} from '../navigation/query.model';
 import {RouterAction} from '../router/router.action';
 import {ViewCursor} from '../views/view.model';
 import {ViewsAction} from '../views/views.action';
-import {moveTableCursor, TableCursor} from './table-cursor';
+import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
 import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
-import {createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
@@ -613,6 +612,139 @@ export class TablesEffects {
         }
       })
     ))
+  );
+
+  @Effect()
+  public moveRowUp$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+      if (rowIndex === 0) {
+        return [];
+      }
+
+      return combineLatest(
+        this.store$.pipe(select(selectTableRows(cursor.tableId))),
+        this.store$.pipe(select(selectDocumentsDictionary))
+      ).pipe(
+        first(),
+        mergeMap(([rows, documentsMap]) => {
+          const row = findTableRow(rows, cursor.rowPath);
+          const document = documentsMap[row && row.documentId];
+          const parentId = (document && document.metaData && document.metaData.parentId) || (row && row.parentDocumentId) || null;
+
+          const previousCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex - 1)};
+          const previousRow = findTableRow(rows, previousCursor.rowPath);
+          const previousDocument = documentsMap[previousRow && previousRow.documentId];
+          const previousParentId = (previousDocument && previousDocument.metaData && previousDocument.metaData.parentId)
+            || (previousRow && previousRow.parentDocumentId) || null;
+
+          const actions: Action[] = [
+            new TablesAction.RemoveRow({cursor}),
+            new TablesAction.ReplaceRows({cursor: previousCursor, rows: [row], deleteCount: 0})
+          ];
+
+          if (cursor.partIndex === 0 && parentId !== previousParentId) {
+            if (row.documentId) {
+              return [new DocumentsAction.PatchMetaData({
+                collectionId: document.collectionId,
+                documentId: document.id,
+                metaData: {parentId: previousParentId},
+                onSuccess: () => actions.forEach(a => this.store$.dispatch(a))
+              })];
+            } else {
+              return [
+                new TablesAction.RemoveRow({cursor}),
+                new TablesAction.ReplaceRows({cursor: previousCursor, rows: [{...row, parentDocumentId: previousParentId}], deleteCount: 0})
+              ];
+            }
+          }
+
+          return actions;
+        })
+      );
+    })
+  );
+
+  @Effect()
+  public moveRowDown$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.MoveRowDown>(TablesActionType.MOVE_ROW_DOWN),
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+
+      return combineLatest(
+        this.store$.pipe(select(selectTableRows(cursor.tableId))),
+        this.store$.pipe(select(selectTableRowsWithHierarchyLevels(cursor.tableId))),
+        this.store$.pipe(select(selectDocumentsDictionary))
+      ).pipe(
+        first(),
+        mergeMap(([rows, hierarchyRows, documentsMap]) => {
+          if (cursor.partIndex > 0) {
+            const row = findTableRow(rows, cursor.rowPath);
+            const nextLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 1)};
+            const nextLinkedRow = findTableRow(rows, nextLinkedCursor.rowPath);
+            if (!nextLinkedRow) {
+              return [];
+            }
+
+            const targetLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 2)};
+
+            return [
+              new TablesAction.ReplaceRows({cursor: targetLinkedCursor, rows: [row], deleteCount: 0}),
+              new TablesAction.RemoveRow({cursor}),
+            ];
+          }
+
+          const sourceRow = hierarchyRows[cursor.rowPath[0]];
+          const document = documentsMap[sourceRow && sourceRow.row.documentId];
+          const parentId = (document && document.metaData && document.metaData.parentId) || (sourceRow && sourceRow.row.parentDocumentId) || null;
+
+          const nextRow = hierarchyRows.slice(rowIndex + 1).find(row => row.level <= sourceRow.level);
+          if (!nextRow) {
+            return [];
+          }
+
+          const targetRowIndex = hierarchyRows.indexOf(nextRow) + 1;
+          const targetRow = hierarchyRows[targetRowIndex];
+          const targetCursor: TableBodyCursor = {...cursor, rowPath: [targetRowIndex]};
+          const targetDocument = documentsMap[targetRow && targetRow.row.documentId];
+          const targetParentId = (targetDocument && targetDocument.metaData && targetDocument.metaData.parentId)
+            || (targetRow && targetRow.row.parentDocumentId) || null;
+
+          const deleteCount = targetRowIndex - rowIndex - 1;
+          const childRows = rows.slice(rowIndex + 1, rowIndex + deleteCount);
+
+          const actions: Action[] = [
+            new TablesAction.ReplaceRows({cursor: targetCursor, rows: [sourceRow.row, ...childRows], deleteCount: 0}),
+            new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
+          ];
+
+          if (parentId !== targetParentId) {
+            if (sourceRow.row.documentId) {
+              return [new DocumentsAction.PatchMetaData({
+                collectionId: document.collectionId,
+                documentId: document.id,
+                metaData: {parentId: targetParentId},
+                onSuccess: () => actions.forEach(a => this.store$.dispatch(a))
+              })];
+            } else {
+              return [
+                new TablesAction.ReplaceRows({
+                  cursor: targetCursor,
+                  rows: [{...sourceRow.row, parentDocumentId: targetParentId}, ...childRows],
+                  deleteCount: 0
+                }),
+                new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
+              ];
+            }
+          }
+
+          return actions;
+        })
+      );
+    })
   );
 
   @Effect()

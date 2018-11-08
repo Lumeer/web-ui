@@ -2,24 +2,25 @@
   <ng-template (execute)="edit.emit()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-edit mr-1"
+       aria-hidden="true"></i>
     <span i18n="@@table.body.row.edit">Edit value</span>
   </ng-template>
 
   <ng-template contextMenuItem
                divider="true">
   </ng-template>
-  <ng-template (execute)="onAddRow(0)"
-               [enabled]="allowedPermissions?.writeWithView"
+  <ng-template (execute)="onMoveUp()"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-to-top mr-1" aria-hidden="true"></i>
-    <span i18n="@@table.body.row.add.above">Add row above</span>
+    <i class="fa fa-fw fa-arrow-alt-up mr-1"
+       aria-hidden="true"></i>
+    <span i18n="@@table.body.row.move-up">Move up</span>
   </ng-template>
-  <ng-template (execute)="onAddRow(1)"
-               [enabled]="allowedPermissions?.writeWithView"
+  <ng-template (execute)="onMoveDown()"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-to-bottom mr-1" aria-hidden="true"></i>
-    <span i18n="@@table.body.row.add.below">Add row below</span>
+    <i class="fa fa-fw fa-arrow-alt-down mr-1"
+       aria-hidden="true"></i>
+    <span i18n="@@table.body.row.move-down">Move down</span>
   </ng-template>
 
   <ng-container *ngIf="cursor.partIndex === 0">
@@ -30,16 +31,36 @@
     <ng-template *ngIf="indentable$ | async"
                  (execute)="onIndent()"
                  contextMenuItem>
-      <i class="fa fa-fw fa-indent mr-1" aria-hidden="true"></i>
+      <i class="fa fa-fw fa-indent mr-1"
+         aria-hidden="true"></i>
       <span i18n="@@table.body.row.indent">Indent</span>
     </ng-template>
     <ng-template *ngIf="outdentable$ | async"
                  (execute)="onOutdent()"
                  contextMenuItem>
-      <i class="fa fa-fw fa-outdent mr-1" aria-hidden="true"></i>
+      <i class="fa fa-fw fa-outdent mr-1"
+         aria-hidden="true"></i>
       <span i18n="@@table.body.row.outdent">Outdent</span>
     </ng-template>
   </ng-container>
+
+  <ng-template contextMenuItem
+               divider="true">
+  </ng-template>
+  <ng-template (execute)="onAddRow(0)"
+               [enabled]="allowedPermissions?.writeWithView"
+               contextMenuItem>
+    <i class="fa fa-fw fa-arrow-to-top mr-1"
+       aria-hidden="true"></i>
+    <span i18n="@@table.body.row.add.above">Add row above</span>
+  </ng-template>
+  <ng-template (execute)="onAddRow(1)"
+               [enabled]="allowedPermissions?.writeWithView"
+               contextMenuItem>
+    <i class="fa fa-fw fa-arrow-to-bottom mr-1"
+       aria-hidden="true"></i>
+    <span i18n="@@table.body.row.add.below">Add row below</span>
+  </ng-template>
 
   <ng-template contextMenuItem
                divider="true">
@@ -48,14 +69,16 @@
                (execute)="onUnlinkRow()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-unlink text-warning mr-1"
+       aria-hidden="true"></i>
     <span i18n="@@table.body.row.unlink">Unlink row</span>
   </ng-template>
   <ng-template *ngIf="!created || cursor.partIndex === 0"
                (execute)="onRemoveRow()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>
+    <i class="fas fa-fw fa-trash text-danger mr-1"
+       aria-hidden="true"></i>
     <span i18n="@@remove.row">Remove row</span>
   </ng-template>
 </context-menu>

@@ -18,10 +18,10 @@
  */
 
 import {Dictionary} from 'lodash';
-import {DocumentModel} from './document.model';
-import {ConditionType} from '../navigation/query.model';
-import {QueryConverter} from '../navigation/query.converter';
 import {CollectionModel} from '../collections/collection.model';
+import {QueryConverter} from '../navigation/query.converter';
+import {ConditionType} from '../navigation/query.model';
+import {DocumentModel} from './document.model';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];
@@ -37,7 +37,7 @@ export function mergeDocuments(documentsA: DocumentModel[], documentsB: Document
   return documentsA.concat(documentsBToAdd);
 }
 
-export function groupDocumentsByCollection(documents: DocumentModel[]): { [documentId: string]: [DocumentModel] } {
+export function groupDocumentsByCollection(documents: DocumentModel[]): {[documentId: string]: [DocumentModel]} {
   return documents.reduce((map, document) => {
     if (!map[document.collectionId]) {
       map[document.collectionId] = [];
@@ -47,7 +47,7 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): { [docum
   }, {});
 }
 
-export function generateDocumentData(collection: CollectionModel, filters: string[]): { [attributeId: string]: any } {
+export function generateDocumentData(collection: CollectionModel, filters: string[]): {[attributeId: string]: any} {
   if (!collection) {
     return [];
   }
