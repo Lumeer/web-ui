@@ -66,7 +66,6 @@ export abstract class PlotMaker {
     }
   }
 
-  public abstract dragEnabledChange();
 
   public abstract createData(): Data[];
 
@@ -78,7 +77,21 @@ export abstract class PlotMaker {
 
   public abstract currentType(): ChartType;
 
-  public abstract onRelayout();
+  public dragEnabledChange() {
+    this.refreshDrag();
+  }
+
+  public onRelayout() {
+    this.refreshDrag();
+  }
+
+  protected refreshDrag() {
+    if (this.dragEnabled) {
+      this.initDrag();
+    } else {
+      this.destroyDrag();
+    }
+  }
 }
 
 export interface ValueChange {

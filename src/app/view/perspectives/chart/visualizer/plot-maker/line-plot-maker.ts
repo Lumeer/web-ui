@@ -291,22 +291,6 @@ export class LinePlotMaker extends PlotMaker {
     this.getPoints().call(drag);
   }
 
-  public dragEnabledChange() {
-    this.refreshDrag();
-  }
-
-  public onRelayout() {
-    this.refreshDrag();
-  }
-
-  private refreshDrag() {
-    if (this.dragEnabled) {
-      this.initDrag();
-    } else {
-      this.destroyDrag();
-    }
-  }
-
   private getPoints(): any {
     return d3.selectAll('.scatterlayer .trace:last-of-type .points path');
   }

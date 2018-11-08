@@ -18,8 +18,8 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
-import {Data, Layout} from 'plotly.js';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {Data, Layout, d3} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
 export class BarPlotMaker extends PlotMaker {
@@ -163,18 +163,31 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   public initDrag() {
-    // TODO
+    this.destroyDrag();
+
+    this.assignDrag(this.createDrag());
+  }
+
+  private assignDrag(drag: any) {
+    this.getPoints().call(drag);
+  }
+
+  private createDrag(): any {
+    return d3.behavior.drag()
+      .on('drag', function (datum, index) {
+        console.log(d3.event, datum, index);
+      })
+      .on('dragend', function (datum, index) {
+        console.log('end', datum, index);
+      });
+  }
+
+
+  private getPoints(): any {
+    return d3.selectAll('.barlayer .trace .points .point path');
   }
 
   public destroyDrag() {
-    // TODO
-  }
-
-  public dragEnabledChange() {
-    // TODO
-  }
-
-  public onRelayout() {
-    // TODO
+    this.getPoints().on('.drag', null);
   }
 }

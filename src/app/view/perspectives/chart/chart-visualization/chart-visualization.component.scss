@@ -2,6 +2,10 @@
   pointer-events: all;
 }
 
+.barlayer .trace .points .point {
+  pointer-events: all;
+}
+
 .js-plotly-plot .plotly .modebar {
   z-index: 999;
 }
