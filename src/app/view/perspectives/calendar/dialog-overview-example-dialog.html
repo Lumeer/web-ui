@@ -1,7 +1,13 @@
-<h2 mat-dialog-title>{{title}}</h2>
+<h2 mat-dialog-title>{{title | date:'medium'}}</h2>
 
 <mat-dialog-content>
-  <div>{{description}}</div>
+  <div
+    class="cal-event"
+    *ngFor="let event of description"
+    [style.backgroundColor]="event.color.primary"
+    [ngClass]="event?.cssClass"
+    >
+    {{ event.title }}</div>
   <!--<mat-form-field>-->
     <!--<input matInput-->
            <!--placeholder="Course Description"-->
@@ -13,5 +19,4 @@
 
 <mat-dialog-actions>
   <button class="mat-raised-button"(click)="close()">Close</button>
-  <button class="mat-raised-button mat-primary"(click)="save()">Save</button>
 </mat-dialog-actions>

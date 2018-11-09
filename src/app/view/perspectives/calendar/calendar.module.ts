@@ -29,7 +29,7 @@ import {ContextMenuModule} from "ngx-contextmenu";
 
 import { FormsModule } from '@angular/forms';
 import {FlatpickrModule} from "angularx-flatpickr";
-import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModalModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MatDialogModule} from "@angular/material";
 
 @NgModule({
@@ -38,6 +38,7 @@ import {MatDialogModule} from "@angular/material";
     CommonModule,
     FormsModule,
     NgbModalModule,
+    NgbModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

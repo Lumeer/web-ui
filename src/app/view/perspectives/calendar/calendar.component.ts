@@ -59,35 +59,14 @@ export class CalendarComponent implements OnInit {
   refresh: Subject<any> = new Subject();
 
   events: CalendarEvent[] = eventsExample;
+  shownEvents: CalendarEvent[] = [];
 
-  activeDayIsOpen: boolean = true;
-
-  constructor(private store$: Store<{}>, private dialog: MatDialog) {}
+  constructor(private store$: Store<{}>) {}
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      this.viewDate = date;
-      this.activeDayIsOpen = !((isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-        events.length === 0);
-    }
-  //   console.log("clicked",date);
-  // }
-  //
-  // openDialog() {
-
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: 1,
-      title: 'Angular For Beginners',
-      description: this.events
-    };
-
-    this.dialog.open(CourseDialogComponent, dialogConfig);
+    this.shownEvents = events;
+    this.viewDate = date;
   }
-
   eventTimesChanged({
                       event,
                       newStart,
