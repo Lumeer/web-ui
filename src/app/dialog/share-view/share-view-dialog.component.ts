@@ -40,13 +40,12 @@ import {ClipboardService} from '../../core/service/clipboard.service';
 @Component({
   selector: 'share-view-dialog',
   templateUrl: './share-view-dialog.component.html',
-  styleUrls: ['./share-view-dialog.component.scss']
+  styleUrls: ['./share-view-dialog.component.scss'],
 })
 export class ShareViewDialogComponent implements OnInit, OnDestroy {
-
   public selectedUsers: UserModel[] = [];
-  public userRoles: { [id: string]: string[] };
-  public initialUserRoles: { [id: string]: string[] };
+  public userRoles: {[id: string]: string[]};
+  public initialUserRoles: {[id: string]: string[]};
   public users: UserModel[] = [];
   public view: ViewModel;
   public currentUser: UserModel;
@@ -59,11 +58,12 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   private organization: OrganizationModel;
   private subscriptions = new Subscription();
 
-  public constructor(private i18n: I18n,
-                     private clipboardService: ClipboardService,
-                     private route: ActivatedRoute,
-                     private store: Store<AppState>) {
-  }
+  public constructor(
+    private i18n: I18n,
+    private clipboardService: ClipboardService,
+    private route: ActivatedRoute,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscribeToView();
@@ -189,57 +189,65 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   public share() {
     const permissions = Object.keys(this.userRoles).map(id => ({id, roles: this.userRoles[id]}));
-    this.store.dispatch(new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions}));
+    this.store.dispatch(
+      new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions})
+    );
   }
 
   private subscribeToView() {
-    this.subscriptions.add(this.route.paramMap.pipe(
-      map(params => params.get('viewCode')),
-      filter(viewCode => !!viewCode),
-      mergeMap(viewCode => observableCombineLatest(this.store.select(selectViewByCode(viewCode)),
-        this.store.select(selectAllUsers)))
-    ).subscribe(([view, users]) => {
-      this.view = view;
-      this.users = users;
-      this.selectedUsers = this.view.permissions.users.reduce((acc, userPerm) => {
-        const user = users.find(u => u.id === userPerm.id);
-        if (user) {
-          acc.push(user);
-        }
-        return acc;
-      }, []);
-      this.userRoles = this.view.permissions.users.reduce((acc, userPerm) => {
-        acc[userPerm.id] = userPerm.roles;
-        return acc;
-      }, {});
-      this.initialUserRoles = {...this.userRoles};
-    }));
+    this.subscriptions.add(
+      this.route.paramMap
+        .pipe(
+          map(params => params.get('viewCode')),
+          filter(viewCode => !!viewCode),
+          mergeMap(viewCode =>
+            observableCombineLatest(this.store.select(selectViewByCode(viewCode)), this.store.select(selectAllUsers))
+          )
+        )
+        .subscribe(([view, users]) => {
+          this.view = view;
+          this.users = users;
+          this.selectedUsers = this.view.permissions.users.reduce((acc, userPerm) => {
+            const user = users.find(u => u.id === userPerm.id);
+            if (user) {
+              acc.push(user);
+            }
+            return acc;
+          }, []);
+          this.userRoles = this.view.permissions.users.reduce((acc, userPerm) => {
+            acc[userPerm.id] = userPerm.roles;
+            return acc;
+          }, {});
+          this.initialUserRoles = {...this.userRoles};
+        })
+    );
   }
 
   private parseViewShareUrl() {
     const currentUrl = window.location.href;
-    const match = currentUrl.match('.+\/w\/.+\/.+\/view;vc=[^/]+');
+    const match = currentUrl.match('.+/w/.+/.+/view;vc=[^/]+');
     if (match && match[0]) {
       this.viewShareUrl$.next(match[0]);
     }
   }
 
   private subscribeData() {
-    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => {
-        if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
-          this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-        }
-        this.organization = organization;
-      }));
+    this.subscriptions.add(
+      this.store
+        .select(selectOrganizationByWorkspace)
+        .pipe(filter(organization => !isNullOrUndefined(organization)))
+        .subscribe(organization => {
+          if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
+            this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+          }
+          this.organization = organization;
+        })
+    );
 
-    this.subscriptions.add(this.store.select(selectCurrentUser)
-      .subscribe(user => this.currentUser = user));
+    this.subscriptions.add(this.store.select(selectCurrentUser).subscribe(user => (this.currentUser = user)));
   }
 
   public trackByUser(index: number, user: UserModel): string {
     return user.id;
   }
-
 }

@@ -37,10 +37,9 @@ import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
-  templateUrl: './project-settings.component.html'
+  templateUrl: './project-settings.component.html',
 })
 export class ProjectSettingsComponent implements OnInit {
-
   public userCount$: Observable<number>;
   public projectCodes$: Observable<string[]>;
   public project: ProjectModel;
@@ -50,11 +49,12 @@ export class ProjectSettingsComponent implements OnInit {
 
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store$: Store<AppState>,
-              private notificationService: NotificationService) {
-  }
+  constructor(
+    private i18n: I18n,
+    private router: Router,
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -69,19 +69,18 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public onDelete(): void {
-    const message = this.i18n({id: 'project.delete.dialog.message', value: 'Do you really want to permanently delete this project?'});
+    const message = this.i18n({
+      id: 'project.delete.dialog.message',
+      value: 'Do you really want to permanently delete this project?',
+    });
     const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteProject(), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteProject(), bold: false},
+    ]);
   }
 
   public onCollectionsClick() {
@@ -118,44 +117,54 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public goBack(): void {
-    this.store$.dispatch(new NavigationAction.NavigateToPreviousUrl({
-      previousUrl: this.previousUrl,
-      organizationCode: this.workspace.organizationCode,
-      projectCode: this.workspace.projectCode
-    }));
+    this.store$.dispatch(
+      new NavigationAction.NavigateToPreviousUrl({
+        previousUrl: this.previousUrl,
+        organizationCode: this.workspace.organizationCode,
+        projectCode: this.workspace.projectCode,
+      })
+    );
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store$.select(selectAllUsers)
-      .pipe(map(users => users ? users.length : 0));
+    this.userCount$ = this.store$.select(selectAllUsers).pipe(map(users => (users ? users.length : 0)));
 
-    this.subscriptions.add(this.store$.select(selectProjectByWorkspace)
-      .pipe(filter(project => !isNullOrUndefined(project)))
-      .subscribe(project => {
-        this.project = project;
-        this.projectCodes$ = this.store$.pipe(
-          select(selectProjectsCodesForOrganization(project.organizationId)),
-          map(codes => codes && codes.filter(code => code !== project.code) || []));
-      })
-    );
-
-    this.subscriptions.add(this.store$.select(selectWorkspace)
-      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
-      .subscribe(workspace => this.workspace = workspace)
+    this.subscriptions.add(
+      this.store$
+        .select(selectProjectByWorkspace)
+        .pipe(filter(project => !isNullOrUndefined(project)))
+        .subscribe(project => {
+          this.project = project;
+          this.projectCodes$ = this.store$.pipe(
+            select(selectProjectsCodesForOrganization(project.organizationId)),
+            map(codes => (codes && codes.filter(code => code !== project.code)) || [])
+          );
+        })
     );
 
     this.subscriptions.add(
-      this.store$.select(selectPreviousUrl).pipe(take(1))
-        .subscribe(url => this.previousUrl = url)
+      this.store$
+        .select(selectWorkspace)
+        .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+        .subscribe(workspace => (this.workspace = workspace))
+    );
+
+    this.subscriptions.add(
+      this.store$
+        .select(selectPreviousUrl)
+        .pipe(take(1))
+        .subscribe(url => (this.previousUrl = url))
     );
   }
 
   private deleteProject() {
-    this.store$.dispatch(new ProjectsAction.Delete({
-      organizationId: this.project.organizationId,
-      projectId: this.project.id,
-      onSuccess: () => this.router.navigate(['/'])
-    }));
+    this.store$.dispatch(
+      new ProjectsAction.Delete({
+        organizationId: this.project.organizationId,
+        projectId: this.project.id,
+        onSuccess: () => this.router.navigate(['/']),
+      })
+    );
   }
 
   private updateProject(project: ProjectModel) {

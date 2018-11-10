@@ -46,16 +46,16 @@ Object.keys(loadJsonFile).forEach(function(key) {
 
   if (icon.styles.includes('brands')) {
     if (!first_brands) {
-      brands += ",\n"
+      brands += ',\n';
     }
     first_brands = false;
-    brands += "'fab fa-" + key + "'"
+    brands += "'fab fa-" + key + "'";
   } else {
     if (!first) {
-      icons += ",\n"
+      icons += ',\n';
     }
     first = false;
-    icons += "'fa-" + key + "'"
+    icons += "'fa-" + key + "'";
   }
 
   registerVocab(key, key);
@@ -82,13 +82,13 @@ vocab.forEach(function(value, key) {
 
     var line = '';
     first_brands = true;
-    line += '[\'' + key.replace('\'', '\\\'') + '\', [\n  ';
+    line += "['" + key.replace("'", "\\'") + "', [\n  ";
     value.forEach(function(elem) {
       if (!first_brands) {
         line += ',\n  ';
       }
       first_brands = false;
-      line += '\'' + elem.replace('\'', '\\\'') + '\'';
+      line += "'" + elem.replace("'", "\\'") + "'";
     });
     line += '\n]]';
 

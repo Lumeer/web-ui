@@ -28,10 +28,9 @@ import {ViewModel} from '../../../../core/store/views/view.model';
   selector: 'search-input',
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
-
   @Input()
   public queryItems: QueryItem[] = [];
 
@@ -126,5 +125,4 @@ export class SearchInputComponent {
       this.search.emit();
     }
   }
-
 }

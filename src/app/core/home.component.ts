@@ -36,44 +36,46 @@ import {NotificationService} from './notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
-  template: ''
+  template: '',
 })
 export class HomeComponent implements OnInit {
-
-  public constructor(private router: Router,
-                     private dialogService: DialogService,
-                     private i18n: I18n,
-                     private notificationService: NotificationService,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(
+    private router: Router,
+    private dialogService: DialogService,
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.redirectToWorkspace();
   }
 
   private redirectToWorkspace(): Subscription {
-    return combineLatest(
-      this.getDefaultWorkspace(),
-      this.getOrganizationsAndProjects()
-    ).pipe(
-      first()
-    ).subscribe(([workspace, {organizations, projects}]) => {
-      if (organizations.length > 0 && projects.length > 0) {
-        if (workspace) {
-          this.navigateToWorkspaceProject(workspace, organizations, projects);
+    return combineLatest(this.getDefaultWorkspace(), this.getOrganizationsAndProjects())
+      .pipe(first())
+      .subscribe(([workspace, {organizations, projects}]) => {
+        if (organizations.length > 0 && projects.length > 0) {
+          if (workspace) {
+            this.navigateToWorkspaceProject(workspace, organizations, projects);
+          } else {
+            this.navigateToAnyProject(organizations, projects);
+          }
+        } else if (organizations.length === 0) {
+          this.createNewOrganization();
         } else {
-          this.navigateToAnyProject(organizations, projects);
+          this.createNewProject(organizations[0]);
         }
-      } else if (organizations.length === 0) {
-        this.createNewOrganization();
-      } else {
-        this.createNewProject(organizations[0]);
-      }
-    });
+      });
   }
 
-  private navigateToWorkspaceProject(workspace: DefaultWorkspaceModel, organizations: OrganizationModel[], projects: ProjectModel[]) {
-    const workspaceOrganization = workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
+  private navigateToWorkspaceProject(
+    workspace: DefaultWorkspaceModel,
+    organizations: OrganizationModel[],
+    projects: ProjectModel[]
+  ) {
+    const workspaceOrganization =
+      workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
     const workspaceProject = workspace.projectId && projects.find(proj => proj.id === workspace.projectId);
 
     if (workspaceOrganization && workspaceProject) {
@@ -127,17 +129,19 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private getOrganizationsAndProjects(): Observable<{ organizations: OrganizationModel[], projects: ProjectModel[] }> {
+  private getOrganizationsAndProjects(): Observable<{organizations: OrganizationModel[]; projects: ProjectModel[]}> {
     return combineLatest(
       this.getOrganizations().pipe(
-        tap(organizations => organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}))))
+        tap(organizations =>
+          organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id})))
+        )
       ),
       this.store$.select(selectProjectsLoaded)
     ).pipe(
       filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
-      switchMap(([organizations]) => this.store$.select(selectAllProjects).pipe(
-        map((projects: ProjectModel[]) => ({organizations, projects}))
-      ))
+      switchMap(([organizations]) =>
+        this.store$.select(selectAllProjects).pipe(map((projects: ProjectModel[]) => ({organizations, projects})))
+      )
     );
   }
 
@@ -146,13 +150,15 @@ export class HomeComponent implements OnInit {
   }
 
   public createNewProject(parentOrganization: OrganizationModel): void {
-    this.dialogService.openCreateProjectDialog(parentOrganization.id, project => this.onCreateProject(parentOrganization, project));
+    this.dialogService.openCreateProjectDialog(parentOrganization.id, project =>
+      this.onCreateProject(parentOrganization, project)
+    );
   }
 
   private onCreateOrganization(organization: OrganizationModel) {
     const successMessage = this.i18n({
       id: 'organization.create.success',
-      value: 'Organization was successfully created'
+      value: 'Organization was successfully created',
     });
 
     this.notificationService.success(successMessage);
@@ -162,12 +168,11 @@ export class HomeComponent implements OnInit {
   private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
     const successMessage = this.i18n({
       id: 'project.create.success',
-      value: 'Project was successfully created'
+      value: 'Project was successfully created',
     });
 
     this.notificationService.success(successMessage);
     this.dialogService.closeDialog();
     this.navigateToProject(organization, project);
   }
-
 }

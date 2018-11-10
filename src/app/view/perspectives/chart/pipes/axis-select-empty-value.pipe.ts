@@ -22,20 +22,20 @@ import {ChartAxisType} from '../../../../core/store/charts/chart.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'axisSelectEmptyValue'
+  name: 'axisSelectEmptyValue',
 })
 export class AxisSelectEmptyValuePipe implements PipeTransform {
-
-  public constructor(private i18n: I18n) {
-  }
+  public constructor(private i18n: I18n) {}
 
   public transform(axisType: ChartAxisType): string {
-    return this.i18n({
-      id: 'chart.axis.placeholder.empty',
-      value: 'Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis'
-    }, {
-      axisType
-    });
+    return this.i18n(
+      {
+        id: 'chart.axis.placeholder.empty',
+        value: 'Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis',
+      },
+      {
+        axisType,
+      }
+    );
   }
-
 }

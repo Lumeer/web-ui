@@ -30,9 +30,7 @@ import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../store/link-types/
 
 @Injectable()
 export class LinkTypesGuard implements Resolve<LinkTypeModel[]> {
-
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkTypeModel[]> {
     return this.store$.select(selectLinkTypesLoaded).pipe(
@@ -46,5 +44,4 @@ export class LinkTypesGuard implements Resolve<LinkTypeModel[]> {
       first()
     );
   }
-
 }

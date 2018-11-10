@@ -78,7 +78,7 @@ const reducers: ActionReducerMap<AppState> = {
   users: usersReducer,
   views: viewsReducer,
   postIts: postItReducer,
-  charts: chartsReducer
+  charts: chartsReducer,
 };
 
 const effects = [
@@ -98,16 +98,15 @@ const effects = [
   RouterEffects,
   TablesEffects,
   UsersEffects,
-  ViewsEffects
+  ViewsEffects,
 ];
 
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
+    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 50}) : [],
   ],
-  declarations: []
+  declarations: [],
 })
-export class AppStoreModule {
-}
+export class AppStoreModule {}

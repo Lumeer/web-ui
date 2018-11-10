@@ -20,12 +20,10 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'pageEndIndex'
+  name: 'pageEndIndex',
 })
 export class PageEndIndexPipe implements PipeTransform {
-
   public transform(page: number, pageSize: number, maxItems: number): number {
     return Math.min((page + 1) * pageSize, maxItems);
   }
-
 }

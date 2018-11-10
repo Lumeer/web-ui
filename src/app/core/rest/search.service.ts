@@ -35,21 +35,19 @@ import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class SearchService {
-
   private workspace: Workspace;
 
-  constructor(private http: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace)
-      .pipe(
-        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
-      )
-      .subscribe(workspace => this.workspace = workspace);
+  constructor(private http: HttpClient, private store: Store<AppState>) {
+    this.store
+      .select(selectWorkspace)
+      .pipe(filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode))
+      .subscribe(workspace => (this.workspace = workspace));
   }
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
-    return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
-      {params: new HttpParams().set('text', text).set('type', type.toString())});
+    return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`, {
+      params: new HttpParams().set('text', text).set('type', type.toString()),
+    });
   }
 
   public searchCollections(query: Query, workspace?: Workspace): Observable<Collection[]> {
@@ -68,5 +66,4 @@ export class SearchService {
     const w = workspace || this.workspace;
     return `${environment.apiUrl}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
   }
-
 }

@@ -21,7 +21,10 @@ import {OrganizationsAction, OrganizationsActionType} from './organizations.acti
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 
-export function organizationsReducer(state: OrganizationsState = initialOrganizationsState, action: OrganizationsAction.All): OrganizationsState {
+export function organizationsReducer(
+  state: OrganizationsState = initialOrganizationsState,
+  action: OrganizationsAction.All
+): OrganizationsState {
   switch (action.type) {
     case OrganizationsActionType.GET_SUCCESS:
       return {...organizationsAdapter.addAll(action.payload.organizations, state), loaded: true};
@@ -32,7 +35,10 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
     case OrganizationsActionType.CREATE_SUCCESS:
       return organizationsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      return organizationsAdapter.updateOne({id: action.payload.organization.id, changes: action.payload.organization}, state);
+      return organizationsAdapter.updateOne(
+        {id: action.payload.organization.id, changes: action.payload.organization},
+        state
+      );
     case OrganizationsActionType.DELETE_SUCCESS:
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
@@ -46,10 +52,19 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
   }
 }
 
-function onChangePermission(state: OrganizationsState,
-                            action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure): OrganizationsState {
+function onChangePermission(
+  state: OrganizationsState,
+  action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure
+): OrganizationsState {
   const organization = state.entities[action.payload.organizationId];
-  const permissions = PermissionsHelper.changePermission(organization.permissions, action.payload.type, action.payload.permission);
+  const permissions = PermissionsHelper.changePermission(
+    organization.permissions,
+    action.payload.type,
+    action.payload.permission
+  );
 
-  return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: permissions}}, state);
+  return organizationsAdapter.updateOne(
+    {id: action.payload.organizationId, changes: {permissions: permissions}},
+    state
+  );
 }

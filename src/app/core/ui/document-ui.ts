@@ -34,7 +34,6 @@ import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
 
 export class DocumentUi {
-
   public rows$ = new BehaviorSubject<UiRow[]>([]);
   public summary$ = new BehaviorSubject<string>('');
   public favorite$ = new BehaviorSubject<boolean>(false);
@@ -48,11 +47,13 @@ export class DocumentUi {
 
   private subscriptions = new Subscription();
 
-  constructor(private collection: CollectionModel,
-              private document: DocumentModel,
-              private store: Store<AppState>,
-              private i18n: I18n,
-              private notificationService: NotificationService) {
+  constructor(
+    private collection: CollectionModel,
+    private document: DocumentModel,
+    private store: Store<AppState>,
+    private i18n: I18n,
+    private notificationService: NotificationService
+  ) {
     if (this.collection && this.document) {
       this.subscribe();
     }
@@ -71,21 +72,29 @@ export class DocumentUi {
   }
 
   private subscribe(): void {
-    this.subscriptions.add(this.store.select(selectDocumentById(this.document.id)).subscribe(doc => {
-      this.document = doc;
-      this.refreshRows();
-    }));
-    this.subscriptions.add(this.store.select(selectCollectionById(this.collection.id)).subscribe(col => {
-      this.collection = col;
-      this.refreshRows();
-    }));
-    this.subscriptions.add(this.favoriteChange$.pipe(
-      debounceTime(2000),
-      filter(favorite => favorite !== this.favorite)
-    ).subscribe(favorite => {
-      this.favorite = null;
-      this.saveFavoriteChange(favorite, false);
-    }));
+    this.subscriptions.add(
+      this.store.select(selectDocumentById(this.document.id)).subscribe(doc => {
+        this.document = doc;
+        this.refreshRows();
+      })
+    );
+    this.subscriptions.add(
+      this.store.select(selectCollectionById(this.collection.id)).subscribe(col => {
+        this.collection = col;
+        this.refreshRows();
+      })
+    );
+    this.subscriptions.add(
+      this.favoriteChange$
+        .pipe(
+          debounceTime(2000),
+          filter(favorite => favorite !== this.favorite)
+        )
+        .subscribe(favorite => {
+          this.favorite = null;
+          this.saveFavoriteChange(favorite, false);
+        })
+    );
   }
 
   private prepareUpdatedDocument(): DocumentModel {
@@ -104,9 +113,9 @@ export class DocumentUi {
   private patchNewAttributes(document: DocumentModel): boolean {
     let dirty = false;
 
-    const newData: { [attributeName: string]: any } = this.addedRows
+    const newData: {[attributeName: string]: any} = this.addedRows
       .filter(row => row.name && !this.alreadyInCollection(row.name))
-      .reduce((acc: { [attributeName: string]: any }, row) => {
+      .reduce((acc: {[attributeName: string]: any}, row) => {
         dirty = true;
         acc[row.name] = {value: row.value, correlationId: row.correlationId};
         return acc;
@@ -120,9 +129,8 @@ export class DocumentUi {
   // value has changed and attr name remained the same
   private patchExistingAttributes(document: DocumentModel): boolean {
     let dirty = false;
-    this.rows.filter(row =>
-      !isUndefined(row.newValue) &&
-      row.name === this.getCollectionAttributeById(row.id).name)
+    this.rows
+      .filter(row => !isUndefined(row.newValue) && row.name === this.getCollectionAttributeById(row.id).name)
       .forEach(row => {
         dirty = true;
         document.data[row.id] = row.newValue;
@@ -134,25 +142,30 @@ export class DocumentUi {
   private patchAttributeRename(document: DocumentModel): boolean {
     let dirty = false;
 
-    this.rows.filter(row => row.newName)
+    this.rows
+      .filter(row => row.newName)
       .forEach(row => {
         dirty = true;
         const attr = this.getCollectionAttributeByName(row.newName);
 
-        if (attr) { // renamed to existing attribute
-          if (!document.data[attr.id]) { // but the name was not used in the document
+        if (attr) {
+          // renamed to existing attribute
+          if (!document.data[attr.id]) {
+            // but the name was not used in the document
             delete document.data[row.id];
             document.data[attr.id] = row.newValue || row.value;
             row.id = attr.id;
             row.correlationId = undefined;
-          } else if (document.data[attr.id] && this.getRemovableRowByName(row.newName) && !row.remove) { // or was marked for deletion
+          } else if (document.data[attr.id] && this.getRemovableRowByName(row.newName) && !row.remove) {
+            // or was marked for deletion
             const originalRow = this.getRemovableRowByName(row.newName);
             originalRow.id = row.id;
             document.data[attr.id] = row.newValue || row.value;
             row.id = attr.id;
             row.correlationId = undefined;
           }
-        } else { // renamed to a completely new name
+        } else {
+          // renamed to a completely new name
           delete document.data[row.id];
           row.id = null;
           row.correlationId = CorrelationIdGenerator.generate();
@@ -167,7 +180,8 @@ export class DocumentUi {
   // patch those that are defined in collection but were unused
   private patchReusedAttributes(document: DocumentModel): boolean {
     let dirty = false;
-    this.addedRows.filter(row => row.name && this.alreadyInCollection(row.name))
+    this.addedRows
+      .filter(row => row.name && this.alreadyInCollection(row.name))
       .forEach(row => {
         dirty = true;
         const attr = this.getCollectionAttributeByName(row.name);
@@ -238,11 +252,18 @@ export class DocumentUi {
         const documentUpdateAction = new DocumentsAction.UpdateData({document: updatedDocument});
 
         if (updatedDocument.newData && Object.getOwnPropertyNames(updatedDocument.newData).length > 0) {
-          const newAttributes = Object.keys(updatedDocument.newData)
-            .map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
+          const newAttributes = Object.keys(updatedDocument.newData).map(name => ({
+            name,
+            constraints: [],
+            correlationId: updatedDocument.newData[name].correlationId,
+          }));
 
-          this.store.dispatch(new CollectionsAction.CreateAttributes(
-            {collectionId: this.document.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
+          this.store.dispatch(
+            new CollectionsAction.CreateAttributes({
+              collectionId: this.document.collectionId,
+              attributes: newAttributes,
+              nextAction: documentUpdateAction,
+            })
           );
         } else {
           this.store.dispatch(documentUpdateAction);
@@ -278,7 +299,7 @@ export class DocumentUi {
             id: attr.id,
             correlationId: attr.correlationId,
             name: attr.name,
-            value: this.document.data[attr.id] || ''
+            value: this.document.data[attr.id] || '',
           });
         }
       });
@@ -320,7 +341,7 @@ export class DocumentUi {
       name: '',
       value: '',
       correlationId: CorrelationIdGenerator.generate(),
-      warning: this.getEmptyWarning()
+      warning: this.getEmptyWarning(),
     });
     this.rowsChanged();
   }
@@ -402,24 +423,23 @@ export class DocumentUi {
   private getCollisionWarning(): string {
     return this.i18n({
       id: 'shared.document.detail.attribute.collision',
-      value: 'The attribute name is already used in this record.'
+      value: 'The attribute name is already used in this record.',
     });
   }
 
   public onRemoveRow(idx: number): void {
     if (idx < this.rows.length) {
-      const message = this.i18n(
-        {
-          id: 'document.detail.attribute.remove.confirm',
-          value: 'Are you sure you want to delete this row?'
-        });
+      const message = this.i18n({
+        id: 'document.detail.attribute.remove.confirm',
+        value: 'Are you sure you want to delete this row?',
+      });
       const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
       const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
       this.notificationService.confirm(message, title, [
         {text: noButtonText},
-        {text: yesButtonText, action: () => this.removeRow(idx), bold: false}
+        {text: yesButtonText, action: () => this.removeRow(idx), bold: false},
       ]);
     } else {
       this.removeRow(idx);
@@ -447,15 +467,19 @@ export class DocumentUi {
       }
     } else {
       if (favorite) {
-        this.store.dispatch(new DocumentsAction.AddFavorite({
-          collectionId: this.document.collectionId,
-          documentId: this.document.id
-        }));
+        this.store.dispatch(
+          new DocumentsAction.AddFavorite({
+            collectionId: this.document.collectionId,
+            documentId: this.document.id,
+          })
+        );
       } else {
-        this.store.dispatch(new DocumentsAction.RemoveFavorite({
-          collectionId: this.document.collectionId,
-          documentId: this.document.id
-        }));
+        this.store.dispatch(
+          new DocumentsAction.RemoveFavorite({
+            collectionId: this.document.collectionId,
+            documentId: this.document.id,
+          })
+        );
       }
     }
   }
@@ -469,5 +493,4 @@ export class DocumentUi {
     this.favoriteChange$.next(value);
     this.saveFavoriteChange(value, true);
   }
-
 }

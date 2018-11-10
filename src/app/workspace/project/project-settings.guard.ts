@@ -36,29 +36,26 @@ import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state'
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
+  public constructor(
+    private i18n: I18n,
+    private router: Router,
+    private workspaceService: WorkspaceService,
+    private store: Store<AppState>
+  ) {}
 
-  public constructor(private i18n: I18n,
-                     private router: Router,
-                     private workspaceService: WorkspaceService,
-                     private store: Store<AppState>) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
-
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
 
-    return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode)
-      .pipe(
-        mergeMap(organization => {
-          if (isNullOrUndefined(organization)) {
-            this.dispatchErrorActionsNotExist();
-            return of(false);
-          }
-          return this.checkProject(organization, projectCode);
-        })
-      );
+    return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      mergeMap(organization => {
+        if (isNullOrUndefined(organization)) {
+          this.dispatchErrorActionsNotExist();
+          return of(false);
+        }
+        return this.checkProject(organization, projectCode);
+      })
+    );
   }
 
   private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
@@ -92,7 +89,7 @@ export class ProjectSettingsGuard implements CanActivate {
   private dispatchErrorActionsNotPermission() {
     const message = this.i18n({
       id: 'project.permission.missing',
-      value: 'You do not have permission to access this project'
+      value: 'You do not have permission to access this project',
     });
     this.dispatchErrorActions(message);
   }

@@ -36,11 +36,11 @@ import {selectAllProjects} from '../core/store/projects/projects.state';
 
 @Injectable()
 export class WorkspaceService {
-
-  constructor(private organizationService: OrganizationService,
-              private projectService: ProjectService,
-              private store: Store<AppState>) {
-  }
+  constructor(
+    private organizationService: OrganizationService,
+    private projectService: ProjectService,
+    private store: Store<AppState>
+  ) {}
 
   public getOrganizationFromStoreOrApi(code: string): Observable<OrganizationModel> {
     return this.getOrganizationFromStore(code).pipe(

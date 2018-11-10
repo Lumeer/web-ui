@@ -36,7 +36,6 @@ import {selectHasNextTableParts, selectTablePart} from '../../../../../../../cor
   },
 })
 export class TableLinkedRowComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -53,8 +52,7 @@ export class TableLinkedRowComponent implements OnChanges {
 
   public striped: boolean;
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -71,5 +69,4 @@ export class TableLinkedRowComponent implements OnChanges {
 
     this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(documentPartCursor)));
   }
-
 }

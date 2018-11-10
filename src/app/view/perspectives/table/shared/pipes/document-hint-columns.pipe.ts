@@ -24,17 +24,19 @@ import {filterLeafColumns, getTableColumnWidth} from '../../../../../core/store/
 import {DocumentHintColumn} from '../../../../../shared/document-hints/document-hint-column';
 
 @Pipe({
-  name: 'documentHintColumns'
+  name: 'documentHintColumns',
 })
 export class DocumentHintColumnsPipe implements PipeTransform {
-
-  public transform(table: TableModel, cursor: TableBodyCursor, showHiddenColumns: boolean = false): DocumentHintColumn[] {
+  public transform(
+    table: TableModel,
+    cursor: TableBodyCursor,
+    showHiddenColumns: boolean = false
+  ): DocumentHintColumn[] {
     return filterLeafColumns(table.parts[cursor.partIndex].columns)
       .filter(column => !(column instanceof TableSingleColumn && !column.attributeId))
       .map(column => ({
         attributeId: (column as TableSingleColumn).attributeId,
-        width: getTableColumnWidth(column, showHiddenColumns)
+        width: getTableColumnWidth(column, showHiddenColumns),
       }));
   }
-
 }

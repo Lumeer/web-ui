@@ -22,12 +22,10 @@ import {AttributeModel} from '../../../../../core/store/collections/collection.m
 import {extractAttributeLastName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
-  name: 'attributeLastName'
+  name: 'attributeLastName',
 })
 export class AttributeLastNamePipe implements PipeTransform {
-
   public transform(attribute: AttributeModel): string {
     return attribute && extractAttributeLastName(attribute.name);
   }
-
 }

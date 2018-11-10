@@ -21,37 +21,31 @@ import {Action} from '@ngrx/store';
 import {ChartConfig, ChartModel} from './chart.model';
 
 export enum ChartActionType {
-
   ADD_CHART = '[Chart] Add chart',
   REMOVE_CHART = '[Chart] Remove chart',
 
   SET_CONFIG = '[Chart] Set config',
 
-  CLEAR = '[Chart] Clear'
-
+  CLEAR = '[Chart] Clear',
 }
 
 export namespace ChartAction {
-
   export class AddChart implements Action {
     public readonly type = ChartActionType.ADD_CHART;
 
-    public constructor(public payload: { chart: ChartModel }) {
-    }
+    public constructor(public payload: {chart: ChartModel}) {}
   }
 
   export class RemoveChart implements Action {
     public readonly type = ChartActionType.REMOVE_CHART;
 
-    public constructor(public payload: { chartId: string }) {
-    }
+    public constructor(public payload: {chartId: string}) {}
   }
 
   export class SetConfig implements Action {
     public readonly type = ChartActionType.SET_CONFIG;
 
-    public constructor(public payload: { chartId: string, config: ChartConfig }) {
-    }
+    public constructor(public payload: {chartId: string; config: ChartConfig}) {}
   }
 
   export class Clear implements Action {
@@ -59,5 +53,4 @@ export namespace ChartAction {
   }
 
   export type All = AddChart | RemoveChart | SetConfig | Clear;
-
 }

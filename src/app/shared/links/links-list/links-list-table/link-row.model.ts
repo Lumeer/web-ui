@@ -21,9 +21,7 @@ import {LinkInstanceModel} from '../../../../core/store/link-instances/link-inst
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 export interface LinkRowModel {
-
   linkInstance?: LinkInstanceModel;
   document?: DocumentModel;
   correlationId?: string;
-
 }

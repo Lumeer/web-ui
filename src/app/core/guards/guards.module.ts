@@ -27,18 +27,8 @@ import {PageNotFoundGuard} from './page-not-found.guard';
 import {ViewRedirectGuard} from './view-redirect.guard';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [],
-  providers: [
-    CollectionsGuard,
-    LinkTypesGuard,
-    PageNotFoundGuard,
-    ViewsGuard,
-    ViewRedirectGuard,
-    CurrentUserGuard,
-  ]
+  providers: [CollectionsGuard, LinkTypesGuard, PageNotFoundGuard, ViewsGuard, ViewRedirectGuard, CurrentUserGuard],
 })
-export class GuardsModule {
-}
+export class GuardsModule {}

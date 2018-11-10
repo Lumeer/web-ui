@@ -28,7 +28,6 @@ import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from '.
 import {EditedAttribute} from './tables.state';
 
 export enum TablesActionType {
-
   CREATE_TABLE = '[Tables] Create Table',
   ADD_TABLE = '[Tables] Add Table',
   DESTROY_TABLE = '[Tables] Destroy Table',
@@ -91,134 +90,115 @@ export enum TablesActionType {
 
   ADD_FUNCTION = '[Tables] Add Function',
   REMOVE_FUNCTION = '[Tables] Remove Function',
-
 }
 
 export namespace TablesAction {
-
   export interface TableCursorAction extends Action {
     payload: {
-      cursor: TableCursor
+      cursor: TableCursor;
     };
   }
 
   export class CreateTable implements Action {
     public readonly type = TablesActionType.CREATE_TABLE;
 
-    public constructor(public payload: {tableId: string, query: QueryModel, config: TableConfig}) {
-    }
+    public constructor(public payload: {tableId: string; query: QueryModel; config: TableConfig}) {}
   }
 
   export class AddTable implements Action {
     public readonly type = TablesActionType.ADD_TABLE;
 
-    public constructor(public payload: {table: TableModel}) {
-    }
+    public constructor(public payload: {table: TableModel}) {}
   }
 
   export class DestroyTable implements Action {
     public readonly type = TablesActionType.DESTROY_TABLE;
 
-    public constructor(public payload: {tableId: string}) {
-    }
+    public constructor(public payload: {tableId: string}) {}
   }
 
   export class RemoveTable implements Action {
     public readonly type = TablesActionType.REMOVE_TABLE;
 
-    public constructor(public payload: {tableId: string}) {
-    }
+    public constructor(public payload: {tableId: string}) {}
   }
 
   export class CreatePart implements Action {
     public readonly type = TablesActionType.CREATE_PART;
 
-    public constructor(public payload: {tableId: string, linkTypeId: string, last?: boolean, config?: TableConfig}) {
-    }
+    public constructor(public payload: {tableId: string; linkTypeId: string; last?: boolean; config?: TableConfig}) {}
   }
 
   export class AddPart implements Action {
     public readonly type = TablesActionType.ADD_PART;
 
-    public constructor(public payload: {tableId: string, parts: TablePart[]}) {
-    }
+    public constructor(public payload: {tableId: string; parts: TablePart[]}) {}
   }
 
   export class SwitchParts implements TableCursorAction {
     public readonly type = TablesActionType.SWITCH_PARTS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class RemovePart implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_PART;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class AddColumn implements TableCursorAction {
     public readonly type = TablesActionType.ADD_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class SplitColumn implements TableCursorAction {
     public readonly type = TablesActionType.SPLIT_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class ReplaceColumns implements Action {
     public readonly type = TablesActionType.REPLACE_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor, deleteCount: number, columns?: TableColumn[]}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor; deleteCount: number; columns?: TableColumn[]}) {}
   }
 
   export class ShowColumns implements TableCursorAction {
     public readonly type = TablesActionType.SHOW_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor, attributeIds: string[]}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor; attributeIds: string[]}) {}
   }
 
   export class HideColumn implements TableCursorAction {
     public readonly type = TablesActionType.HIDE_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class RemoveColumn implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   export class MoveColumn implements TableCursorAction {
     public readonly type = TablesActionType.MOVE_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor, toIndex: number}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor; toIndex: number}) {}
   }
 
   export class ResizeColumn implements Action {
     public readonly type = TablesActionType.RESIZE_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor, delta: number}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor; delta: number}) {}
   }
 
   export class InitColumn implements Action {
     public readonly type = TablesActionType.INIT_COLUMN;
 
-    public constructor(public payload: {cursor: TableHeaderCursor, attributeId: string}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor; attributeId: string}) {}
   }
 
   /**
@@ -227,8 +207,7 @@ export namespace TablesAction {
   export class RemoveEmptyColumns implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_EMPTY_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {
-    }
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
 
   /**
@@ -240,8 +219,7 @@ export namespace TablesAction {
   export class SyncPrimaryRows implements Action {
     public readonly type = TablesActionType.SYNC_PRIMARY_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, query: QueryModel}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor; query: QueryModel}) {}
   }
 
   /**
@@ -252,8 +230,7 @@ export namespace TablesAction {
   export class SyncLinkedRows implements Action {
     public readonly type = TablesActionType.SYNC_LINKED_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   /**
@@ -264,14 +241,15 @@ export namespace TablesAction {
   export class AddPrimaryRows implements Action {
     public readonly type = TablesActionType.ADD_PRIMARY_ROWS;
 
-    public constructor(public payload: {
-      cursor: TableBodyCursor,
-      rows: TableConfigRow[],
-      append?: boolean,
-      documentsMap?: Dictionary<DocumentModel>,
-      below?: boolean
-    }) {
-    }
+    public constructor(
+      public payload: {
+        cursor: TableBodyCursor;
+        rows: TableConfigRow[];
+        append?: boolean;
+        documentsMap?: Dictionary<DocumentModel>;
+        below?: boolean;
+      }
+    ) {}
   }
 
   /**
@@ -282,8 +260,7 @@ export namespace TablesAction {
   export class AddLinkedRows implements Action {
     public readonly type = TablesActionType.ADD_LINKED_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, linkedRows: TableConfigRow[], append?: boolean}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor; linkedRows: TableConfigRow[]; append?: boolean}) {}
   }
 
   /**
@@ -292,8 +269,9 @@ export namespace TablesAction {
   export class InitRows implements Action {
     public readonly type = TablesActionType.INIT_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, documents: DocumentModel[], linkInstances: LinkInstanceModel[]}) {
-    }
+    public constructor(
+      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstanceModel[]}
+    ) {}
   }
 
   /**
@@ -302,57 +280,51 @@ export namespace TablesAction {
   export class CleanRows implements Action {
     public readonly type = TablesActionType.CLEAN_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, documents: DocumentModel[], linkInstances: LinkInstanceModel[]}) {
-    }
+    public constructor(
+      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstanceModel[]}
+    ) {}
   }
 
   export class ReplaceRows implements Action {
     public readonly type = TablesActionType.REPLACE_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, rows: TableConfigRow[], deleteCount: number}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor; rows: TableConfigRow[]; deleteCount: number}) {}
   }
 
   export class RemoveRow implements Action {
     public readonly type = TablesActionType.REMOVE_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   export class MoveRowUp implements Action {
     public readonly type = TablesActionType.MOVE_ROW_UP;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   export class MoveRowDown implements Action {
     public readonly type = TablesActionType.MOVE_ROW_DOWN;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   export class OrderPrimaryRows implements Action {
     public readonly type = TablesActionType.ORDER_PRIMARY_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor, documents: DocumentModel[]}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor; documents: DocumentModel[]}) {}
   }
 
   export class IndentRow implements Action {
     public readonly type = TablesActionType.INDENT_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   export class OutdentRow implements Action {
     public readonly type = TablesActionType.OUTDENT_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   /**
@@ -361,8 +333,7 @@ export namespace TablesAction {
   export class ToggleChildRows implements Action {
     public readonly type = TablesActionType.TOGGLE_CHILD_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   /**
@@ -371,29 +342,25 @@ export namespace TablesAction {
   export class ToggleLinkedRows implements Action {
     public readonly type = TablesActionType.TOGGLE_LINKED_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {
-    }
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
   export class SetCursor implements TableCursorAction {
     public readonly type = TablesActionType.SET_CURSOR;
 
-    public constructor(public payload: {cursor: TableCursor}) {
-    }
+    public constructor(public payload: {cursor: TableCursor}) {}
   }
 
   export class MoveCursor implements Action {
     public readonly type = TablesActionType.MOVE_CURSOR;
 
-    public constructor(public payload: {direction: Direction}) {
-    }
+    public constructor(public payload: {direction: Direction}) {}
   }
 
   export class EditSelectedCell implements Action {
     public readonly type = TablesActionType.EDIT_SELECTED_CELL;
 
-    public constructor(public payload: {clear?: boolean}) {
-    }
+    public constructor(public payload: {clear?: boolean}) {}
   }
 
   export class RemoveSelectedCell implements Action {
@@ -403,19 +370,46 @@ export namespace TablesAction {
   export class SetEditedAttribute implements Action {
     public readonly type = TablesActionType.SET_EDITED_ATTRIBUTE;
 
-    public constructor(public payload: {editedAttribute: EditedAttribute}) {
-    }
+    public constructor(public payload: {editedAttribute: EditedAttribute}) {}
   }
 
-  export type All = CreateTable | AddTable | DestroyTable | RemoveTable |
-    CreatePart | AddPart | SwitchParts | RemovePart |
-    AddColumn | SplitColumn | ReplaceColumns | RemoveColumn | RemoveEmptyColumns |
-    HideColumn | ShowColumns |
-    MoveColumn | ResizeColumn | InitColumn |
-    SyncPrimaryRows | SyncLinkedRows | OrderPrimaryRows |
-    AddPrimaryRows | AddLinkedRows | InitRows | CleanRows | ReplaceRows | RemoveRow |
-    MoveRowDown | MoveRowUp |
-    IndentRow | OutdentRow | ToggleChildRows | ToggleLinkedRows |
-    SetCursor | MoveCursor |
-    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute;
+  export type All =
+    | CreateTable
+    | AddTable
+    | DestroyTable
+    | RemoveTable
+    | CreatePart
+    | AddPart
+    | SwitchParts
+    | RemovePart
+    | AddColumn
+    | SplitColumn
+    | ReplaceColumns
+    | RemoveColumn
+    | RemoveEmptyColumns
+    | HideColumn
+    | ShowColumns
+    | MoveColumn
+    | ResizeColumn
+    | InitColumn
+    | SyncPrimaryRows
+    | SyncLinkedRows
+    | OrderPrimaryRows
+    | AddPrimaryRows
+    | AddLinkedRows
+    | InitRows
+    | CleanRows
+    | ReplaceRows
+    | RemoveRow
+    | MoveRowDown
+    | MoveRowUp
+    | IndentRow
+    | OutdentRow
+    | ToggleChildRows
+    | ToggleLinkedRows
+    | SetCursor
+    | MoveCursor
+    | EditSelectedCell
+    | RemoveSelectedCell
+    | SetEditedAttribute;
 }

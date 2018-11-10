@@ -21,13 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {LinkRowModel} from './link-row.model';
 
 @Pipe({
-  name: 'linkRowsDocumentIds'
+  name: 'linkRowsDocumentIds',
 })
 export class LinkRowsDocumentIdsPipe implements PipeTransform {
-
   public transform(linkRows: LinkRowModel[]): string[] {
-    return linkRows.filter(linkRow => !!linkRow.document)
-      .map(linkRow => linkRow.document.id);
+    return linkRows.filter(linkRow => !!linkRow.document).map(linkRow => linkRow.document.id);
   }
-
 }

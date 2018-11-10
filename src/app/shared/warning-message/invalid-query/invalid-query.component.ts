@@ -23,14 +23,12 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   selector: 'invalid-query',
   templateUrl: './invalid-query.component.html',
   styleUrls: ['./invalid-query.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidQueryComponent {
-
   @Input()
   public minCollections: number;
 
   @Input()
   public maxCollections: number;
-
 }

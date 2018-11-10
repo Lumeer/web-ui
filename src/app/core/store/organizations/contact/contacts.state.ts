@@ -24,19 +24,22 @@ import {AppState} from '../../app.state';
 import {selectOrganizationByWorkspace} from '../organizations.state';
 import {selectAllPayments} from '../payment/payments.state';
 
-export interface ContactsState extends EntityState<ContactModel> {
-}
+export interface ContactsState extends EntityState<ContactModel> {}
 
 export const contactsAdapter = createEntityAdapter<ContactModel>({selectId: contact => contact.organizationId});
 
-export const initialContactsState: ContactsState = contactsAdapter.getInitialState({
-});
+export const initialContactsState: ContactsState = contactsAdapter.getInitialState({});
 
 export const selectContactsState = (state: AppState) => state.contacts;
 export const selectAllContacts = createSelector(selectContactsState, contactsAdapter.getSelectors().selectAll);
-export const selectContactByOrganizationId = (organizationId) => createSelector(selectAllContacts, contacts => {
-  return contacts.find(contact => contact.organizationId === organizationId);
-});
-export const selectContactByWorkspace = createSelector(selectAllContacts, selectOrganizationByWorkspace, (contacts, organization) => {
-  return contacts.find(contact => organization && (contact.organizationId === organization.id));
-});
+export const selectContactByOrganizationId = organizationId =>
+  createSelector(selectAllContacts, contacts => {
+    return contacts.find(contact => contact.organizationId === organizationId);
+  });
+export const selectContactByWorkspace = createSelector(
+  selectAllContacts,
+  selectOrganizationByWorkspace,
+  (contacts, organization) => {
+    return contacts.find(contact => organization && contact.organizationId === organization.id);
+  }
+);

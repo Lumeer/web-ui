@@ -23,7 +23,10 @@ import {initialUsersState, usersAdapter, UsersState} from './users.state';
 export function usersReducer(state: UsersState = initialUsersState, action: UsersAction.All): UsersState {
   switch (action.type) {
     case UsersActionType.GET_SUCCESS:
-      return {...usersAdapter.addAll(action.payload.users, state), loadedForOrganizationId: action.payload.organizationId};
+      return {
+        ...usersAdapter.addAll(action.payload.users, state),
+        loadedForOrganizationId: action.payload.organizationId,
+      };
     case UsersActionType.GET_CURRENT_USER_SUCCESS:
       return {...state, currentUser: action.payload.user};
     case UsersActionType.CREATE_SUCCESS:
@@ -33,11 +36,17 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
     case UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS:
-      const newState = {...state, currentUser: {...state.currentUser, defaultWorkspace: action.payload.defaultWorkspace}};
-      return usersAdapter.updateOne({
-        id: action.payload.user.id,
-        changes: {defaultWorkspace: action.payload.defaultWorkspace}
-      }, newState);
+      const newState = {
+        ...state,
+        currentUser: {...state.currentUser, defaultWorkspace: action.payload.defaultWorkspace},
+      };
+      return usersAdapter.updateOne(
+        {
+          id: action.payload.user.id,
+          changes: {defaultWorkspace: action.payload.defaultWorkspace},
+        },
+        newState
+      );
     case UsersActionType.SET_PENDING:
       return {...state, pending: action.payload.pending};
     case UsersActionType.CLEAR:

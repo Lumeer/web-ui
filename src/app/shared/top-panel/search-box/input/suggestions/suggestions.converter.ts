@@ -32,22 +32,30 @@ import {QueryItem} from '../../query-item/model/query-item';
 import {ViewQueryItem} from '../../query-item/model/view.query-item';
 
 export class SuggestionsConverter {
-
-  public static convertSuggestionsToQueryItems(suggestions: Suggestions, allCollections: CollectionModel[]): Observable<QueryItem[]> {
+  public static convertSuggestionsToQueryItems(
+    suggestions: Suggestions,
+    allCollections: CollectionModel[]
+  ): Observable<QueryItem[]> {
     if (!suggestions) {
       return of([]);
     }
 
-    const attributes: CollectionModel[] = suggestions.attributes.map(collection => CollectionConverter.fromDto(collection));
-    const collections: CollectionModel[] = suggestions.collections.map(collection => CollectionConverter.fromDto(collection));
+    const attributes: CollectionModel[] = suggestions.attributes.map(collection =>
+      CollectionConverter.fromDto(collection)
+    );
+    const collections: CollectionModel[] = suggestions.collections.map(collection =>
+      CollectionConverter.fromDto(collection)
+    );
     const views: ViewModel[] = suggestions.views.map(view => ViewConverter.convertToModel(view));
-    const linkTypes: LinkTypeModel[] = suggestions.linkTypes.map(link => SuggestionsConverter.convertLinkType(link, allCollections));
+    const linkTypes: LinkTypeModel[] = suggestions.linkTypes.map(link =>
+      SuggestionsConverter.convertLinkType(link, allCollections)
+    );
 
     const suggestedQueryItems: QueryItem[] = [
       ...SuggestionsConverter.createCollectionQueryItems(collections),
       ...SuggestionsConverter.createAttributeQueryItems(attributes),
       ...SuggestionsConverter.createViewQueryItems(views),
-      ...SuggestionsConverter.createLinkQueryItems(linkTypes)
+      ...SuggestionsConverter.createLinkQueryItems(linkTypes),
     ];
     return of(suggestedQueryItems);
   }
@@ -56,7 +64,7 @@ export class SuggestionsConverter {
     const linkType = LinkTypeConverter.fromDto(dto);
     linkType.collections = [
       allCollections.find(collection => collection.id === linkType.collectionIds[0]),
-      allCollections.find(collection => collection.id === linkType.collectionIds[1])
+      allCollections.find(collection => collection.id === linkType.collectionIds[1]),
     ];
     return linkType;
   }
@@ -76,5 +84,4 @@ export class SuggestionsConverter {
   private static createLinkQueryItems(linkTypes: LinkTypeModel[]): QueryItem[] {
     return linkTypes.map(linkType => new LinkQueryItem(linkType));
   }
-
 }

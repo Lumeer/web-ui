@@ -33,13 +33,7 @@ import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PickerModule,
-    InputModule,
-    PipesModule,
-    DocumentHintsModule
-  ],
+  imports: [CommonModule, PickerModule, InputModule, PipesModule, DocumentHintsModule],
   declarations: [
     LinksComponent,
     LinksListComponent,
@@ -47,11 +41,8 @@ import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-d
     LinksListTableComponent,
     LinksListTableHeaderComponent,
     LinksListTableBodyComponent,
-    LinkRowsDocumentIdsPipe
+    LinkRowsDocumentIdsPipe,
   ],
-  exports: [
-    LinksComponent,
-    LinksListComponent
-  ]
+  exports: [LinksComponent, LinksListComponent],
 })
-export class LinksModule { }
+export class LinksModule {}

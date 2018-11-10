@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Resource} from '../../../../core/dto';
@@ -33,10 +42,9 @@ import {selectProjectsForWorkspace} from '../../../../core/store/projects/projec
 @Component({
   selector: 'resource-menu',
   templateUrl: './resource-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceMenuComponent implements OnInit, OnChanges {
-
   @Input() public labelledBy: string = '';
   @Input() public type: ResourceType;
   @Input() public resource: Resource;
@@ -50,8 +58,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
 
   private dispatched = false;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindData();
@@ -80,5 +87,4 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
       this.dispatched = true;
     }
   }
-
 }

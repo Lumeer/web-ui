@@ -18,8 +18,6 @@
  */
 
 export interface Permission {
-
   id: string;
   roles: string[];
-
 }

@@ -44,7 +44,6 @@ import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 
 @Injectable()
 export class ViewsEffects {
-
   @Effect()
   public get: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
@@ -54,7 +53,7 @@ export class ViewsEffects {
       return this.viewService.getViews().pipe(
         map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
         map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
-        catchError((error) => of(new ViewsAction.GetFailure({error: error})))
+        catchError(error => of(new ViewsAction.GetFailure({error: error})))
       );
     })
   );
@@ -64,11 +63,13 @@ export class ViewsEffects {
     ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE),
     withLatestFrom(this.store$.select(selectViewsDictionary)),
     filter(([action, views]) => !(action.payload.viewCode in views)),
-    mergeMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
-      map((dto: View) => ViewConverter.convertToModel(dto)),
-      map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
-      catchError((error) => of(new ViewsAction.GetFailure({error: error})))
-    )),
+    mergeMap(([action]) =>
+      this.viewService.getView(action.payload.viewCode).pipe(
+        map((dto: View) => ViewConverter.convertToModel(dto)),
+        map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
+        catchError(error => of(new ViewsAction.GetFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -90,7 +91,7 @@ export class ViewsEffects {
       return this.viewService.createView(viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
         map(view => new ViewsAction.CreateSuccess({view: view})),
-        catchError((error) => of(new ViewsAction.CreateFailure({error: error})))
+        catchError(error => of(new ViewsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -98,10 +99,7 @@ export class ViewsEffects {
   @Effect()
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
-    withLatestFrom(
-      this.store$.pipe(select(selectWorkspace)),
-      this.store$.pipe(select(selectSearchTab))
-    ),
+    withLatestFrom(this.store$.pipe(select(selectWorkspace)), this.store$.pipe(select(selectSearchTab))),
     flatMap(([action, workspace, searchTab]) => {
       const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
       const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
@@ -111,7 +109,7 @@ export class ViewsEffects {
       }
       return [
         new NotificationsAction.Success({message}),
-        new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}})
+        new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}}),
       ];
     })
   );
@@ -134,10 +132,10 @@ export class ViewsEffects {
 
       return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
-        map((view) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
-        catchError((error) => of(new ViewsAction.UpdateFailure({error: error})))
+        map(view => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
+        catchError(error => of(new ViewsAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -178,9 +176,9 @@ export class ViewsEffects {
 
           return actions;
         }),
-        catchError((error) => of(new ViewsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ViewsAction.DeleteFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -197,8 +195,9 @@ export class ViewsEffects {
   public setPermission$ = this.actions$.pipe(
     ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
     concatMap(action => {
-      const permissionsDto: Permission[] = action.payload.permissions
-        .map(model => PermissionsConverter.toPermissionDto(model));
+      const permissionsDto: Permission[] = action.payload.permissions.map(model =>
+        PermissionsConverter.toPermissionDto(model)
+      );
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
@@ -208,7 +207,7 @@ export class ViewsEffects {
       }
       return observable.pipe(
         concatMap(() => of(new ViewsAction.SetPermissionsSuccess(action.payload))),
-        catchError((error) => of(new ViewsAction.SetPermissionsFailure({error})))
+        catchError(error => of(new ViewsAction.SetPermissionsFailure({error})))
       );
     })
   );
@@ -223,10 +222,10 @@ export class ViewsEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private i18n: I18n,
-              private store$: Store<AppState>,
-              private viewService: ViewService) {
-  }
-
+  constructor(
+    private actions$: Actions,
+    private i18n: I18n,
+    private store$: Store<AppState>,
+    private viewService: ViewService
+  ) {}
 }

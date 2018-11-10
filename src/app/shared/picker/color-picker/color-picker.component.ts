@@ -27,10 +27,9 @@ declare let $: any;
 @Component({
   selector: 'color-picker',
   templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.scss']
+  styleUrls: ['./color-picker.component.scss'],
 })
 export class ColorPickerComponent implements OnInit, AfterViewInit {
-
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
     event.stopPropagation();
@@ -60,8 +59,7 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   public customColor = false;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public ngOnInit(): void {
     this.resetColor();
@@ -84,9 +82,11 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
   }
 
   private isCustom() {
-    return this.greyscaleColors.indexOf(this.selected) < 0 &&
+    return (
+      this.greyscaleColors.indexOf(this.selected) < 0 &&
       this.saturatedColors.indexOf(this.selected) < 0 &&
-      this.colors.indexOf(this.selected) < 0;
+      this.colors.indexOf(this.selected) < 0
+    );
   }
 
   public openSpectrum() {
@@ -96,17 +96,17 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
       color: this.color,
       flat: false,
       showInput: true,
-      cancelText: this.i18n({ id: 'button.cancel', value: 'Cancel' }),
-      chooseText:  this.i18n({ id: 'button.choose', value: 'Choose' }),
+      cancelText: this.i18n({id: 'button.cancel', value: 'Cancel'}),
+      chooseText: this.i18n({id: 'button.choose', value: 'Choose'}),
       preferredFormat: 'hex',
       containerClassName: 'spectrum-container',
       clickoutFiresChange: true,
-      change: function (color) {
+      change: function(color) {
         __this.select(color.toHexString());
       },
-      move: function (color) {
+      move: function(color) {
         __this.preview(color.toHexString());
-      }
+      },
     });
   }
 

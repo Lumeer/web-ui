@@ -24,10 +24,9 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
   selector: 'map-attribute-group',
   templateUrl: './map-attribute-group.component.html',
   styleUrls: ['./map-attribute-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapAttributeGroupComponent {
-
   @Input()
   public collection: CollectionModel;
 
@@ -40,5 +39,4 @@ export class MapAttributeGroupComponent {
   public trackByIndex(index: number, attributeId: string): number {
     return index;
   }
-
 }

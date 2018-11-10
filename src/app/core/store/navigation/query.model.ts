@@ -18,7 +18,6 @@
  */
 
 export interface QueryModel {
-
   collectionIds?: string[];
   documentIds?: string[];
   filters?: string[];
@@ -30,7 +29,6 @@ export interface QueryModel {
   and?: QueryModel[];
   or?: QueryModel[];
   not?: QueryModel;
-
 }
 
 export interface AttributeFilter {
@@ -46,5 +44,5 @@ export enum ConditionType {
   LowerThan,
   LowerThanEquals,
   GreaterThan,
-  GreaterThanEquals
+  GreaterThanEquals,
 }

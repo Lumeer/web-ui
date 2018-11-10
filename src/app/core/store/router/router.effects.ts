@@ -26,7 +26,6 @@ import {RouterAction, RouterActionType} from './router.action';
 
 @Injectable()
 export class RouterEffects {
-
   @Effect({dispatch: false})
   public navigate$ = this.actions$.pipe(
     ofType<RouterAction.Go>(RouterActionType.GO),
@@ -46,8 +45,5 @@ export class RouterEffects {
     tap(() => this.location.forward())
   );
 
-  constructor(private actions$: Actions,
-              private router: Router,
-              private location: Location) {
-  }
+  constructor(private actions$: Actions, private router: Router, private location: Location) {}
 }

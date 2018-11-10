@@ -27,20 +27,13 @@ import {SearchDocumentHeaderComponent} from './header/search-document-header.com
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule
-  ],
+  imports: [CommonModule, SharedModule],
   declarations: [
     SearchDocumentsComponent,
     EmptyDocumentsComponent,
     SearchDocumentHeaderComponent,
-    IsDocumentOpenedPipe
+    IsDocumentOpenedPipe,
   ],
-  exports: [
-    SearchDocumentsComponent
-  ]
+  exports: [SearchDocumentsComponent],
 })
-export class SearchDocumentsModule {
-
-}
+export class SearchDocumentsModule {}

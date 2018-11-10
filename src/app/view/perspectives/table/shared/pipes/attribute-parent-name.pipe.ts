@@ -22,12 +22,10 @@ import {AttributeModel} from '../../../../../core/store/collections/collection.m
 import {extractAttributeParentName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
-  name: 'attributeParentName'
+  name: 'attributeParentName',
 })
 export class AttributeParentNamePipe implements PipeTransform {
-
   public transform(attribute: AttributeModel): string {
     return extractAttributeParentName(attribute.name);
   }
-
 }

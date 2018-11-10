@@ -21,7 +21,6 @@ import {Action} from '@ngrx/store';
 import {PaymentModel} from './payment.model';
 
 export enum PaymentsActionType {
-
   GET_PAYMENT = '[Organizations] Get Payment',
   GET_PAYMENT_SUCCESS = '[Organizations] Get Payment :: Success',
   GET_PAYMENT_FAILURE = '[Organizations] Get Payment :: Failure',
@@ -36,72 +35,68 @@ export enum PaymentsActionType {
 }
 
 export namespace PaymentsAction {
-
   export class GetPayment implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENT;
 
-    public constructor(public payload: { organizationId: string, paymentId: string, nextAction?: Action }) {
-    }
+    public constructor(public payload: {organizationId: string; paymentId: string; nextAction?: Action}) {}
   }
 
   export class GetPaymentSuccess implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENT_SUCCESS;
 
-    public constructor(public payload: { payment: PaymentModel }) {
-    }
+    public constructor(public payload: {payment: PaymentModel}) {}
   }
 
   export class GetPaymentFailure implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENT_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class CreatePayment implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT;
 
-    public constructor(public payload: { organizationId: string, payment: PaymentModel, returnUrl?: string }) {
-    }
+    public constructor(public payload: {organizationId: string; payment: PaymentModel; returnUrl?: string}) {}
   }
 
   export class CreatePaymentSuccess implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT_SUCCESS;
 
-    public constructor(public payload: { payment: PaymentModel }) {
-    }
+    public constructor(public payload: {payment: PaymentModel}) {}
   }
 
   export class CreatePaymentFailure implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class GetPayments implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENTS;
 
-    public constructor(public payload: { organizationId: string }) {
-    }
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class GetPaymentsSuccess implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENTS_SUCCESS;
 
-    public constructor(public payload: { payments: PaymentModel[] }) {
-    }
+    public constructor(public payload: {payments: PaymentModel[]}) {}
   }
 
   export class GetPaymentsFailure implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENTS_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export type All =
-    GetPayment | GetPaymentSuccess | GetPaymentFailure |
-    GetPayments | GetPaymentsSuccess | GetPaymentsFailure |
-    CreatePayment | CreatePaymentSuccess | CreatePaymentFailure;
+    | GetPayment
+    | GetPaymentSuccess
+    | GetPaymentFailure
+    | GetPayments
+    | GetPaymentsSuccess
+    | GetPaymentsFailure
+    | CreatePayment
+    | CreatePaymentSuccess
+    | CreatePaymentFailure;
 }

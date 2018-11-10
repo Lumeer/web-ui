@@ -39,10 +39,9 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 
 @Component({
   selector: 'users',
-  templateUrl: './users.component.html'
+  templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit, OnDestroy {
-
   @Input() public resourceType: ResourceType;
 
   public users$: Observable<UserModel[]>;
@@ -57,8 +56,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   private organizationSubscription: Subscription;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -89,7 +87,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UsersAction.Delete({organizationId: this.organizationId, userId: user.id}));
   }
 
-  public onUserPermissionChanged(data: { newPermission: PermissionModel, currentPermission: PermissionModel, onlyStore: boolean }) {
+  public onUserPermissionChanged(data: {
+    newPermission: PermissionModel;
+    currentPermission: PermissionModel;
+    onlyStore: boolean;
+  }) {
     if (data.onlyStore) {
       this.changeUserPermissionOnlyStore(data);
     } else {
@@ -97,11 +99,13 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public changeUserPermissionOnlyStore(data: { newPermission: PermissionModel }) {
+  public changeUserPermissionOnlyStore(data: {newPermission: PermissionModel}) {
     const payload = {type: PermissionType.Users, permission: data.newPermission};
     switch (this.resourceType) {
       case ResourceType.Organization: {
-        this.store.dispatch(new OrganizationsAction.ChangePermissionSuccess({...payload, organizationId: this.resourceId}));
+        this.store.dispatch(
+          new OrganizationsAction.ChangePermissionSuccess({...payload, organizationId: this.resourceId})
+        );
         break;
       }
       case ResourceType.Project: {
@@ -112,12 +116,15 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.store.dispatch(new CollectionsAction.ChangePermissionSuccess({...payload, collectionId: this.resourceId}));
         break;
       }
-
     }
   }
 
-  public changeUserPermission(data: { newPermission: PermissionModel, currentPermission: PermissionModel }) {
-    const payload = {type: PermissionType.Users, permission: data.newPermission, currentPermission: data.currentPermission};
+  public changeUserPermission(data: {newPermission: PermissionModel; currentPermission: PermissionModel}) {
+    const payload = {
+      type: PermissionType.Users,
+      permission: data.newPermission,
+      currentPermission: data.currentPermission,
+    };
     switch (this.resourceType) {
       case ResourceType.Organization: {
         this.store.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));
@@ -131,23 +138,23 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.store.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}));
         break;
       }
-
     }
   }
 
   private subscribeData() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.organizationSubscription = this.store
+      .select(selectOrganizationByWorkspace)
       .pipe(
         filter(organization => !isNullOrUndefined(organization)),
         map(organization => organization.id)
       )
-      .subscribe(organizationId => this.organizationId = organizationId);
+      .subscribe(organizationId => (this.organizationId = organizationId));
     this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
     this.currentUser$ = this.store.select(selectCurrentUserForWorkspace);
 
     this.resource$ = this.store.select(this.getSelector()).pipe(
       filter(resource => !isNullOrUndefined(resource)),
-      tap(resource => this.resourceId = resource.id),
+      tap(resource => (this.resourceId = resource.id))
     );
   }
 
@@ -162,5 +169,4 @@ export class UsersComponent implements OnInit, OnDestroy {
       // TODO case ResourceType.View: return selectViewByWorkspace
     }
   }
-
 }

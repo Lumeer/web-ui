@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -41,10 +51,9 @@ const PAGE_SIZE = 100;
   selector: 'links-list-table',
   templateUrl: './links-list-table.component.html',
   styleUrls: ['./links-list-table.component.scss', './links-list-table.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableComponent implements OnChanges, OnDestroy {
-
   @ViewChild(LinksListTableHeaderComponent)
   public headerComponent: LinksListTableHeaderComponent;
 
@@ -52,7 +61,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   @Input() public document: DocumentModel;
 
-  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
+  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
@@ -61,11 +70,10 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   public page = 0;
   public readonly pageSize = PAGE_SIZE;
 
-  private lastSelection: { linkType: LinkTypeModel, document: DocumentModel };
+  private lastSelection: {linkType: LinkTypeModel; document: DocumentModel};
   private linksSubscription = new Subscription();
 
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public ngOnDestroy() {
     this.linksSubscription.unsubscribe();
@@ -85,11 +93,16 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
       );
 
       this.linksSubscription.unsubscribe();
-      this.linksSubscription = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
-        mergeMap(linkInstances => this.fetchDocumentsForLinkInstances(linkInstances).pipe(
-          map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))
-        ))
-      ).subscribe(linkRows => this.handleNewLinkRows(linkRows));
+      this.linksSubscription = this.store
+        .select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id]))
+        .pipe(
+          mergeMap(linkInstances =>
+            this.fetchDocumentsForLinkInstances(linkInstances).pipe(
+              map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))
+            )
+          )
+        )
+        .subscribe(linkRows => this.handleNewLinkRows(linkRows));
     }
   }
 
@@ -106,7 +119,10 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
     }, []);
   }
 
-  private joinLinkInstancesWithDocuments(linkInstances: LinkInstanceModel[], documents: DocumentModel[]): LinkRowModel[] {
+  private joinLinkInstancesWithDocuments(
+    linkInstances: LinkInstanceModel[],
+    documents: DocumentModel[]
+  ): LinkRowModel[] {
     return linkInstances.reduce((rows, linkInstance) => {
       const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
       const document = documents.find(doc => doc.id === otherDocumentId);
@@ -118,7 +134,11 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   }
 
   private handleNewLinkRows(linkRows: LinkRowModel[]) {
-    if (this.lastSelection && this.lastSelection.document === this.document && this.lastSelection.linkType === this.linkType) {
+    if (
+      this.lastSelection &&
+      this.lastSelection.document === this.document &&
+      this.lastSelection.linkType === this.linkType
+    ) {
       this.mergeLinkRows(linkRows);
     } else {
       this.lastSelection = {linkType: this.linkType, document: this.document};
@@ -178,5 +198,4 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
       this.page--;
     }
   }
-
 }

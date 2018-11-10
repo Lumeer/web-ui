@@ -25,7 +25,6 @@ interface MovePosition {
 }
 
 export class GridLayout {
-
   private muuri: any;
   private movePosition: MovePosition;
 
@@ -34,8 +33,7 @@ export class GridLayout {
   private intervalId: number;
   private correctionIntervalId: number;
 
-  public constructor(selector: string, options: any, zone: NgZone,
-                     onMove?: (event: MovePosition) => any) {
+  public constructor(selector: string, options: any, zone: NgZone, onMove?: (event: MovePosition) => any) {
     setTimeout(() => {
       if (!GridLayout.containerElementExists(selector)) {
         return;
@@ -43,7 +41,7 @@ export class GridLayout {
 
       zone.runOutsideAngular(() => {
         this.muuri = new window['Muuri'](selector, options);
-        this.muuri.on('move', event => this.movePosition = event);
+        this.muuri.on('move', event => (this.movePosition = event));
         this.muuri.on('dragReleaseEnd', () => {
           if (this.movePosition) {
             onMove(this.movePosition);
@@ -57,7 +55,7 @@ export class GridLayout {
   }
 
   private refreshSizeOnChangesInside(selector: string) {
-    this.mutationObserver = new MutationObserver(() => this.lastChangedTime = new Date());
+    this.mutationObserver = new MutationObserver(() => (this.lastChangedTime = new Date()));
     this.mutationObserver.observe(document.querySelector(selector), {attributes: true, childList: true, subtree: true});
     this.intervalId = window.setInterval(() => this.refreshSize(), 100);
   }
@@ -85,7 +83,6 @@ export class GridLayout {
   }
 
   private static containerElementExists(selector: string): boolean {
-    return !!(document.querySelector(selector));
+    return !!document.querySelector(selector);
   }
-
 }

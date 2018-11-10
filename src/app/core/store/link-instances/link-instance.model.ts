@@ -18,13 +18,11 @@
  */
 
 export interface LinkInstanceModel {
-
   id?: string;
   linkTypeId: string;
   documentIds: [string, string];
 
-  data?: { [attributeId: string]: any };
-
+  data?: {[attributeId: string]: any};
 }
 
 export function getOtherLinkedDocumentId(linkInstance: LinkInstanceModel, documentId: string): string {

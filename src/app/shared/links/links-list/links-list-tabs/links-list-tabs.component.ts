@@ -25,10 +25,9 @@ import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
   selector: 'links-list-tabs',
   templateUrl: './links-list-tabs.component.html',
   styleUrls: ['./links-list-tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTabsComponent {
-
   @Input()
   public linkTypes: LinkTypeModel[];
 
@@ -47,5 +46,4 @@ export class LinksListTabsComponent {
   public trackByLinkTypes(index: number, linkType: LinkTypeModel): string {
     return linkType.id;
   }
-
 }

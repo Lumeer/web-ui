@@ -31,16 +31,14 @@ import {isNullOrUndefined} from 'util';
 import {DeletedQueryItem} from './model/deleted.query-item';
 
 export class QueryItemsConverter {
-
-  constructor(private data: QueryData) {
-  }
+  constructor(private data: QueryData) {}
 
   public static toQueryString(queryItems: QueryItem[]): string {
     const query: QueryModel = {
       collectionIds: [],
       documentIds: [],
       filters: [],
-      linkTypeIds: []
+      linkTypeIds: [],
     };
 
     queryItems.forEach(queryItem => {
@@ -72,7 +70,7 @@ export class QueryItemsConverter {
       ...this.createAttributeItems(query.filters),
       ...this.createDocumentItems(query.documentIds),
       ...this.createFulltextItems(query.fulltext),
-      ...this.createLinkItems(query.linkTypeIds)
+      ...this.createLinkItems(query.linkTypeIds),
     ];
   }
 
@@ -110,7 +108,8 @@ export class QueryItemsConverter {
   }
 
   private createLinkItems(linkTypeIds: string[]): QueryItem[] {
-    return linkTypeIds.map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
+    return linkTypeIds
+      .map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
       .filter(linkType => !!linkType)
       .map(linkType => {
         const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
@@ -121,7 +120,7 @@ export class QueryItemsConverter {
 
         linkType.collections = [collection1, collection2];
         return new LinkQueryItem(linkType);
-      }).filter(queryItem => !isNullOrUndefined(queryItem));
+      })
+      .filter(queryItem => !isNullOrUndefined(queryItem));
   }
-
 }

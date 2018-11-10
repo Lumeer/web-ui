@@ -24,10 +24,9 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
   selector: 'preview-results-tabs',
   templateUrl: './preview-results-tabs.component.html',
   styleUrls: ['./preview-results-tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviewResultsTabsComponent implements OnInit {
-
   @Input()
   public collections: CollectionModel[];
 
@@ -47,5 +46,4 @@ export class PreviewResultsTabsComponent implements OnInit {
     this.selectedCollection = collection.id;
     this.select.emit(collection);
   }
-
 }

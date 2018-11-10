@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
@@ -46,22 +55,22 @@ import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-
 @Component({
   selector: 'post-it-perspective',
   templateUrl: './post-it-perspective.component.html',
-  styleUrls: ['./post-it-perspective.component.scss']
+  styleUrls: ['./post-it-perspective.component.scss'],
 })
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
-
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: any) {
     const id = event.target.id || '';
     const parent = event.target.parentElement;
-    const idParent = parent && parent.id || '';
+    const idParent = (parent && parent.id) || '';
 
     if (!id.startsWith(this.perspectiveId) && !idParent.startsWith(this.perspectiveId)) {
       this.selectionHelper.clearSelection();
     }
   }
 
-  @ViewChild('postItLayout') set content(content: ElementRef) {
+  @ViewChild('postItLayout')
+  set content(content: ElementRef) {
     if (content) {
       this.postItLayout = content;
       this.createLayout();
@@ -89,13 +98,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private creatingCorrelationsIds: string[] = [];
 
-  constructor(private store: Store<AppState>,
-              private zone: NgZone,
-              private canManageConfigPipe: CanManageConfigPipe,
-              private changeDetector: ChangeDetectorRef,
-              private documentUiService: DocumentUiService,
-              private userSettingsService: UserSettingsService) {
-  }
+  constructor(
+    private store: Store<AppState>,
+    private zone: NgZone,
+    private canManageConfigPipe: CanManageConfigPipe,
+    private changeDetector: ChangeDetectorRef,
+    private documentUiService: DocumentUiService,
+    private userSettingsService: UserSettingsService
+  ) {}
 
   public ngOnInit(): void {
     this.createSelectionHelper();
@@ -113,7 +123,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private createLayout() {
     if (!this.layout) {
-      this.layout = new PostItLayout(this.postItLayout, this.canManageConfig, this.zone, (orderedIds) => this.onPostItOrderChanged(orderedIds));
+      this.layout = new PostItLayout(this.postItLayout, this.canManageConfig, this.zone, orderedIds =>
+        this.onPostItOrderChanged(orderedIds)
+      );
       this.changeDetector.detectChanges();
       this.layout.setOrder(this.postItsOrder$.getValue());
     }
@@ -124,10 +136,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createSelectionHelper() {
-    this.selectionHelper = new SelectionHelper(this.postItsOrder$,
+    this.selectionHelper = new SelectionHelper(
+      this.postItsOrder$,
       (key: string) => this.getNumRows(key),
       () => this.getNumberColumns(),
-      this.perspectiveId);
+      this.perspectiveId
+    );
   }
 
   private getNumberColumns(): number {
@@ -155,14 +169,17 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initConfig() {
-    const subscription = this.store.select(selectCurrentView).pipe(
-      filter(view => !!view),
-      take(1)
-    ).subscribe(view => {
-      if (view.config && view.config.postit) {
-        this.dispatchInitConfigActions(view.config.postit);
-      }
-    });
+    const subscription = this.store
+      .select(selectCurrentView)
+      .pipe(
+        filter(view => !!view),
+        take(1)
+      )
+      .subscribe(view => {
+        if (view.config && view.config.postit) {
+          this.dispatchInitConfigActions(view.config.postit);
+        }
+      });
     this.subscriptions.add(subscription);
   }
 
@@ -173,40 +190,44 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToConfig() {
     this.subscriptions.add(
-      observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView)).pipe(
-        map(([size, view]) => size || this.viewPostItSize(view)),
-        tap(size => !size ? this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()})) : null),
-        filter(size => size && this.size$.getValue() !== size)
-      ).subscribe(size => {
-        this.size$.next(size);
-        if (this.layout) {
-          this.layout.refresh();
-        }
-      }));
+      observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView))
+        .pipe(
+          map(([size, view]) => size || this.viewPostItSize(view)),
+          tap(size => (!size ? this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()})) : null)),
+          filter(size => size && this.size$.getValue() !== size)
+        )
+        .subscribe(size => {
+          this.size$.next(size);
+          if (this.layout) {
+            this.layout.refresh();
+          }
+        })
+    );
 
-    this.subscriptions.add(this.store.select(selectPostItsOrder)
-      .subscribe(order => this.postItsOrder$.next(order)));
+    this.subscriptions.add(this.store.select(selectPostItsOrder).subscribe(order => this.postItsOrder$.next(order)));
   }
 
   private viewPostItSize(view: ViewModel): SizeType | null {
-    return view && view.config && view.config.postit && view.config.postit.size || null;
+    return (view && view.config && view.config.postit && view.config.postit.size) || null;
   }
 
   private subscribeCollections() {
-    const collectionsSubscription = this.store.select(selectCollectionsByQuery)
-      .subscribe(collections => this.collections = collections);
+    const collectionsSubscription = this.store
+      .select(selectCollectionsByQuery)
+      .subscribe(collections => (this.collections = collections));
     this.subscriptions.add(collectionsSubscription);
   }
 
   private subscribeNavigation() {
-    const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !!navigation.query && !!navigation.workspace)
-    ).subscribe(navigation => {
-      this.query = navigation.query;
-      this.workspace = navigation.workspace;
-      this.clearData();
-      this.fetchDocuments();
-    });
+    const navigationSubscription = this.store
+      .select(selectNavigation)
+      .pipe(filter(navigation => !!navigation.query && !!navigation.workspace))
+      .subscribe(navigation => {
+        this.query = navigation.query;
+        this.workspace = navigation.workspace;
+        this.clearData();
+        this.fetchDocuments();
+      });
     this.subscriptions.add(navigationSubscription);
   }
 
@@ -218,14 +239,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToView() {
-    const subscription = this.store.select(selectCurrentView).pipe(
-      mergeMap(view => this.canManageConfigPipe.transform(view))
-    ).subscribe(viewHasManageRole => {
-      this.canManageConfig = viewHasManageRole;
-      if (this.layout) {
-        this.layout.setDrag(viewHasManageRole);
-      }
-    });
+    const subscription = this.store
+      .select(selectCurrentView)
+      .pipe(mergeMap(view => this.canManageConfigPipe.transform(view)))
+      .subscribe(viewHasManageRole => {
+        this.canManageConfig = viewHasManageRole;
+        if (this.layout) {
+          this.layout.setDrag(viewHasManageRole);
+        }
+      });
     this.subscriptions.add(subscription);
   }
 
@@ -258,16 +280,19 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
     const pageSize = this.getPageSize() * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
-      filter((documents) => !!documents),
-      withLatestFrom(this.store.select(selectCurrentView))
-    ).subscribe(([documents, view]) => {
-      if (view && view.config && view.config.postit) {
-        this.mapNewDocumentsWithConfig(documents, view.config.postit);
-      } else {
-        this.mapNewDocuments(documents);
-      }
-    });
+    this.documentsSubscription = this.store
+      .select(selectDocumentsByCustomQuery(query, true))
+      .pipe(
+        filter(documents => !!documents),
+        withLatestFrom(this.store.select(selectCurrentView))
+      )
+      .subscribe(([documents, view]) => {
+        if (view && view.config && view.config.postit) {
+          this.mapNewDocumentsWithConfig(documents, view.config.postit);
+        } else {
+          this.mapNewDocuments(documents);
+        }
+      });
   }
 
   private mapNewDocuments(documents: DocumentModel[]) {
@@ -286,7 +311,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     const newOrderIds = [];
 
-    documents.filter(doc => doc.correlationId && this.creatingCorrelationsIds.includes(doc.correlationId))
+    documents
+      .filter(doc => doc.correlationId && this.creatingCorrelationsIds.includes(doc.correlationId))
       .forEach(document => {
         newOrderIds.push(document.id);
         delete documentsMap[document.id];
@@ -347,10 +373,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public removePostIt(documentModel: DocumentModel) {
     if (documentModel.id) {
-      this.store.dispatch(new DocumentsAction.DeleteConfirm({
-        collectionId: documentModel.collectionId,
-        documentId: documentModel.id
-      }));
+      this.store.dispatch(
+        new DocumentsAction.DeleteConfirm({
+          collectionId: documentModel.collectionId,
+          documentId: documentModel.id,
+        })
+      );
     }
   }
 
@@ -373,5 +401,4 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const userSettings = this.userSettingsService.getUserSettings();
     return userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
-
 }

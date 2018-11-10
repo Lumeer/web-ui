@@ -28,9 +28,7 @@ import {AxisSelectItemsPipe} from './axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     DisplayablePipe,
     AttributeNamePipe,
@@ -38,7 +36,7 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
     AxisSelectItemsPipe,
-    ConfigAxisByTypePipe
+    ConfigAxisByTypePipe,
   ],
   exports: [
     DisplayablePipe,
@@ -47,9 +45,7 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     ChartTypesToSelectPipe,
     AxisSelectEmptyValuePipe,
     AxisSelectItemsPipe,
-    ConfigAxisByTypePipe
-  ]
+    ConfigAxisByTypePipe,
+  ],
 })
-export class ChartPipesModule {
-
-}
+export class ChartPipesModule {}

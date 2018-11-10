@@ -30,21 +30,7 @@ import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    FormsModule,
-    RouterModule,
-    PostItPerspectiveModule,
-    SharedModule,
-    ViewRoutingModule
-  ],
-  declarations: [
-    ViewComponent,
-    ViewControlsComponent,
-    ViewLoadingComponent,
-    ViewControlsInfoPipe
-  ]
+  imports: [BrowserModule, FormsModule, RouterModule, PostItPerspectiveModule, SharedModule, ViewRoutingModule],
+  declarations: [ViewComponent, ViewControlsComponent, ViewLoadingComponent, ViewControlsInfoPipe],
 })
-export class ViewModule {
-
-}
+export class ViewModule {}

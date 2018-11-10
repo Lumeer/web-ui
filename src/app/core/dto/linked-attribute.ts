@@ -21,7 +21,6 @@ import {Attribute} from './attribute';
 import {Collection} from './collection';
 
 export class LinkedAttribute {
-
   public value: Attribute;
   public collection: Collection;
 
@@ -29,5 +28,4 @@ export class LinkedAttribute {
     this.value = attribute;
     this.collection = collection;
   }
-
 }

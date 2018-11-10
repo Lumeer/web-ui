@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
@@ -34,10 +45,9 @@ declare let $: any;
 @Component({
   selector: 'post-it-collection',
   templateUrl: './post-it-collection.component.html',
-  styleUrls: ['./post-it-collection.component.scss']
+  styleUrls: ['./post-it-collection.component.scss'],
 })
 export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
-
   @Input() public collection: CollectionModel;
   @Input() public focused: boolean;
   @Input() public selected: boolean;
@@ -50,7 +60,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   @Output() public unselect = new EventEmitter();
   @Output() public delete = new EventEmitter();
   @Output() public togglePanel = new EventEmitter<any>();
-  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
+  @Output() public favoriteChange = new EventEmitter<{favorite: boolean; onlyStore: boolean}>();
 
   @ViewChild(PostItCollectionNameComponent)
   public collectionNameComponent: PostItCollectionNameComponent;
@@ -66,8 +76,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   private oldIcon: string;
   private clickedComponent: any;
 
-  constructor(private collectionValidators: CollectionValidators) {
-  }
+  constructor(private collectionValidators: CollectionValidators) {}
 
   @HostListener('document:click', ['$event'])
   public documentClicked($event): void {
@@ -199,19 +208,25 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeData() {
-    const favoriteChangeSubscription = this.favoriteChange$.pipe(
-      debounceTime(1000),
-      filter(favorite => favorite !== this.lastSyncedFavorite)
-    ).subscribe(favorite => {
-      this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false});
-    });
+    const favoriteChangeSubscription = this.favoriteChange$
+      .pipe(
+        debounceTime(1000),
+        filter(favorite => favorite !== this.lastSyncedFavorite)
+      )
+      .subscribe(favorite => {
+        this.lastSyncedFavorite = null;
+        this.favoriteChange.emit({favorite, onlyStore: false});
+      });
     this.subscriptions.add(favoriteChangeSubscription);
   }
 
   private initFormControl() {
     const collectionName = this.collection ? this.collection.name : '';
-    this.nameFormControl = new FormControl(collectionName, null, this.collectionValidators.uniqueName(this.collection.name));
+    this.nameFormControl = new FormControl(
+      collectionName,
+      null,
+      this.collectionValidators.uniqueName(this.collection.name)
+    );
     this.nameFormControl.setErrors(null);
   }
 

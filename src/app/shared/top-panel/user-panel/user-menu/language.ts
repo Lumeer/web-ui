@@ -18,12 +18,10 @@
  */
 
 export interface Language {
-
   code: string;
   name: string;
   englishName: string;
   icon: string;
-
 }
 
 export const availableLanguages: Language[] = [

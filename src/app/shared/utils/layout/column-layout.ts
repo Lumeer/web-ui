@@ -25,12 +25,10 @@ interface MovePosition {
 }
 
 export class ColumnLayout {
-
   private muuri: any;
   private movePosition: MovePosition;
 
-  public constructor(selector: string, options: any, zone: NgZone,
-                     onMove?: (event: MovePosition) => any) {
+  public constructor(selector: string, options: any, zone: NgZone, onMove?: (event: MovePosition) => any) {
     setTimeout(() => {
       if (!ColumnLayout.containerElementExists(selector)) {
         return;
@@ -75,7 +73,6 @@ export class ColumnLayout {
   }
 
   private static containerElementExists(selector: string): boolean {
-    return !!(document.querySelector(selector));
+    return !!document.querySelector(selector);
   }
-
 }

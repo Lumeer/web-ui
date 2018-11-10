@@ -17,24 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'top-panel-wrapper',
   templateUrl: './top-panel-wrapper.component.html',
   styleUrls: ['./top-panel-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopPanelWrapperComponent implements OnInit, AfterViewChecked {
-
   @Input()
   public searchBoxShown: boolean;
 
   public mobile$ = new BehaviorSubject(true);
 
-  constructor(private element: ElementRef) {
-  }
+  constructor(private element: ElementRef) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
@@ -58,5 +64,4 @@ export class TopPanelWrapperComponent implements OnInit, AfterViewChecked {
     const element = this.element.nativeElement as HTMLElement;
     element.style.setProperty('--top-panel-offset-top', `${element.offsetTop}px`);
   }
-
 }

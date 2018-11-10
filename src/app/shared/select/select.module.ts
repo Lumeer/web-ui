@@ -27,21 +27,9 @@ import {PickerModule} from '../picker/picker.module';
 import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PickerModule
-  ],
-  declarations: [
-    SelectItemComponent,
-    GetSelectItemPipe,
-    AreIdsEqualPipe
-  ],
-  providers: [
-    AreIdsEqualPipe
-  ],
-  exports: [
-    SelectItemComponent
-  ]
+  imports: [CommonModule, PickerModule],
+  declarations: [SelectItemComponent, GetSelectItemPipe, AreIdsEqualPipe],
+  providers: [AreIdsEqualPipe],
+  exports: [SelectItemComponent],
 })
-export class SelectModule {
-}
+export class SelectModule {}

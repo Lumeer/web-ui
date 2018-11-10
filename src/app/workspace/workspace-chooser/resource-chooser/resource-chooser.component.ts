@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNullOrUndefined} from 'util';
@@ -39,10 +49,9 @@ const arrowSize: number = 40;
   selector: 'resource-chooser',
   templateUrl: './resource-chooser.component.html',
   styleUrls: ['./resource-chooser.component.scss'],
-  animations: [animateOpacityFromUp]
+  animations: [animateOpacityFromUp],
 })
 export class ResourceChooserComponent implements OnChanges {
-
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
 
@@ -52,7 +61,7 @@ export class ResourceChooserComponent implements OnChanges {
   @Input() public resourceType: ResourceType;
   @Input() public resources: ResourceModel[];
   @Input() public serviceLimits: ServiceLimitsModel[];
-  @Input() public resourcesRoles: { [id: string]: string[] };
+  @Input() public resourcesRoles: {[id: string]: string[]};
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
   @Input() public usedCodes: string[];
@@ -78,9 +87,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   public syncingCorrIds: string[] = [];
 
-  public constructor(private i18n: I18n,
-                     private notificationService: NotificationService) {
-  }
+  public constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resources) {
@@ -147,7 +154,7 @@ export class ResourceChooserComponent implements OnChanges {
     this.resourceCanScrollLeft = true;
     const numVisible = this.numResourcesVisible();
     const numPotentiallyVisible = this.numResourcesPotentiallyVisible();
-    this.resourceCanScrollRight = numVisible > 0 && (numPotentiallyVisible - numVisible > 0);
+    this.resourceCanScrollRight = numVisible > 0 && numPotentiallyVisible - numVisible > 0;
   }
 
   private getActiveIndex(): number {
@@ -172,7 +179,7 @@ export class ResourceChooserComponent implements OnChanges {
   private checkForScrollRightResources() {
     const numVisible = this.numResourcesVisible();
     const numPotentiallyVisible = this.numResourcesPotentiallyVisible();
-    this.resourceCanScrollRight = numVisible > 0 && (numPotentiallyVisible - numVisible > 0);
+    this.resourceCanScrollRight = numVisible > 0 && numPotentiallyVisible - numVisible > 0;
 
     const numToScroll = numVisible - numPotentiallyVisible;
     if (numToScroll > 0) {
@@ -208,7 +215,7 @@ export class ResourceChooserComponent implements OnChanges {
     }
     const widthContent = this.resourcesLength() * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
-    this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
+    this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + index * squareSize;
     this.resourceLineSizes[1] = squareSize;
     this.resourceLineSizes[2] = this.linesWidth - this.resourceLineSizes[0] - this.resourceLineSizes[1];
   }
@@ -220,7 +227,7 @@ export class ResourceChooserComponent implements OnChanges {
       color: DEFAULT_COLOR,
       icon: DEFAULT_ICON,
       correlationId: CorrelationIdGenerator.generate(),
-      description: ''
+      description: '',
     });
     this.compute();
     this.checkVisibilityNewResource();
@@ -235,11 +242,12 @@ export class ResourceChooserComponent implements OnChanges {
       const message = this.i18n(
         {
           id: 'resource.delete.dialog.message',
-          value: 'Do you really want to delete {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
+          value:
+            'Do you really want to delete {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?',
         },
         {
           resourceType: this.resourceType,
-          resourceCode: resource.code
+          resourceCode: resource.code,
         }
       );
       const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
@@ -248,7 +256,7 @@ export class ResourceChooserComponent implements OnChanges {
 
       this.notificationService.confirm(message, title, [
         {text: noButtonText},
-        {text: yesButtonText, action: () => this.resourceDelete.emit(resource.id), bold: false}
+        {text: yesButtonText, action: () => this.resourceDelete.emit(resource.id), bold: false},
       ]);
     } else {
       this.newResources = this.newResources.filter(newRes => newRes.correlationId !== resource.correlationId);
@@ -276,7 +284,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public getRoles(resource: ResourceModel) {
-    return this.resourcesRoles && this.resourcesRoles[resource.id] || [];
+    return (this.resourcesRoles && this.resourcesRoles[resource.id]) || [];
   }
 
   public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
@@ -306,8 +314,10 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private findResource(identificator: string): ResourceModel {
-    return this.resources.find(res => res.id === identificator) ||
-      this.newResources.find(newRes => newRes.correlationId === identificator);
+    return (
+      this.resources.find(res => res.id === identificator) ||
+      this.newResources.find(newRes => newRes.correlationId === identificator)
+    );
   }
 
   private resourcesLength(): number {
@@ -321,8 +331,7 @@ export class ResourceChooserComponent implements OnChanges {
   public getDescriptionPlaceholder(): string {
     return this.i18n({
       id: 'resource.description',
-      value: 'Fill in description'
+      value: 'Fill in description',
     });
   }
-
 }

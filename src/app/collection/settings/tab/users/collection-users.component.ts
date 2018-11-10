@@ -22,12 +22,10 @@ import {Component} from '@angular/core';
 import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
-  templateUrl: './collection-users.component.html'
+  templateUrl: './collection-users.component.html',
 })
 export class CollectionUsersComponent {
-
   public getResourceType(): ResourceType {
     return ResourceType.Collection;
   }
-
 }

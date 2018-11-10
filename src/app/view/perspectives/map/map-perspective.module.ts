@@ -26,16 +26,12 @@ import {MapPerspectiveRoutingModule} from './map-perspective-routing.module';
 import {MapPerspectiveComponent} from './map-perspective.component';
 import {MapAttributeSelectComponent} from './panel/attribute-select/map-attribute-select.component';
 import {MapPanelComponent} from './panel/map-panel.component';
-import { MapRenderComponent } from './content/render/map-render.component';
-import { MapAttributeGroupComponent } from './panel/attribute-group/map-attribute-group.component';
-import { MapAttributeIdsPipe } from './panel/map-attribute-ids.pipe';
+import {MapRenderComponent} from './content/render/map-render.component';
+import {MapAttributeGroupComponent} from './panel/attribute-group/map-attribute-group.component';
+import {MapAttributeIdsPipe} from './panel/map-attribute-ids.pipe';
 
 @NgModule({
-  imports: [
-    PickerModule,
-    SharedModule,
-    MapPerspectiveRoutingModule,
-  ],
+  imports: [PickerModule, SharedModule, MapPerspectiveRoutingModule],
   declarations: [
     MapPerspectiveComponent,
     MapContentComponent,
@@ -44,14 +40,9 @@ import { MapAttributeIdsPipe } from './panel/map-attribute-ids.pipe';
     EmptyMapComponent,
     MapRenderComponent,
     MapAttributeGroupComponent,
-    MapAttributeIdsPipe
+    MapAttributeIdsPipe,
   ],
-  entryComponents: [
-    MapPerspectiveComponent
-  ],
-  exports: [
-    MapPerspectiveComponent
-  ]
+  entryComponents: [MapPerspectiveComponent],
+  exports: [MapPerspectiveComponent],
 })
-export class MapPerspectiveModule {
-}
+export class MapPerspectiveModule {}

@@ -28,10 +28,9 @@ declare let $: any;
 @Component({
   selector: 'icon-picker',
   templateUrl: './icon-picker.component.html',
-  styleUrls: ['./icon-picker.component.scss']
+  styleUrls: ['./icon-picker.component.scss'],
 })
 export class IconPickerComponent implements OnInit, AfterViewInit {
-
   @Input()
   public icon: string;
 
@@ -52,8 +51,7 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public filter = '';
 
-  constructor(private iconIdPipe: IconIdPipe) {
-  }
+  constructor(private iconIdPipe: IconIdPipe) {}
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {

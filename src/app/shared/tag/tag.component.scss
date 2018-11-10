@@ -1,4 +1,4 @@
-@import "../../../styles/variables";
+@import '../../../styles/variables';
 
 .tag {
   border: 1px solid $primary;
@@ -14,5 +14,4 @@
     color: $primary;
     transition: opacity $animation-duration;
   }
-
 }

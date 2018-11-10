@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
@@ -28,10 +37,9 @@ import {getTableElement} from '../../../../../../core/store/tables/table.utils';
   selector: 'table-link-info',
   templateUrl: './table-link-info.component.html',
   styleUrls: ['./table-link-info.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableLinkInfoComponent implements AfterViewInit {
-
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -59,8 +67,7 @@ export class TableLinkInfoComponent implements AfterViewInit {
   @ViewChild(ContextMenuComponent)
   public contextMenuComponent: ContextMenuComponent;
 
-  constructor(private contextMenuService: ContextMenuService) {
-  }
+  constructor(private contextMenuService: ContextMenuService) {}
 
   public ngAfterViewInit() {
     this.setTableLinkInfoWidthCssVariable();
@@ -82,8 +89,7 @@ export class TableLinkInfoComponent implements AfterViewInit {
       anchorElement: null,
       contextMenu: this.contextMenuComponent,
       event,
-      item: null
+      item: null,
     });
   }
-
 }

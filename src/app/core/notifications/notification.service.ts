@@ -25,12 +25,12 @@ import {UserSettingsService} from '../service/user-settings.service';
 
 @Injectable()
 export class NotificationService {
-
-  constructor(private zone: NgZone,
-              private notifications: SnotifyService,
-              private userSettingsService: UserSettingsService,
-              private i18n: I18n) {
-  }
+  constructor(
+    private zone: NgZone,
+    private notifications: SnotifyService,
+    private userSettingsService: UserSettingsService,
+    private i18n: I18n
+  ) {}
 
   public simple(message: string): void {
     if (this.areNotificationsDisabled()) {
@@ -85,18 +85,25 @@ export class NotificationService {
   }
 
   public prompt(message: string, title: string, buttons: SnotifyButton[], placeholder: string): void {
-    this.zone.runOutsideAngular(() => this.notifications.prompt(
-      message,
-      title,
-      {buttons, placeholder, position: SnotifyPosition.centerTop, timeout: null})
+    this.zone.runOutsideAngular(() =>
+      this.notifications.prompt(message, title, {
+        buttons,
+        placeholder,
+        position: SnotifyPosition.centerTop,
+        timeout: null,
+      })
     );
   }
 
   public confirm(message: string, title: string, buttons: SnotifyButton[]): void {
-    this.zone.runOutsideAngular(() => this.notifications.confirm(
-      message,
-      title,
-      {timeout: null, buttons: buttons, position: SnotifyPosition.centerTop, closeOnClick: true}));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.confirm(message, title, {
+        timeout: null,
+        buttons: buttons,
+        position: SnotifyPosition.centerTop,
+        closeOnClick: true,
+      })
+    );
   }
 
   public html(html: string): void {
@@ -113,5 +120,4 @@ export class NotificationService {
   private areNotificationsDisabled(): boolean {
     return this.userSettingsService.getUserSettings().notificationsDisabled;
   }
-
 }

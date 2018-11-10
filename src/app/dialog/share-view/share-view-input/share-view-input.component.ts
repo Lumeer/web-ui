@@ -23,10 +23,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   selector: 'share-view-input',
   templateUrl: './share-view-input.component.html',
   styleUrls: ['./share-view-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareViewInputComponent {
-
   @Input()
   public text: string;
 
@@ -63,5 +62,4 @@ export class ShareViewInputComponent {
   public onInputChanged(value: string) {
     this.inputChanged.emit(value);
   }
-
 }

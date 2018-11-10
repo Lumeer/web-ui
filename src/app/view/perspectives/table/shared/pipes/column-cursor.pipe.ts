@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Pipe({
-  name: 'columnCursor'
+  name: 'columnCursor',
 })
 export class ColumnCursorPipe implements PipeTransform {
-
   public transform(cursor: TableBodyCursor, columnIndex: number): TableBodyCursor {
     return {...cursor, columnIndex};
   }
-
 }

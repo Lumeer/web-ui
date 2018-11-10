@@ -32,11 +32,9 @@ import {selectProjectsCodesForOrganization} from '../store/projects/projects.sta
 
 @Injectable()
 export class ProjectValidators {
-
   private currentOrganizationId: string;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   public setOrganizationId(id: string) {
     this.currentOrganizationId = id;
@@ -60,5 +58,4 @@ export class ProjectValidators {
         take(1)
       );
   }
-
 }

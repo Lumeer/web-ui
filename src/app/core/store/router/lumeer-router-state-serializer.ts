@@ -29,7 +29,6 @@ export interface RouterStateUrl {
 }
 
 export class LumeerRouterStateSerializer implements RouterStateSerializer<RouterStateUrl> {
-
   public serialize(routerState: RouterStateSnapshot): RouterStateUrl {
     let route = routerState.root;
 
@@ -52,5 +51,4 @@ export class LumeerRouterStateSerializer implements RouterStateSerializer<Router
 
     return {url, params, queryParams, data};
   }
-
 }

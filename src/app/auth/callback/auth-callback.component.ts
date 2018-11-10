@@ -33,20 +33,17 @@ import {AuthService} from '../auth.service';
   animations: [
     trigger('slowlyShow', [
       state('shown', style({opacity: 1})),
-      transition('void => *', [
-        style({opacity: 0}),
-        animate('3s 5s ease-in-out')
-      ])
-    ])
-  ]
+      transition('void => *', [style({opacity: 0}), animate('3s 5s ease-in-out')]),
+    ]),
+  ],
 })
 export class AuthCallbackComponent implements OnInit, AfterViewChecked {
-
-  public constructor(private authService: AuthService,
-                     private element: ElementRef,
-                     private router: Router,
-                     private store: Store<AppState>) {
-  }
+  public constructor(
+    private authService: AuthService,
+    private element: ElementRef,
+    private router: Router,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -54,10 +51,13 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
       return;
     }
 
-    this.store.select(selectCurrentUser).pipe(
-      filter(user => !!user),
-      take(1)
-    ).subscribe(() => this.navigateToApplication());
+    this.store
+      .select(selectCurrentUser)
+      .pipe(
+        filter(user => !!user),
+        take(1)
+      )
+      .subscribe(() => this.navigateToApplication());
   }
 
   private navigateToApplication() {
@@ -86,5 +86,4 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
     const element = this.element.nativeElement as HTMLElement;
     element.style.setProperty('--auth-callback-offset-top', `${element.offsetTop}px`);
   }
-
 }

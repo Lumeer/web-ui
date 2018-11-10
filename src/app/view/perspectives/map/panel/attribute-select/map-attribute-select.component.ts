@@ -24,10 +24,9 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
   selector: 'map-attribute-select',
   templateUrl: './map-attribute-select.component.html',
   styleUrls: ['./map-attribute-select.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapAttributeSelectComponent {
-
   @Input()
   public attributeId: string;
 
@@ -40,5 +39,4 @@ export class MapAttributeSelectComponent {
   public onChange(event: Event) {
     this.select.emit(event.target['value']);
   }
-
 }

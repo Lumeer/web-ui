@@ -18,12 +18,10 @@
  */
 
 export interface LinkType {
-
   id?: string; // TODO make compulsory
   name: string;
 
   collectionIds?: [string, string];
 
   attributes?: string[]; // TODO use complex object
-
 }

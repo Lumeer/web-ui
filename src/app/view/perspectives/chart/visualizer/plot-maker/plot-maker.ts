@@ -26,7 +26,6 @@ import {ElementRef} from '@angular/core';
 export const DEFAULT_GRID_HEIGHT = 270;
 
 export abstract class PlotMaker {
-
   protected collections: CollectionModel[];
 
   protected documents: DocumentModel[];
@@ -39,8 +38,7 @@ export abstract class PlotMaker {
 
   protected dragEnabled: boolean = false;
 
-  constructor(protected element: ElementRef) {
-  }
+  constructor(protected element: ElementRef) {}
 
   public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     this.collections = collections;

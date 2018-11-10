@@ -46,13 +46,7 @@ import {ResourcePostItComponent} from './workspace-chooser/resource-post-it/reso
 import {DatePipe} from '@angular/common';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    WorkspaceRoutingModule,
-    UsersModule,
-    PickerModule,
-    ClickOutsideModule
-  ],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, PickerModule, ClickOutsideModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,
@@ -69,19 +63,9 @@ import {DatePipe} from '@angular/common';
     PaymentsPanelComponent,
     PaymentsOrderComponent,
     PaymentsListComponent,
-    PaymentsStateComponent
+    PaymentsStateComponent,
   ],
-  exports: [
-    WorkspaceChooserComponent
-  ],
-  providers: [
-    WorkspaceService,
-    WorkspaceSelectGuard,
-    OrganizationSettingsGuard,
-    ProjectSettingsGuard,
-    DatePipe
-  ]
+  exports: [WorkspaceChooserComponent],
+  providers: [WorkspaceService, WorkspaceSelectGuard, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],
 })
-export class WorkspaceModule {
-
-}
+export class WorkspaceModule {}

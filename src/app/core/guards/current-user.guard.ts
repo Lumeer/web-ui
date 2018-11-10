@@ -30,11 +30,7 @@ import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
-
-  constructor(private authService: AuthService,
-              private router: Router,
-              private store: Store<AppState>) {
-  }
+  constructor(private authService: AuthService, private router: Router, private store: Store<AppState>) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isCurrentUserLoaded(state);
@@ -73,5 +69,4 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
       })
     );
   }
-
 }

@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'data'
+  name: 'data',
 })
 export class DataPipe implements PipeTransform {
-
   public transform(entity: {data: any}, attributeId: string): any {
     return entity && entity.data ? entity.data[attributeId] || '' : '';
   }
-
 }

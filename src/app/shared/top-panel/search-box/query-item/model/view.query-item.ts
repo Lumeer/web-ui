@@ -24,7 +24,6 @@ import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
 
 export class ViewQueryItem implements QueryItem {
-
   public type = QueryItemType.View;
 
   public icons: string[];
@@ -46,5 +45,4 @@ export class ViewQueryItem implements QueryItem {
   public dependsOn(queryItem: QueryItem): boolean {
     return false;
   }
-
 }

@@ -26,18 +26,16 @@ import {getTableElement} from '../../../../../../core/store/tables/table.utils';
   selector: 'table-caption',
   templateUrl: './table-caption.component.html',
   styleUrls: ['./table-caption.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCaptionComponent implements AfterViewChecked {
-
   @Input()
   public collection: CollectionModel;
 
   @Input()
   public cursor: TableHeaderCursor;
 
-  constructor(private element: ElementRef) {
-  }
+  constructor(private element: ElementRef) {}
 
   public ngAfterViewChecked() {
     const element = this.element.nativeElement as HTMLElement;
@@ -46,5 +44,4 @@ export class TableCaptionComponent implements AfterViewChecked {
     const tableElement = getTableElement(this.cursor.tableId);
     tableElement.style.setProperty('--caption-height', `${height}px`);
   }
-
 }

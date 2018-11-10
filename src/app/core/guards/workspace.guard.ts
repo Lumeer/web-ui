@@ -30,22 +30,24 @@ import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByCode, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
 import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectByOrganizationAndCode, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
+import {
+  selectProjectByOrganizationAndCode,
+  selectProjectsLoadedForOrganization,
+} from '../store/projects/projects.state';
 import {selectCurrentUser} from '../store/users/users.state';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WorkspaceGuard implements CanActivate {
+  public constructor(
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
-  public constructor(private i18n: I18n,
-                     private notificationService: NotificationService,
-                     private router: Router,
-                     private store$: Store<AppState>) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
 
@@ -56,10 +58,12 @@ export class WorkspaceGuard implements CanActivate {
 
     return this.store$.select(selectCurrentUser).pipe(
       filter(user => !!user),
-      mergeMap(() => this.getOrganization(organizationCode).pipe(
-        mergeMap(organization => this.getProject(organization, projectCode)),
-        map(project => !!project)
-      ))
+      mergeMap(() =>
+        this.getOrganization(organizationCode).pipe(
+          mergeMap(organization => this.getProject(organization, projectCode)),
+          map(project => !!project)
+        )
+      )
     );
   }
 
@@ -71,16 +75,18 @@ export class WorkspaceGuard implements CanActivate {
         }
       }),
       filter(loaded => loaded),
-      mergeMap(() => this.store$.select(selectOrganizationByCode(organizationCode)).pipe(
-        tap(organization => {
-          if (!organization) {
-            const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
-            this.notificationService.error(message);
+      mergeMap(() =>
+        this.store$.select(selectOrganizationByCode(organizationCode)).pipe(
+          tap(organization => {
+            if (!organization) {
+              const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+              this.notificationService.error(message);
 
-            this.navigateToHome();
-          }
-        })
-      ))
+              this.navigateToHome();
+            }
+          })
+        )
+      )
     );
   }
 
@@ -96,30 +102,33 @@ export class WorkspaceGuard implements CanActivate {
         }
       }),
       filter(loaded => loaded),
-      mergeMap(() => this.store$.select(selectProjectByOrganizationAndCode(organization.id, projectCode)).pipe(
-        tap((project) => {
-          if (project) {
-            this.switchWorkspace(organization, project);
-          } else {
-            const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
-            this.notificationService.error(message);
+      mergeMap(() =>
+        this.store$.select(selectProjectByOrganizationAndCode(organization.id, projectCode)).pipe(
+          tap(project => {
+            if (project) {
+              this.switchWorkspace(organization, project);
+            } else {
+              const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+              this.notificationService.error(message);
 
-            this.navigateToHome();
-          }
-        })
-      )),
+              this.navigateToHome();
+            }
+          })
+        )
+      )
     );
   }
 
   private switchWorkspace(organization: OrganizationModel, project: ProjectModel) {
-    this.store$.dispatch(new ProjectsAction.SwitchWorkspace({
-      organizationId: organization.id,
-      projectId: project.id
-    }));
+    this.store$.dispatch(
+      new ProjectsAction.SwitchWorkspace({
+        organizationId: organization.id,
+        projectId: project.id,
+      })
+    );
   }
 
   private navigateToHome() {
     this.router.navigate(['/']);
   }
-
 }

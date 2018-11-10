@@ -25,13 +25,12 @@ export const DEFAULT_COLOR = '#ffffff';
 export const DEFAULT_STRIPED_COLOR = '#eeeeee';
 
 @Pipe({
-  name: 'columnBackground'
+  name: 'columnBackground',
 })
 export class ColumnBackgroundPipe implements PipeTransform {
-
   public transform(collection: CollectionModel, unsaved?: boolean): any {
-    const color = collection ? shadeColor(collection.color, .5) : DEFAULT_COLOR;
-    const stripeColor = collection ? shadeColor(color, .25) : DEFAULT_STRIPED_COLOR;
+    const color = collection ? shadeColor(collection.color, 0.5) : DEFAULT_COLOR;
+    const stripeColor = collection ? shadeColor(color, 0.25) : DEFAULT_STRIPED_COLOR;
 
     if (unsaved) {
       return stripedBackground(color, stripeColor);
@@ -39,5 +38,4 @@ export class ColumnBackgroundPipe implements PipeTransform {
 
     return color;
   }
-
 }

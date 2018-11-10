@@ -21,35 +21,41 @@ Cypress.Commands.add('login', () => {
 
   // wait for the token
   cy.window({timeout: 30000}).should(() => {
-    expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty
+    expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
   });
 });
 
 // allows to perform actions using access token like calling backend API
-Cypress.Commands.add('withToken', (fn) => {
-  cy.window().its('localStorage').invoke('getItem', 'auth_access_token').then((token) => fn(token))
+Cypress.Commands.add('withToken', fn => {
+  cy.window()
+    .its('localStorage')
+    .invoke('getItem', 'auth_access_token')
+    .then(token => fn(token));
 });
 
 Cypress.Commands.add('logout', () => {
   // remove tokens from local storage
-  cy.window().its('localStorage').then((localStorage) => {
-    localStorage.removeItem('auth_id_token');
-    localStorage.removeItem('auth_access_token');
-  })
+  cy.window()
+    .its('localStorage')
+    .then(localStorage => {
+      localStorage.removeItem('auth_id_token');
+      localStorage.removeItem('auth_access_token');
+    });
 });
 
 Cypress.Commands.add('dismissAgreement', () => {
-  cy.withToken((token) => {
+  cy.withToken(token => {
     // make sure to pass license agreement
     cy.request({
       method: 'PATCH',
       url: Cypress.env('engineUrl') + 'rest/users/current',
       body: {
-        'agreement': true, 'newsletter': true
+        agreement: true,
+        newsletter: true,
       },
       auth: {
-        bearer: token
-      }
+        bearer: token,
+      },
     });
 
     function pollAgreementStatus(tries = 0) {
@@ -57,19 +63,21 @@ Cypress.Commands.add('dismissAgreement', () => {
         method: 'GET',
         url: Cypress.env('engineUrl') + 'rest/users/current',
         auth: {
-          bearer: token
-        }
-      }).its('body').then((user) => {
-        if (user.agreement) {
-          return
-        }
-
-        if (tries < 10) {
-          pollAgreementStatus(tries + 1)
-        } else {
-          assert.fail(false, true, "Expected user agreement to be true")
-        }
+          bearer: token,
+        },
       })
+        .its('body')
+        .then(user => {
+          if (user.agreement) {
+            return;
+          }
+
+          if (tries < 10) {
+            pollAgreementStatus(tries + 1);
+          } else {
+            assert.fail(false, true, 'Expected user agreement to be true');
+          }
+        });
     }
 
     pollAgreementStatus();
@@ -78,8 +86,11 @@ Cypress.Commands.add('dismissAgreement', () => {
       method: 'GET',
       url: Cypress.env('engineUrl') + 'rest/organizations',
       auth: {
-        bearer: token
-      }
-    }).its('body').its('length').should('gt', 0)
-  })
+        bearer: token,
+      },
+    })
+      .its('body')
+      .its('length')
+      .should('gt', 0);
+  });
 });

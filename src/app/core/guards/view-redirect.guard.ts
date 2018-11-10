@@ -31,13 +31,9 @@ import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
+  public constructor(private router: Router, private store$: Store<AppState>) {}
 
-  public constructor(private router: Router,
-                     private store$: Store<AppState>) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
 
     return this.store$.select(selectViewsLoaded).pipe(
@@ -46,7 +42,7 @@ export class ViewRedirectGuard implements CanActivate {
           this.store$.dispatch(new ViewsAction.Get());
         }
       }),
-      skipWhile((loaded) => !loaded),
+      skipWhile(loaded => !loaded),
       switchMap(() => this.store$.select(selectViewByCode(viewCode))),
       take(1),
       withLatestFrom(this.store$.select(selectWorkspace)),
@@ -66,5 +62,4 @@ export class ViewRedirectGuard implements CanActivate {
       })
     );
   }
-
 }

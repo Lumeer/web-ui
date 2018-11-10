@@ -33,17 +33,21 @@ import {selectLinkInstancesQueries} from './link-instances.state';
 
 @Injectable()
 export class LinkInstancesEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
-    mergeMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
-      map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
-      map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
-      catchError((error) => of(new LinkInstancesAction.GetFailure({error: error})))
-    ))
+    mergeMap(([action]) =>
+      this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
+        map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
+        map(
+          linkInstances =>
+            new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})
+        ),
+        catchError(error => of(new LinkInstancesAction.GetFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -71,7 +75,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(linkInstance => new LinkInstancesAction.CreateSuccess({linkInstance})),
-        catchError((error) => of(new LinkInstancesAction.CreateFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.CreateFailure({error: error})))
       );
     })
   );
@@ -95,9 +99,9 @@ export class LinkInstancesEffects {
       return this.linkInstanceService.updateLinkInstance(action.payload.linkInstance.id, linkInstanceDto).pipe(
         map(dto => LinkInstanceConverter.fromDto(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance: linkInstance})),
-        catchError((error) => of(new LinkInstancesAction.UpdateFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -113,16 +117,18 @@ export class LinkInstancesEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Delete>(LinkInstancesActionType.DELETE),
-    mergeMap(action => this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
-      tap(() => {
-        const callback = action.payload.callback;
-        if (callback) {
-          callback(action.payload.linkInstanceId);
-        }
-      }),
-      map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
-      catchError((error) => of(new LinkInstancesAction.DeleteFailure({error: error})))
-    ))
+    mergeMap(action =>
+      this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
+        tap(() => {
+          const callback = action.payload.callback;
+          if (callback) {
+            callback(action.payload.linkInstanceId);
+          }
+        }),
+        map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
+        catchError(error => of(new LinkInstancesAction.DeleteFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -130,12 +136,15 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.DeleteConfirm>(LinkInstancesActionType.DELETE_CONFIRM),
     map((action: LinkInstancesAction.DeleteConfirm) => {
       const title = this.i18n({id: 'link.instance.delete.dialog.title', value: 'Delete link'});
-      const message = this.i18n({id: 'link.instance.delete.dialog.message', value: 'Do you really want to delete this link between records?'});
+      const message = this.i18n({
+        id: 'link.instance.delete.dialog.message',
+        value: 'Do you really want to delete this link between records?',
+      });
 
       return new NotificationsAction.Confirm({
         title,
         message,
-        action: new LinkInstancesAction.Delete(action.payload)
+        action: new LinkInstancesAction.Delete(action.payload),
       });
     })
   );
@@ -150,10 +159,10 @@ export class LinkInstancesEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private i18n: I18n,
-              private linkInstanceService: LinkInstanceService,
-              private store$: Store<AppState>) {
-  }
-
+  constructor(
+    private actions$: Actions,
+    private i18n: I18n,
+    private linkInstanceService: LinkInstanceService,
+    private store$: Store<AppState>
+  ) {}
 }

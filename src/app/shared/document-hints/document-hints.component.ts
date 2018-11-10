@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
@@ -33,10 +42,9 @@ import {DocumentHintColumn} from './document-hint-column';
   selector: 'document-hints',
   templateUrl: './document-hints.component.html',
   styleUrls: ['./document-hints.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentHintsComponent implements OnInit, OnChanges {
-
   @Input()
   public attributeId: string;
 
@@ -76,8 +84,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
   private hintsCount = 0;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindDocuments();
@@ -91,33 +98,49 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
   private bindDocuments() {
     const query: QueryModel = {
-      collectionIds: [this.collectionId]
+      collectionIds: [this.collectionId],
     };
 
     this.documents$ = this.store$.select(selectDocumentsByCustomQuery(query)).pipe(
-      map(documents => documents.filter(document =>
-        document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
-      )),
-      mergeMap(documents => this.filter$.pipe(
-        map(typedValue => documents.filter(document => {
-          const value = document.data[this.attributeId];
-          return value && value.toString().toLowerCase().includes(typedValue.toLowerCase());
-        }).slice(0, this.limit)),
-        tap(hints => this.hintsCount = hints.length)
-      ))
+      map(documents =>
+        documents.filter(document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id))
+      ),
+      mergeMap(documents =>
+        this.filter$.pipe(
+          map(typedValue =>
+            documents
+              .filter(document => {
+                const value = document.data[this.attributeId];
+                return (
+                  value &&
+                  value
+                    .toString()
+                    .toLowerCase()
+                    .includes(typedValue.toLowerCase())
+                );
+              })
+              .slice(0, this.limit)
+          ),
+          tap(hints => (this.hintsCount = hints.length))
+        )
+      )
     );
   }
 
   public onCreateLink(document: DocumentModel) {
     this.linkCreate.emit();
 
-    this.store$.dispatch(new LinkInstancesAction.Create({
-      linkInstance: {
-        linkTypeId: this.linkTypeId,
-        documentIds: [this.linkedDocumentId, document.id]
-      },
-      callback: this.createLinkCallback ? (linkInstanceId) => this.createLinkCallback(linkInstanceId, document.id) : null
-    }));
+    this.store$.dispatch(
+      new LinkInstancesAction.Create({
+        linkInstance: {
+          linkTypeId: this.linkTypeId,
+          documentIds: [this.linkedDocumentId, document.id],
+        },
+        callback: this.createLinkCallback
+          ? linkInstanceId => this.createLinkCallback(linkInstanceId, document.id)
+          : null,
+      })
+    );
   }
 
   public moveSelection(direction: Direction) {
@@ -137,11 +160,13 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.documents$.pipe(
-      first(),
-      map(documents => documents[index]),
-      filter(document => !!document)
-    ).subscribe(document => this.onCreateLink(document));
+    this.documents$
+      .pipe(
+        first(),
+        map(documents => documents[index]),
+        filter(document => !!document)
+      )
+      .subscribe(document => this.onCreateLink(document));
   }
 
   public clearSelection() {
@@ -151,5 +176,4 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public isSelected(): boolean {
     return this.selectedIndex$.getValue() > -1;
   }
-
 }

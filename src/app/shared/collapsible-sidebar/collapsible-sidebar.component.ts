@@ -24,10 +24,9 @@ import {BehaviorSubject} from 'rxjs';
   selector: 'collapsible-sidebar',
   templateUrl: './collapsible-sidebar.component.html',
   styleUrls: ['./collapsible-sidebar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollapsibleSidebarComponent implements OnChanges {
-
   @Input()
   public collapsed = false;
 
@@ -48,5 +47,4 @@ export class CollapsibleSidebarComponent implements OnChanges {
   public onToggle() {
     this.collapsed$.next(!this.collapsed$.getValue());
   }
-
 }

@@ -39,11 +39,11 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: !environment.analytics,
   pageTracking: {
     clearIds: true,
-    idsRegExp: new RegExp('^[0-9a-z]{24}$')
+    idsRegExp: new RegExp('^[0-9a-z]{24}$'),
   },
   ga: {
-    anonymizeIp: true
-  }
+    anonymizeIp: true,
+  },
 };
 
 @NgModule({
@@ -58,30 +58,25 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     ViewModule,
     WorkspaceModule,
     AppRoutingModule, // needs to be declared after all other routing modules
-    Angulartics2Module.forRoot(angularticsSettings)
+    Angulartics2Module.forRoot(angularticsSettings),
   ],
   providers: [
     {
       provide: LOCALE_ID,
-      useFactory: () => environment.locale
+      useFactory: () => environment.locale,
     },
     {
       provide: TRANSLATIONS,
-      useFactory: (locale) => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`), // TODO ${environment.i18nPath}
-      deps: [LOCALE_ID]
+      useFactory: locale => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`), // TODO ${environment.i18nPath}
+      deps: [LOCALE_ID],
     },
     {
       provide: TRANSLATIONS_FORMAT,
-      useFactory: () => environment.i18nFormat
+      useFactory: () => environment.i18nFormat,
     },
-    I18n
+    I18n,
   ],
-  declarations: [
-    AppComponent
-  ],
-  bootstrap: [
-    AppComponent
-  ]
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

@@ -23,21 +23,23 @@ import {AppState} from '../app.state';
 import {LinkTypeModel} from './link-type.model';
 
 export interface LinkTypesState extends EntityState<LinkTypeModel> {
-
   loaded: boolean;
-
 }
 
 export const linkTypesAdapter = createEntityAdapter<LinkTypeModel>();
 
 export const initialLinkTypesState: LinkTypesState = linkTypesAdapter.getInitialState({
-  loaded: false
+  loaded: false,
 });
 
 export const selectLinkTypesState = (state: AppState) => state.linkTypes;
 
 export const selectAllLinkTypes = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectAll);
-export const selectLinkTypesDictionary = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectEntities);
+export const selectLinkTypesDictionary = createSelector(
+  selectLinkTypesState,
+  linkTypesAdapter.getSelectors().selectEntities
+);
 export const selectLinkTypesLoaded = createSelector(selectLinkTypesState, linkTypesState => linkTypesState.loaded);
 
-export const selectLinkTypeById = (linkTypeId: string) => createSelector(selectLinkTypesDictionary, linkTypes => linkTypes[linkTypeId]);
+export const selectLinkTypeById = (linkTypeId: string) =>
+  createSelector(selectLinkTypesDictionary, linkTypes => linkTypes[linkTypeId]);

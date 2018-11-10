@@ -32,11 +32,7 @@ import {DocumentCollectionPipe} from './pipes/document-collection.pipe';
 import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule,
-    InfiniteScrollModule
-  ],
+  imports: [SharedModule, RouterModule, InfiniteScrollModule],
   declarations: [
     PostItAddDocumentComponent,
     PostItDocumentComponent,
@@ -45,15 +41,9 @@ import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
     PostItDocumentCellComponent,
     PostItColumnStylePipe,
     DocumentCollectionPipe,
-    EmptyPostItsComponent
+    EmptyPostItsComponent,
   ],
-  entryComponents: [
-    PostItPerspectiveComponent
-  ],
-  exports: [
-    PostItPerspectiveComponent
-  ]
+  entryComponents: [PostItPerspectiveComponent],
+  exports: [PostItPerspectiveComponent],
 })
-export class PostItPerspectiveModule {
-
-}
+export class PostItPerspectiveModule {}

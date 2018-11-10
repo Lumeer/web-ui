@@ -30,34 +30,44 @@ import {DialogService} from '../dialog.service';
 
 @Component({
   selector: 'overwrite-view-dialog',
-  templateUrl: './overwrite-view-dialog.component.html'
+  templateUrl: './overwrite-view-dialog.component.html',
 })
 export class OverwriteViewDialogComponent implements OnInit, OnDestroy {
-
   public view: ViewModel;
   public viewPath: any[] = [];
 
   private subscriptions = new Subscription();
 
-  public constructor(private dialogService: DialogService,
-                     private route: ActivatedRoute,
-                     private store: Store<AppState>) {
-  }
+  public constructor(
+    private dialogService: DialogService,
+    private route: ActivatedRoute,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToExistingView());
   }
 
   private subscribeToExistingView(): Subscription {
-    return this.route.paramMap.pipe(
-      map(params => params.get('existingViewCode')),
-      filter(viewCode => !!viewCode),
-      mergeMap(viewCode => this.store.select(selectViewByCode(viewCode))),
-      withLatestFrom(this.store.select(selectWorkspace))
-    ).subscribe(([view, workspace]) => {
-      this.viewPath = ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}, {outlets: {dialog: null}}];
-      this.view = view;
-    });
+    return this.route.paramMap
+      .pipe(
+        map(params => params.get('existingViewCode')),
+        filter(viewCode => !!viewCode),
+        mergeMap(viewCode => this.store.select(selectViewByCode(viewCode))),
+        withLatestFrom(this.store.select(selectWorkspace))
+      )
+      .subscribe(([view, workspace]) => {
+        this.viewPath = [
+          '/',
+          'w',
+          workspace.organizationCode,
+          workspace.projectCode,
+          'view',
+          {vc: view.code},
+          {outlets: {dialog: null}},
+        ];
+        this.view = view;
+      });
   }
 
   public ngOnDestroy() {
@@ -69,5 +79,4 @@ export class OverwriteViewDialogComponent implements OnInit, OnDestroy {
       this.dialogService.callback();
     }
   }
-
 }

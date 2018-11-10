@@ -31,28 +31,26 @@ import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
 import {queryIsEmpty} from '../../store/navigation/query.util';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentsGuard implements Resolve<DocumentModel[]> {
+  public constructor(private store$: Store<AppState>) {}
 
-  public constructor(private store$: Store<AppState>) {
-  }
-
-  public resolve(route: ActivatedRouteSnapshot,
-                 state: RouterStateSnapshot): Observable<DocumentModel[]> {
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
     return this.store$.select(selectQuery).pipe(
-      mergeMap(query => this.store$.select(selectCurrentQueryDocumentsLoaded).pipe(
-        tap(loaded => {
-          if (!loaded) {
-            const querySingleDocument = {...query, page: 0, pageSize: queryIsEmpty(query) ? 10 : 1000}; // TODO change count
-            this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
-          }
-        }),
-        filter(loaded => loaded),
-      )),
+      mergeMap(query =>
+        this.store$.select(selectCurrentQueryDocumentsLoaded).pipe(
+          tap(loaded => {
+            if (!loaded) {
+              const querySingleDocument = {...query, page: 0, pageSize: queryIsEmpty(query) ? 10 : 1000}; // TODO change count
+              this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
+            }
+          }),
+          filter(loaded => loaded)
+        )
+      ),
       mergeMap(() => this.store$.select(selectDocumentsByQuery)),
       first()
     );
   }
-
 }

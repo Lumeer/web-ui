@@ -22,7 +22,6 @@ import {SearchTab} from './search-tab';
 import {QueryModel} from './query.model';
 
 export enum NavigationActionType {
-
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
 
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
@@ -32,59 +31,50 @@ export enum NavigationActionType {
 
   SET_QUERY = '[Navigation] Set query',
 
-  REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL'
-
+  REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL',
 }
 
 export namespace NavigationAction {
-
   export class AddLinkToQuery implements Action {
     public readonly type = NavigationActionType.ADD_LINK_TO_QUERY;
 
-    public constructor(public payload: { linkTypeId: string }) {
-    }
+    public constructor(public payload: {linkTypeId: string}) {}
   }
 
   export class AddCollectionToQuery implements Action {
     public readonly type = NavigationActionType.ADD_COLLECTION_TO_QUERY;
 
-    public constructor(public payload: { collectionId: string }) {
-    }
+    public constructor(public payload: {collectionId: string}) {}
   }
 
   export class RemoveCollectionFromQuery implements Action {
     public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
 
-    public constructor(public payload: { collectionId: string }) {
-    }
+    public constructor(public payload: {collectionId: string}) {}
   }
 
   export class SetQuery implements Action {
     public readonly type = NavigationActionType.SET_QUERY;
 
-    public constructor(public payload: { query: QueryModel }) {
-
-    }
+    public constructor(public payload: {query: QueryModel}) {}
   }
 
   export class RemoveViewFromUrl implements Action {
     public readonly type = NavigationActionType.REMOVE_VIEW_FROM_URL;
 
-    public constructor(public payload: { setQuery?: QueryModel}) {
-
-    }
+    public constructor(public payload: {setQuery?: QueryModel}) {}
   }
 
   export class NavigateToPreviousUrl implements Action {
     public readonly type = NavigationActionType.NAVIGATE_TO_PREVIOUS_URL;
 
-    constructor(public payload: {
-      previousUrl: string,
-      organizationCode: string,
-      projectCode: string,
-      searchTab?: SearchTab,
-    }) {
-    }
+    constructor(
+      public payload: {
+        previousUrl: string;
+        organizationCode: string;
+        projectCode: string;
+        searchTab?: SearchTab;
+      }
+    ) {}
   }
-
 }

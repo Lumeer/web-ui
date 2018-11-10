@@ -49,7 +49,6 @@ import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} fro
 
 @Injectable()
 export class ProjectsEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Get>(ProjectsActionType.GET),
@@ -88,7 +87,9 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
     filter(([[action, projectCodes], organizationsEntities]) => {
       const organizationId = action.payload.organizationId;
-      return isNullOrUndefined(projectCodes[organizationId]) && !isNullOrUndefined(organizationsEntities[organizationId]);
+      return (
+        isNullOrUndefined(projectCodes[organizationId]) && !isNullOrUndefined(organizationsEntities[organizationId])
+      );
     }),
     map(([[action], organizationsEntities]) => ({action, organizationsEntities})),
     mergeMap(({action, organizationsEntities}) => {
@@ -96,7 +97,7 @@ export class ProjectsEffects {
       return this.projectService.getProjectCodes(organization.code).pipe(
         map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId})),
         map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
-        catchError((error) => of(new ProjectsAction.GetCodesFailure({error: error})))
+        catchError(error => of(new ProjectsAction.GetCodesFailure({error: error})))
       );
     })
   );
@@ -121,8 +122,10 @@ export class ProjectsEffects {
         withLatestFrom(this.store$.select(selectProjectsCodes)),
         mergeMap(([project, projectCodes]) => {
           const codes = [...projectCodes[project.organizationId], project.code];
-          const actions: Action[] = [new ProjectsAction.CreateSuccess({project}),
-            new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})];
+          const actions: Action[] = [
+            new ProjectsAction.CreateSuccess({project}),
+            new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}),
+          ];
 
           const {callback} = action.payload;
           if (callback) {
@@ -146,16 +149,17 @@ export class ProjectsEffects {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'project.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?'
+          value:
+            'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?',
         });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: {fragment: 'orderService'}
+            extras: {fragment: 'orderService'},
           }),
-          yesFirst: true
+          yesFirst: true,
         });
       }
       const errorMessage = this.i18n({id: 'project.create.fail', value: 'Could not create the project'});
@@ -178,8 +182,10 @@ export class ProjectsEffects {
           const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
           const codesByOrg = projectCodes && projectCodes[project.organizationId];
           if (codesByOrg) {
-            const codes = codesByOrg.map(code => code === oldProject.code ? project.code : code);
-            actions.push(new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}));
+            const codes = codesByOrg.map(code => (code === oldProject.code ? project.code : code));
+            actions.push(
+              new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})
+            );
           }
 
           const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
@@ -225,7 +231,9 @@ export class ProjectsEffects {
           let codes = projectCodes[action.payload.organizationId];
           if (!isNullOrUndefined(codes)) {
             codes = codes.filter(code => code !== project.code);
-            actions.push(new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes}));
+            actions.push(
+              new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})
+            );
           }
           if (action.payload.onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
@@ -267,12 +275,17 @@ export class ProjectsEffects {
 
       return observable.pipe(
         concatMap(() => of()),
-        catchError((error) => {
-          const payload = {projectId: action.payload.projectId, type: action.payload.type, permission: action.payload.currentPermission, error};
+        catchError(error => {
+          const payload = {
+            projectId: action.payload.projectId,
+            type: action.payload.type,
+            permission: action.payload.currentPermission,
+            error,
+          };
           return of(new ProjectsAction.ChangePermissionFailure(payload));
         })
       );
-    }),
+    })
   );
 
   @Effect()
@@ -280,7 +293,10 @@ export class ProjectsEffects {
     ofType<ProjectsAction.ChangePermissionFailure>(ProjectsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'project.permission.change.fail', value: 'Could not change the project permissions'});
+      const message = this.i18n({
+        id: 'project.permission.change.fail',
+        value: 'Could not change the project permissions',
+      });
       return new NotificationsAction.Error({message});
     })
   );
@@ -298,7 +314,7 @@ export class ProjectsEffects {
 
       return [
         new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}),
-        new ProjectsAction.ClearWorkspaceData()
+        new ProjectsAction.ClearWorkspaceData(),
       ];
     })
   );
@@ -317,11 +333,11 @@ export class ProjectsEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private i18n: I18n,
-              private router: Router,
-              private projectService: ProjectService,
-              private store$: Store<AppState>) {
-  }
-
+  constructor(
+    private actions$: Actions,
+    private i18n: I18n,
+    private router: Router,
+    private projectService: ProjectService,
+    private store$: Store<AppState>
+  ) {}
 }

@@ -25,31 +25,25 @@ import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart.model';
 
 export interface ViewModel extends ResourceModel {
-
   perspective: Perspective;
   query: QueryModel;
   config: ViewConfigModel;
-  authorRights?: { [collectionId: string]: string[] };
-
+  authorRights?: {[collectionId: string]: string[]};
 }
 
 export interface ViewCursor {
-
   linkInstanceId?: string;
   collectionId: string;
   documentId: string;
   attributeId?: string;
-
 }
 
 export interface ViewConfigModel {
-
   detail?: DetailConfigModel;
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfig;
   chart?: ChartConfig;
-
 }
 
 export interface DetailConfigModel {
@@ -62,8 +56,6 @@ export interface PostItConfigModel {
 }
 
 export interface SearchConfigModel {
-
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
-
 }

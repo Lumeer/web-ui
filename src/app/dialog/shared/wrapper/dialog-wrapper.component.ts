@@ -22,10 +22,9 @@ import {DialogType} from '../../dialog-type';
 
 @Component({
   selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html'
+  templateUrl: './dialog-wrapper.component.html',
 })
 export class DialogWrapperComponent {
-
   @Input()
   public submitDisabled: boolean;
 
@@ -46,5 +45,4 @@ export class DialogWrapperComponent {
       this.submit.emit();
     }
   }
-
 }

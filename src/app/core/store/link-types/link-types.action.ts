@@ -22,7 +22,6 @@ import {QueryModel} from '../navigation/query.model';
 import {LinkTypeModel} from './link-type.model';
 
 export enum LinkTypesActionType {
-
   GET = '[Link Types] Get',
   GET_SUCCESS = '[Link Types] Get :: Success',
   GET_FAILURE = '[Link Types] Get :: Failure',
@@ -39,12 +38,10 @@ export enum LinkTypesActionType {
   DELETE_SUCCESS = '[Link Types] Delete :: Success',
   DELETE_FAILURE = '[Link Types] Delete :: Failure',
 
-  CLEAR = '[Link Types] Clear'
-
+  CLEAR = '[Link Types] Clear',
 }
 
 export namespace LinkTypesAction {
-
   export class Get implements Action {
     public readonly type = LinkTypesActionType.GET;
   }
@@ -52,78 +49,67 @@ export namespace LinkTypesAction {
   export class GetSuccess implements Action {
     public readonly type = LinkTypesActionType.GET_SUCCESS;
 
-    public constructor(public payload: { linkTypes: LinkTypeModel[]}) {
-    }
+    public constructor(public payload: {linkTypes: LinkTypeModel[]}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = LinkTypesActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = LinkTypesActionType.CREATE;
 
-    public constructor(public payload: { linkType: LinkTypeModel, callback?: (linkType: LinkTypeModel) => void }) {
-    }
+    public constructor(public payload: {linkType: LinkTypeModel; callback?: (linkType: LinkTypeModel) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = LinkTypesActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { linkType: LinkTypeModel }) {
-    }
+    public constructor(public payload: {linkType: LinkTypeModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = LinkTypesActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = LinkTypesActionType.UPDATE;
 
-    public constructor(public payload: { linkType: LinkTypeModel }) {
-    }
+    public constructor(public payload: {linkType: LinkTypeModel}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = LinkTypesActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { linkType: LinkTypeModel }) {
-    }
+    public constructor(public payload: {linkType: LinkTypeModel}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = LinkTypesActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = LinkTypesActionType.DELETE;
 
-    public constructor(public payload: { linkTypeId: string }) {
-    }
+    public constructor(public payload: {linkTypeId: string}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = LinkTypesActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { linkTypeId: string }) {
-    }
+    public constructor(public payload: {linkTypeId: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = LinkTypesActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Clear implements Action {
@@ -131,8 +117,17 @@ export namespace LinkTypesAction {
   }
 
   export type All =
-    Get | GetSuccess | GetFailure |
-    Create | CreateSuccess | CreateFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    | Get
+    | GetSuccess
+    | GetFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure
+    | Clear;
 }

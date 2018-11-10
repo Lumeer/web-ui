@@ -23,14 +23,14 @@ import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
 
 export class AttributeQueryItem implements QueryItem {
-
   public type = QueryItemType.Attribute;
 
-  public constructor(public collection: CollectionModel,
-                     public attribute: AttributeModel,
-                     public condition: string,
-                     public conditionValue: string) {
-  }
+  public constructor(
+    public collection: CollectionModel,
+    public attribute: AttributeModel,
+    public condition: string,
+    public conditionValue: string
+  ) {}
 
   public get text() {
     return this.attribute.name;
@@ -58,5 +58,4 @@ export class AttributeQueryItem implements QueryItem {
     }
     return false;
   }
-
 }

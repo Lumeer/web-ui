@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {UserModel} from '../../core/store/users/user.model';
 
 @Pipe({
-  name: 'userRoles'
+  name: 'userRoles',
 })
 export class UserRolesPipe implements PipeTransform {
-
-  public transform(user: UserModel, userRoles: { [id: string]: string[] }): string[] {
+  public transform(user: UserModel, userRoles: {[id: string]: string[]}): string[] {
     return userRoles[user.id] || [];
   }
-
 }

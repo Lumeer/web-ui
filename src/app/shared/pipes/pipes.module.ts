@@ -47,10 +47,7 @@ import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PermissionsPipesModule
-  ],
+  imports: [CommonModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     PixelPipe,
@@ -76,7 +73,7 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
-    RemoveHtmlCommentsPipe
+    RemoveHtmlCommentsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -104,8 +101,7 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    PermissionsPipesModule
-  ]
+    PermissionsPipesModule,
+  ],
 })
-export class PipesModule {
-}
+export class PipesModule {}

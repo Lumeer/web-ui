@@ -32,7 +32,7 @@ export function userHasRoleInResource(user: UserModel, resource: ResourceModel, 
 }
 
 export function userRolesInResource(user: UserModel, resource: ResourceModel): string[] {
-  const permissions = resource && resource.permissions || {users: [], groups: []};
+  const permissions = (resource && resource.permissions) || {users: [], groups: []};
   const allUserRoles = userRoles(user, permissions.users);
   allUserRoles.push(...userGroupRoles(user, permissions.groups));
   return allUserRoles;

@@ -33,16 +33,17 @@ import {selectOrganizationsDictionary} from '../organizations.state';
 
 @Injectable()
 export class ServiceLimitsEffects {
-
   @Effect()
   public getAll$: Observable<Action> = this.actions$.pipe(
     ofType<ServiceLimitsAction.GetAll>(ServiceLimitsActionType.GET_ALL),
     mergeMap(() => {
       return this.organizationService.getAllServiceLimits().pipe(
-        map(mapOfLimits => Object.keys(mapOfLimits).reduce((acc, organizationId) => {
-          acc.push(ServiceLimitsConverter.fromDto(organizationId, mapOfLimits[organizationId]));
-          return acc;
-        }, [])),
+        map(mapOfLimits =>
+          Object.keys(mapOfLimits).reduce((acc, organizationId) => {
+            acc.push(ServiceLimitsConverter.fromDto(organizationId, mapOfLimits[organizationId]));
+            return acc;
+          }, [])
+        ),
         map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
         catchError(error => of(new ServiceLimitsAction.GetAllFailure({error: error})))
       );
@@ -56,7 +57,7 @@ export class ServiceLimitsEffects {
     map(() => {
       const message = this.i18n({
         id: 'organization.serviceLimits.getAll.fail',
-        value: 'Could not read information about your service levels and subscriptions'
+        value: 'Could not read information about your service levels and subscriptions',
       });
       return new NotificationsAction.Error({message});
     })
@@ -81,15 +82,19 @@ export class ServiceLimitsEffects {
     ofType<ServiceLimitsAction.GetServiceLimitsFailure>(ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.serviceLimits.get.fail', value: 'Could not read information about your service level and subscription'});
+      const message = this.i18n({
+        id: 'organization.serviceLimits.get.fail',
+        value: 'Could not read information about your service level and subscription',
+      });
       return new NotificationsAction.Error({message});
     })
   );
 
-  constructor(private i18n: I18n,
-              private store$: Store<AppState>,
-              private router: Router,
-              private actions$: Actions,
-              private organizationService: OrganizationService) {
-  }
+  constructor(
+    private i18n: I18n,
+    private store$: Store<AppState>,
+    private router: Router,
+    private actions$: Actions,
+    private organizationService: OrganizationService
+  ) {}
 }

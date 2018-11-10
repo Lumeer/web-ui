@@ -20,9 +20,7 @@
 import {GroupModel} from './group.model';
 
 export class GroupFilters {
-
   public static filterFunctions(groups: GroupModel[]) {
     return groups.filter(group => typeof group === 'object');
   }
-
 }

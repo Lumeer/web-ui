@@ -24,18 +24,12 @@ import {DetailPerspectiveComponent} from './detail-perspective.component';
 const chartRoutes: Routes = [
   {
     path: '',
-    component: DetailPerspectiveComponent
-  }
+    component: DetailPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(chartRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(chartRoutes)],
+  exports: [RouterModule],
 })
-export class DetailPerspectiveRoutingModule {
-
-}
+export class DetailPerspectiveRoutingModule {}

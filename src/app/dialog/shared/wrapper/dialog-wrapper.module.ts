@@ -24,16 +24,8 @@ import {DialogWrapperComponent} from './dialog-wrapper.component';
 import {SharedModule} from '../../../shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule
-  ],
-  declarations: [
-    DialogWrapperComponent
-  ],
-  exports: [
-    DialogWrapperComponent
-  ]
+  imports: [CommonModule, SharedModule],
+  declarations: [DialogWrapperComponent],
+  exports: [DialogWrapperComponent],
 })
-export class DialogWrapperModule {
-}
+export class DialogWrapperModule {}

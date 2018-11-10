@@ -18,10 +18,8 @@
  */
 
 export interface PostItRow {
-
   attributeId?: string;
   attributeName?: string;
   value?: string;
   correlationId?: string;
-
 }

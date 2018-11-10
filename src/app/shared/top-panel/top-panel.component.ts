@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
@@ -31,10 +43,9 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
   selector: 'top-panel',
   templateUrl: './top-panel.component.html',
   styleUrls: ['./top-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
-
   @Input()
   public mobile: boolean;
 
@@ -52,9 +63,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
 
-  constructor(private element: ElementRef,
-              private store$: Store<AppState>) {
-  }
+  constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.workspace$ = this.store$.select(selectWorkspace);
@@ -101,5 +110,4 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   public onToggleControls() {
     this.controlsShown$.next(!this.controlsShown$.getValue());
   }
-
 }

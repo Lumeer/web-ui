@@ -18,13 +18,11 @@
  */
 
 export enum QueryItemType {
-
   Attribute = 'Attribute',
   Collection = 'Collection',
   Document = 'Document',
   Fulltext = 'Fulltext',
   Link = 'Link',
   View = 'View',
-  Deleted = 'Deleted'
-
+  Deleted = 'Deleted',
 }

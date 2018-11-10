@@ -30,6 +30,9 @@ error_handler() {
 #bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
 #PING_LOOP_PID=$!
 
+echo "Checking formatting..."
+npm run format:check
+
 echo "Linting..."
 npm run lint #>> $BUILD_OUTPUT 2>&1
 #dump_output

@@ -23,8 +23,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'empty-map',
   templateUrl: './empty-map.component.html',
   styleUrls: ['./empty-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyMapComponent {
-
-}
+export class EmptyMapComponent {}

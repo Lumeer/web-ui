@@ -18,10 +18,8 @@
  */
 
 export interface Workspace {
-
   organizationCode?: string;
   projectCode?: string;
   collectionId?: string;
   viewCode?: string;
-
 }

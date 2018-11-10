@@ -55,9 +55,9 @@ import {TableEditableCellDirective} from './shared/directives/table-editable-cel
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
-import { TableHierarchyColumnComponent } from './header/hierarchy-column/table-hierarchy-column.component';
-import { TableHierarchyCellMenuComponent } from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
-import { TableHeaderAddButtonComponent } from './header/add-button/table-header-add-button.component';
+import {TableHierarchyColumnComponent} from './header/hierarchy-column/table-hierarchy-column.component';
+import {TableHierarchyCellMenuComponent} from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
+import {TableHeaderAddButtonComponent} from './header/add-button/table-header-add-button.component';
 
 @NgModule({
   imports: [
@@ -69,7 +69,7 @@ import { TableHeaderAddButtonComponent } from './header/add-button/table-header-
     ResizableModule,
     InfiniteScrollModule,
     TablePipesModule,
-    TablePerspectiveRoutingModule
+    TablePerspectiveRoutingModule,
   ],
   declarations: [
     TablePerspectiveComponent,
@@ -104,9 +104,6 @@ import { TableHeaderAddButtonComponent } from './header/add-button/table-header-
     TableHierarchyCellMenuComponent,
     TableHeaderAddButtonComponent,
   ],
-  exports: [
-    TablePerspectiveComponent
-  ]
+  exports: [TablePerspectiveComponent],
 })
-export class TablePerspectiveModule {
-}
+export class TablePerspectiveModule {}

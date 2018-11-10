@@ -22,7 +22,6 @@ import {ServiceLimitsModel} from './service-limits.model';
 import {serviceLevelMap, ServiceLevelType} from '../../../dto/service-level-type';
 
 export class ServiceLimitsConverter {
-
   public static fromDto(organizationId: string, dto: ServiceLimits): ServiceLimitsModel {
     return {
       organizationId: organizationId,
@@ -32,7 +31,7 @@ export class ServiceLimitsConverter {
       files: dto.files,
       documents: dto.documents,
       dbSizeMb: dto.dbSizeMb,
-      validUntil: new Date(dto.validUntil)
+      validUntil: new Date(dto.validUntil),
     };
   }
 
@@ -44,7 +43,7 @@ export class ServiceLimitsConverter {
       files: model.files,
       documents: model.documents,
       dbSizeMb: model.dbSizeMb,
-      validUntil: model.validUntil.getTime()
+      validUntil: model.validUntil.getTime(),
     };
   }
 }

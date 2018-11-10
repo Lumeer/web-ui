@@ -42,7 +42,6 @@ import {selectDocumentById, selectDocumentsQueries} from './documents.state';
 
 @Injectable()
 export class DocumentsEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
@@ -54,7 +53,7 @@ export class DocumentsEffects {
       return this.searchService.searchDocuments(queryDto).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents: documents, query: action.payload.query})),
-        catchError((error) => of(new DocumentsAction.GetFailure({error: error})))
+        catchError(error => of(new DocumentsAction.GetFailure({error: error})))
       );
     })
   );
@@ -87,10 +86,10 @@ export class DocumentsEffects {
         flatMap(([document, collection]) => {
           return [
             createSyncCollectionAction(collection, document, null),
-            new DocumentsAction.CreateSuccess({document})
+            new DocumentsAction.CreateSuccess({document}),
           ];
         }),
-        catchError((error) => of(new DocumentsAction.CreateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -105,16 +104,17 @@ export class DocumentsEffects {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'document.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?'
+          value:
+            'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?',
         });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: {fragment: 'orderService'}
+            extras: {fragment: 'orderService'},
           }),
-          yesFirst: true
+          yesFirst: true,
         });
       }
       const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
@@ -127,31 +127,39 @@ export class DocumentsEffects {
     ofType<DocumentsAction.Patch>(DocumentsActionType.PATCH),
     mergeMap(action => {
       const documentDto = convertDocumentModelToDto(action.payload.document);
-      return this.documentService.patchDocument(action.payload.collectionId, action.payload.documentId, documentDto).pipe(
-        map(dto => convertDocumentDtoToModel(dto)),
-        withLatestFrom(
-          this.store$.select(selectCollectionById(documentDto.collectionId)),
-          this.store$.select(selectDocumentById(documentDto.id))
-        ),
-        flatMap(([document, collection, oldDocument]) => [
-          createSyncCollectionAction(collection, document, oldDocument),
-          new DocumentsAction.UpdateSuccess({document})
-        ]),
-        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
-      );
+      return this.documentService
+        .patchDocument(action.payload.collectionId, action.payload.documentId, documentDto)
+        .pipe(
+          map(dto => convertDocumentDtoToModel(dto)),
+          withLatestFrom(
+            this.store$.select(selectCollectionById(documentDto.collectionId)),
+            this.store$.select(selectDocumentById(documentDto.id))
+          ),
+          flatMap(([document, collection, oldDocument]) => [
+            createSyncCollectionAction(collection, document, oldDocument),
+            new DocumentsAction.UpdateSuccess({document}),
+          ]),
+          catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+        );
     })
   );
 
   @Effect()
   public addFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
-    mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => of()),
-      catchError((error) => of(new DocumentsAction.AddFavoriteFailure({
-        documentId: action.payload.documentId,
-        error: error
-      })))
-    ))
+    mergeMap(action =>
+      this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
+        mergeMap(() => of()),
+        catchError(error =>
+          of(
+            new DocumentsAction.AddFavoriteFailure({
+              documentId: action.payload.documentId,
+              error: error,
+            })
+          )
+        )
+      )
+    )
   );
 
   @Effect()
@@ -167,13 +175,19 @@ export class DocumentsEffects {
   @Effect()
   public removeFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
-    mergeMap(action => this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => of()),
-      catchError((error) => of(new DocumentsAction.RemoveFavoriteFailure({
-        documentId: action.payload.documentId,
-        error: error
-      })))
-    ))
+    mergeMap(action =>
+      this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
+        mergeMap(() => of()),
+        catchError(error =>
+          of(
+            new DocumentsAction.RemoveFavoriteFailure({
+              documentId: action.payload.documentId,
+              error: error,
+            })
+          )
+        )
+      )
+    )
   );
 
   @Effect()
@@ -181,7 +195,10 @@ export class DocumentsEffects {
     ofType<DocumentsAction.RemoveFavoriteFailure>(DocumentsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'document.remove.favorite.fail', value: 'Could not remove the record from favorites'});
+      const message = this.i18n({
+        id: 'document.remove.favorite.fail',
+        value: 'Could not remove the record from favorites',
+      });
       return new NotificationsAction.Error({message});
     })
   );
@@ -206,13 +223,12 @@ export class DocumentsEffects {
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
         flatMap(([[document, collection], oldDocument]) => {
-
           return [
             createSyncCollectionAction(collection, document, oldDocument),
-            new DocumentsAction.UpdateSuccess({document})
+            new DocumentsAction.UpdateSuccess({document}),
           ];
         }),
-        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -229,10 +245,10 @@ export class DocumentsEffects {
         flatMap(([[document, collection], oldDocument]) => {
           return [
             createSyncCollectionAction(collection, document, oldDocument),
-            new DocumentsAction.UpdateSuccess({document})
+            new DocumentsAction.UpdateSuccess({document}),
           ];
         }),
-        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -257,7 +273,7 @@ export class DocumentsEffects {
 
               return actions;
             }),
-            catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
           );
         })
       );
@@ -271,7 +287,7 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.updateDocumentMetaData(documentDto).pipe(
         map(dto => new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(dto)})),
-        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -285,10 +301,9 @@ export class DocumentsEffects {
         withLatestFrom(this.store$.select(selectCollectionById(action.payload.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(action.payload.documentId))),
         flatMap(([[payload, collection], oldDocument]) => {
-
           const actions: Action[] = [
             new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
-            createSyncCollectionAction(collection, null, oldDocument)
+            createSyncCollectionAction(collection, null, oldDocument),
           ];
 
           if (payload.nextAction) {
@@ -297,7 +312,7 @@ export class DocumentsEffects {
 
           return actions;
         }),
-        catchError((error) => of(new DocumentsAction.DeleteFailure({error: error})))
+        catchError(error => of(new DocumentsAction.DeleteFailure({error: error})))
       );
     })
   );
@@ -309,13 +324,13 @@ export class DocumentsEffects {
       const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
       const message = this.i18n({
         id: 'document.delete.dialog.message',
-        value: 'Do you really want to delete this record?'
+        value: 'Do you really want to delete this record?',
       });
 
       return new NotificationsAction.Confirm({
         title,
         message,
-        action: new DocumentsAction.Delete(action.payload)
+        action: new DocumentsAction.Delete(action.payload),
       });
     })
   );
@@ -330,19 +345,21 @@ export class DocumentsEffects {
     })
   );
 
-  constructor(private actions$: Actions,
+  constructor(
+    private actions$: Actions,
     private documentService: DocumentService,
     private collectionService: CollectionService,
     private i18n: I18n,
     private searchService: SearchService,
-    private store$: Store<AppState>) {
-  }
-
+    private store$: Store<AppState>
+  ) {}
 }
 
-function createSyncCollectionAction(collection: CollectionModel,
+function createSyncCollectionAction(
+  collection: CollectionModel,
   newDocument: DocumentModel,
-  oldDocument: DocumentModel): CollectionsAction.UpdateSuccess {
+  oldDocument: DocumentModel
+): CollectionsAction.UpdateSuccess {
   const newAttributeIds: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
   const oldAttributeIds: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
 
@@ -353,9 +370,11 @@ function createSyncCollectionAction(collection: CollectionModel,
   return new CollectionsAction.UpdateSuccess({collection: updatedCollection});
 }
 
-function updateAttributes(attributes: AttributeModel[],
+function updateAttributes(
+  attributes: AttributeModel[],
   newDocumentAttributeIds: string[],
-  oldDocumentAttributeIds: string[]): AttributeModel[] {
+  oldDocumentAttributeIds: string[]
+): AttributeModel[] {
   const addedAttributeIds = newDocumentAttributeIds.filter(name => !oldDocumentAttributeIds.includes(name));
   const removedAttributeIds = oldDocumentAttributeIds.filter(name => !newDocumentAttributeIds.includes(name));
 

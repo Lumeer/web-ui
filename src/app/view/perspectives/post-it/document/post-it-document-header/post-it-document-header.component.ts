@@ -26,10 +26,9 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
   selector: 'post-it-document-header',
   templateUrl: './post-it-document-header.component.html',
   styleUrls: ['./post-it-document-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItDocumentHeaderComponent {
-
   @Input() public collection: CollectionModel;
 
   @Input() public initialized: boolean;

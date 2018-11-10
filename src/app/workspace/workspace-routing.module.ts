@@ -39,14 +39,14 @@ const workspaceRoutes: Routes = [
     children: [
       {
         path: 'users',
-        component: ProjectUsersComponent
+        component: ProjectUsersComponent,
       },
       {
         path: '',
         redirectTo: 'users',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'organization/:organizationCode',
@@ -55,34 +55,28 @@ const workspaceRoutes: Routes = [
     children: [
       {
         path: 'detail',
-        component: OrganizationDetailComponent
+        component: OrganizationDetailComponent,
       },
       {
         path: 'users',
-        component: OrganizationUsersComponent
+        component: OrganizationUsersComponent,
       },
       {
         path: '',
         redirectTo: 'detail',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'workspace',
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceSelectGuard],
-    component: WorkspaceChooserComponent
-  }
+    component: WorkspaceChooserComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(workspaceRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(workspaceRoutes)],
+  exports: [RouterModule],
 })
-export class WorkspaceRoutingModule {
-
-}
+export class WorkspaceRoutingModule {}

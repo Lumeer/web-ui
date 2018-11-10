@@ -32,23 +32,29 @@ export interface DocumentsState extends EntityState<DocumentModel> {
 export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: document => document.id});
 
 export const initialDocumentsState: DocumentsState = documentsAdapter.getInitialState({
-  queries: []
+  queries: [],
 });
 
 export const selectDocumentsState = (state: AppState) => state.documents;
 
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
-export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
+export const selectDocumentsDictionary = createSelector(
+  selectDocumentsState,
+  documentsAdapter.getSelectors().selectEntities
+);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 
-export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
-  !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
+export const selectCurrentQueryDocumentsLoaded = createSelector(
+  selectDocumentsQueries,
+  selectQuery,
+  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
 );
 
-export const selectQueryDocumentsLoaded = (query: QueryModel) => createSelector(selectDocumentsQueries,
-  queries => !!queries.find(q => areQueriesEqualExceptPagination(q, query)));
+export const selectQueryDocumentsLoaded = (query: QueryModel) =>
+  createSelector(selectDocumentsQueries, queries => !!queries.find(q => areQueriesEqualExceptPagination(q, query)));
 
-export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
+export const selectDocumentById = (id: string) =>
+  createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
-  documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
+export const selectDocumentsByIds = (ids: string[]) =>
+  createSelector(selectDocumentsDictionary, documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));

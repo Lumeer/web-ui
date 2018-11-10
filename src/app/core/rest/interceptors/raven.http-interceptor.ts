@@ -26,7 +26,6 @@ import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class RavenHttpInterceptor implements HttpInterceptor {
-
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(error => {
@@ -38,5 +37,4 @@ export class RavenHttpInterceptor implements HttpInterceptor {
       })
     );
   }
-
 }

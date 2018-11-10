@@ -30,9 +30,7 @@ import {selectAllCollections, selectCollectionsLoaded} from '../../store/collect
 
 @Injectable()
 export class CollectionsGuard implements Resolve<CollectionModel[]> {
-
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CollectionModel[]> {
     return this.store$.select(selectCollectionsLoaded).pipe(
@@ -46,5 +44,4 @@ export class CollectionsGuard implements Resolve<CollectionModel[]> {
       first()
     );
   }
-
 }

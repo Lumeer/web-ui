@@ -22,14 +22,12 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'icons-presenter',
   templateUrl: './icons-presenter.component.html',
-  styleUrls: ['./icons-presenter.component.scss']
+  styleUrls: ['./icons-presenter.component.scss'],
 })
 export class IconsPresenterComponent {
-
   @Input()
   public colors: string[];
 
   @Input()
   public icons: string[];
-
 }

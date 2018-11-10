@@ -19,5 +19,4 @@
 
 import {ResourceModel} from '../../model/resource.model';
 
-export interface OrganizationModel extends ResourceModel {
-}
+export interface OrganizationModel extends ResourceModel {}

@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Action } from '@ngrx/store';
-import { QueryModel } from '../navigation/query.model';
-import { DocumentMetaData, DocumentModel } from './document.model';
+import {Action} from '@ngrx/store';
+import {QueryModel} from '../navigation/query.model';
+import {DocumentMetaData, DocumentModel} from './document.model';
 
 export enum DocumentsActionType {
-
   GET = '[Documents] Get',
   GET_SUCCESS = '[Documents] Get :: Success',
   GET_FAILURE = '[Documents] Get :: Failure',
@@ -56,176 +55,153 @@ export enum DocumentsActionType {
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
   CLEAR = '[Documents] Clear',
-  CLEAR_BY_COLLECTION = '[Documents] Clear by collection'
-
+  CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
 }
 
 export namespace DocumentsAction {
-
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: { query: QueryModel }) {
-    }
+    public constructor(public payload: {query: QueryModel}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { documents: DocumentModel[], query: QueryModel }) {
-    }
+    public constructor(public payload: {documents: DocumentModel[]; query: QueryModel}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = DocumentsActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = DocumentsActionType.CREATE;
 
-    public constructor(public payload: { document: DocumentModel, callback?: (documentId: string) => void }) {
-    }
+    public constructor(public payload: {document: DocumentModel; callback?: (documentId: string) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = DocumentsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Patch implements Action {
     public readonly type = DocumentsActionType.PATCH;
 
-    public constructor(public payload: { collectionId: string, documentId: string, document: Partial<DocumentModel> }) {
-    }
+    public constructor(public payload: {collectionId: string; documentId: string; document: Partial<DocumentModel>}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = DocumentsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = DocumentsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class PatchData implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class UpdateMetaData implements Action {
     public readonly type = DocumentsActionType.UPDATE_META_DATA;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class PatchMetaData implements Action {
     public readonly type = DocumentsActionType.PATCH_META_DATA;
 
-    public constructor(public payload: {
-      collectionId: string,
-      documentId: string,
-      metaData: DocumentMetaData,
-      onSuccess?: (document: DocumentModel) => void
-    }) {
-    }
+    public constructor(
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        metaData: DocumentMetaData;
+        onSuccess?: (document: DocumentModel) => void;
+      }
+    ) {}
   }
 
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: { collectionId: string, documentId: string, nextAction?: Action }) {
-    }
+    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: { collectionId: string, documentId: string, nextAction?: Action }) {
-    }
+    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = DocumentsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { documentId: string }) {
-    }
+    public constructor(public payload: {documentId: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = DocumentsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class AddFavorite implements Action {
     public readonly type = DocumentsActionType.ADD_FAVORITE;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
-    }
+    public constructor(public payload: {collectionId: string; documentId: string}) {}
   }
 
   export class AddFavoriteSuccess implements Action {
     public readonly type = DocumentsActionType.ADD_FAVORITE_SUCCESS;
 
-    public constructor(public payload: { documentId: string }) {
-    }
+    public constructor(public payload: {documentId: string}) {}
   }
 
   export class AddFavoriteFailure implements Action {
     public readonly type = DocumentsActionType.ADD_FAVORITE_FAILURE;
 
-    public constructor(public payload: { documentId: string, error: any }) {
-    }
+    public constructor(public payload: {documentId: string; error: any}) {}
   }
 
   export class RemoveFavorite implements Action {
     public readonly type = DocumentsActionType.REMOVE_FAVORITE;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
-    }
+    public constructor(public payload: {collectionId: string; documentId: string}) {}
   }
 
   export class RemoveFavoriteSuccess implements Action {
     public readonly type = DocumentsActionType.REMOVE_FAVORITE_SUCCESS;
 
-    public constructor(public payload: { documentId: string }) {
-    }
+    public constructor(public payload: {documentId: string}) {}
   }
 
   export class RemoveFavoriteFailure implements Action {
     public readonly type = DocumentsActionType.REMOVE_FAVORITE_FAILURE;
 
-    public constructor(public payload: { documentId: string, error: any }) {
-    }
+    public constructor(public payload: {documentId: string; error: any}) {}
   }
 
   export class Clear implements Action {
@@ -235,17 +211,33 @@ export namespace DocumentsAction {
   export class ClearByCollection implements Action {
     public readonly type = DocumentsActionType.CLEAR_BY_COLLECTION;
 
-    public constructor(public payload: { collectionId: string }) {
-    }
+    public constructor(public payload: {collectionId: string}) {}
   }
 
   export type All =
-    Get | GetSuccess | GetFailure |
-    Create | CreateSuccess | CreateFailure |
-    Patch |
-    AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
-    RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
-    UpdateData | PatchData | UpdateMetaData | PatchMetaData | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | DeleteConfirm |
-    Clear | ClearByCollection;
+    | Get
+    | GetSuccess
+    | GetFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | Patch
+    | AddFavorite
+    | AddFavoriteSuccess
+    | AddFavoriteFailure
+    | RemoveFavorite
+    | RemoveFavoriteSuccess
+    | RemoveFavoriteFailure
+    | UpdateData
+    | PatchData
+    | UpdateMetaData
+    | PatchMetaData
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure
+    | DeleteConfirm
+    | Clear
+    | ClearByCollection;
 }

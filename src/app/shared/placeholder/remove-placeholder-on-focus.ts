@@ -20,10 +20,9 @@
 import {Directive, HostBinding, HostListener, Input} from '@angular/core';
 
 @Directive({
-  selector: '[remove-placeholder-on-focus]'
+  selector: '[remove-placeholder-on-focus]',
 })
 export class RemovePlaceholderOnFocusDirective {
-
   @HostListener('blur')
   public onBlur() {
     this.focused = false;
@@ -39,7 +38,6 @@ export class RemovePlaceholderOnFocusDirective {
   public get placeholder() {
     if (this.focused) {
       return '';
-
     } else {
       return this.placeholderText;
     }
@@ -54,5 +52,4 @@ export class RemovePlaceholderOnFocusDirective {
   private focused = false;
 
   private placeholderText = '';
-
 }

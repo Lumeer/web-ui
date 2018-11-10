@@ -23,16 +23,12 @@ import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'logout',
-  template: ''
+  template: '',
 })
 export class LogoutComponent implements OnInit {
-
-  public constructor(private authService: AuthService,
-                     private router: Router) {
-  }
+  public constructor(private authService: AuthService, private router: Router) {}
 
   public ngOnInit() {
     this.router.navigate(['/']);
   }
-
 }

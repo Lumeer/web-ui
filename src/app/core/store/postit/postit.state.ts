@@ -26,7 +26,7 @@ export interface PostItState {
 }
 
 export const initialPostItState: PostItState = {
-  config: {size: undefined, documentIdsOrder: []}
+  config: {size: undefined, documentIdsOrder: []},
 };
 
 export const selectPostItState = (state: AppState) => state.postIts;

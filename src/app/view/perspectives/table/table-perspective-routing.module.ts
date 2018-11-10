@@ -25,17 +25,11 @@ const tableRoutes: Routes = [
   {
     path: '',
     component: TablePerspectiveComponent,
-  }
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(tableRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(tableRoutes)],
+  exports: [RouterModule],
 })
-export class TablePerspectiveRoutingModule {
-
-}
+export class TablePerspectiveRoutingModule {}

@@ -28,10 +28,9 @@ import {generateDocumentData} from '../../../../core/store/documents/document.ut
 @Component({
   selector: 'add-document',
   templateUrl: './add-document.component.html',
-  styleUrls: ['./add-document.component.scss']
+  styleUrls: ['./add-document.component.scss'],
 })
 export class PostItAddDocumentComponent {
-
   @Input()
   public disabled: boolean;
 
@@ -48,8 +47,7 @@ export class PostItAddDocumentComponent {
     this.createPostIt.emit({
       collectionId: this.collection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: generateDocumentData(this.collection, this.query && this.query.filters || [])
+      data: generateDocumentData(this.collection, (this.query && this.query.filters) || []),
     });
   }
-
 }

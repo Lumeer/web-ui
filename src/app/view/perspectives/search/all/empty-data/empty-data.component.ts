@@ -24,10 +24,9 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 @Component({
   selector: 'empty-data',
   templateUrl: './empty-data.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyDataComponent {
-
   @Input()
   public query: QueryModel;
 
@@ -37,5 +36,4 @@ export class EmptyDataComponent {
   public onSwitchToCollectionsTab() {
     this.collectionsTab.emit();
   }
-
 }
