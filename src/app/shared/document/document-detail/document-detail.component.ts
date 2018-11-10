@@ -44,10 +44,9 @@ import {QueryConverter} from '../../../core/store/navigation/query.converter';
   selector: 'document-detail',
   templateUrl: './document-detail.component.html',
   styleUrls: ['./document-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentDetailComponent implements OnInit, OnDestroy {
-
   @Input()
   public collection: CollectionModel;
 
@@ -62,12 +61,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   private query: QueryModel;
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n,
-              private store: Store<AppState>,
-              private notificationService: NotificationService,
-              private documentUiService: DocumentUiService,
-              private perspective: PerspectiveService) {
-  }
+  constructor(
+    private i18n: I18n,
+    private store: Store<AppState>,
+    private notificationService: NotificationService,
+    private documentUiService: DocumentUiService,
+    private perspective: PerspectiveService
+  ) {}
 
   get _document(): DocumentModel {
     return this.document;
@@ -85,22 +85,31 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private fetchUsers() {
-    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(org => !isNullOrUndefined(org)), take(1))
-      .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
+    this.subscriptions.add(
+      this.store
+        .select(selectOrganizationByWorkspace)
+        .pipe(
+          filter(org => !isNullOrUndefined(org)),
+          take(1)
+        )
+        .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id})))
+    );
 
-    this.subscriptions.add(this.store.select(selectQuery)
-      .subscribe(query => this.query = query));
+    this.subscriptions.add(this.store.select(selectQuery).subscribe(query => (this.query = query)));
   }
 
   private renewSubscriptions(): void {
     if (this.collection && this.document) {
       this.documentUiService.init(this.collection, this.document);
 
-      this.createdBy$ = this.store.select(selectUserById(this.document.createdBy))
-        .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
-      this.updatedBy$ = this.store.select(selectUserById(this.document.updatedBy))
-        .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
+      this.createdBy$ = this.store.select(selectUserById(this.document.createdBy)).pipe(
+        filter(user => !isNullOrUndefined(user)),
+        map(user => user.name || user.email || 'Guest')
+      );
+      this.updatedBy$ = this.store.select(selectUserById(this.document.updatedBy)).pipe(
+        filter(user => !isNullOrUndefined(user)),
+        map(user => user.name || user.email || 'Guest')
+      );
 
       this.summary$ = this.getSummary$();
       this.favorite$ = this.getFavorite$();
@@ -126,10 +135,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public onRemoveDocument() {
-    this.store.dispatch(new DeleteConfirm({
-      collectionId: this.document.collectionId,
-      documentId: this.document.id,
-    }));
+    this.store.dispatch(
+      new DeleteConfirm({
+        collectionId: this.document.collectionId,
+        documentId: this.document.id,
+      })
+    );
   }
 
   public onToggleFavorite() {
@@ -157,6 +168,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     if (this.query && this.query.collectionIds && this.query.collectionIds.length !== 1) {
       collectionQuery = QueryConverter.toString({collectionIds: [this.collection.id]});
     }
-    this.perspective.switchPerspective(perspectivesMap[Perspective.Table], this.collection, this.document, collectionQuery);
+    this.perspective.switchPerspective(
+      perspectivesMap[Perspective.Table],
+      this.collection,
+      this.document,
+      collectionQuery
+    );
   }
 }

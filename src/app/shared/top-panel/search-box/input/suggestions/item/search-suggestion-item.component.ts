@@ -23,10 +23,9 @@ import {QueryItemType} from '../../../query-item/model/query-item-type';
 
 @Component({
   selector: 'search-suggestion-item',
-  templateUrl: './search-suggestion-item.component.html'
+  templateUrl: './search-suggestion-item.component.html',
 })
 export class SuggestionItemComponent {
-
   @Input()
   public suggestion: QueryItem;
 
@@ -40,5 +39,4 @@ export class SuggestionItemComponent {
   public isFulltextItem(): boolean {
     return this.suggestion.type === QueryItemType.Fulltext;
   }
-
 }

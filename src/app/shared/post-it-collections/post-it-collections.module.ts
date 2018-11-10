@@ -42,7 +42,7 @@ import {EmptyCollectionsComponent} from './empty-collections/empty-collections.c
     ClickOutsideModule,
     RouterModule,
     PipesModule,
-    WarningMessageModule
+    WarningMessageModule,
   ],
   declarations: [
     LayoutItemDirective,
@@ -51,13 +51,8 @@ import {EmptyCollectionsComponent} from './empty-collections/empty-collections.c
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
     PostItCollectionImportButtonComponent,
-    EmptyCollectionsComponent
+    EmptyCollectionsComponent,
   ],
-  exports: [
-    PostItCollectionsComponent,
-    LayoutItemDirective
-  ]
+  exports: [PostItCollectionsComponent, LayoutItemDirective],
 })
-export class PostItCollectionsModule {
-
-}
+export class PostItCollectionsModule {}

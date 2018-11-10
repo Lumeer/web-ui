@@ -26,10 +26,9 @@ import {getLastFromArray} from '../../../../../shared/utils/array.utils';
 const MIN_COLUMN_WIDTH = 30;
 
 @Pipe({
-  name: 'resizeValidate'
+  name: 'resizeValidate',
 })
 export class ResizeValidatePipe implements PipeTransform {
-
   public transform(column: TableCompoundColumn, showHiddenColumns: boolean = false): (event: ResizeEvent) => boolean {
     return (event: ResizeEvent) => {
       if (!hasTableColumnChildren(column)) {
@@ -42,5 +41,4 @@ export class ResizeValidatePipe implements PipeTransform {
       return lastChildWidth + delta >= MIN_COLUMN_WIDTH;
     };
   }
-
 }

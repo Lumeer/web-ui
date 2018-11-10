@@ -33,12 +33,7 @@ import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.c
 import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule,
-    UsersModule,
-    PickerModule
-  ],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule, PickerModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,
@@ -46,12 +41,8 @@ import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pip
     CollectionUsersComponent,
     CollectionAttributesComponent,
     CollectionLinkTypesComponent,
-    LinkTypeComponent
+    LinkTypeComponent,
   ],
-  providers: [
-    CollectionSettingsGuard
-  ]
+  providers: [CollectionSettingsGuard],
 })
-export class CollectionModule {
-
-}
+export class CollectionModule {}

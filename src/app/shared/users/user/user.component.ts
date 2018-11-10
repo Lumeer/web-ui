@@ -32,10 +32,9 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 @Component({
   selector: '[user]',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
-
   @Input() public resourceType: ResourceType;
 
   @Input() public editable: boolean;
@@ -56,24 +55,24 @@ export class UserComponent implements OnInit, OnDestroy {
 
   @Output() public userDeleted = new EventEmitter<UserModel>();
 
-  @Output() public rolesUpdate = new EventEmitter<{ roles: string[], onlyStore: boolean }>();
+  @Output() public rolesUpdate = new EventEmitter<{roles: string[]; onlyStore: boolean}>();
 
   private lastSyncedUserRoles: string[];
   private rolesChange$ = new Subject<string[]>();
   private rolesChangeSubscription: Subscription;
 
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService) {
-  }
+  constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnInit() {
-    this.rolesChangeSubscription = this.rolesChange$.pipe(
-      debounceTime(2000),
-      filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
-    ).subscribe(newRoles => {
-      this.lastSyncedUserRoles = null;
-      this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
-    });
+    this.rolesChangeSubscription = this.rolesChange$
+      .pipe(
+        debounceTime(2000),
+        filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
+      )
+      .subscribe(newRoles => {
+        this.lastSyncedUserRoles = null;
+        this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
+      });
   }
 
   public ngOnDestroy() {
@@ -91,14 +90,10 @@ export class UserComponent implements OnInit, OnDestroy {
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteUser(), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteUser(), bold: false},
+    ]);
   }
 
   public deleteUser() {
@@ -127,5 +122,4 @@ export class UserComponent implements OnInit, OnDestroy {
     this.rolesChange$.next(newRoles);
     this.rolesUpdate.emit({roles: newRoles, onlyStore: true});
   }
-
 }

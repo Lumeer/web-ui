@@ -2,7 +2,6 @@
 @import '../../../../styles/bootstrap_var';
 
 .input {
-
   padding-top: 0;
   padding-bottom: 0;
 
@@ -29,7 +28,7 @@
   }
 }
 
-[contenteditable=true]:empty::before {
+[contenteditable='true']:empty::before {
   content: attr(placeholder);
   display: block; /* For Firefox */
 }

@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class DragService {
-
   private zone: string;
 
   public startDrag(zone: string) {

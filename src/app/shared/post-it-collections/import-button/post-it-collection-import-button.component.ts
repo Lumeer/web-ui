@@ -23,12 +23,11 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: 'post-it-collection-import-button',
   templateUrl: './post-it-collection-import-button.component.html',
-  styleUrls: ['./post-it-collection-import-button.component.scss']
+  styleUrls: ['./post-it-collection-import-button.component.scss'],
 })
 export class PostItCollectionImportButtonComponent {
-
   @Output()
-  public import = new EventEmitter<{ result: string, name: string, format: string }>();
+  public import = new EventEmitter<{result: string; name: string; format: string}>();
 
   @Output()
   public error = new EventEmitter<string>();
@@ -36,8 +35,7 @@ export class PostItCollectionImportButtonComponent {
   @Input()
   public disabled: boolean;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public dragging: boolean = false;
 
@@ -57,7 +55,6 @@ export class PostItCollectionImportButtonComponent {
         this.import.emit({result: reader.result, name, format: 'csv'});
       };
       reader.readAsText(file);
-
     } else {
       const message = this.i18n({id: '@@files.input.button.empty', value: 'File input is empty'});
       this.error.emit(message);

@@ -23,11 +23,10 @@ import {AttributeModel, CollectionModel} from '../../core/store/collections/coll
 import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
 
 @Pipe({
-  name: 'isDefaultAttribute'
+  name: 'isDefaultAttribute',
 })
 @Injectable()
 export class DefaultAttributePipe implements PipeTransform {
-
   public transform(attribute: AttributeModel, collection: CollectionModel): boolean {
     const defaultAttributeId = getDefaultAttributeId(collection);
     return defaultAttributeId === attribute.id;

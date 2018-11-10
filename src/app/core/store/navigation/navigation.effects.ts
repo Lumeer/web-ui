@@ -34,15 +34,16 @@ import {Perspective} from '../../../view/perspectives/perspective';
 
 @Injectable()
 export class NavigationEffects {
-
   @Effect()
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
       const linkTypeIds = (query.linkTypeIds || []).concat(action.payload.linkTypeId);
 
@@ -53,11 +54,13 @@ export class NavigationEffects {
   @Effect()
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
       const collectionIds = (query.collectionIds || []).concat(action.payload.collectionId);
 
@@ -68,11 +71,13 @@ export class NavigationEffects {
   @Effect()
   public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
       const collectionIds = query.collectionIds || [];
       const indexToRemove = collectionIds.findIndex(id => id === action.payload.collectionId);
@@ -93,7 +98,7 @@ export class NavigationEffects {
 
       if (!previousUrl || previousUrl === '/') {
         return new RouterAction.Go({
-          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', (searchTab || SearchTab.All)]
+          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', searchTab || SearchTab.All],
         });
       }
 
@@ -130,26 +135,24 @@ export class NavigationEffects {
         path.push(searchTab);
       }
 
-      const extras: NavigationExtras = action.payload.setQuery ? {queryParams: action.payload.setQuery} : {queryParamsHandling: 'merge'};
+      const extras: NavigationExtras = action.payload.setQuery
+        ? {queryParams: action.payload.setQuery}
+        : {queryParamsHandling: 'merge'};
       return new RouterAction.Go({path, extras});
     })
   );
 
-  constructor(private actions$: Actions,
-              private router: Router,
-              private store$: Store<AppState>) {
-  }
-
+  constructor(private actions$: Actions, private router: Router, private store$: Store<AppState>) {}
 }
 
 function newQueryAction(query: QueryModel): Action {
   return new RouterAction.Go({
     path: [],
     queryParams: {
-      query: QueryConverter.toString(query)
+      query: QueryConverter.toString(query),
     },
     extras: {
-      queryParamsHandling: 'merge'
-    }
+      queryParamsHandling: 'merge',
+    },
   });
 }

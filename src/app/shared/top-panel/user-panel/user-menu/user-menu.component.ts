@@ -31,10 +31,9 @@ import {selectCurrentUser} from './../../../../core/store/users/users.state';
   selector: 'user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserMenuComponent {
-
   public readonly buildNumber = environment.buildNumber;
   public readonly locale = environment.locale;
 
@@ -44,8 +43,8 @@ export class UserMenuComponent {
   public constructor(
     private authService: AuthService,
     private dialogService: DialogService,
-    private store: Store<AppState>) {
-  }
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.currentUser$ = this.store.pipe(select(selectCurrentUser));
@@ -59,5 +58,4 @@ export class UserMenuComponent {
   public onLogoutClick() {
     this.authService.logout();
   }
-
 }

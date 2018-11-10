@@ -23,7 +23,6 @@ import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
 
 export class LinkQueryItem implements QueryItem {
-
   public type = QueryItemType.Link;
 
   public icons: string[];
@@ -50,5 +49,4 @@ export class LinkQueryItem implements QueryItem {
     }
     return false;
   }
-
 }

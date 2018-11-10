@@ -28,7 +28,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   templateUrl: './empty-collections.component.html',
 })
 export class EmptyCollectionsComponent {
-
   @Input()
   public query: QueryModel;
 
@@ -42,10 +41,9 @@ export class EmptyCollectionsComponent {
   public error = new EventEmitter<string>();
 
   @Output()
-  public import = new EventEmitter<{ result: string, name: string, format: string }>();
+  public import = new EventEmitter<{result: string; name: string; format: string}>();
 
-  constructor(public i18n: I18n) {
-  }
+  constructor(public i18n: I18n) {}
 
   public onNewCollection() {
     this.newCollection.emit();
@@ -55,8 +53,7 @@ export class EmptyCollectionsComponent {
     this.error.emit(message);
   }
 
-  public onImport(importInfo: { result: string, name: string, format: string }) {
+  public onImport(importInfo: {result: string; name: string; format: string}) {
     this.import.emit(importInfo);
   }
-
 }

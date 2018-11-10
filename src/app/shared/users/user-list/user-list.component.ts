@@ -31,10 +31,9 @@ import {AttributeModel} from '../../../core/store/collections/collection.model';
 @Component({
   selector: 'user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent {
-
   @Input() public resourceType: ResourceType;
 
   @Input() public users: UserModel[];
@@ -49,13 +48,14 @@ export class UserListComponent {
 
   @Output() public userDeleted = new EventEmitter<UserModel>();
 
-  @Output() public userPermissionChange = new EventEmitter<{
-    newPermission: PermissionModel,
-    currentPermission: PermissionModel,
-    onlyStore: boolean
+  @Output()
+  public userPermissionChange = new EventEmitter<{
+    newPermission: PermissionModel;
+    currentPermission: PermissionModel;
+    onlyStore: boolean;
   }>();
 
-  public expanded: { [email: string]: boolean } = {};
+  public expanded: {[email: string]: boolean} = {};
   public searchString: string;
 
   public canAddUsers(): boolean {
@@ -75,14 +75,19 @@ export class UserListComponent {
   }
 
   private getCurrentUserId(): string {
-    return this.currentUser && this.currentUser.id || '';
+    return (this.currentUser && this.currentUser.id) || '';
   }
 
   private getUserPermission(userId: string): PermissionModel {
-    return this.resource && this.resource.permissions && this.resource.permissions.users && this.resource.permissions.users.find(perm => perm.id === userId);
+    return (
+      this.resource &&
+      this.resource.permissions &&
+      this.resource.permissions.users &&
+      this.resource.permissions.users.find(perm => perm.id === userId)
+    );
   }
 
-  public onUserRolesChanged(userId: string, data: { roles: string[], onlyStore: boolean }) {
+  public onUserRolesChanged(userId: string, data: {roles: string[]; onlyStore: boolean}) {
     const currentPermission = this.getUserPermission(userId);
     const newPermission = {id: userId, roles: data.roles};
     this.userPermissionChange.emit({newPermission, currentPermission, onlyStore: data.onlyStore});
@@ -91,5 +96,4 @@ export class UserListComponent {
   public trackByUserId(index: number, user: UserModel): string {
     return user.id;
   }
-
 }

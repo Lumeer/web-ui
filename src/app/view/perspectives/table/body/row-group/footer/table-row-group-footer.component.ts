@@ -22,8 +22,6 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'table-row-group-footer',
   templateUrl: './table-row-group-footer.component.html',
-  styleUrls: ['./table-row-group-footer.component.scss']
+  styleUrls: ['./table-row-group-footer.component.scss'],
 })
-export class TableRowGroupFooterComponent {
-
-}
+export class TableRowGroupFooterComponent {}

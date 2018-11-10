@@ -17,23 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {PipesModule} from '../pipes/pipes.module';
 import {DocumentHintsComponent} from './document-hints.component';
-import { DocumentHintColumnOffsetPipe } from './document-hint-column-offset.pipe';
+import {DocumentHintColumnOffsetPipe} from './document-hint-column-offset.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PipesModule
-  ],
-  declarations: [
-    DocumentHintsComponent,
-    DocumentHintColumnOffsetPipe,
-  ],
-  exports: [
-    DocumentHintsComponent,
-  ]
+  imports: [CommonModule, PipesModule],
+  declarations: [DocumentHintsComponent, DocumentHintColumnOffsetPipe],
+  exports: [DocumentHintsComponent],
 })
-export class DocumentHintsModule { }
+export class DocumentHintsModule {}

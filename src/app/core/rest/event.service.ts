@@ -33,12 +33,10 @@ const EVENTS_KEY = 'events';
 // TODO implement on backend
 @Injectable()
 export class EventService {
-
   private workspace: Workspace;
 
-  constructor(private httpClient: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public createEvent(collectionId: string, event: Event): Observable<string> {
@@ -88,7 +86,8 @@ export class EventService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `${
+      environment.apiUrl
+    }/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
-
 }

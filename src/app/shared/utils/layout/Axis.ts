@@ -18,8 +18,6 @@
  */
 
 export enum Axis {
-
   X = 'x',
-  Y = 'y'
-
+  Y = 'y',
 }

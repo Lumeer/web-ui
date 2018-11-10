@@ -42,17 +42,18 @@ import {ServiceLimitsAction} from './service-limits/service-limits.action';
 
 @Injectable()
 export class OrganizationsEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
     withLatestFrom(this.store$.select(selectOrganizationsLoaded)),
     filter(([action, loaded]) => !loaded),
-    mergeMap(() => this.organizationService.getOrganizations().pipe(
-      map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
-      map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
-      catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
-    ))
+    mergeMap(() =>
+      this.organizationService.getOrganizations().pipe(
+        map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
+        map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
+        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -70,10 +71,12 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
     withLatestFrom(this.store$.select(selectOrganizationCodes)),
     filter(([action, codes]) => isNullOrUndefined(codes)),
-    mergeMap(() => this.organizationService.getOrganizationsCodes().pipe(
-      map((organizationCodes) => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
-      catchError((error) => of(new OrganizationsAction.GetCodesFailure({error: error})))
-    ))
+    mergeMap(() =>
+      this.organizationService.getOrganizationsCodes().pipe(
+        map(organizationCodes => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
+        catchError(error => of(new OrganizationsAction.GetCodesFailure({error: error})))
+      )
+    )
   );
 
   @Effect({dispatch: false})
@@ -94,9 +97,11 @@ export class OrganizationsEffects {
         withLatestFrom(this.store$.select(selectOrganizationCodes)),
         mergeMap(([organization, organizationCodes]) => {
           const codes = [...organizationCodes, organization.code];
-          const actions: Action[] = [new OrganizationsAction.CreateSuccess({organization}),
+          const actions: Action[] = [
+            new OrganizationsAction.CreateSuccess({organization}),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}),
-            new ServiceLimitsAction.GetServiceLimits({organizationId: organization.id})];
+            new ServiceLimitsAction.GetServiceLimits({organizationId: organization.id}),
+          ];
 
           const {callback} = action.payload;
           if (callback) {
@@ -131,9 +136,11 @@ export class OrganizationsEffects {
         map(dto => OrganizationConverter.fromDto(dto)),
         withLatestFrom(this.store$.select(selectOrganizationCodes)),
         flatMap(([organization, organizationCodes]) => {
-          const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}})];
+          const actions: Action[] = [
+            new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}}),
+          ];
           if (organizationCodes) {
-            const codes = organizationCodes.map(code => code === oldOrganization.code ? organization.code : code);
+            const codes = organizationCodes.map(code => (code === oldOrganization.code ? organization.code : code));
             actions.push(new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}));
           }
 
@@ -177,8 +184,10 @@ export class OrganizationsEffects {
         flatMap(([, organizationCodes]) => {
           const codes = organizationCodes.filter(code => code !== organization.code);
 
-          const actions: Action[] = [new OrganizationsAction.DeleteSuccess(action.payload),
-            new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
+          const actions: Action[] = [
+            new OrganizationsAction.DeleteSuccess(action.payload),
+            new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}),
+          ];
 
           if (action.payload.onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
@@ -219,12 +228,17 @@ export class OrganizationsEffects {
 
       return observable.pipe(
         concatMap(() => of()),
-        catchError((error) => {
-          const payload = {organizationId: action.payload.organizationId, type: action.payload.type, permission: action.payload.currentPermission, error};
+        catchError(error => {
+          const payload = {
+            organizationId: action.payload.organizationId,
+            type: action.payload.type,
+            permission: action.payload.currentPermission,
+            error,
+          };
           return of(new OrganizationsAction.ChangePermissionFailure(payload));
         })
       );
-    }),
+    })
   );
 
   @Effect()
@@ -232,16 +246,19 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.ChangePermissionFailure>(OrganizationsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.permission.change.fail', value: 'Could not change the organization permissions'});
+      const message = this.i18n({
+        id: 'organization.permission.change.fail',
+        value: 'Could not change the organization permissions',
+      });
       return new NotificationsAction.Error({message});
     })
   );
 
-  constructor(private i18n: I18n,
-              private store$: Store<AppState>,
-              private router: Router,
-              private actions$: Actions,
-              private organizationService: OrganizationService) {
-  }
-
+  constructor(
+    private i18n: I18n,
+    private store$: Store<AppState>,
+    private router: Router,
+    private actions$: Actions,
+    private organizationService: OrganizationService
+  ) {}
 }

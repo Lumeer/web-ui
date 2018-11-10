@@ -23,63 +23,58 @@ import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
 export class PostItLayout {
-
   private grid = null;
   private refreshSubject = new Subject();
   private notifySubject = new Subject<string[]>();
   private subscriptions = new Subscription();
 
-  constructor(private gridElement: ElementRef,
-              private dragEnabled: boolean,
-              private zone: NgZone,
-              private onOrderChange?: (orderedIds: string[]) => void) {
+  constructor(
+    private gridElement: ElementRef,
+    private dragEnabled: boolean,
+    private zone: NgZone,
+    private onOrderChange?: (orderedIds: string[]) => void
+  ) {
     this.initGrid();
   }
 
   private initGrid() {
     this.runSafely(() => {
-      this.grid = new window['Muuri'](
-        this.gridElement.nativeElement,
-        {
-          layoutDuration: 200,
-          layoutEasing: 'ease',
-          dragEnabled: this.dragEnabled,
-          dragSortInterval: 200,
-          dragReleaseDuration: 200,
-          dragReleaseEasing: 'ease',
-          layoutOnResize: 200,
-          layoutOnInit: true,
-          layout: {
-            fillGaps: false,
-            horizontal: false,
-            alignRight: false,
-            alignBottom: false,
-            rounding: false
-          },
-          dragStartPredicate: {
-            distance: 0,
-            delay: 0,
-            handle: false
-          },
-          dragSort: true,
-          dragSortPredicate: {
-            threshold: 50,
-            action: 'move'
-          },
-        }
-      ).on('move', () => this.updateIndices())
+      this.grid = new window['Muuri'](this.gridElement.nativeElement, {
+        layoutDuration: 200,
+        layoutEasing: 'ease',
+        dragEnabled: this.dragEnabled,
+        dragSortInterval: 200,
+        dragReleaseDuration: 200,
+        dragReleaseEasing: 'ease',
+        layoutOnResize: 200,
+        layoutOnInit: true,
+        layout: {
+          fillGaps: false,
+          horizontal: false,
+          alignRight: false,
+          alignBottom: false,
+          rounding: false,
+        },
+        dragStartPredicate: {
+          distance: 0,
+          delay: 0,
+          handle: false,
+        },
+        dragSort: true,
+        dragSortPredicate: {
+          threshold: 50,
+          action: 'move',
+        },
+      })
+        .on('move', () => this.updateIndices())
         .on('sort', () => this.updateIndices());
     });
 
-    const subscription = this.refreshSubject.pipe(
-      debounceTime(200)
-    ).subscribe(() => {
+    const subscription = this.refreshSubject.pipe(debounceTime(200)).subscribe(() => {
       this.onRefresh();
     });
 
-    const notifySubscription = this.notifySubject.pipe(
-      debounceTime(200)
-    ).subscribe((ids) => {
+    const notifySubscription = this.notifySubject.pipe(debounceTime(200)).subscribe(ids => {
       this.onNotifyAboutOrderChange(ids);
     });
 
@@ -136,7 +131,7 @@ export class PostItLayout {
     this.grid.sort(newItems, {layout: 'instant'});
   }
 
-  private createGridItemsMap(): { [key: string]: any } {
+  private createGridItemsMap(): {[key: string]: any} {
     return this.grid.getItems().reduce((map, item) => {
       map[this.getPostItId(item.getElement())] = item;
       return map;
@@ -167,5 +162,4 @@ export class PostItLayout {
   private runSafely(fun: () => void) {
     this.zone.runOutsideAngular(() => fun());
   }
-
 }

@@ -29,15 +29,13 @@ import {Role} from '../../../core/model/role';
 
 @Pipe({
   name: 'canManageConfig',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CanManageConfigPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public transform(currentView: ViewModel): Observable<boolean> {
     if (!currentView) {
@@ -54,5 +52,4 @@ export class CanManageConfigPipe implements PipeTransform {
       })
     );
   }
-
 }

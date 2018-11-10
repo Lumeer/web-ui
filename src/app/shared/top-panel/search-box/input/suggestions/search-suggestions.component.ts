@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {catchError, debounceTime, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -34,10 +44,9 @@ import {SuggestionsConverter} from './suggestions.converter';
   selector: 'search-suggestions',
   templateUrl: './search-suggestions.component.html',
   styleUrls: ['./search-suggestions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit {
-
   @Input()
   public queryItems: QueryItem[] = [];
 
@@ -56,9 +65,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private subscriptions = new Subscription();
 
-  constructor(private searchService: SearchService,
-              private store: Store<AppState>) {
-  }
+  constructor(private searchService: SearchService, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToSearchTerms());
@@ -78,22 +85,26 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private subscribeToSearchTerms(): Subscription {
-    return this.searchTerms$.pipe(
-      debounceTime(300),
-      switchMap(text => this.retrieveSuggestions(text)),
-      withLatestFrom(this.store.select(selectAllCollections)),
-      mergeMap(([suggestions, collections]) => SuggestionsConverter.convertSuggestionsToQueryItems(suggestions, collections)),
-      map(queryItems => this.filterViewQueryItems(queryItems)),
-      map(queryItems => this.addFulltextSuggestion(queryItems)),
-      map(queryItems => this.filterUsedQueryItems(queryItems)),
-      catchError(error => {
-        console.error(error);
-        return of<QueryItem[]>();
-      })
-    ).subscribe(suggestions => {
-      this.suggestions$.next(suggestions);
-      this.selectedIndex$.next(-1);
-    });
+    return this.searchTerms$
+      .pipe(
+        debounceTime(300),
+        switchMap(text => this.retrieveSuggestions(text)),
+        withLatestFrom(this.store.select(selectAllCollections)),
+        mergeMap(([suggestions, collections]) =>
+          SuggestionsConverter.convertSuggestionsToQueryItems(suggestions, collections)
+        ),
+        map(queryItems => this.filterViewQueryItems(queryItems)),
+        map(queryItems => this.addFulltextSuggestion(queryItems)),
+        map(queryItems => this.filterUsedQueryItems(queryItems)),
+        catchError(error => {
+          console.error(error);
+          return of<QueryItem[]>();
+        })
+      )
+      .subscribe(suggestions => {
+        this.suggestions$.next(suggestions);
+        this.selectedIndex$.next(-1);
+      });
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
@@ -119,9 +130,12 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
-    return queryItems.filter(queryItem => !this.queryItems.find(usedItem => {
-      return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
-    }));
+    return queryItems.filter(
+      queryItem =>
+        !this.queryItems.find(usedItem => {
+          return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
+        })
+    );
   }
 
   public moveSelection(direction: number) {
@@ -149,5 +163,4 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     this.useSuggestion.emit(queryItem);
     this.suggestions$.next([]);
   }
-
 }

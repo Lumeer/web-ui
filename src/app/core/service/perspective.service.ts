@@ -30,43 +30,54 @@ import {filter, take} from 'rxjs/operators';
 import {selectViewCursor} from '../store/views/views.state';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PerspectiveService {
+  constructor(private store: Store<AppState>, private router: Router) {}
 
-  constructor(private store: Store<AppState>,
-              private router: Router) {
-  }
-
-  public switchPerspective(perspective: Perspective, collection?: CollectionModel, document?: DocumentModel, queryToSet?: string): void {
-    if (collection && document) { // do we have any document selected?
+  public switchPerspective(
+    perspective: Perspective,
+    collection?: CollectionModel,
+    document?: DocumentModel,
+    queryToSet?: string
+  ): void {
+    if (collection && document) {
+      // do we have any document selected?
       // update cursor
-      this.store.dispatch(new ViewsAction.SetCursor({
-        cursor: {collectionId: collection.id, documentId: document.id}
-      }));
+      this.store.dispatch(
+        new ViewsAction.SetCursor({
+          cursor: {collectionId: collection.id, documentId: document.id},
+        })
+      );
 
       // wait for the cursor to get updated
-      this.store.select(selectViewCursor).pipe(
-        filter(cursor => cursor.collectionId === collection.id && cursor.documentId === document.id),
-        take(1)
-      ).subscribe(cursor => {
-        this.navigateToPerspective(perspective, queryToSet);
-      });
+      this.store
+        .select(selectViewCursor)
+        .pipe(
+          filter(cursor => cursor.collectionId === collection.id && cursor.documentId === document.id),
+          take(1)
+        )
+        .subscribe(cursor => {
+          this.navigateToPerspective(perspective, queryToSet);
+        });
     } else {
       this.navigateToPerspective(perspective, queryToSet);
     }
   }
 
   private navigateToPerspective(perspective: Perspective, queryToSet?: string): void {
-    this.store.select(selectWorkspace).pipe(take(1)).subscribe(workspace => {
-      const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
-      viewPath.push(perspective.toString());
+    this.store
+      .select(selectWorkspace)
+      .pipe(take(1))
+      .subscribe(workspace => {
+        const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
+        viewPath.push(perspective.toString());
 
-      if (queryToSet) {
-        this.router.navigate(viewPath, {queryParams: {query: queryToSet}});
-      } else {
-        this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
-      }
-    });
+        if (queryToSet) {
+          this.router.navigate(viewPath, {queryParams: {query: queryToSet}});
+        } else {
+          this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
+        }
+      });
   }
 }

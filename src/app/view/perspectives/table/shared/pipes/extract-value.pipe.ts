@@ -23,15 +23,13 @@ import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-i
 import {TableSingleColumn} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'extractValue'
+  name: 'extractValue',
 })
 export class ExtractValuePipe implements PipeTransform {
-
   public transform(entity: DocumentModel | LinkInstanceModel, column: TableSingleColumn): string {
     if (entity && entity.data) {
       return entity.data[column.attributeId];
     }
     return '';
   }
-
 }

@@ -25,12 +25,10 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DeletedQueryItem} from '../model/deleted.query-item';
 
 @Pipe({
-  name: 'queryItemText'
+  name: 'queryItemText',
 })
 export class QueryItemTextPipe implements PipeTransform {
-
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public transform(queryItem: QueryItem): string {
     if (queryItem.type === QueryItemType.Deleted) {
@@ -54,36 +52,35 @@ export class QueryItemTextPipe implements PipeTransform {
   private deletedCollectionText(): string {
     return this.i18n({
       id: 'query.item.deleted.file',
-      value: 'Deleted file'
+      value: 'Deleted file',
     });
   }
 
   private deletedLinkText(): string {
     return this.i18n({
       id: 'query.item.deleted.link',
-      value: 'Deleted link'
+      value: 'Deleted link',
     });
   }
 
   private deletedDocumentText(): string {
     return this.i18n({
       id: 'query.item.deleted.document',
-      value: 'Deleted record'
+      value: 'Deleted record',
     });
   }
 
   private deletedAttributeText(): string {
     return this.i18n({
       id: 'query.item.deleted.attribute',
-      value: 'Deleted attribute'
+      value: 'Deleted attribute',
     });
   }
 
   private deletedText(): string {
     return this.i18n({
       id: 'query.item.deleted.default',
-      value: 'Deleted'
+      value: 'Deleted',
     });
   }
-
 }

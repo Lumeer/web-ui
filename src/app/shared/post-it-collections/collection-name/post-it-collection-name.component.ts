@@ -24,10 +24,9 @@ import {FormControl} from '@angular/forms';
 @Component({
   selector: 'post-it-collection-name',
   templateUrl: './post-it-collection-name.component.html',
-  styleUrls: ['./post-it-collection-name.component.scss']
+  styleUrls: ['./post-it-collection-name.component.scss'],
 })
 export class PostItCollectionNameComponent {
-
   @ViewChild('collectionNameInput') public input: ElementRef;
 
   @Input() public editable: boolean;
@@ -90,5 +89,4 @@ export class PostItCollectionNameComponent {
     const currentValue = this.input.nativeElement.textContent;
     return this.pendingUpdate && this.nameFormControl.valid && currentValue !== this.collectionName;
   }
-
 }

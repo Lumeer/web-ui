@@ -25,10 +25,9 @@ import {LocalStorage} from '../../shared/utils/local-storage';
 const USER_SETTINGS = 'user-settings';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserSettingsService {
-
   public getUserSettings(): UserSettings {
     return LocalStorage.get(USER_SETTINGS) || {};
   }
@@ -36,5 +35,4 @@ export class UserSettingsService {
   public updateUserSettings(userSettings: UserSettings) {
     LocalStorage.set(USER_SETTINGS, userSettings);
   }
-
 }

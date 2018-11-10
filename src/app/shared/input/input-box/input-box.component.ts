@@ -30,10 +30,9 @@ const warningStyle = ['border', 'border-danger', 'rounded'];
 @Component({
   selector: 'input-box',
   templateUrl: './input-box.component.html',
-  styleUrls: ['./input-box.component.scss']
+  styleUrls: ['./input-box.component.scss'],
 })
 export class InputBoxComponent implements OnInit {
-
   @ViewChild('input') public input: ElementRef;
   @ViewChild('inputParent') public inputParent: ElementRef;
 
@@ -67,26 +66,25 @@ export class InputBoxComponent implements OnInit {
   public mPaddingVRem: number;
   public mMaxHeightRem: number;
 
-  public constructor(private i18n: I18n) {
-  }
+  public constructor(private i18n: I18n) {}
 
   public ngOnInit() {
     this.computeProperties();
   }
 
-  public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     this.computeProperties();
   }
 
   private computeProperties() {
-    this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
+    this.mCurrentValue = (this.initialValue && this.initialValue.trim()) || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
     this.mPaddingVRem = this.paddingRem || DEFAULT_PADDING_V;
     this.mPaddingHRem = DEFAULT_PADDING_H;
     if (mMaxLines === 1) {
-      this.mMaxHeightRem = mMaxLines * this.mLineHeight * this.mFontSizeRem + (2 * this.mPaddingVRem);
+      this.mMaxHeightRem = mMaxLines * this.mLineHeight * this.mFontSizeRem + 2 * this.mPaddingVRem;
     } else {
       this.mMaxHeightRem = 9999; // unlimited
     }
@@ -136,7 +134,7 @@ export class InputBoxComponent implements OnInit {
   private defaultPlaceholder() {
     return this.i18n({
       id: 'inputBox.placeholder.default',
-      value: 'Write text here...'
+      value: 'Write text here...',
     });
   }
 
@@ -153,5 +151,4 @@ export class InputBoxComponent implements OnInit {
   public onEnter() {
     this.enter.emit();
   }
-
 }

@@ -17,7 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
@@ -33,10 +46,9 @@ import {SelectionHelper} from '../util/selection-helper';
   selector: 'post-it-document',
   templateUrl: './post-it-document.component.html',
   styleUrls: ['./post-it-document.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
   @Input() public collection: CollectionModel;
@@ -56,8 +68,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
   public initedDocumentKey: string;
   private currentRowsLength: number;
 
-  public constructor(private documentUiService: DocumentUiService) {
-  }
+  public constructor(private documentUiService: DocumentUiService) {}
 
   public ngOnInit() {
     this.initDocumentServiceIfNeeded();
@@ -74,7 +85,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
     if (changed) {
       this.sizeChange.emit();
     }
-
   }
 
   public ngAfterViewInit() {
@@ -122,15 +132,19 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
     const capture = false;
     const scrollKeys: string[] = [KeyCode.ArrowUp, KeyCode.ArrowDown];
 
-    this.content.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (scrollKeys.includes(event.code)) {
-        event.preventDefault();
-      }
-    }, capture);
+    this.content.nativeElement.addEventListener(
+      'keydown',
+      (event: KeyboardEvent) => {
+        if (scrollKeys.includes(event.code)) {
+          event.preventDefault();
+        }
+      },
+      capture
+    );
   }
 
   public suggestionListId(): string {
-    return `${ this.perspectiveId }${ this.getDocumentKey() }`;
+    return `${this.perspectiveId}${this.getDocumentKey()}`;
   }
 
   public getDocumentKey(): string {
@@ -147,14 +161,14 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
       if (!this.documentUiService.isInited(this.collection, this.documentModel)) {
         this.documentUiService.init(this.collection, this.documentModel);
       }
-      this.rows$ = this.documentUiService.getRows$(this.collection, this.documentModel).asObservable().pipe(
-        tap(rows => this.checkRowsLength(rows.length))
-      );
+      this.rows$ = this.documentUiService
+        .getRows$(this.collection, this.documentModel)
+        .asObservable()
+        .pipe(tap(rows => this.checkRowsLength(rows.length)));
       this.favorite$ = this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
       this.unusedAttributes$ = this.rows$.pipe(
-        map(rows => this.collection.attributes.filter(attribute =>
-          !rows.find(row => row.id === attribute.id))
-        ));
+        map(rows => this.collection.attributes.filter(attribute => !rows.find(row => row.id === attribute.id)))
+      );
 
       return true;
     }

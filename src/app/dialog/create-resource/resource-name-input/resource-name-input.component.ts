@@ -22,15 +22,13 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'resource-name-input',
-  templateUrl: './resource-name-input.component.html'
+  templateUrl: './resource-name-input.component.html',
 })
 export class ResourceNameInputComponent {
-
   @Input()
   public form: FormGroup;
 
   public get nameInput(): AbstractControl {
     return this.form.get('name');
   }
-
 }

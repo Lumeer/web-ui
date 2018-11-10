@@ -18,9 +18,7 @@
  */
 
 export interface DraggableOptions {
-
   enabled?: boolean;
   zone?: string;
   data?: any;
-
 }

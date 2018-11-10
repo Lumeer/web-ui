@@ -20,7 +20,10 @@
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-types.state';
 
-export function linkTypesReducer(state: LinkTypesState = initialLinkTypesState, action: LinkTypesAction.All): LinkTypesState {
+export function linkTypesReducer(
+  state: LinkTypesState = initialLinkTypesState,
+  action: LinkTypesAction.All
+): LinkTypesState {
   switch (action.type) {
     case LinkTypesActionType.GET_SUCCESS:
       return linkTypesAdapter.addMany(action.payload.linkTypes, {...state, loaded: true});

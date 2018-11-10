@@ -1,4 +1,4 @@
-@import "../../../../styles/variables";
+@import '../../../../styles/variables';
 
 .layout-item {
   position: absolute;
@@ -9,7 +9,8 @@
   position: relative;
 }
 
-.post-it:hover, .selected {
+.post-it:hover,
+.selected {
   box-shadow: $shadow-default;
 }
 
@@ -21,7 +22,8 @@
   cursor: move;
 }
 
-.masonry-layout-item-dragging, .masonry-layout-item-releasing {
+.masonry-layout-item-dragging,
+.masonry-layout-item-releasing {
   z-index: $z-index-selected;
 }
 

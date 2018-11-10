@@ -23,12 +23,10 @@ import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
-
-  public constructor(private authService: AuthService) {
-  }
+  public constructor(private authService: AuthService) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     return this.isAuthenticated(state);
@@ -45,5 +43,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
     return true;
   }
-
 }

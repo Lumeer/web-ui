@@ -22,11 +22,10 @@ import {Pipe, PipeTransform, Injectable} from '@angular/core';
 import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
 @Pipe({
-  name: 'attributeFilter'
+  name: 'attributeFilter',
 })
 @Injectable()
 export class AttributeFilterPipe implements PipeTransform {
-
   public transform(attributes: AttributeModel[], value: string): any[] {
     if (!attributes || !value) {
       return attributes;

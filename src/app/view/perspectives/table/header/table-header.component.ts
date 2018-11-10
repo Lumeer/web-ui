@@ -28,10 +28,9 @@ import {TablesAction} from '../../../../core/store/tables/tables.action';
   selector: 'table-header',
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeaderComponent {
-
   @Input()
   public table: TableModel;
 
@@ -40,8 +39,7 @@ export class TableHeaderComponent {
 
   public cursor: TableHeaderCursor;
 
-  public constructor(private store$: Store<AppState>) {
-  }
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.table && this.table && hasTableIdChanged(changes.table)) {
@@ -53,7 +51,7 @@ export class TableHeaderComponent {
     return {
       tableId: this.table.id,
       partIndex: null,
-      columnPath: []
+      columnPath: [],
     };
   }
 
@@ -64,7 +62,6 @@ export class TableHeaderComponent {
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
-
 }
 
 function hasTableIdChanged(change: SimpleChange): boolean {

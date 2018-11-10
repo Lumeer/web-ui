@@ -23,46 +23,38 @@ import {DocumentModel} from '../documents/document.model';
 import {MapTiles} from './map-tiles';
 
 export interface MapModel {
-
   id: string;
   config: MapConfig;
-
 }
 
 export interface MapConfig {
-
   attributeIdsMap: AttributeIdsMap;
   center: LatLngLiteral;
   tiles: MapTiles;
   zoom: number;
-
 }
 
-export type AttributeIdsMap = { [collectionId: string]: string[] };
+export type AttributeIdsMap = {[collectionId: string]: string[]};
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   attributeIdsMap: {},
   center: {
     lat: 49.2331315,
-    lng: 16.5701833
+    lng: 16.5701833,
   },
   tiles: MapTiles.SeznamBasic,
-  zoom: 5
+  zoom: 5,
 };
 
 export interface MapMarkerProperties {
-
   collection: CollectionModel;
   document: DocumentModel;
   attributeId: string;
   attributeType?: MapAttributeType;
   coordinates?: LatLngLiteral;
-
 }
 
 export enum MapAttributeType {
-
   Address = 'Address',
-  Coordinates = 'Coordinates'
-
+  Coordinates = 'Coordinates',
 }

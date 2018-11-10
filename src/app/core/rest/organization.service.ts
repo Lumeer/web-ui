@@ -31,14 +31,12 @@ import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
-
   public getOrganizations(): Observable<Organization[]> {
     return this.httpClient.get<Organization[]>(this.apiPrefix());
   }
 
   public getOrganizationsCodes(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe(
-    );
+    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe();
   }
 
   public getOrganization(code: string): Observable<Organization> {
@@ -82,10 +80,11 @@ export class OrganizationService extends PermissionService {
   }
 
   public createPayment(payment: Payment, returnUrl: string): Observable<Payment> {
-    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment,
-      { headers: {
-        'RETURN_URL': returnUrl
-      }});
+    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment, {
+      headers: {
+        RETURN_URL: returnUrl,
+      },
+    });
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
@@ -98,5 +97,4 @@ export class OrganizationService extends PermissionService {
   private apiPrefix(code?: string): string {
     return `${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
   }
-
 }

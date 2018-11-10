@@ -24,21 +24,11 @@ import {RouterModule} from '@angular/router';
 import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule,
-    DetailPerspectiveRoutingModule
-  ],
-  declarations: [
-    DetailPerspectiveComponent
-  ],
-  entryComponents: [
-    DetailPerspectiveComponent
-  ],
-  exports: [
-    DetailPerspectiveComponent
-  ]
+  imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
+  declarations: [DetailPerspectiveComponent],
+  entryComponents: [DetailPerspectiveComponent],
+  exports: [DetailPerspectiveComponent],
 })
-export class DetailPerspectiveModule { }
+export class DetailPerspectiveModule {}
 
 export default DetailPerspectiveModule;

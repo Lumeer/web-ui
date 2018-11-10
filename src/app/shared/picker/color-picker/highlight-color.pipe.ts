@@ -21,10 +21,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {shadeColor} from '../../utils/html-modifier';
 
 @Pipe({
-  name: 'highlightColor'
+  name: 'highlightColor',
 })
 export class HighlightColorPipe implements PipeTransform {
-
   public transform(color: string, selected: string, current: string): string {
     if (color === selected) {
       return shadeColor(color, -0.3);
@@ -36,5 +35,4 @@ export class HighlightColorPipe implements PipeTransform {
 
     return 'transparent';
   }
-
 }

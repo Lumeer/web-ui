@@ -29,9 +29,7 @@ import {FeedbackDto} from '../dto/feedback.dto';
 
 @Injectable()
 export class UserService {
-
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
@@ -42,7 +40,8 @@ export class UserService {
   }
 
   public deleteUser(organizationId: string, id: string): Observable<string> {
-    return this.httpClient.delete(this.organizationUsersApiPrefix(organizationId, id), {observe: 'response', responseType: 'text'})
+    return this.httpClient
+      .delete(this.organizationUsersApiPrefix(organizationId, id), {observe: 'response', responseType: 'text'})
       .pipe(map(() => id));
   }
 
@@ -74,5 +73,4 @@ export class UserService {
   private usersApiPrefix(): string {
     return `${environment.apiUrl}/rest/users`;
   }
-
 }

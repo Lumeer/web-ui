@@ -39,13 +39,13 @@ import {WorkspaceService} from '../workspace/workspace.service';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
-
-  constructor(private i18n: I18n,
-              private router: Router,
-              private collectionService: CollectionService,
-              private workspaceService: WorkspaceService,
-              private store: Store<AppState>) {
-  }
+  constructor(
+    private i18n: I18n,
+    private router: Router,
+    private collectionService: CollectionService,
+    private workspaceService: WorkspaceService,
+    private store: Store<AppState>
+  ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const organizationCode = next.paramMap.get('organizationCode');
@@ -54,11 +54,13 @@ export class CollectionSettingsGuard implements CanActivate {
     return this.loadCollections().pipe(
       mergeMap(() => this.store.select(selectCollectionById(collectionId))),
       withLatestFrom(this.workspaceService.getOrganizationFromStoreOrApi(organizationCode)),
-      mergeMap(([collection, organization]) => this.store.select(selectCurrentUserForWorkspace).pipe(
-        filter(user => !isNullOrUndefined(user)),
-        take(1),
-        map(user => ({collection, organization, user}))
-      )),
+      mergeMap(([collection, organization]) =>
+        this.store.select(selectCurrentUserForWorkspace).pipe(
+          filter(user => !isNullOrUndefined(user)),
+          take(1),
+          map(user => ({collection, organization, user}))
+        )
+      ),
       map(({collection, organization, user}) => {
         if (isNullOrUndefined(collection)) {
           this.dispatchErrorActionsNotExist();
@@ -97,7 +99,7 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActionsNotPermission() {
     const message = this.i18n({
       id: 'file.permission.missing',
-      value: 'You do not have permission to access this collection'
+      value: 'You do not have permission to access this collection',
     });
     this.dispatchErrorActions(message);
   }
@@ -111,5 +113,4 @@ export class CollectionSettingsGuard implements CanActivate {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
-
 }

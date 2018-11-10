@@ -42,29 +42,29 @@ const viewRoutes: Routes = [
       collections: CollectionsGuard,
       documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
-      views: ViewsGuard
+      views: ViewsGuard,
     },
     component: ViewComponent,
     children: [
       {
         path: Perspective.Detail,
-        loadChildren: './perspectives/detail/detail-perspective.module#DetailPerspectiveModule'
+        loadChildren: './perspectives/detail/detail-perspective.module#DetailPerspectiveModule',
       },
       {
         path: Perspective.PostIt,
-        component: PostItPerspectiveComponent
+        component: PostItPerspectiveComponent,
       },
       {
         path: Perspective.Chart,
-        loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule'
+        loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule',
       },
       {
         path: Perspective.Map,
-        loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule'
+        loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule',
       },
       {
         path: Perspective.Search,
-        loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule' // TODO sync
+        loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule', // TODO sync
       },
       {
         path: Perspective.Table,
@@ -74,20 +74,14 @@ const viewRoutes: Routes = [
         path: '',
         pathMatch: 'full',
         canActivate: [ViewRedirectGuard],
-        component: ViewLoadingComponent
-      }
-    ]
-  }
+        component: ViewLoadingComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(viewRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(viewRoutes)],
+  exports: [RouterModule],
 })
-export class ViewRoutingModule {
-
-}
+export class ViewRoutingModule {}

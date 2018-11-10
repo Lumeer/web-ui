@@ -25,7 +25,6 @@ import {SearchTab} from './search-tab';
 import {Workspace} from './workspace.model';
 
 export interface NavigationState {
-
   query: QueryModel;
   workspace: Workspace;
   perspective?: Perspective;
@@ -33,15 +32,12 @@ export interface NavigationState {
   viewName?: string;
   url: string;
   previousUrl?: string;
-
 }
 
 export const initialNavigationState: NavigationState = {
-
   query: {},
   workspace: {},
-  url: '/'
-
+  url: '/',
 };
 
 export const selectNavigation = (state: AppState) => state.navigation;

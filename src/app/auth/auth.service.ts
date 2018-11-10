@@ -34,17 +34,14 @@ const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private auth0: WebAuth;
 
   private refreshSubscription: Subscription;
 
-  public constructor(private location: Location,
-                     private router: Router,
-                     private store: Store<AppState>) {
+  public constructor(private location: Location, private router: Router, private store: Store<AppState>) {
     if (environment.auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
@@ -58,7 +55,7 @@ export class AuthService {
       responseType: 'token id_token',
       audience: document.location.origin.replace(':7000', ':8080') + '/',
       redirectUri,
-      scope: 'openid profile email'
+      scope: 'openid profile email',
     });
   }
 
@@ -81,7 +78,7 @@ export class AuthService {
 
   private setSession(authResult: Auth0DecodedHash): void {
     // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
 
     localStorage.setItem(ACCESS_TOKEN_KEY, authResult.accessToken);
     localStorage.setItem(ID_TOKEN_KEY, authResult.idToken);
@@ -190,5 +187,4 @@ export class AuthService {
   public saveLoginRedirectPath(path: string) {
     localStorage.setItem(REDIRECT_KEY, path);
   }
-
 }

@@ -17,14 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AppState} from '../../../../../core/store/app.state';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
+import {
+  TableColumn,
+  TableColumnType,
+  TableCompoundColumn,
+  TableModel,
+} from '../../../../../core/store/tables/table.model';
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
@@ -35,10 +49,9 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
   selector: 'table-column-group',
   templateUrl: './table-column-group.component.html',
   styleUrls: ['./table-column-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
-
   @Input()
   public table: TableModel;
 
@@ -67,10 +80,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   public containerClassPrefix = 'table-';
 
-  public constructor(private element: ElementRef,
-                     private store$: Store<AppState>,
-                     private zone: NgZone) {
-  }
+  public constructor(private element: ElementRef, private store$: Store<AppState>, private zone: NgZone) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes) || this.canManageViewChanged(changes)) {
@@ -106,15 +116,20 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   private initLayout() {
     this.columnGroupId = this.createColumnGroupId();
-    this.columnsLayout = new ColumnLayout('.' + this.layoutContainerClass(), {
-      layout: {
-        horizontal: true,
-        rounding: true
+    this.columnsLayout = new ColumnLayout(
+      '.' + this.layoutContainerClass(),
+      {
+        layout: {
+          horizontal: true,
+          rounding: true,
+        },
+        dragEnabled: this.canManageConfig,
+        dragAxis: 'x',
+        dragStartPredicate: (item, event) => this.dragStartPredicate(item, event),
       },
-      dragEnabled: this.canManageConfig,
-      dragAxis: 'x',
-      dragStartPredicate: (item, event) => this.dragStartPredicate(item, event)
-    }, this.zone, ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex));
+      this.zone,
+      ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex)
+    );
   }
 
   private dragStartPredicate(item, event): boolean {
@@ -175,5 +190,4 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     const delta = Number(event.edges.right);
     this.store$.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
   }
-
 }

@@ -27,7 +27,6 @@ import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class ProjectService extends PermissionService {
-
   public getProjects(orgCode: string): Observable<Project[]> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
       throw Error('Organization not set');
@@ -37,8 +36,7 @@ export class ProjectService extends PermissionService {
   }
 
   public getProjectCodes(orgCode: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix(orgCode)}/info/codes`).pipe(
-    );
+    return this.httpClient.get<string[]>(`${this.apiPrefix(orgCode)}/info/codes`).pipe();
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
@@ -91,5 +89,4 @@ export class ProjectService extends PermissionService {
 
     return this.apiPrefix(orgCode, projCode);
   }
-
 }

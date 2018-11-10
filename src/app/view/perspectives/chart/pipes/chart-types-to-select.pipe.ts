@@ -23,24 +23,24 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'chartTypesToSelect'
+  name: 'chartTypesToSelect',
 })
 export class ChartTypesToSelectPipe implements PipeTransform {
-
-  public constructor(private i18n: I18n) {
-  }
+  public constructor(private i18n: I18n) {}
 
   public transform(types: ChartType[]): SelectItemModel[] {
     return types.map(type => ({id: type, value: this.getTypeValue(type), icon: chartTypesIconsMap[type]}));
   }
 
   private getTypeValue(type: ChartType): string {
-    return this.i18n({
-      id: 'chart.type',
-      value: '{chartType, select, line {Line} bar {Bar} pie {Pie}}'
-    }, {
-      chartType: type
-    });
+    return this.i18n(
+      {
+        id: 'chart.type',
+        value: '{chartType, select, line {Line} bar {Bar} pie {Pie}}',
+      },
+      {
+        chartType: type,
+      }
+    );
   }
-
 }

@@ -25,11 +25,9 @@ import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from '../or
 import {ProjectModel} from './project.model';
 
 export interface ProjectsState extends EntityState<ProjectModel> {
-
   selectedProjectId: string;
-  projectCodes: { [organizationId: string]: string[] };
-  loaded: { [organizationId: string]: boolean };
-
+  projectCodes: {[organizationId: string]: string[]};
+  loaded: {[organizationId: string]: boolean};
 }
 
 export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: project => project.id});
@@ -37,14 +35,20 @@ export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: proj
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
   selectedProjectId: null,
   projectCodes: {},
-  loaded: {}
+  loaded: {},
 });
 
 export const selectProjectsState = (state: AppState) => state.projects;
 export const selectAllProjects = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectAll);
-export const selectProjectsDictionary = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectEntities);
+export const selectProjectsDictionary = createSelector(
+  selectProjectsState,
+  projectsAdapter.getSelectors().selectEntities
+);
 export const selectProjectsLoaded = createSelector(selectProjectsState, projectState => projectState.loaded);
-export const selectSelectedProjectId = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectId);
+export const selectSelectedProjectId = createSelector(
+  selectProjectsState,
+  projectsState => projectsState.selectedProjectId
+);
 export const selectProjectsCodes = createSelector(selectProjectsState, projectState => projectState.projectCodes);
 export const selectProjectsCodesForSelectedOrganization = createSelector(
   selectProjectsCodes,
@@ -54,34 +58,53 @@ export const selectProjectsCodesForSelectedOrganization = createSelector(
   }
 );
 
-export const selectProjectsCodesForOrganization = (id) => createSelector(selectProjectsCodes, projectCodes => projectCodes[id]);
+export const selectProjectsCodesForOrganization = id =>
+  createSelector(selectProjectsCodes, projectCodes => projectCodes[id]);
 
-export const selectProjectsLoadedForOrganization = (id) => createSelector(selectProjectsLoaded, loaded => loaded[id]);
+export const selectProjectsLoadedForOrganization = id => createSelector(selectProjectsLoaded, loaded => loaded[id]);
 
-export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {
-  return projects.filter(project => project.organizationId === organizationId);
-});
-export const selectSelectedProject = createSelector(selectProjectsDictionary, selectSelectedProjectId, (projects, selectedId) => {
-  return selectedId ? projects[selectedId] : null;
-});
-
-export const selectProjectsForWorkspace = createSelector(selectAllProjects, selectOrganizationByWorkspace, (projects, organization) => {
-  return organization ? projects.filter(project => project.organizationId === organization.id) : [];
-});
-
-export const selectProjectById = (id) => createSelector(selectProjectsDictionary, projects => {
-  return projects[id];
-});
-
-export const selectProjectByWorkspace = createSelector(selectWorkspace, selectProjectsForWorkspace, (workspace, projects) => {
-  return workspace && workspace.projectCode ? projects.find(project => project.code === workspace.projectCode) : null;
-});
-
-export const selectProjectsByOrganizationId = (id) => createSelector(selectAllProjects, projects => {
-  return projects.filter(project => project.organizationId === id);
-});
-
-export const selectProjectByOrganizationAndCode = (organizationId: string, projectCode: string) => createSelector(
+export const selectProjectsForSelectedOrganization = createSelector(
   selectAllProjects,
-  projects => projects.find(project => project.organizationId === organizationId && project.code === projectCode)
+  selectSelectedOrganizationId,
+  (projects, organizationId) => {
+    return projects.filter(project => project.organizationId === organizationId);
+  }
 );
+export const selectSelectedProject = createSelector(
+  selectProjectsDictionary,
+  selectSelectedProjectId,
+  (projects, selectedId) => {
+    return selectedId ? projects[selectedId] : null;
+  }
+);
+
+export const selectProjectsForWorkspace = createSelector(
+  selectAllProjects,
+  selectOrganizationByWorkspace,
+  (projects, organization) => {
+    return organization ? projects.filter(project => project.organizationId === organization.id) : [];
+  }
+);
+
+export const selectProjectById = id =>
+  createSelector(selectProjectsDictionary, projects => {
+    return projects[id];
+  });
+
+export const selectProjectByWorkspace = createSelector(
+  selectWorkspace,
+  selectProjectsForWorkspace,
+  (workspace, projects) => {
+    return workspace && workspace.projectCode ? projects.find(project => project.code === workspace.projectCode) : null;
+  }
+);
+
+export const selectProjectsByOrganizationId = id =>
+  createSelector(selectAllProjects, projects => {
+    return projects.filter(project => project.organizationId === id);
+  });
+
+export const selectProjectByOrganizationAndCode = (organizationId: string, projectCode: string) =>
+  createSelector(selectAllProjects, projects =>
+    projects.find(project => project.organizationId === organizationId && project.code === projectCode)
+  );

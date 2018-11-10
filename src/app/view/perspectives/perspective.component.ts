@@ -22,10 +22,8 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {ViewConfigModel} from '../../core/store/views/view.model';
 
 export interface PerspectiveComponent {
-
   query: Query;
   config: ViewConfigModel;
   embedded: boolean;
   linkedDocument: DocumentModel;
-
 }

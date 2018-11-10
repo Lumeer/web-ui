@@ -21,10 +21,8 @@ import {tileLayer, TileLayer} from 'leaflet';
 import {environment} from '../../../../environments/environment';
 
 export enum MapTiles {
-
   OpenStreetMap = 'OpenStreetMap',
-  SeznamBasic = 'SeznamBasic'
-
+  SeznamBasic = 'SeznamBasic',
 }
 
 export const LUMEER_ATTRIBUTION = `<span class="lumeer-attribution">
@@ -46,7 +44,7 @@ function createOpenStreetMapTileLayer(): TileLayer {
   return tileLayer('//{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', {
     foo: 'bar',
     attribution: LUMEER_ATTRIBUTION,
-    detectRetina: true
+    detectRetina: true,
   });
 }
 
@@ -65,7 +63,7 @@ function createCzechSeznamBasicMapTileLayer() {
     detectRetina: true,
     maxZoom: 18,
     minZoom: 2,
-    subdomains: '1234'
+    subdomains: '1234',
   });
 }
 
@@ -75,6 +73,6 @@ function createEnglishSeznamBasicMapTileLayer() {
     detectRetina: true,
     maxZoom: 18,
     minZoom: 2,
-    subdomains: '1234'
+    subdomains: '1234',
   });
 }

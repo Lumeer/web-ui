@@ -3,7 +3,7 @@
 
 // Variables ===================================================================
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic&subset=latin-ext" !default;
+$web-font-path: 'https://fonts.googleapis.com/css?family=Lato:400,700,400italic&subset=latin-ext' !default;
 @import url($web-font-path);
 
 body {
@@ -30,7 +30,6 @@ body {
 }
 
 .navbar-triangle {
-
   .nav-link {
     color: $secondary;
     display: block;
@@ -38,13 +37,12 @@ body {
     padding: 10px 15px !important;
     margin-top: 5px;
     margin-bottom: 5px;
-    background:url('assets/img/crumbs2.gif') no-repeat right center;
+    background: url('assets/img/crumbs2.gif') no-repeat right center;
 
     &:hover {
       color: $secondary-hover;
     }
   }
-
 
   .nav-item {
     background: $white !important;
@@ -57,7 +55,6 @@ body {
 }
 
 .navbar-brand img {
-
   &:hover {
     transform: scale(1.4, 1.4);
   }
@@ -66,12 +63,13 @@ body {
 
 // Buttons =====================================================================
 
-.btn:focus, .btn:active, .focus {
+.btn:focus,
+.btn:active,
+.focus {
   box-shadow: none !important;
 }
 
 .btn {
-
   &-primary:hover {
     border-color: $primary-hover;
     background-color: $primary-hover;
@@ -81,7 +79,6 @@ body {
     border-color: $primary-hover;
     background-color: $primary-hover;
   }
-
 }
 
 .sharp-top-left {
@@ -121,13 +118,13 @@ body {
 
 .text-attribute.bg-dark {
   color: $gray-300;
-
 }
 .bg-dark > .text-attribute {
   color: $gray-300;
 }
 
-.dropdown-item:hover .text-primary, .dropdown-item:active {
+.dropdown-item:hover .text-primary,
+.dropdown-item:active {
   color: $white !important;
 }
 
@@ -142,7 +139,6 @@ body {
 // Tables ======================================================================
 
 .table {
-
   .thead-dark th {
     background-color: $primary;
   }
@@ -155,55 +151,69 @@ body {
   }
 
   &-success {
-    &, > th, > td {
+    &,
+    > th,
+    > td {
       background-color: $success;
     }
   }
 
   &-info {
-    &, > th, > td {
+    &,
+    > th,
+    > td {
       background-color: $info;
     }
   }
 
   &-danger {
-    &, > th, > td {
+    &,
+    > th,
+    > td {
       background-color: $danger;
     }
   }
 
   &-warning {
-    &, > th, > td {
+    &,
+    > th,
+    > td {
       background-color: $warning;
     }
   }
 
   &-hover {
-
     .table-success:hover {
-      &, > th, > td {
+      &,
+      > th,
+      > td {
         background-color: darken($success, 5%);
       }
     }
 
     .table-info:hover {
-      &, > th, > td {
+      &,
+      > th,
+      > td {
         background-color: darken($info, 5%);
       }
     }
 
     .table-danger:hover {
-      &, > th, > td {
+      &,
+      > th,
+      > td {
         background-color: darken($danger, 5%);
       }
     }
 
     .table-warning:hover {
-      &, > th, > td {
+      &,
+      > th,
+      > td {
         background-color: darken($warning, 5%);
       }
     }
-
   }
 }
 
@@ -213,45 +223,55 @@ input:-webkit-autofill {
   background-color: red !important;
 }
 
-input, .form-control, .custom-control-input, input, textarea, select, .custom-file-input {
-
+input,
+.form-control,
+.custom-control-input,
+input,
+textarea,
+select,
+.custom-file-input {
   color: $primary;
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     box-shadow: none !important;
   }
-
 }
 
-.form-control, .custom-file-label {
+.form-control,
+.custom-file-label {
   box-shadow: none !important;
 }
 
 .custom-control-label {
-  &::before, &::after {
+  &::before,
+  &::after {
     box-shadow: none !important;
   }
 }
 
-
-input::placeholder, .custom-file-label {
+input::placeholder,
+.custom-file-label {
   font-style: italic;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   color: $primary !important;
 }
 
 div[contenteditable].user.form-control {
   background: transparent;
 
-  &:focus, &:active, &.focused {
+  &:focus,
+  &:active,
+  &.focused {
     background: $white;
   }
 }
 
-div[contenteditable="true"].form-control {
-
+div[contenteditable='true'].form-control {
   outline: 0;
   color: $primary;
 
@@ -260,11 +280,9 @@ div[contenteditable="true"].form-control {
   }
 
   &:not(.frame):not(.user) {
-
     text-decoration-style: dotted;
     text-decoration-line: underline;
     text-decoration-color: $gray-400;
-
   }
 
   &:empty:before {
@@ -279,14 +297,16 @@ div[contenteditable="true"].form-control {
     color: $gray-600;
   }
 
-  transition:border .15s ease-in;
+  transition: border 0.15s ease-in;
 
   &.placeholder {
     font-style: italic;
     color: $gray-600;
   }
 
-  &:active, &:focus, &.user:hover {
+  &:active,
+  &:focus,
+  &.user:hover {
     border: 1px solid $gray-400;
     text-decoration-line: none !important;
   }
@@ -304,12 +324,13 @@ div[contenteditable="true"].form-control {
   background-image: none;
   border-color: $gray-500;
 
-  &:active, &[aria-expanded=true] {
+  &:active,
+  &[aria-expanded='true'] {
     border-color: $primary;
   }
 }
 
-[contenteditable=true]:empty:before {
+[contenteditable='true']:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
   color: $gray-400;
@@ -333,7 +354,8 @@ div[contenteditable="true"].form-control {
 }
 
 .nav-link {
-  &:focus, &:active {
+  &:focus,
+  &:active {
     outline: 0;
   }
 
@@ -373,7 +395,6 @@ div[contenteditable="true"].form-control {
   }
 }
 
-
 .alert {
   border: none;
   color: $white;
@@ -402,7 +423,7 @@ div[contenteditable="true"].form-control {
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-.modal .close{
+.modal .close {
   color: $white;
 }
 
@@ -418,7 +439,8 @@ ul.nav-tabs {
   .nav-link {
     color: $secondary;
 
-    &:focus, &:active {
+    &:focus,
+    &:active {
       outline: 0;
     }
 
@@ -427,14 +449,16 @@ ul.nav-tabs {
     }
   }
 
-  .nav-item.show .nav-link, .nav-link.active {
+  .nav-item.show .nav-link,
+  .nav-link.active {
     color: $primary;
     background-color: #fff;
     border-color: $secondary;
     font-weight: bold;
     outline: 0;
 
-    &:focus, &:active {
+    &:focus,
+    &:active {
       color: $primary;
     }
   }
@@ -448,13 +472,13 @@ ul.nav-tabs {
 }
 
 .list-group.list-group-naked {
-
   a {
     color: $link-color !important;
     border-right: 4px solid transparent;
     outline: 0;
 
-    &:active, &:focus {
+    &:active,
+    &:focus {
       background: transparent;
     }
 

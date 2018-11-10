@@ -22,10 +22,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'search-button',
   templateUrl: './search-button.component.html',
-  styleUrls: ['./search-button.component.scss']
+  styleUrls: ['./search-button.component.scss'],
 })
 export class SearchButtonComponent {
-
   @Input()
   public disabled: boolean;
 
@@ -36,5 +35,4 @@ export class SearchButtonComponent {
     const redirect = event.altKey || event.ctrlKey || event.shiftKey;
     this.search.emit(redirect);
   }
-
 }

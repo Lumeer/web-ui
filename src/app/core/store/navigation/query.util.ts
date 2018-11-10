@@ -64,26 +64,26 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.Link:
       return new FormGroup({
         value: new FormControl(queryItem.value, Validators.required),
-        text: new FormControl(queryItem.text, Validators.required)
+        text: new FormControl(queryItem.text, Validators.required),
       });
     case QueryItemType.Deleted:
     case QueryItemType.Fulltext:
       return new FormGroup({
-        value: new FormControl(queryItem.value, Validators.required)
+        value: new FormControl(queryItem.value, Validators.required),
       });
     case QueryItemType.Attribute:
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
         condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required])
+        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required]),
       });
   }
 }
 
-export function conditionValidator(input: FormControl): { [key: string]: any } {
+export function conditionValidator(input: FormControl): {[key: string]: any} {
   const value = input.value.toString().trim();
   const isCondition = conditionFromString(value) != null;
-  return !isCondition ? {'invalidCondition': value} : null;
+  return !isCondition ? {invalidCondition: value} : null;
 }
 
 export function conditionFromString(condition: string): ConditionType {
@@ -105,14 +105,18 @@ export function conditionFromString(condition: string): ConditionType {
 }
 
 export function queryIsNotEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).find(val => val instanceof Array ? val.length > 0 : val);
+  return query && Object.values(query).find(val => (val instanceof Array ? val.length > 0 : val));
 }
 
 export function queryIsEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).every(val => val instanceof Array ? val.length === 0 : !val);
+  return query && Object.values(query).every(val => (val instanceof Array ? val.length === 0 : !val));
 }
 
 export function isSingleCollectionQuery(query: QueryModel): boolean {
-  return query && Object.entries(query)
-    .every(([key, value]) => value instanceof Array ? key === 'collectionIds' ? value.length > 0 : value.length === 0 : !value);
+  return (
+    query &&
+    Object.entries(query).every(([key, value]) =>
+      value instanceof Array ? (key === 'collectionIds' ? value.length > 0 : value.length === 0) : !value
+    )
+  );
 }

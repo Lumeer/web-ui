@@ -31,12 +31,12 @@ import {selectAllViews, selectViewsDictionary, selectViewsLoaded} from '../../st
 
 @Injectable()
 export class ViewsGuard implements Resolve<ViewModel[]> {
-
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService,
-              private router: Router,
-              private store$: Store<AppState>) {
-  }
+  constructor(
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ViewModel[]> {
     return this.store$.select(selectViewsLoaded).pipe(
@@ -75,5 +75,4 @@ export class ViewsGuard implements Resolve<ViewModel[]> {
     const message = this.i18n({id: 'view.not.found', value: 'View not found'});
     this.notificationService.error(message);
   }
-
 }

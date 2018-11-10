@@ -18,11 +18,9 @@
  */
 
 export interface Constraints {
-
   type: string;
   color: string;
   list: string[];
-
 }
 
 export const constraints: Constraints[] = [
@@ -30,22 +28,55 @@ export const constraints: Constraints[] = [
     type: 'numeric',
     color: '#5c93ff',
     list: [
-      'Number', '=', '>=', '<=', '<', '>', 'RoundedTo:', 'Decimal', 'Odd', 'Even', 'LessThan:', 'MoreThan:', 'Prime', 'MultipleOf:'
-    ]
+      'Number',
+      '=',
+      '>=',
+      '<=',
+      '<',
+      '>',
+      'RoundedTo:',
+      'Decimal',
+      'Odd',
+      'Even',
+      'LessThan:',
+      'MoreThan:',
+      'Prime',
+      'MultipleOf:',
+    ],
   },
   {
     type: 'text',
     color: '#ff513e',
     list: [
-      'Word', 'ShorterThan:', 'LongerThan:', 'HasWords:', 'WordCount:', 'ContainsNumbers:', 'Uppercase',
-      'Lowercase', 'StartsWith:', 'EndsWith:', 'NoPunctuation'
-    ]
+      'Word',
+      'ShorterThan:',
+      'LongerThan:',
+      'HasWords:',
+      'WordCount:',
+      'ContainsNumbers:',
+      'Uppercase',
+      'Lowercase',
+      'StartsWith:',
+      'EndsWith:',
+      'NoPunctuation',
+    ],
   },
   {
     type: 'special',
     color: '#6bf643',
     list: [
-      'FullName', 'Name', 'Date', 'Time', 'Money', 'OneOf:', 'Gender', 'Person', 'Address', 'Email', 'Phone', 'Fax'
-    ]
-  }
+      'FullName',
+      'Name',
+      'Date',
+      'Time',
+      'Money',
+      'OneOf:',
+      'Gender',
+      'Person',
+      'Address',
+      'Email',
+      'Phone',
+      'Fax',
+    ],
+  },
 ];

@@ -22,10 +22,9 @@ import {AttributeModel} from '../../../../../core/store/collections/collection.m
 import {extractAttributeParentName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
-  name: 'attributeName'
+  name: 'attributeName',
 })
 export class AttributeNamePipe implements PipeTransform {
-
   public transform(attribute: AttributeModel, newLastName: string): any {
     if (!attribute) {
       return '';
@@ -38,5 +37,4 @@ export class AttributeNamePipe implements PipeTransform {
 
     return newLastName;
   }
-
 }

@@ -22,12 +22,10 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsEmpty} from '../../core/store/navigation/query.util';
 
 @Pipe({
-  name: 'emptyQuery'
+  name: 'emptyQuery',
 })
 export class EmptyQueryPipe implements PipeTransform {
-
   public transform(query: QueryModel): boolean {
     return queryIsEmpty(query);
   }
-
 }

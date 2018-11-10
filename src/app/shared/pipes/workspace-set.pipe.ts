@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 
 @Pipe({
-  name: 'workspaceSet'
+  name: 'workspaceSet',
 })
 export class WorkspaceSetPipe implements PipeTransform {
-
   public transform(workspace: Workspace): boolean {
     return !!workspace && !!workspace.organizationCode && !!workspace.projectCode;
   }
-
 }

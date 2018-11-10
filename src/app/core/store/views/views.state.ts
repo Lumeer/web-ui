@@ -32,11 +32,9 @@ import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {areConfigsEqual} from './view.utils';
 
 export interface ViewsState extends EntityState<ViewModel> {
-
   loaded: boolean;
   config: ViewConfigModel;
   cursor: ViewCursor;
-
 }
 
 export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => view.code});
@@ -44,7 +42,7 @@ export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => vi
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
   config: {},
-  cursor: null
+  cursor: null,
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -61,34 +59,47 @@ export const selectViewsLoaded = createSelector(selectViewsState, state => state
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
-export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query)));
+export const selectViewsByQuery = createSelector(
+  selectAllViews,
+  selectQuery,
+  (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query))
+);
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
 export const selectPerspectiveConfig = createSelector(
-  selectPerspective, selectPostItConfig, selectTableConfig, selectChartConfig, selectMapConfig,
-  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) => ({
-    [Perspective.Map]: mapConfig,
-    [Perspective.PostIt]: postItConfig,
-    [Perspective.Table]: tableConfig,
-    [Perspective.Chart]: chartConfig
-  }[perspective])
+  selectPerspective,
+  selectPostItConfig,
+  selectTableConfig,
+  selectChartConfig,
+  selectMapConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) =>
+    ({
+      [Perspective.Map]: mapConfig,
+      [Perspective.PostIt]: postItConfig,
+      [Perspective.Table]: tableConfig,
+      [Perspective.Chart]: chartConfig,
+    }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(
-  selectCurrentView, selectPerspective,
+  selectCurrentView,
+  selectPerspective,
   (view, perspective) => view && view.config && view.config[perspective]
 );
 export const selectViewConfigChanged = createSelector(
-  selectPerspectiveConfig, selectPerspectiveViewConfig,
+  selectPerspectiveConfig,
+  selectPerspectiveViewConfig,
   (perspectiveConfig, viewConfig) => perspectiveConfig && viewConfig && !areConfigsEqual(perspectiveConfig, viewConfig)
 );
 
 export const selectViewQueryChanged = createSelector(
-  selectCurrentView, selectQuery,
+  selectCurrentView,
+  selectQuery,
   (view, query) => view && query && !areQueriesEqual(view.query, query)
 );
 
 export const selectViewPerspectiveChanged = createSelector(
-  selectCurrentView, selectPerspective,
+  selectCurrentView,
+  selectPerspective,
   (view, perspective) => view && perspective && view.perspective !== perspective
 );

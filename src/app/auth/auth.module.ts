@@ -23,19 +23,10 @@ import {AuthRoutingModule} from './auth-routing.module';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
 import {AgreementComponent} from './agreement/agreement.component';
-import { SessionExpiredComponent } from './session-expired/session-expired.component';
+import {SessionExpiredComponent} from './session-expired/session-expired.component';
 
 @NgModule({
-  imports: [
-    AuthRoutingModule,
-    SharedModule
-  ],
-  declarations: [
-    AuthCallbackComponent,
-    LogoutComponent,
-    AgreementComponent,
-    SessionExpiredComponent
-  ]
+  imports: [AuthRoutingModule, SharedModule],
+  declarations: [AuthCallbackComponent, LogoutComponent, AgreementComponent, SessionExpiredComponent],
 })
-export class AuthModule {
-}
+export class AuthModule {}

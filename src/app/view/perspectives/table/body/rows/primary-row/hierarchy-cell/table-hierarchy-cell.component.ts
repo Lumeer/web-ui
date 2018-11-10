@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {isNullOrUndefined} from 'util';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
@@ -26,10 +36,9 @@ import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.
   selector: 'table-hierarchy-cell',
   templateUrl: './table-hierarchy-cell.component.html',
   styleUrls: ['./table-hierarchy-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHierarchyCellComponent implements OnChanges {
-
   @Input()
   public collapsible: boolean;
 
@@ -64,5 +73,4 @@ export class TableHierarchyCellComponent implements OnChanges {
       this.toggle.emit();
     }
   }
-
 }

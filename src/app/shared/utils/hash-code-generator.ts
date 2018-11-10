@@ -18,7 +18,6 @@
  */
 
 export class HashCodeGenerator {
-
   public static hashString(str: string): number {
     let hash = 0;
 
@@ -28,11 +27,10 @@ export class HashCodeGenerator {
 
     for (let i = 0; i < str.length; i++) {
       const character = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + character;
+      hash = (hash << 5) - hash + character;
       hash = hash & hash; // Convert to 32bit integer
     }
 
     return hash;
   }
-
 }

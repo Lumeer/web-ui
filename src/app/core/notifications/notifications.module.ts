@@ -24,21 +24,9 @@ import {NotificationService} from './notification.service';
 import {NotificationsComponent} from './notifications.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SnotifyModule,
-  ],
-  declarations: [
-    NotificationsComponent,
-  ],
-  providers: [
-    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService,
-    NotificationService,
-  ],
-  exports: [
-    NotificationsComponent
-  ]
+  imports: [CommonModule, SnotifyModule],
+  declarations: [NotificationsComponent],
+  providers: [{provide: 'SnotifyToastConfig', useValue: ToastDefaults}, SnotifyService, NotificationService],
+  exports: [NotificationsComponent],
 })
-export class NotificationsModule {
-}
+export class NotificationsModule {}

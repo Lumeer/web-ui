@@ -1,4 +1,4 @@
-@import "../../../../styles/variables";
+@import '../../../../styles/variables';
 
 :host {
   background: $white !important;
@@ -11,7 +11,8 @@
     display: flex;
     flex-wrap: wrap;
 
-    &:active, &:hover {
+    &:active,
+    &:hover {
       background-color: inherit;
       color: inherit;
     }
@@ -28,7 +29,6 @@
   hr {
     margin-top: 15px;
   }
-
 
   label {
     transition: color $animation-color-duration;

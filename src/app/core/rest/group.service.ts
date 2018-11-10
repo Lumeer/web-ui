@@ -32,14 +32,13 @@ import {filter, map} from 'rxjs/operators';
 
 @Injectable()
 export class GroupService {
-
   private workspace: Workspace;
 
-  constructor(private httpClient: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace)
+  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    this.store
+      .select(selectWorkspace)
       .pipe(filter(workspace => !isNullOrUndefined(workspace)))
-      .subscribe(workspace => this.workspace = workspace);
+      .subscribe(workspace => (this.workspace = workspace));
   }
 
   public createGroup(group: Group): Observable<Group> {
@@ -51,8 +50,7 @@ export class GroupService {
   }
 
   public deleteGroup(id: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'})
-      .pipe(map(() => id));
+    return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'}).pipe(map(() => id));
   }
 
   public getGroups(): Observable<Group[]> {
@@ -60,7 +58,8 @@ export class GroupService {
   }
 
   private apiPrefix(groupId?: string): string {
-    return `${environment.apiUrl}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
+    return `${environment.apiUrl}/rest/organizations/${this.workspace.organizationCode}/groups${
+      groupId ? `/${groupId}` : ''
+    }`;
   }
-
 }

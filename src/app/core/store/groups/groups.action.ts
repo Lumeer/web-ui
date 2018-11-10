@@ -21,7 +21,6 @@ import {Action} from '@ngrx/store';
 import {GroupModel} from './group.model';
 
 export enum GroupsActionType {
-
   GET = '[Groups] Get',
   GET_SUCCESS = '[Groups] Get :: Success',
   GET_FAILURE = '[Groups] Get :: Failure',
@@ -38,12 +37,10 @@ export enum GroupsActionType {
   DELETE_SUCCESS = '[Groups] Delete :: Success',
   DELETE_FAILURE = '[Groups] Delete :: Failure',
 
-  CLEAR = '[Groups] Clear'
-
+  CLEAR = '[Groups] Clear',
 }
 
 export namespace GroupsAction {
-
   export class Get implements Action {
     public readonly type = GroupsActionType.GET;
   }
@@ -51,86 +48,85 @@ export namespace GroupsAction {
   export class GetSuccess implements Action {
     public readonly type = GroupsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { groups: GroupModel[] }) {
-    }
+    public constructor(public payload: {groups: GroupModel[]}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = GroupsActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = GroupsActionType.CREATE;
 
-    public constructor(public payload: { group: GroupModel }) {
-    }
+    public constructor(public payload: {group: GroupModel}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = GroupsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { group: GroupModel }) {
-    }
+    public constructor(public payload: {group: GroupModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = GroupsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = GroupsActionType.UPDATE;
 
-    public constructor(public payload: { group: GroupModel }) {
-    }
+    public constructor(public payload: {group: GroupModel}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = GroupsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { group: GroupModel }) {
-    }
+    public constructor(public payload: {group: GroupModel}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = GroupsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = GroupsActionType.DELETE;
 
-    public constructor(public payload: { groupId: string }) {
-    }
+    public constructor(public payload: {groupId: string}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = GroupsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { groupId: string }) {
-    }
+    public constructor(public payload: {groupId: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = GroupsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Clear implements Action {
     public readonly type = GroupsActionType.CLEAR;
   }
 
-  export type All = Get | GetSuccess | GetFailure |
-    Create | CreateSuccess | CreateFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+  export type All =
+    | Get
+    | GetSuccess
+    | GetFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure
+    | Clear;
 }

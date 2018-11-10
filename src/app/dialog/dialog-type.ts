@@ -18,7 +18,6 @@
  */
 
 export enum DialogType {
-
   Primary = 'primary',
   Secondary = 'secondary',
   Success = 'success',
@@ -26,6 +25,5 @@ export enum DialogType {
   Warning = 'warning',
   Info = 'info',
   Light = 'light',
-  Dark = 'dark'
-
+  Dark = 'dark',
 }

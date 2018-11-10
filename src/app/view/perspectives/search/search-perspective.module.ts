@@ -43,7 +43,7 @@ import {SearchDocumentsModule} from './documents/search-documents.module';
     SearchBoxModule,
     WarningMessageModule,
     SearchPerspectiveRoutingModule,
-    SearchDocumentsModule
+    SearchDocumentsModule,
   ],
   declarations: [
     SearchAllComponent,
@@ -54,22 +54,17 @@ import {SearchDocumentsModule} from './documents/search-documents.module';
     SearchViewsComponent,
     EmptyDataComponent,
     EmptyViewsComponent,
-    ViewDetailComponent
+    ViewDetailComponent,
   ],
   entryComponents: [
     SearchAllComponent,
     SearchCollectionsComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
-    SearchViewsComponent
+    SearchViewsComponent,
   ],
-  exports: [
-    SearchPerspectiveComponent,
-    ViewDetailComponent
-  ]
+  exports: [SearchPerspectiveComponent, ViewDetailComponent],
 })
-export class SearchPerspectiveModule {
-
-}
+export class SearchPerspectiveModule {}
 
 export default SearchPerspectiveModule;

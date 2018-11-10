@@ -29,10 +29,9 @@ import {ContactsActionType} from '../../../../core/store/organizations/contact/c
 @Component({
   selector: 'contact-form',
   templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.scss']
+  styleUrls: ['./contact-form.component.scss'],
 })
 export class ContactFormComponent implements OnInit, OnDestroy {
-
   @ViewChild('invoicingContactForm')
   private invoicingContact: NgForm;
 
@@ -47,8 +46,10 @@ export class ContactFormComponent implements OnInit, OnDestroy {
 
   private contactSaveSuccessSubscription: Subscription;
 
-  constructor(private organizationSettingsComponent: OrganizationSettingsComponent,
-              private actionsSubject: ActionsSubject) { }
+  constructor(
+    private organizationSettingsComponent: OrganizationSettingsComponent,
+    private actionsSubject: ActionsSubject
+  ) {}
 
   public ngOnInit() {
     this.contactSaveSuccessSubscription = this.actionsSubject.subscribe(data => {
@@ -75,10 +76,9 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   public save() {
-    this.contact = { ...this.invoicingContact.form.value, code: this.organizationSettingsComponent.organization.code };
+    this.contact = {...this.invoicingContact.form.value, code: this.organizationSettingsComponent.organization.code};
     this.updateContact.emit(this.contact);
     this.invoicingContact.form.markAsPristine();
     this.savingState = true;
   }
-
 }

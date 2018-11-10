@@ -26,10 +26,9 @@ import {UserModel} from '../../../core/store/users/user.model';
 @Component({
   selector: 'new-user',
   templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss']
+  styleUrls: ['./new-user.component.scss'],
 })
 export class NewUserComponent {
-
   @Input()
   public users: UserModel[];
 
@@ -39,8 +38,7 @@ export class NewUserComponent {
   public email: string;
   public isDuplicate: boolean = false;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public onAddUser() {
     this.userCreated.emit(this.email);
@@ -58,7 +56,7 @@ export class NewUserComponent {
   public emailPlaceHolder(): string {
     return this.i18n({
       id: 'user.add.placeholder',
-      value: 'Type email to invite another user'
+      value: 'Type email to invite another user',
     });
   }
 }

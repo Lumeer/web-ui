@@ -29,17 +29,15 @@ import {selectTableHierarchyMaxLevel} from '../../../../../core/store/tables/tab
   selector: 'table-hierarchy-column',
   templateUrl: './table-hierarchy-column.component.html',
   styleUrls: ['./table-hierarchy-column.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHierarchyColumnComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
   public spaces$: Observable<any[]>;
 
-  public constructor(private store$: Store<AppState>) {
-  }
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.cursor && this.cursor) {
@@ -53,5 +51,4 @@ export class TableHierarchyColumnComponent implements OnChanges {
       map(maxLevel => maxLevel && new Array(maxLevel + 1))
     );
   }
-
 }

@@ -37,18 +37,22 @@ import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state
 
 @Injectable()
 export class UsersEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Get>(UsersActionType.GET),
     withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
     filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
     map(([action, loaded]) => action),
-    mergeMap(action => this.userService.getUsers(action.payload.organizationId).pipe(
-      map(dtos => ({organizationId: action.payload.organizationId, users: dtos.map(dto => UserConverter.fromDto(dto))})),
-      map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
-      catchError(error => of(new UsersAction.GetFailure({error: error})))
-    ))
+    mergeMap(action =>
+      this.userService.getUsers(action.payload.organizationId).pipe(
+        map(dtos => ({
+          organizationId: action.payload.organizationId,
+          users: dtos.map(dto => UserConverter.fromDto(dto)),
+        })),
+        map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
+        catchError(error => of(new UsersAction.GetFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -65,20 +69,16 @@ export class UsersEffects {
   public getCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
     tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
-    mergeMap(() => this.userService.getCurrentUser().pipe(
-      map(user => UserConverter.fromDto(user)),
-      mergeMap(user => [
-        new UsersAction.GetCurrentUserSuccess({user}),
-        new UsersAction.SetPending({pending: false})
-      ]),
-      catchError(() => {
-        const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
-        return from([
-          new UsersAction.SetPending({pending: false}),
-          new NotificationsAction.Error({message})
-        ]);
-      })
-    ))
+    mergeMap(() =>
+      this.userService.getCurrentUser().pipe(
+        map(user => UserConverter.fromDto(user)),
+        mergeMap(user => [new UsersAction.GetCurrentUserSuccess({user}), new UsersAction.SetPending({pending: false})]),
+        catchError(() => {
+          const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+          return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
+        })
+      )
+    )
   );
 
   @Effect()
@@ -132,16 +132,17 @@ export class UsersEffects {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'user.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?'
+          value:
+            'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
         });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: {fragment: 'orderService'}
+            extras: {fragment: 'orderService'},
           }),
-          yesFirst: true
+          yesFirst: true,
         });
       }
       const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
@@ -176,10 +177,12 @@ export class UsersEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Delete>(UsersActionType.DELETE),
-    mergeMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
-      map(() => new UsersAction.DeleteSuccess(action.payload)),
-      catchError(error => of(new UsersAction.DeleteFailure({error: error})))
-    ))
+    mergeMap(action =>
+      this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
+        map(() => new UsersAction.DeleteSuccess(action.payload)),
+        catchError(error => of(new UsersAction.DeleteFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -199,11 +202,12 @@ export class UsersEffects {
       const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
       return this.userService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
         withLatestFrom(this.store$.select(selectCurrentUser)),
-        map(([result, user]) =>
-          new UsersAction.SaveDefaultWorkspaceSuccess({
-            user,
-            defaultWorkspace: action.payload.defaultWorkspace
-          })
+        map(
+          ([result, user]) =>
+            new UsersAction.SaveDefaultWorkspaceSuccess({
+              user,
+              defaultWorkspace: action.payload.defaultWorkspace,
+            })
         ),
         catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error: error})))
       );
@@ -220,10 +224,10 @@ export class UsersEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private i18n: I18n,
-              private store$: Store<AppState>,
-              private userService: UserService) {
-  }
-
+  constructor(
+    private actions$: Actions,
+    private i18n: I18n,
+    private store$: Store<AppState>,
+    private userService: UserService
+  ) {}
 }

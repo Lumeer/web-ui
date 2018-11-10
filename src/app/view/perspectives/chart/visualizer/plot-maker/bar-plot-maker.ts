@@ -23,7 +23,6 @@ import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
 export class BarPlotMaker extends PlotMaker {
-
   public createData(): Data[] {
     const data: Data[] = [];
 
@@ -71,7 +70,6 @@ export class BarPlotMaker extends PlotMaker {
       if (yValue && y2Value) {
         break;
       }
-
     }
     return [yValue, y2Value].filter(val => !!val);
   }
@@ -149,12 +147,12 @@ export class BarPlotMaker extends PlotMaker {
         barmode: 'group',
         yaxis2: {
           overlaying: 'y',
-          side: 'right'
+          side: 'right',
         },
         legend: {
           xanchor: 'left',
-          x: 1.1
-        }
+          x: 1.1,
+        },
       };
     }
     return {};
@@ -179,5 +177,4 @@ export class BarPlotMaker extends PlotMaker {
   public onRelayout() {
     // TODO
   }
-
 }

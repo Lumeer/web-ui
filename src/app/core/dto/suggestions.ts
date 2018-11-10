@@ -20,10 +20,8 @@
 import {Collection, LinkType, View} from '.';
 
 export interface Suggestions {
-
   attributes: Collection[];
   collections: Collection[];
   views: View[];
   linkTypes: LinkType[];
-
 }

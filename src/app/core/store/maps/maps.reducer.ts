@@ -39,7 +39,7 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
 function createMap(state: MapsState, action: MapsAction.CreateMap): MapsState {
   const map: MapModel = {
     id: action.payload.mapId,
-    config: {...DEFAULT_MAP_CONFIG, ...action.payload.config}
+    config: {...DEFAULT_MAP_CONFIG, ...action.payload.config},
   };
   return mapsAdapter.addOne(map, state);
 }

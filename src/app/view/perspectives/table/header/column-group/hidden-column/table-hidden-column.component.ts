@@ -35,10 +35,9 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
   selector: 'table-hidden-column',
   templateUrl: './table-hidden-column.component.html',
   styleUrls: ['./table-hidden-column.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHiddenColumnComponent implements OnChanges {
-
   @Input()
   public table: TableModel;
 
@@ -55,9 +54,7 @@ export class TableHiddenColumnComponent implements OnChanges {
   public linkType$: Observable<LinkTypeModel>;
   public hiddenAttributes$: Observable<AttributeModel[]>;
 
-  public constructor(private contextMenuService: ContextMenuService,
-                     private store: Store<AppState>) {
-  }
+  public constructor(private contextMenuService: ContextMenuService, private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     const part = this.table.parts[this.cursor.partIndex];
@@ -98,7 +95,7 @@ export class TableHiddenColumnComponent implements OnChanges {
       anchorElement: null,
       contextMenu: this.contextMenuComponent,
       event,
-      item: null
+      item: null,
     });
   }
 
@@ -111,10 +108,11 @@ export class TableHiddenColumnComponent implements OnChanges {
   }
 
   private showColumns(...attributeIds: string[]) {
-    this.store.dispatch(new TablesAction.ShowColumns({
-      cursor: this.cursor,
-      attributeIds
-    }));
+    this.store.dispatch(
+      new TablesAction.ShowColumns({
+        cursor: this.cursor,
+        attributeIds,
+      })
+    );
   }
-
 }

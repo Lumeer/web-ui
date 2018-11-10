@@ -30,9 +30,7 @@ import {TruncatePipe} from './truncate.pipe';
 import {QueryItemTextPipe} from './query-item-text.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     IsAttributeItemPipe,
     IsCollectionItemPipe,
@@ -41,7 +39,7 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
     QueryItemBorderPipe,
     ConditionFilterPipe,
     QueryItemTextPipe,
-    TruncatePipe
+    TruncatePipe,
   ],
   exports: [
     IsAttributeItemPipe,
@@ -51,8 +49,7 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
     QueryItemBorderPipe,
     ConditionFilterPipe,
     QueryItemTextPipe,
-    TruncatePipe
-  ]
+    TruncatePipe,
+  ],
 })
-export class SearchBoxPipesModule {
-}
+export class SearchBoxPipesModule {}

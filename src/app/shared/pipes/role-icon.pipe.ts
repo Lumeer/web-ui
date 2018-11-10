@@ -22,10 +22,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Role} from '../../core/model/role';
 
 @Pipe({
-  name: 'roleIcon'
+  name: 'roleIcon',
 })
 export class RoleIconPipe implements PipeTransform {
-
   public transform(role: Role): string {
     switch (role) {
       case Role.Read:
@@ -44,5 +43,4 @@ export class RoleIconPipe implements PipeTransform {
         return '';
     }
   }
-
 }

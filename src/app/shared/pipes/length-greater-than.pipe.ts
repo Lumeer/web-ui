@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'lengthGreaterThan'
+  name: 'lengthGreaterThan',
 })
 export class LengthGreaterThanPipe implements PipeTransform {
-
   public transform(value: {length: number}, threshold: number): boolean {
     return value && value.length && value.length > threshold;
   }
-
 }

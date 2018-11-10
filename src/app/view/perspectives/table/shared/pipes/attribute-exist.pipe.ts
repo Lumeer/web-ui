@@ -17,20 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {findAttributeByName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
-  name: 'attributeExist'
+  name: 'attributeExist',
 })
 export class AttributeExistPipe implements PipeTransform {
-
   public transform(collection: CollectionModel, attributeName: string): boolean {
     if (collection) {
       return !!findAttributeByName(collection.attributes, attributeName); // TODO add support for nested attributes
     }
     return false;
   }
-
 }

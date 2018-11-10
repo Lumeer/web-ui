@@ -1,4 +1,4 @@
-@import "../../../../../styles/variables";
+@import '../../../../../styles/variables';
 
 :host {
   max-width: 100%;
@@ -21,5 +21,4 @@
     color: black;
     transition: opacity $animation-duration;
   }
-
 }

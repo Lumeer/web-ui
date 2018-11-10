@@ -20,23 +20,29 @@
 import {Direction} from '../../../shared/direction';
 import {arrayStartsWith, deepArrayEquals, getLastFromArray} from '../../../shared/utils/array.utils';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableModel, TablePart} from './table.model';
-import {containCompoundColumn, filterLeafColumns, findTableColumn, findTableColumnByIndex, findTableRow, getTableColumns, isTableRowExpanded, splitColumnPath, splitRowPath} from './table.utils';
+import {
+  containCompoundColumn,
+  filterLeafColumns,
+  findTableColumn,
+  findTableColumnByIndex,
+  findTableRow,
+  getTableColumns,
+  isTableRowExpanded,
+  splitColumnPath,
+  splitRowPath,
+} from './table.utils';
 
 export interface TableHeaderCursor {
-
   tableId: string;
   partIndex: number;
   columnPath?: number[];
-
 }
 
 export interface TableBodyCursor {
-
   tableId: string;
   rowPath?: number[];
   partIndex: number;
   columnIndex?: number;
-
 }
 
 export type TableCursor = TableHeaderCursor & TableBodyCursor;
@@ -72,7 +78,7 @@ function moveTableBodyCursorUp(table: TableModel, cursor: TableBodyCursor): Tabl
     return {
       tableId: cursor.tableId,
       partIndex: cursor.partIndex,
-      columnPath: [cursor.columnIndex] // TODO nested attributes
+      columnPath: [cursor.columnIndex], // TODO nested attributes
     };
   }
 
@@ -98,7 +104,11 @@ function getPreviousParentRowPath(rows: TableConfigRow[], rowPath: number[]): nu
   return getPreviousParentRowPath(rows, parentPath);
 }
 
-function findLastLinkedRow(row: TableConfigRow, rowPath: number[], depth: number): { row: TableConfigRow, rowPath: number[] } {
+function findLastLinkedRow(
+  row: TableConfigRow,
+  rowPath: number[],
+  depth: number
+): {row: TableConfigRow; rowPath: number[]} {
   if (rowPath.length === depth) {
     return {row, rowPath};
   }
@@ -175,7 +185,7 @@ function moveTableHeaderCursorDown(table: TableModel, cursor: TableHeaderCursor)
     tableId: cursor.tableId,
     partIndex: cursor.partIndex,
     columnIndex: cursor.columnPath[0], // TODO nested attributes
-    rowPath: Array((cursor.partIndex / 2) + 1).fill(0) // TODO check link instance parts
+    rowPath: Array(cursor.partIndex / 2 + 1).fill(0), // TODO check link instance parts
   };
 }
 
@@ -218,7 +228,7 @@ function moveTableBodyCursorLeftToPreviousPart(table: TableModel, cursor: TableB
     ...cursor,
     partIndex,
     columnIndex: filterLeafColumns(columns).length - 1,
-    rowPath: cursor.rowPath.slice(0, -1)
+    rowPath: cursor.rowPath.slice(0, -1),
   };
 
   const nextColumn = findTableColumnByIndex(columns, partIndex);
@@ -254,18 +264,22 @@ function findLastColumnInPreviousPart(table: TableModel, partIndex: number, leve
   if (part.columns.length) {
     const leftSibling = findDirectLeftSibling(part.columns, [part.columns.length]);
     if (leftSibling) {
-      return findRightMostColumn(leftSibling.column, {
-        tableId: table.id,
-        partIndex: part.index,
-        columnPath: leftSibling.path
-      }, level);
+      return findRightMostColumn(
+        leftSibling.column,
+        {
+          tableId: table.id,
+          partIndex: part.index,
+          columnPath: leftSibling.path,
+        },
+        level
+      );
     }
   }
 
   return findLastColumnInPreviousPart(table, partIndex - 1, level);
 }
 
-function findLeftParentColumn(columns: TableColumn[], path: number[]): { column: TableCompoundColumn, path: number[] } {
+function findLeftParentColumn(columns: TableColumn[], path: number[]): {column: TableCompoundColumn; path: number[]} {
   if (path.length === 0) {
     return null;
   }
@@ -278,7 +292,7 @@ function findLeftParentColumn(columns: TableColumn[], path: number[]): { column:
   return findLeftParentColumn(columns, path.slice(0, path.length - 1));
 }
 
-function findDirectLeftSibling(columns: TableColumn[], path: number[]): { column: TableCompoundColumn, path: number[] } {
+function findDirectLeftSibling(columns: TableColumn[], path: number[]): {column: TableCompoundColumn; path: number[]} {
   const {parentPath, columnIndex} = splitColumnPath(path);
 
   const siblingColumns = getTableColumns(columns, parentPath);
@@ -328,7 +342,7 @@ function moveTableBodyCursorRightToNextPart(table: TableModel, cursor: TableBody
     ...cursor,
     partIndex: cursor.partIndex + 2, // TODO link instance parts
     columnIndex: 0,
-    rowPath: cursor.rowPath.concat(0)
+    rowPath: cursor.rowPath.concat(0),
   };
 
   if (table.parts.length - 1 < nextCursor.partIndex) {
@@ -353,7 +367,11 @@ function moveTableHeaderCursorRight(table: TableModel, cursor: TableHeaderCursor
 
   const nextPart = findNextPartWithColumns(table, cursor.partIndex);
   if (nextPart) {
-    return findLeftMostColumn(nextPart.columns[0] as TableCompoundColumn, {...cursor, partIndex: nextPart.index, columnPath: [0]}, cursor.columnPath.length);
+    return findLeftMostColumn(
+      nextPart.columns[0] as TableCompoundColumn,
+      {...cursor, partIndex: nextPart.index, columnPath: [0]},
+      cursor.columnPath.length
+    );
   }
 
   return cursor;
@@ -372,7 +390,7 @@ function findNextPartWithColumns(table: TableModel, partIndex: number): TablePar
   return part;
 }
 
-function findNextParentColumn(columns: TableColumn[], path: number[]): { column: TableCompoundColumn, path: number[] } {
+function findNextParentColumn(columns: TableColumn[], path: number[]): {column: TableCompoundColumn; path: number[]} {
   if (columns.length === 0 || path.length === 0) {
     return null;
   }
@@ -398,7 +416,12 @@ function findLeftMostColumn(column: TableCompoundColumn, cursor: TableCursor, le
   return findSideMostColumn(column, cursor, level, false);
 }
 
-function findSideMostColumn(column: TableCompoundColumn, cursor: TableCursor, level: number, right: boolean): TableCursor {
+function findSideMostColumn(
+  column: TableCompoundColumn,
+  cursor: TableCursor,
+  level: number,
+  right: boolean
+): TableCursor {
   if (!containCompoundColumn(column.children) || cursor.columnPath.length === level) {
     return cursor;
   }
@@ -418,37 +441,51 @@ export function areTableCursorsEqual(cursor1: TableCursor, cursor2: TableCursor)
 }
 
 export function areTableHeaderCursorsEqual(cursor1: TableHeaderCursor, cursor2: TableHeaderCursor): boolean {
-  return cursor1 && cursor2
-    && cursor1.tableId === cursor2.tableId
-    && cursor1.partIndex === cursor2.partIndex
-    && deepArrayEquals(cursor1.columnPath, cursor2.columnPath);
+  return (
+    cursor1 &&
+    cursor2 &&
+    cursor1.tableId === cursor2.tableId &&
+    cursor1.partIndex === cursor2.partIndex &&
+    deepArrayEquals(cursor1.columnPath, cursor2.columnPath)
+  );
 }
 
 export function isTableColumnSubPath(parent: TableHeaderCursor, child: TableHeaderCursor): boolean {
-  return parent && child
-    && parent.tableId === child.tableId
-    && parent.partIndex === child.partIndex
-    && arrayStartsWith(child.columnPath, parent.columnPath);
+  return (
+    parent &&
+    child &&
+    parent.tableId === child.tableId &&
+    parent.partIndex === child.partIndex &&
+    arrayStartsWith(child.columnPath, parent.columnPath)
+  );
 }
 
 export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: TableBodyCursor): boolean {
-  return cursor1 && cursor2
-    && cursor1.tableId === cursor2.tableId
-    && cursor1.partIndex === cursor2.partIndex
-    && cursor1.columnIndex === cursor2.columnIndex
-    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
+  return (
+    cursor1 &&
+    cursor2 &&
+    cursor1.tableId === cursor2.tableId &&
+    cursor1.partIndex === cursor2.partIndex &&
+    cursor1.columnIndex === cursor2.columnIndex &&
+    deepArrayEquals(cursor1.rowPath, cursor2.rowPath)
+  );
 }
 
 export function areTableRowCursorsEqual(cursor1: TableBodyCursor, cursor2: TableBodyCursor): boolean {
-  return cursor1 && cursor2
-    && cursor1.tableId === cursor2.tableId
-    && cursor1.partIndex === cursor2.partIndex
-    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
+  return (
+    cursor1 &&
+    cursor2 &&
+    cursor1.tableId === cursor2.tableId &&
+    cursor1.partIndex === cursor2.partIndex &&
+    deepArrayEquals(cursor1.rowPath, cursor2.rowPath)
+  );
 }
 
-export function findTableColumnWithCursor(table: TableModel,
-                                          partIndex: number,
-                                          attributeName: string): { column: TableCompoundColumn, cursor: TableHeaderCursor } {
+export function findTableColumnWithCursor(
+  table: TableModel,
+  partIndex: number,
+  attributeName: string
+): {column: TableCompoundColumn; cursor: TableHeaderCursor} {
   const columns = table.parts[partIndex].columns;
   const startingCursor: TableHeaderCursor = {tableId: table.id, partIndex, columnPath: []};
   const cursor = getTableHeaderCursor(columns, attributeName, startingCursor);
@@ -456,7 +493,11 @@ export function findTableColumnWithCursor(table: TableModel,
   return {column, cursor};
 }
 
-function getTableHeaderCursor(columns: TableColumn[], attributeName: string, cursor: TableHeaderCursor): TableHeaderCursor {
+function getTableHeaderCursor(
+  columns: TableColumn[],
+  attributeName: string,
+  cursor: TableHeaderCursor
+): TableHeaderCursor {
   return columns.reduce<TableHeaderCursor>((foundCursor, column, index) => {
     if (foundCursor) {
       return foundCursor;
@@ -468,7 +509,7 @@ function getTableHeaderCursor(columns: TableColumn[], attributeName: string, cur
 
     const currentCursor = {...cursor, columnPath: cursor.columnPath.concat(index)};
 
-    const compoundColumn = (column as TableCompoundColumn);
+    const compoundColumn = column as TableCompoundColumn;
     if (compoundColumn.parent.attributeName === attributeName) {
       return currentCursor;
     }

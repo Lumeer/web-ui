@@ -24,13 +24,11 @@ import {calculateColumnRowspan} from '../../../../../core/store/tables/table.uti
 import {TABLE_ROW_HEIGHT} from './column-height.pipe';
 
 @Pipe({
-  name: 'headerHeight'
+  name: 'headerHeight',
 })
 export class HeaderHeightPipe implements PipeTransform {
-
   public transform(table: TableModel, cursor: TableHeaderCursor): number {
     const rowspan = calculateColumnRowspan(table, cursor.partIndex, cursor.columnPath) || 1;
     return rowspan * TABLE_ROW_HEIGHT;
   }
-
 }

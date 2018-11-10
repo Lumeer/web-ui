@@ -20,8 +20,6 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './search-links.component.html'
+  templateUrl: './search-links.component.html',
 })
-export class SearchLinksComponent {
-
-}
+export class SearchLinksComponent {}

@@ -22,10 +22,9 @@ import {Component} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
-  templateUrl: './project-users.component.html'
+  templateUrl: './project-users.component.html',
 })
 export class ProjectUsersComponent {
-
   public getResourceType(): ResourceType {
     return ResourceType.Project;
   }

@@ -21,27 +21,22 @@ import {Action} from '@ngrx/store';
 import {SizeType} from '../../../shared/slider/size-type';
 
 export enum PostItActionType {
-
   CHANGE_SIZE = '[PostIts] Change size',
   CHANGE_ORDER = '[PostIts] Change order',
-  CLEAR = '[PostIts] Clear'
-
+  CLEAR = '[PostIts] Clear',
 }
 
 export namespace PostItAction {
-
   export class ChangeSize implements Action {
     public readonly type = PostItActionType.CHANGE_SIZE;
 
-    public constructor(public payload: { size: SizeType }) {
-    }
+    public constructor(public payload: {size: SizeType}) {}
   }
 
   export class ChangeOrder implements Action {
     public readonly type = PostItActionType.CHANGE_ORDER;
 
-    public constructor(public payload: { documentIdsOrder: string[] }) {
-    }
+    public constructor(public payload: {documentIdsOrder: string[]}) {}
   }
 
   export class Clear implements Action {
@@ -49,5 +44,4 @@ export namespace PostItAction {
   }
 
   export type All = ChangeSize | ChangeOrder | Clear;
-
 }

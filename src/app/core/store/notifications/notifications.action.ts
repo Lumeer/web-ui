@@ -20,50 +20,42 @@
 import {Action} from '@ngrx/store';
 
 export enum NotificationsActionType {
-
   CONFIRM = '[Notifications] Confirm',
   INFO = '[Notifications] Info',
   ERROR = '[Notifications] Error',
   SUCCESS = '[Notifications] Success',
-  WARNING = '[Notifications] Warning'
-
+  WARNING = '[Notifications] Warning',
 }
 
 export namespace NotificationsAction {
-
   export class Confirm implements Action {
     public readonly type = NotificationsActionType.CONFIRM;
 
-    public constructor(public payload: { title: string, message: string, action: Action, yesFirst?: boolean }) {
-    }
+    public constructor(public payload: {title: string; message: string; action: Action; yesFirst?: boolean}) {}
   }
 
   export class Info implements Action {
     public readonly type = NotificationsActionType.INFO;
 
-    public constructor(public payload: { title: string, message: string }) {
-    }
+    public constructor(public payload: {title: string; message: string}) {}
   }
 
   export class Error implements Action {
     public readonly type = NotificationsActionType.ERROR;
 
-    public constructor(public payload: { message: string }) {
-    }
+    public constructor(public payload: {message: string}) {}
   }
 
   export class Success implements Action {
     public readonly type = NotificationsActionType.SUCCESS;
 
-    public constructor(public payload: { message: string }) {
-    }
+    public constructor(public payload: {message: string}) {}
   }
 
   export class Warning implements Action {
     public readonly type = NotificationsActionType.WARNING;
 
-    public constructor(public payload: { message: string }) {
-    }
+    public constructor(public payload: {message: string}) {}
   }
 
   export type All = Confirm | Error | Success | Warning;

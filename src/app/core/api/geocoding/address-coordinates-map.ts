@@ -20,7 +20,5 @@
 import {LatLngLiteral} from 'leaflet';
 
 export interface AddressCoordinatesMap {
-
   [address: string]: LatLngLiteral;
-
 }

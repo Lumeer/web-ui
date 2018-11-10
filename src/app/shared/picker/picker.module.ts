@@ -30,26 +30,15 @@ import {HighlightColorPipe} from './color-picker/highlight-color.pipe';
 import {IconIdPipe} from './icon-picker/icon-id.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    PipesModule
-  ],
+  imports: [CommonModule, FormsModule, PipesModule],
   declarations: [
     IconPickerComponent,
     ColorPickerComponent,
     IconComponent,
     IconsPresenterComponent,
     HighlightColorPipe,
-    IconIdPipe
+    IconIdPipe,
   ],
-  exports: [
-    IconPickerComponent,
-    ColorPickerComponent,
-    IconComponent,
-    IconsPresenterComponent
-  ]
+  exports: [IconPickerComponent, ColorPickerComponent, IconComponent, IconsPresenterComponent],
 })
-export class PickerModule {
-
-}
+export class PickerModule {}

@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'expandable'
+  name: 'expandable',
 })
 export class ExpandablePipe implements PipeTransform {
-
   public transform(row: TableConfigRow): boolean {
     return row && !row.expanded && row.linkedRows && row.linkedRows.length > 1;
   }
-
 }

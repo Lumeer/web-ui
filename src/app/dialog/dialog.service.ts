@@ -32,12 +32,10 @@ import {DialogPath} from './dialog-path';
  */
 @Injectable()
 export class DialogService {
-
   public callback: any;
   private open: boolean;
 
-  public constructor(private router: Router) {
-  }
+  public constructor(private router: Router) {}
 
   public closeDialog() {
     this.callback = null;
@@ -90,5 +88,4 @@ export class DialogService {
     this.open = !!path;
     return this.router.navigate(['', {outlets: {dialog: path}}], {queryParamsHandling: 'preserve'});
   }
-
 }

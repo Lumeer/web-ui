@@ -20,8 +20,6 @@
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 export class PostItDocumentModel {
-
   public document: DocumentModel;
   public order = 0;
-
 }

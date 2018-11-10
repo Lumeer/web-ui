@@ -24,11 +24,9 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 @Component({
   selector: 'empty-views',
   templateUrl: './empty-views.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyViewsComponent {
-
   @Input()
   public query: QueryModel;
-
 }

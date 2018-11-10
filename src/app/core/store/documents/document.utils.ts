@@ -27,7 +27,7 @@ export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc
   const sortedDocuments = [...documents];
   return sortedDocuments.sort((a, b) => {
     const value = a.creationDate.getTime() - b.creationDate.getTime();
-    return (value !== 0 ? value : a.id.localeCompare(b.id))  * (sortDesc ? -1 : 1);
+    return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
   });
 }
 
@@ -87,7 +87,11 @@ export function generateDocumentData(collection: CollectionModel, filters: strin
   return data;
 }
 
-export function calculateDocumentHierarchyLevel(documentId: string, documentIdsFilter: Set<string>, documentsMap: Dictionary<DocumentModel>): number {
+export function calculateDocumentHierarchyLevel(
+  documentId: string,
+  documentIdsFilter: Set<string>,
+  documentsMap: Dictionary<DocumentModel>
+): number {
   if (!documentId || !documentIdsFilter.has(documentId)) {
     return 0;
   }

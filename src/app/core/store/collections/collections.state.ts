@@ -25,38 +25,49 @@ import {selectWorkspace} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
-
   loaded: boolean;
   collectionNames: string[];
-
 }
 
 export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.id});
 
 export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({
   loaded: false,
-  collectionNames: null
+  collectionNames: null,
 });
 
 export const selectCollectionsState = (state: AppState) => state.collections;
 
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
-export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
-export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded);
+export const selectCollectionsDictionary = createSelector(
+  selectCollectionsState,
+  collectionsAdapter.getSelectors().selectEntities
+);
+export const selectCollectionsLoaded = createSelector(
+  selectCollectionsState,
+  (state: CollectionsState) => state.loaded
+);
 
-export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {
-  return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;
-});
-
-export const selectCollectionById = (id: string) => createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);
-
-export const selectCollectionsByIds = (ids: string[]) => createSelector(selectCollectionsDictionary,
-  collectionsDictionary => ids.map(id => collectionsDictionary[id]));
-
-export const selectCollectionsByLinkType = (linkTypeId: string) => createSelector(
-  selectCollectionsDictionary, selectLinkTypeById(linkTypeId), (collectionsMap, linkType) => {
-    return linkType.collectionIds.map(id => collectionsMap[id]);
+export const selectCollectionByWorkspace = createSelector(
+  selectCollectionsDictionary,
+  selectWorkspace,
+  (collections, workspace) => {
+    return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;
   }
 );
 
-export const selectCollectionNames = createSelector(selectCollectionsState, (state: CollectionsState) => state.collectionNames);
+export const selectCollectionById = (id: string) =>
+  createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);
+
+export const selectCollectionsByIds = (ids: string[]) =>
+  createSelector(selectCollectionsDictionary, collectionsDictionary => ids.map(id => collectionsDictionary[id]));
+
+export const selectCollectionsByLinkType = (linkTypeId: string) =>
+  createSelector(selectCollectionsDictionary, selectLinkTypeById(linkTypeId), (collectionsMap, linkType) => {
+    return linkType.collectionIds.map(id => collectionsMap[id]);
+  });
+
+export const selectCollectionNames = createSelector(
+  selectCollectionsState,
+  (state: CollectionsState) => state.collectionNames
+);

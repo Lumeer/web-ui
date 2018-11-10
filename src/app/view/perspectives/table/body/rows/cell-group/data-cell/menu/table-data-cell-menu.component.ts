@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Dictionary} from 'lodash';
 import {ContextMenuComponent} from 'ngx-contextmenu';
@@ -34,17 +43,20 @@ import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/s
 import {TableConfigRow, TableModel} from '../../../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow, findTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
-import {selectTableRow, selectTableRowIndentable, selectTableRowOutdentable} from '../../../../../../../../core/store/tables/tables.selector';
+import {
+  selectTableRow,
+  selectTableRowIndentable,
+  selectTableRowOutdentable,
+} from '../../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../../shared/direction';
 
 @Component({
   selector: 'table-data-cell-menu',
   templateUrl: './table-data-cell-menu.component.html',
   styleUrls: ['./table-data-cell-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableDataCellMenuComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -71,8 +83,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
 
-  public constructor(private store$: Store<AppState>) {
-  }
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document && this.document) {
@@ -104,22 +115,30 @@ export class TableDataCellMenuComponent implements OnChanges {
       this.store$.pipe(select(selectTableRow(this.cursor))),
       this.store$.pipe(select(selectTableRow(getTableRowCursor(this.cursor, 1)))),
       this.store$.pipe(select(selectDocumentsDictionary))
-    ).pipe(
-      first()
-    ).subscribe(([row, nextRow, documentsMap]) => {
-      const parentDocumentId = this.getParentDocumentId(row, nextRow, Boolean(indexDelta), documentsMap);
+    )
+      .pipe(first())
+      .subscribe(([row, nextRow, documentsMap]) => {
+        const parentDocumentId = this.getParentDocumentId(row, nextRow, Boolean(indexDelta), documentsMap);
 
-      this.store$.dispatch(new TablesAction.AddPrimaryRows({
-        cursor: getTableRowCursor(this.cursor, indexDelta),
-        rows: [createEmptyTableRow(parentDocumentId)]
-      }));
-    });
+        this.store$.dispatch(
+          new TablesAction.AddPrimaryRows({
+            cursor: getTableRowCursor(this.cursor, indexDelta),
+            rows: [createEmptyTableRow(parentDocumentId)],
+          })
+        );
+      });
   }
 
-  private getParentDocumentId(row: TableConfigRow, nextRow: TableConfigRow, below: boolean, documentsMap: Dictionary<DocumentModel>): string {
+  private getParentDocumentId(
+    row: TableConfigRow,
+    nextRow: TableConfigRow,
+    below: boolean,
+    documentsMap: Dictionary<DocumentModel>
+  ): string {
     const nextRowDocument = documentsMap[nextRow && nextRow.documentId];
-    const nextRowParentDocumentId = (nextRowDocument && nextRowDocument.metaData && nextRowDocument.metaData.parentId)
-      || (nextRow && nextRow.parentDocumentId);
+    const nextRowParentDocumentId =
+      (nextRowDocument && nextRowDocument.metaData && nextRowDocument.metaData.parentId) ||
+      (nextRow && nextRow.parentDocumentId);
 
     if (below && row && row.documentId === nextRowParentDocumentId) {
       return nextRowParentDocumentId;
@@ -130,10 +149,12 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   private addLinkedRow(indexDelta: number) {
-    this.store$.dispatch(new TablesAction.AddLinkedRows({
-      cursor: getTableRowCursor(this.cursor, indexDelta),
-      linkedRows: [createEmptyTableRow()]
-    }));
+    this.store$.dispatch(
+      new TablesAction.AddLinkedRows({
+        cursor: getTableRowCursor(this.cursor, indexDelta),
+        linkedRows: [createEmptyTableRow()],
+      })
+    );
   }
 
   public onRemoveRow() {
@@ -141,11 +162,13 @@ export class TableDataCellMenuComponent implements OnChanges {
     // TODO response from server might be slow and some change can be done to the table in the meantime
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
     if (this.document && this.document.id) {
-      this.store$.dispatch(new DocumentsAction.DeleteConfirm({
-        collectionId: this.document.collectionId,
-        documentId: this.document.id,
-        nextAction: removeRowAction
-      }));
+      this.store$.dispatch(
+        new DocumentsAction.DeleteConfirm({
+          collectionId: this.document.collectionId,
+          documentId: this.document.id,
+          nextAction: removeRowAction,
+        })
+      );
       return;
     }
     if (this.linkInstance && this.linkInstance.id) {
@@ -177,5 +200,4 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onOutdent() {
     this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
   }
-
 }

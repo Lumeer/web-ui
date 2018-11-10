@@ -1,4 +1,4 @@
-@import "../../../../../../styles/variables";
+@import '../../../../../../styles/variables';
 
 .always-visible {
   opacity: 1 !important;
@@ -23,6 +23,4 @@
   &.text-warning:hover {
     color: $warning-hover !important;
   }
-
 }
-

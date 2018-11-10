@@ -24,10 +24,9 @@ import {SelectItemModel} from './select-item.model';
   selector: 'select-item',
   templateUrl: './select-item.component.html',
   styleUrls: ['./select-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectItemComponent {
-
   @Input()
   public items: SelectItemModel[];
 
@@ -64,5 +63,4 @@ export class SelectItemComponent {
     event.stopPropagation();
     this.remove.emit();
   }
-
 }

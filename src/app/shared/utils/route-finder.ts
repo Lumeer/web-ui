@@ -20,7 +20,6 @@
 import {ActivatedRouteSnapshot} from '@angular/router';
 
 export class RouteFinder {
-
   public static getDeepestChildRoute(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
     while (route.firstChild) {
       route = route.firstChild;
@@ -37,5 +36,4 @@ export class RouteFinder {
     }
     return route;
   }
-
 }

@@ -18,7 +18,6 @@
  */
 
 export enum KeyCode {
-
   ArrowDown = 'ArrowDown',
   ArrowLeft = 'ArrowLeft',
   ArrowRight = 'ArrowRight',
@@ -68,7 +67,6 @@ export enum KeyCode {
   NumpadEnter = 'NumpadEnter',
   Space = 'Space',
   Tab = 'Tab',
-
 }
 
 export function isKeyPrintable(event: KeyboardEvent): boolean {

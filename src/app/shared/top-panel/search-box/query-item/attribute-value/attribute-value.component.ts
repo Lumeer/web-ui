@@ -27,10 +27,9 @@ import {AttributeQueryItem} from '../model/attribute.query-item';
 @Component({
   selector: 'attribute-value',
   templateUrl: './attribute-value.component.html',
-  styleUrls: ['./attribute-value.component.scss']
+  styleUrls: ['./attribute-value.component.scss'],
 })
 export class AttributeValueComponent implements OnInit {
-
   @Input()
   public queryItem: AttributeQueryItem;
 

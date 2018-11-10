@@ -22,10 +22,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'post-it-collection-add-button',
   templateUrl: './post-it-collection-add-button.component.html',
-  styleUrls: ['./post-it-collection-add-button.component.scss']
+  styleUrls: ['./post-it-collection-add-button.component.scss'],
 })
 export class PostItCollectionAddButtonComponent {
-
   @Output()
   public clicked = new EventEmitter();
 
@@ -35,5 +34,4 @@ export class PostItCollectionAddButtonComponent {
   public add() {
     this.clicked.emit();
   }
-
 }

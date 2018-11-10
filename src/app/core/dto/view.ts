@@ -21,10 +21,8 @@ import {Query} from './query';
 import {Resource} from './resource';
 
 export interface View extends Resource {
-
   perspective: string;
   query: Query;
   config: any; // TODO create DTO
-  authorRights?: { [collectionId: string]: string[] };
-
+  authorRights?: {[collectionId: string]: string[]};
 }

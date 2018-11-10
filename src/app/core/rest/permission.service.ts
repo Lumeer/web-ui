@@ -29,12 +29,10 @@ import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable()
 export abstract class PermissionService {
-
   protected workspace: Workspace;
 
-  constructor(protected httpClient: HttpClient,
-              protected store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public getPermissions(): Observable<Permissions> {
@@ -50,14 +48,17 @@ export abstract class PermissionService {
   }
 
   public removeUserPermission(user: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`,
-      {observe: 'response', responseType: 'text'});
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
   public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`,
-      {observe: 'response', responseType: 'text'}
-    );
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
   protected abstract actualApiPrefix(workspace?: Workspace): string;

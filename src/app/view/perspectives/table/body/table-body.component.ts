@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
@@ -30,10 +40,9 @@ import {TableRowsComponent} from './rows/table-rows.component';
   selector: 'table-body',
   templateUrl: './table-body.component.html',
   styleUrls: ['./table-body.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableBodyComponent implements OnChanges, AfterViewInit {
-
   @Input()
   public tableId: string;
 
@@ -48,16 +57,14 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   public cursor: TableBodyCursor;
 
-  public constructor(private element: ElementRef,
-                     private store: Store<AppState>) {
-  }
+  public constructor(private element: ElementRef, private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tableId && this.tableId) {
       this.cursor = {
         tableId: this.tableId,
         partIndex: 0,
-        rowPath: []
+        rowPath: [],
       };
     }
   }
@@ -81,5 +88,4 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
     const tableElement = getTableElement(this.tableId);
     tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
   }
-
 }

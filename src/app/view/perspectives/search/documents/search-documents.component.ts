@@ -33,7 +33,10 @@ import {UserSettingsService} from '../../../../core/service/user-settings.servic
 import {SizeType} from '../../../../shared/slider/size-type';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectDocumentsByCustomQuery,
+} from '../../../../core/store/common/permissions.selectors';
 import {PerspectiveService} from '../../../../core/service/perspective.service';
 import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
@@ -46,10 +49,9 @@ const PAGE_SIZE = 40;
 @Component({
   selector: 'search-documents',
   templateUrl: './search-documents.component.html',
-  styleUrls: ['./search-documents.component.scss']
+  styleUrls: ['./search-documents.component.scss'],
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
-
   @Input()
   public maxLines: number = -1;
 
@@ -66,9 +68,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documentsMap: { [documentId: string]: DocumentModel };
+  public documentsMap: {[documentId: string]: DocumentModel};
   public expandedDocumentIds: string[] = [];
-  public collectionsMap: { [collectionId: string]: CollectionModel };
+  public collectionsMap: {[collectionId: string]: CollectionModel};
   public documentsOrder: string[] = [];
   public loaded$: Observable<boolean>;
   public query: QueryModel;
@@ -78,11 +80,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private documentsSubscription = new Subscription();
 
-  constructor(private store: Store<AppState>,
-              private router: Router,
-              private userSettingsService: UserSettingsService,
-              private perspectiveService: PerspectiveService) {
-  }
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private userSettingsService: UserSettingsService,
+    private perspectiveService: PerspectiveService
+  ) {}
 
   public ngOnInit() {
     this.initSettings();
@@ -128,7 +131,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public toggleDocument(document: DocumentModel) {
-    const newIds = this.isDocumentExplicitlyExpanded(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
+    const newIds = this.isDocumentExplicitlyExpanded(document)
+      ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
     this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
   }
@@ -165,7 +169,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {queryParams: {query: QueryConverter.toString(this.query)}});
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {
+      queryParams: {query: QueryConverter.toString(this.query)},
+    });
   }
 
   private workspacePath(): string {
@@ -182,27 +188,31 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !!navigation.workspace && !!navigation.query)
-    ).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.query = navigation.query;
-      this.clearData();
-      this.fetchDocuments();
-    });
+    const navigationSubscription = this.store
+      .select(selectNavigation)
+      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
+      .subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        this.query = navigation.query;
+        this.clearData();
+        this.fetchDocuments();
+      });
     this.subscriptions.add(navigationSubscription);
 
-    const searchConfigSubscription = this.store.select(selectViewSearchConfig)
-      .subscribe(config => this.expandedDocumentIds = config && config.expandedDocumentIds.slice() || []);
+    const searchConfigSubscription = this.store
+      .select(selectViewSearchConfig)
+      .subscribe(config => (this.expandedDocumentIds = (config && config.expandedDocumentIds.slice()) || []));
     this.subscriptions.add(searchConfigSubscription);
 
     this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
 
-    const collectionSubscription = this.store.select(selectCollectionsByQuery)
-      .subscribe(collections => this.collectionsMap = collections.reduce((acc, coll) => {
-        acc[coll.id] = coll;
-        return acc;
-      }, {}));
+    const collectionSubscription = this.store.select(selectCollectionsByQuery).subscribe(
+      collections =>
+        (this.collectionsMap = collections.reduce((acc, coll) => {
+          acc[coll.id] = coll;
+          return acc;
+        }, {}))
+    );
     this.subscriptions.add(collectionSubscription);
   }
 
@@ -225,11 +235,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.documentsSubscription.unsubscribe();
     const pageSize = PAGE_SIZE * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
-      filter(documents => !!documents)
-    ).subscribe(documents => {
-      this.mapNewDocuments(documents);
-    });
+    this.documentsSubscription = this.store
+      .select(selectDocumentsByCustomQuery(query, true))
+      .pipe(filter(documents => !!documents))
+      .subscribe(documents => {
+        this.mapNewDocuments(documents);
+      });
   }
 
   private mapNewDocuments(documents: DocumentModel[]) {
@@ -254,5 +265,4 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
     this.documentsMap = newDocumentsMap;
   }
-
 }

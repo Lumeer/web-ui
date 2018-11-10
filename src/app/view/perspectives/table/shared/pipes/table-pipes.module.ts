@@ -61,9 +61,7 @@ import {ResizeValidatePipe} from './resize-validate.pipe';
 import {RowPositionTopPipe} from './row-position-top.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     DataPipe,
     EntityCreatedPipe,
@@ -105,7 +103,8 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     LinkedDocumentIdsPipe,
     RowPositionTopPipe,
     DataCellDocumentPipe,
-  ], exports: [
+  ],
+  exports: [
     DataPipe,
     EntityCreatedPipe,
     IsFirstPartPipe,
@@ -147,10 +146,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     RowPositionTopPipe,
     DataCellDocumentPipe,
   ],
-  providers: [
-    AttributeNameChangedPipe,
-    ColumnBackgroundPipe,
-  ]
+  providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
 })
-export class TablePipesModule {
-}
+export class TablePipesModule {}

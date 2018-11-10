@@ -27,5 +27,5 @@ export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: RavenHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true}
+  {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true},
 ];

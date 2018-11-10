@@ -21,7 +21,6 @@
  * Provides buffering by calling update function after a specified time passes without any changes made.
  */
 export class Buffer {
-
   private timerId: number;
 
   private bufferingTime: number;
@@ -53,5 +52,4 @@ export class Buffer {
       this.onFinish();
     }
   }
-
 }

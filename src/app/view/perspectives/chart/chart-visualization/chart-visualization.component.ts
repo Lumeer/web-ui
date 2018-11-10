@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, Output, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -30,10 +42,9 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
   templateUrl: './chart-visualization.component.html',
   styleUrls: ['./chart-visualization.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartVisualizationComponent implements OnChanges {
-
   @Input()
   public collection: CollectionModel;
 
@@ -54,8 +65,7 @@ export class ChartVisualizationComponent implements OnChanges {
 
   private chartVisualizer: ChartVisualizer;
 
-  constructor(private ngZone: NgZone) {
-  }
+  constructor(private ngZone: NgZone) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.documents || changes.config) && this.config) {
@@ -112,5 +122,4 @@ export class ChartVisualizationComponent implements OnChanges {
       this.chartVisualizer.disableWrite();
     }
   }
-
 }

@@ -28,7 +28,6 @@ import {map} from 'rxjs/operators';
 
 @Injectable()
 export class ViewService extends PermissionService {
-
   public createView(view: View): Observable<View> {
     return this.httpClient.post<View>(this.apiPrefix(), view);
   }
@@ -42,17 +41,14 @@ export class ViewService extends PermissionService {
   }
 
   public deleteView(code: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(code)).pipe(
-      map(() => code)
-    );
+    return this.httpClient.delete(this.apiPrefix(code)).pipe(map(() => code));
   }
 
   public getViews(pageNumber?: number, pageSize?: number): Observable<View[]> {
     const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString())
-        .set('size', pageSize.toString());
+      queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
 
     return this.httpClient.get<View[]>(this.apiPrefix(), {params: queryParams});

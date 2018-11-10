@@ -24,38 +24,54 @@ import {QueryModel} from '../navigation/query.model';
 import {LinkInstanceModel} from './link-instance.model';
 
 export interface LinkInstancesState extends EntityState<LinkInstanceModel> {
-
   queries: QueryModel[];
-
 }
 
 export const linkInstancesAdapter = createEntityAdapter<LinkInstanceModel>();
 
 export const initialLinkInstancesState: LinkInstancesState = linkInstancesAdapter.getInitialState({
-  queries: []
+  queries: [],
 });
 
 export const selectLinkInstancesState = (state: AppState) => state.linkInstances;
 
-export const selectAllLinkInstances = createSelector(selectLinkInstancesState, linkInstancesAdapter.getSelectors().selectAll);
-export const selectLinkInstancesDictionary = createSelector(selectLinkInstancesState, linkInstancesAdapter.getSelectors().selectEntities);
-export const selectLinkInstancesQueries = createSelector(selectLinkInstancesState, linkInstancesState => linkInstancesState.queries);
+export const selectAllLinkInstances = createSelector(
+  selectLinkInstancesState,
+  linkInstancesAdapter.getSelectors().selectAll
+);
+export const selectLinkInstancesDictionary = createSelector(
+  selectLinkInstancesState,
+  linkInstancesAdapter.getSelectors().selectEntities
+);
+export const selectLinkInstancesQueries = createSelector(
+  selectLinkInstancesState,
+  linkInstancesState => linkInstancesState.queries
+);
 
-export const selectLinkInstanceById = (id: string) => createSelector(selectLinkInstancesDictionary,
-  linkInstancesMap => linkInstancesMap[id]);
+export const selectLinkInstanceById = (id: string) =>
+  createSelector(selectLinkInstancesDictionary, linkInstancesMap => linkInstancesMap[id]);
 
-export const selectLinkInstancesByIds = (ids: string[]) => createSelector(selectLinkInstancesDictionary,
-  linkInstancesMap => ids.map(id => linkInstancesMap[id]).filter(linkInstance => !!linkInstance));
+export const selectLinkInstancesByIds = (ids: string[]) =>
+  createSelector(selectLinkInstancesDictionary, linkInstancesMap =>
+    ids.map(id => linkInstancesMap[id]).filter(linkInstance => !!linkInstance)
+  );
 
-export const selectLinkInstancesByDocumentId = (id: string) => createSelector(selectAllLinkInstances,
-  linkInstances => linkInstances.filter(linkInstance => linkInstance.documentIds.includes(id)));
+export const selectLinkInstancesByDocumentId = (id: string) =>
+  createSelector(selectAllLinkInstances, linkInstances =>
+    linkInstances.filter(linkInstance => linkInstance.documentIds.includes(id))
+  );
 
-export const selectLinkInstancesByDocumentIds = (documentIds: string[]) => createSelector(selectAllLinkInstances,
-  linkInstances => linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id))));
+export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
+  createSelector(selectAllLinkInstances, linkInstances =>
+    linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+  );
 
-export const selectLinkInstancesByType = (linkTypeId: string) => createSelector(selectAllLinkInstances,
-  linkInstances => linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId));
+export const selectLinkInstancesByType = (linkTypeId: string) =>
+  createSelector(selectAllLinkInstances, linkInstances =>
+    linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId)
+  );
 
 export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
   createSelector(selectLinkInstancesByType(linkTypeId), linkInstances =>
-    linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id))));
+    linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+  );

@@ -29,32 +29,60 @@ export interface OrganizationsState extends EntityState<OrganizationModel> {
   loaded: boolean;
 }
 
-export const organizationsAdapter = createEntityAdapter<OrganizationModel>({selectId: organization => organization.id});
+export const organizationsAdapter = createEntityAdapter<OrganizationModel>({
+  selectId: organization => organization.id,
+});
 
 export const initialOrganizationsState: OrganizationsState = organizationsAdapter.getInitialState({
   selectedOrganizationId: null,
   organizationCodes: undefined,
-  loaded: false
+  loaded: false,
 });
 
 export const selectOrganizationsState = (state: AppState) => state.organizations;
-export const selectAllOrganizations = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectAll);
-export const selectOrganizationsDictionary = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectEntities);
-export const selectOrganizationsLoaded = createSelector(selectOrganizationsState, organizationState => organizationState.loaded);
-export const selectSelectedOrganizationId = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationId);
-export const selectOrganizationCodes = createSelector(selectOrganizationsState, organizationState => organizationState.organizationCodes);
-export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId) => {
-  return selectedId ? organizations[selectedId] : null;
-});
-
-export const selectOrganizationByWorkspace = createSelector(selectWorkspace, selectAllOrganizations, (workspace, organizations) => {
-  return workspace && workspace.organizationCode ? organizations.find(organization => organization.code === workspace.organizationCode) : null;
-});
-
-export const selectOrganizationById = (id) => createSelector(selectOrganizationsDictionary, organizations => {
-  return organizations[id];
-});
-export const selectOrganizationByCode = (organizationCode: string) => createSelector(
-  selectAllOrganizations,
-    organizations => organizations.find(organization => organization.code === organizationCode)
+export const selectAllOrganizations = createSelector(
+  selectOrganizationsState,
+  organizationsAdapter.getSelectors().selectAll
 );
+export const selectOrganizationsDictionary = createSelector(
+  selectOrganizationsState,
+  organizationsAdapter.getSelectors().selectEntities
+);
+export const selectOrganizationsLoaded = createSelector(
+  selectOrganizationsState,
+  organizationState => organizationState.loaded
+);
+export const selectSelectedOrganizationId = createSelector(
+  selectOrganizationsState,
+  organizationsState => organizationsState.selectedOrganizationId
+);
+export const selectOrganizationCodes = createSelector(
+  selectOrganizationsState,
+  organizationState => organizationState.organizationCodes
+);
+export const selectSelectedOrganization = createSelector(
+  selectOrganizationsDictionary,
+  selectSelectedOrganizationId,
+  (organizations, selectedId) => {
+    return selectedId ? organizations[selectedId] : null;
+  }
+);
+
+export const selectOrganizationByWorkspace = createSelector(
+  selectWorkspace,
+  selectAllOrganizations,
+  (workspace, organizations) => {
+    return workspace && workspace.organizationCode
+      ? organizations.find(organization => organization.code === workspace.organizationCode)
+      : null;
+  }
+);
+
+export const selectOrganizationById = id =>
+  createSelector(selectOrganizationsDictionary, organizations => {
+    return organizations[id];
+  });
+export const selectOrganizationByCode = (organizationCode: string) =>
+  createSelector(selectAllOrganizations, organizations =>
+    organizations.find(organization => organization.code === organizationCode)
+  );

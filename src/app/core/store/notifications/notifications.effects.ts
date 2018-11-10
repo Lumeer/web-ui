@@ -29,7 +29,6 @@ import {NotificationsAction, NotificationsActionType} from './notifications.acti
 
 @Injectable()
 export class NotificationsEffects {
-
   @Effect({dispatch: false})
   public confirm$ = this.actions.pipe(
     ofType<NotificationsAction.Confirm>(NotificationsActionType.CONFIRM),
@@ -57,9 +56,7 @@ export class NotificationsEffects {
     tap(action => {
       const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
 
-      const buttons: SnotifyButton[] = [
-        {text: okButtonText, bold: true }
-      ];
+      const buttons: SnotifyButton[] = [{text: okButtonText, bold: true}];
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
     })
   );
@@ -82,9 +79,10 @@ export class NotificationsEffects {
     tap(action => this.notificationService.warning(action.payload.message))
   );
 
-  constructor(private actions: Actions,
-              private i18n: I18n,
-              private notificationService: NotificationService,
-              private store$: Store<AppState>) {
-  }
+  constructor(
+    private actions: Actions,
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private store$: Store<AppState>
+  ) {}
 }

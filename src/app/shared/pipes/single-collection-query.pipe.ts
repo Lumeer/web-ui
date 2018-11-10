@@ -22,12 +22,10 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {isSingleCollectionQuery} from '../../core/store/navigation/query.util';
 
 @Pipe({
-  name: 'singleCollectionQuery'
+  name: 'singleCollectionQuery',
 })
 export class SingleCollectionQueryPipe implements PipeTransform {
-
   public transform(query: QueryModel): boolean {
     return isSingleCollectionQuery(query);
   }
-
 }

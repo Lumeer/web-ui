@@ -33,7 +33,11 @@ export function searchDocumentValuesHtml(document: DocumentModel, collection: Co
     .join(', ');
 }
 
-export function searchDocumentEntriesHtml(document: DocumentModel, collection: CollectionModel, showEmptyValues: boolean): string {
+export function searchDocumentEntriesHtml(
+  document: DocumentModel,
+  collection: CollectionModel,
+  showEmptyValues: boolean
+): string {
   if (!document.data || !collection) {
     return '';
   }
@@ -41,8 +45,13 @@ export function searchDocumentEntriesHtml(document: DocumentModel, collection: C
   const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
 
   return Object.keys(document.data)
-    .filter(attributeId => collectionAttributesIds.includes(attributeId) && (showEmptyValues || document.data[attributeId]))
-    .map(attributeId => `${searchDocumentAttributeHtml(attributeId, collection)}${searchDocumentValueHtml(document.data[attributeId])}`)
+    .filter(
+      attributeId => collectionAttributesIds.includes(attributeId) && (showEmptyValues || document.data[attributeId])
+    )
+    .map(
+      attributeId =>
+        `${searchDocumentAttributeHtml(attributeId, collection)}${searchDocumentValueHtml(document.data[attributeId])}`
+    )
     .join(', ');
 }
 
@@ -82,7 +91,10 @@ function searchDocumentGetValuesFromArray(array: any[]): string[] {
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: CollectionModel) {
-  return `<span class="${attributeHtmlClasses(attributeId, collection)}">${getAttributeName(collection, attributeId)}</span>: `;
+  return `<span class="${attributeHtmlClasses(attributeId, collection)}">${getAttributeName(
+    collection,
+    attributeId
+  )}</span>: `;
 }
 
 function attributeHtmlClasses(attributeId: string, collection: CollectionModel): string {

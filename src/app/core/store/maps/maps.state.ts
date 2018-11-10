@@ -24,8 +24,7 @@ import {MapModel} from './map.model';
 
 export const DEFAULT_MAP_ID = 'default';
 
-export interface MapsState extends EntityState<MapModel> {
-}
+export interface MapsState extends EntityState<MapModel> {}
 
 export const mapsAdapter = createEntityAdapter<MapModel>({selectId: map => map.id});
 

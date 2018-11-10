@@ -24,7 +24,10 @@ import {filter, first, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../../../../../core/store/collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionsDictionary,
+} from '../../../../../../../core/store/collections/collections.state';
 import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
@@ -38,11 +41,9 @@ import {Direction} from '../../../../../../../shared/direction';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
-
   linkType?: LinkTypeModel;
   collection: CollectionModel;
   attribute: AttributeModel;
-
 }
 
 const MAX_SUGGESTIONS_COUNT = 5;
@@ -51,10 +52,9 @@ const MAX_SUGGESTIONS_COUNT = 5;
   selector: 'table-attribute-suggestions',
   templateUrl: './table-attribute-suggestions.component.html',
   styleUrls: ['./table-attribute-suggestions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableAttributeSuggestionsComponent implements OnChanges {
-
   @Input()
   public table: TableModel;
 
@@ -78,9 +78,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  public constructor(private dialogService: DialogService,
-    private store$: Store<AppState>) {
-  }
+  public constructor(private dialogService: DialogService, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attributeName) {
@@ -96,22 +94,26 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public createAttribute() {
     const attribute: AttributeModel = {
       name: this.attributeName,
-      constraints: []
+      constraints: [],
     };
-    this.store$.dispatch(new CollectionsAction.CreateAttributes({
-      collectionId: this.collection.id,
-      attributes: [attribute],
-      callback: attributes => this.initColumn(attributes)
-    }));
+    this.store$.dispatch(
+      new CollectionsAction.CreateAttributes({
+        collectionId: this.collection.id,
+        attributes: [attribute],
+        callback: attributes => this.initColumn(attributes),
+      })
+    );
   }
 
   private initColumn(attributes: AttributeModel[]) {
     const attribute = attributes.find(attr => attr.name === this.attributeName);
     if (attribute) {
-      this.store$.dispatch(new TablesAction.InitColumn({
-        cursor: this.cursor,
-        attributeId: attribute.id
-      }));
+      this.store$.dispatch(
+        new TablesAction.InitColumn({
+          cursor: this.cursor,
+          attributeId: attribute.id,
+        })
+      );
     }
   }
 
@@ -131,49 +133,59 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
       this.store$.select(selectCollectionsDictionary),
       this.store$.select(selectQuery)
     ).pipe(
-      map(([linkTypes, collectionsMap, query]) => linkTypes
-        .filter(linkType => !query.linkTypeIds || !query.linkTypeIds.includes(linkType.id))
-        .reduce<LinkedAttribute[]>((filtered, linkType) => {
-          if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
-            return filtered.slice(0, 5);
-          }
+      map(([linkTypes, collectionsMap, query]) =>
+        linkTypes
+          .filter(linkType => !query.linkTypeIds || !query.linkTypeIds.includes(linkType.id))
+          .reduce<LinkedAttribute[]>((filtered, linkType) => {
+            if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
+              return filtered.slice(0, 5);
+            }
 
-          const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, this.collection.id);
-          const collection = collectionsMap[collectionId];
+            const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, this.collection.id);
+            const collection = collectionsMap[collectionId];
 
-          return filtered.concat(
-            collection.attributes
-              .filter(attribute => this.isMatchingAttribute(collection, attribute))
-              .map(attribute => ({linkType, collection, attribute}))
-              .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
-          );
-        }, [])
+            return filtered.concat(
+              collection.attributes
+                .filter(attribute => this.isMatchingAttribute(collection, attribute))
+                .map(attribute => ({linkType, collection, attribute}))
+                .filter(newAttribute =>
+                  filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute))
+                )
+            );
+          }, [])
       ),
-      tap(suggestions => this.linkedCount = suggestions.length)
+      tap(suggestions => (this.linkedCount = suggestions.length))
     );
   }
 
   public suggestAllAttributes(): Observable<LinkedAttribute[]> {
     return this.store$.select(selectAllCollections).pipe(
-      map((collections: CollectionModel[]) => collections.reduce<LinkedAttribute[]>((filtered, collection) => {
-        if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
-          return filtered.slice(0, 5);
-        }
+      map((collections: CollectionModel[]) =>
+        collections.reduce<LinkedAttribute[]>((filtered, collection) => {
+          if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
+            return filtered.slice(0, 5);
+          }
 
-        return filtered.concat(
-          collection.attributes
-            .filter(attribute => this.isMatchingAttribute(collection, attribute))
-            .map(attribute => ({collection, attribute}))
-            .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
-        );
-      }, [])),
-      tap(suggestions => this.allCount = suggestions.length)
+          return filtered.concat(
+            collection.attributes
+              .filter(attribute => this.isMatchingAttribute(collection, attribute))
+              .map(attribute => ({collection, attribute}))
+              .filter(newAttribute =>
+                filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute))
+              )
+          );
+        }, [])
+      ),
+      tap(suggestions => (this.allCount = suggestions.length))
     );
   }
 
   private isMatchingAttribute(collection: CollectionModel, attribute: AttributeModel): boolean {
-    return this.lastName && (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase())
-      || collection.name.toLowerCase().startsWith(this.lastName.toLowerCase()));
+    return (
+      this.lastName &&
+      (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()) ||
+        collection.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
+    );
   }
 
   public moveSelection(direction: Direction) {
@@ -198,20 +210,24 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     }
 
     if (this.newCount <= index && index < this.newCount + this.linkedCount) {
-      this.linkedAttributes$.pipe(
-        first(),
-        map(suggestions => suggestions[index - this.newCount]),
-        filter(suggestion => !!suggestion && !!suggestion.linkType)
-      ).subscribe(suggestion => this.useLinkType(suggestion.linkType));
+      this.linkedAttributes$
+        .pipe(
+          first(),
+          map(suggestions => suggestions[index - this.newCount]),
+          filter(suggestion => !!suggestion && !!suggestion.linkType)
+        )
+        .subscribe(suggestion => this.useLinkType(suggestion.linkType));
       return;
     }
 
     if (this.newCount + this.linkedCount <= index && index < this.newCount + this.linkedCount + this.allCount) {
-      this.allAttributes$.pipe(
-        first(),
-        map(suggestions => suggestions[index - this.linkedCount - this.newCount]),
-        filter(suggestion => !!suggestion && !!suggestion.collection)
-      ).subscribe(suggestion => this.createLinkType(suggestion.collection));
+      this.allAttributes$
+        .pipe(
+          first(),
+          map(suggestions => suggestions[index - this.linkedCount - this.newCount]),
+          filter(suggestion => !!suggestion && !!suggestion.collection)
+        )
+        .subscribe(suggestion => this.createLinkType(suggestion.collection));
       return;
     }
   }
@@ -223,9 +239,10 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public isSelected(): boolean {
     return this.selectedIndex$.getValue() >= 0;
   }
-
 }
 
 function equalLinkedAttributes(a1: LinkedAttribute, a2: LinkedAttribute): boolean {
-  return a1.attribute.id === a2.attribute.id && a1.collection.id === a2.collection.id && a1.linkType.id === a2.linkType.id;
+  return (
+    a1.attribute.id === a2.attribute.id && a1.collection.id === a2.collection.id && a1.linkType.id === a2.linkType.id
+  );
 }

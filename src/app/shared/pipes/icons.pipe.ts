@@ -21,13 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ResourceModel} from '../../core/model/resource.model';
 
 @Pipe({
-  name: 'icons'
+  name: 'icons',
 })
 export class IconsPipe implements PipeTransform {
-
   public transform(entities: ResourceModel[]): string[] {
-    return entities.filter(entity => !!entity)
-      .map(entity => entity.icon);
+    return entities.filter(entity => !!entity).map(entity => entity.icon);
   }
-
 }

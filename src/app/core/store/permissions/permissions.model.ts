@@ -18,22 +18,16 @@
  */
 
 export enum PermissionType {
-
   Users = 'users',
-  Groups = 'groups'
-
+  Groups = 'groups',
 }
 
 export interface PermissionModel {
-
   id: string;
   roles: string[];
-
 }
 
 export interface PermissionsModel {
-
   users: PermissionModel[];
   groups: PermissionModel[];
-
 }
