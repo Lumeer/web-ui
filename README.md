@@ -24,10 +24,12 @@ $ npm install
 You can run the application locally using the following NPM scripts:
 
 1. `npm run start`: uses JIT compiler and default language (English at the moment)
-2. `npm run start:cs`: uses AOT compiler and Czech language
-3. `npm run start:en`: uses AOT compiler and English language
+1. `npm run start:aot`: uses AOT compiler and default language (English at the moment)
+1. `npm run start:cs`: uses AOT compiler and Czech language
+1. `npm run start:en`: uses AOT compiler and English language
 
-The application will run on [http://localhost:7000/ui](http://localhost:7000/ui) by default.
+The application will be run on [http://localhost:7000/ui](http://localhost:7000/ui) by default.
+The third script runs the application on [http://localhost:7000/cs](http://localhost:7000/cs) and the fourth one runs it on [http://localhost:7000/en](http://localhost:7000/en).
 
 You also need to run our [back-end](https://github.com/Lumeer/engine) if you want to be able to work with the application.
 

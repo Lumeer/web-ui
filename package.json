@@ -18,6 +18,7 @@
     "prettier": "prettier",
     "reset-env": "echo {} > ./src/environments/.env.json",
     "start": "npm run reset-env && ng serve",
+    "start:aot": "npm run reset-env && ng serve --aot=true",
     "start:cs": "npm run reset-env && ng serve --configuration=cs",
     "start:en": "npm run reset-env && ng serve --configuration=en",
     "test": "ng test",
