@@ -25,7 +25,6 @@ try {
 }
 
 export interface EnvironmentVariables {
-
   apiUrl: string;
   authClientId: string;
   authDomain: string;
@@ -34,7 +33,6 @@ export interface EnvironmentVariables {
   locale: string;
   sentryDsn: string;
   sessionTimeout: number;
-
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
@@ -47,7 +45,6 @@ const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 
 export const environmentVariables: EnvironmentVariables = {
-
   apiUrl,
   authClientId,
   authDomain,
@@ -55,6 +52,5 @@ export const environmentVariables: EnvironmentVariables = {
   i18nFormat,
   locale,
   sentryDsn,
-  sessionTimeout
-
+  sessionTimeout,
 };

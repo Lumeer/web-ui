@@ -22,11 +22,10 @@ import {Pipe, PipeTransform, Injectable} from '@angular/core';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 
 @Pipe({
-  name: 'linkTypeFilter'
+  name: 'linkTypeFilter',
 })
 @Injectable()
 export class LinkTypeFilterPipe implements PipeTransform {
-
   public transform(linkTypes: LinkTypeModel[], value: string): any[] {
     if (!linkTypes || !value) {
       return linkTypes;

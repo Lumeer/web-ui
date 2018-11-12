@@ -36,14 +36,13 @@ import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/loc
 
 @Injectable()
 export class PaymentsEffects {
-
   @Effect()
   public getPayments$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
     mergeMap(action => {
       return this.organizationService.getPayments().pipe(
         map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
-        map(payments => new PaymentsAction.GetPaymentsSuccess({ payments: payments })),
+        map(payments => new PaymentsAction.GetPaymentsSuccess({payments: payments})),
         catchError(error => of(new PaymentsAction.GetPaymentsFailure({error: error})))
       );
     })
@@ -54,7 +53,10 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payments.get.fail', value: 'Could not read information about your previous service orders'});
+      const message = this.i18n({
+        id: 'organization.payments.get.fail',
+        value: 'Could not read information about your previous service orders',
+      });
       return new NotificationsAction.Error({message});
     })
   );
@@ -65,9 +67,9 @@ export class PaymentsEffects {
     mergeMap(action => {
       return this.organizationService.getPayment(action.payload.paymentId).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-        map(payment => ({ payment, nextAction: action.payload.nextAction })),
-        flatMap(({ payment, nextAction }) => {
-          const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({ payment: payment })];
+        map(payment => ({payment, nextAction: action.payload.nextAction})),
+        flatMap(({payment, nextAction}) => {
+          const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({payment: payment})];
           if (nextAction) {
             actions.push(nextAction);
           }
@@ -83,7 +85,10 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payment.get.fail', value: 'Could not read information about your previous service order'});
+      const message = this.i18n({
+        id: 'organization.payment.get.fail',
+        value: 'Could not read information about your previous service order',
+      });
       return new NotificationsAction.Error({message});
     })
   );
@@ -93,10 +98,12 @@ export class PaymentsEffects {
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     mergeMap(([action, organization]) => {
-      const returnUrl = isNullOrUndefined(action.payload.returnUrl) ? (this.location as BrowserPlatformLocation).location.href : action.payload.returnUrl;
+      const returnUrl = isNullOrUndefined(action.payload.returnUrl)
+        ? (this.location as BrowserPlatformLocation).location.href
+        : action.payload.returnUrl;
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-        map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
+        map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
         catchError(error => of(new PaymentsAction.CreatePaymentFailure({error: error})))
       );
     })
@@ -107,16 +114,20 @@ export class PaymentsEffects {
     ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payment.create.fail', value: 'Could not create your new service order'});
+      const message = this.i18n({
+        id: 'organization.payment.create.fail',
+        value: 'Could not create your new service order',
+      });
       return new NotificationsAction.Error({message});
     })
   );
 
-  constructor(private i18n: I18n,
-              private store$: Store<AppState>,
-              private router: Router,
-              private actions$: Actions,
-              private organizationService: OrganizationService,
-              private location: PlatformLocation) {
-  }
+  constructor(
+    private i18n: I18n,
+    private store$: Store<AppState>,
+    private router: Router,
+    private actions$: Actions,
+    private organizationService: OrganizationService,
+    private location: PlatformLocation
+  ) {}
 }

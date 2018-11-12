@@ -36,18 +36,19 @@ declare let $: any;
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   @ViewChild('browserWarning')
   public browserWarning: ElementRef;
 
   public isChrome = true;
 
-  constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
-              private authService: AuthService,
-              private changeDetector: ChangeDetectorRef,
-              private snotifyService: SnotifyService,
-              private store$: Store<AppState>,
-              private title: Title) {
+  constructor(
+    private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
+    private authService: AuthService,
+    private changeDetector: ChangeDetectorRef,
+    private snotifyService: SnotifyService,
+    private store$: Store<AppState>,
+    private title: Title
+  ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
     this.handleAuthentication();
@@ -67,13 +68,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.angulartics2GoogleAnalytics.startTracking();
 
-    this.store$.select(selectCurrentUser).pipe(
-      filter(user => !!user),
-      first()
-    ).subscribe(user => {
-      const userHash = hashUserId(user.id);
-      this.angulartics2GoogleAnalytics.setUsername(userHash);
-    });
+    this.store$
+      .select(selectCurrentUser)
+      .pipe(
+        filter(user => !!user),
+        first()
+      )
+      .subscribe(user => {
+        const userHash = hashUserId(user.id);
+        this.angulartics2GoogleAnalytics.setUsername(userHash);
+      });
   }
 
   public ngOnInit() {
@@ -93,8 +97,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         timeout: 3000,
         showProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: false
-      }
+        pauseOnHover: false,
+      },
     });
   }
 
@@ -108,7 +112,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.changeDetector.detectChanges();
     });
   }
-
 }
 
 function hashUserId(userId: string): string {

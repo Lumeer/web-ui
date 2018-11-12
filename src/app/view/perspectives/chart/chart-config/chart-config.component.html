@@ -15,7 +15,7 @@
       [disabled]="!canManageConfig"
       [items]="[collection] | axisSelectItems:axis:config"
       [selectedId]="config.axes[axis]"
-      [placeholderText]="axis | axisSelectPlaceholder"
+      [placeholderText]="axis.toUpperCase()"
       [emptyValue]="axis | axisSelectEmptyValue"
       [removable]="true"
       (select)="onAxisSelect(axis, $event)"

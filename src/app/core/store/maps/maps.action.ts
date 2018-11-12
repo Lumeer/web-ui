@@ -21,37 +21,31 @@ import {Action} from '@ngrx/store';
 import {MapConfig} from './map.model';
 
 export enum MapsActionType {
-
   CREATE_MAP = '[Maps] Create Map',
   DESTROY_MAP = '[Maps] Destroy Map',
 
   SELECT_ATTRIBUTE = '[Maps] Select Attribute',
 
-  CLEAR = '[Maps] Clear'
-
+  CLEAR = '[Maps] Clear',
 }
 
 export namespace MapsAction {
-
   export class CreateMap implements Action {
     public readonly type = MapsActionType.CREATE_MAP;
 
-    constructor(public payload: { mapId: string, config?: MapConfig }) {
-    }
+    constructor(public payload: {mapId: string; config?: MapConfig}) {}
   }
 
   export class DestroyMap implements Action {
     public readonly type = MapsActionType.DESTROY_MAP;
 
-    constructor(public payload: { mapId: string }) {
-    }
+    constructor(public payload: {mapId: string}) {}
   }
 
   export class SelectAttribute implements Action {
     public readonly type = MapsActionType.SELECT_ATTRIBUTE;
 
-    constructor(public payload: { mapId: string, collectionId: string, index: number, attributeId: string }) {
-    }
+    constructor(public payload: {mapId: string; collectionId: string; index: number; attributeId: string}) {}
   }
 
   export class Clear implements Action {
@@ -59,5 +53,4 @@ export namespace MapsAction {
   }
 
   export type All = CreateMap | DestroyMap | SelectAttribute | Clear;
-
 }

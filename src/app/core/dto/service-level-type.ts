@@ -18,13 +18,11 @@
  */
 
 export enum ServiceLevelType {
-
   FREE = 'FREE',
-  BASIC = 'BASIC'
-
+  BASIC = 'BASIC',
 }
 
-export const serviceLevelMap: { [id: string]: ServiceLevelType } = {
+export const serviceLevelMap: {[id: string]: ServiceLevelType} = {
   [ServiceLevelType.FREE]: ServiceLevelType.FREE,
-  [ServiceLevelType.BASIC]: ServiceLevelType.BASIC
+  [ServiceLevelType.BASIC]: ServiceLevelType.BASIC,
 };

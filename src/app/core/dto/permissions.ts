@@ -20,8 +20,6 @@
 import {Permission} from './permission';
 
 export interface Permissions {
-
   users: Permission[];
   groups: Permission[];
-
 }

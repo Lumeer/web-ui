@@ -22,7 +22,6 @@ import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
 
 export class DocumentQueryItem implements QueryItem {
-
   public type = QueryItemType.Document;
 
   public constructor(public documentId: string) {
@@ -40,5 +39,4 @@ export class DocumentQueryItem implements QueryItem {
   public dependsOn(queryItem: QueryItem): boolean {
     return false;
   }
-
 }

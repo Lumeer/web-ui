@@ -18,15 +18,13 @@
  */
 
 export enum SearchTab {
-
   All = 'all',
   Collections = 'collections',
   Records = 'records',
   Views = 'views',
-
 }
 
-export const searchTabsMap: { [key: string]: SearchTab } = {
+export const searchTabsMap: {[key: string]: SearchTab} = {
   [SearchTab.All]: SearchTab.All,
   [SearchTab.Collections]: SearchTab.Collections,
   [SearchTab.Records]: SearchTab.Records,

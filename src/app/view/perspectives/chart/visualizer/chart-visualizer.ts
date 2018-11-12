@@ -27,7 +27,6 @@ import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
 
 export class ChartVisualizer {
-
   private data: Data[] = [];
 
   private layout: Partial<Layout>;
@@ -36,17 +35,20 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
-  constructor(private chartElement: ElementRef,
-              private writable: boolean,
-              private onValueChanged?: (documentId: string, attributeId: string, value: string) => void) {
-  }
+  constructor(
+    private chartElement: ElementRef,
+    private writable: boolean,
+    private onValueChanged?: (documentId: string, attributeId: string, value: string) => void
+  ) {}
 
   public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type, this.chartElement);
-      this.plotMaker.setOnValueChanged((change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)));
-      this.plotMaker.setOnDataChanged((change) => this.onDataChanged(change));
+      this.plotMaker.setOnValueChanged(
+        change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)
+      );
+      this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
     }
 
     const currentConfig = this.plotMaker.currentConfig();
@@ -65,8 +67,7 @@ export class ChartVisualizer {
   }
 
   private shouldRefreshLayout(newConfig: ChartConfig, currentConfig: ChartConfig) {
-    return !this.plotMaker || !currentConfig
-      || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
+    return !this.plotMaker || !currentConfig || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
   }
 
   public onDataChanged(change: DataChange) {
@@ -122,5 +123,4 @@ export class ChartVisualizer {
     this.writable = false;
     this.plotMaker && this.plotMaker.setDragEnabled(false);
   }
-
 }

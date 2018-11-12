@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
-import {filterDirectAttributeChildren, findAttributeByName, generateAttributeName, splitAttributeName} from '../../../shared/utils/attribute.utils';
+import {
+  filterDirectAttributeChildren,
+  findAttributeByName,
+  generateAttributeName,
+  splitAttributeName,
+} from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {CollectionModel} from '../collections/collection.model';
 import {DocumentModel} from '../documents/document.model';
@@ -26,7 +31,19 @@ import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {AttributeModel} from './../collections/collection.model';
 import {TableCursor} from './table-cursor';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
+import {
+  TableColumn,
+  TableColumnType,
+  TableCompoundColumn,
+  TableConfig,
+  TableConfigColumn,
+  TableConfigPart,
+  TableConfigRow,
+  TableHiddenColumn,
+  TableModel,
+  TablePart,
+  TableSingleColumn,
+} from './table.model';
 
 export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
   const index = getColumnIndex(path);
@@ -65,7 +82,12 @@ export function addTableColumn(columns: TableColumn[], path: number[], column: T
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
 
-export function replaceTableColumns(columns: TableColumn[], path: number[], deleteCount: number, addedColumns: TableColumn[] = []): TableColumn[] {
+export function replaceTableColumns(
+  columns: TableColumn[],
+  path: number[],
+  deleteCount: number,
+  addedColumns: TableColumn[] = []
+): TableColumn[] {
   const index = getColumnIndex(path);
 
   if (path.length === 1) {
@@ -77,7 +99,10 @@ export function replaceTableColumns(columns: TableColumn[], path: number[], dele
   }
 
   const oldColumn = columns[index] as TableCompoundColumn;
-  const newColumn = {...oldColumn, children: replaceTableColumns(oldColumn.children, path.slice(1), deleteCount, addedColumns)};
+  const newColumn = {
+    ...oldColumn,
+    children: replaceTableColumns(oldColumn.children, path.slice(1), deleteCount, addedColumns),
+  };
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
 
@@ -95,8 +120,10 @@ function getColumnIndex(path: number[]): number {
   return path[0];
 }
 
-export function createTableColumnsBySiblingAttributeIds(allAttributes: AttributeModel[],
-  attributeIds: string[]): TableColumn[] {
+export function createTableColumnsBySiblingAttributeIds(
+  allAttributes: AttributeModel[],
+  attributeIds: string[]
+): TableColumn[] {
   if (!attributeIds || attributeIds.length === 0) {
     return [];
   }
@@ -104,8 +131,9 @@ export function createTableColumnsBySiblingAttributeIds(allAttributes: Attribute
   const attributes = allAttributes.filter(attribute => attributeIds.includes(attribute.id));
   const attributeNames = attributes.map(attribute => attribute.name);
 
-  const childAttributes = allAttributes
-    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name + '.')));
+  const childAttributes = allAttributes.filter(attribute =>
+    attributeNames.some(name => attribute.name.startsWith(name + '.'))
+  );
   attributes.push(...childAttributes);
 
   const {parentName} = splitAttributeName(attributeNames[0]);
@@ -117,9 +145,11 @@ export function createTableColumnsBySiblingAttributeIds(allAttributes: Attribute
   return createTableColumnsFromAttributes(attributes, parent);
 }
 
-export function createTableColumnsFromAttributes(allAttributes: AttributeModel[],
+export function createTableColumnsFromAttributes(
+  allAttributes: AttributeModel[],
   parentAttribute?: AttributeModel,
-  columnsConfig: TableConfigColumn[] = []): TableColumn[] {
+  columnsConfig: TableConfigColumn[] = []
+): TableColumn[] {
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
   attributes.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
 
@@ -127,16 +157,18 @@ export function createTableColumnsFromAttributes(allAttributes: AttributeModel[]
     return createColumnsFromConfig(columnsConfig, allAttributes, attributes);
   }
 
-  return attributes.map((attribute) => {
+  return attributes.map(attribute => {
     const parent = new TableSingleColumn(attribute.id);
     const children = createTableColumnsFromAttributes(allAttributes, attribute);
     return new TableCompoundColumn(parent, children);
   });
 }
 
-function createColumnsFromConfig(columnsConfig: TableConfigColumn[],
+function createColumnsFromConfig(
+  columnsConfig: TableConfigColumn[],
   allAttributes: AttributeModel[],
-  attributes: AttributeModel[]): TableColumn[] {
+  attributes: AttributeModel[]
+): TableColumn[] {
   const attributeIds = attributes.map(attribute => attribute.id);
 
   const columns = columnsConfig.reduce<TableColumn[]>((preparedColumns, column) => {
@@ -178,34 +210,36 @@ export function getAttributeIdFromColumn(column: TableColumn) {
 }
 
 export function maxColumnDepth(columns: TableColumn[]): number {
-  return Math.max(...columns.map(column => {
-    if (column.type === TableColumnType.COMPOUND) {
-      const children = (column as TableCompoundColumn).children;
-      return children.length ? maxColumnDepth(children) + 1 : 1;
-    }
-    return 1;
-  }));
+  return Math.max(
+    ...columns.map(column => {
+      if (column.type === TableColumnType.COMPOUND) {
+        const children = (column as TableCompoundColumn).children;
+        return children.length ? maxColumnDepth(children) + 1 : 1;
+      }
+      return 1;
+    })
+  );
 }
 
-export function splitColumnPath(path: number[]): {parentPath: number[], columnIndex: number} {
+export function splitColumnPath(path: number[]): {parentPath: number[]; columnIndex: number} {
   if (!path || !path.length) {
     throw Error('Invalid table column path');
   }
 
   return {
     parentPath: path.slice(0, path.length - 1),
-    columnIndex: path[path.length - 1]
+    columnIndex: path[path.length - 1],
   };
 }
 
-export function splitRowPath(rowPath: number[]): {parentPath: number[], rowIndex: number} {
+export function splitRowPath(rowPath: number[]): {parentPath: number[]; rowIndex: number} {
   if (!rowPath || !rowPath.length) {
     throw Error('Invalid table column path');
   }
 
   return {
     parentPath: rowPath.slice(0, -1),
-    rowIndex: rowPath[rowPath.length - 1]
+    rowIndex: rowPath[rowPath.length - 1],
   };
 }
 
@@ -222,7 +256,12 @@ export function containCompoundColumn(columns: TableColumn[]): boolean {
   return columns && columns.some(column => column.type === TableColumnType.COMPOUND);
 }
 
-export function createCollectionPart(collection: CollectionModel, index: number, last?: boolean, config?: TableConfig): TablePart {
+export function createCollectionPart(
+  collection: CollectionModel,
+  index: number,
+  last?: boolean,
+  config?: TableConfig
+): TablePart {
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.collectionId === collection.id ? configPart.columns : null;
 
@@ -237,7 +276,7 @@ export function createCollectionPart(collection: CollectionModel, index: number,
     index,
     collectionId: collection.id,
     columns,
-    columnDepth
+    columnDepth,
   };
 }
 
@@ -257,7 +296,7 @@ export function createLinkPart(linkType: LinkTypeModel, index: number, config?: 
     index,
     linkTypeId: linkType.id,
     columns,
-    columnDepth
+    columnDepth,
   };
 }
 
@@ -394,8 +433,10 @@ export function isTableRowStriped(rowPath: number[]): boolean {
 }
 
 export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean {
-  return (cursor.columnPath && cursor.columnPath.length === 1 && cursor.columnPath[0] === part.columns.length - 1) ||
-    (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1);
+  return (
+    (cursor.columnPath && cursor.columnPath.length === 1 && cursor.columnPath[0] === part.columns.length - 1) ||
+    (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1)
+  );
 }
 
 export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
@@ -410,7 +451,7 @@ export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {
   return {
     correlationId: generateCorrelationId(),
     linkedRows: [],
-    parentDocumentId
+    parentDocumentId,
   };
 }
 
@@ -418,7 +459,7 @@ export function createTableRow(document: DocumentModel, linkInstance?: LinkInsta
   return {
     documentId: document.id,
     linkInstanceId: linkInstance && linkInstance.id,
-    linkedRows: []
+    linkedRows: [],
   };
 }
 
@@ -437,7 +478,11 @@ export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): b
   return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
 }
 
-export function calculateRowHierarchyLevel(row: TableConfigRow, documentIds: Set<string>, documentsMap: {[id: string]: DocumentModel}): number {
+export function calculateRowHierarchyLevel(
+  row: TableConfigRow,
+  documentIds: Set<string>,
+  documentsMap: {[id: string]: DocumentModel}
+): number {
   if (!row.documentId && !row.parentDocumentId) {
     return 0;
   }
@@ -447,7 +492,10 @@ export function calculateRowHierarchyLevel(row: TableConfigRow, documentIds: Set
   return calculateDocumentHierarchyLevel(parentDocumentId, documentIds, documentsMap);
 }
 
-export function isValidHierarchicalRowOrder(rows: TableConfigRow[], documentsMap: {[id: string]: DocumentModel}): boolean {
+export function isValidHierarchicalRowOrder(
+  rows: TableConfigRow[],
+  documentsMap: {[id: string]: DocumentModel}
+): boolean {
   const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
   let documentIdsStack: string[] = [];
 
@@ -462,7 +510,12 @@ export function isValidHierarchicalRowOrder(rows: TableConfigRow[], documentsMap
   return true;
 }
 
-function updateDocumentIdsStack(documentId: string, parentDocumentId: string, documentIdsStack: string[], documentIdsFilter: Set<string>): string[] {
+function updateDocumentIdsStack(
+  documentId: string,
+  parentDocumentId: string,
+  documentIdsStack: string[],
+  documentIdsFilter: Set<string>
+): string[] {
   if (!parentDocumentId || !documentIdsFilter.has(parentDocumentId)) {
     return documentId ? [documentId] : [];
   }
@@ -474,16 +527,21 @@ function updateDocumentIdsStack(documentId: string, parentDocumentId: string, do
   return documentIdsStack.slice(0, documentIdsStack.indexOf(parentDocumentId) + 1).concat(documentId);
 }
 
-export function sortTableRowsByHierarchy(rows: TableConfigRow[], documentsMap: {[id: string]: DocumentModel}): TableConfigRow[] {
+export function sortTableRowsByHierarchy(
+  rows: TableConfigRow[],
+  documentsMap: {[id: string]: DocumentModel}
+): TableConfigRow[] {
   const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
 
   const rowsMap = createRowsMapByParentDocumentId(rows, documentIds, documentsMap);
   return createRowsFromRowsMap(null, rowsMap);
 }
 
-function createRowsMapByParentDocumentId(rows: TableConfigRow[],
+function createRowsMapByParentDocumentId(
+  rows: TableConfigRow[],
   documentIdsFilter: Set<string>,
-  documentsMap: {[id: string]: DocumentModel}): {[parentDocumentId: string]: TableConfigRow[]} {
+  documentsMap: {[id: string]: DocumentModel}
+): {[parentDocumentId: string]: TableConfigRow[]} {
   return rows.reduce((map, row) => {
     const parentDocumentId = getRowParentDocumentId(row, documentIdsFilter, documentsMap) || null;
     const siblingRows = map[parentDocumentId] || [];
@@ -492,15 +550,23 @@ function createRowsMapByParentDocumentId(rows: TableConfigRow[],
   }, {});
 }
 
-function createRowsFromRowsMap(documentId: string, rowsMap: {[parentDocumentId: string]: TableConfigRow[]}): TableConfigRow[] {
+function createRowsFromRowsMap(
+  documentId: string,
+  rowsMap: {[parentDocumentId: string]: TableConfigRow[]}
+): TableConfigRow[] {
   const rows = rowsMap[documentId] || [];
   return rows.reduce((orderedRows, row) => {
     return orderedRows.concat(row).concat(row.documentId ? createRowsFromRowsMap(row.documentId, rowsMap) : []);
   }, []);
 }
 
-export function getRowParentDocumentId(row: TableConfigRow, documentIdsFilter: Set<string>, documentsMap: {[id: string]: DocumentModel}): string {
+export function getRowParentDocumentId(
+  row: TableConfigRow,
+  documentIdsFilter: Set<string>,
+  documentsMap: {[id: string]: DocumentModel}
+): string {
   const document = documentsMap[row && row.documentId];
-  const parentDocumentId = (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
+  const parentDocumentId =
+    (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
   return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
 }

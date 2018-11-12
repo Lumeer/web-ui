@@ -32,9 +32,7 @@ import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class CollectionService extends PermissionService {
-
-  constructor(protected httpClient: HttpClient,
-              protected store: Store<AppState>) {
+  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
     super(httpClient, store);
   }
 
@@ -47,12 +45,9 @@ export class CollectionService extends PermissionService {
   }
 
   public removeCollection(collectionId: string): Observable<string> {
-    return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionId}`,
-      {observe: 'response', responseType: 'text'}
-    ).pipe(
-      map(() => collectionId)
-    );
+    return this.httpClient
+      .delete(`${this.apiPrefix()}/${collectionId}`, {observe: 'response', responseType: 'text'})
+      .pipe(map(() => collectionId));
   }
 
   public addFavorite(collectionId: string): Observable<any> {
@@ -71,8 +66,7 @@ export class CollectionService extends PermissionService {
     let queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams = queryParams.set('page', pageNumber.toString())
-        .set('size', pageSize.toString());
+      queryParams = queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
     queryParams = queryParams.set('fromViews', 'true');
 
@@ -95,9 +89,9 @@ export class CollectionService extends PermissionService {
   }
 
   public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
-    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute]).pipe(
-      map(attributes => attributes[0])
-    );
+    return this.httpClient
+      .post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute])
+      .pipe(map(attributes => attributes[0]));
   }
 
   public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
@@ -109,10 +103,10 @@ export class CollectionService extends PermissionService {
   }
 
   public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionId}/attributes/${id}`,
-      {observe: 'response', responseType: 'text'}
-    );
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
@@ -128,5 +122,4 @@ export class CollectionService extends PermissionService {
 
     return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
-
 }

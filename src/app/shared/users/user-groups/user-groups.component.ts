@@ -26,10 +26,9 @@ import {OrganizationModel} from '../../../core/store/organizations/organization.
 @Component({
   selector: 'user-groups',
   templateUrl: './user-groups.component.html',
-  styleUrls: ['./user-groups.component.scss']
+  styleUrls: ['./user-groups.component.scss'],
 })
 export class UserGroupsComponent {
-
   @Input()
   public user: UserModel;
 
@@ -70,8 +69,7 @@ export class UserGroupsComponent {
       return [];
     }
     const searchTextLowerCase = this.searchGroupText.toLowerCase().trim();
-    return this.filterUserGroups()
-      .filter(group => group.name.toLowerCase().includes(searchTextLowerCase));
+    return this.filterUserGroups().filter(group => group.name.toLowerCase().includes(searchTextLowerCase));
   }
 
   private filterUserGroups(): GroupModel[] {
@@ -88,5 +86,4 @@ export class UserGroupsComponent {
 
     this.userUpdate.emit(userCopy);
   }
-
 }

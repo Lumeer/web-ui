@@ -22,7 +22,6 @@ import {OrganizationModel} from './organization.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum OrganizationsActionType {
-
   GET = '[Organizations] Get',
   GET_SUCCESS = '[Organizations] Get :: Success',
   GET_FAILURE = '[Organizations] Get :: Failure',
@@ -49,12 +48,10 @@ export enum OrganizationsActionType {
 
   CHANGE_PERMISSION = '[Organizations] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Organizations] Change Permission :: Success',
-  CHANGE_PERMISSION_FAILURE = '[Organizations] Change Permission :: Failure'
-
+  CHANGE_PERMISSION_FAILURE = '[Organizations] Change Permission :: Failure',
 }
 
 export namespace OrganizationsAction {
-
   export class Get implements Action {
     public readonly type = OrganizationsActionType.GET;
   }
@@ -62,22 +59,19 @@ export namespace OrganizationsAction {
   export class GetSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { organizations: OrganizationModel[] }) {
-    }
+    public constructor(public payload: {organizations: OrganizationModel[]}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = OrganizationsActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class GetOneSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_ONE_SUCCESS;
 
-    public constructor(public payload: { organization: OrganizationModel }) {
-    }
+    public constructor(public payload: {organization: OrganizationModel}) {}
   }
 
   export class GetCodes implements Action {
@@ -87,113 +81,124 @@ export namespace OrganizationsAction {
   export class GetCodesSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_CODES_SUCCESS;
 
-    public constructor(public payload: { organizationCodes: string[] }) {
-    }
+    public constructor(public payload: {organizationCodes: string[]}) {}
   }
 
   export class GetCodesFailure implements Action {
     public readonly type = OrganizationsActionType.GET_CODES_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = OrganizationsActionType.CREATE;
 
-    public constructor(public payload: { organization: OrganizationModel, callback?: (organization: OrganizationModel) => void }) {
-    }
+    public constructor(
+      public payload: {organization: OrganizationModel; callback?: (organization: OrganizationModel) => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = OrganizationsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { organization: OrganizationModel }) {
-    }
+    public constructor(public payload: {organization: OrganizationModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = OrganizationsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = OrganizationsActionType.UPDATE;
 
-    public constructor(public payload: { organization: OrganizationModel }) {
-    }
+    public constructor(public payload: {organization: OrganizationModel}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = OrganizationsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { organization: OrganizationModel }) {
-    }
+    public constructor(public payload: {organization: OrganizationModel}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = OrganizationsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = OrganizationsActionType.DELETE;
 
-    public constructor(public payload: { organizationId: string, onSuccess?: () => void }) {
-    }
+    public constructor(public payload: {organizationId: string; onSuccess?: () => void}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = OrganizationsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { organizationId: string }) {
-    }
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = OrganizationsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Select implements Action {
     public readonly type = OrganizationsActionType.SELECT;
 
-    public constructor(public payload: { organizationId: string }) {
-    }
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class ChangePermission implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel, currentPermission: PermissionModel }) {
-    }
+    public constructor(
+      public payload: {
+        organizationId: string;
+        type: PermissionType;
+        permission: PermissionModel;
+        currentPermission: PermissionModel;
+      }
+    ) {}
   }
 
   export class ChangePermissionSuccess implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel }) {
-    }
+    public constructor(public payload: {organizationId: string; type: PermissionType; permission: PermissionModel}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_FAILURE;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel, error: any }) {
-    }
+    public constructor(
+      public payload: {organizationId: string; type: PermissionType; permission: PermissionModel; error: any}
+    ) {}
   }
 
-  export type All = Select |
-    Get | GetSuccess | GetFailure | GetOneSuccess |
-    GetCodes | GetCodesSuccess | GetCodesFailure |
-    Create | CreateSuccess | CreateFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Select |
-    ChangePermission | ChangePermissionSuccess | ChangePermissionFailure;
+  export type All =
+    | Select
+    | Get
+    | GetSuccess
+    | GetFailure
+    | GetOneSuccess
+    | GetCodes
+    | GetCodesSuccess
+    | GetCodesFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure
+    | Select
+    | ChangePermission
+    | ChangePermissionSuccess
+    | ChangePermissionFailure;
 }

@@ -33,10 +33,9 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   selector: 'table-header-link',
   templateUrl: './table-header-link.component.html',
   styleUrls: ['./table-header-link.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeaderLinkComponent implements OnChanges {
-
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -52,8 +51,7 @@ export class TableHeaderLinkComponent implements OnChanges {
   public collections$: Observable<CollectionModel[]>;
   public linkType$: Observable<LinkTypeModel>;
 
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
@@ -69,5 +67,4 @@ export class TableHeaderLinkComponent implements OnChanges {
   public onRemovePart() {
     this.store.dispatch(new TablesAction.RemovePart({cursor: this.cursor}));
   }
-
 }

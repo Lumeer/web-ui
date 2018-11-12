@@ -18,11 +18,10 @@
  */
 
 export interface DocumentModel {
-
   id?: string;
   collectionId: string;
   data: DocumentData;
-  newData?: { [attributeName: string]: { value: any, correlationId?: string } };
+  newData?: {[attributeName: string]: {value: any; correlationId?: string}};
 
   metaData?: DocumentMetaData;
 
@@ -35,17 +34,12 @@ export interface DocumentModel {
   dataVersion?: number;
 
   correlationId?: string;
-
 }
 
 export type DocumentData = {
-
-  [attributeId: string]: any
-
+  [attributeId: string]: any;
 };
 
 export interface DocumentMetaData {
-
   parentId?: string;
-
 }

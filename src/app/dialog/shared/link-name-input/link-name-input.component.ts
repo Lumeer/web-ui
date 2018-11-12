@@ -22,10 +22,9 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'link-name-input',
-  templateUrl: './link-name-input.component.html'
+  templateUrl: './link-name-input.component.html',
 })
 export class LinkNameInputComponent implements OnChanges {
-
   @Input()
   public colors: string[];
 
@@ -50,5 +49,4 @@ export class LinkNameInputComponent implements OnChanges {
   public get linkNameInput(): AbstractControl {
     return this.formGroup.get('linkName');
   }
-
 }

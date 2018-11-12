@@ -26,10 +26,9 @@ const DEFAULT_SIZE = 'fa-3x';
 @Component({
   selector: 'icon-chooser',
   templateUrl: './icon-chooser.component.html',
-  styleUrls: ['./icon-chooser.component.scss']
+  styleUrls: ['./icon-chooser.component.scss'],
 })
 export class IconComponent implements AfterViewInit {
-
   @Input()
   public color: string;
 
@@ -80,8 +79,8 @@ export class IconComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     const dropdown = $(`#${this.dropdownId}`);
     dropdown.on('hide.bs.dropdown', () => this.detectChanges());
-    dropdown.on('hidden.bs.dropdown', () => this.visible = false);
-    dropdown.on('shown.bs.dropdown', () => this.visible = true);
+    dropdown.on('hidden.bs.dropdown', () => (this.visible = false));
+    dropdown.on('shown.bs.dropdown', () => (this.visible = true));
   }
 
   public detectChanges(): void {
@@ -107,5 +106,4 @@ export class IconComponent implements AfterViewInit {
     this.oldColor = this.color;
     this.oldIcon = this.icon;
   }
-
 }

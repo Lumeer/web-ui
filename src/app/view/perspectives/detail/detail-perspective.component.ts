@@ -29,10 +29,9 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
   selector: 'detail-perspective',
   templateUrl: './detail-perspective.component.html',
   styleUrls: ['./detail-perspective.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailPerspectiveComponent {
-
   @Input()
   public embedded: boolean;
 
@@ -40,9 +39,7 @@ export class DetailPerspectiveComponent {
 
   public selectedDocument: DocumentModel;
 
-  public constructor(private store: Store<AppState>,
-                     private detector: ChangeDetectorRef) {
-  }
+  public constructor(private store: Store<AppState>, private detector: ChangeDetectorRef) {}
 
   public selectCollection(collection: CollectionModel) {
     this.select(collection, undefined);
@@ -53,7 +50,7 @@ export class DetailPerspectiveComponent {
     this.loadLinkInstances(document);
   }
 
-  public selectCollectionAndDocument(data: { collection: CollectionModel, document: DocumentModel }) {
+  public selectCollectionAndDocument(data: {collection: CollectionModel; document: DocumentModel}) {
     const {collection, document} = data;
     this.setQueryWithCollection(collection);
     this.select(collection, document);

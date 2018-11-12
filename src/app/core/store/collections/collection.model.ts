@@ -20,7 +20,6 @@
 import {ResourceModel} from '../../model/resource.model';
 
 export interface AttributeModel {
-
   id?: string;
   name: string;
 
@@ -29,11 +28,9 @@ export interface AttributeModel {
   intermediate?: boolean;
 
   correlationId?: string;
-
 }
 
 export interface CollectionModel extends ResourceModel {
-
   attributes?: AttributeModel[];
   defaultAttributeId?: string;
   lastTimeUsed?: Date;
@@ -41,5 +38,4 @@ export interface CollectionModel extends ResourceModel {
   documentsCount?: number;
 
   favorite?: boolean;
-
 }

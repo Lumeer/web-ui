@@ -23,13 +23,11 @@ import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table
 import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({
-  name: 'previousLinkedRow'
+  name: 'previousLinkedRow',
 })
 export class PreviousLinkedRowPipe implements PipeTransform {
-
   public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {
     const {parentPath} = splitRowPath(cursor.rowPath);
     return findTableRow(table.config.rows, parentPath);
   }
-
 }

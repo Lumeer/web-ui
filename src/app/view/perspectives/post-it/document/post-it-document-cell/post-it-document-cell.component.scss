@@ -1,10 +1,11 @@
-@import "../../../../../../styles/variables";
+@import '../../../../../../styles/variables';
 
 :host {
   display: flex;
 }
 
-:host(:focus) input, :host input:focus {
+:host(:focus) input,
+:host input:focus {
   outline: auto !important;
   pointer-events: auto;
 }

@@ -23,10 +23,9 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/co
   selector: 'lumeer-logo',
   templateUrl: './lumeer-logo.component.html',
   styleUrls: ['./lumeer-logo.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LumeerLogoComponent {
-
   @Input()
   public height: number;
 
@@ -36,6 +35,5 @@ export class LumeerLogoComponent {
   @Input()
   public text: string;
 
-  constructor(public element: ElementRef) {
-  }
+  constructor(public element: ElementRef) {}
 }

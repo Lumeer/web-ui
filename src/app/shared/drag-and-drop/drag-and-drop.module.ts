@@ -24,20 +24,9 @@ import {DropTargetDirective} from './drop-target.directive';
 import {DragService} from './drag.service';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    DraggableDirective,
-    DropTargetDirective
-  ],
-  declarations: [
-    DraggableDirective,
-    DropTargetDirective
-  ],
-  providers: [
-    DragService
-  ]
+  imports: [CommonModule],
+  exports: [DraggableDirective, DropTargetDirective],
+  declarations: [DraggableDirective, DropTargetDirective],
+  providers: [DragService],
 })
-export class DragAndDropModule {
-}
+export class DragAndDropModule {}

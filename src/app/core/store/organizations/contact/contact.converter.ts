@@ -21,7 +21,6 @@ import {Contact} from '../../../dto';
 import {ContactModel} from './contact.model';
 
 export class ContactConverter {
-
   public static fromDto(dto: Contact): ContactModel {
     return {
       id: dto.id,
@@ -38,7 +37,7 @@ export class ContactConverter {
       email: dto.email,
       phone: dto.phone,
       ic: dto.ic,
-      dic: dto.dic
+      dic: dto.dic,
     };
   }
 
@@ -58,7 +57,7 @@ export class ContactConverter {
       email: contact.email,
       phone: contact.phone,
       ic: contact.ic,
-      dic: contact.dic
+      dic: contact.dic,
     };
   }
 }

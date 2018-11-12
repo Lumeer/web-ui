@@ -36,8 +36,10 @@ export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
     return false;
   }
 
-  return newQuery.linkTypeIds.length > oldQuery.linkTypeIds.length
-    && isArraySubset(newQuery.linkTypeIds, oldQuery.linkTypeIds);
+  return (
+    newQuery.linkTypeIds.length > oldQuery.linkTypeIds.length &&
+    isArraySubset(newQuery.linkTypeIds, oldQuery.linkTypeIds)
+  );
 }
 
 export function getNewLinkTypeIdFromQuery(oldQuery: QueryModel, newQuery: QueryModel): string {

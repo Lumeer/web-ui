@@ -24,13 +24,12 @@ import {environment} from '../../../environments/environment';
 if (environment.sentryDsn) {
   Raven.config(environment.sentryDsn, {
     release: environment.buildNumber,
-    environment: environment.name || ''
+    environment: environment.name || '',
   }).install();
 }
 
 @Injectable()
 export class RavenErrorHandler implements ErrorHandler {
-
   public handleError(error: any): void {
     console.error(error);
 
@@ -38,5 +37,4 @@ export class RavenErrorHandler implements ErrorHandler {
       Raven.captureException(error.originalError || error);
     }
   }
-
 }

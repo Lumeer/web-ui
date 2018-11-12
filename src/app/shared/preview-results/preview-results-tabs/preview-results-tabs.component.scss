@@ -1,7 +1,6 @@
-@import "../../../../styles/variables";
+@import '../../../../styles/variables';
 
 :host {
-
   a.nav-link {
     max-width: 10rem;
     white-space: nowrap;
@@ -16,6 +15,4 @@
       color: $primary-hover;
     }
   }
-
 }
-

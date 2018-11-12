@@ -35,17 +35,10 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 
 @Injectable()
 export class WorkspaceSelectGuard implements CanActivate {
+  public constructor(private workspaceService: WorkspaceService, private store: Store<AppState>) {}
 
-  public constructor(private workspaceService: WorkspaceService,
-                     private store: Store<AppState>) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
-
-    return this.isSomethingSelected().pipe(
-      switchMap(selected => this.checkOrFetch(selected))
-    );
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.isSomethingSelected().pipe(switchMap(selected => this.checkOrFetch(selected)));
   }
 
   private checkOrFetch(selected: boolean): Observable<boolean> {
@@ -57,12 +50,12 @@ export class WorkspaceSelectGuard implements CanActivate {
   }
 
   private isSomethingSelected(): Observable<boolean> {
-    return combineLatest(
-      this.store.select(selectSelectedOrganization),
-      this.store.select(selectSelectedProject)
-    ).pipe(
+    return combineLatest(this.store.select(selectSelectedOrganization), this.store.select(selectSelectedProject)).pipe(
       first(),
-      map(([selectedOrganization, selectedProject]) => !isNullOrUndefined(selectedOrganization) || !isNullOrUndefined(selectedProject))
+      map(
+        ([selectedOrganization, selectedProject]) =>
+          !isNullOrUndefined(selectedOrganization) || !isNullOrUndefined(selectedProject)
+      )
     );
   }
 
@@ -95,13 +88,12 @@ export class WorkspaceSelectGuard implements CanActivate {
   private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
     return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(
       switchMap(project => {
-          if (!isNullOrUndefined(project)) {
-            this.store.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
-            this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
-          }
-          return of(true);
+        if (!isNullOrUndefined(project)) {
+          this.store.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
+          this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
         }
-      ));
+        return of(true);
+      })
+    );
   }
-
 }

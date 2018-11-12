@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
 @Pipe({
-  name: 'isDocumentOpened'
+  name: 'isDocumentOpened',
 })
 export class IsDocumentOpenedPipe implements PipeTransform {
-
   public transform(expandedIds: string[], document: DocumentModel): boolean {
     return expandedIds.includes(document.id);
   }
-
 }

@@ -42,10 +42,9 @@ import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 @Component({
   selector: 'payments-panel',
   templateUrl: './payments-panel.component.html',
-  styleUrls: ['./payments-panel.component.scss']
+  styleUrls: ['./payments-panel.component.scss'],
 })
 export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
@@ -58,14 +57,16 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   private paymentCreatedSubscription: Subscription;
   private lastCreatedPayment: Subscription;
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>,
-              private actionsSubject: ActionsSubject,
-              @Inject(DOCUMENT) private document,
-              private elementRef: ElementRef,
-              private notificationService: NotificationService,
-              private datePipe: DatePipe) {
+  constructor(
+    private i18n: I18n,
+    private router: Router,
+    private store: Store<AppState>,
+    private actionsSubject: ActionsSubject,
+    @Inject(DOCUMENT) private document,
+    private elementRef: ElementRef,
+    private notificationService: NotificationService,
+    private datePipe: DatePipe
+  ) {
     this.languageCode = this.i18n({id: 'organization.payments.lang.code', value: 'en'});
   }
 
@@ -75,17 +76,20 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public subscribeToStore() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.organizationSubscription = this.store
+      .select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+      .subscribe(organization => (this.organization = organization));
 
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
+    this.serviceLimitsSubscription = this.store
+      .select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
-      .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
+      .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
 
-    this.lastCreatedPayment = this.store.select(selectLastCreatedPayment)
+    this.lastCreatedPayment = this.store
+      .select(selectLastCreatedPayment)
       .pipe(filter(payment => !isNullOrUndefined(payment)))
-      .subscribe(payment => this.lastPayment = payment);
+      .subscribe(payment => (this.lastPayment = payment));
   }
 
   public ngOnDestroy(): void {
@@ -109,34 +113,68 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   public createPayment($event) {
     let validUntil: Date;
 
-    validUntil = new Date($event.start.getFullYear(), $event.start.getMonth() + $event.months, $event.start.getDate(), 23, 59, 59, 999);
+    validUntil = new Date(
+      $event.start.getFullYear(),
+      $event.start.getMonth() + $event.months,
+      $event.start.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
 
     const payment: PaymentModel = {
-      date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
-      start: $event.start, validUntil, state: 'CREATED', users: $event.users, language: this.languageCode, gwUrl: '',
-      paymentId: null, id: null, organizationId: this.organization.id
+      date: new Date(),
+      serviceLevel: 'BASIC',
+      amount: $event.amount,
+      currency: $event.currency,
+      start: $event.start,
+      validUntil,
+      state: 'CREATED',
+      users: $event.users,
+      language: this.languageCode,
+      gwUrl: '',
+      paymentId: null,
+      id: null,
+      organizationId: this.organization.id,
     };
 
-    if (this.serviceLimits.serviceLevel !== ServiceLevelType.FREE && this.checkDayOverlap(this.serviceLimits.validUntil, $event.start)) {
-      this.store.dispatch(new NotificationsAction.Confirm({
-        title: this.i18n({ id: 'organization.payments.paidWarning.title', value: 'Already Paid' }),
-        message: this.i18n({
-          id: 'organization.payments.paidWarning.text',
-          value: `Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}?
+    if (
+      this.serviceLimits.serviceLevel !== ServiceLevelType.FREE &&
+      this.checkDayOverlap(this.serviceLimits.validUntil, $event.start)
+    ) {
+      this.store.dispatch(
+        new NotificationsAction.Confirm({
+          title: this.i18n({id: 'organization.payments.paidWarning.title', value: 'Already Paid'}),
+          message: this.i18n(
+            {
+              id: 'organization.payments.paidWarning.text',
+              value: `Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}?
  In case you want to add more users, please contact support@lumeer.io.`,
-        }, {
-          '0': this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate'),
-          '1': this.datePipe.transform($event.start, 'shortDate')
-        }),
-        action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment})
-      }));
+            },
+            {
+              '0': this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate'),
+              '1': this.datePipe.transform($event.start, 'shortDate'),
+            }
+          ),
+          action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}),
+        })
+      );
     } else {
       this.store.dispatch(new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}));
     }
   }
 
   private checkDayOverlap(serviceUntil: Date, newOrder: Date): boolean {
-    const serviceDay = new Date(serviceUntil.getFullYear(), serviceUntil.getMonth(), serviceUntil.getDate(), 23, 59, 59, 999);
+    const serviceDay = new Date(
+      serviceUntil.getFullYear(),
+      serviceUntil.getMonth(),
+      serviceUntil.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
     const newOrderDay = new Date(newOrder.getFullYear(), newOrder.getMonth(), newOrder.getDate(), 0, 0, 0, 0);
     return serviceDay.getTime() > newOrderDay.getTime();
   }

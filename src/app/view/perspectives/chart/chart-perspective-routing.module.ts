@@ -24,18 +24,12 @@ import {ChartPerspectiveComponent} from './chart-perspective.component';
 const chartRoutes: Routes = [
   {
     path: '',
-    component: ChartPerspectiveComponent
-  }
+    component: ChartPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(chartRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(chartRoutes)],
+  exports: [RouterModule],
 })
-export class ChartPerspectiveRoutingModule {
-
-}
+export class ChartPerspectiveRoutingModule {}

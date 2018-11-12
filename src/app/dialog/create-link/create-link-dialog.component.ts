@@ -32,10 +32,9 @@ import {DialogService} from '../dialog.service';
 
 @Component({
   selector: 'create-link-dialog',
-  templateUrl: './create-link-dialog.component.html'
+  templateUrl: './create-link-dialog.component.html',
 })
 export class CreateLinkDialogComponent implements OnInit, OnDestroy {
-
   private collections: CollectionModel[];
 
   private subscriptions = new Subscription();
@@ -43,9 +42,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public linkTypeFormGroup: FormGroup;
 
-  constructor(private dialogService: DialogService,
-              private route: ActivatedRoute,
-              private store: Store<AppState>) {
+  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store: Store<AppState>) {
     this.createForm();
   }
 
@@ -53,14 +50,14 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
     this.linkTypeFormGroup = this.createLinkTypeFormGroup();
 
     this.form = new FormGroup({
-      linkType: this.linkTypeFormGroup
+      linkType: this.linkTypeFormGroup,
     });
   }
 
   private createLinkTypeFormGroup() {
     const validators = [Validators.required, Validators.minLength(3)];
     return new FormGroup({
-      linkName: new FormControl('', validators)
+      linkName: new FormControl('', validators),
     });
   }
 
@@ -74,16 +71,18 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
 
   private subscribeToLinkCollectionIds() {
     this.subscriptions.add(
-      this.route.paramMap.pipe(
-        map(params => params.get('linkCollectionIds')),
-        filter(linkCollectionIds => !!linkCollectionIds),
-        map(linkCollectionIds => linkCollectionIds.split(',')),
-        filter(linkCollectionIds => linkCollectionIds.length === 2),
-        withLatestFrom(this.store.select(selectAllCollections))
-      ).subscribe(([linkCollectionIds, collections]) => {
-        this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
-        this.linkNameInput.setValue(this.collections.map(collection => collection.name).join(' '));
-      })
+      this.route.paramMap
+        .pipe(
+          map(params => params.get('linkCollectionIds')),
+          filter(linkCollectionIds => !!linkCollectionIds),
+          map(linkCollectionIds => linkCollectionIds.split(',')),
+          filter(linkCollectionIds => linkCollectionIds.length === 2),
+          withLatestFrom(this.store.select(selectAllCollections))
+        )
+        .subscribe(([linkCollectionIds, collections]) => {
+          this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
+          this.linkNameInput.setValue(this.collections.map(collection => collection.name).join(' '));
+        })
     );
   }
 
@@ -114,9 +113,8 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
   private createLinkTypeAction(): LinkTypesAction.Create {
     const linkType: LinkTypeModel = {
       name: this.linkNameInput.value,
-      collectionIds: [this.collections[0].id, this.collections[1].id]
+      collectionIds: [this.collections[0].id, this.collections[1].id],
     };
     return new LinkTypesAction.Create({linkType, callback: this.dialogService.callback});
   }
-
 }

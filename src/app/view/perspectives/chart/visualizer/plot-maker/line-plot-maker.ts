@@ -22,7 +22,6 @@ import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/stor
 import {d3, Data, Layout} from 'plotly.js';
 
 export class LinePlotMaker extends PlotMaker {
-
   public createData(): Data[] {
     const data: Data[] = [];
 
@@ -55,8 +54,8 @@ export class LinePlotMaker extends PlotMaker {
       yaxis: 'y2',
       line: {
         dash: 'dot',
-        width: 4
-      }
+        width: 4,
+      },
     };
   }
 
@@ -81,7 +80,12 @@ export class LinePlotMaker extends PlotMaker {
     return collection && collection.color;
   }
 
-  private createAxesData(dataStyle: Data, yAxisType: ChartAxisType, xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+  private createAxesData(
+    dataStyle: Data,
+    yAxisType: ChartAxisType,
+    xAxis?: ChartAxisModel,
+    yAxis?: ChartAxisModel
+  ): Data {
     const data = {...dataStyle};
 
     const traceX = [];
@@ -134,7 +138,7 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    return {...this.yAxis1Layout(), ... this.yAxis2Layout(), ...this.otherLayout()};
+    return {...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
   }
 
   private yAxis1Layout(): Partial<Layout> {
@@ -143,8 +147,8 @@ export class LinePlotMaker extends PlotMaker {
       return {
         yaxis: {
           type: 'category',
-          categoryarray: this.getYAxisCategories(type)
-        }
+          categoryarray: this.getYAxisCategories(type),
+        },
       };
     }
     return {};
@@ -160,16 +164,16 @@ export class LinePlotMaker extends PlotMaker {
             overlaying: 'y',
             side: 'right',
             type: 'category',
-            categoryarray: this.getYAxisCategories(type)
-          }
+            categoryarray: this.getYAxisCategories(type),
+          },
         };
       }
 
       return {
         yaxis2: {
           overlaying: 'y',
-          side: 'right'
-        }
+          side: 'right',
+        },
       };
     }
   }
@@ -178,8 +182,8 @@ export class LinePlotMaker extends PlotMaker {
     return {
       legend: {
         xanchor: 'left',
-        x: 1.1
-      }
+        x: 1.1,
+      },
     };
   }
 
@@ -227,28 +231,24 @@ export class LinePlotMaker extends PlotMaker {
 
   private createDrag(): any {
     const plotMaker = this;
-    return d3.behavior.drag()
-      .origin(function () {
+    return d3.behavior
+      .drag()
+      .origin(function(datum) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         this.yScale = plotMaker.createYScale(traceIx);
         this.traceIx = traceIx;
+        this.initialValue = plotMaker.getInitialValue(traceIx, datum.i);
         return plotMaker.getPointPosition(this);
       })
-      .on('drag', function (datum) {
+      .on('drag', function(datum) {
         const yMouse = d3.event.y;
         const index = datum.i;
-        let newValue = this.yScale(yMouse);
-        if (plotMaker.isNumeric(newValue)) {
-          newValue = Math.round(newValue);
-        } else {
-          newValue = newValue.toString();
-        }
-        this.newValue = newValue;
+        this.newValue = plotMaker.getNewValue(this, yMouse);
 
-        const dataChange = {trace: this.traceIx, axis: 'y', index, value: newValue};
+        const dataChange = {trace: this.traceIx, axis: 'y', index, value: this.newValue};
         plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
       })
-      .on('dragend', function (datum) {
+      .on('dragend', function(datum) {
         const documentId = plotMaker.documents[datum.i].id;
         const attributeId = plotMaker.getAttributeIdForTrace(this.traceIx);
         const value = this.newValue;
@@ -256,8 +256,27 @@ export class LinePlotMaker extends PlotMaker {
         if (documentId && attributeId && value && plotMaker.onValueChanged) {
           plotMaker.onValueChanged({documentId, attributeId, value});
         }
-
       });
+  }
+
+  private getInitialValue(traceIx: number, index: number): any {
+    const attributeId = this.getAttributeIdForTrace(traceIx);
+    return this.documents[index].data[attributeId];
+  }
+
+  private getNewValue(point: any, y: number): any {
+    let newValue = point.yScale(y);
+    if (this.isNumeric(newValue)) {
+      const initialValue = point.initialValue;
+      if (this.isDecimal(initialValue)) {
+        newValue = Number.parseFloat(newValue).toFixed(2);
+      } else {
+        newValue = Math.round(newValue);
+      }
+    } else {
+      newValue = newValue.toString();
+    }
+    return newValue;
   }
 
   private canDragPoints(): boolean {
@@ -294,7 +313,7 @@ export class LinePlotMaker extends PlotMaker {
 
   private getTraceIndexForPoint(point: any): number {
     const traceIds = this.getLayoutElement()._traceUids;
-    const traceClasses = traceIds && traceIds.map(id => 'trace' + id) || [];
+    const traceClasses = (traceIds && traceIds.map(id => 'trace' + id)) || [];
     let node = d3.select(point).node();
     while (node) {
       const classList = node.classList;
@@ -309,7 +328,7 @@ export class LinePlotMaker extends PlotMaker {
     return 0;
   }
 
-  private getPointPosition(point: any): { x: number, y: number } {
+  private getPointPosition(point: any): {x: number; y: number} {
     const transform = d3.select(point).attr('transform');
     const translate = transform.substring(10, transform.length - 1).split(/,| /);
     return {x: translate[0], y: translate[1]};
@@ -324,7 +343,8 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   private createYScaleLinear(yAxisElement: any): any {
-    return d3.scale.linear()
+    return d3.scale
+      .linear()
       .domain([this.getGridHeight(), 0])
       .range(yAxisElement.range);
   }
@@ -337,8 +357,9 @@ export class LinePlotMaker extends PlotMaker {
     const domainRange = d3.range(yAxisMargin + domainStep / 2, gridHeight - yAxisMargin, domainStep);
     const domain = domainRange.reverse();
 
-    return (value) => {
-      for (let i = 0; i < domain.length; i++) { // TODO binary search
+    return value => {
+      for (let i = 0; i < domain.length; i++) {
+        // TODO binary search
         if (value > domain[i]) {
           return categories[i];
         }
@@ -357,7 +378,7 @@ export class LinePlotMaker extends PlotMaker {
   private getGridHeight(): number {
     const gridElement = d3.select('.gridlayer').node();
     const boundingRect = gridElement && gridElement.getBoundingClientRect();
-    return boundingRect && boundingRect.height || DEFAULT_GRID_HEIGHT;
+    return (boundingRect && boundingRect.height) || DEFAULT_GRID_HEIGHT;
   }
 
   private getAttributeIdForTrace(index: number): string {
@@ -382,4 +403,7 @@ export class LinePlotMaker extends PlotMaker {
     return !isNaN(value);
   }
 
+  private isDecimal(value: number): boolean {
+    return value % 1 !== 0;
+  }
 }

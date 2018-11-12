@@ -20,17 +20,16 @@
 import {Injectable} from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClipboardService {
-
   private stringToCopy: string;
 
   private copyHandler = (e: ClipboardEvent) => {
     e.clipboardData.setData('text/plain', this.stringToCopy);
     e.preventDefault();
     document.removeEventListener('copy', this.copyHandler);
-  }
+  };
 
   public copy(value: string) {
     this.stringToCopy = value;
@@ -39,5 +38,4 @@ export class ClipboardService {
       document.execCommand('copy');
     });
   }
-
 }

@@ -28,25 +28,9 @@ import {ChartVisualizationComponent} from './chart-visualization/chart-visualiza
 import {ChartPipesModule} from './pipes/chart-pipes.module';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule,
-    PickerModule,
-    ChartPerspectiveRoutingModule,
-    ChartPipesModule
-  ],
-  declarations: [
-    ChartPerspectiveComponent,
-    ChartVisualizationComponent,
-    ChartConfigComponent
-  ],
-  entryComponents: [
-    ChartPerspectiveComponent
-  ],
-  exports: [
-    ChartPerspectiveComponent
-  ]
+  imports: [SharedModule, RouterModule, PickerModule, ChartPerspectiveRoutingModule, ChartPipesModule],
+  declarations: [ChartPerspectiveComponent, ChartVisualizationComponent, ChartConfigComponent],
+  entryComponents: [ChartPerspectiveComponent],
+  exports: [ChartPerspectiveComponent],
 })
-export class ChartPerspectiveModule {
-
-}
+export class ChartPerspectiveModule {}

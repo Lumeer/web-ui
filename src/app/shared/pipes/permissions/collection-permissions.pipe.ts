@@ -36,15 +36,13 @@ import {Role} from '../../../core/model/role';
 
 @Pipe({
   name: 'collectionPermissions',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CollectionPermissionsPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public transform(collection: CollectionModel): Observable<AllowedPermissions> {
     return this.store.select(selectCurrentUserForWorkspace).pipe(
@@ -99,18 +97,12 @@ export class CollectionPermissionsPipe implements PipeTransform {
   }
 
   private viewContainsCollection(view: ViewModel, collection: CollectionModel): Observable<boolean> {
-    return this.getViewCollectionIds(view).pipe(
-      map(collectionIds => collectionIds.includes(collection.id))
-    );
+    return this.getViewCollectionIds(view).pipe(map(collectionIds => collectionIds.includes(collection.id)));
   }
 
   private getViewCollectionIds(view: ViewModel): Observable<string[]> {
-    return observableCombineLatest(
-      this.store.select(selectAllLinkTypes),
-      this.store.select(selectAllDocuments)
-    ).pipe(
+    return observableCombineLatest(this.store.select(selectAllLinkTypes), this.store.select(selectAllDocuments)).pipe(
       map(([linkTypes, documents]) => getCollectionsIdsFromView(view, linkTypes, documents))
     );
   }
-
 }

@@ -27,5 +27,5 @@ export const environment: Environment = {
   production: false,
   storeDevtools: true,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables
+  ...environmentVariables,
 };

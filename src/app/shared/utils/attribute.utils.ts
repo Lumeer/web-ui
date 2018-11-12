@@ -44,7 +44,9 @@ export function filterDirectAttributeChildren(attributes: AttributeModel[], pare
 }
 
 export function isDirectAttributeChild(parent: AttributeModel, potentialChild: AttributeModel): boolean {
-  return potentialChild.name.startsWith(parent.name) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1;
+  return (
+    potentialChild.name.startsWith(parent.name) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1
+  );
 }
 
 export function hasAttributeChildren(attributes: AttributeModel[], parent: AttributeModel): boolean {
@@ -63,7 +65,7 @@ export function extractAttributeParentName(name: string): string {
   return splitAttributeName(name).parentName;
 }
 
-export function splitAttributeName(name: string): { parentName: string, lastName: string } {
+export function splitAttributeName(name: string): {parentName: string; lastName: string} {
   const parts = name.split('.');
   if (parts.length === 1) {
     return {parentName: null, lastName: name};
@@ -71,7 +73,7 @@ export function splitAttributeName(name: string): { parentName: string, lastName
 
   return {
     parentName: parts.slice(0, parts.length - 1).join('.'),
-    lastName: parts[parts.length - 1]
+    lastName: parts[parts.length - 1],
   };
 }
 

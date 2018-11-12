@@ -1,4 +1,4 @@
-@import "../../../../../styles/variables";
+@import '../../../../../styles/variables';
 
 table {
   table-layout: auto;
@@ -11,7 +11,8 @@ thead {
   font-weight: bold;
 }
 
-th, td {
+th,
+td {
   max-width: 20rem;
   white-space: nowrap;
   overflow: hidden;
@@ -21,7 +22,8 @@ th, td {
   width: auto !important;
 }
 
-td:last-child, th:last-child {
+td:last-child,
+th:last-child {
   position: sticky;
   text-align: end;
   right: 0;
@@ -29,5 +31,5 @@ td:last-child, th:last-child {
 }
 
 th:last-child {
-  z-index: 2
+  z-index: 2;
 }

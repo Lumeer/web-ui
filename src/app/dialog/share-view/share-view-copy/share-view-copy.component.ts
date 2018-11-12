@@ -24,10 +24,9 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
   selector: 'share-view-copy',
   templateUrl: './share-view-copy.component.html',
   styleUrls: ['./share-view-copy.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareViewCopyComponent {
-
   @Input()
   public viewShareUrl: string;
 
@@ -40,5 +39,4 @@ export class ShareViewCopyComponent {
   public onCopyClick() {
     this.copy.emit();
   }
-
 }

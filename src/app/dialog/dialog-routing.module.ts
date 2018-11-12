@@ -31,52 +31,47 @@ const routes: Routes = [
   {
     path: `${DialogPath.CREATE_COLLECTION}/:linkedCollectionId`,
     component: CreateCollectionDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: DialogPath.CREATE_COLLECTION,
     component: CreateCollectionDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_LINK}/:linkCollectionIds`,
     component: CreateLinkDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: DialogPath.FEEDBACK,
     component: FeedbackDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.OVERWRITE_VIEW}/:existingViewCode`,
     component: OverwriteViewDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.SHARE_VIEW}/:viewCode`,
     component: ShareViewDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_ORGANIZATION}`,
     component: CreateResourceDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
     component: CreateResourceDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class DialogRoutingModule {
-}
+export class DialogRoutingModule {}

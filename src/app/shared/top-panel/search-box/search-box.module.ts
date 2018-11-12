@@ -35,14 +35,7 @@ import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    PickerModule,
-    PipesModule,
-    SearchBoxPipesModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, PickerModule, PipesModule, SearchBoxPipesModule],
   declarations: [
     SearchBoxComponent,
     QueryItemComponent,
@@ -52,13 +45,8 @@ import {SearchBoxComponent} from './search-box.component';
     ConditionSuggestionsComponent,
     SuggestionItemComponent,
     AttributeConditionComponent,
-    AttributeValueComponent
+    AttributeValueComponent,
   ],
-  exports: [
-    SearchBoxComponent,
-    QueryItemComponent,
-    SearchBoxPipesModule
-  ]
+  exports: [SearchBoxComponent, QueryItemComponent, SearchBoxPipesModule],
 })
-export class SearchBoxModule {
-}
+export class SearchBoxModule {}

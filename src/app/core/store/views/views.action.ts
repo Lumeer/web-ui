@@ -22,7 +22,6 @@ import {PermissionModel, PermissionType} from '../permissions/permissions.model'
 import {SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 
 export enum ViewsActionType {
-
   GET = '[Views] Get',
   GET_BY_CODE = '[Views] Get By Code',
   GET_SUCCESS = '[Views] Get :: Success',
@@ -53,12 +52,10 @@ export enum ViewsActionType {
 
   SET_CURSOR = '[Views] Set Cursor',
 
-  CLEAR = '[Views] Clear'
-
+  CLEAR = '[Views] Clear',
 }
 
 export namespace ViewsAction {
-
   export class Get implements Action {
     public readonly type = ViewsActionType.GET;
   }
@@ -66,140 +63,133 @@ export namespace ViewsAction {
   export class GetByCode implements Action {
     public readonly type = ViewsActionType.GET_BY_CODE;
 
-    public constructor(public payload: { viewCode: string }) {
-    }
+    public constructor(public payload: {viewCode: string}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = ViewsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { views: ViewModel[] }) {
-    }
+    public constructor(public payload: {views: ViewModel[]}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = ViewsActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: { view: ViewModel }) {
-    }
+    public constructor(public payload: {view: ViewModel}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ViewsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { view: ViewModel }) {
-    }
+    public constructor(public payload: {view: ViewModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = ViewsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = ViewsActionType.UPDATE;
 
-    public constructor(public payload: { viewCode: string, view: ViewModel, nextAction?: Action }) {
-    }
+    public constructor(public payload: {viewCode: string; view: ViewModel; nextAction?: Action}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { view: ViewModel, nextAction?: Action }) {
-    }
+    public constructor(public payload: {view: ViewModel; nextAction?: Action}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = ViewsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class SetPermissions implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS;
 
-    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
-    }
+    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: PermissionModel[]}) {}
   }
 
   export class SetPermissionsSuccess implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
 
-    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
-    }
+    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: PermissionModel[]}) {}
   }
 
   export class SetPermissionsFailure implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = ViewsActionType.DELETE;
 
-    public constructor(public payload: { viewCode: string }) {
-    }
+    public constructor(public payload: {viewCode: string}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = ViewsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { viewCode: string }) {
-    }
+    public constructor(public payload: {viewCode: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = ViewsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class ChangeConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_CONFIG;
 
-    public constructor(public payload: { config: ViewConfigModel }) {
-    }
+    public constructor(public payload: {config: ViewConfigModel}) {}
   }
 
   export class ChangeSearchConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
 
-    public constructor(public payload: { config: SearchConfigModel }) {
-    }
+    public constructor(public payload: {config: SearchConfigModel}) {}
   }
 
   export class SetCursor implements Action {
     public readonly type = ViewsActionType.SET_CURSOR;
 
-    public constructor(public payload: { cursor: ViewCursor }) {
-    }
+    public constructor(public payload: {cursor: ViewCursor}) {}
   }
 
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
 
-  export type All = GetByCode | GetSuccess | GetFailure |
-    Create | CreateSuccess | CreateFailure |
-    SetPermissions | SetPermissionsSuccess | SetPermissionsFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure |
-    ChangeConfig | ChangeSearchConfig |
-    SetCursor |
-    Clear;
-
+  export type All =
+    | GetByCode
+    | GetSuccess
+    | GetFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | SetPermissions
+    | SetPermissionsSuccess
+    | SetPermissionsFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure
+    | ChangeConfig
+    | ChangeSearchConfig
+    | SetCursor
+    | Clear;
 }

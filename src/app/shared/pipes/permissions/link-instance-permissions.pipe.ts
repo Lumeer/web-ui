@@ -30,16 +30,13 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'linkInstancePermissions',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LinkInstancePermissionsPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>,
-                     private documentPermissionsPipe: DocumentPermissionsPipe) {
-  }
+  public constructor(private store: Store<AppState>, private documentPermissionsPipe: DocumentPermissionsPipe) {}
 
   public transform(linkInstance: LinkInstanceModel): Observable<AllowedPermissions> {
     if (!linkInstance) {
@@ -52,7 +49,10 @@ export class LinkInstancePermissionsPipe implements PipeTransform {
           return of({});
         }
 
-        return observableCombineLatest(this.documentPermissionsPipe.transform(documents[0]), this.documentPermissionsPipe.transform(documents[1])).pipe(
+        return observableCombineLatest(
+          this.documentPermissionsPipe.transform(documents[0]),
+          this.documentPermissionsPipe.transform(documents[1])
+        ).pipe(
           map(([ap1, ap2]) => {
             return {
               read: ap1.read && ap2.read,
@@ -60,7 +60,7 @@ export class LinkInstancePermissionsPipe implements PipeTransform {
               manage: ap1.manage && ap2.manage,
               readWithView: ap1.readWithView && ap2.readWithView,
               writeWithView: ap1.writeWithView && ap2.writeWithView,
-              manageWithView: ap1.manageWithView && ap2.manageWithView
+              manageWithView: ap1.manageWithView && ap2.manageWithView,
             };
           })
         );
@@ -69,9 +69,8 @@ export class LinkInstancePermissionsPipe implements PipeTransform {
   }
 
   private getDocumentsForLinkInstance(linkInstance: LinkInstanceModel): Observable<DocumentModel[]> {
-    return this.store.select(selectDocumentsByIds(linkInstance.documentIds)).pipe(
-      map(documents => documents.filter(document => !!document))
-    );
+    return this.store
+      .select(selectDocumentsByIds(linkInstance.documentIds))
+      .pipe(map(documents => documents.filter(document => !!document)));
   }
-
 }

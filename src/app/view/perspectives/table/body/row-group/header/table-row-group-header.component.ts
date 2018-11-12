@@ -22,8 +22,6 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'table-row-group-header',
   templateUrl: './table-row-group-header.component.html',
-  styleUrls: ['./table-row-group-header.component.scss']
+  styleUrls: ['./table-row-group-header.component.scss'],
 })
-export class TableRowGroupHeaderComponent {
-
-}
+export class TableRowGroupHeaderComponent {}

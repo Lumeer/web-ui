@@ -1,4 +1,4 @@
-@import "../../../../styles/variables";
+@import '../../../../styles/variables';
 
 $post-it-size: 170px;
 $post-it-margin: 15px;
@@ -49,7 +49,7 @@ $bookmark-border-color: #bdbdbd;
       -o-transition: left $animation-duration;
 
       .tab {
-        width: $post-it-size + 2*$post-it-margin;
+        width: $post-it-size + 2 * $post-it-margin;
         height: $bookmark-height;
 
         .post-it {
@@ -63,7 +63,6 @@ $bookmark-border-color: #bdbdbd;
             background: transparent;
             z-index: 10;
             position: absolute !important;
-
           }
         }
       }
@@ -90,11 +89,7 @@ $bookmark-border-color: #bdbdbd;
             background: $bookmark-border-color;
           }
         }
-
       }
     }
   }
-
 }
-
-

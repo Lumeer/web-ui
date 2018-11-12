@@ -38,10 +38,9 @@ import {ChartAction} from '../../../core/store/charts/charts.action';
   selector: 'chart-perspective',
   templateUrl: './chart-perspective.component.html',
   styleUrls: ['./chart-perspective.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
-
   public documents$: Observable<DocumentModel[]>;
   public collection$: Observable<CollectionModel>;
   public config$: Observable<ChartConfig>;
@@ -52,8 +51,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initChart();
@@ -62,11 +60,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery))
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchDocuments(query);
-      });
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchDocuments(query);
+    });
     this.subscriptions.add(subscription);
   }
 
@@ -75,10 +72,13 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initChart() {
-    const subscription = this.store$.pipe(select(selectCurrentView),
-      take(1))
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        take(1)
+      )
       .subscribe(view => {
-        const config = view && view.config && view.config.chart || this.createDefaultConfig();
+        const config = (view && view.config && view.config.chart) || this.createDefaultConfig();
         const chart = {id: this.chartId, config};
         this.store$.dispatch(new ChartAction.AddChart({chart}));
       });
@@ -91,8 +91,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collection$ = this.store$.pipe(select(selectCollectionsByQuery),
-      map(collections => collections[0]));
+    this.collection$ = this.store$.pipe(
+      select(selectCollectionsByQuery),
+      map(collections => collections[0])
+    );
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
@@ -109,5 +111,4 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
-
 }

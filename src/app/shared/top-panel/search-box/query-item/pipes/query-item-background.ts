@@ -26,21 +26,18 @@ const DEFAULT_BACKGROUND_COLOR = '#faeabb';
 const LINK_BACKGROUND_COLOR = '#ffffff';
 
 @Pipe({
-  name: 'queryItemBackground'
+  name: 'queryItemBackground',
 })
 export class QueryItemBackgroundPipe implements PipeTransform {
-
   public transform(queryItem: QueryItem, isValid?: boolean): string {
     if ([QueryItemType.Link, QueryItemType.View, QueryItemType.Deleted].includes(queryItem.type)) {
       return LINK_BACKGROUND_COLOR;
     }
 
     if (queryItem.colors && queryItem.colors.length === 1) {
-      return shadeColor(queryItem.colors[0], .5);
-
+      return shadeColor(queryItem.colors[0], 0.5);
     }
 
     return DEFAULT_BACKGROUND_COLOR;
   }
-
 }

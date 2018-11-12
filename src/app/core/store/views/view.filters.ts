@@ -34,7 +34,9 @@ export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewM
   }
 
   if (query.collectionIds && query.collectionIds.length > 0) {
-    filtered = filtered.filter(view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0);
+    filtered = filtered.filter(
+      view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0
+    );
   }
 
   return filtered;

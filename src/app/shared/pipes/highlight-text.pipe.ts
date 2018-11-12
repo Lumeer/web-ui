@@ -21,10 +21,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {isNullOrUndefined} from 'util';
 
 @Pipe({
-  name: 'highlightText'
+  name: 'highlightText',
 })
 export class HighlightTextPipe implements PipeTransform {
-
   public transform(text: string, part: string, prefixOnly?: boolean): string {
     if (isNullOrUndefined(text)) {
       return '';
@@ -35,5 +34,4 @@ export class HighlightTextPipe implements PipeTransform {
     }
     return text.replace(match.toString(), `<span class="text-success">${match}</span>`);
   }
-
 }

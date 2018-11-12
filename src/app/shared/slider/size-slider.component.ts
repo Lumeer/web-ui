@@ -23,10 +23,9 @@ import {SizeType} from './size-type';
 @Component({
   selector: 'size-slider',
   templateUrl: './size-slider.component.html',
-  styleUrls: ['./size-slider.component.scss']
+  styleUrls: ['./size-slider.component.scss'],
 })
 export class SizeSliderComponent implements OnInit {
-
   @ViewChild('slider')
   public slider: ElementRef;
 
@@ -108,5 +107,4 @@ export class SizeSliderComponent implements OnInit {
 
     return offset;
   }
-
 }

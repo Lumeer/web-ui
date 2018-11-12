@@ -22,10 +22,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {SizeType} from '../../../../shared/slider/size-type';
 
 @Pipe({
-  name: 'postItColumnStyle'
+  name: 'postItColumnStyle',
 })
 export class PostItColumnStylePipe implements PipeTransform {
-
   public transform(size: SizeType): string {
     switch (size) {
       case SizeType.S:
@@ -40,5 +39,4 @@ export class PostItColumnStylePipe implements PipeTransform {
         return 'col-3';
     }
   }
-
 }

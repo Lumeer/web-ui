@@ -25,10 +25,9 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 @Component({
   selector: 'empty-documents',
   templateUrl: './empty-documents.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyDocumentsComponent {
-
   @Input()
   public query: QueryModel;
 
@@ -41,5 +40,4 @@ export class EmptyDocumentsComponent {
   public onSwitchToTablePerspective() {
     this.tablePerspective.emit();
   }
-
 }

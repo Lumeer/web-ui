@@ -20,18 +20,15 @@
 import {CollectionModel} from '../collections/collection.model';
 
 export interface LinkTypeAttributeModel {
-
   id: string;
   name: string;
 
   constraints: string[]; // TODO use complex objects instead
   usageCount: number;
   intermediate?: boolean;
-
 }
 
 export interface LinkTypeModel {
-
   id?: string;
   name: string;
 
@@ -41,5 +38,4 @@ export interface LinkTypeModel {
   attributes?: LinkTypeAttributeModel[];
 
   correlationId?: string;
-
 }

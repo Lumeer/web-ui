@@ -18,39 +18,31 @@
  */
 
 export interface Event {
-
   id?: string;
   fireReasons: EventFireReason[];
   callback: EventCallback;
   parameters: EventParameter[];
   automatic?: boolean;
-
 }
 
 export interface EventCallback {
-
   name: string;
   hasValue?: boolean;
   value?: string;
-
 }
 
 export enum EventFireReason {
-
   documentCreate = 'new record',
   documentEdit = 'record edit',
   documentRemove = 'record removal',
 
   attributeCreate = 'new attribute',
   attributeEdit = 'attribute edit',
-  attributeRemove = 'attribute removal'
-
+  attributeRemove = 'attribute removal',
 }
 
 export interface EventParameter {
-
   name: string;
   value: any;
   possibleValues: any[];
-
 }

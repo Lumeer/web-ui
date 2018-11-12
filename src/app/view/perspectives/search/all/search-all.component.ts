@@ -35,10 +35,9 @@ import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/document
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 
 @Component({
-  templateUrl: './search-all.component.html'
+  templateUrl: './search-all.component.html',
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
-
   public dataLoaded$: Observable<boolean>;
   public hasCollection: boolean;
   public hasDocument: boolean;
@@ -49,9 +48,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   private documentsLoaded: boolean;
   private subscriptions = new Subscription();
 
-  constructor(private store: Store<AppState>,
-              private router: Router) {
-  }
+  constructor(private store: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.subscribeDataInfo();
@@ -62,7 +59,9 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {queryParams: {action: QueryAction.CreateCollection}});
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+      queryParams: {action: QueryAction.CreateCollection},
+    });
   }
 
   private subscribeDataInfo() {
@@ -71,34 +70,36 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       this.store.select(selectViewsLoaded),
       this.store.select(selectCurrentQueryDocumentsLoaded)
     ).pipe(
-      tap(([collectionsLoaded, viewLoaded, documentsLoaded]) => this.documentsLoaded = documentsLoaded),
-      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded),
+      tap(([collectionsLoaded, viewLoaded, documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
+      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );
 
-    const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !!navigation.workspace && !!navigation.query)
-    ).subscribe(
-      navigation => {
+    const navigationSubscription = this.store
+      .select(selectNavigation)
+      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
+      .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
         this.fetchDocuments();
-      }
-    );
+      });
     this.subscriptions.add(navigationSubscription);
 
-    const collectionSubscription = this.store.select(selectCollectionsByQuery).pipe(
-      map(collections => collections && collections.length > 0)
-    ).subscribe(hasCollection => this.hasCollection = hasCollection);
+    const collectionSubscription = this.store
+      .select(selectCollectionsByQuery)
+      .pipe(map(collections => collections && collections.length > 0))
+      .subscribe(hasCollection => (this.hasCollection = hasCollection));
     this.subscriptions.add(collectionSubscription);
 
-    const viewsSubscription = this.store.select(selectViewsByQuery).pipe(
-      map(views => views && views.length > 0)
-    ).subscribe(hasView => this.hasView = hasView);
+    const viewsSubscription = this.store
+      .select(selectViewsByQuery)
+      .pipe(map(views => views && views.length > 0))
+      .subscribe(hasView => (this.hasView = hasView));
     this.subscriptions.add(viewsSubscription);
 
-    const documentSubscription = this.store.select(selectDocumentsByQuery).pipe(
-      map(documents => documents && documents.length > 0)
-    ).subscribe(hasDocument => this.hasDocument = hasDocument);
+    const documentSubscription = this.store
+      .select(selectDocumentsByQuery)
+      .pipe(map(documents => documents && documents.length > 0))
+      .subscribe(hasDocument => (this.hasDocument = hasDocument));
     this.subscriptions.add(documentSubscription);
   }
 
@@ -110,5 +111,4 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
-
 }

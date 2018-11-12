@@ -24,14 +24,23 @@ import {TableSingleColumn} from '../../../../../core/store/tables/table.model';
 import {EditedAttribute} from '../../../../../core/store/tables/tables.state';
 
 @Pipe({
-  name: 'affectedCell'
+  name: 'affectedCell',
 })
 export class AffectedCellPipe implements PipeTransform {
-
-  public transform(editedAttribute: EditedAttribute, entities: (DocumentModel | LinkInstanceModel)[], column: TableSingleColumn): boolean {
-    return editedAttribute && entities && column && editedAttribute.attributeId === column.attributeId &&
-      entities.some(entity => entity.id && (editedAttribute.documentId === entity.id || editedAttribute.linkInstanceId === entity.id));
-
+  public transform(
+    editedAttribute: EditedAttribute,
+    entities: (DocumentModel | LinkInstanceModel)[],
+    column: TableSingleColumn
+  ): boolean {
+    return (
+      editedAttribute &&
+      entities &&
+      column &&
+      editedAttribute.attributeId === column.attributeId &&
+      entities.some(
+        entity =>
+          entity.id && (editedAttribute.documentId === entity.id || editedAttribute.linkInstanceId === entity.id)
+      )
+    );
   }
-
 }

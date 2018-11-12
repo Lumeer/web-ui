@@ -21,13 +21,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {MapConfig} from '../../../../core/store/maps/map.model';
 
 @Pipe({
-  name: 'mapAttributeIds'
+  name: 'mapAttributeIds',
 })
 export class MapAttributeIdsPipe implements PipeTransform {
-
   public transform(config: MapConfig, collectionId: string): string[] {
     const attributeIds = config && config.attributeIdsMap[collectionId];
     return attributeIds ? attributeIds.concat(null) : [null];
   }
-
 }

@@ -22,7 +22,6 @@ import {QueryModel} from '../navigation/query.model';
 import {LinkInstanceModel} from './link-instance.model';
 
 export enum LinkInstancesActionType {
-
   GET = '[Link Instances] Get',
   GET_SUCCESS = '[Link Instances] Get :: Success',
   GET_FAILURE = '[Link Instances] Get :: Failure',
@@ -40,101 +39,88 @@ export enum LinkInstancesActionType {
   DELETE_SUCCESS = '[Link Instances] Delete :: Success',
   DELETE_FAILURE = '[Link Instances] Delete :: Failure',
 
-  CLEAR = '[Link Instances] Clear'
-
+  CLEAR = '[Link Instances] Clear',
 }
 
 export namespace LinkInstancesAction {
-
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: { query: QueryModel }) {
-    }
+    public constructor(public payload: {query: QueryModel}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: { linkInstances: LinkInstanceModel[], query: QueryModel }) {
-    }
+    public constructor(public payload: {linkInstances: LinkInstanceModel[]; query: QueryModel}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = LinkInstancesActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = LinkInstancesActionType.CREATE;
 
-    public constructor(public payload: { linkInstance: LinkInstanceModel, callback?: (linkInstanceId: string) => void }) {
-    }
+    public constructor(
+      public payload: {linkInstance: LinkInstanceModel; callback?: (linkInstanceId: string) => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = LinkInstancesActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { linkInstance: LinkInstanceModel }) {
-    }
+    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = LinkInstancesActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = LinkInstancesActionType.UPDATE;
 
-    public constructor(public payload: { linkInstance: LinkInstanceModel }) {
-    }
+    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { linkInstance: LinkInstanceModel }) {
-    }
+    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = LinkInstancesActionType.DELETE;
 
-    public constructor(public payload: { linkInstanceId: string, callback?: (linkInstanceId: string) => void }) {
-    }
+    public constructor(public payload: {linkInstanceId: string; callback?: (linkInstanceId: string) => void}) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = LinkInstancesActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: { linkInstanceId: string, callback?: (linkInstanceId: string) => void }) {
-    }
+    public constructor(public payload: {linkInstanceId: string; callback?: (linkInstanceId: string) => void}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = LinkInstancesActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { linkInstanceId: string }) {
-    }
+    public constructor(public payload: {linkInstanceId: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = LinkInstancesActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Clear implements Action {
@@ -142,9 +128,18 @@ export namespace LinkInstancesAction {
   }
 
   export type All =
-    Get | GetSuccess | GetFailure |
-    Create | CreateSuccess | CreateFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteConfirm | DeleteSuccess | DeleteFailure | Clear;
-
+    | Get
+    | GetSuccess
+    | GetFailure
+    | Create
+    | CreateSuccess
+    | CreateFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteConfirm
+    | DeleteSuccess
+    | DeleteFailure
+    | Clear;
 }

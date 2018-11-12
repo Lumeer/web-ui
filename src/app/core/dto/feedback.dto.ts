@@ -18,10 +18,8 @@
  */
 
 export interface FeedbackDto {
-
   id?: string;
   userId?: string;
   creationTime?: number;
   message: string;
-
 }

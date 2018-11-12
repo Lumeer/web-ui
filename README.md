@@ -1,16 +1,20 @@
 # Lumeer Web UI
+
 This repository contains Lumeer front-end source code.
 
 ## Prerequisites
+
 The following tools are needed to work with this repository:
-* [Node.js](https://nodejs.org/en/) 8.x (LTS)
-* [NPM](https://www.npmjs.com/) 6.x (latest)
+
+- [Node.js](https://nodejs.org/en/) 8.x (LTS)
+- [NPM](https://www.npmjs.com/) 6.x (latest)
 
 Read how to install and set up both these tools [here](https://docs.npmjs.com/getting-started/installing-node#install-npm--manage-npm-versions).
 
 ## Dependencies
 
 Before running the application on your machine for the first time, install project dependencies:
+
 ```bash
 $ npm install
 ```
@@ -30,6 +34,7 @@ You also need to run our [back-end](https://github.com/Lumeer/engine) if you wan
 ## Deployment
 
 Here is the example command to build the application WAR file with all configuration properties you might need:
+
 ```bash
 $ LUMEER_ENV=production \
 > I18N_LOCALE=en \
@@ -40,17 +45,18 @@ $ LUMEER_ENV=production \
 > mvn clean package -Dcontext.root=en
 ```
 
- * `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
- * `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
- * `AUTH_CLIENT_ID`: client ID of Auth0 application
- * `AUTH_DOMAIN`: base URL for Auth0 authentication
- * `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
- * `BUILD_NUMBER`: build number to be shown in the application
- * `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
- * `LUMEER_ENGINE`: back-end deployment context root
- * `context.root`: front-end deployment context root
+- `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
+- `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
+- `AUTH_CLIENT_ID`: client ID of Auth0 application
+- `AUTH_DOMAIN`: base URL for Auth0 authentication
+- `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
+- `BUILD_NUMBER`: build number to be shown in the application
+- `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
+- `LUMEER_ENGINE`: back-end deployment context root
+- `context.root`: front-end deployment context root
 
 ## Translations
+
 When you add some text to the application which will be shown to the user, you should always add `i18n` attribute on its element with the translation string unique ID as its value. For example:
 
 ```html
@@ -67,7 +73,6 @@ $ npm run i18n
 
 It will add your new texts into all translation files (`src/i18n/messages.en.xlf` and `src/i18n/messages.cs.xlf`). You then need to open these files and translate the texts by adding the translations between the `<target>...</target>` tags.
 
-
 ## How To Contribute
 
 Everyone is welcome to contribute to this project.
@@ -78,4 +83,3 @@ TSLint is run with every pull-request so make sure your code complies with our l
 ```bash
 $ npm run lint
 ```
-

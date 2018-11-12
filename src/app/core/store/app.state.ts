@@ -38,7 +38,6 @@ import {initialPostItState, PostItState} from './postit/postit.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
 
 export interface AppState {
-
   collections: CollectionsState;
   documents: DocumentsState;
   groups: GroupsState;
@@ -78,6 +77,6 @@ export function initialAppState(): AppState {
     users: initialUsersState,
     views: initialViewsState,
     postIts: initialPostItState,
-    charts: initialChartsState
+    charts: initialChartsState,
   };
 }

@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Pipe({
-  name: 'isFirstRow'
+  name: 'isFirstRow',
 })
 export class IsFirstRowPipe implements PipeTransform {
-
   public transform(cursor: TableBodyCursor): boolean {
     return cursor && cursor.rowPath && cursor.rowPath[0] === 0;
   }
-
 }

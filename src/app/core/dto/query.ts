@@ -18,7 +18,6 @@
  */
 
 export interface Query {
-
   collectionIds?: string[];
   documentIds?: string[];
   filters?: string[];
@@ -27,5 +26,4 @@ export interface Query {
 
   page?: number;
   pageSize?: number;
-
 }

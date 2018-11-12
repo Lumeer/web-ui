@@ -22,11 +22,10 @@ import {Pipe, PipeTransform, Injectable} from '@angular/core';
 import {UserModel} from '../../../core/store/users/user.model';
 
 @Pipe({
-  name: 'userFilter'
+  name: 'userFilter',
 })
 @Injectable()
 export class UserFilterPipe implements PipeTransform {
-
   public transform(users: UserModel[], value: string): UserModel[] {
     if (!users || !value) {
       return users;

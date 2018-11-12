@@ -28,10 +28,9 @@ import {SizeType} from '../../../../../shared/slider/size-type';
   selector: 'search-document-header',
   templateUrl: './search-document-header.component.html',
   styleUrls: ['./search-document-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchDocumentHeaderComponent {
-
   @Input()
   public collection: CollectionModel;
 
@@ -61,5 +60,4 @@ export class SearchDocumentHeaderComponent {
   public createDefaultAttributeHtml(): string {
     return searchDocumentDefaultAttributeHtml(this.document, this.collection);
   }
-
 }

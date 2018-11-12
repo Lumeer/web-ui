@@ -24,10 +24,9 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'empty-post-its',
-  templateUrl: './empty-post-its.component.html'
+  templateUrl: './empty-post-its.component.html',
 })
 export class EmptyPostItsComponent {
-
   @Input()
   public query: QueryModel;
 
@@ -40,5 +39,4 @@ export class EmptyPostItsComponent {
   public onCreatePostIt(documentModel: DocumentModel) {
     this.createPostIt.emit(documentModel);
   }
-
 }

@@ -29,19 +29,19 @@ const FEEDBACK_KEY = 'feedback_message';
 @Component({
   selector: 'feedback-dialog',
   templateUrl: './feedback-dialog.component.html',
-  styleUrls: ['./feedback-dialog.component.scss']
+  styleUrls: ['./feedback-dialog.component.scss'],
 })
 export class FeedbackDialogComponent implements OnInit {
-
   public readonly form = new FormGroup({
-    message: new FormControl('', Validators.required)
+    message: new FormControl('', Validators.required),
   });
 
-  public constructor(private dialogService: DialogService,
-                     private i18n: I18n,
-                     private notificationService: NotificationService,
-                     private userService: UserService) {
-  }
+  public constructor(
+    private dialogService: DialogService,
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private userService: UserService
+  ) {}
 
   public ngOnInit() {
     this.message.setValue(localStorage.getItem(FEEDBACK_KEY) || '');
@@ -85,5 +85,4 @@ export class FeedbackDialogComponent implements OnInit {
   public get message(): AbstractControl {
     return this.form.get('message');
   }
-
 }

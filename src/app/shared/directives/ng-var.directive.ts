@@ -20,10 +20,9 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 
 @Directive({
-  selector: '[ngVar]'
+  selector: '[ngVar]',
 })
 export class NgVarDirective {
-
   @Input()
   public set ngVar(context: any) {
     this.context.$implicit = this.context.ngVar = context;
@@ -32,13 +31,10 @@ export class NgVarDirective {
 
   private context: any = {};
 
-  public constructor(private template: TemplateRef<any>,
-                     private viewContainer: ViewContainerRef) {
-  }
+  public constructor(private template: TemplateRef<any>, private viewContainer: ViewContainerRef) {}
 
   private updateView() {
     this.viewContainer.clear();
     this.viewContainer.createEmbeddedView(this.template, this.context);
   }
-
 }

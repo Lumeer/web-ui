@@ -22,8 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 @Component({
   selector: 'empty-search',
   templateUrl: './empty-search.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptySearchComponent {
-
-}
+export class EmptySearchComponent {}

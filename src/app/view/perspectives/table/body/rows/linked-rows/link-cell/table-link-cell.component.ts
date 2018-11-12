@@ -24,10 +24,9 @@ import {TableConfigRow} from '../../../../../../../core/store/tables/table.model
   selector: 'table-link-cell',
   templateUrl: './table-link-cell.component.html',
   styleUrls: ['./table-link-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableLinkCellComponent {
-
   @Input()
   public row: TableConfigRow;
 
@@ -36,5 +35,4 @@ export class TableLinkCellComponent {
 
   @Output()
   public toggle = new EventEmitter();
-
 }

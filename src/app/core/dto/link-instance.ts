@@ -18,11 +18,9 @@
  */
 
 export interface LinkInstance {
-
   id?: string;
   linkTypeId: string;
   documentIds: [string, string];
 
-  data?: { [key: string]: any };
-
+  data?: {[key: string]: any};
 }

@@ -35,10 +35,9 @@ import {UsersAction} from '../../../../../core/store/users/users.action';
 @Component({
   selector: 'resource-detail',
   templateUrl: './resource-detail.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceDetailComponent implements OnInit, OnDestroy {
-
   @Input() public type: ResourceType;
   @Input() public resource: Resource;
   @Input() public workspace: Workspace;
@@ -48,17 +47,19 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
   public organization: OrganizationModel;
   public project: ProjectModel;
 
-  constructor(private store: Store<AppState>,
-              private router: Router) {
-  }
+  constructor(private store: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
-    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace).pipe(
-      filter(organization => !!organization),
-      tap(organization => this.store.dispatch(new UsersAction.Get({organizationId: organization.id})))
-    ).subscribe(organization => this.organization = organization));
-    this.subscriptions.add(this.store.select(selectProjectByWorkspace)
-      .subscribe(project => this.project = project));
+    this.subscriptions.add(
+      this.store
+        .select(selectOrganizationByWorkspace)
+        .pipe(
+          filter(organization => !!organization),
+          tap(organization => this.store.dispatch(new UsersAction.Get({organizationId: organization.id})))
+        )
+        .subscribe(organization => (this.organization = organization))
+    );
+    this.subscriptions.add(this.store.select(selectProjectByWorkspace).subscribe(project => (this.project = project)));
   }
 
   public ngOnDestroy() {
@@ -77,8 +78,13 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
 
   public goToProjectSettings(page: string) {
     if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]);
+      this.router.navigate([
+        'organization',
+        this.workspace.organizationCode,
+        'project',
+        this.workspace.projectCode,
+        page,
+      ]);
     }
   }
-
 }

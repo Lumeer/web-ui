@@ -50,10 +50,9 @@ const allowAutomaticSubmission = true;
 
 @Component({
   selector: 'search-box',
-  templateUrl: './search-box.component.html'
+  templateUrl: './search-box.component.html',
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
-
   public queryItems: QueryItem[] = [];
   public form: FormGroup;
   public queryItemsControl: FormArray;
@@ -66,10 +65,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: UserModel;
   private queryData: QueryData;
 
-  constructor(private router: Router,
-              private store: Store<AppState>,
-              private formBuilder: FormBuilder) {
-  }
+  constructor(private router: Router, private store: Store<AppState>, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
     this.subscribeViewData();
@@ -79,33 +75,32 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeViewData() {
-    this.subscriptions.add(this.store.pipe(select(selectCurrentUser)).subscribe(user => this.currentUser = user));
+    this.subscriptions.add(this.store.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user)));
     this.subscriptions.add(this.store.pipe(select(selectCurrentView)).subscribe(view => this.currentView$.next(view)));
   }
 
   private subscribeToQuery() {
-    const querySubscription = this.store.pipe(select(selectQuery)).pipe(
-      filter(query => !isNullOrUndefined(query)),
-      flatMap(query => observableCombineLatest(
-        of(query),
-        this.loadData()
-      )),
-      tap(([query, data]) => this.queryData = data),
-      map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
-      filter(queryItems => this.itemsChanged(queryItems))
-    ).subscribe(queryItems => {
-      this.queryItems = queryItems;
-      this.initForm(this.queryItems);
-    });
+    const querySubscription = this.store
+      .pipe(select(selectQuery))
+      .pipe(
+        filter(query => !isNullOrUndefined(query)),
+        flatMap(query => observableCombineLatest(of(query), this.loadData())),
+        tap(([query, data]) => (this.queryData = data)),
+        map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
+        filter(queryItems => this.itemsChanged(queryItems))
+      )
+      .subscribe(queryItems => {
+        this.queryItems = queryItems;
+        this.initForm(this.queryItems);
+      });
     this.subscriptions.add(querySubscription);
   }
 
   private subscribeToNavigation() {
-    const navigationSubscription = this.store.pipe(select(selectNavigation))
-      .subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.perspective = navigation.perspective;
-      });
+    const navigationSubscription = this.store.pipe(select(selectNavigation)).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.perspective = navigation.perspective;
+    });
     this.subscriptions.add(navigationSubscription);
   }
 
@@ -120,7 +115,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       map(([collections, linkTypes]) => {
         return {
           collections: collections.filter(collection => collection && collection.id),
-          linkTypes: linkTypes.filter(linkType => linkType && linkType.id) // TODO remove after NgRx bug is fixed
+          linkTypes: linkTypes.filter(linkType => linkType && linkType.id), // TODO remove after NgRx bug is fixed
         };
       })
     );
@@ -139,8 +134,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private addPrerequisiteItems(queryItem: QueryItem) {
     const prerequisiteItems = this.getPrerequisiteQueryItems(queryItem);
-    prerequisiteItems.filter(item => !this.isQueryItemPresented(item))
-      .forEach(item => this.addQueryItem(item));
+    prerequisiteItems.filter(item => !this.isQueryItemPresented(item)).forEach(item => this.addQueryItem(item));
   }
 
   private getPrerequisiteQueryItems(queryItem: QueryItem): QueryItem[] {
@@ -265,11 +259,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       while (this.queryItemsControl.length > 0) {
         this.queryItemsControl.removeAt(0);
       }
-      queryItems.map(qi => queryItemToForm(qi))
-        .forEach(it => this.queryItemsControl.push(it));
+      queryItems.map(qi => queryItemToForm(qi)).forEach(it => this.queryItemsControl.push(it));
     } else {
       this.form = this.formBuilder.group({
-        queryItems: this.formBuilder.array(queryItems.map(qi => queryItemToForm(qi)))
+        queryItems: this.formBuilder.array(queryItems.map(qi => queryItemToForm(qi))),
       });
       this.queryItemsControl = <FormArray>this.form.controls['queryItems'];
     }
@@ -278,5 +271,4 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public trackByTypeAndText(index: number, queryItem: QueryItem) {
     return queryItem.type.toString() + queryItem.text;
   }
-
 }

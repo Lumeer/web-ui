@@ -36,10 +36,9 @@ import {NotificationsAction} from '../../../../../core/store/notifications/notif
 @Component({
   selector: 'payments-list',
   templateUrl: './payments-list.component.html',
-  styleUrls: ['./payments-list.component.scss']
+  styleUrls: ['./payments-list.component.scss'],
 })
 export class PaymentsListComponent implements OnInit, OnDestroy {
-
   @Output()
   public repay = new EventEmitter<string>();
 
@@ -49,9 +48,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   public payments: PaymentModel[];
   private paymentsSubscription: Subscription;
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>) { }
+  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -59,17 +56,19 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   }
 
   public subscribeToStore() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.organizationSubscription = this.store
+      .select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+      .subscribe(organization => (this.organization = organization));
 
-    this.paymentsSubscription = this.store.select(selectPaymentsByWorkspaceSorted)
+    this.paymentsSubscription = this.store
+      .select(selectPaymentsByWorkspaceSorted)
       .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
-      .subscribe(payments => this.payments = payments);
+      .subscribe(payments => (this.payments = payments));
   }
 
   public requestData() {
-    this.store.dispatch(new PaymentsAction.GetPayments({ organizationId: this.organization.id }));
+    this.store.dispatch(new PaymentsAction.GetPayments({organizationId: this.organization.id}));
   }
 
   public ngOnDestroy(): void {
@@ -83,11 +82,13 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   }
 
   public refreshPayment(paymentId: string) {
-    this.store.dispatch(new PaymentsAction.GetPayment({
-      organizationId: this.organization.id,
-      paymentId,
-      nextAction: new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id })
-    }));
+    this.store.dispatch(
+      new PaymentsAction.GetPayment({
+        organizationId: this.organization.id,
+        paymentId,
+        nextAction: new ServiceLimitsAction.GetServiceLimits({organizationId: this.organization.id}),
+      })
+    );
   }
 
   public repayEvent(gwUrl: string) {
@@ -95,12 +96,14 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   }
 
   public addUsers() {
-    this.store.dispatch(new NotificationsAction.Info({
-      title: this.i18n({ id: 'organization.payments.addUsers.title', value: 'Add Users' }),
-      message: this.i18n({
-        id: 'organization.payments.addUsers.info',
-        value: 'To add more users to your organization, please contact support@lumeer.io.',
+    this.store.dispatch(
+      new NotificationsAction.Info({
+        title: this.i18n({id: 'organization.payments.addUsers.title', value: 'Add Users'}),
+        message: this.i18n({
+          id: 'organization.payments.addUsers.info',
+          value: 'To add more users to your organization, please contact support@lumeer.io.',
+        }),
       })
-    }));
+    );
   }
 }

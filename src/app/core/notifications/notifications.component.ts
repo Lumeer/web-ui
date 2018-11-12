@@ -21,8 +21,6 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'notifications',
-  template: '<ng-snotify></ng-snotify>'
+  template: '<ng-snotify></ng-snotify>',
 })
-export class NotificationsComponent {
-
-}
+export class NotificationsComponent {}

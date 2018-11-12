@@ -22,10 +22,9 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'collection-name-input',
-  templateUrl: './collection-name-input.component.html'
+  templateUrl: './collection-name-input.component.html',
 })
 export class CollectionNameInputComponent {
-
   @Input()
   public formGroup: FormGroup;
 
@@ -39,5 +38,4 @@ export class CollectionNameInputComponent {
   public onInput() {
     this.change.emit();
   }
-
 }

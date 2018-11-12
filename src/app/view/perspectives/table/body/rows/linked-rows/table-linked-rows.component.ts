@@ -32,10 +32,9 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
   selector: 'table-linked-rows',
   templateUrl: './table-linked-rows.component.html',
   styleUrls: ['./table-linked-rows.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableLinkedRowsComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -51,8 +50,7 @@ export class TableLinkedRowsComponent implements OnChanges {
   public linkedRows$: Observable<TableConfigRow[]>;
   public emptyLinkedRow = createEmptyTableRow();
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.rows && this.rows) {
@@ -66,9 +64,13 @@ export class TableLinkedRowsComponent implements OnChanges {
     return this.store$.pipe(
       select(selectLinkInstancesByDocumentIds(documentIds)),
       map(linkInstances => filterRowsByExistingLinkInstance(linkedRows, linkInstances)),
-      tap(() => this.store$.dispatch(new TablesAction.SyncLinkedRows({
-        cursor: {...cursor, partIndex: cursor.partIndex + 1}
-      })))
+      tap(() =>
+        this.store$.dispatch(
+          new TablesAction.SyncLinkedRows({
+            cursor: {...cursor, partIndex: cursor.partIndex + 1},
+          })
+        )
+      )
     );
   }
 
@@ -79,12 +81,17 @@ export class TableLinkedRowsComponent implements OnChanges {
   public trackByLinkInstanceId(index: number, linkedRow: TableConfigRow): string | object {
     return linkedRow.correlationId || linkedRow.linkInstanceId;
   }
-
 }
 
-function filterRowsByExistingLinkInstance(rows: TableConfigRow[], linkInstances: LinkInstanceModel[]): TableConfigRow[] {
-  return rows ? rows.reduce((existingRows, linkedRow) => {
-    const exists = !linkedRow.linkInstanceId || linkInstances.some(linkInstance => linkInstance.id === linkedRow.linkInstanceId);
-    return exists ? existingRows.concat(linkedRow) : existingRows;
-  }, []) : [];
+function filterRowsByExistingLinkInstance(
+  rows: TableConfigRow[],
+  linkInstances: LinkInstanceModel[]
+): TableConfigRow[] {
+  return rows
+    ? rows.reduce((existingRows, linkedRow) => {
+        const exists =
+          !linkedRow.linkInstanceId || linkInstances.some(linkInstance => linkInstance.id === linkedRow.linkInstanceId);
+        return exists ? existingRows.concat(linkedRow) : existingRows;
+      }, [])
+    : [];
 }

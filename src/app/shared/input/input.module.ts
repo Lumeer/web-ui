@@ -24,17 +24,8 @@ import {FilterBoxComponent} from './filter-box/filter-box.component';
 import {InputBoxComponent} from './input-box/input-box.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    FilterBoxComponent,
-    InputBoxComponent
-  ],
-  exports: [
-    FilterBoxComponent,
-    InputBoxComponent
-  ]
+  imports: [CommonModule],
+  declarations: [FilterBoxComponent, InputBoxComponent],
+  exports: [FilterBoxComponent, InputBoxComponent],
 })
-export class InputModule {
-}
+export class InputModule {}

@@ -21,7 +21,6 @@ import {Attribute} from '../../core/dto/attribute';
 import {Collection} from '../../core/dto/collection';
 
 export class AttributeHelper {
-
   public static generateAttributeId(attributeName: string): string {
     // TODO deal with existing same ID as well as invalid characters
     return attributeName;
@@ -58,12 +57,14 @@ export class AttributeHelper {
   }
 
   public static getAttributesByPrefix(prefix: string, ...collections: Collection[]): [Collection, Attribute][] {
-    return [].concat.apply([], collections.map(collection => collection.attributes.map(attribute => [collection, attribute])))
-      .filter(([collection, attribute]: [Collection, Attribute]) => attribute.name.toLowerCase().startsWith(prefix.toLowerCase()));
+    return [].concat
+      .apply([], collections.map(collection => collection.attributes.map(attribute => [collection, attribute])))
+      .filter(([collection, attribute]: [Collection, Attribute]) =>
+        attribute.name.toLowerCase().startsWith(prefix.toLowerCase())
+      );
   }
 
   public static isAttributeInitialized(attribute: Attribute): boolean {
     return !!attribute.id;
   }
-
 }

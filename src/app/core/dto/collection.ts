@@ -21,11 +21,9 @@ import {Attribute} from './attribute';
 import {Resource} from './resource';
 
 export interface Collection extends Resource {
-
   attributes?: Attribute[];
   defaultAttributeId?: string;
   documentsCount?: number;
   favorite?: boolean;
   lastTimeUsed?: number;
-
 }

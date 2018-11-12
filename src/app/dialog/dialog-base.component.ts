@@ -27,19 +27,16 @@ declare let $: any;
 
 @Component({
   selector: 'dialog-base',
-  templateUrl: './dialog-base.component.html'
+  templateUrl: './dialog-base.component.html',
 })
 export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
-
   public id = 'dialog';
 
   public open: boolean;
 
   private subscriptions = new Subscription();
 
-  public constructor(private dialogService: DialogService,
-                     private router: Router) {
-  }
+  public constructor(private dialogService: DialogService, private router: Router) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToOpenDialog());
@@ -47,17 +44,21 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private subscribeToOpenDialog(): Subscription {
-    return this.router.events.pipe(
-      filter(event => !this.open && event instanceof NavigationStart),
-      filter((event: NavigationStart) => event.url.includes('(dialog:'))
-    ).subscribe(event => this.openDialog());
+    return this.router.events
+      .pipe(
+        filter(event => !this.open && event instanceof NavigationStart),
+        filter((event: NavigationStart) => event.url.includes('(dialog:'))
+      )
+      .subscribe(event => this.openDialog());
   }
 
   private subscribeToCloseDialog(): Subscription {
-    return this.router.events.pipe(
-      filter(event => this.open && event instanceof NavigationStart),
-      filter((event: NavigationStart) => !event.url.includes('(dialog:'))
-    ).subscribe(event => this.closeDialog());
+    return this.router.events
+      .pipe(
+        filter(event => this.open && event instanceof NavigationStart),
+        filter((event: NavigationStart) => !event.url.includes('(dialog:'))
+      )
+      .subscribe(event => this.closeDialog());
   }
 
   private openDialog() {
@@ -88,5 +89,4 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   private dialog(): any {
     return $(`#${this.id}`);
   }
-
 }

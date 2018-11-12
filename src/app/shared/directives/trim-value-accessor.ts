@@ -17,19 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Directive, ElementRef, HostListener, Inject, Input, Optional,
-  Renderer2
-} from '@angular/core';
+import {Directive, ElementRef, HostListener, Inject, Input, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Directive({
   selector: 'input[trim], textarea[trim], div[trim]',
-  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: TrimValueAccessor, multi: true}]
-
+  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: TrimValueAccessor, multi: true}],
 })
 export class TrimValueAccessor extends DefaultValueAccessor {
-
   private readonly regex = /\s/g;
 
   private _type: string = 'text';
@@ -58,15 +53,12 @@ export class TrimValueAccessor extends DefaultValueAccessor {
     this.writeValue(val);
 
     if (val !== this.value) {
-
       // Cache the new value first
       this._value = val;
 
       // update model
       this.onChange(val);
-
     }
-
   }
 
   @HostListener('blur', ['$event.type', '$event.target.value'])
@@ -83,9 +75,11 @@ export class TrimValueAccessor extends DefaultValueAccessor {
     this.updateValue(event, value);
   }
 
-  constructor(@Inject(Renderer2) renderer: Renderer2,
-              @Inject(ElementRef) elementRef: ElementRef,
-              @Optional() @Inject(COMPOSITION_BUFFER_MODE) compositionMode: boolean) {
+  constructor(
+    @Inject(Renderer2) renderer: Renderer2,
+    @Inject(ElementRef) elementRef: ElementRef,
+    @Optional() @Inject(COMPOSITION_BUFFER_MODE) compositionMode: boolean
+  ) {
     super(renderer, elementRef, compositionMode);
 
     this._sourceRenderer = renderer;
@@ -102,12 +96,9 @@ export class TrimValueAccessor extends DefaultValueAccessor {
     if (this._type !== 'text') {
       this._sourceRenderer.setAttribute(this._sourceElementRef.nativeElement, 'value', value);
     }
-
   }
 
   private updateValue(event: string, value: string): void {
-    this.value = (this.trim !== '' && event !== this.trim) ? value : value.replace(this.regex, '');
-
+    this.value = this.trim !== '' && event !== this.trim ? value : value.replace(this.regex, '');
   }
-
 }

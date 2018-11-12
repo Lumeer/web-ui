@@ -30,22 +30,15 @@ import {UserRolesPipe} from './user-roles.pipe';
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    DialogWrapperModule
-  ],
+  imports: [CommonModule, SharedModule, DialogWrapperModule],
   declarations: [
     ShareViewDialogComponent,
     ShareUserComponent,
     ShareViewInputComponent,
     ShareViewCopyComponent,
     ViewPermissionsChangedPipe,
-    UserRolesPipe
+    UserRolesPipe,
   ],
-  entryComponents: [
-    ShareViewDialogComponent,
-  ]
+  entryComponents: [ShareViewDialogComponent],
 })
-export class ShareViewDialogModule {
-}
+export class ShareViewDialogModule {}

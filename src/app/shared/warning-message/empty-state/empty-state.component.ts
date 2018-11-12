@@ -22,11 +22,9 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 @Component({
   selector: 'empty-state',
   templateUrl: './empty-state.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyStateComponent {
-
   @Input()
   public icon: string;
-
 }

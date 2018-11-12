@@ -31,10 +31,9 @@ import {KeyCode} from '../../../../key-code';
   selector: '[links-list-table-body]',
   templateUrl: './links-list-table-body.component.html',
   styleUrls: ['links-list-table-body.component.scss', './../links-list-table.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableBodyComponent {
-
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
@@ -59,7 +58,7 @@ export class LinksListTableBodyComponent {
   @Input()
   public readonly: boolean;
 
-  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
+  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
@@ -89,7 +88,7 @@ export class LinksListTableBodyComponent {
   }
 
   public trackByLinkRow(index: number, linkRow: LinkRowModel): string {
-    return linkRow.document && (linkRow.correlationId || linkRow.document.id) || linkRow.correlationId;
+    return (linkRow.document && (linkRow.correlationId || linkRow.document.id)) || linkRow.correlationId;
   }
 
   public onFocus(correlationId: string, attributeId: string, value: string) {
@@ -122,5 +121,4 @@ export class LinksListTableBodyComponent {
   public onEnterKeyDown() {
     return this.suggestions && this.suggestions.isSelected() && this.suggestions.useSelection();
   }
-
 }

@@ -25,10 +25,9 @@ import {Perspective} from '../../perspective';
 @Component({
   selector: 'chart-config',
   templateUrl: './chart-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartConfigComponent {
-
   @Input()
   public collection: CollectionModel;
 
@@ -62,5 +61,4 @@ export class ChartConfigComponent {
     const newConfig = {...this.config, axes: axes};
     this.configChange.emit(newConfig);
   }
-
 }

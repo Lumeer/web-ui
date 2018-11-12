@@ -18,7 +18,6 @@
  */
 
 export interface SelectItemModel {
-
   id: any;
   value: string;
   icon?: string;

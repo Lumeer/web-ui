@@ -20,7 +20,10 @@
 import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from './service-limits.state';
 import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
 
-export function serviceLimitsReducer(state: ServiceLimitsState = initialServiceLimitsState, action: ServiceLimitsAction.All): ServiceLimitsState {
+export function serviceLimitsReducer(
+  state: ServiceLimitsState = initialServiceLimitsState,
+  action: ServiceLimitsAction.All
+): ServiceLimitsState {
   switch (action.type) {
     case ServiceLimitsActionType.GET_ALL_SUCCESS:
       return serviceLimitsAdapter.addAll(action.payload.allServiceLimits, state);

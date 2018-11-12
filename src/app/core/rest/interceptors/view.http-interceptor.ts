@@ -28,9 +28,7 @@ import {selectViewCode} from '../../store/navigation/navigation.state';
 
 @Injectable()
 export class ViewHttpInterceptor implements HttpInterceptor {
-
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url)) {
@@ -50,7 +48,5 @@ export class ViewHttpInterceptor implements HttpInterceptor {
         return next.handle(request);
       })
     );
-
   }
-
 }
