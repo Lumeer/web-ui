@@ -1,5 +1,5 @@
 import {addDays, addHours, endOfMonth, startOfDay, subDays} from "date-fns";
-import {colors} from "./utils/colors";
+import {colors} from "./colors";
 
 const eventsExample =[
   {

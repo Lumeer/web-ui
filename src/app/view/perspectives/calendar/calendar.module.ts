@@ -20,7 +20,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {SharedModule} from '../../../shared/shared.module';
-import {CalendarComponent, CourseDialogComponent} from './calendar.component';
+import {CalendarComponent} from './calendar.component';
 import {CalendarRoutingModule} from './calendar-routing.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -52,9 +52,7 @@ import {MatDialogModule} from "@angular/material";
     MatDialogModule
   ],
   declarations: [
-    CalendarComponent,
-    CourseDialogComponent
-  ],
-  entryComponents: [CourseDialogComponent]
+    CalendarComponent
+  ]
 })
 export class CalendarModules { }

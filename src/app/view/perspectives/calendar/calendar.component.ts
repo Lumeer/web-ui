@@ -36,8 +36,9 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView
 } from 'angular-calendar';
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import eventsExample from './data';
+// import eventsExample from './utils/data';
+import {ViewModel} from "../../../core/store/views/view.model";
+import {selectCurrentView} from "../../../core/store/views/views.state";
 
 
 @Component({
@@ -58,15 +59,16 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = eventsExample;
+  events: CalendarEvent[] = [];
   shownEvents: CalendarEvent[] = [];
 
-  constructor(private store$: Store<{}>) {}
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     this.shownEvents = events;
     this.viewDate = date;
   }
+
+
   eventTimesChanged({
                       event,
                       newStart,
@@ -78,31 +80,36 @@ export class CalendarComponent implements OnInit {
   }
 
 
-  addEvent(date: Date): void {
-    this.events.push({
-      start: date,
-      title: 'New event',
-      color: colors.red
-    });
-    this.refresh.next();
-  }
+  // addEvent(date: Date): void {
+  //   this.events.push({
+  //     start: date,
+  //     title: 'New event',
+  //     color: colors.red
+  //   });
+  //   this.refresh.next();
+  // }
 
   @Input()
   public query: QueryModel;
 
+  public currentView$: Observable<ViewModel>;
   public collections$: Observable<CollectionModel[]>;
   public documents$: Observable<DocumentModel[]>;
   //public calendar$: Observable<MapModel>;
   public validQuery$: Observable<boolean>;
   //private calendarId = DEFAULT_CALENDAR_ID;     //TODO
 
-  private subscriptions = new Subscription();
+  // private subscriptions = new Subscription();
+
+  constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindValidQuery();
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     //this.bindCalendar(this.calendarId);
+    this.currentView$ = this.store$.select(selectCurrentView);
+    this.showCalendar();
   }
 
   private bindValidQuery() {
@@ -112,43 +119,65 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-
-}
-
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-
-@Component({
-  selector: 'course-dialog',
-  templateUrl: './dialog-overview-example-dialog.html',
-  styleUrls: ['./dialog.css']
-})
-export class CourseDialogComponent implements OnInit {
-
-
-  description:string;
-  title:string;
-
-
-  constructor(
-    private dialogRef: MatDialogRef<CourseDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data) {
-
-    this.description = data.description;
-    this.title = data.title
+  private showCalendar() {
+    this.documents$.subscribe(documents => {
+      documents.forEach(document => {
+        console.log(document);
+        if(this.validateDataInRow(document.data)){
+          this.events.push(this.createEvent(document.data));
+        }
+      });
+    });
   }
 
-  ngOnInit() {
-    // this.form = fb.group({
-    //   description: [description, []],
-    //   ...
-    // });
+  private validateDataInRow (data){
+    let values = Object.values(data);
+    let isString: boolean = false;
+    let isDate: boolean = false;
+    values.forEach(column => {
+      if(!isDate){
+        isDate=CalendarComponent.isValidDate(column);
+      }
+      if(!isString) {
+        isString = typeof column === "string";
+      }
+    });
+    return isString && isDate;
+
   }
 
-  save() {
-    this.dialogRef.close();
+  private createEvent(doc: Object){
+    let values = Object.values(doc);
+    let date: Date = new Date();
+    let name: string = '';
+    values.forEach(column => {
+        if(CalendarComponent.isValidDate(column)) {
+          date = CalendarComponent.createDate(column);
+        }
+        else if (typeof column === "string" && name == '') {
+          name = column;
+        }
+    });
+    return{
+      start: date,
+      title: name,
+      color: colors.red,
+      allDay: true
+    };
   }
 
-  close() {
-    this.dialogRef.close();
+  private static createDate(dateString){
+    let separators = ['\\.', '\\-', '\\/'];
+    let bits = dateString.split(new RegExp(separators.join('|'), 'g'));
+    return new Date(bits[2], bits[1] - 1, bits[0]);
   }
+
+  //expected input dd/mm/yyyy or dd.mm.yyyy or dd-mm-yyyy
+  private static isValidDate(string) {
+    let separators = ['\\.', '\\-', '\\/'];
+    let bits = string.split(new RegExp(separators.join('|'), 'g'));
+    let date = new Date(bits[2], bits[1] - 1, bits[0]);
+    return date.getFullYear() == bits[2] && date.getMonth() + 1 == bits[1];
+  }
+
 }
