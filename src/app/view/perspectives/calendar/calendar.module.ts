@@ -25,18 +25,31 @@ import {CalendarRoutingModule} from './calendar-routing.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {UtilsModule} from './utils/module';
+import {ContextMenuModule} from "ngx-contextmenu";
 
+import { FormsModule } from '@angular/forms';
+import {FlatpickrModule} from "angularx-flatpickr";
+import {NgbModalModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {MatDialogModule} from "@angular/material";
 
 @NgModule({
   imports: [    //not sure
     SharedModule,
     CommonModule,
+    FormsModule,
+    NgbModalModule,
+    NgbModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
     CalendarRoutingModule,
-    UtilsModule
+    FlatpickrModule.forRoot(),
+    ContextMenuModule.forRoot({
+      useBootstrap4: true
+    }),
+    UtilsModule,
+    MatDialogModule
   ],
   declarations: [
     CalendarComponent
