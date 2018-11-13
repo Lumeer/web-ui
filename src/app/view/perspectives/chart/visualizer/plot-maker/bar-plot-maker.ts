@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
 import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {d3, Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
+import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 
-export class BarPlotMaker extends PlotMaker {
+export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
     const data: Data[] = [];
 
@@ -55,9 +55,13 @@ export class BarPlotMaker extends PlotMaker {
     return [dataY, dataY2];
   }
 
-  private findAxesNonNullAttributeValues(xAttrId: string, y1AttrId: string, y2AttrId: string): { x: string, y: string }[] {
-    let yValue: { x: string, y: string } = null;
-    let y2Value: { x: string, y: string } = null;
+  private findAxesNonNullAttributeValues(
+    xAttrId: string,
+    y1AttrId: string,
+    y2AttrId: string
+  ): {x: string; y: string}[] {
+    let yValue: {x: string; y: string} = null;
+    let y2Value: {x: string; y: string} = null;
     const isY1Category = this.isAxisCategory(ChartAxisType.Y1);
     const isY2Category = this.isAxisCategory(ChartAxisType.Y2);
     for (const document of this.documents) {
@@ -109,7 +113,12 @@ export class BarPlotMaker extends PlotMaker {
     return collection && collection.color;
   }
 
-  private createAxesData(dataStyle: Data, yAxisType: ChartAxisType, xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+  private createAxesData(
+    dataStyle: Data,
+    yAxisType: ChartAxisType,
+    xAxis?: ChartAxisModel,
+    yAxis?: ChartAxisModel
+  ): Data {
     const data = {...dataStyle};
 
     const traceX = [];
@@ -164,44 +173,7 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    return {...this.yAxis1Layout(), ... this.yAxis2Layout(), ...this.otherLayout()};
-  }
-
-  private yAxis1Layout(): Partial<Layout> {
-    const type = ChartAxisType.Y1;
-    if (this.config.axes[type] && this.isAxisCategory(type)) {
-      return {
-        yaxis: {
-          type: 'category',
-          categoryarray: this.getYAxisCategories(type)
-        }
-      };
-    }
-    return {};
-  }
-
-  private yAxis2Layout(): Partial<Layout> {
-    const type = ChartAxisType.Y2;
-
-    if (this.config.axes[type]) {
-      if (this.isAxisCategory(type)) {
-        return {
-          yaxis2: {
-            overlaying: 'y',
-            side: 'right',
-            type: 'category',
-            categoryarray: this.getYAxisCategories(type)
-          }
-        };
-      }
-
-      return {
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right'
-        }
-      };
-    }
+    return {...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
   }
 
   private otherLayout(): Partial<Layout> {
@@ -209,93 +181,20 @@ export class BarPlotMaker extends PlotMaker {
       barmode: 'group',
       legend: {
         xanchor: 'left',
-        x: 1.1
-      }
+        x: 1.1,
+      },
     };
-  }
-
-  private isAxisCategory(type: ChartAxisType): boolean {
-    const axis = this.config.axes[type];
-    if (!axis) {
-      return false;
-    }
-    for (const document of this.documents) {
-      const value = document.data[axis.attributeId];
-      if (value && !this.isNumeric(value)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private getYAxisCategories(type: ChartAxisType): string[] {
-    const axis = this.config.axes[type];
-    if (!axis) {
-      return [];
-    }
-
-    return this.documents.reduce((values, document) => {
-      const value = document.data[axis.attributeId];
-      if (value && !values.includes(value)) {
-        values.push(value);
-      }
-      return values;
-    }, []);
   }
 
   public currentType(): ChartType {
     return ChartType.Bar;
   }
 
-  public initDrag() {
-    this.destroyDrag();
-
-    this.assignDrag(this.createDrag());
+  public getPointPosition(point: any, datum: any): {x: number; y: number} {
+    return {x: datum.x, y: point.clickedY};
   }
 
-  private assignDrag(drag: any) {
-    this.getPoints().call(drag);
-  }
-
-  private createDrag(): any {
-    const plotMaker = this;
-    return d3.behavior.drag()
-      .origin(function (datum) {
-        this.traceIx = plotMaker.getTraceIndexForPoint(this);
-        this.yScale = plotMaker.createYScale(this.traceIx);
-        this.initialValue = plotMaker.getInitialValue(this.traceIx, datum.i);
-        this.lastValue = this.initialValue;
-        this.isCategory = plotMaker.isTraceCategory(this.traceIx);
-        this.initialY = datum.ct[1];
-        this.offset = plotMaker.getOffset(d3.event.target);
-        const elementClickedY = d3.event.pageY - this.offset.top;
-        this.clickedY = elementClickedY + this.initialY;
-
-        return {x: datum.x, y: this.clickedY};
-      })
-      .on('drag', function (datum) {
-        const yMouse = d3.event.sourceEvent.pageY - this.offset.top + datum.ct[1];
-        const index = datum.i;
-        this.newValue = plotMaker.getNewValue(this, yMouse);
-
-        if (this.newValue !== this.lastValue) {
-          this.lastValue = this.newValue;
-          const dataChange = {trace: this.traceIx, axis: 'y', index, value: this.newValue};
-          plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
-        }
-      })
-      .on('dragend', function (datum) {
-        const documentId = plotMaker.documents[datum.i].id;
-        const attributeId = plotMaker.getAttributeIdForTrace(this.traceIx);
-        const value = this.newValue;
-
-        documentId && attributeId && value &&
-        plotMaker.onValueChanged && plotMaker.onValueChanged({documentId, attributeId, value});
-      });
-  }
-
-  private getTraceIndexForPoint(point: any): number {
+  public getTraceIndexForPoint(point: any): number {
     const barsContainers = d3.selectAll('.barlayer .trace .points')[0];
     const pointNode = d3.select(point).node().parentNode;
 
@@ -310,123 +209,14 @@ export class BarPlotMaker extends PlotMaker {
     return 0;
   }
 
-  private getInitialValue(traceIx: number, index: number): any {
-    const attributeId = this.getAttributeIdForTrace(traceIx);
-    return this.documents[index].data[attributeId];
+  public getPointNewY(point: any, datum: any, event: any): number {
+    const pointData: PointData = point.pointData;
+    const computedY = event.sourceEvent.pageY - pointData.offset.top + datum.ct[1];
+    const dy = computedY - pointData.clickedY;
+    return pointData.initialY + dy;
   }
 
-  private isTraceCategory(index: number): boolean {
-    if (index > 0 || !this.config.axes[ChartAxisType.Y1]) {
-      return this.isAxisCategory(ChartAxisType.Y2);
-    }
-    return this.isAxisCategory(ChartAxisType.Y1);
-  }
-
-  private getOffset(element: HTMLElement) {
-    const bound = element.getBoundingClientRect();
-    const html = document.documentElement;
-
-    return {
-      top: bound.top + window.pageYOffset - html.clientTop,
-      left: bound.left + window.pageXOffset - html.clientLeft
-    };
-  }
-
-  private getNewValue(point: any, y: number): any {
-    const dy = y - point.clickedY;
-    const newY = point.initialY + dy;
-    const newValue = point.yScale(newY);
-
-    if (point.isCategory) {
-      return newValue.toString();
-    }
-
-    const initialValue = point.initialValue;
-
-    if (this.isDecimal(initialValue)) {
-      return Number.parseFloat(newValue).toFixed(2);
-    } else {
-      return Math.round(newValue);
-    }
-  }
-
-  private createYScale(traceIndex: number): any {
-    const yAxisElement = this.getYAxisElementForTrace(traceIndex);
-    if (yAxisElement.type === 'category') {
-      return this.createYScaleCategories(yAxisElement);
-    }
-    return this.createYScaleLinear(yAxisElement);
-  }
-
-  private createYScaleLinear(yAxisElement: any): any {
-    return d3.scale.linear()
-      .domain([this.getGridHeight(), 0])
-      .range(yAxisElement.range);
-  }
-
-  private createYScaleCategories(yAxisElement: any): any {
-    const yAxisMargin = this.computeYMarginCategories(yAxisElement);
-    const gridHeight = this.getGridHeight();
-    const categories = yAxisElement._categories;
-    const domainStep = (gridHeight - 2 * yAxisMargin) / (categories.length - 1);
-    const domainRange = d3.range(yAxisMargin + domainStep / 2, gridHeight - yAxisMargin, domainStep);
-    const domain = domainRange.reverse();
-
-    return (value) => {
-      for (let i = 0; i < domain.length; i++) { // TODO binary search
-        if (value > domain[i]) {
-          return categories[i];
-        }
-      }
-      return categories.length > 0 ? categories[categories.length - 1] : null;
-    };
-  }
-
-  private computeYMarginCategories(yAxisElement: any): number {
-    const downRange = Math.abs(yAxisElement.range[0]);
-    const upRange = Math.abs(yAxisElement.range[1]);
-    const range = downRange + upRange;
-    return (this.getGridHeight() / range) * downRange;
-  }
-
-  private getGridHeight(): number {
-    const element = this.getLayoutElement();
-    return element.height - element.margin.t - element.margin.b;
-  }
-
-  private getAttributeIdForTrace(index: number): string {
-    if (index > 0 || !this.config.axes[ChartAxisType.Y1]) {
-      return this.config.axes[ChartAxisType.Y2].attributeId;
-    }
-    return this.config.axes[ChartAxisType.Y1].attributeId;
-  }
-
-  private getYAxisElementForTrace(index: number): any {
-    if (index > 0 || !this.config.axes[ChartAxisType.Y1]) {
-      return this.getLayoutElement().yaxis2;
-    }
-    return this.getLayoutElement().yaxis;
-  }
-
-
-  private getLayoutElement(): any {
-    return this.element.nativeElement._fullLayout;
-  }
-
-  private isNumeric(value: any): boolean {
-    return !isNaN(value);
-  }
-
-  private isDecimal(value: number): boolean {
-    return value % 1 !== 0;
-  }
-
-
-  private getPoints(): any {
+  public getPoints(): any {
     return d3.selectAll('.barlayer .trace .points .point path');
-  }
-
-  public destroyDrag() {
-    this.getPoints().on('.drag', null);
   }
 }
