@@ -17,23 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {isNullOrUndefined} from 'util';
-import {escapeStringForRegex} from '../utils/string.utils';
-
-@Pipe({
-  name: 'highlightText',
-})
-export class HighlightTextPipe implements PipeTransform {
-  public transform(text: string, highlightedText: string, prefixOnly?: boolean): string {
-    if (isNullOrUndefined(text)) {
-      return '';
-    }
-    const pattern = escapeStringForRegex(highlightedText);
-    const match = text.match(new RegExp(pattern, 'i'));
-    if (!match || (prefixOnly && match.index > 0)) {
-      return text;
-    }
-    return text.replace(match.toString(), `<span class="text-success">${match}</span>`);
-  }
+export function escapeStringForRegex(text: string): string {
+  return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
