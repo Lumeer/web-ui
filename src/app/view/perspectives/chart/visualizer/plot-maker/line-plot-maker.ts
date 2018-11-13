@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DEFAULT_GRID_HEIGHT, PlotMaker} from './plot-maker';
+import {PlotMaker} from './plot-maker';
 import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {d3, Data, Layout} from 'plotly.js';
 
@@ -93,6 +93,7 @@ export class LinePlotMaker extends PlotMaker {
 
     const isYCategory = this.isAxisCategory(yAxisType);
     const additionalYValues = [];
+    const addedYValues = new Set();
 
     for (const document of this.documents) {
       if (xAxis) {
@@ -102,9 +103,10 @@ export class LinePlotMaker extends PlotMaker {
         const yValue = document.data[yAxis.attributeId];
         traceY.push(yValue);
         // we need to add first and last category value to the values in order to keep them on y axis while drag
-        if (yValue && isYCategory) {
+        if (yValue && isYCategory && !addedYValues.has(yValue)) {
           const insertIndex = additionalYValues.length === 0 ? 0 : 1;
           additionalYValues[insertIndex] = yValue;
+          addedYValues.add(yValue);
         }
       }
     }
@@ -231,13 +233,13 @@ export class LinePlotMaker extends PlotMaker {
 
   private createDrag(): any {
     const plotMaker = this;
-    return d3.behavior
-      .drag()
-      .origin(function(datum) {
-        const traceIx = plotMaker.getTraceIndexForPoint(this);
-        this.yScale = plotMaker.createYScale(traceIx);
-        this.traceIx = traceIx;
-        this.initialValue = plotMaker.getInitialValue(traceIx, datum.i);
+    return d3.behavior.drag()
+      .origin(function (datum) {
+        this.traceIx = plotMaker.getTraceIndexForPoint(this);
+        this.yScale = plotMaker.createYScale(this.traceIx);
+        this.initialValue = plotMaker.getInitialValue(this.traceIx, datum.i);
+        this.lastValue = this.initialValue;
+        this.isCategory = plotMaker.isTraceCategory(this.traceIx);
         return plotMaker.getPointPosition(this);
       })
       .on('drag', function(datum) {
@@ -245,18 +247,27 @@ export class LinePlotMaker extends PlotMaker {
         const index = datum.i;
         this.newValue = plotMaker.getNewValue(this, yMouse);
 
-        const dataChange = {trace: this.traceIx, axis: 'y', index, value: this.newValue};
-        plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
+        if (this.newValue !== this.lastValue) {
+          this.lastValue = this.newValue;
+          const dataChange = {trace: this.traceIx, axis: 'y', index, value: this.newValue};
+          plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
+        }
       })
       .on('dragend', function(datum) {
         const documentId = plotMaker.documents[datum.i].id;
         const attributeId = plotMaker.getAttributeIdForTrace(this.traceIx);
         const value = this.newValue;
 
-        if (documentId && attributeId && value && plotMaker.onValueChanged) {
-          plotMaker.onValueChanged({documentId, attributeId, value});
-        }
+        documentId && attributeId && value &&
+        plotMaker.onValueChanged && plotMaker.onValueChanged({documentId, attributeId, value});
       });
+  }
+
+  private isTraceCategory(index: number): boolean {
+    if (index === 1 || !this.config.axes[ChartAxisType.Y1]) {
+      return this.isAxisCategory(ChartAxisType.Y2);
+    }
+    return this.isAxisCategory(ChartAxisType.Y1);
   }
 
   private getInitialValue(traceIx: number, index: number): any {
@@ -265,18 +276,18 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   private getNewValue(point: any, y: number): any {
-    let newValue = point.yScale(y);
-    if (this.isNumeric(newValue)) {
-      const initialValue = point.initialValue;
-      if (this.isDecimal(initialValue)) {
-        newValue = Number.parseFloat(newValue).toFixed(2);
-      } else {
-        newValue = Math.round(newValue);
-      }
-    } else {
-      newValue = newValue.toString();
+    const newValue = point.yScale(y);
+
+    if (point.isCategory) {
+      return newValue.toString()
     }
-    return newValue;
+
+    const initialValue = point.initialValue;
+    if (this.isDecimal(initialValue)) {
+      return Number.parseFloat(newValue).toFixed(2);
+    } else {
+      return Math.round(newValue);
+    }
   }
 
   private canDragPoints(): boolean {
@@ -360,9 +371,8 @@ export class LinePlotMaker extends PlotMaker {
   }
 
   private getGridHeight(): number {
-    const gridElement = d3.select('.gridlayer').node();
-    const boundingRect = gridElement && gridElement.getBoundingClientRect();
-    return (boundingRect && boundingRect.height) || DEFAULT_GRID_HEIGHT;
+    const element = this.getLayoutElement();
+    return element.height - element.margin.t - element.margin.b;
   }
 
   private getAttributeIdForTrace(index: number): string {
