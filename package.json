@@ -84,6 +84,7 @@
     "@ngrx/schematics": "^6.1.0",
     "@sentry/cli": "^1.36.1",
     "@types/auth0-js": "^8.11.6",
+    "@types/d3": "^3.5.36",
     "@types/jasmine": "^2.8.9",
     "@types/jasminewd2": "~2.0.5",
     "@types/jssha": "^0.0.29",

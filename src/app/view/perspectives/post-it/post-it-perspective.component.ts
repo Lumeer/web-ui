@@ -37,7 +37,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
-import {selectCollectionsByQuery, selectDocumentsByCustomQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {UserSettingsService} from '../../../core/service/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';

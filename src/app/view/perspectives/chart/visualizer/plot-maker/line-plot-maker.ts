@@ -18,8 +18,9 @@
  */
 
 import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
-import {d3, Data, Layout} from 'plotly.js';
+import {Data, Layout} from 'plotly.js';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
+import * as d3 from 'd3';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
@@ -160,14 +161,14 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     return event.y;
   }
 
-  public getPoints(): any {
+  public getPoints(): d3.Selection<any> {
     return d3.selectAll('.scatterlayer .trace:last-of-type .points path');
   }
 
   public getTraceIndexForPoint(point: any): number {
     const traceIds = this.getLayoutElement()._traceUids;
     const traceClasses = (traceIds && traceIds.map(id => 'trace' + id)) || [];
-    let node = d3.select(point).node();
+    let node = d3.select(point).node() as Element;
     while (node) {
       const classList = node.classList;
       for (let i = 0; i < traceClasses.length; i++) {
@@ -175,7 +176,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
           return i;
         }
       }
-      node = node.parentNode;
+      node = node.parentNode as Element;
     }
 
     return 0;
@@ -184,6 +185,6 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   public getPointPosition(point: any, datum: any): {x: number; y: number} {
     const transform = d3.select(point).attr('transform');
     const translate = transform.substring(10, transform.length - 1).split(/[, ]/);
-    return {x: translate[0], y: translate[1]};
+    return {x: +translate[0], y: +translate[1]};
   }
 }

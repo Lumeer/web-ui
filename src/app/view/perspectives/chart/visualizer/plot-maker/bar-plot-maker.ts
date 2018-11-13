@@ -18,9 +18,10 @@
  */
 
 import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
-import {d3, Data, Layout} from 'plotly.js';
+import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
+import * as d3 from 'd3';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
@@ -199,7 +200,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     const pointNode = d3.select(point).node().parentNode;
 
     for (let i = 0; i < barsContainers.length; i++) {
-      const children = barsContainers[i].children;
+      const children = (barsContainers[i] as Element).children;
 
       if (Array.from(children).find(p => p === pointNode)) {
         return i;
@@ -216,7 +217,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return pointData.initialY + dy;
   }
 
-  public getPoints(): any {
+  public getPoints(): d3.Selection<any> {
     return d3.selectAll('.barlayer .trace .points .point path');
   }
 }

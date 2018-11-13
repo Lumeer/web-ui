@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Layout, d3} from 'plotly.js';
+import {Layout} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart.model';
 import {DraggablePlotMaker} from './draggable-plot-maker';
+import * as d3 from 'd3';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -97,7 +98,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     }, []);
   }
 
-  protected createYScale(traceIndex: number): any {
+  protected createYScale(traceIndex: number): (val: number) => any {
     const yAxisElement = this.getYAxisElementForTrace(traceIndex);
     if (yAxisElement.type === 'category') {
       return this.createYScaleCategories(yAxisElement);
@@ -105,14 +106,14 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.createYScaleLinear(yAxisElement);
   }
 
-  protected createYScaleLinear(yAxisElement: any): any {
+  protected createYScaleLinear(yAxisElement: any): d3.scale.Linear<number, number> {
     return d3.scale
       .linear()
       .domain([this.getGridHeight(), 0])
       .range(yAxisElement.range);
   }
 
-  protected createYScaleCategories(yAxisElement: any): any {
+  protected createYScaleCategories(yAxisElement: any): (val: number) => string {
     const yAxisMargin = this.computeYMarginCategories(yAxisElement);
     const gridHeight = this.getGridHeight();
     const categories = yAxisElement._categories;
@@ -177,7 +178,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const plotMaker = this;
     return d3.behavior
       .drag()
-      .origin(function(datum) {
+      .origin(function(datum: any) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         const yScale = plotMaker.createYScale(traceIx);
         const initialValue = plotMaker.getInitialValue(traceIx, datum.i);
@@ -188,8 +189,9 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         if (datum.ct) {
           const initialY = datum.ct[1];
-          const offset = plotMaker.getElementOffset(d3.event.target);
-          const elementClickedY = d3.event.pageY - offset.top;
+          const event = d3.event as MouseEvent;
+          const offset = plotMaker.getElementOffset(event.target as Element);
+          const elementClickedY = event.pageY - offset.top;
           const clickedY = elementClickedY + initialY;
 
           pointData = {...pointData, initialY, offset, clickedY};
@@ -199,7 +201,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         return plotMaker.getPointPosition(this, datum);
       })
-      .on('drag', function(datum) {
+      .on('drag', function(datum: any) {
         const pointData: PointData = this.pointData;
 
         const index = datum.i;
@@ -211,7 +213,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
           plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
         }
       })
-      .on('dragend', function(datum) {
+      .on('dragend', function(datum: any) {
         const pointData: PointData = this.pointData;
 
         const documentId = plotMaker.documents[datum.i].id;
@@ -226,7 +228,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       });
   }
 
-  private getInitialValue(traceIx: number, index: number): any {
+  private getInitialValue(traceIx: number, index: number): string | number {
     const attributeId = this.getAttributeIdForTrace(traceIx);
     return this.documents[index].data[attributeId];
   }
@@ -238,7 +240,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.isAxisCategory(ChartAxisType.Y1);
   }
 
-  private getElementOffset(element: HTMLElement) {
+  private getElementOffset(element: Element) {
     const bound = element.getBoundingClientRect();
     const html = document.documentElement;
 
@@ -248,7 +250,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     };
   }
 
-  private getNewValue(point: any, datum: any, event: any): any {
+  private getNewValue(point: any, datum: any, event: any): string | number {
     const pointData: PointData = point.pointData;
 
     const newY = this.getPointNewY(point, datum, event);
@@ -259,10 +261,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     }
 
     const initialValue = pointData.initialValue;
-    if (this.isDecimal(initialValue)) {
-      return Number.parseFloat(newValue).toFixed(2);
+    if (this.isDecimal(+initialValue)) {
+      return Number.parseFloat(newValue.toString()).toFixed(2);
     } else {
-      return Math.round(newValue);
+      return Math.round(+newValue);
     }
   }
 
@@ -281,9 +283,9 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
 export interface PointData {
   traceIx: number;
-  yScale: (val: number) => any;
-  initialValue: any;
-  lastValue: any;
+  yScale: (val: number) => string | number;
+  initialValue: string | number;
+  lastValue: string | number;
   isCategory: boolean;
   initialY?: number;
   offset?: {top: number; left: number};
