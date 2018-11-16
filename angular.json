@@ -38,7 +38,11 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
             "styles": ["src/styles.scss", "node_modules/leaflet/dist/leaflet.css"],
-            "scripts": ["node_modules/hammerjs/hammer.min.js", "node_modules/muuri/dist/muuri.min.js"],
+            "scripts": [
+              "node_modules/hammerjs/hammer.min.js",
+              "node_modules/muuri/dist/muuri.min.js",
+              "node_modules/pusher-js/dist/web/pusher.min.js"
+            ],
             "vendorChunk": false
           },
           "configurations": {

@@ -71,6 +71,7 @@
     "ngx-contextmenu": "^5.0.3",
     "ngx-infinite-scroll": "^6.0.1",
     "plotly.js": "^1.41.3",
+    "pusher-js": "^4.3.1",
     "raven-js": "^3.27.0",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
