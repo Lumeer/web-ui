@@ -42,7 +42,7 @@ import {DialogService} from '../../../../../dialog/dialog.service';
 import {CollectionModel} from './../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from './../../../../../core/store/link-types/link-type.model';
 
-const ITEMS_LIMIT = 5;
+const ITEMS_LIMIT = 15;
 
 @Component({
   selector: 'table-header-add-button',
