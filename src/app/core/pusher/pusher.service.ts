@@ -19,7 +19,7 @@
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
@@ -31,6 +31,12 @@ import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {ProjectConverter} from '../store/projects/project.converter';
+import {ViewsAction} from '../store/views/views.action';
+import {ViewConverter} from '../store/views/view.converter';
+import {CollectionsAction} from '../store/collections/collections.action';
+import {CollectionConverter} from '../store/collections/collection.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -77,16 +83,65 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel = this.pusher.subscribe('private-' + user.id);
-    this.channel.bind('my-event', function(data) {
-      console.log(JSON.stringify(data));
+
+    this.channel.bind('Organization:create', function(data) {
+      thisRef.store.dispatch(
+        new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)})
+      );
     });
     this.channel.bind('Organization:update', function(data) {
       thisRef.store.dispatch(
         new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data)})
       );
     });
+    this.channel.bind('Organization:remove', function(data) {
+      thisRef.store.dispatch(new OrganizationsAction.DeleteSuccess({organizationId: data.id}));
+    });
+
+    this.channel.bind('Project:create', function(data) {
+      thisRef.store.dispatch(
+        new ProjectsAction.CreateSuccess({project: ProjectConverter.fromDto(data.resource, data.parentId)})
+      );
+    });
+    this.channel.bind('Project:update', function(data) {
+      thisRef.store.dispatch(
+        new ProjectsAction.UpdateSuccess({project: ProjectConverter.fromDto(data.resource, data.parentId)})
+      );
+    });
+    this.channel.bind('Project:remove', function(data) {
+      thisRef.store.dispatch(new ProjectsAction.DeleteSuccess({projectId: data.id}));
+    });
+
+    this.channel.bind('View:create', function(data) {
+      thisRef.store.dispatch(new ViewsAction.CreateSuccess({view: ViewConverter.convertToModel(data)}));
+    });
+    this.channel.bind('View:update', function(data) {
+      thisRef.store.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data)}));
+    });
+    this.channel.bind('View:remove', function(data) {
+      thisRef.store.dispatch(
+        new ViewsAction.DeleteSuccess({viewCode: data.id}) // backend sends code in id in case of View for simplicity
+      );
+    });
+
+    this.channel.bind('Collection:create', function(data) {
+      thisRef.store.dispatch(new CollectionsAction.CreateSuccess({collection: CollectionConverter.fromDto(data)}));
+    });
+    this.channel.bind('Collection:update', function(data) {
+      thisRef.store.dispatch(new CollectionsAction.UpdateSuccess({collection: CollectionConverter.fromDto(data)}));
+    });
+    this.channel.bind('Collection:remove', function(data) {
+      thisRef.store.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));
+    });
+
+    this.channel.bind('Document:create', function(data) {
+      thisRef.store.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data)}));
+    });
     this.channel.bind('Document:update', function(data) {
       thisRef.store.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data)}));
+    });
+    this.channel.bind('Document:remove', function(data) {
+      thisRef.store.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
     });
   }
 
