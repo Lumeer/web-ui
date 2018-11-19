@@ -132,7 +132,7 @@
     },
     {
       "path": "./dist/lumeer/perspectives-map*.js",
-      "maxSize": "10 kB"
+      "maxSize": "50 kB"
     },
     {
       "path": "./dist/lumeer/perspectives-search*.js",
@@ -149,6 +149,10 @@
     {
       "path": "./dist/lumeer/scripts*.js",
       "maxSize": "20 kB"
+    },
+    {
+      "path": "./dist/lumeer/styles*css",
+      "maxSize": "40 kB"
     }
   ],
   "husky": {
