@@ -28,8 +28,8 @@ import {selectCollectionsDictionary} from '../../../../core/store/collections/co
 import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
-import {createMapMarker, parseCoordinates} from '../../../../core/store/maps/map.utils';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
+import {createMapMarker, parseCoordinates} from './render/map.utils';
 
 @Component({
   selector: 'map-content',
