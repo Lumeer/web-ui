@@ -66,11 +66,7 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
       this.router.navigate(['/']);
     }
 
-    const urls = path.split('?', 2);
-    const params = this.router.parseUrl(path).queryParams;
-    const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
-
-    this.router.navigate([urls[0]], queryParams);
+    this.router.navigateByUrl(path);
   }
 
   public ngAfterViewChecked() {
