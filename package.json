@@ -139,10 +139,6 @@
       "maxSize": "20 kB"
     },
     {
-      "path": "./dist/lumeer/perspectives-table*.js",
-      "maxSize": "30 kB"
-    },
-    {
       "path": "./dist/lumeer/polyfills*.js",
       "maxSize": "25 kB"
     },

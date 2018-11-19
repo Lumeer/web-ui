@@ -20,12 +20,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   HostBinding,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
@@ -59,38 +60,67 @@ export const EDITABLE_EVENT = 'editableEvent';
   styleUrls: ['./table-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TablePerspectiveComponent implements OnInit, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public config: TableConfig;
+
   @Input()
   public linkInstance: LinkInstanceModel;
 
   @Input()
   public query: QueryModel;
 
+  @Input()
+  public tableId: string;
+
   @HostBinding('id')
   public elementId: string;
 
   public currentView$: Observable<ViewModel>;
   public table$ = new BehaviorSubject<TableModel>(null);
-  public tableId: string;
 
   private selectedCursor: TableCursor;
 
   private subscriptions = new Subscription();
 
-  public constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.tableId = this.createTableId();
-    this.elementId = `table-${this.tableId}`;
-
+    this.prepareTableId();
     this.initTable();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
     this.currentView$ = this.store$.select(selectCurrentView);
   }
 
+  private prepareTableId() {
+    if (this.query && !this.tableId) {
+      throw Error('tableId must be set for embedded table!');
+    }
+    this.tableId = this.tableId || DEFAULT_TABLE_ID;
+    this.elementId = `table-${this.tableId}`;
+  }
+
   private subscribeToSelectedCursor() {
     this.subscriptions.add(this.store$.select(selectTableCursor).subscribe(cursor => (this.selectedCursor = cursor)));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.query && !changes.query.firstChange) {
+      this.refreshEmbeddedTable();
+    }
+  }
+
+  private refreshEmbeddedTable() {
+    this.store$
+      .pipe(
+        select(selectTableById(this.tableId)),
+        first(),
+        filter(table => !!table)
+      )
+      .subscribe(table => {
+        this.refreshTable(this.query, table.config);
+      });
   }
 
   public ngOnDestroy() {
@@ -109,7 +139,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private createTableFromQuery(config: TableConfig) {
     if (this.query) {
-      this.createTable(this.query); // TODO pass config from parent to embedded table
+      this.createTable(this.query, this.config);
     } else {
       this.subscribeToQuery(config);
     }
@@ -196,10 +226,6 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   private refreshTable(query: QueryModel, config: TableConfig) {
     this.destroyTable();
     this.createTable(query, config);
-  }
-
-  private createTableId(): string {
-    return this.linkInstance ? this.linkInstance.id : DEFAULT_TABLE_ID;
   }
 
   public onClickOutside(event: MouseEvent) {

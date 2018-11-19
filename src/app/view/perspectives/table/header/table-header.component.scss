@@ -2,6 +2,7 @@
   display: block;
   min-height: calc(var(--caption-height) + var(--column-group-height));
   overflow: hidden;
+  transform: scale(1, 1); // keep header in embedded mode
 
   & > div {
     z-index: 10;
