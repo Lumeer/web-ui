@@ -85,3 +85,8 @@ TSLint is run with every pull-request so make sure your code complies with our l
 ```bash
 $ npm run lint
 ```
+
+### Bundle size
+
+Bundle size limits are automatically checked in every pull-request.
+If the Travis CI build fails because of this and you are sure that you have not introduced anything undesirable, you can change these limits in `package.json` file under `bundlesize` property.
