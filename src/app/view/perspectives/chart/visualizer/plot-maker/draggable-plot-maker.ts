@@ -17,24 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ErrorHandler, Injectable} from '@angular/core';
-import * as Raven from 'raven-js';
-import {environment} from '../../../environments/environment';
+import {PlotMaker} from './plot-maker';
 
-if (environment.sentryDsn) {
-  Raven.config(environment.sentryDsn, {
-    release: environment.buildNumber,
-    environment: environment.name || '',
-  }).install();
-}
+export abstract class DraggablePlotMaker extends PlotMaker {
+  protected dragEnabled: boolean = false;
 
-@Injectable()
-export class RavenErrorHandler implements ErrorHandler {
-  public handleError(error: any): void {
-    console.error(error);
+  public setDragEnabled(enabled: boolean) {
+    const changed = enabled !== this.dragEnabled;
+    this.dragEnabled = enabled;
+    if (changed) {
+      this.dragEnabledChange();
+    }
+  }
 
-    if (environment.sentryDsn) {
-      Raven.captureException(error.originalError || error);
+  public abstract initDrag();
+
+  public abstract destroyDrag();
+
+  public dragEnabledChange() {
+    this.refreshDrag();
+  }
+
+  public onRelayout() {
+    this.refreshDrag();
+  }
+
+  protected refreshDrag() {
+    if (this.dragEnabled) {
+      this.initDrag();
+    } else {
+      this.destroyDrag();
     }
   }
 }

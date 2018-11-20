@@ -19,9 +19,9 @@
 
 import * as Coordinates from 'coordinate-parser';
 import {DivIcon, divIcon, LatLngLiteral, Map, MapOptions, marker, Marker} from 'leaflet';
-import {shadeColor} from '../../../shared/utils/html-modifier';
-import {CollectionModel} from '../collections/collection.model';
-import {MapConfig, MapMarkerProperties} from './map.model';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
+import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
 const MAP_OPTIONS: MapOptions = {
   attributionControl: false,

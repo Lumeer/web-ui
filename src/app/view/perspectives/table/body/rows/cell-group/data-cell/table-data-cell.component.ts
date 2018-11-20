@@ -33,10 +33,11 @@ import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
@@ -50,9 +51,8 @@ import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
-import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
+import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
 @Component({
   selector: 'table-data-cell',
@@ -274,7 +274,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       ...this.document,
       correlationId: row && row.correlationId,
       newData: {[attributeName]: {value}},
-      metaData: {parentId: row.parentDocumentId},
+      metaData: this.createDocumentMetaData(row),
     };
     const createDocumentAction = new DocumentsAction.Create({
       document,
@@ -303,10 +303,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       ...this.document,
       correlationId: row && row.correlationId,
       data: data,
-      metaData: {parentId: row.parentDocumentId},
+      metaData: this.createDocumentMetaData(row),
     };
 
     this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
+  }
+
+  private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
+    return this.cursor.partIndex === 0 ? {parentId: row.parentDocumentId} : undefined;
   }
 
   private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {

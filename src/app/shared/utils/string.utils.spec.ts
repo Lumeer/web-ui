@@ -17,15 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthHttpInterceptor} from './auth.http-interceptor';
-import {SentryHttpInterceptor} from './sentry.http-interceptor';
-import {SessionHttpInterceptor} from './session.http-interceptor';
-import {ViewHttpInterceptor} from './view.http-interceptor';
+import {} from 'jasmine';
+import {escapeStringForRegex} from './string.utils';
 
-export const httpInterceptorProviders = [
-  {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: SentryHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true},
-];
+describe('escapeStringForRegex()', () => {
+  it('should escape two plus signs', () => {
+    expect(escapeStringForRegex('C++')).toEqual('C\\+\\+');
+  });
+});

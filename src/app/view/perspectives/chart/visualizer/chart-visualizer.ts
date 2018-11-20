@@ -25,6 +25,7 @@ import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
+import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 
 export class ChartVisualizer {
   private data: Data[] = [];
@@ -90,7 +91,10 @@ export class ChartVisualizer {
   public createChartAndVisualize() {
     this.createNewChart();
     this.refreshDrag();
-    this.chartElement.nativeElement.on('plotly_relayout', () => this.plotMaker.onRelayout());
+    this.chartElement.nativeElement.on(
+      'plotly_relayout',
+      () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
+    );
   }
 
   public visualize() {
@@ -108,19 +112,23 @@ export class ChartVisualizer {
 
   private refreshDrag() {
     if (this.writable) {
-      this.plotMaker.initDrag();
+      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).initDrag();
     } else {
-      this.plotMaker.destroyDrag();
+      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).destroyDrag();
     }
   }
 
   public enableWrite() {
     this.writable = true;
-    this.plotMaker && this.plotMaker.setDragEnabled(true);
+    this.plotMaker &&
+      this.plotMaker instanceof DraggablePlotMaker &&
+      (this.plotMaker as DraggablePlotMaker).setDragEnabled(true);
   }
 
   public disableWrite() {
     this.writable = false;
-    this.plotMaker && this.plotMaker.setDragEnabled(false);
+    this.plotMaker &&
+      this.plotMaker instanceof DraggablePlotMaker &&
+      (this.plotMaker as DraggablePlotMaker).setDragEnabled(false);
   }
 }

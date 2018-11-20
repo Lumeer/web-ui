@@ -17,19 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TablePerspectiveComponent} from './table-perspective.component';
-
-const tableRoutes: Routes = [
-  {
-    path: '',
-    component: TablePerspectiveComponent,
-  },
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(tableRoutes)],
-  exports: [RouterModule],
-})
-export class TablePerspectiveRoutingModule {}
+export function escapeStringForRegex(text: string): string {
+  return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}

@@ -1,7 +1,8 @@
 :host {
   display: block;
   min-height: calc(var(--caption-height) + var(--column-group-height));
-  overflow: hidden;
+  transform: scale(1, 1); // keep header in embedded mode
+  z-index: 10;
 
   & > div {
     z-index: 10;

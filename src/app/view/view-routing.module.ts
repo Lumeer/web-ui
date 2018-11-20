@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
@@ -30,6 +29,7 @@ import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
+import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {GanttChartComponent} from './perspectives/gantt-chart/gantt-chart.component';
@@ -78,7 +78,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Table,
-        loadChildren: './perspectives/table/table-perspective.module#TablePerspectiveModule',
+        component: TablePerspectiveComponent,
       },
       {
         path: '',

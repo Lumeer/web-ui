@@ -17,15 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthHttpInterceptor} from './auth.http-interceptor';
-import {SentryHttpInterceptor} from './sentry.http-interceptor';
-import {SessionHttpInterceptor} from './session.http-interceptor';
-import {ViewHttpInterceptor} from './view.http-interceptor';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import * as Sentry from '@sentry/browser';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {environment} from '../../../../environments/environment';
 
-export const httpInterceptorProviders = [
-  {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: SentryHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true},
-];
+@Injectable()
+export class SentryHttpInterceptor implements HttpInterceptor {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (environment.sentryDsn && error.status !== 402) {
+          Sentry.captureException(error);
+        }
+
+        return throwError(error);
+      })
+    );
+  }
+}

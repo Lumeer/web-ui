@@ -20,6 +20,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
+import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
@@ -52,7 +53,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
     this.handleAuthentication();
-    this.setUpGoogleAnalytics();
+    this.startGoogleAnalyticsTracking();
+    this.setUpExternalServicesUserContext();
   }
 
   private handleAuthentication() {
@@ -61,13 +63,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private setUpGoogleAnalytics() {
+  private startGoogleAnalyticsTracking() {
     if (!environment.analytics) {
       return;
     }
 
     this.angulartics2GoogleAnalytics.startTracking();
+  }
 
+  private setUpExternalServicesUserContext() {
     this.store$
       .select(selectCurrentUser)
       .pipe(
@@ -75,9 +79,30 @@ export class AppComponent implements OnInit, AfterViewInit {
         first()
       )
       .subscribe(user => {
-        const userHash = hashUserId(user.id);
-        this.angulartics2GoogleAnalytics.setUsername(userHash);
+        const userIdHash = hashUserId(user.id);
+        this.setGoogleAnalyticsUsername(userIdHash);
+        this.configureSentryUserScope(userIdHash);
       });
+  }
+
+  private setGoogleAnalyticsUsername(userIdHash: string) {
+    if (!environment.analytics) {
+      return;
+    }
+
+    this.angulartics2GoogleAnalytics.setUsername(userIdHash);
+  }
+
+  private configureSentryUserScope(userIdHash: string) {
+    if (!environment.sentryDsn) {
+      return;
+    }
+
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: userIdHash,
+      });
+    });
   }
 
   public ngOnInit() {
