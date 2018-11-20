@@ -17,23 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {GanttChartComponent} from './gantt-chart.component';
+import {Pipe, PipeTransform} from '@angular/core';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: GanttChartComponent
-  }
-];
-
-@NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+@Pipe({
+  name: 'displayable'
 })
-export class GanttChartRoutingModule { }
+export class DisplayablePipe implements PipeTransform {
+
+  public transform(query: QueryModel): boolean {
+    return query && query.collectionIds && query.collectionIds.length === 1;
+  }
+
+}

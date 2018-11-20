@@ -23,6 +23,7 @@ import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart.model';
+import {GanttChartConfig} from "../gantt-charts/gantt-chart.model";
 
 export interface ViewModel extends ResourceModel {
 
@@ -48,9 +49,10 @@ export interface ViewConfigModel {
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfig;
-  ganttchart?: GanttChartConfigModel;
+  // ganttchart?: GanttChartConfigModel;
   calendar?: CalendarConfigModel;
   chart?: ChartConfig;
+  ganttChart?: GanttChartConfig;
 
 }
 
@@ -68,11 +70,6 @@ export interface SearchConfigModel {
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
 
-}
-
-export interface GanttChartConfigModel {
-  //TODO
-  whateverConfig?: string;    //not sure
 }
 
 export interface CalendarConfigModel {

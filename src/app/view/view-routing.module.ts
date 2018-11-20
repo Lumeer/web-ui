@@ -32,7 +32,7 @@ import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
-import {GanttChartComponent} from './perspectives/gantt-chart/gantt-chart.component';
+import {GanttChartPerspectiveComponent} from './perspectives/gantt-chart/gantt-chart-perspective.component';
 import {CalendarComponent} from './perspectives/calendar/calendar.component';
 
 const viewRoutes: Routes = [
@@ -66,7 +66,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.GanttChart,
-        loadChildren: './perspectives/gantt-chart/gantt-chart.module#GanttChartModule'
+        loadChildren: './perspectives/gantt-chart/gantt-chart-perspective.module#GanttChartPerspectiveModule'
       },
       {
         path: Perspective.Calendar,

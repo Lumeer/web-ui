@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
+
+  <select-item class="mr-2"
+               [placeholderText]="ganntChartViewMode"
+               [items]="ganttChartModes | ganttChartModesToSelect"
+               [selectedId]="config.mode"
+               (select)="onModeSelect($event)">
+
+  </select-item>
+
+  <ng-container *ngFor="let ganttChartBar of ganttChartBars; let isLast = last">
+    <select-item
+      [class.mr-2]="!isLast"
+      [items]="[collection] | barSelectItems:ganttChartBar:config"
+      [selectedId]="config.bars[ganttChartBar]"
+      [placeholderText]="ganttChartBar | barSelectPlaceholder"
+      [emptyValue]="ganttChartBar | barSelectEmptyValue"
+      [removable]="true"
+      (select)="onBarSelect(ganttChartBar, $event)"
+      (remove)="onBarRemoved(ganttChartBar)">
+    </select-item>
+  </ng-container>
+
+</div>

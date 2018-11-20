@@ -18,23 +18,22 @@
  */
 
 import { NgModule } from '@angular/core';
-//import { CommonModule } from '@angular/common';
-import {SharedModule} from '../../../shared/shared.module';
-import {GanttChartComponent} from './gantt-chart.component';
-//import {RouterModule} from '@angular/router';
-import {GanttChartRoutingModule} from './gantt-chart-routing.module';
-import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
-import {GanttChartConfigSelectComponent} from './config-select/gantt-chart-config-select.component';
+import { Routes, RouterModule } from '@angular/router';
+import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
+
+const ganttChartRoutes: Routes = [
+  {
+    path: '',
+    component: GanttChartPerspectiveComponent
+  }
+];
 
 @NgModule({
-  imports: [    //not sure
-    SharedModule,
-    GanttChartRoutingModule
+  imports: [
+    RouterModule.forChild(ganttChartRoutes)
   ],
-  declarations: [
-    GanttChartComponent,
-    GanttChartConfigComponent,
-    GanttChartConfigSelectComponent
+  exports: [
+    RouterModule
   ]
 })
-export class GanttChartModule { }
+export class GanttChartPerspectiveRoutingModule { }
