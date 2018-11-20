@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {HtmlModifier} from '../utils/html-modifier';
 
 @Pipe({
-  name: 'removeHtmlComments'
+  name: 'removeHtmlComments',
 })
 export class RemoveHtmlCommentsPipe implements PipeTransform {
-
   public transform(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
   }
-
 }

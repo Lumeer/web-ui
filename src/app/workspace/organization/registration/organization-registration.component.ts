@@ -20,7 +20,6 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './organization-registration.component.html'
+  templateUrl: './organization-registration.component.html',
 })
-export class OrganizationRegistrationComponent {
-}
+export class OrganizationRegistrationComponent {}

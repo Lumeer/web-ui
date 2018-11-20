@@ -17,17 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
@@ -41,18 +51,16 @@ import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
-import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
+import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
 @Component({
   selector: 'table-data-cell',
   templateUrl: './table-data-cell.component.html',
   styleUrls: ['./table-data-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -95,10 +103,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private savingDisabled: boolean;
 
-  public constructor(private actions$: Actions,
-                     private contextMenuService: ContextMenuService,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(
+    private actions$: Actions,
+    private contextMenuService: ContextMenuService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.bindAffected();
@@ -109,13 +118,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.affected$ = this.store$.select(selectAffected({
-      attributeId: this.column.attributeId,
-      documentId: this.document && this.document.id,
-      linkInstanceId: this.linkInstance && this.linkInstance.id
-    })).pipe(
-      distinctUntilChanged()
-    );
+    this.affected$ = this.store$
+      .select(
+        selectAffected({
+          attributeId: this.column.attributeId,
+          documentId: this.document && this.document.id,
+          linkInstanceId: this.linkInstance && this.linkInstance.id,
+        })
+      )
+      .pipe(distinctUntilChanged());
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -141,12 +152,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToEditSelectedCell(): Subscription {
-    return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe((action) => this.editableCell.startEditing(action.payload.clear));
+    return this.actions$
+      .ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .subscribe(action => this.editableCell.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
-    return this.actions$.ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+    return this.actions$
+      .ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
       .subscribe(() => this.deleteCellData());
   }
 
@@ -176,19 +189,22 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public onEditStart() {
     if (this.document.id) {
-      this.store$.dispatch(new TablesAction.SetEditedAttribute({
-        editedAttribute: {
-          documentId: this.document.id,
-          attributeId: this.column.attributeId
-        }
-      }));
+      this.store$.dispatch(
+        new TablesAction.SetEditedAttribute({
+          editedAttribute: {
+            documentId: this.document.id,
+            attributeId: this.column.attributeId,
+          },
+        })
+      );
     }
   }
 
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
 
-    if (!isNullOrUndefined(value)) { // TODO maybe null values in the future
+    if (!isNullOrUndefined(value)) {
+      // TODO maybe null values in the future
       this.useSelectionOrSave(value);
     }
 
@@ -242,15 +258,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     combineLatest(
       this.store$.pipe(select(selectTableById(this.cursor.tableId))),
       this.store$.pipe(select(selectTableRow(this.cursor)))
-    ).pipe(
-      first()
-    ).subscribe(([table, row]) => {
-      if (!attributeId) {
-        this.createDocumentWithNewAttribute(table, row, attributeName, value);
-      } else {
-        this.createDocumentWithExistingAttribute(table, row, attributeId, value);
-      }
-    });
+    )
+      .pipe(first())
+      .subscribe(([table, row]) => {
+        if (!attributeId) {
+          this.createDocumentWithNewAttribute(table, row, attributeName, value);
+        } else {
+          this.createDocumentWithExistingAttribute(table, row, attributeId, value);
+        }
+      });
   }
 
   private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: string) {
@@ -258,29 +274,43 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       ...this.document,
       correlationId: row && row.correlationId,
       newData: {[attributeName]: {value}},
-      metaData: {parentId: row.parentDocumentId}
+      metaData: this.createDocumentMetaData(row),
     };
-    const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)});
+    const createDocumentAction = new DocumentsAction.Create({
+      document,
+      callback: this.createLinkInstanceCallback(table),
+    });
     const newAttribute = {name: attributeName, constraints: []};
 
-    this.store$.dispatch(new CollectionsAction.CreateAttributes({
-      collectionId: this.document.collectionId,
-      attributes: [newAttribute],
-      nextAction: createDocumentAction,
-      callback: this.replaceTableColumnCallback(table, attributeName)
-    }));
+    this.store$.dispatch(
+      new CollectionsAction.CreateAttributes({
+        collectionId: this.document.collectionId,
+        attributes: [newAttribute],
+        nextAction: createDocumentAction,
+        callback: this.replaceTableColumnCallback(table, attributeName),
+      })
+    );
   }
 
-  private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: string) {
+  private createDocumentWithExistingAttribute(
+    table: TableModel,
+    row: TableConfigRow,
+    attributeId: string,
+    value: string
+  ) {
     const data = {[attributeId]: value};
     const document: DocumentModel = {
       ...this.document,
       correlationId: row && row.correlationId,
       data: data,
-      metaData: {parentId: row.parentDocumentId}
+      metaData: this.createDocumentMetaData(row),
     };
 
     this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
+  }
+
+  private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
+    return this.cursor.partIndex === 0 ? {parentId: row.parentDocumentId} : undefined;
   }
 
   private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {
@@ -307,7 +337,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return documentId => {
       const linkInstance: LinkInstanceModel = {
         linkTypeId,
-        documentIds: [previousRow.documentId, documentId]
+        documentIds: [previousRow.documentId, documentId],
       };
       this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
     };
@@ -322,28 +352,41 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateDocumentWithNewAttribute(attributeName: string, value: string) {
-    const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[attributeName]: {value}}};
+    const document = {
+      collectionId: this.document.collectionId,
+      id: this.document.id,
+      data: {},
+      newData: {[attributeName]: {value}},
+    };
     const patchDocumentAction = new DocumentsAction.PatchData({document});
     const newAttribute = {name: attributeName, constraints: []};
 
-    this.store$.pipe(
-      select(selectTableById(this.cursor.tableId)),
-      first()
-    ).subscribe(table => {
-      this.store$.dispatch(new CollectionsAction.CreateAttributes({
-        collectionId: this.document.collectionId,
-        attributes: [newAttribute],
-        nextAction: patchDocumentAction,
-        callback: this.replaceTableColumnCallback(table, attributeName)
-      }));
-    });
+    this.store$
+      .pipe(
+        select(selectTableById(this.cursor.tableId)),
+        first()
+      )
+      .subscribe(table => {
+        this.store$.dispatch(
+          new CollectionsAction.CreateAttributes({
+            collectionId: this.document.collectionId,
+            attributes: [newAttribute],
+            nextAction: patchDocumentAction,
+            callback: this.replaceTableColumnCallback(table, attributeName),
+          })
+        );
+      });
   }
 
   private updateDocumentWithExistingAttribute(attributeId: string, value: string) {
     // TODO what if user does not have permissions to see all columns?
-    if (this.cursor.partIndex > 0 && !value && !Object.entries(this.document.data)
-      .filter(([k]) => k !== attributeId)
-      .some(([, v]) => v)) {
+    if (
+      this.cursor.partIndex > 0 &&
+      !value &&
+      !Object.entries(this.document.data)
+        .filter(([k]) => k !== attributeId)
+        .some(([, v]) => v)
+    ) {
       this.deleteDocument();
     } else {
       const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
@@ -354,11 +397,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private deleteDocument() {
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
     if (this.document && this.document.id) {
-      this.store$.dispatch(new DocumentsAction.Delete({
-        collectionId: this.document.collectionId,
-        documentId: this.document.id,
-        nextAction: removeRowAction
-      }));
+      this.store$.dispatch(
+        new DocumentsAction.Delete({
+          collectionId: this.document.collectionId,
+          documentId: this.document.id,
+          nextAction: removeRowAction,
+        })
+      );
       return;
     }
     this.store$.dispatch(removeRowAction);
@@ -391,21 +436,25 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public createLinkCallback(linkInstanceId: string, documentId: string) {
-    this.store$.dispatch(new TablesAction.ReplaceRows({
-      cursor: this.cursor,
-      deleteCount: 1,
-      rows: [{documentId, linkInstanceId, linkedRows: []}]
-    }));
+    this.store$.dispatch(
+      new TablesAction.ReplaceRows({
+        cursor: this.cursor,
+        deleteCount: 1,
+        rows: [{documentId, linkInstanceId, linkedRows: []}],
+      })
+    );
   }
 
   private deleteLinkInstance() {
-    this.store$.pipe(
-      select(selectTableRow(this.cursor)),
-      first()
-    ).subscribe(row => {
-      const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-      this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: row.linkInstanceId, callback}));
-    });
+    this.store$
+      .pipe(
+        select(selectTableRow(this.cursor)),
+        first()
+      )
+      .subscribe(row => {
+        const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: row.linkInstanceId, callback}));
+      });
   }
 
   public onEditKeyDown(event: KeyboardEvent) {
@@ -445,8 +494,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       anchorElement: null,
       contextMenu: this.menuComponent.contextMenu,
       event,
-      item: null
+      item: null,
     });
   }
-
 }

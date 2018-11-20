@@ -9,22 +9,22 @@ if [ -d ~/.engine -a -f ~/.engine/.git ]; then
 else
   echo "Downloading engine..."
   git clone https://github.com/Lumeer/engine.git ~/.engine
-  git checkout devel
   cd ~/.engine
+  git checkout devel
 fi
 
 echo "Building engine..."
-mvn install -DskipTests -B
+mvn install -DskipTests -B --quiet
 cd war
 
 echo "Starting engine..."
 export SKIP_LIMITS=true
-mvn -s settings.xml wildfly:run -PstartEngine -B &
+mvn -s settings.xml wildfly:run -PstartEngine -B --quiet &
 echo $! > $ORIG/engine.pid
 
 echo "Waiting for engine to start..."
-while ! test -f "target/wildfly-run/wildfly-13.0.0.Final/standalone/tmp/startup-marker"; do
-  sleep 2
+while test $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:8080/lumeer-engine/rest/users) != 401; do
+  sleep 10
 done
 sleep 5
 

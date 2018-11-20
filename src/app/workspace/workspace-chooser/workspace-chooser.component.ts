@@ -30,13 +30,25 @@ import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationById, selectOrganizationCodes, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
+import {
+  selectAllOrganizations,
+  selectOrganizationById,
+  selectOrganizationCodes,
+  selectSelectedOrganization,
+  selectSelectedOrganizationId,
+} from '../../core/store/organizations/organizations.state';
 import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
 import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
 import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
+import {
+  selectProjectById,
+  selectProjectsCodesForSelectedOrganization,
+  selectProjectsForSelectedOrganization,
+  selectSelectedProject,
+  selectSelectedProjectId,
+} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
@@ -51,19 +63,18 @@ const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lume
   selector: 'workspace-chooser',
   templateUrl: './workspace-chooser.component.html',
   styleUrls: ['./workspace-chooser.component.scss'],
-  animations: [animateOpacityFromUp]
+  animations: [animateOpacityFromUp],
 })
 export class WorkspaceChooserComponent implements OnInit, OnDestroy {
-
   public organizations$: Observable<OrganizationModel[]>;
   public organizationCodes$: Observable<string[]>;
-  public organizationsRoles$: Observable<{ [organizationId: string]: string[] }>;
+  public organizationsRoles$: Observable<{[organizationId: string]: string[]}>;
   public canCreateOrganizations$: Observable<boolean>;
   public serviceLimits$: Observable<ServiceLimitsModel[]>;
 
   public projects$: Observable<ProjectModel[]>;
   public projectCodes$: Observable<string[]>;
-  public projectRoles$: Observable<{ [projectId: string]: string[] }>;
+  public projectRoles$: Observable<{[projectId: string]: string[]}>;
   public canCreateProjects$: Observable<boolean>;
 
   public currentUser: UserModel;
@@ -72,10 +83,11 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store: Store<AppState>,
-              private router: Router,
-              private userSettingsService: UserSettingsService) {
-  }
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private userSettingsService: UserSettingsService
+  ) {}
 
   public ngOnInit() {
     this.bindData();
@@ -111,11 +123,14 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public onOrganizationSettings(id: string) {
-    this.store.select(selectOrganizationById(id)).pipe(first()).subscribe(organization => {
-      if (organization) {
-        this.store.dispatch(new RouterAction.Go({path: ['organization', organization.code]}));
-      }
-    });
+    this.store
+      .select(selectOrganizationById(id))
+      .pipe(first())
+      .subscribe(organization => {
+        if (organization) {
+          this.store.dispatch(new RouterAction.Go({path: ['organization', organization.code]}));
+        }
+      });
   }
 
   public onSelectProject(id: string) {
@@ -146,13 +161,13 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onProjectSettings(id: string) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
-      combineLatest(
-        this.store.select(selectSelectedOrganization),
-        this.store.select(selectProjectById(id))
-      ).pipe(first())
+      combineLatest(this.store.select(selectSelectedOrganization), this.store.select(selectProjectById(id)))
+        .pipe(first())
         .subscribe(([organization, project]) => {
           if (organization && project) {
-            this.store.dispatch(new RouterAction.Go({path: ['organization', organization.code, 'project', project.code]}));
+            this.store.dispatch(
+              new RouterAction.Go({path: ['organization', organization.code, 'project', project.code]})
+            );
           }
         });
     }
@@ -160,10 +175,8 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.selectedOrganizationId) && !isNullOrUndefined(this.selectedProjectId)) {
-      combineLatest(
-        this.store.select(selectSelectedOrganization),
-        this.store.select(selectSelectedProject)
-      ).pipe(first())
+      combineLatest(this.store.select(selectSelectedOrganization), this.store.select(selectSelectedProject))
+        .pipe(first())
         .subscribe(([organization, project]) => {
           if (organization && project) {
             this.router.navigate(['/w', organization.code, project.code, 'view', Perspective.Search, 'collections']);
@@ -186,58 +199,62 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   private bindData() {
     this.organizations$ = this.store.select(selectAllOrganizations);
-    this.organizationCodes$ = this.store.select(selectOrganizationCodes).pipe(
-      map(codes => codes || [])
-    );
+    this.organizationCodes$ = this.store.select(selectOrganizationCodes).pipe(map(codes => codes || []));
 
     this.organizationsRoles$ = this.organizations$.pipe(
       withLatestFrom(this.store.select(selectCurrentUser)),
       withLatestFrom(this.store.select(selectGroupsDictionary)),
-      map(([[organizations, user], groups]) => organizations.reduce((rolesMap, organization) => {
-        const userWithGroups = mapGroupsOnUser(user, organization.id, groups);
-        rolesMap[organization.id] = userRolesInResource(userWithGroups, organization);
-        return rolesMap;
-      }, {}))
+      map(([[organizations, user], groups]) =>
+        organizations.reduce((rolesMap, organization) => {
+          const userWithGroups = mapGroupsOnUser(user, organization.id, groups);
+          rolesMap[organization.id] = userRolesInResource(userWithGroups, organization);
+          return rolesMap;
+        }, {})
+      )
     );
-    this.canCreateOrganizations$ = this.store.select(selectCurrentUser).pipe(
-      map(user => allowedEmails.includes(user.email))
-    );
+    this.canCreateOrganizations$ = this.store
+      .select(selectCurrentUser)
+      .pipe(map(user => allowedEmails.includes(user.email)));
     this.serviceLimits$ = this.store.select(selectAllServiceLimits);
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
-    this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
-      map(codes => codes || [])
-    );
+    this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(map(codes => codes || []));
     this.projectRoles$ = this.projects$.pipe(
-      mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
-        map(({organization, user}) => projects.reduce((rolesMap, project) => {
-          rolesMap[project.id] = userRolesInResource(user, project);
-          return rolesMap;
-        }, {}))
-      ))
+      mergeMap(projects =>
+        this.selectOrganizationAndCurrentUser().pipe(
+          map(({organization, user}) =>
+            projects.reduce((rolesMap, project) => {
+              rolesMap[project.id] = userRolesInResource(user, project);
+              return rolesMap;
+            }, {})
+          )
+        )
+      )
     );
     this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
       map(({organization, user}) => userHasRoleInResource(user, organization, Role.Write))
     );
   }
 
-  private selectOrganizationAndCurrentUser(): Observable<({ organization: OrganizationModel, user: UserModel })> {
+  private selectOrganizationAndCurrentUser(): Observable<{organization: OrganizationModel; user: UserModel}> {
     return this.store.select(selectSelectedOrganization).pipe(
       filter(organization => !isNullOrUndefined(organization)),
-      mergeMap(organization => this.store.select(selectCurrentUserForOrganization(organization)).pipe(
-        map(user => ({organization, user}))
-      ))
+      mergeMap(organization =>
+        this.store.select(selectCurrentUserForOrganization(organization)).pipe(map(user => ({organization, user})))
+      )
     );
   }
 
   private subscribeData() {
-    this.subscriptions.add(this.store.select(selectSelectedOrganizationId).subscribe(id => {
-      this.selectedOrganizationId = id;
-      if (id) {
-        this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
-        this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
-      }
-    }));
+    this.subscriptions.add(
+      this.store.select(selectSelectedOrganizationId).subscribe(id => {
+        this.selectedOrganizationId = id;
+        if (id) {
+          this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+          this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
+        }
+      })
+    );
     this.subscriptions.add(
       this.store.select(selectSelectedProjectId).subscribe(id => {
         this.selectedProjectId = id;

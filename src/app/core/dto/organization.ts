@@ -21,7 +21,5 @@ import {Project} from './project';
 import {Resource} from './resource';
 
 export interface Organization extends Resource {
-
   projects?: Project[];
-
 }

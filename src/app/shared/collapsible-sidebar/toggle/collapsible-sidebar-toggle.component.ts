@@ -23,10 +23,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, O
   selector: 'collapsible-sidebar-toggle',
   templateUrl: './collapsible-sidebar-toggle.component.html',
   styleUrls: ['./collapsible-sidebar-toggle.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollapsibleSidebarToggleComponent {
-
   @Input()
   public collapsed: boolean;
 
@@ -37,5 +36,4 @@ export class CollapsibleSidebarToggleComponent {
   public onClick() {
     this.toggle.emit();
   }
-
 }

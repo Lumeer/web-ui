@@ -4,8 +4,11 @@
   "description": "Lumeer Web UI",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_OPTIONS=--max_old_space_size=4096 ng build $(node ./env-vars.js)",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 ng build --progress=true $(node ./env-vars.js)",
+    "bundlesize": "bundlesize",
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json -d ../web-ui-docs -n 'Lumeer Web UI documentation'",
+    "format:check": "prettier --list-different '**/*.{ts,js,json,scss,md}'",
+    "format:fix": "prettier --write",
     "i18n": "npm run i18n-html && npm run i18n-ts && npm run i18n-merge",
     "i18n-html": "ng xi18n --output-path i18n",
     "i18n-ts": "ngx-extractor -i \"src/app/**/*.ts\" -f xlf -o src/i18n/messages.xlf",
@@ -13,8 +16,10 @@
     "lint": "ng lint lumeer",
     "tslint": "tslint --project ./src/tsconfig.app.json",
     "ng": "ng",
+    "prettier": "prettier",
     "reset-env": "echo {} > ./src/environments/.env.json",
     "start": "npm run reset-env && ng serve",
+    "start:aot": "npm run reset-env && ng serve --aot=true",
     "start:cs": "npm run reset-env && ng serve --configuration=cs",
     "start:en": "npm run reset-env && ng serve --configuration=en",
     "test": "ng test",
@@ -49,6 +54,7 @@
     "@ngrx/store": "^6.1.0",
     "@ngrx/store-devtools": "^6.1.0",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
+    "@sentry/browser": "^4.3.2",
     "angular-resizable-element": "^3.2.2",
     "angulartics2": "^7.0.0",
     "auth0-js": "^9.8.0",
@@ -66,12 +72,11 @@
     "ngx-contextmenu": "^5.0.3",
     "ngx-infinite-scroll": "^6.0.1",
     "plotly.js": "^1.41.3",
-    "raven-js": "^3.27.0",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.8.5",
+    "@angular-devkit/build-angular": "^0.10.6",
     "@angular-devkit/schematics": "^0.8.5",
     "@angular/cli": "^6.2.5",
     "@angular/compiler-cli": "^6.1.10",
@@ -80,15 +85,17 @@
     "@ngrx/schematics": "^6.1.0",
     "@sentry/cli": "^1.36.1",
     "@types/auth0-js": "^8.11.6",
+    "@types/d3": "^3.5.36",
     "@types/jasmine": "^2.8.9",
     "@types/jasminewd2": "~2.0.5",
     "@types/jssha": "^0.0.29",
     "@types/leaflet": "^1.2.11",
     "@types/node": "^8.10.36",
     "@types/plotly.js": "^1.38.11",
+    "bundlesize": "^0.17.0",
     "codelyzer": "^4.5.0",
     "cypress": "^3.1.0",
-    "husky": "^1.1.2",
+    "husky": "^1.1.3",
     "jasmine": "~3.2.0",
     "jasmine-core": "~3.2.1",
     "jasmine-spec-reporter": "~4.2.1",
@@ -97,14 +104,57 @@
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^1.3.1",
-    "lint-staged": "^7.3.0",
+    "lint-staged": "^8.0.4",
     "ngx-i18nsupport": "^0.17.1",
+    "prettier": "~1.15.1",
     "protractor": "~5.4.1",
     "rxjs-tslint-rules": "^4.10.0",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
   },
+  "bundlesize": [
+    {
+      "path": "./dist/lumeer/common*.js",
+      "maxSize": "3 kB"
+    },
+    {
+      "path": "./dist/lumeer/main*.js",
+      "maxSize": "600 kB"
+    },
+    {
+      "path": "./dist/lumeer/perspectives-chart*.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./dist/lumeer/perspectives-detail*.js",
+      "maxSize": "15 kB"
+    },
+    {
+      "path": "./dist/lumeer/perspectives-map*.js",
+      "maxSize": "50 kB"
+    },
+    {
+      "path": "./dist/lumeer/perspectives-search*.js",
+      "maxSize": "20 kB"
+    },
+    {
+      "path": "./dist/lumeer/polyfills*.js",
+      "maxSize": "25 kB"
+    },
+    {
+      "path": "./dist/lumeer/runtime*.js",
+      "maxSize": "2 kB"
+    },
+    {
+      "path": "./dist/lumeer/scripts*.js",
+      "maxSize": "20 kB"
+    },
+    {
+      "path": "./dist/lumeer/styles*css",
+      "maxSize": "40 kB"
+    }
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -112,6 +162,10 @@
   },
   "lint-staged": {
     "linters": {
+      "*.{ts,js,json,scss,md}": [
+        "npm run format:fix",
+        "git add"
+      ],
       "*.ts,!*.spec.ts": [
         "npm run tslint",
         "git add"

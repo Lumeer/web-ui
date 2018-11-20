@@ -33,13 +33,7 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PipesModule,
-    RouterModule,
-    ResourceMenuModule,
-    SearchBoxModule
-  ],
+  imports: [CommonModule, PipesModule, RouterModule, ResourceMenuModule, SearchBoxModule],
   declarations: [
     TopPanelComponent,
     TopPanelWrapperComponent,
@@ -48,12 +42,8 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
     LumeerLogoComponent,
     WorkspacePanelComponent,
     UserPanelComponent,
-    ControlsToggleComponent
+    ControlsToggleComponent,
   ],
-  exports: [
-    TopPanelWrapperComponent,
-    LumeerLogoComponent
-  ]
+  exports: [TopPanelWrapperComponent, LumeerLogoComponent],
 })
-export class TopPanelModule {
-}
+export class TopPanelModule {}

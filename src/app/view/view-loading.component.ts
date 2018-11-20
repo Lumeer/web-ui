@@ -21,8 +21,6 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'view-loading',
-  template: ''
+  template: '',
 })
-export class ViewLoadingComponent {
-
-}
+export class ViewLoadingComponent {}

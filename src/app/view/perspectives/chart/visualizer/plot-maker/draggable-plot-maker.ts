@@ -17,25 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TablePerspectiveComponent} from './table-perspective.component';
+import {PlotMaker} from './plot-maker';
 
-const tableRoutes: Routes = [
-  {
-    path: '',
-    component: TablePerspectiveComponent,
+export abstract class DraggablePlotMaker extends PlotMaker {
+  protected dragEnabled: boolean = false;
+
+  public setDragEnabled(enabled: boolean) {
+    const changed = enabled !== this.dragEnabled;
+    this.dragEnabled = enabled;
+    if (changed) {
+      this.dragEnabledChange();
+    }
   }
-];
 
-@NgModule({
-  imports: [
-    RouterModule.forChild(tableRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
-})
-export class TablePerspectiveRoutingModule {
+  public abstract initDrag();
 
+  public abstract destroyDrag();
+
+  public dragEnabledChange() {
+    this.refreshDrag();
+  }
+
+  public onRelayout() {
+    this.refreshDrag();
+  }
+
+  protected refreshDrag() {
+    if (this.dragEnabled) {
+      this.initDrag();
+    } else {
+      this.destroyDrag();
+    }
+  }
 }

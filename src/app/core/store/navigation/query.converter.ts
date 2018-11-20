@@ -23,7 +23,6 @@ import {AttributeFilter, QueryModel} from './query.model';
 import {conditionFromString} from './query.util';
 
 export class QueryConverter {
-
   public static fromDto(dto: Query): QueryModel {
     return {
       collectionIds: dto.collectionIds,
@@ -32,7 +31,7 @@ export class QueryConverter {
       fulltext: dto.fulltext,
       linkTypeIds: dto.linkTypeIds,
       page: dto.page,
-      pageSize: dto.pageSize
+      pageSize: dto.pageSize,
       // TODO convert other fields as well
     };
   }
@@ -93,5 +92,4 @@ export class QueryConverter {
 
     return {collectionId, conditionType, attributeId, value};
   }
-
 }

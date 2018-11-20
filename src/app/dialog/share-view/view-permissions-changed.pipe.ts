@@ -22,11 +22,13 @@ import {isNullOrUndefined} from 'util';
 import {containsSameElements} from '../../shared/utils/array.utils';
 
 @Pipe({
-  name: 'viewPermissionsChanged'
+  name: 'viewPermissionsChanged',
 })
 export class ViewPermissionsChangedPipe implements PipeTransform {
-
-  public transform(initialUserPermissions: { [id: string]: string[] }, currentUserPermissions: { [id: string]: string[] }): boolean {
+  public transform(
+    initialUserPermissions: {[id: string]: string[]},
+    currentUserPermissions: {[id: string]: string[]}
+  ): boolean {
     if (Object.keys(initialUserPermissions).length !== Object.keys(currentUserPermissions).length) {
       return true;
     }
@@ -41,5 +43,4 @@ export class ViewPermissionsChangedPipe implements PipeTransform {
 
     return false;
   }
-
 }

@@ -25,9 +25,9 @@ import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
+import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 
 export class ChartVisualizer {
-
   private data: Data[] = [];
 
   private layout: Partial<Layout>;
@@ -36,17 +36,20 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
-  constructor(private chartElement: ElementRef,
-              private writable: boolean,
-              private onValueChanged?: (documentId: string, attributeId: string, value: string) => void) {
-  }
+  constructor(
+    private chartElement: ElementRef,
+    private writable: boolean,
+    private onValueChanged?: (documentId: string, attributeId: string, value: string) => void
+  ) {}
 
   public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type, this.chartElement);
-      this.plotMaker.setOnValueChanged((change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)));
-      this.plotMaker.setOnDataChanged((change) => this.onDataChanged(change));
+      this.plotMaker.setOnValueChanged(
+        change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)
+      );
+      this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
     }
 
     const currentConfig = this.plotMaker.currentConfig();
@@ -65,8 +68,7 @@ export class ChartVisualizer {
   }
 
   private shouldRefreshLayout(newConfig: ChartConfig, currentConfig: ChartConfig) {
-    return !this.plotMaker || !currentConfig
-      || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
+    return !this.plotMaker || !currentConfig || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
   }
 
   public onDataChanged(change: DataChange) {
@@ -89,7 +91,10 @@ export class ChartVisualizer {
   public createChartAndVisualize() {
     this.createNewChart();
     this.refreshDrag();
-    this.chartElement.nativeElement.on('plotly_relayout', () => this.plotMaker.onRelayout());
+    this.chartElement.nativeElement.on(
+      'plotly_relayout',
+      () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
+    );
   }
 
   public visualize() {
@@ -107,20 +112,23 @@ export class ChartVisualizer {
 
   private refreshDrag() {
     if (this.writable) {
-      this.plotMaker.initDrag();
+      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).initDrag();
     } else {
-      this.plotMaker.destroyDrag();
+      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).destroyDrag();
     }
   }
 
   public enableWrite() {
     this.writable = true;
-    this.plotMaker && this.plotMaker.setDragEnabled(true);
+    this.plotMaker &&
+      this.plotMaker instanceof DraggablePlotMaker &&
+      (this.plotMaker as DraggablePlotMaker).setDragEnabled(true);
   }
 
   public disableWrite() {
     this.writable = false;
-    this.plotMaker && this.plotMaker.setDragEnabled(false);
+    this.plotMaker &&
+      this.plotMaker instanceof DraggablePlotMaker &&
+      (this.plotMaker as DraggablePlotMaker).setDragEnabled(false);
   }
-
 }

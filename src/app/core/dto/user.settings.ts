@@ -19,8 +19,6 @@
 import {SizeType} from '../../shared/slider/size-type';
 
 export interface UserSettings {
-
   searchSize: SizeType;
   notificationsDisabled: boolean;
-
 }

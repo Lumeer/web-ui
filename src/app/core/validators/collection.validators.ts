@@ -30,11 +30,11 @@ import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class CollectionValidators {
-
   constructor(private store: Store<AppState>) {
-    this.store.select(selectWorkspace).pipe(
-      filter(workspace => Boolean(workspace && workspace.organizationCode && workspace.projectCode))
-    ).subscribe(() => this.store.dispatch(new CollectionsAction.GetNames()));
+    this.store
+      .select(selectWorkspace)
+      .pipe(filter(workspace => Boolean(workspace && workspace.organizationCode && workspace.projectCode)))
+      .subscribe(() => this.store.dispatch(new CollectionsAction.GetNames()));
   }
 
   public uniqueName(excludeName?: string): AsyncValidatorFn {
@@ -45,7 +45,7 @@ export class CollectionValidators {
           const names = collectionNames.map(name => name.toLowerCase());
           const value = control.value.trim().toLowerCase();
 
-          if ((excludeName && excludeName.toLowerCase() !== value) && names.includes(value)) {
+          if (excludeName && excludeName.toLowerCase() !== value && names.includes(value)) {
             return {uniqueName: true};
           } else {
             return null;
@@ -54,5 +54,4 @@ export class CollectionValidators {
         take(1)
       );
   }
-
 }

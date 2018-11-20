@@ -1,4 +1,4 @@
-@import "../../../styles/variables";
+@import '../../../styles/variables';
 
 :host {
   display: block;
@@ -18,7 +18,8 @@
       }
     }
 
-    .focused, .selected {
+    .focused,
+    .selected {
       z-index: $z-index-selected;
     }
 
@@ -27,5 +28,4 @@
       font-size: 200%;
     }
   }
-
 }

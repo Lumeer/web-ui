@@ -34,13 +34,13 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
       organizationCode: params['organizationCode'],
       projectCode: params['projectCode'],
       collectionId: params['collectionId'],
-      viewCode: params['vc']
+      viewCode: params['vc'],
     },
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
     searchTab: tryToParseSearchTabPath(url),
     previousUrl: state.url,
-    url
+    url,
   };
 }
 
@@ -81,8 +81,10 @@ function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppSt
   return action.payload.storeState.navigation;
 }
 
-export function navigationReducer(state: NavigationState,
-                                  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<AppState>): NavigationState {
+export function navigationReducer(
+  state: NavigationState,
+  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<AppState>
+): NavigationState {
   switch (action.type) {
     case ROUTER_NAVIGATION:
       return onRouterNavigation(state, action);

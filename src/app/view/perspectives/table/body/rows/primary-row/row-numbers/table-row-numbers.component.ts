@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
+} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
@@ -26,10 +36,9 @@ import {countLinkedRows, getTableElement} from '../../../../../../../core/store/
   selector: 'table-row-numbers',
   templateUrl: './table-row-numbers.component.html',
   styleUrls: ['./table-row-numbers.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -56,7 +65,9 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
     const width = Math.max(...widths);
 
     const tableElement = getTableElement(this.cursor.tableId);
-    const rowNumberColumnWidth = Number((tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2));
+    const rowNumberColumnWidth = Number(
+      (tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2)
+    );
 
     if (width > rowNumberColumnWidth) {
       tableElement.style.setProperty('--row-number-column-width', `${width}px`);
@@ -66,7 +77,6 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
   public trackByIndex(index: number) {
     return index;
   }
-
 }
 
 function createRowIndexes(row: TableConfigRow): number[] {

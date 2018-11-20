@@ -30,15 +30,16 @@ import {GroupsAction, GroupsActionType} from './groups.action';
 
 @Injectable()
 export class GroupsEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<GroupsAction.Get>(GroupsActionType.GET),
-    mergeMap(() => this.groupService.getGroups().pipe(
-      map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
-      map(groups => new GroupsAction.GetSuccess({groups: groups})),
-      catchError(error => of(new GroupsAction.GetFailure({error: error})))
-    ))
+    mergeMap(() =>
+      this.groupService.getGroups().pipe(
+        map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
+        map(groups => new GroupsAction.GetSuccess({groups: groups})),
+        catchError(error => of(new GroupsAction.GetFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -62,7 +63,7 @@ export class GroupsEffects {
         map(group => new GroupsAction.CreateSuccess({group: group})),
         catchError(error => of(new GroupsAction.CreateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -86,7 +87,7 @@ export class GroupsEffects {
         map(group => new GroupsAction.UpdateSuccess({group: group})),
         catchError(error => of(new GroupsAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -102,10 +103,12 @@ export class GroupsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
-    mergeMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
-      map(() => new GroupsAction.DeleteSuccess(action.payload)),
-      catchError(error => of(new GroupsAction.DeleteFailure({error: error})))
-    ))
+    mergeMap(action =>
+      this.groupService.deleteGroup(action.payload.groupId).pipe(
+        map(() => new GroupsAction.DeleteSuccess(action.payload)),
+        catchError(error => of(new GroupsAction.DeleteFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -118,9 +121,5 @@ export class GroupsEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private groupService: GroupService,
-              private i18n: I18n) {
-  }
-
+  constructor(private actions$: Actions, private groupService: GroupService, private i18n: I18n) {}
 }

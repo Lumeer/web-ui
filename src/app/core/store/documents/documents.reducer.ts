@@ -20,7 +20,10 @@
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
 
-export function documentsReducer(state: DocumentsState = initialDocumentsState, action: DocumentsAction.All): DocumentsState {
+export function documentsReducer(
+  state: DocumentsState = initialDocumentsState,
+  action: DocumentsAction.All
+): DocumentsState {
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
       const queriesState = {...state, queries: state.queries.concat(action.payload.query)};

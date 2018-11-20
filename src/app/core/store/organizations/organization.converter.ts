@@ -22,7 +22,6 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {OrganizationModel} from './organization.model';
 
 export class OrganizationConverter {
-
   public static fromDto(dto: Organization, correlationId?: string): OrganizationModel {
     return {
       id: dto.id,
@@ -33,7 +32,7 @@ export class OrganizationConverter {
       description: dto.description,
       correlationId: correlationId,
       nonRemovable: dto.nonRemovable,
-      permissions: PermissionsConverter.fromDto(dto.permissions)
+      permissions: PermissionsConverter.fromDto(dto.permissions),
     };
   }
 
@@ -43,8 +42,7 @@ export class OrganizationConverter {
       name: organization.name,
       icon: organization.icon,
       color: organization.color,
-      description: organization.description
+      description: organization.description,
     };
   }
-
 }

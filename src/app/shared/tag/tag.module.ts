@@ -23,15 +23,8 @@ import {NgModule} from '@angular/core';
 import {TagComponent} from './tag.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    TagComponent
-  ],
-  exports: [
-    TagComponent
-  ]
+  imports: [CommonModule],
+  declarations: [TagComponent],
+  exports: [TagComponent],
 })
-export class TagModule {
-}
+export class TagModule {}

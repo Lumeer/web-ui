@@ -33,47 +33,61 @@ import {Workspace} from '../store/navigation/workspace.model';
 // TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService {
-
   private workspace: Workspace;
 
-  constructor(private httpClient: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient.post<DocumentDto>(this.apiPrefix(document.collectionId), document);
   }
 
-  public patchDocument(collectionId: string, documentId: string, document: Partial<DocumentDto>): Observable<DocumentDto> {
+  public patchDocument(
+    collectionId: string,
+    documentId: string,
+    document: Partial<DocumentDto>
+  ): Observable<DocumentDto> {
     return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`, document);
   }
 
   public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
-      .pipe(map(returnedDocument => {
+    return this.httpClient
+      .put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
+      .pipe(
+        map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
         })
       );
   }
 
   public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
+    return this.httpClient.patch<DocumentDto>(
+      `${this.apiPrefix(document.collectionId)}/${document.id}/data`,
+      document.data
+    );
   }
 
   public updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/meta`, document.metaData);
+    return this.httpClient.put<DocumentDto>(
+      `${this.apiPrefix(document.collectionId)}/${document.id}/meta`,
+      document.metaData
+    );
   }
 
-  public patchDocumentMetaData(collectionId: string, documentId: string, metaData: DocumentMetaDataDto): Observable<DocumentDto> {
+  public patchDocumentMetaData(
+    collectionId: string,
+    documentId: string,
+    metaData: DocumentMetaDataDto
+  ): Observable<DocumentDto> {
     return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}/meta`, metaData);
   }
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(
-      `${this.apiPrefix(collectionId)}/${documentId}`,
-      {observe: 'response', responseType: 'text'}
-    );
+    return this.httpClient.delete(`${this.apiPrefix(collectionId)}/${documentId}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
   public addFavorite(collectionId: string, documentId: string): Observable<any> {
@@ -92,8 +106,7 @@ export class DocumentService {
     const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString())
-        .set('size', pageSize.toString());
+      queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
 
     return this.httpClient.get<DocumentDto[]>(this.apiPrefix(collectionId), {params: queryParams});
@@ -103,7 +116,8 @@ export class DocumentService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
+    return `${
+      environment.apiUrl
+    }/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
   }
-
 }

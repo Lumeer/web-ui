@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LatLngLiteral} from 'leaflet';
+import {MapCoordinates} from './../../store/maps/map.model';
 
 export interface AddressCoordinatesMap {
-
-  [address: string]: LatLngLiteral;
-
+  [address: string]: MapCoordinates;
 }

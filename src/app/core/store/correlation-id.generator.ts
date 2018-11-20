@@ -20,12 +20,10 @@
 import {generateCorrelationId} from '../../shared/utils/resource.utils';
 
 export class CorrelationIdGenerator {
-
   /**
    * @deprecated use function below instead
    */
   public static generate(): string {
     return generateCorrelationId();
   }
-
 }

@@ -23,10 +23,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ElementRef} from '@angular/core';
 
-export const DEFAULT_GRID_HEIGHT = 270;
-
 export abstract class PlotMaker {
-
   protected collections: CollectionModel[];
 
   protected documents: DocumentModel[];
@@ -37,10 +34,7 @@ export abstract class PlotMaker {
 
   protected onDataChanged?: (dataChange: DataChange) => void;
 
-  protected dragEnabled: boolean = false;
-
-  constructor(protected element: ElementRef) {
-  }
+  constructor(protected element: ElementRef) {}
 
   public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
     this.collections = collections;
@@ -60,27 +54,11 @@ export abstract class PlotMaker {
     return this.config ? {...this.config} : null;
   }
 
-  public setDragEnabled(enabled: boolean) {
-    const changed = enabled !== this.dragEnabled;
-    this.dragEnabled = enabled;
-    if (changed) {
-      this.dragEnabledChange();
-    }
-  }
-
-  public abstract dragEnabledChange();
-
   public abstract createData(): Data[];
 
   public abstract createLayout(): Partial<Layout>;
 
-  public abstract initDrag();
-
-  public abstract destroyDrag();
-
   public abstract currentType(): ChartType;
-
-  public abstract onRelayout();
 }
 
 export interface ValueChange {

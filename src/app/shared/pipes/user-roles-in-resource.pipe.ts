@@ -23,13 +23,15 @@ import {UserModel} from '../../core/store/users/user.model';
 import {ResourceModel} from '../../core/model/resource.model';
 
 @Pipe({
-  name: 'userRolesInResource'
+  name: 'userRolesInResource',
 })
 export class UserRolesInResource implements PipeTransform {
-
   public transform(user: UserModel, resource: ResourceModel): string[] {
-    const userPermission = resource && resource.permissions && resource.permissions.users && resource.permissions.users.find(perm => perm.id === user.id);
+    const userPermission =
+      resource &&
+      resource.permissions &&
+      resource.permissions.users &&
+      resource.permissions.users.find(perm => perm.id === user.id);
     return userPermission ? userPermission.roles : [];
   }
-
 }

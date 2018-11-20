@@ -21,18 +21,16 @@ import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/c
 import {PostItLayout} from './post-it-layout';
 
 @Directive({
-  selector: '[layout-item]'
+  selector: '[layout-item]',
 })
 export class LayoutItemDirective implements AfterViewInit, OnDestroy {
-
   @Input()
   public layout: PostItLayout;
 
   @Input()
   public forceLayoutIndex: number;
 
-  constructor(private element: ElementRef) {
-  }
+  constructor(private element: ElementRef) {}
 
   public ngAfterViewInit(): void {
     this.layout.addItem(this.element.nativeElement, this.forceLayoutIndex);
@@ -41,5 +39,4 @@ export class LayoutItemDirective implements AfterViewInit, OnDestroy {
   public ngOnDestroy(): void {
     this.layout.removeItem(this.element.nativeElement);
   }
-
 }

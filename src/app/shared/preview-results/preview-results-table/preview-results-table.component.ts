@@ -27,10 +27,9 @@ const PAGE_SIZE = 100;
   selector: 'preview-results-table',
   templateUrl: './preview-results-table.component.html',
   styleUrls: ['./preview-results-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviewResultsTableComponent implements OnChanges {
-
   @Input()
   public documents: DocumentModel[];
 
@@ -83,5 +82,4 @@ export class PreviewResultsTableComponent implements OnChanges {
   public trackByDocument(index: number, document: DocumentModel): string {
     return document.correlationId || document.id;
   }
-
 }

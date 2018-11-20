@@ -24,18 +24,12 @@ import {MapPerspectiveComponent} from './map-perspective.component';
 const mapRoutes: Routes = [
   {
     path: '',
-    component: MapPerspectiveComponent
-  }
+    component: MapPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(mapRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(mapRoutes)],
+  exports: [RouterModule],
 })
-export class MapPerspectiveRoutingModule {
-
-}
+export class MapPerspectiveRoutingModule {}

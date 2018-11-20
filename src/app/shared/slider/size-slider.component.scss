@@ -1,4 +1,4 @@
-@import "../../../styles/variables";
+@import '../../../styles/variables';
 
 $width: 160px;
 
@@ -13,13 +13,12 @@ $text-size: 12px;
 $text-margin-tb: 6px;
 
 .box {
-
-  height: $circle-size + $text-size + 2*$text-margin-tb;
+  height: $circle-size + $text-size + 2 * $text-margin-tb;
 
   .captions {
     color: $primary;
     font-size: $text-size;
-    height: $text-size + 2*$text-margin-tb;;
+    height: $text-size + 2 * $text-margin-tb;
   }
 
   .slider {
@@ -42,6 +41,4 @@ $text-margin-tb: 6px;
       border: 1px solid $circle-border-color;
     }
   }
-
 }
-

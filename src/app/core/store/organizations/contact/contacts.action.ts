@@ -21,60 +21,57 @@ import {Action} from '@ngrx/store';
 import {ContactModel} from './contact.model';
 
 export enum ContactsActionType {
-
   GET_CONTACT = '[Organizations] Get Contact',
   GET_CONTACT_SUCCESS = '[Organizations] Get Contact :: Success',
   GET_CONTACT_FAILURE = '[Organizations] Get Contact :: Failure',
 
   SET_CONTACT = '[Organizations] Set Contact',
   SET_CONTACT_SUCCESS = '[Organizations] Set Contact :: Success',
-  SET_CONTACT_FAILURE = '[Organizations] Set Contact :: Failure'
+  SET_CONTACT_FAILURE = '[Organizations] Set Contact :: Failure',
 }
 
 export namespace ContactsAction {
   export class GetContact implements Action {
     public readonly type = ContactsActionType.GET_CONTACT;
 
-    public constructor(public payload: { organizationCode: string }) {
-    }
+    public constructor(public payload: {organizationCode: string}) {}
   }
 
   export class GetContactSuccess implements Action {
     public readonly type = ContactsActionType.GET_CONTACT_SUCCESS;
 
-    public constructor(public payload: { contact: ContactModel }) {
-    }
+    public constructor(public payload: {contact: ContactModel}) {}
   }
 
   export class GetContactFailure implements Action {
     public readonly type = ContactsActionType.GET_CONTACT_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class SetContact implements Action {
     public readonly type = ContactsActionType.SET_CONTACT;
 
-    public constructor(public payload: { organizationCode: string, contact: ContactModel }) {
-    }
+    public constructor(public payload: {organizationCode: string; contact: ContactModel}) {}
   }
 
   export class SetContactSuccess implements Action {
     public readonly type = ContactsActionType.SET_CONTACT_SUCCESS;
 
-    public constructor(public payload: { contact: ContactModel }) {
-    }
+    public constructor(public payload: {contact: ContactModel}) {}
   }
 
   export class SetContactFailure implements Action {
     public readonly type = ContactsActionType.SET_CONTACT_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export type All =
-    GetContact | GetContactSuccess | GetContactFailure |
-    SetContact | SetContactSuccess | SetContactFailure;
+    | GetContact
+    | GetContactSuccess
+    | GetContactFailure
+    | SetContact
+    | SetContactSuccess
+    | SetContactFailure;
 }

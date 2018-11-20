@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
+import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
+import * as d3 from 'd3';
 
-export class BarPlotMaker extends PlotMaker {
-
+export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
     const data: Data[] = [];
 
@@ -34,7 +34,7 @@ export class BarPlotMaker extends PlotMaker {
     if (xAxis && y1Axis && y2Axis) {
       data.push(this.createAxis1Data(xAxis, y1Axis));
       // workaround data to group columns with multiple axes
-      data.push(...this.createHelperData(xAxis, y2Axis, y2Axis));
+      data.push(...this.createHelperData(xAxis, y1Axis, y2Axis));
       data.push(this.createAxis2Data(xAxis, y2Axis));
     } else if (!y1Axis && (xAxis || y2Axis)) {
       data.push(this.createAxis2Data(xAxis, y2Axis));
@@ -46,44 +46,53 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   private createHelperData(xAxis: ChartAxisModel, y1Axis: ChartAxisModel, y2Axis: ChartAxisModel): any[] {
-    const names = this.findAxesNonNullAttributeValues(xAxis.attributeId, y1Axis.attributeId, y2Axis.attributeId);
-    if (names.length < 2) {
+    const values = this.findAxesNonNullAttributeValues(xAxis.attributeId, y1Axis.attributeId, y2Axis.attributeId);
+    if (values.length < 2) {
       return [];
     }
 
-    const dataY = {x: [names[0]], y: [0], showlegend: false, type: 'bar', hoverinfo: 'none'};
-    const dataY2 = {x: [names[1]], y: [0], yaxis: 'y2', showlegend: false, type: 'bar', hoverinfo: 'none'};
+    const dataY = {x: [values[0].x], y: [values[0].y], showlegend: false, type: 'bar', hoverinfo: 'none'};
+    const dataY2 = {x: [values[1].x], y: [values[1].y], yaxis: 'y2', showlegend: false, type: 'bar', hoverinfo: 'none'};
     return [dataY, dataY2];
   }
 
-  private findAxesNonNullAttributeValues(xAttrId: string, y1AttrId: string, y2AttrId): string[] {
-    let yValue: string = null;
-    let y2Value: string = null;
+  private findAxesNonNullAttributeValues(
+    xAttrId: string,
+    y1AttrId: string,
+    y2AttrId: string
+  ): {x: string; y: string}[] {
+    let yValue: {x: string; y: string} = null;
+    let y2Value: {x: string; y: string} = null;
+    const isY1Category = this.isAxisCategory(ChartAxisType.Y1);
+    const isY2Category = this.isAxisCategory(ChartAxisType.Y2);
     for (const document of this.documents) {
-      if (!yValue && document.data[xAttrId] && document.data[y1AttrId]) {
-        yValue = document.data[xAttrId];
+      const x = document.data[xAttrId];
+      const y = document.data[y1AttrId];
+      const y2 = document.data[y2AttrId];
+
+      if (!yValue && x && y) {
+        yValue = {x, y: isY1Category ? y : '0'};
       }
 
-      if (!y2Value && document.data[xAttrId] && document.data[y2AttrId]) {
-        y2Value = document.data[xAttrId];
+      if (!y2Value && x && y2) {
+        y2Value = {x, y: isY2Category ? y2 : '0'};
       }
 
       if (yValue && y2Value) {
         break;
       }
-
     }
     return [yValue, y2Value].filter(val => !!val);
   }
 
   private createAxis1Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
     const dataStyle = this.getDataStyle(ChartAxisType.Y1);
-    return this.createAxesData(dataStyle, xAxis, yAxis);
+    return this.createAxesData(dataStyle, ChartAxisType.Y1, xAxis, yAxis);
   }
 
   private createAxis2Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
     const dataStyle = this.getDataStyle(ChartAxisType.Y2);
-    const data = this.createAxesData(dataStyle, xAxis, yAxis);
+    const data = this.createAxesData(dataStyle, ChartAxisType.Y2, xAxis, yAxis);
     return {...data, yaxis: 'y2'};
   }
 
@@ -105,19 +114,40 @@ export class BarPlotMaker extends PlotMaker {
     return collection && collection.color;
   }
 
-  private createAxesData(dataStyle: Data, xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+  private createAxesData(
+    dataStyle: Data,
+    yAxisType: ChartAxisType,
+    xAxis?: ChartAxisModel,
+    yAxis?: ChartAxisModel
+  ): Data {
     const data = {...dataStyle};
 
     const traceX = [];
     const traceY = [];
+
+    const isYCategory = this.isAxisCategory(yAxisType);
+    const additionalYValues = [];
+    const addedYValues = new Set();
 
     for (const document of this.documents) {
       if (xAxis) {
         traceX.push(document.data[xAxis.attributeId]);
       }
       if (yAxis) {
-        traceY.push(document.data[yAxis.attributeId]);
+        const yValue = document.data[yAxis.attributeId];
+        traceY.push(yValue);
+        if (yValue && isYCategory && !addedYValues.has(yValue)) {
+          // we need to add first and last category value to the values in order to keep them on y axis while drag
+          const insertIndex = additionalYValues.length === 0 ? 0 : 1;
+          additionalYValues[insertIndex] = yValue;
+          addedYValues.add(yValue);
+        }
       }
+    }
+
+    for (let i = 0; i < additionalYValues.length; i++) {
+      traceX.push(null);
+      traceY.push(additionalYValues[i]);
     }
 
     const name = yAxis && this.getAttributeName(yAxis.attributeId);
@@ -144,40 +174,50 @@ export class BarPlotMaker extends PlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    if (this.config.axes[ChartAxisType.Y2]) {
-      return {
-        barmode: 'group',
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right'
-        },
-        legend: {
-          xanchor: 'left',
-          x: 1.1
-        }
-      };
-    }
-    return {};
+    return {...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
+  }
+
+  private otherLayout(): Partial<Layout> {
+    return {
+      barmode: 'group',
+      legend: {
+        xanchor: 'left',
+        x: 1.1,
+      },
+    };
   }
 
   public currentType(): ChartType {
     return ChartType.Bar;
   }
 
-  public initDrag() {
-    // TODO
+  public getPointPosition(point: any, datum: any): {x: number; y: number} {
+    return {x: datum.x, y: point.clickedY};
   }
 
-  public destroyDrag() {
-    // TODO
+  public getTraceIndexForPoint(point: any): number {
+    const barsContainers = d3.selectAll('.barlayer .trace .points')[0];
+    const pointNode = d3.select(point).node().parentNode;
+
+    for (let i = 0; i < barsContainers.length; i++) {
+      const children = (barsContainers[i] as Element).children;
+
+      if (Array.from(children).find(p => p === pointNode)) {
+        return i;
+      }
+    }
+
+    return 0;
   }
 
-  public dragEnabledChange() {
-    // TODO
+  public getPointNewY(point: any, datum: any, event: any): number {
+    const pointData: PointData = point.pointData;
+    const computedY = event.sourceEvent.pageY - pointData.offset.top + datum.ct[1];
+    const dy = computedY - pointData.clickedY;
+    return pointData.initialY + dy;
   }
 
-  public onRelayout() {
-    // TODO
+  public getPoints(): d3.Selection<any> {
+    return d3.selectAll('.barlayer .trace .points .point path');
   }
-
 }

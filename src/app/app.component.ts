@@ -20,6 +20,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
+import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
@@ -36,22 +37,24 @@ declare let $: any;
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   @ViewChild('browserWarning')
   public browserWarning: ElementRef;
 
   public isChrome = true;
 
-  constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
-              private authService: AuthService,
-              private changeDetector: ChangeDetectorRef,
-              private snotifyService: SnotifyService,
-              private store$: Store<AppState>,
-              private title: Title) {
+  constructor(
+    private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
+    private authService: AuthService,
+    private changeDetector: ChangeDetectorRef,
+    private snotifyService: SnotifyService,
+    private store$: Store<AppState>,
+    private title: Title
+  ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
     this.handleAuthentication();
-    this.setUpGoogleAnalytics();
+    this.startGoogleAnalyticsTracking();
+    this.setUpExternalServicesUserContext();
   }
 
   private handleAuthentication() {
@@ -60,19 +63,45 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private setUpGoogleAnalytics() {
+  private startGoogleAnalyticsTracking() {
     if (!environment.analytics) {
       return;
     }
 
     this.angulartics2GoogleAnalytics.startTracking();
+  }
 
-    this.store$.select(selectCurrentUser).pipe(
-      filter(user => !!user),
-      first()
-    ).subscribe(user => {
-      const userHash = hashUserId(user.id);
-      this.angulartics2GoogleAnalytics.setUsername(userHash);
+  private setUpExternalServicesUserContext() {
+    this.store$
+      .select(selectCurrentUser)
+      .pipe(
+        filter(user => !!user),
+        first()
+      )
+      .subscribe(user => {
+        const userIdHash = hashUserId(user.id);
+        this.setGoogleAnalyticsUsername(userIdHash);
+        this.configureSentryUserScope(userIdHash);
+      });
+  }
+
+  private setGoogleAnalyticsUsername(userIdHash: string) {
+    if (!environment.analytics) {
+      return;
+    }
+
+    this.angulartics2GoogleAnalytics.setUsername(userIdHash);
+  }
+
+  private configureSentryUserScope(userIdHash: string) {
+    if (!environment.sentryDsn) {
+      return;
+    }
+
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: userIdHash,
+      });
     });
   }
 
@@ -93,8 +122,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         timeout: 3000,
         showProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: false
-      }
+        pauseOnHover: false,
+      },
     });
   }
 
@@ -108,7 +137,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.changeDetector.detectChanges();
     });
   }
-
 }
 
 function hashUserId(userId: string): string {

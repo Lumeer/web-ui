@@ -18,7 +18,6 @@
  */
 
 export interface ContactModel {
-
   id?: string;
   organizationId: string;
   company: string;
@@ -34,5 +33,4 @@ export interface ContactModel {
   phone: string;
   ic: string;
   dic: string;
-
 }

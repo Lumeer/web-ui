@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {debounceTime, map, tap} from 'rxjs/operators';
@@ -34,10 +42,9 @@ import {selectTableRows} from '../../../../../core/store/tables/tables.selector'
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
   styleUrls: ['./table-rows.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowsComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -49,9 +56,7 @@ export class TableRowsComponent implements OnChanges {
 
   public rows$: Observable<TableConfigRow[]>;
 
-  public constructor(public element: ElementRef,
-    private store$: Store<AppState>) {
-  }
+  public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.query) {
@@ -72,7 +77,7 @@ export class TableRowsComponent implements OnChanges {
     ).pipe(
       debounceTime(10), // fixes not shown linked records after linked part is added
       map(([rows, existingDocumentIds]) => {
-        return rows.filter(row => row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId);
+        return rows.filter(row => (row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId));
       }),
       tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query})))
     );
@@ -96,5 +101,4 @@ export class TableRowsComponent implements OnChanges {
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
-
 }

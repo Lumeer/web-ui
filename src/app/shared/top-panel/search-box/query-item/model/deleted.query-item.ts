@@ -22,7 +22,6 @@ import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
 
 export class DeletedQueryItem implements QueryItem {
-
   public type = QueryItemType.Deleted;
   public forType: QueryItemType;
 
@@ -41,5 +40,4 @@ export class DeletedQueryItem implements QueryItem {
   public dependsOn(queryItem: QueryItem): boolean {
     return false;
   }
-
 }

@@ -25,10 +25,9 @@ import {Role} from '../../../core/model/role';
   selector: '[share-user]',
   templateUrl: './share-user.component.html',
   styleUrls: ['./share-user.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareUserComponent {
-
   @Input()
   public canRemove: boolean;
 
@@ -47,13 +46,11 @@ export class ShareUserComponent {
   public viewResourceType = ResourceType.View;
 
   public toggleRole(role: Role) {
-    const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role)
-      : [...this.roles, role];
+    const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role) : [...this.roles, role];
     this.rolesChange.emit(newRoles);
   }
 
   public onDelete() {
     this.delete.emit();
   }
-
 }

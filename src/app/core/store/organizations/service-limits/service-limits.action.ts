@@ -21,7 +21,6 @@ import {Action} from '@ngrx/store';
 import {ServiceLimitsModel} from './service-limits.model';
 
 export enum ServiceLimitsActionType {
-
   GET_ALL = '[ServiceLimits] Get All',
   GET_ALL_SUCCESS = '[ServiceLimits] Get All :: Success',
   GET_ALL_FAILURE = '[ServiceLimits] Get All :: Failure',
@@ -32,7 +31,6 @@ export enum ServiceLimitsActionType {
 }
 
 export namespace ServiceLimitsAction {
-
   export class GetAll implements Action {
     public readonly type = ServiceLimitsActionType.GET_ALL;
   }
@@ -40,38 +38,38 @@ export namespace ServiceLimitsAction {
   export class GetAllSuccess implements Action {
     public readonly type = ServiceLimitsActionType.GET_ALL_SUCCESS;
 
-    public constructor(public payload: { allServiceLimits: ServiceLimitsModel[] }) {
-    }
+    public constructor(public payload: {allServiceLimits: ServiceLimitsModel[]}) {}
   }
 
   export class GetAllFailure implements Action {
     public readonly type = ServiceLimitsActionType.GET_ALL_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class GetServiceLimits implements Action {
     public readonly type = ServiceLimitsActionType.GET_SERVICE_LIMITS;
 
-    public constructor(public payload: { organizationId: string }) {
-    }
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class GetServiceLimitsSuccess implements Action {
     public readonly type = ServiceLimitsActionType.GET_SERVICE_LIMITS_SUCCESS;
 
-    public constructor(public payload: { serviceLimits: ServiceLimitsModel }) {
-    }
+    public constructor(public payload: {serviceLimits: ServiceLimitsModel}) {}
   }
 
   export class GetServiceLimitsFailure implements Action {
     public readonly type = ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
-  export type All = GetAll | GetAllSuccess | GetAllFailure |
-    GetServiceLimits | GetServiceLimitsSuccess | GetServiceLimitsFailure;
+  export type All =
+    | GetAll
+    | GetAllSuccess
+    | GetAllFailure
+    | GetServiceLimits
+    | GetServiceLimitsSuccess
+    | GetServiceLimitsFailure;
 }

@@ -31,12 +31,10 @@ import {map} from 'rxjs/operators';
 
 @Injectable()
 export class LinkInstanceService {
-
   private workspace: Workspace;
 
-  constructor(private httpClient: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public createLinkInstance(linkInstance: LinkInstance): Observable<LinkInstance> {
@@ -48,8 +46,7 @@ export class LinkInstanceService {
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    return this.httpClient.delete(this.restApiPrefix(id))
-      .pipe(map(() => id));
+    return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
   public getLinkInstances(query: Query): Observable<LinkInstance[]> {
@@ -61,7 +58,8 @@ export class LinkInstanceService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
+    return `${
+      environment.apiUrl
+    }/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
   }
-
 }

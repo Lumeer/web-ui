@@ -20,7 +20,6 @@
 import {Axis} from './Axis';
 
 export class PostItLayoutConfig {
-
   public items = '.layout-item';
 
   public showDuration = 300;
@@ -31,26 +30,29 @@ export class PostItLayoutConfig {
 
   public hideEasing = 'ease';
 
-  public visibleStyles: object =
-    {
-      opacity: '1',
-      transform: 'scale(1)'
-    };
+  public visibleStyles: object = {
+    opacity: '1',
+    transform: 'scale(1)',
+  };
 
-  public hiddenStyles: object =
-    {
-      opacity: '0',
-      transform: 'scale(0.5)'
-    };
+  public hiddenStyles: object = {
+    opacity: '0',
+    transform: 'scale(0.5)',
+  };
 
-  public layout: { fillGaps: boolean, horizontal: boolean, alignRight: boolean, alignBottom: boolean, rounding: boolean } =
-    {
-      fillGaps: false,
-      horizontal: false,
-      alignRight: false,
-      alignBottom: false,
-      rounding: true
-    };
+  public layout: {
+    fillGaps: boolean;
+    horizontal: boolean;
+    alignRight: boolean;
+    alignBottom: boolean;
+    rounding: boolean;
+  } = {
+    fillGaps: false,
+    horizontal: false,
+    alignRight: false,
+    alignBottom: false,
+    rounding: true,
+  };
 
   public layoutOnResize = 200;
 
@@ -66,12 +68,11 @@ export class PostItLayoutConfig {
 
   public dragContainer: HTMLElement = null;
 
-  public dragStartPredicate: { distance: number, delay: number, handle: boolean | string } =
-    {
-      distance: 0,
-      delay: 0,
-      handle: false
-    };
+  public dragStartPredicate: {distance: number; delay: number; handle: boolean | string} = {
+    distance: 0,
+    delay: 0,
+    handle: false,
+  };
 
   public dragAxis: Axis = null;
 
@@ -79,20 +80,18 @@ export class PostItLayoutConfig {
 
   public dragSortInterval = 200;
 
-  public dragSortPredicate: { threshold: number, action: string } =
-    {
-      threshold: 50,
-      action: 'move'
-    };
+  public dragSortPredicate: {threshold: number; action: string} = {
+    threshold: 50,
+    action: 'move',
+  };
 
   public dragReleaseDuration = 300;
 
   public dragReleaseEasing = 'ease';
 
-  public dragHammerSettings: { touchAction: string } =
-    {
-      touchAction: 'none'
-    };
+  public dragHammerSettings: {touchAction: string} = {
+    touchAction: 'none',
+  };
 
   public containerClass: 'muuri';
 
@@ -107,5 +106,4 @@ export class PostItLayoutConfig {
   public itemDraggingClass: 'muuri-item-dragging';
 
   public itemReleasingClass: 'muuri-item-releasing';
-
 }

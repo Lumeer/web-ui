@@ -22,17 +22,15 @@ import {DragService} from './drag.service';
 import {DraggableOptions} from './draggable-options';
 
 @Directive({
-  selector: '[lmrDropTarget]'
+  selector: '[lmrDropTarget]',
 })
 export class DropTargetDirective {
-
   @Output('lmrDrop')
   public drop = new EventEmitter();
 
   private _options: DraggableOptions = {};
 
-  constructor(private dragService: DragService) {
-  }
+  constructor(private dragService: DragService) {}
 
   @Input('lmrDropTarget')
   public set options(options: DraggableOptions) {
@@ -44,7 +42,7 @@ export class DropTargetDirective {
   @HostListener('dragenter', ['$event'])
   @HostListener('dragover', ['$event'])
   public onDragOver(event) {
-    const { zone = 'zone' } = this._options;
+    const {zone = 'zone'} = this._options;
 
     if (this.dragService.accepts(zone)) {
       event.preventDefault();
@@ -53,7 +51,7 @@ export class DropTargetDirective {
 
   @HostListener('drop', ['$event'])
   public onDrop(event) {
-    const data =  JSON.parse(event.dataTransfer.getData('Text'));
+    const data = JSON.parse(event.dataTransfer.getData('Text'));
 
     this.drop.next(data);
   }

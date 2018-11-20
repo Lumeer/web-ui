@@ -28,10 +28,9 @@ declare let $: any;
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
-  styleUrls: ['./resource-header.component.scss']
+  styleUrls: ['./resource-header.component.scss'],
 })
 export class ResourceHeaderComponent implements AfterViewInit {
-
   @Input() public resourceType: ResourceType;
   @Input() public resource: ResourceModel;
   @Input() public restrictedValues: string[];
@@ -52,8 +51,7 @@ export class ResourceHeaderComponent implements AfterViewInit {
   private clickedComponent: any;
   private colorPickerVisible: boolean;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   @HostListener('document:click', ['$event'])
   public documentClicked($event): void {
@@ -150,21 +148,21 @@ export class ResourceHeaderComponent implements AfterViewInit {
   public getCodePlaceholder(): string {
     return this.i18n({
       id: 'resource.postit.code',
-      value: 'Set code'
+      value: 'Set code',
     });
   }
 
   public getNamePlaceholder(): string {
     return this.i18n({
       id: 'resource.postit.name',
-      value: 'Fill in name'
+      value: 'Fill in name',
     });
   }
 
   public getDescriptionPlaceholder(): string {
     return this.i18n({
       id: 'resource.description',
-      value: 'Fill in description'
+      value: 'Fill in description',
     });
   }
 

@@ -21,7 +21,6 @@ import {LinkType} from '../../core/dto/link-type';
 import {Collection} from '../../core/dto/collection';
 
 export class LinkHelper {
-
   public static filterRelatedLinkTypes(collection: Collection, linkTypes: LinkType[]): LinkType[] {
     return linkTypes.filter(linkType => linkType.collectionIds.includes(collection.id));
   }
@@ -29,5 +28,4 @@ export class LinkHelper {
   public static getOtherCollectionId(linkType: LinkType, collectionId: string): string {
     return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
   }
-
 }

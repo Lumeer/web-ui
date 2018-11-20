@@ -22,14 +22,12 @@ import {DragService} from './drag.service';
 import {DraggableOptions} from './draggable-options';
 
 @Directive({
-  selector: '[lmrDraggable]'
+  selector: '[lmrDraggable]',
 })
 export class DraggableDirective {
-
   private _options: DraggableOptions = {};
 
-  constructor(private dragService: DragService) {
-  }
+  constructor(private dragService: DragService) {}
 
   @HostBinding('draggable')
   get draggable(): boolean {
@@ -45,7 +43,7 @@ export class DraggableDirective {
 
   @HostListener('dragstart', ['$event'])
   public onDragStart(event) {
-    const { zone = 'zone', data = {} } = this._options;
+    const {zone = 'zone', data = {}} = this._options;
 
     this.dragService.startDrag(zone);
 

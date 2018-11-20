@@ -30,14 +30,18 @@ export interface PaymentsState extends EntityState<PaymentModel> {
 export const paymentsAdapter = createEntityAdapter<PaymentModel>({selectId: payment => payment.id});
 
 export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialState({
-  lastCreatedPayment: null
+  lastCreatedPayment: null,
 });
 
 export const selectPaymentsState = (state: AppState) => state.payments;
 export const selectAllPayments = createSelector(selectPaymentsState, paymentsAdapter.getSelectors().selectAll);
-export const selectPaymentsByWorkspace = createSelector(selectAllPayments, selectOrganizationByWorkspace, (payments, organization) => {
-  return payments.filter(payment => organization && (payment.organizationId === organization.id));
-});
+export const selectPaymentsByWorkspace = createSelector(
+  selectAllPayments,
+  selectOrganizationByWorkspace,
+  (payments, organization) => {
+    return payments.filter(payment => organization && payment.organizationId === organization.id);
+  }
+);
 export const selectPaymentsByWorkspaceSorted = createSelector(selectPaymentsByWorkspace, payments => {
   return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
 });

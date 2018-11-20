@@ -44,7 +44,7 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
     PickerModule,
     DialogRoutingModule,
     DialogWrapperModule,
-    ShareViewDialogModule
+    ShareViewDialogModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,
@@ -56,20 +56,15 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
-    FeedbackDialogComponent
+    FeedbackDialogComponent,
   ],
-  providers: [
-    DialogService
-  ],
+  providers: [DialogService],
   entryComponents: [
     CreateCollectionDialogComponent,
     CreateLinkDialogComponent,
     OverwriteViewDialogComponent,
-    CreateResourceDialogComponent
+    CreateResourceDialogComponent,
   ],
-  exports: [
-    DialogBaseComponent
-  ]
+  exports: [DialogBaseComponent],
 })
-export class DialogModule {
-}
+export class DialogModule {}

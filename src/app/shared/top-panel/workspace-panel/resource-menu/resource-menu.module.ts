@@ -28,21 +28,15 @@ import {PipesModule} from '../../../pipes/pipes.module';
 import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PipesModule
-  ],
+  imports: [CommonModule, PipesModule],
   declarations: [
     ResourceMenuComponent,
     ResourceDetailComponent,
     ResourceListComponent,
     ResourceStatusLineComponent,
     IsOrganizationTypePipe,
-    CanCreateResourcePipe
+    CanCreateResourcePipe,
   ],
-  exports: [
-    ResourceMenuComponent
-  ]
+  exports: [ResourceMenuComponent],
 })
-export class ResourceMenuModule {
-}
+export class ResourceMenuModule {}

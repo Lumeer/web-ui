@@ -35,10 +35,9 @@ import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state
   selector: 'map-perspective',
   templateUrl: './map-perspective.component.html',
   styleUrls: ['./map-perspective.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapPerspectiveComponent implements OnInit, OnDestroy {
-
   @Input()
   public query: QueryModel;
 
@@ -51,8 +50,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindValidQuery();
@@ -67,15 +65,18 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initMap(mapId: string) {
-    this.store$.pipe(
-      select(selectPerspectiveViewConfig),
-      first()
-    ).subscribe(config => this.createMap(mapId, config));
+    this.store$
+      .pipe(
+        select(selectPerspectiveViewConfig),
+        first()
+      )
+      .subscribe(config => this.createMap(mapId, config));
   }
 
   private createMap(mapId: string, initConfig: MapConfig) {
     this.subscriptions.add(
-      this.store$.pipe(select(selectMapConfig))
+      this.store$
+        .pipe(select(selectMapConfig))
         .subscribe(config => this.store$.dispatch(new MapsAction.CreateMap({mapId, config: config || initConfig})))
     );
   }
@@ -91,5 +92,4 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new MapsAction.DestroyMap({mapId: this.mapId}));
   }
-
 }

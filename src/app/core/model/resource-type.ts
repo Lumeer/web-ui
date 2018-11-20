@@ -21,12 +21,12 @@ export const enum ResourceType {
   Organization = 'organization',
   Project = 'project',
   Collection = 'collection',
-  View = 'view'
+  View = 'view',
 }
 
-export const resourceTypesMap: { [id: string]: ResourceType } = {
+export const resourceTypesMap: {[id: string]: ResourceType} = {
   [ResourceType.Organization]: ResourceType.Organization,
   [ResourceType.Project]: ResourceType.Project,
   [ResourceType.Collection]: ResourceType.Collection,
-  [ResourceType.View]: ResourceType.View
+  [ResourceType.View]: ResourceType.View,
 };

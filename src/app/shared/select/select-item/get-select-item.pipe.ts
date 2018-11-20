@@ -22,12 +22,10 @@ import {SelectItemModel} from './select-item.model';
 import {AreIdsEqualPipe} from './are-ids-equal.pipe';
 
 @Pipe({
-  name: 'getSelectItem'
+  name: 'getSelectItem',
 })
 export class GetSelectItemPipe implements PipeTransform {
-
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {
-  }
+  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
 
   public transform(id: any, items: SelectItemModel[]): SelectItemModel {
     if (!id) {
@@ -35,5 +33,4 @@ export class GetSelectItemPipe implements PipeTransform {
     }
     return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
   }
-
 }

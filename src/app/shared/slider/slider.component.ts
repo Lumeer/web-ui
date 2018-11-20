@@ -22,10 +22,9 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 @Component({
   selector: 'slider',
   templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  styleUrls: ['./slider.component.scss'],
 })
 export class SliderComponent implements OnInit {
-
   @Input('values')
   public values: string;
 
@@ -33,7 +32,7 @@ export class SliderComponent implements OnInit {
   public defaultValue: number = 0;
 
   @Output('onSlide')
-  public onSlide = new EventEmitter<{position: number, value: string}>();
+  public onSlide = new EventEmitter<{position: number; value: string}>();
 
   public splitValues: string[];
 

@@ -18,11 +18,10 @@
  */
 
 import {PlotMaker} from './plot-maker';
-import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
 import {Data, Layout} from 'plotly.js';
 
 export class PiePlotMaker extends PlotMaker {
-
   public createData(): Data[] {
     const dataStyle = this.getDataStyle();
 
@@ -70,21 +69,4 @@ export class PiePlotMaker extends PlotMaker {
   public currentType(): ChartType {
     return ChartType.Pie;
   }
-
-  public initDrag() {
-    // TODO
-  }
-
-  public destroyDrag() {
-    // TODO
-  }
-
-  public dragEnabledChange() {
-    // TODO
-  }
-
-  public onRelayout() {
-    // TODO
-  }
-
 }

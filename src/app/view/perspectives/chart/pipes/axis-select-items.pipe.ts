@@ -23,13 +23,13 @@ import {AttributeModel, CollectionModel} from '../../../../core/store/collection
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
-  name: 'axisSelectItems'
+  name: 'axisSelectItems',
 })
 export class AxisSelectItemsPipe implements PipeTransform {
-
   public transform(collections: CollectionModel[], axis: ChartAxisType, config: ChartConfig): SelectItemModel[] {
     const selectedAttributesIdsInsteadAxis = this.getSelectedAttributesIdsInsteadAxis(axis, config);
-    return collections.filter(collection => !!collection)
+    return collections
+      .filter(collection => !!collection)
       .reduce((items, collection) => {
         const itemsForCollection = this.getItemsForCollection(collection, selectedAttributesIdsInsteadAxis);
         return [...items, ...itemsForCollection];
@@ -43,7 +43,8 @@ export class AxisSelectItemsPipe implements PipeTransform {
   }
 
   public getItemsForCollection(collection: CollectionModel, restrictedIds: string[]): SelectItemModel[] {
-    return collection.attributes.filter(attribute => !restrictedIds.includes(attribute.id))
+    return collection.attributes
+      .filter(attribute => !restrictedIds.includes(attribute.id))
       .map(attribute => this.attributeToItem(collection, attribute));
   }
 
@@ -51,5 +52,4 @@ export class AxisSelectItemsPipe implements PipeTransform {
     const axis: ChartAxisModel = {collectionId: collection.id, attributeId: attribute.id};
     return {id: axis, value: attribute.name, icon: collection.icon, iconColor: collection.color};
   }
-
 }

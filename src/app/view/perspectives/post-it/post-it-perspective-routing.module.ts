@@ -24,18 +24,12 @@ import {PostItPerspectiveComponent} from './post-it-perspective.component';
 const postItRoutes: Routes = [
   {
     path: '',
-    component: PostItPerspectiveComponent
-  }
+    component: PostItPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(postItRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(postItRoutes)],
+  exports: [RouterModule],
 })
-export class PostItPerspectiveRoutingModule {
-
-}
+export class PostItPerspectiveRoutingModule {}

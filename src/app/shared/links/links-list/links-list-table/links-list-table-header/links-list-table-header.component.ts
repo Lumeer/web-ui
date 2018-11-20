@@ -25,10 +25,9 @@ import {DocumentHintColumn} from '../../../../document-hints/document-hint-colum
   selector: '[links-list-table-header]',
   templateUrl: './links-list-table-header.component.html',
   styleUrls: ['./links-list-table-header.component.scss', './../links-list-table.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableHeaderComponent {
-
   @ViewChildren('headerCell')
   public cells: QueryList<ElementRef>;
 
@@ -40,8 +39,8 @@ export class LinksListTableHeaderComponent {
   }
 
   public getColumns(): DocumentHintColumn[] {
-    return this.cells.toArray()
+    return this.cells
+      .toArray()
       .map(cell => ({attributeId: cell.nativeElement.id, width: cell.nativeElement.clientWidth}));
   }
-
 }

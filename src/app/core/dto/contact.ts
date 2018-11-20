@@ -18,7 +18,6 @@
  */
 
 export interface Contact {
-
   id?: string;
   organizationId: string;
   company: string;
@@ -34,5 +33,4 @@ export interface Contact {
   phone: string;
   ic: string;
   dic: string;
-
 }

@@ -20,15 +20,13 @@
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'iconId'
+  name: 'iconId',
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IconIdPipe implements PipeTransform {
-
   public transform(icon: string, baseId: string): string {
     return baseId + '-icon-' + icon.replace(/ /g, '.');
   }
-
 }

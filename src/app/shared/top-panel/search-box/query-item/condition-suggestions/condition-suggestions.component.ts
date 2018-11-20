@@ -25,10 +25,9 @@ import {getAllConditions} from '../../../../../core/store/navigation/query.util'
 
 @Component({
   selector: 'condition-suggestions',
-  templateUrl: './condition-suggestions.component.html'
+  templateUrl: './condition-suggestions.component.html',
 })
 export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestroy {
-
   @Input()
   public attribute: AttributeModel;
 
@@ -89,20 +88,18 @@ export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestr
 
   private subscribeToUseSelection() {
     this.useSelectionSubscription = this.useSelection$.subscribe(text => {
-      const condition = this.selectedIndex >= 0 && this.suggestions[this.selectedIndex] ? this.suggestions[this.selectedIndex] : text;
+      const condition =
+        this.selectedIndex >= 0 && this.suggestions[this.selectedIndex] ? this.suggestions[this.selectedIndex] : text;
       this.onUseSuggestion(condition);
     });
   }
 
   private filterSuggestions() {
     const textLowerCase = this.text.toLowerCase().trim();
-    this.suggestions = this.allSuggestions
-      .filter(s => s.toLowerCase().includes(textLowerCase))
-      .slice(0, 5);
+    this.suggestions = this.allSuggestions.filter(s => s.toLowerCase().includes(textLowerCase)).slice(0, 5);
 
-    if(this.selectedIndex >= this.suggestions.length) {
+    if (this.selectedIndex >= this.suggestions.length) {
       this.selectedIndex = this.suggestions.length - 1;
     }
   }
-
 }

@@ -26,10 +26,9 @@ import {AllowedPermissions} from '../../../../../../../core/model/allowed-permis
   selector: 'table-column-context-menu',
   templateUrl: './table-column-context-menu.component.html',
   styleUrls: ['./table-column-context-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnContextMenuComponent {
-
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -80,5 +79,4 @@ export class TableColumnContextMenuComponent {
   public onSort(descending: boolean) {
     // TODO
   }
-
 }

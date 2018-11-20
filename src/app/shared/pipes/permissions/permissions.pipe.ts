@@ -28,15 +28,13 @@ import {userHasRoleInResource} from '../../utils/resource.utils';
 
 @Pipe({
   name: 'permissions',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PermissionsPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public transform(resource: ResourceModel, role: string): Observable<boolean> {
     return this.store.select(selectCurrentUserForWorkspace).pipe(
@@ -49,5 +47,4 @@ export class PermissionsPipe implements PipeTransform {
       })
     );
   }
-
 }

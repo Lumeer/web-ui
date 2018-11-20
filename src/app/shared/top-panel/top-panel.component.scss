@@ -4,7 +4,7 @@
 :host {
   display: grid;
   grid-gap: 10px;
-  grid-template-areas: "logo controls-toggle user-panel"; //  "workspace-panel workspace-panel workspace-panel" "search-box search-box search-box" "controls controls controls"
+  grid-template-areas: 'logo controls-toggle user-panel'; //  "workspace-panel workspace-panel workspace-panel" "search-box search-box search-box" "controls controls controls"
   grid-template-columns: auto auto 1fr;
   align-items: center;
 }
@@ -50,13 +50,13 @@
 
 @include media-breakpoint-between(md, xl) {
   :host {
-    grid-template-areas: "logo workspace-panel user-panel" "search-box search-box search-box" "controls controls controls";
+    grid-template-areas: 'logo workspace-panel user-panel' 'search-box search-box search-box' 'controls controls controls';
   }
 }
 
 @include media-breakpoint-up(xl) {
   :host {
-    grid-template-areas: "logo workspace-panel search-box user-panel" ". . controls .";
+    grid-template-areas: 'logo workspace-panel search-box user-panel' '. . controls .';
     grid-template-columns: auto auto 1fr auto;
   }
 

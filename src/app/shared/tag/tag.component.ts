@@ -22,10 +22,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'tag',
   templateUrl: './tag.component.html',
-  styleUrls: ['./tag.component.scss']
+  styleUrls: ['./tag.component.scss'],
 })
 export class TagComponent {
-
   @Input() public value: string;
   @Input() public readonly: boolean;
 
@@ -34,5 +33,4 @@ export class TagComponent {
   public onRemove() {
     this.remove.emit();
   }
-
 }

@@ -25,17 +25,8 @@ import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    InputModule,
-    PipesModule
-  ],
-  declarations: [
-    DocumentDetailComponent,
-    KeyValueComponent
-  ],
-  exports: [
-    DocumentDetailComponent
-  ]
+  imports: [CommonModule, InputModule, PipesModule],
+  declarations: [DocumentDetailComponent, KeyValueComponent],
+  exports: [DocumentDetailComponent],
 })
-export class DocumentModule { }
+export class DocumentModule {}

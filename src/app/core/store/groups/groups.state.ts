@@ -23,9 +23,7 @@ import {AppState} from '../app.state';
 import {GroupModel} from './group.model';
 import {GroupFilters} from './group.filters';
 
-export interface GroupsState extends EntityState<GroupModel> {
-
-}
+export interface GroupsState extends EntityState<GroupModel> {}
 
 export const groupsAdapter = createEntityAdapter<GroupModel>();
 

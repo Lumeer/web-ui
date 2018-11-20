@@ -28,10 +28,9 @@ import {AttributeQueryItem} from '../model/attribute.query-item';
 @Component({
   selector: 'attribute-condition',
   templateUrl: './attribute-condition.component.html',
-  styleUrls: ['./attribute-condition.component.scss']
+  styleUrls: ['./attribute-condition.component.scss'],
 })
 export class AttributeConditionComponent implements OnInit {
-
   @Input()
   public queryItem: AttributeQueryItem;
 

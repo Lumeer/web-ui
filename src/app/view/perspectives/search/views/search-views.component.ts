@@ -41,10 +41,9 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 
 @Component({
   selector: 'search-views',
-  templateUrl: './search-views.component.html'
+  templateUrl: './search-views.component.html',
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
-
   @Input()
   public maxLines: number = -1;
 
@@ -58,11 +57,12 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   public query: QueryModel;
 
-  constructor(private router: Router,
-              private i18n: I18n,
-              private notificationService: NotificationService,
-              private store: Store<AppState>) {
-  }
+  constructor(
+    private router: Router,
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.views$ = this.store.select(selectViewsByQuery);
@@ -75,14 +75,13 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !!navigation.workspace && !!navigation.query)
-    ).subscribe(
-      navigation => {
+    const navigationSubscription = this.store
+      .select(selectNavigation)
+      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
+      .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
-      }
-    );
+      });
     this.subscriptions.add(navigationSubscription);
   }
 
@@ -90,28 +89,26 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     const dataSubscription = combineLatest(
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes)
-    ).subscribe(([collections, linkTypes]) => this.queryData = {collections, linkTypes});
+    ).subscribe(([collections, linkTypes]) => (this.queryData = {collections, linkTypes}));
     this.subscriptions.add(dataSubscription);
 
-    const loadedSubscription = this.store.select(selectViewsLoaded)
-      .subscribe(loaded => this.viewsLoaded = loaded);
+    const loadedSubscription = this.store.select(selectViewsLoaded).subscribe(loaded => (this.viewsLoaded = loaded));
     this.subscriptions.add(loadedSubscription);
   }
 
   public onDeleteView(view: ViewModel) {
-    const message = this.i18n({id: 'views.delete.message', value: 'Do you really want to permanently delete this view?'});
+    const message = this.i18n({
+      id: 'views.delete.message',
+      value: 'Do you really want to permanently delete this view?',
+    });
     const title = this.i18n({id: 'views.delete.title', value: 'Delete view?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteView(view), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteView(view), bold: false},
+    ]);
   }
 
   public deleteView(view: ViewModel) {
@@ -131,11 +128,12 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {queryParams: {query: QueryConverter.toString(this.query)}});
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {
+      queryParams: {query: QueryConverter.toString(this.query)},
+    });
   }
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
-
 }

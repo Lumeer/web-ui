@@ -29,30 +29,24 @@ const authRoutes: Routes = [
   {
     path: 'agreement',
     canActivate: [AuthGuard],
-    component: AgreementComponent
+    component: AgreementComponent,
   },
   {
     path: 'auth',
-    component: AuthCallbackComponent
+    component: AuthCallbackComponent,
   },
   {
     path: 'logout',
-    component: LogoutComponent
+    component: LogoutComponent,
   },
   {
     path: 'session-expired',
-    component: SessionExpiredComponent
-  }
+    component: SessionExpiredComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(authRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(authRoutes)],
+  exports: [RouterModule],
 })
-export class AuthRoutingModule {
-
-}
+export class AuthRoutingModule {}

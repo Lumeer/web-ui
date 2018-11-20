@@ -21,7 +21,6 @@ import {Payment} from '../../../dto/payment';
 import {PaymentModel} from './payment.model';
 
 export class PaymentConverter {
-
   public static fromDto(organizationId: string, dto: Payment): PaymentModel {
     return {
       id: dto.id,
@@ -36,7 +35,7 @@ export class PaymentConverter {
       users: dto.users,
       language: dto.language,
       currency: dto.currency,
-      gwUrl: dto.gwUrl
+      gwUrl: dto.gwUrl,
     };
   }
 
@@ -53,7 +52,7 @@ export class PaymentConverter {
       users: model.users,
       language: model.language,
       currency: model.currency,
-      gwUrl: model.gwUrl
+      gwUrl: model.gwUrl,
     };
   }
 }

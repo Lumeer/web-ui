@@ -23,10 +23,9 @@ import {ResourceType} from '../../core/model/resource-type';
 import {Role} from '../../core/model/role';
 
 @Pipe({
-  name: 'resourceRoles'
+  name: 'resourceRoles',
 })
 export class ResourceRolesPipe implements PipeTransform {
-
   public transform(resourceType: ResourceType): string[] {
     switch (resourceType) {
       case ResourceType.Organization:
@@ -41,5 +40,4 @@ export class ResourceRolesPipe implements PipeTransform {
         return [];
     }
   }
-
 }

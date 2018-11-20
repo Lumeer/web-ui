@@ -34,10 +34,9 @@ import {DialogService} from '../dialog/dialog.service';
 
 @Component({
   templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+  styleUrls: ['./view.component.scss'],
 })
 export class ViewComponent implements OnInit, OnDestroy {
-
   public view: ViewModel;
 
   public viewsExist$: Observable<boolean>;
@@ -47,9 +46,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private dialogService: DialogService,
-              private store: Store<AppState>) {
-  }
+  constructor(private dialogService: DialogService, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToNavigation());
@@ -57,18 +54,19 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation(): Subscription {
-    return this.store.select(selectNavigation).pipe(
-      filter(this.validNavigation)
-    ).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.query = navigation.query;
+    return this.store
+      .select(selectNavigation)
+      .pipe(filter(this.validNavigation))
+      .subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        this.query = navigation.query;
 
-      if (navigation.workspace.viewCode) {
-        this.loadView(navigation.workspace.viewCode);
-      } else {
-        this.loadQuery(navigation.query, navigation.viewName);
-      }
-    });
+        if (navigation.workspace.viewCode) {
+          this.loadView(navigation.workspace.viewCode);
+        } else {
+          this.loadQuery(navigation.query, navigation.viewName);
+        }
+      });
   }
 
   private bindToViews() {
@@ -83,9 +81,13 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private validNavigation(navigation: NavigationState): boolean {
-    return Boolean(navigation && navigation.workspace && navigation.workspace.projectCode &&
-      navigation.workspace.organizationCode &&
-      navigation.perspective);
+    return Boolean(
+      navigation &&
+        navigation.workspace &&
+        navigation.workspace.projectCode &&
+        navigation.workspace.organizationCode &&
+        navigation.perspective
+    );
   }
 
   public ngOnDestroy() {
@@ -94,12 +96,13 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private loadView(code: string) {
     this.subscriptions.add(
-      this.store.select(selectViewByCode(code)).pipe(
-        filter(view => Boolean(view))
-      ).subscribe(view => {
-        this.view = {...view};
-        this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
-      })
+      this.store
+        .select(selectViewByCode(code))
+        .pipe(filter(view => Boolean(view)))
+        .subscribe(view => {
+          this.view = {...view};
+          this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
+        })
     );
   }
 
@@ -108,24 +111,23 @@ export class ViewComponent implements OnInit, OnDestroy {
       name: name ? `${name} - copy` : '',
       query: query,
       perspective: null,
-      config: {}
+      config: {},
     };
   }
 
   public onSave(name: string) {
     this.subscriptions.add(
-      combineLatest(
-        this.store.select(selectPerspectiveConfig),
-        this.store.select(selectPerspective)
-      ).pipe(take(1)).subscribe(([config, perspective]) => {
-        const view: ViewModel = {...this.view, query: this.query, name, config: {[perspective]: config}, perspective};
+      combineLatest(this.store.select(selectPerspectiveConfig), this.store.select(selectPerspective))
+        .pipe(take(1))
+        .subscribe(([config, perspective]) => {
+          const view: ViewModel = {...this.view, query: this.query, name, config: {[perspective]: config}, perspective};
 
-        if (view.code) {
-          this.updateView(view);
-        } else {
-          this.saveView(view);
-        }
-      })
+          if (view.code) {
+            this.updateView(view);
+          } else {
+            this.saveView(view);
+          }
+        })
     );
   }
 
@@ -156,11 +158,13 @@ export class ViewComponent implements OnInit, OnDestroy {
   private onConfirmOverwrite(view: ViewModel) {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
 
-    this.store.dispatch(new ViewsAction.Update({
-      viewCode: view.code,
-      view,
-      nextAction: new RouterAction.Go({path})
-    }));
+    this.store.dispatch(
+      new ViewsAction.Update({
+        viewCode: view.code,
+        view,
+        nextAction: new RouterAction.Go({path}),
+      })
+    );
   }
 
   private createView(view: ViewModel) {
@@ -170,5 +174,4 @@ export class ViewComponent implements OnInit, OnDestroy {
   private updateView(view: ViewModel) {
     this.store.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
   }
-
 }

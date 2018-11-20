@@ -59,7 +59,7 @@ import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
 import {postItReducer} from './postit/postit.reducer';
 import {chartsReducer} from './charts/charts.reducer';
-import {ganttChartsReducer} from "./gantt-charts/gantt-charts.reducer";
+import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -80,7 +80,7 @@ const reducers: ActionReducerMap<AppState> = {
   views: viewsReducer,
   postIts: postItReducer,
   charts: chartsReducer,
-  ganttCharts: ganttChartsReducer
+  ganttCharts: ganttChartsReducer,
 };
 
 const effects = [
@@ -100,16 +100,15 @@ const effects = [
   RouterEffects,
   TablesEffects,
   UsersEffects,
-  ViewsEffects
+  ViewsEffects,
 ];
 
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 50}) : []
+    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 50}) : [],
   ],
-  declarations: []
+  declarations: [],
 })
-export class AppStoreModule {
-}
+export class AppStoreModule {}

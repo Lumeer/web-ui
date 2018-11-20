@@ -22,10 +22,9 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {TableConfigRow, TablePart} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'dataCellDocument'
+  name: 'dataCellDocument',
 })
 export class DataCellDocumentPipe implements PipeTransform {
-
   public transform(documents: DocumentModel[], part: TablePart, row: TableConfigRow): DocumentModel {
     if (documents && documents[0]) {
       return documents[0];
@@ -34,8 +33,7 @@ export class DataCellDocumentPipe implements PipeTransform {
     return {
       collectionId: part.collectionId,
       correlationId: row.correlationId,
-      data: {}
+      data: {},
     };
   }
-
 }

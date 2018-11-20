@@ -30,13 +30,15 @@ import {OrganizationModel} from '../../../core/store/organizations/organization.
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
-import {selectContactByOrganizationId, selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
+import {
+  selectContactByOrganizationId,
+  selectContactByWorkspace,
+} from '../../../core/store/organizations/contact/contacts.state';
 
 @Component({
-  templateUrl: './organization-detail.component.html'
+  templateUrl: './organization-detail.component.html',
 })
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
-
   @ViewChild('contactForm')
   private contactForm: ContactFormComponent;
 
@@ -45,13 +47,10 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>) {
-  }
+  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
 
   public updateContact($event: ContactModel) {
-    this.store.dispatch(new ContactsAction.SetContact({ organizationCode: this.organization.code, contact: $event }));
+    this.store.dispatch(new ContactsAction.SetContact({organizationCode: this.organization.code, contact: $event}));
   }
 
   public ngOnInit(): void {
@@ -60,11 +59,13 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.organizationSubscription = this.store
+      .select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+      .subscribe(organization => (this.organization = organization));
 
-    this.contactSubscription = this.store.select(selectContactByWorkspace)
+    this.contactSubscription = this.store
+      .select(selectContactByWorkspace)
       .pipe(filter(contact => !isNullOrUndefined(contact)))
       .subscribe(contact => this.contactForm.setContact(contact));
   }
@@ -80,7 +81,6 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private requestData() {
-    this.store.dispatch(new ContactsAction.GetContact({ organizationCode: this.organization.code }));
+    this.store.dispatch(new ContactsAction.GetContact({organizationCode: this.organization.code}));
   }
-
 }

@@ -31,26 +31,25 @@ import {AuthService} from '../auth.service';
 
 const termsOfServiceLinks = {
   cs: 'http://www.lumeer.io/terms_service_cz.html',
-  en: 'http://www.lumeer.io/terms_service.html'
+  en: 'http://www.lumeer.io/terms_service.html',
 };
 
 const privacyPolicyLinks = {
   cs: 'http://www.lumeer.io/privacy_cz.html',
-  en: 'http://www.lumeer.io/privacy.html'
+  en: 'http://www.lumeer.io/privacy.html',
 };
 
 const dataProcessingAgreementLinks = {
   cs: 'http://www.lumeer.io/agree_news_cz.html',
-  en: 'http://www.lumeer.io/agree_news.html'
+  en: 'http://www.lumeer.io/agree_news.html',
 };
 
 @Component({
   selector: 'agreement',
   templateUrl: './agreement.component.html',
-  styleUrls: ['./agreement.component.scss']
+  styleUrls: ['./agreement.component.scss'],
 })
 export class AgreementComponent implements OnInit, OnDestroy {
-
   public readonly agreementName = 'agreement';
   public readonly newsletterName = 'newsletter';
 
@@ -60,26 +59,24 @@ export class AgreementComponent implements OnInit, OnDestroy {
 
   public form = new FormGroup({
     [this.agreementName]: new FormControl(false, Validators.requiredTrue),
-    [this.newsletterName]: new FormControl(false)
+    [this.newsletterName]: new FormControl(false),
   });
 
   public loading: boolean;
 
   private subscriptions = new Subscription();
 
-  public constructor(private authService: AuthService,
-                     private router: Router,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscriptions.add(
-      this.store$.select(selectCurrentUser).pipe(
-        filter(user => !!user)
-      ).subscribe(user => {
-        this.agreement.setValue(user.agreement);
-        this.newsletter.setValue(user.newsletter);
-      })
+      this.store$
+        .select(selectCurrentUser)
+        .pipe(filter(user => !!user))
+        .subscribe(user => {
+          this.agreement.setValue(user.agreement);
+          this.newsletter.setValue(user.newsletter);
+        })
     );
   }
 
@@ -98,14 +95,16 @@ export class AgreementComponent implements OnInit, OnDestroy {
   private sendAgreement() {
     this.loading = true;
 
-    this.store$.dispatch(new UsersAction.PatchCurrentUser({
-      user: {
-        agreement: this.agreement.value,
-        newsletter: this.newsletter.value
-      },
-      onSuccess: () => this.onSuccess(),
-      onFailure: () => this.onFailure()
-    }));
+    this.store$.dispatch(
+      new UsersAction.PatchCurrentUser({
+        user: {
+          agreement: this.agreement.value,
+          newsletter: this.newsletter.value,
+        },
+        onSuccess: () => this.onSuccess(),
+        onFailure: () => this.onFailure(),
+      })
+    );
   }
 
   private onSuccess() {
@@ -129,5 +128,4 @@ export class AgreementComponent implements OnInit, OnDestroy {
   public get newsletter(): AbstractControl {
     return this.form.get(this.newsletterName);
   }
-
 }

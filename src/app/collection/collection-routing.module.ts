@@ -37,38 +37,32 @@ const collectionRoutes: Routes = [
     component: CollectionSettingsComponent,
     resolve: {
       linkTypes: LinkTypesGuard,
-      collections: CollectionsGuard
+      collections: CollectionsGuard,
     },
     children: [
       {
         path: 'attributes',
-        component: CollectionAttributesComponent
+        component: CollectionAttributesComponent,
       },
       {
         path: 'linktypes',
-        component: CollectionLinkTypesComponent
+        component: CollectionLinkTypesComponent,
       },
       {
         path: 'users',
-        component: CollectionUsersComponent
+        component: CollectionUsersComponent,
       },
       {
         path: '',
         redirectTo: 'attributes',
-        pathMatch: 'full'
-      }
-    ]
-  }
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(collectionRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(collectionRoutes)],
+  exports: [RouterModule],
 })
-export class CollectionRoutingModule {
-
-}
+export class CollectionRoutingModule {}

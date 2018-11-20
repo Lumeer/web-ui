@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Pipe({
-  name: 'isOrganizationType'
+  name: 'isOrganizationType',
 })
 export class IsOrganizationTypePipe implements PipeTransform {
-
   public transform(type: ResourceType): boolean {
     return type === ResourceType.Organization;
   }
-
 }

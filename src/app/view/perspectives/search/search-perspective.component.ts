@@ -28,16 +28,14 @@ import {QueryConverter} from '../../../core/store/navigation/query.converter';
 
 @Component({
   templateUrl: './search-perspective.component.html',
-  styleUrls: ['./search-perspective.component.scss']
+  styleUrls: ['./search-perspective.component.scss'],
 })
 export class SearchPerspectiveComponent {
-
   public query: QueryModel = {};
 
   private workspace: Workspace;
 
-  constructor(private store: Store<AppState>, private activatedRoute: ActivatedRoute) {
-  }
+  constructor(private store: Store<AppState>, private activatedRoute: ActivatedRoute) {}
 
   public ngOnInit() {
     this.store.select(selectNavigation).subscribe(navigation => {
@@ -47,15 +45,22 @@ export class SearchPerspectiveComponent {
   }
 
   public isLinkActive(url: string): boolean {
-    return (this.activatedRoute.firstChild.snapshot.url.join('/').includes(url));
+    return this.activatedRoute.firstChild.snapshot.url.join('/').includes(url);
   }
 
   public viewPath(searchTab: string): string[] {
-    return ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.workspace.viewCode, 'search', searchTab];
+    return [
+      'w',
+      this.workspace.organizationCode,
+      this.workspace.projectCode,
+      'view',
+      this.workspace.viewCode,
+      'search',
+      searchTab,
+    ];
   }
 
   public stringifyQuery(): string {
     return QueryConverter.toString(this.query);
   }
-
 }

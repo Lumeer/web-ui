@@ -25,14 +25,12 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 @Component({
   selector: 'empty-records',
   templateUrl: './empty-records.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyRecordsComponent {
-
   @Input()
   public query: QueryModel;
 
   @Input()
   public collections: CollectionModel[];
-
 }

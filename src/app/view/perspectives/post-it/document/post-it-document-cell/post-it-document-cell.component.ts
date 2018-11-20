@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {KeyCode} from '../../../../../shared/key-code';
 
 import {SelectionHelper} from '../../util/selection-helper';
@@ -26,10 +36,9 @@ import {SelectionHelper} from '../../util/selection-helper';
   selector: 'post-it-document-cell',
   templateUrl: './post-it-document-cell.component.html',
   styleUrls: ['./post-it-document-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItDocumentCellComponent implements OnChanges {
-
   @Input() public perspectiveId: string;
   @Input() public suggestionListId: string;
   @Input() public additionalClasses: string;
@@ -106,5 +115,4 @@ export class PostItDocumentCellComponent implements OnChanges {
       this.update.emit(this.model);
     }
   }
-
 }

@@ -32,19 +32,16 @@ import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/
   selector: 'user-panel',
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserPanelComponent implements OnInit {
-
   @Input()
   public workspace: Workspace;
 
   public freePlan$: Observable<boolean>;
   public notifications = 0;
 
-  constructor(private router: Router,
-              private store$: Store<AppState>) {
-  }
+  constructor(private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindServiceLimits();
@@ -52,9 +49,9 @@ export class UserPanelComponent implements OnInit {
 
   private bindServiceLimits() {
     this.store$.dispatch(new ServiceLimitsAction.GetAll());
-    this.freePlan$ = this.store$.select(selectServiceLimitsByWorkspace).pipe(
-      map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE)
-    );
+    this.freePlan$ = this.store$
+      .select(selectServiceLimitsByWorkspace)
+      .pipe(map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE));
   }
 
   public goToOrganizationDetail() {
@@ -62,5 +59,4 @@ export class UserPanelComponent implements OnInit {
       this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
     }
   }
-
 }

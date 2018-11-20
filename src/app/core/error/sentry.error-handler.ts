@@ -17,26 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import * as Raven from 'raven-js';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
+import {ErrorHandler, Injectable} from '@angular/core';
+import * as Sentry from '@sentry/browser';
+import {environment} from '../../../environments/environment';
+
+if (environment.sentryDsn) {
+  Sentry.init({
+    dsn: environment.sentryDsn,
+    release: environment.buildNumber,
+    environment: environment.name || '',
+  });
+}
 
 @Injectable()
-export class RavenHttpInterceptor implements HttpInterceptor {
+export class SentryErrorHandler implements ErrorHandler {
+  public handleError(error: any): void {
+    if (environment.sentryDsn) {
+      Sentry.captureException(error.originalError || error);
+    }
 
-  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
-      catchError(error => {
-        if (environment.sentryDsn && error.status !== 402) {
-          Raven.captureException(error);
-        }
-
-        return throwError(error);
-      })
-    );
+    throw error;
   }
-
 }

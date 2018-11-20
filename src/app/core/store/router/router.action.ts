@@ -24,20 +24,20 @@ import {Action} from '@ngrx/store';
 export enum RouterActionType {
   GO = '[Router] Go',
   BACK = '[Router] Back',
-  FORWARD = '[Router] Forward'
+  FORWARD = '[Router] Forward',
 }
 
 export namespace RouterAction {
-
   export class Go implements Action {
     public readonly type = RouterActionType.GO;
 
-    constructor(public payload: {
-      path: any[];
-      queryParams?: Params;
-      extras?: NavigationExtras;
-    }) {
-    }
+    constructor(
+      public payload: {
+        path: any[];
+        queryParams?: Params;
+        extras?: NavigationExtras;
+      }
+    ) {}
   }
 
   export class Back implements Action {

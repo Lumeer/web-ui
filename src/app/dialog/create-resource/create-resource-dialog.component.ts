@@ -42,10 +42,9 @@ import * as Icons from '../../shared/picker/icon-picker/icons';
 
 @Component({
   selector: 'create-resource-dialog',
-  templateUrl: './create-resource-dialog.component.html'
+  templateUrl: './create-resource-dialog.component.html',
 })
 export class CreateResourceDialogComponent implements OnInit, OnDestroy {
-
   public form: FormGroup;
 
   public color: string = DEFAULT_COLOR;
@@ -66,7 +65,8 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
     private projectValidators: ProjectValidators,
     private organizationValidators: OrganizationValidators,
     private route: ActivatedRoute,
-    private store: Store<AppState>) {
+    private store: Store<AppState>
+  ) {
     this.createForm();
   }
 
@@ -92,7 +92,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   private createForm() {
     this.form = new FormGroup({
       code: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(5)]),
-      name: new FormControl('')
+      name: new FormControl(''),
     });
   }
 
@@ -148,40 +148,44 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
       code: this.codeInput.value,
       color: this.color,
       icon: this.icon,
-      description: ''
+      description: '',
     };
   }
 
   private parseResourceType() {
     this.resourceType = this.getResourceTypeFromRouter();
 
-    this.route.paramMap.pipe(
-      map(params => params.get('organizationId')),
-      take(1)
-    ).subscribe(parentId => {
-      this.parentId = parentId;
-      if (this.resourceType === ResourceType.Project && parentId) {
-        this.projectValidators.setOrganizationId(parentId);
-        this.selectData();
-      }
+    this.route.paramMap
+      .pipe(
+        map(params => params.get('organizationId')),
+        take(1)
+      )
+      .subscribe(parentId => {
+        this.parentId = parentId;
+        if (this.resourceType === ResourceType.Project && parentId) {
+          this.projectValidators.setOrganizationId(parentId);
+          this.selectData();
+        }
 
-      this.codeInput.setAsyncValidators(this.createAsyncValidator());
-    });
+        this.codeInput.setAsyncValidators(this.createAsyncValidator());
+      });
   }
 
   private selectData() {
     this.subscriptions.add(
-      this.store.select(selectOrganizationById(this.parentId))
-        .subscribe(resource => this.parentOrganization = resource)
+      this.store
+        .select(selectOrganizationById(this.parentId))
+        .subscribe(resource => (this.parentOrganization = resource))
     );
     this.subscriptions.add(
-      this.store.select(selectProjectsByOrganizationId(this.parentId))
-        .subscribe(projects => this.isFirstProject = projects.length === 0)
+      this.store
+        .select(selectProjectsByOrganizationId(this.parentId))
+        .subscribe(projects => (this.isFirstProject = projects.length === 0))
     );
   }
 
   private getResourceTypeFromRouter(): ResourceType {
-    const [rootPath,] = this.route.routeConfig.path.split('/');
+    const [rootPath] = this.route.routeConfig.path.split('/');
     const dialogPath = dialogPathsMap[rootPath];
     if (dialogPath === DialogPath.CREATE_ORGANIZATION) {
       return ResourceType.Organization;
@@ -190,5 +194,4 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
     }
     return null;
   }
-
 }

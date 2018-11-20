@@ -30,7 +30,6 @@ import {selectOrganizationCodes} from '../store/organizations/organizations.stat
 
 @Injectable()
 export class OrganizationValidators {
-
   constructor(private store: Store<AppState>) {
     this.store.dispatch(new OrganizationsAction.GetCodes());
   }
@@ -52,5 +51,4 @@ export class OrganizationValidators {
         take(1)
       );
   }
-
 }

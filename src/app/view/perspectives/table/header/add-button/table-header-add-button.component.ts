@@ -16,12 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {first, map} from 'rxjs/operators';
 import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
-import {selectCollectionsByReadPermission, selectLinkTypesByReadPermission} from '../../../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByReadPermission,
+  selectLinkTypesByReadPermission,
+} from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
@@ -31,25 +42,22 @@ import {DialogService} from '../../../../../dialog/dialog.service';
 import {CollectionModel} from './../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from './../../../../../core/store/link-types/link-type.model';
 
-const ITEMS_LIMIT = 5;
+const ITEMS_LIMIT = 15;
 
 @Component({
   selector: 'table-header-add-button',
   templateUrl: './table-header-add-button.component.html',
   styleUrls: ['./table-header-add-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
-
   @Input()
   public cursor: TableBodyCursor;
 
   public collections$: Observable<CollectionModel[]>;
   public linkTypes$: Observable<[LinkTypeModel, CollectionModel, CollectionModel][]>;
 
-  constructor(private dialogService: DialogService,
-    private element: ElementRef,
-    private store$: Store<{}>) {}
+  constructor(private dialogService: DialogService, private element: ElementRef, private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -78,7 +86,8 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
     ).pipe(
       map(([linkTypes, collectionsMap, query, lastCollectionId]) => {
         const linkTypeIds = (query && query.linkTypeIds) || [];
-        return linkTypes.filter(linkType => !linkTypeIds.includes(linkType.id))
+        return linkTypes
+          .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
           .slice(0, ITEMS_LIMIT)
           .map<[LinkTypeModel, CollectionModel, CollectionModel]>(linkType => {
@@ -98,17 +107,18 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   }
 
   public onUseCollection(collection: CollectionModel) {
-    this.store$.pipe(
-      select(selectTableLastCollectionId(this.cursor.tableId)),
-      first()
-    ).subscribe(lastCollectionId => {
-      const linkCollectionIds = [lastCollectionId, collection.id].join(',');
-      this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.onUseLinkType(linkType));
-    });
+    this.store$
+      .pipe(
+        select(selectTableLastCollectionId(this.cursor.tableId)),
+        first()
+      )
+      .subscribe(lastCollectionId => {
+        const linkCollectionIds = [lastCollectionId, collection.id].join(',');
+        this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.onUseLinkType(linkType));
+      });
   }
 
   public onUseLinkType(linkType: LinkTypeModel) {
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
-
 }

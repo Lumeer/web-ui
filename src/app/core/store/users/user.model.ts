@@ -20,17 +20,15 @@
 import {GroupModel} from '../groups/group.model';
 
 export interface UserModel {
-
   id?: string;
   name?: string;
   email: string;
-  groupsMap: { [organizationId: string]: string[]; };
+  groupsMap: {[organizationId: string]: string[]};
   groups?: GroupModel[];
   defaultWorkspace?: DefaultWorkspaceModel;
   agreement?: boolean;
   agreementDate?: Date;
   newsletter?: boolean;
-
 }
 
 export interface DefaultWorkspaceModel {

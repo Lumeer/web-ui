@@ -3,6 +3,11 @@
 export SENTRY_ORG=answer-institute-sro
 export SENTRY_PROJECT=lumeerio
 
+if [ $SKIP_SENTRY_UPLOAD = true ]
+then
+  exit 0
+fi
+
 if [ "$LUMEER_ENV" != "production" -a "$LUMEER_ENV" != "staging" ]
 then
   exit 0

@@ -36,10 +36,9 @@ import {initialServiceLimitsState, ServiceLimitsState} from './organizations/ser
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
 import {initialPostItState, PostItState} from './postit/postit.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
-import {GanttChartsState, initialGanttChartsState} from "./gantt-charts/gantt-charts.state";
+import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';
 
 export interface AppState {
-
   collections: CollectionsState;
   documents: DocumentsState;
   groups: GroupsState;
@@ -81,6 +80,6 @@ export function initialAppState(): AppState {
     views: initialViewsState,
     postIts: initialPostItState,
     charts: initialChartsState,
-    ganttCharts: initialGanttChartsState
+    ganttCharts: initialGanttChartsState,
   };
 }

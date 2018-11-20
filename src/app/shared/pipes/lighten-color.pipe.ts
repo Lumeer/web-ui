@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {shadeColor} from '../utils/html-modifier';
 
 @Pipe({
-  name: 'lightenColor'
+  name: 'lightenColor',
 })
 export class LightenColorPipe implements PipeTransform {
-
   public transform(color: string, percent: number): string {
     return shadeColor(color, percent);
   }
-
 }

@@ -1,5 +1,13 @@
-.scatterlayer .trace:last-child .points path {
-  pointer-events: all;
+.draggable {
+  .scatterlayer .trace:last-child .points path {
+    pointer-events: all;
+    cursor: ns-resize;
+  }
+
+  .barlayer .trace .points .point {
+    pointer-events: all;
+    cursor: ns-resize;
+  }
 }
 
 .js-plotly-plot .plotly .modebar {

@@ -17,52 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LatLngLiteral} from 'leaflet';
 import {CollectionModel} from '../collections/collection.model';
 import {DocumentModel} from '../documents/document.model';
-import {MapTiles} from './map-tiles';
+
+export enum MapTiles {
+  OpenStreetMap = 'OpenStreetMap',
+  SeznamBasic = 'SeznamBasic',
+}
+
+export interface MapCoordinates {
+  lat: number;
+  lng: number;
+}
 
 export interface MapModel {
-
   id: string;
   config: MapConfig;
-
 }
 
 export interface MapConfig {
-
   attributeIdsMap: AttributeIdsMap;
-  center: LatLngLiteral;
+  center: MapCoordinates;
   tiles: MapTiles;
   zoom: number;
-
 }
 
-export type AttributeIdsMap = { [collectionId: string]: string[] };
+export type AttributeIdsMap = {[collectionId: string]: string[]};
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   attributeIdsMap: {},
   center: {
     lat: 49.2331315,
-    lng: 16.5701833
+    lng: 16.5701833,
   },
   tiles: MapTiles.SeznamBasic,
-  zoom: 5
+  zoom: 5,
 };
 
 export interface MapMarkerProperties {
-
   collection: CollectionModel;
   document: DocumentModel;
   attributeId: string;
   attributeType?: MapAttributeType;
-  coordinates?: LatLngLiteral;
-
+  coordinates?: MapCoordinates;
 }
 
 export enum MapAttributeType {
-
   Address = 'Address',
-  Coordinates = 'Coordinates'
-
+  Coordinates = 'Coordinates',
 }

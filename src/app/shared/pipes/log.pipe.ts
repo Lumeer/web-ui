@@ -20,14 +20,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'log'
+  name: 'log',
 })
 export class LogPipe implements PipeTransform {
-
   public transform(value: any): any {
     // tslint:disable-next-line:no-console
     console.log(value);
     return value;
   }
-
 }

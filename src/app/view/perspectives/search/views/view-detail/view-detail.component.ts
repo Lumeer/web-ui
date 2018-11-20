@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import {perspectiveIconsMap} from '../../../perspective';
 import {ViewModel} from '../../../../../core/store/views/view.model';
@@ -29,10 +38,9 @@ import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/qu
   selector: 'view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewDetailComponent implements OnInit, OnChanges {
-
   @Input()
   public view: ViewModel;
 

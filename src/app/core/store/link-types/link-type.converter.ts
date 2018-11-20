@@ -22,14 +22,13 @@ import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from './link-type.model';
 
 export class LinkTypeConverter {
-
   public static fromDto(dto: LinkType, correlationId?: string): LinkTypeModel {
     return {
       id: dto.id,
       name: dto.name,
       collectionIds: dto.collectionIds,
       attributes: [], // TODO
-      correlationId: correlationId
+      correlationId: correlationId,
     };
   }
 
@@ -38,16 +37,15 @@ export class LinkTypeConverter {
       id: model.id,
       name: model.name,
       collectionIds: model.collectionIds,
-      attributes: [] // TODO
+      attributes: [], // TODO
     };
   }
 
   public static addCollections(linkType: LinkTypeModel, collections: CollectionModel[]): LinkTypeModel {
     const usedCollections: [CollectionModel, CollectionModel] = [
       collections.find(collection => collection.id === linkType.collectionIds[0]),
-      collections.find(collection => collection.id === linkType.collectionIds[1])
+      collections.find(collection => collection.id === linkType.collectionIds[1]),
     ];
     return {...linkType, collections: usedCollections};
   }
-
 }

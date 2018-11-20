@@ -23,28 +23,23 @@ import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart.model';
-import {GanttChartConfig} from "../gantt-charts/gantt-chart.model";
+import {GanttChartConfig} from '../gantt-charts/gantt-chart.model';
 
 export interface ViewModel extends ResourceModel {
-
   perspective: Perspective;
   query: QueryModel;
   config: ViewConfigModel;
-  authorRights?: { [collectionId: string]: string[] };
-
+  authorRights?: {[collectionId: string]: string[]};
 }
 
 export interface ViewCursor {
-
   linkInstanceId?: string;
   collectionId: string;
   documentId: string;
   attributeId?: string;
-
 }
 
 export interface ViewConfigModel {
-
   detail?: DetailConfigModel;
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
@@ -53,7 +48,6 @@ export interface ViewConfigModel {
   calendar?: CalendarConfigModel;
   chart?: ChartConfig;
   ganttChart?: GanttChartConfig;
-
 }
 
 export interface DetailConfigModel {
@@ -66,13 +60,11 @@ export interface PostItConfigModel {
 }
 
 export interface SearchConfigModel {
-
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
-
 }
 
 export interface CalendarConfigModel {
   //TODO
-  whateverConfig?: string;    //not sure
+  whateverConfig?: string; //not sure
 }

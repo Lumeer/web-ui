@@ -16,16 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {tileLayer, TileLayer} from 'leaflet';
-import {environment} from '../../../../environments/environment';
-
-export enum MapTiles {
-
-  OpenStreetMap = 'OpenStreetMap',
-  SeznamBasic = 'SeznamBasic'
-
-}
+import {MapTiles} from 'src/app/core/store/maps/map.model';
+import {environment} from '../../../../../../environments/environment';
 
 export const LUMEER_ATTRIBUTION = `<span class="lumeer-attribution">
 <a href="https://www.lumeer.io" target="_blank">
@@ -46,7 +39,7 @@ function createOpenStreetMapTileLayer(): TileLayer {
   return tileLayer('//{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', {
     foo: 'bar',
     attribution: LUMEER_ATTRIBUTION,
-    detectRetina: true
+    detectRetina: true,
   });
 }
 
@@ -65,7 +58,7 @@ function createCzechSeznamBasicMapTileLayer() {
     detectRetina: true,
     maxZoom: 18,
     minZoom: 2,
-    subdomains: '1234'
+    subdomains: '1234',
   });
 }
 
@@ -75,6 +68,6 @@ function createEnglishSeznamBasicMapTileLayer() {
     detectRetina: true,
     maxZoom: 18,
     minZoom: 2,
-    subdomains: '1234'
+    subdomains: '1234',
   });
 }

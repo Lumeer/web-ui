@@ -24,7 +24,6 @@ import {ViewModel} from './view.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 
 export class ViewConverter {
-
   public static convertToModel(dto: View): ViewModel {
     return {
       id: dto.id,
@@ -35,7 +34,7 @@ export class ViewConverter {
       perspective: perspectivesMap[dto.perspective],
       config: dto.config,
       permissions: PermissionsConverter.fromDto(dto.permissions),
-      authorRights: dto.authorRights
+      authorRights: dto.authorRights,
     };
   }
 
@@ -46,8 +45,7 @@ export class ViewConverter {
       query: QueryConverter.toDto(model.query),
       perspective: model.perspective,
       config: model.config,
-      description: model.description
+      description: model.description,
     };
   }
-
 }

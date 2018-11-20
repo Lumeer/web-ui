@@ -36,11 +36,11 @@ const searchRoutes: Routes = [
       },
       {
         path: 'collections',
-        component: SearchCollectionsComponent
+        component: SearchCollectionsComponent,
       },
       {
         path: 'records',
-        component: SearchDocumentsComponent
+        component: SearchDocumentsComponent,
       },
       /*{
         path: 'links',
@@ -48,25 +48,19 @@ const searchRoutes: Routes = [
       },*/
       {
         path: 'views',
-        component: SearchViewsComponent
+        component: SearchViewsComponent,
       },
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'all'
-      }
-    ]
-  }
+        redirectTo: 'all',
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(searchRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(searchRoutes)],
+  exports: [RouterModule],
 })
-export class SearchPerspectiveRoutingModule {
-
-}
+export class SearchPerspectiveRoutingModule {}

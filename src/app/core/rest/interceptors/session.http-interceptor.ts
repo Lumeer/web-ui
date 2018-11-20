@@ -27,13 +27,11 @@ import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class SessionHttpInterceptor implements HttpInterceptor {
-
   private sessionExpirationTime: Date;
 
   private redirected: boolean;
 
-  public constructor(private router: Router) {
-  }
+  public constructor(private router: Router) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url)) {
@@ -64,9 +62,8 @@ export class SessionHttpInterceptor implements HttpInterceptor {
   private navigateToSessionExpiredPage() {
     this.router.navigate(['/', 'session-expired'], {
       queryParams: {
-        redirectUrl: this.router.url
-      }
+        redirectUrl: this.router.url,
+      },
     });
   }
-
 }

@@ -23,11 +23,8 @@ import {CollapsibleSidebarComponent} from './collapsible-sidebar.component';
 import {CollapsibleSidebarToggleComponent} from './toggle/collapsible-sidebar-toggle.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [CollapsibleSidebarComponent, CollapsibleSidebarToggleComponent],
-  exports: [CollapsibleSidebarComponent]
+  exports: [CollapsibleSidebarComponent],
 })
-export class CollapsibleSidebarModule {
-}
+export class CollapsibleSidebarModule {}

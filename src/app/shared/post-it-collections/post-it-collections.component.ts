@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -55,17 +67,17 @@ const UNCREATED_THRESHOLD = 5;
 @Component({
   selector: 'post-it-collections',
   templateUrl: './post-it-collections.component.html',
-  styleUrls: ['./post-it-collections.component.scss']
+  styleUrls: ['./post-it-collections.component.scss'],
 })
 export class PostItCollectionsComponent implements OnInit, OnDestroy {
-
   @Input()
   public maxShown: number = -1;
 
   @ViewChildren(PostItCollectionComponent)
   public postIts: QueryList<PostItCollectionComponent>;
 
-  @ViewChild('postItLayout') set content(content: ElementRef) {
+  @ViewChild('postItLayout')
+  set content(content: ElementRef) {
     if (content) {
       this.postItLayout = content;
       this.createLayout();
@@ -91,14 +103,15 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   private colors = Colors.palette;
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>,
-              private zone: NgZone,
-              private activatedRoute: ActivatedRoute,
-              private changeDetector: ChangeDetectorRef,
-              private notificationService: NotificationService,) {
-  }
+  constructor(
+    private i18n: I18n,
+    private router: Router,
+    private store: Store<AppState>,
+    private zone: NgZone,
+    private activatedRoute: ActivatedRoute,
+    private changeDetector: ChangeDetectorRef,
+    private notificationService: NotificationService
+  ) {}
 
   /**
    * Handler to change the flag to remove opacity css on elements
@@ -151,7 +164,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public createNewCollection() {
     const newCollection = {
       ...this.emptyCollection(),
-      correlationId: CorrelationIdGenerator.generate()
+      correlationId: CorrelationIdGenerator.generate(),
     };
 
     if (this.collections) {
@@ -170,11 +183,11 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       color: this.colors[Math.round(Math.random() * this.colors.length)],
       icon: this.icons[Math.round(Math.random() * this.icons.length)],
       description: '',
-      attributes: []
+      attributes: [],
     };
   }
 
-  public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
+  public onFavoriteChange(collectionId: string, data: {favorite: boolean; onlyStore: boolean}) {
     const {favorite, onlyStore} = data;
     if (onlyStore) {
       if (favorite) {
@@ -198,7 +211,12 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public createCollection(newCollection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection: newCollection, callback: (collection) => this.onCreateCollection(collection)}));
+    this.store.dispatch(
+      new CollectionsAction.Create({
+        collection: newCollection,
+        callback: collection => this.onCreateCollection(collection),
+      })
+    );
   }
 
   public trackByCollection(index: number, collection: CollectionModel): string {
@@ -209,14 +227,17 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.notificationService.error(message);
   }
 
-  public onImportCollection(importInfo: { result: string, name: string, format: string }) {
+  public onImportCollection(importInfo: {result: string; name: string; format: string}) {
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(new CollectionsAction.Import({
-      format: importInfo.format, importedCollection,
-      callback: (collection) => this.onCreateCollection(collection)
-    }));
+    this.store.dispatch(
+      new CollectionsAction.Import({
+        format: importInfo.format,
+        importedCollection,
+        callback: collection => this.onCreateCollection(collection),
+      })
+    );
   }
 
   public forceLayout() {
@@ -230,7 +251,9 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public onShowAllClicked() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {queryParams: {query: QueryConverter.toString(this.query)}});
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+      queryParams: {query: QueryConverter.toString(this.query)},
+    });
   }
 
   private destroyLayout() {
@@ -245,9 +268,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeOnRoute() {
-    this.activatedRoute.queryParams.pipe(
-      take(1)
-    ).subscribe(queryParams => {
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe(queryParams => {
       const action = queryParams['action'];
       if (action && action === QueryAction.CreateCollection) {
         this.createNewCollection();
@@ -256,56 +277,73 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         delete myQueryParams.action;
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
-          queryParams: myQueryParams
+          queryParams: myQueryParams,
         });
       }
     });
   }
 
   private subscribeOnNavigation() {
-    const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode))
-    ).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.query = navigation.query;
-    });
+    const navigationSubscription = this.store
+      .select(selectNavigation)
+      .pipe(
+        filter(navigation =>
+          Boolean(
+            navigation &&
+              navigation.workspace &&
+              navigation.workspace.organizationCode &&
+              navigation.workspace.projectCode
+          )
+        )
+      )
+      .subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        this.query = navigation.query;
+      });
     this.subscriptions.add(navigationSubscription);
 
-    const projectSubscription = this.store.select(selectProjectByWorkspace).pipe(
-      filter(project => !isNullOrUndefined(project)
-      )).subscribe(project => this.project = project);
+    const projectSubscription = this.store
+      .select(selectProjectByWorkspace)
+      .pipe(filter(project => !isNullOrUndefined(project)))
+      .subscribe(project => (this.project = project));
     this.subscriptions.add(projectSubscription);
   }
 
   private subscribeOnCollections() {
-    const collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
-    ).subscribe(([collections, user]) => {
-      this.collections = this.sortCollectionsFromStore(collections);
-    });
+    const collectionsSubscription = this.store
+      .select(selectCollectionsByQuery)
+      .pipe(withLatestFrom(this.store.select(selectCurrentUserForWorkspace)))
+      .subscribe(([collections, user]) => {
+        this.collections = this.sortCollectionsFromStore(collections);
+      });
     this.subscriptions.add(collectionsSubscription);
 
-    const loadedSubscription = this.store.select(selectCollectionsLoaded)
-      .subscribe(loaded => this.collectionsLoaded = loaded);
+    const loadedSubscription = this.store
+      .select(selectCollectionsLoaded)
+      .subscribe(loaded => (this.collectionsLoaded = loaded));
     this.subscriptions.add(loadedSubscription);
   }
 
   private sortCollectionsFromStore(collections: CollectionModel[]): CollectionModel[] {
-    const uncreatedCollections = this.collections && this.collections.filter(collection => !collection.id) || [];
+    const uncreatedCollections = (this.collections && this.collections.filter(collection => !collection.id)) || [];
     this.filterCorrelationIds(uncreatedCollections, collections);
 
     const collectionsCopy = [...collections];
 
     const newCollections = [];
     for (let i = 0; i < this.correlationIdsOrder.length; i++) {
-      const indexInCreated = collectionsCopy.findIndex(collection => collection.correlationId === this.correlationIdsOrder[i]);
+      const indexInCreated = collectionsCopy.findIndex(
+        collection => collection.correlationId === this.correlationIdsOrder[i]
+      );
       if (indexInCreated !== -1) {
         newCollections.push(collectionsCopy[indexInCreated]);
         collectionsCopy.splice(indexInCreated, 1);
         continue;
       }
 
-      const uncreatedCollection = uncreatedCollections.find(collection => collection.correlationId === this.correlationIdsOrder[i]);
+      const uncreatedCollection = uncreatedCollections.find(
+        collection => collection.correlationId === this.correlationIdsOrder[i]
+      );
       if (uncreatedCollection) {
         newCollections.push(uncreatedCollection);
       }
@@ -316,23 +354,33 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private filterCorrelationIds(uncreatedCollections: CollectionModel[], newCollections: CollectionModel[]) {
     const uncreatedCorrelationIds = uncreatedCollections.map(collection => collection.correlationId);
-    const currentUsedCorrelationIds = newCollections.filter(collection => collection.correlationId)
+    const currentUsedCorrelationIds = newCollections
+      .filter(collection => collection.correlationId)
       .map(collection => collection.correlationId)
       .concat(uncreatedCorrelationIds);
 
-    this.correlationIdsOrder = this.correlationIdsOrder.filter(correlationId => currentUsedCorrelationIds.includes(correlationId));
+    this.correlationIdsOrder = this.correlationIdsOrder.filter(correlationId =>
+      currentUsedCorrelationIds.includes(correlationId)
+    );
   }
 
   private deleteInitializedPostIt(collection: CollectionModel) {
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to delete this collection?'});
+    const message = this.i18n({
+      id: 'collection.delete.dialog.message',
+      value: 'Do you really want to delete this collection?',
+    });
 
-    this.store.dispatch(new NotificationsAction.Confirm(
-      {
+    this.store.dispatch(
+      new NotificationsAction.Confirm({
         title,
         message,
-        action: new CollectionsAction.Delete({collectionId: collection.id, callback: (collectionId) => this.onRemoveCollection(collectionId)})
-      }));
+        action: new CollectionsAction.Delete({
+          collectionId: collection.id,
+          callback: collectionId => this.onRemoveCollection(collectionId),
+        }),
+      })
+    );
   }
 
   private deleteUninitializedPostIt(collection: CollectionModel) {
@@ -364,12 +412,12 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     if (numUncreated % UNCREATED_THRESHOLD === 0) {
       const message = this.i18n({
         id: 'collections.postit.empty.info',
-        value: 'Looks like you have lot of empty collections. Is it okay? I would suggest to fill in their names or delete them.'
+        value:
+          'Looks like you have lot of empty collections. Is it okay? I would suggest to fill in their names or delete them.',
       });
 
       this.notificationService.info(message);
     }
-
   }
 
   private workspacePath(): string {

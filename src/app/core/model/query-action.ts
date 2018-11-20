@@ -18,5 +18,5 @@
  */
 
 export const enum QueryAction {
-  CreateCollection = 'create-collection'
+  CreateCollection = 'create-collection',
 }

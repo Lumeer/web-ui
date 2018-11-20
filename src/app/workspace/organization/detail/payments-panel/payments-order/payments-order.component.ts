@@ -33,10 +33,9 @@ import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 @Component({
   selector: 'payments-order',
   templateUrl: './payments-order.component.html',
-  styleUrls: ['./payments-order.component.scss']
+  styleUrls: ['./payments-order.component.scss'],
 })
 export class PaymentsOrderComponent implements OnInit {
-
   private static CZK_FULL = 205;
   private static CZK_SALE = 169;
   private static EUR_FULL = 8.0;
@@ -48,7 +47,7 @@ export class PaymentsOrderComponent implements OnInit {
   public discountDescription: string;
 
   @Output()
-  public pay = new EventEmitter<{users: number, months: number, currency: string, amount: number, start: Date}>();
+  public pay = new EventEmitter<{users: number; months: number; currency: string; amount: number; start: Date}>();
 
   public subscriptionLength: string;
 
@@ -75,10 +74,11 @@ export class PaymentsOrderComponent implements OnInit {
   public trial: boolean = true; // are we on a trial subscription?
   public serviceLimits: ServiceLimitsModel;
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>) {
-    this.discountDescription = this.i18n({ id: 'organizations.tab.detail.order.discount', value: 'Special Early Bird Prices!' });
+  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {
+    this.discountDescription = this.i18n({
+      id: 'organizations.tab.detail.order.discount',
+      value: 'Special Early Bird Prices!',
+    });
   }
 
   public ngOnInit() {
@@ -86,7 +86,8 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   private subscribeToStore() {
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
+    this.serviceLimitsSubscription = this.store
+      .select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
         this.serviceLimits = serviceLimits;
@@ -117,19 +118,36 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   private calculatePrice() {
-    this.discount = this.subscriptionLength.indexOf(this.i18n({ id: 'organizations.tab.detail.order.term', value: 'year' })) > 0;
+    this.discount =
+      this.subscriptionLength.indexOf(this.i18n({id: 'organizations.tab.detail.order.term', value: 'year'})) > 0;
     this.months = +this.subscriptionLength.split(' ')[0] * (this.discount ? 12 : 1);
 
     switch (this.currency) {
-      case 'EUR': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.EUR_SALE : PaymentsOrderComponent.EUR_FULL);
-      case 'USD': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.USD_SALE : PaymentsOrderComponent.USD_FULL);
-      case 'CZK': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL);
+      case 'EUR':
+        return this.calculatePriceFromMonthly(
+          this.discount ? PaymentsOrderComponent.EUR_SALE : PaymentsOrderComponent.EUR_FULL
+        );
+      case 'USD':
+        return this.calculatePriceFromMonthly(
+          this.discount ? PaymentsOrderComponent.USD_SALE : PaymentsOrderComponent.USD_FULL
+        );
+      case 'CZK':
+        return this.calculatePriceFromMonthly(
+          this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL
+        );
     }
   }
 
   private calculatePriceFromMonthly(monthlyPrice: number): number {
-    return Math.round(this.months * this.numberOfUsers * monthlyPrice
-      * (this.discountAmount > 0 ? (this.discountAmount / 100) : 1) * 100) / 100;
+    return (
+      Math.round(
+        this.months *
+          this.numberOfUsers *
+          monthlyPrice *
+          (this.discountAmount > 0 ? this.discountAmount / 100 : 1) *
+          100
+      ) / 100
+    );
   }
 
   public sliderValue($event) {
@@ -153,10 +171,11 @@ export class PaymentsOrderComponent implements OnInit {
         break;
     }
     this.price = this.calculatePrice();
-    this.pricePerUser = Math.round(this.price / this.months / this.numberOfUsers * 100) / 100;
+    this.pricePerUser = Math.round((this.price / this.months / this.numberOfUsers) * 100) / 100;
 
     if (this.discountAmount > 0) {
-      this.discountInfoPerUser = this.prefix + (Math.round(this.pricePerUser * (100 / this.discountAmount) * 100) / 100) + this.suffix;
+      this.discountInfoPerUser =
+        this.prefix + Math.round(this.pricePerUser * (100 / this.discountAmount) * 100) / 100 + this.suffix;
       this.discountInfo = Math.round(this.price * (100 / this.discountAmount) * 100) / 100;
     } else {
       this.discountInfoPerUser = '';
@@ -165,7 +184,13 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   public placeOrder() {
-    this.pay.emit({ months: this.months, users: this.numberOfUsers, amount: this.price, currency: this.currency, start: this.startDate });
+    this.pay.emit({
+      months: this.months,
+      users: this.numberOfUsers,
+      amount: this.price,
+      currency: this.currency,
+      start: this.startDate,
+    });
   }
 
   public updateStartDate($event) {

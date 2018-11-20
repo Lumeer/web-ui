@@ -16,24 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.module';
 import {SharedModule} from '../../../shared/shared.module';
+import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.module';
+import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {PostItPerspectiveModule} from '../post-it/post-it-perspective.module';
+import {EmptyDataComponent} from './all/empty-data/empty-data.component';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
+import {SearchDocumentsModule} from './documents/search-documents.module';
 import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
+import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
-import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
-import {EmptyDataComponent} from './all/empty-data/empty-data.component';
-import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
-import {SearchDocumentsModule} from './documents/search-documents.module';
 
 @NgModule({
   imports: [
@@ -43,7 +42,7 @@ import {SearchDocumentsModule} from './documents/search-documents.module';
     SearchBoxModule,
     WarningMessageModule,
     SearchPerspectiveRoutingModule,
-    SearchDocumentsModule
+    SearchDocumentsModule,
   ],
   declarations: [
     SearchAllComponent,
@@ -54,22 +53,15 @@ import {SearchDocumentsModule} from './documents/search-documents.module';
     SearchViewsComponent,
     EmptyDataComponent,
     EmptyViewsComponent,
-    ViewDetailComponent
+    ViewDetailComponent,
   ],
   entryComponents: [
     SearchAllComponent,
     SearchCollectionsComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
-    SearchViewsComponent
+    SearchViewsComponent,
   ],
-  exports: [
-    SearchPerspectiveComponent,
-    ViewDetailComponent
-  ]
+  exports: [SearchPerspectiveComponent, ViewDetailComponent],
 })
-export class SearchPerspectiveModule {
-
-}
-
-export default SearchPerspectiveModule;
+export class SearchPerspectiveModule {}

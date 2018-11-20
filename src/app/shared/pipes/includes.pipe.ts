@@ -20,12 +20,10 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'includes'
+  name: 'includes',
 })
 export class IncludesPipe implements PipeTransform {
-
   public transform(items: any[], item: any): boolean {
     return items && items.includes(item);
   }
-
 }

@@ -28,17 +28,16 @@ import {selectCollectionsDictionary} from '../../../../core/store/collections/co
 import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
-import {createMapMarker, parseCoordinates} from '../../../../core/store/maps/map.utils';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
+import {createMapMarker, parseCoordinates} from './render/map.utils';
 
 @Component({
   selector: 'map-content',
   templateUrl: './map-content.component.html',
   styleUrls: ['./map-content.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapContentComponent implements OnInit {
-
   @Input()
   public collections: CollectionModel[] = [];
 
@@ -50,9 +49,7 @@ export class MapContentComponent implements OnInit {
 
   public markers$: Observable<Marker[]>;
 
-  constructor(private geocodingApiService: GeocodingApiService,
-              private store$: Store<{}>) {
-  }
+  constructor(private geocodingApiService: GeocodingApiService, private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindMarkers();
@@ -85,22 +82,29 @@ export class MapContentComponent implements OnInit {
   private populateAddressProperties(propertiesList: MapMarkerProperties[]): Observable<MapMarkerProperties[]> {
     const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
     return this.geocodingApiService.convertAddressesToCoordinates(addresses).pipe(
-      map(addressCoordinatesMap => propertiesList.reduce((addressPropertiesList, properties) => {
-        const coordinates = addressCoordinatesMap[properties.document.data[properties.attributeId]];
-        if (coordinates) {
-          const addressProperties: MapMarkerProperties = {...properties, coordinates, attributeType: MapAttributeType.Address};
-          return addressPropertiesList.concat(addressProperties);
-        }
-        return addressPropertiesList;
-      }, []))
+      map(addressCoordinatesMap =>
+        propertiesList.reduce((addressPropertiesList, properties) => {
+          const coordinates = addressCoordinatesMap[properties.document.data[properties.attributeId]];
+          if (coordinates) {
+            const addressProperties: MapMarkerProperties = {
+              ...properties,
+              coordinates,
+              attributeType: MapAttributeType.Address,
+            };
+            return addressPropertiesList.concat(addressProperties);
+          }
+          return addressPropertiesList;
+        }, [])
+      )
     );
   }
-
 }
 
-function createMarkerPropertiesList(documents: DocumentModel[],
-                                 attributeIdsMap: AttributeIdsMap,
-                                 collectionsMap: {[id: string]: CollectionModel}): MapMarkerProperties[] {
+function createMarkerPropertiesList(
+  documents: DocumentModel[],
+  attributeIdsMap: AttributeIdsMap,
+  collectionsMap: {[id: string]: CollectionModel}
+): MapMarkerProperties[] {
   return documents.reduce((propertiesList, document) => {
     const attributeIds = attributeIdsMap[document.collectionId] || [];
     const attributeId = attributeIds.find(id => !!document.data[id]);
@@ -122,14 +126,21 @@ function populateCoordinateProperties(propertiesList: MapMarkerProperties[]): Ma
     const value = properties.document.data[properties.attributeId];
     const coordinates = parseCoordinates(value);
     if (coordinates) {
-      const coordinateProperties: MapMarkerProperties = {...properties, coordinates, attributeType: MapAttributeType.Coordinates};
+      const coordinateProperties: MapMarkerProperties = {
+        ...properties,
+        coordinates,
+        attributeType: MapAttributeType.Coordinates,
+      };
       return coordinatePropertiesList.concat(coordinateProperties);
     }
     return coordinatePropertiesList;
   }, []);
 }
 
-function filterUninitializedProperties(allProperties: MapMarkerProperties[], coordinateProperties: MapMarkerProperties[]): MapMarkerProperties[] {
+function filterUninitializedProperties(
+  allProperties: MapMarkerProperties[],
+  coordinateProperties: MapMarkerProperties[]
+): MapMarkerProperties[] {
   const documentIdsMap = new Set(coordinateProperties.map(properties => properties.document.id));
   return allProperties.filter(properties => !documentIdsMap.has(properties.document.id));
 }

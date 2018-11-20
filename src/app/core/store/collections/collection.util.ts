@@ -54,21 +54,27 @@ export function mergeCollections(collectionsA: CollectionModel[], collectionsB: 
   return collectionsA.concat(collectionsBToAdd);
 }
 
-export function getCollectionsIdsFromView(view: ViewModel, linkTypes: LinkTypeModel[], documents: DocumentModel[]): string[] | null {
+export function getCollectionsIdsFromView(
+  view: ViewModel,
+  linkTypes: LinkTypeModel[],
+  documents: DocumentModel[]
+): string[] | null {
   if (!view) {
     return null;
   }
 
   const query = view.query || {};
-  const collectionIds = [...query && query.collectionIds || []];
+  const collectionIds = [...((query && query.collectionIds) || [])];
   collectionIds.push(...getCollectionsIdsFromFilters(query.filters));
 
-  const linkTypesFromView = (query.linkTypeIds || []).map(id => linkTypes.find(linkType => linkType.id === id))
+  const linkTypesFromView = (query.linkTypeIds || [])
+    .map(id => linkTypes.find(linkType => linkType.id === id))
     .filter(linkType => !!linkType);
 
   collectionIds.push(...getCollectionsIdsFromLinkTypes(linkTypesFromView));
 
-  const documentsFromView = (query.documentIds || []).map(id => documents.find(document => document.id === id))
+  const documentsFromView = (query.documentIds || [])
+    .map(id => documents.find(document => document.id === id))
     .filter(document => !!document);
 
   collectionIds.push(...getCollectionsIdsFromDocuments(documentsFromView));
@@ -80,9 +86,14 @@ export function getCollectionsIdsFromFilters(filters: string[]): string[] {
   if (!filters) {
     return [];
   }
-  return filters && filters.map(filter => QueryConverter.parseFilter(filter))
-    .filter(filter => !!filter)
-    .map(filter => filter.collectionId) || [];
+  return (
+    (filters &&
+      filters
+        .map(filter => QueryConverter.parseFilter(filter))
+        .filter(filter => !!filter)
+        .map(filter => filter.collectionId)) ||
+    []
+  );
 }
 
 function getCollectionsIdsFromLinkTypes(linkTypes: LinkTypeModel[]): string[] {

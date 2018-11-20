@@ -26,14 +26,11 @@ import {CommonAction, CommonActionType} from './common.action';
 
 @Injectable()
 export class CommonEffects {
-
   @Effect({dispatch: false})
   public executeCallback$: Observable<Action> = this.actions$.pipe(
     ofType<CommonAction.ExecuteCallback>(CommonActionType.EXECUTE_CALLBACK),
     tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
   );
 
-  constructor(private actions$: Actions) {
-  }
-
+  constructor(private actions$: Actions) {}
 }

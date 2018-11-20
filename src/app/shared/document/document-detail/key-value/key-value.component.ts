@@ -23,10 +23,9 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: 'key-value',
   templateUrl: './key-value.component.html',
-  styleUrls: ['./key-value.component.scss']
+  styleUrls: ['./key-value.component.scss'],
 })
 export class KeyValueComponent {
-
   @Input()
   public key: string;
 
@@ -54,7 +53,7 @@ export class KeyValueComponent {
   @Input()
   public warning: string = '';
 
-  constructor(public i18n: I18n) { }
+  constructor(public i18n: I18n) {}
 
   public onNewKey($event: string) {
     this.key = $event;

@@ -17,26 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ErrorHandler, Injectable} from '@angular/core';
-import * as Raven from 'raven-js';
-import {environment} from '../../../environments/environment';
+import {} from 'jasmine';
+import {escapeStringForRegex} from './string.utils';
 
-if (environment.sentryDsn) {
-  Raven.config(environment.sentryDsn, {
-    release: environment.buildNumber,
-    environment: environment.name || ''
-  }).install();
-}
-
-@Injectable()
-export class RavenErrorHandler implements ErrorHandler {
-
-  public handleError(error: any): void {
-    console.error(error);
-
-    if (environment.sentryDsn) {
-      Raven.captureException(error.originalError || error);
-    }
-  }
-
-}
+describe('escapeStringForRegex()', () => {
+  it('should escape two plus signs', () => {
+    expect(escapeStringForRegex('C++')).toEqual('C\\+\\+');
+  });
+});

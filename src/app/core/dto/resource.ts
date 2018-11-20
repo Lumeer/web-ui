@@ -20,7 +20,6 @@
 import {Permissions} from './permissions';
 
 export interface Resource {
-
   id?: string;
   code?: string;
   name: string;
@@ -29,5 +28,4 @@ export interface Resource {
   description: string;
   nonRemovable?: boolean;
   permissions?: Permissions;
-
 }

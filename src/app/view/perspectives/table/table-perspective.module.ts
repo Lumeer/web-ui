@@ -36,11 +36,13 @@ import {TableCellGroupComponent} from './body/rows/cell-group/table-cell-group.c
 import {TableLinkCellComponent} from './body/rows/linked-rows/link-cell/table-link-cell.component';
 import {TableLinkedRowComponent} from './body/rows/linked-rows/linked-row/table-linked-row.component';
 import {TableLinkedRowsComponent} from './body/rows/linked-rows/table-linked-rows.component';
+import {TableHierarchyCellMenuComponent} from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
 import {TableHierarchyCellComponent} from './body/rows/primary-row/hierarchy-cell/table-hierarchy-cell.component';
 import {TableRowNumbersComponent} from './body/rows/primary-row/row-numbers/table-row-numbers.component';
 import {TablePrimaryRowComponent} from './body/rows/primary-row/table-primary-row.component';
 import {TableRowsComponent} from './body/rows/table-rows.component';
 import {TableBodyComponent} from './body/table-body.component';
+import {TableHeaderAddButtonComponent} from './header/add-button/table-header-add-button.component';
 import {TableCaptionComponent} from './header/collection/caption/table-caption.component';
 import {TableHeaderCollectionComponent} from './header/collection/table-header-collection.component';
 import {TableHiddenColumnComponent} from './header/column-group/hidden-column/table-hidden-column.component';
@@ -48,16 +50,13 @@ import {TableAttributeSuggestionsComponent} from './header/column-group/single-c
 import {TableColumnContextMenuComponent} from './header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableSingleColumnComponent} from './header/column-group/single-column/table-single-column.component';
 import {TableColumnGroupComponent} from './header/column-group/table-column-group.component';
+import {TableHierarchyColumnComponent} from './header/hierarchy-column/table-hierarchy-column.component';
 import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
-import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
-import { TableHierarchyColumnComponent } from './header/hierarchy-column/table-hierarchy-column.component';
-import { TableHierarchyCellMenuComponent } from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
-import { TableHeaderAddButtonComponent } from './header/add-button/table-header-add-button.component';
 
 @NgModule({
   imports: [
@@ -69,7 +68,6 @@ import { TableHeaderAddButtonComponent } from './header/add-button/table-header-
     ResizableModule,
     InfiniteScrollModule,
     TablePipesModule,
-    TablePerspectiveRoutingModule
   ],
   declarations: [
     TablePerspectiveComponent,
@@ -104,9 +102,7 @@ import { TableHeaderAddButtonComponent } from './header/add-button/table-header-
     TableHierarchyCellMenuComponent,
     TableHeaderAddButtonComponent,
   ],
-  exports: [
-    TablePerspectiveComponent
-  ]
+  entryComponents: [TablePerspectiveComponent],
+  exports: [TablePerspectiveComponent],
 })
-export class TablePerspectiveModule {
-}
+export class TablePerspectiveModule {}

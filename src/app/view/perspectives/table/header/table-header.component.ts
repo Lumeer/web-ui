@@ -16,9 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ChangeDetectionStrategy, Component, Input, SimpleChange, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {selectAllCollections} from 'src/app/core/store/collections/collections.state';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
@@ -28,19 +30,29 @@ import {TablesAction} from '../../../../core/store/tables/tables.action';
   selector: 'table-header',
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderComponent {
-
+export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public table: TableModel;
 
   @Input()
   public canManageConfig: boolean;
 
+  public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(private store$: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.bindSingleCollection();
+  }
+
+  private bindSingleCollection() {
+    this.singleCollection$ = this.store$.pipe(
+      select(selectAllCollections),
+      map(collections => collections.length === 1)
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -53,7 +65,7 @@ export class TableHeaderComponent {
     return {
       tableId: this.table.id,
       partIndex: null,
-      columnPath: []
+      columnPath: [],
     };
   }
 
@@ -64,7 +76,6 @@ export class TableHeaderComponent {
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
-
 }
 
 function hasTableIdChanged(change: SimpleChange): boolean {

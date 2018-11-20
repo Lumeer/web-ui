@@ -33,7 +33,6 @@ import {selectLinkTypesLoaded} from './link-types.state';
 
 @Injectable()
 export class LinkTypesEffects {
-
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
@@ -43,9 +42,9 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkTypes().pipe(
         map(dtos => dtos.map(dto => LinkTypeConverter.fromDto(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
-        catchError((error) => of(new LinkTypesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -76,9 +75,9 @@ export class LinkTypesEffects {
 
           return actions;
         }),
-        catchError((error) => of(new LinkTypesAction.CreateFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.CreateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -100,9 +99,9 @@ export class LinkTypesEffects {
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
         map(dto => LinkTypeConverter.fromDto(dto)),
         map(linkType => new LinkTypesAction.UpdateSuccess({linkType: linkType})),
-        catchError((error) => of(new LinkTypesAction.UpdateFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -118,10 +117,12 @@ export class LinkTypesEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Delete>(LinkTypesActionType.DELETE),
-    mergeMap(action => this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
-      map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
-      catchError((error) => of(new LinkTypesAction.DeleteFailure({error: error})))
-    ))
+    mergeMap(action =>
+      this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
+        map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
+        catchError(error => of(new LinkTypesAction.DeleteFailure({error: error})))
+      )
+    )
   );
 
   @Effect()
@@ -134,10 +135,10 @@ export class LinkTypesEffects {
     })
   );
 
-  constructor(private actions$: Actions,
-              private i18n: I18n,
-              private linkTypeService: LinkTypeService,
-              private store$: Store<AppState>) {
-  }
-
+  constructor(
+    private actions$: Actions,
+    private i18n: I18n,
+    private linkTypeService: LinkTypeService,
+    private store$: Store<AppState>
+  ) {}
 }

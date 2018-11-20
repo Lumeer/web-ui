@@ -1,6 +1,5 @@
 language: java
-sudo: required
-dist: trusty
+dist: xenial
 cache:
   directories:
     - ~/.npm
@@ -16,12 +15,13 @@ addons:
       - xvfb
       - psmisc
 before_install:
-  - "nvm install v8.11.4"
-  - "nvm use v8.11.4"
-  - "npm i -g npm@latest"
-#install:
-#  - "npm install"
+  - 'sudo apt-get install -y libgconf-2-4'
+  - 'nvm install v8.11.4'
+  - 'nvm use v8.11.4'
+  - 'npm i -g npm@latest'
+install:
+  - npm install
 node_js:
-  - "lts/*"
+  - 'lts/*'
 script:
-  - "./travis.sh"
+  - './travis.sh'

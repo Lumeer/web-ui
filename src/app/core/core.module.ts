@@ -25,7 +25,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {SharedModule} from '../shared/shared.module';
-import {RavenErrorHandler} from './error/raven.error-handler';
+import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
@@ -58,15 +58,13 @@ import {ProjectValidators} from './validators/project.validators';
     ClickOutsideModule,
     GuardsModule,
     BrowserAnimationsModule,
-    NotificationsModule
+    NotificationsModule,
   ],
-  declarations: [
-    HomeComponent
-  ],
+  declarations: [HomeComponent],
   providers: [
     {
       provide: ErrorHandler,
-      useClass: RavenErrorHandler
+      useClass: SentryErrorHandler,
     },
     httpInterceptorProviders,
     CollectionService,
@@ -83,19 +81,14 @@ import {ProjectValidators} from './validators/project.validators';
     EventService,
     CollectionValidators,
     OrganizationValidators,
-    ProjectValidators
+    ProjectValidators,
   ],
-  exports: [
-    HomeComponent,
-    NotificationsModule,
-  ]
+  exports: [HomeComponent, NotificationsModule],
 })
 export class CoreModule {
-
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error('CoreModule has already been loaded. Import CoreModule only in the AppModule!');
     }
   }
-
 }

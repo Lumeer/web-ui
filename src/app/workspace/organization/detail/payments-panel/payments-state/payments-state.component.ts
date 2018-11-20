@@ -36,20 +36,16 @@ import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 @Component({
   selector: 'payments-state',
   templateUrl: './payments-state.component.html',
-  styleUrls: ['./payments-state.component.scss']
+  styleUrls: ['./payments-state.component.scss'],
 })
 export class PaymentsStateComponent implements OnInit, OnDestroy {
-
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
   public serviceLimits: ServiceLimitsModel;
   private serviceLimitsSubscription: Subscription;
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>) {
-  }
+  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -57,13 +53,15 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.organizationSubscription = this.store
+      .select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+      .subscribe(organization => (this.organization = organization));
 
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
+    this.serviceLimitsSubscription = this.store
+      .select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
-      .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
+      .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
   }
 
   private requestData() {
@@ -87,5 +85,4 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   public isBasic(): boolean {
     return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.BASIC;
   }
-
 }

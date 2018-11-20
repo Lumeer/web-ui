@@ -21,7 +21,6 @@
  * Wrapper around Window.localStorage of WebStorage API
  */
 export class LocalStorage {
-
   public static get(key: string): any {
     const data: string = localStorage.getItem(key);
     return data ? JSON.parse(data) : null;
@@ -34,5 +33,4 @@ export class LocalStorage {
   public static remove(key: string) {
     localStorage.removeItem(key);
   }
-
 }

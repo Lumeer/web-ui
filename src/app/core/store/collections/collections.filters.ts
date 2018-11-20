@@ -24,28 +24,45 @@ import {getCollectionsIdsFromFilters, mergeCollections} from './collection.util'
 import {groupDocumentsByCollection} from '../documents/document.utils';
 import {filterDocumentsByFulltext} from '../documents/documents.filters';
 
-export function filterCollectionsByQuery(collections: CollectionModel[], documents: DocumentModel[], query: QueryModel): CollectionModel[] {
-  collections = collections.filter(collection => typeof(collection) === 'object');
+export function filterCollectionsByQuery(
+  collections: CollectionModel[],
+  documents: DocumentModel[],
+  query: QueryModel
+): CollectionModel[] {
+  collections = collections.filter(collection => typeof collection === 'object');
 
   if (!query || !containsCollectionsQueryField(query)) {
     return collections;
   }
 
   let filteredCollections = filterCollectionsByFulltext(collections, documents, query.fulltext);
-  filteredCollections = mergeCollections(filteredCollections, filterCollectionsByCollectionIds(collections, query.collectionIds));
+  filteredCollections = mergeCollections(
+    filteredCollections,
+    filterCollectionsByCollectionIds(collections, query.collectionIds)
+  );
   filteredCollections = mergeCollections(filteredCollections, filterCollectionsByFilters(collections, query.filters));
-  filteredCollections = mergeCollections(filteredCollections, filterCollectionsByDocumentsIds(collections, documents, query.documentIds));
+  filteredCollections = mergeCollections(
+    filteredCollections,
+    filterCollectionsByDocumentsIds(collections, documents, query.documentIds)
+  );
 
   return filteredCollections;
 }
 
 function containsCollectionsQueryField(query: QueryModel): boolean {
-  return (query.collectionIds && query.collectionIds.length > 0)
-    || (query.documentIds && query.documentIds.length > 0)
-    || (query.filters && query.filters.length > 0) || !!query.fulltext;
+  return (
+    (query.collectionIds && query.collectionIds.length > 0) ||
+    (query.documentIds && query.documentIds.length > 0) ||
+    (query.filters && query.filters.length > 0) ||
+    !!query.fulltext
+  );
 }
 
-function filterCollectionsByFulltext(collections: CollectionModel[], documents: DocumentModel[], fulltext: string): CollectionModel[] {
+function filterCollectionsByFulltext(
+  collections: CollectionModel[],
+  documents: DocumentModel[],
+  fulltext: string
+): CollectionModel[] {
   if (!fulltext) {
     return [];
   }
@@ -76,7 +93,11 @@ function filterCollectionsByFilters(collections: CollectionModel[], filters: str
   return filterCollectionsByCollectionIds(collections, collectionIdsFromFilters);
 }
 
-function filterCollectionsByDocumentsIds(collections: CollectionModel[], documents: DocumentModel[], documentsIds: string[]): CollectionModel[] {
+function filterCollectionsByDocumentsIds(
+  collections: CollectionModel[],
+  documents: DocumentModel[],
+  documentsIds: string[]
+): CollectionModel[] {
   if (!documentsIds || documentsIds.length === 0) {
     return [];
   }

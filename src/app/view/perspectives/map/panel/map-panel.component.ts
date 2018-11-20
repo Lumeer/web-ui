@@ -27,21 +27,20 @@ import {MapsAction} from '../../../../core/store/maps/maps.action';
   selector: 'map-panel',
   templateUrl: './map-panel.component.html',
   styleUrls: ['./map-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapPanelComponent {
-
   @Input()
   public map: MapModel;
 
   @Input()
   public collections: CollectionModel[];
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public onSelect(collection: CollectionModel, [index, attributeId]: [number, string]) {
-    this.store$.dispatch(new MapsAction.SelectAttribute({mapId: this.map.id, collectionId: collection.id, index, attributeId}));
+    this.store$.dispatch(
+      new MapsAction.SelectAttribute({mapId: this.map.id, collectionId: collection.id, index, attributeId})
+    );
   }
-
 }

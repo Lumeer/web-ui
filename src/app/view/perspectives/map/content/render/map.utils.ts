@@ -19,9 +19,9 @@
 
 import * as Coordinates from 'coordinate-parser';
 import {DivIcon, divIcon, LatLngLiteral, Map, MapOptions, marker, Marker} from 'leaflet';
-import {shadeColor} from '../../../shared/utils/html-modifier';
-import {CollectionModel} from '../collections/collection.model';
-import {MapConfig, MapMarkerProperties} from './map.model';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
+import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
 const MAP_OPTIONS: MapOptions = {
   attributionControl: false,
@@ -32,7 +32,7 @@ export function parseCoordinates(value: string): LatLngLiteral {
     const coordinates = new Coordinates(value);
     return {
       lat: coordinates.getLatitude(),
-      lng: coordinates.getLongitude()
+      lng: coordinates.getLongitude(),
     };
   } catch (error) {
     return null;
@@ -43,7 +43,7 @@ export function createLeafletMap(elementId: string, config: MapConfig) {
   return new Map(elementId, {
     ...MAP_OPTIONS,
     center: config.center,
-    zoom: config.zoom
+    zoom: config.zoom,
   });
 }
 
@@ -52,7 +52,7 @@ export function createMapMarker(properties: MapMarkerProperties): Marker {
 
   // TODO create GeoJSON instead and put properties into it
   return marker(properties.coordinates, {
-    icon: createMapMarkerIcon(properties.collection)
+    icon: createMapMarkerIcon(properties.collection),
   }).bindTooltip(`<b>${defaultAttributeValue}</b>`, {direction: 'bottom'});
 }
 
@@ -64,6 +64,6 @@ function createMapMarkerIcon(collection: CollectionModel): DivIcon {
              <div class="map-marker-icon" style="background-color: ${shadeColor(collection.color, -0.3)}">
                <i class="${collection.icon}"></i>
              </div>
-           </div>`
+           </div>`,
   });
 }

@@ -31,12 +31,10 @@ import {ImportedCollection} from '../dto/imported-collection';
 
 @Injectable()
 export class ImportService {
-
   private workspace: Workspace;
 
-  constructor(private http: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(private http: HttpClient, private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public importFile(format: string, importedCollection: ImportedCollection): Observable<Collection> {
@@ -51,5 +49,4 @@ export class ImportService {
 
     return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }
-
 }
