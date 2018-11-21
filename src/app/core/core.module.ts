@@ -25,7 +25,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {SharedModule} from '../shared/shared.module';
-import {RavenErrorHandler} from './error/raven.error-handler';
+import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
@@ -65,7 +65,7 @@ import {PusherService} from './pusher/pusher.service';
   providers: [
     {
       provide: ErrorHandler,
-      useClass: RavenErrorHandler,
+      useClass: SentryErrorHandler,
     },
     httpInterceptorProviders,
     CollectionService,

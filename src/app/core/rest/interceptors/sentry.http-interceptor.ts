@@ -17,19 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TablePerspectiveComponent} from './table-perspective.component';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import * as Sentry from '@sentry/browser';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {environment} from '../../../../environments/environment';
 
-const tableRoutes: Routes = [
-  {
-    path: '',
-    component: TablePerspectiveComponent,
-  },
-];
+@Injectable()
+export class SentryHttpInterceptor implements HttpInterceptor {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (environment.sentryDsn && error.status !== 402) {
+          Sentry.captureException(error);
+        }
 
-@NgModule({
-  imports: [RouterModule.forChild(tableRoutes)],
-  exports: [RouterModule],
-})
-export class TablePerspectiveRoutingModule {}
+        return throwError(error);
+      })
+    );
+  }
+}

@@ -17,10 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LatLngLiteral} from 'leaflet';
 import {CollectionModel} from '../collections/collection.model';
 import {DocumentModel} from '../documents/document.model';
-import {MapTiles} from './map-tiles';
+
+export enum MapTiles {
+  OpenStreetMap = 'OpenStreetMap',
+  SeznamBasic = 'SeznamBasic',
+}
+
+export interface MapCoordinates {
+  lat: number;
+  lng: number;
+}
 
 export interface MapModel {
   id: string;
@@ -29,7 +37,7 @@ export interface MapModel {
 
 export interface MapConfig {
   attributeIdsMap: AttributeIdsMap;
-  center: LatLngLiteral;
+  center: MapCoordinates;
   tiles: MapTiles;
   zoom: number;
 }
@@ -51,7 +59,7 @@ export interface MapMarkerProperties {
   document: DocumentModel;
   attributeId: string;
   attributeType?: MapAttributeType;
-  coordinates?: LatLngLiteral;
+  coordinates?: MapCoordinates;
 }
 
 export enum MapAttributeType {

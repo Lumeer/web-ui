@@ -14,7 +14,8 @@
                 [query]="query"
                 [canManageConfig]="data.canManageConfig"
                 (scroll)="onBodyScroll($event)"
-                class="flex-grow-1 pl-3">
+                class="flex-grow-1 pl-3"
+                [style.height.px]="((table$ | async)?.config?.rows | rowPositionTop: (table$ | async)?.config?.rows?.length) + 40">
     </table-body>
   </ng-container>
 </div>

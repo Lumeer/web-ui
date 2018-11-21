@@ -37,7 +37,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
-            "styles": ["src/styles.scss", "node_modules/leaflet/dist/leaflet.css"],
+            "styles": ["src/styles.scss"],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/muuri/dist/muuri.min.js",

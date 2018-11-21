@@ -54,6 +54,7 @@
     "@ngrx/store": "^6.1.0",
     "@ngrx/store-devtools": "^6.1.0",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
+    "@sentry/browser": "^4.3.2",
     "angular-resizable-element": "^3.2.2",
     "angulartics2": "^7.0.0",
     "auth0-js": "^9.8.0",
@@ -72,7 +73,6 @@
     "ngx-infinite-scroll": "^6.0.1",
     "plotly.js": "^1.41.3",
     "pusher-js": "^4.3.1",
-    "raven-js": "^3.27.0",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   },
@@ -133,15 +133,11 @@
     },
     {
       "path": "./dist/lumeer/perspectives-map*.js",
-      "maxSize": "10 kB"
+      "maxSize": "50 kB"
     },
     {
       "path": "./dist/lumeer/perspectives-search*.js",
       "maxSize": "20 kB"
-    },
-    {
-      "path": "./dist/lumeer/perspectives-table*.js",
-      "maxSize": "30 kB"
     },
     {
       "path": "./dist/lumeer/polyfills*.js",
@@ -154,6 +150,10 @@
     {
       "path": "./dist/lumeer/scripts*.js",
       "maxSize": "20 kB"
+    },
+    {
+      "path": "./dist/lumeer/styles*css",
+      "maxSize": "40 kB"
     }
   ],
   "husky": {

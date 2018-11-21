@@ -118,7 +118,7 @@ export class TablesEffects {
         },
       });
 
-      const createPartActions: Action[] = query.linkTypeIds.map(
+      const createPartActions: Action[] = (query.linkTypeIds || []).map(
         (linkTypeId, index) =>
           new TablesAction.CreatePart({
             tableId: action.payload.tableId,

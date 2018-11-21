@@ -27,17 +27,19 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import {LayerGroup, Map, Marker} from 'leaflet';
-import {createMapTileLayer} from '../../../../../core/store/maps/map-tiles';
 import {MapConfig, MapModel} from '../../../../../core/store/maps/map.model';
-import {createLeafletMap} from '../../../../../core/store/maps/map.utils';
+import {createMapTileLayer} from './map-tiles';
+import {createLeafletMap} from './map.utils';
 
 @Component({
   selector: 'map-render',
   templateUrl: './map-render.component.html',
-  styleUrls: ['./map-render.component.scss'],
+  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/leaflet/dist/leaflet.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
