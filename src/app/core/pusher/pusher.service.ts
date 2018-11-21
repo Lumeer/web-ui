@@ -37,6 +37,12 @@ import {ViewsAction} from '../store/views/views.action';
 import {ViewConverter} from '../store/views/view.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {CollectionConverter} from '../store/collections/collection.converter';
+import {ContactsAction} from '../store/organizations/contact/contacts.action';
+import {ContactConverter} from '../store/organizations/contact/contact.converter';
+import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
+import {ServiceLimitsConverter} from '../store/organizations/service-limits/service-limits.converter';
+import {PaymentsAction} from '../store/organizations/payment/payments.action';
+import {PaymentConverter} from '../store/organizations/payment/payment.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +53,6 @@ export class PusherService implements OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(private store: Store<AppState>, private authService: AuthService) {
-    console.log('service is used');
     if (environment.pusherKey) {
       this.init();
     }
@@ -69,9 +74,8 @@ export class PusherService implements OnDestroy {
 
   private subscribePusher(user: UserModel): void {
     const thisRef = this;
-    console.log('subscribing to pusher');
 
-    Pusher.logToConsole = true;
+    //Pusher.logToConsole = true;
     this.pusher = new Pusher(environment.pusherKey, {
       cluster: environment.pusherCluster,
       authEndpoint: `${environment.apiUrl}/rest/pusher`,
@@ -116,7 +120,9 @@ export class PusherService implements OnDestroy {
       thisRef.store.dispatch(new ViewsAction.CreateSuccess({view: ViewConverter.convertToModel(data)}));
     });
     this.channel.bind('View:update', function(data) {
-      thisRef.store.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data)}));
+      thisRef.store.dispatch(
+        new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data), skipNotify: true})
+      );
     });
     this.channel.bind('View:remove', function(data) {
       thisRef.store.dispatch(
@@ -142,6 +148,24 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:remove', function(data) {
       thisRef.store.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
+    });
+
+    this.channel.bind('CompanyContact:update', function(data) {
+      thisRef.store.dispatch(new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(data)}));
+    });
+
+    this.channel.bind('ServiceLimits:update', function(data) {
+      thisRef.store.dispatch(
+        new ServiceLimitsAction.GetServiceLimitsSuccess({
+          serviceLimits: ServiceLimitsConverter.fromDto(data.organizationId, data.entity),
+        })
+      );
+    });
+
+    this.channel.bind('Payment:update', function(data) {
+      thisRef.store.dispatch(
+        new PaymentsAction.GetPaymentSuccess({payment: PaymentConverter.fromDto(data.organizationId, data.entity)})
+      );
     });
   }
 

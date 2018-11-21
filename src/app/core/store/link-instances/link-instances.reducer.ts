@@ -31,10 +31,7 @@ export function linkInstancesReducer(
     case LinkInstancesActionType.CREATE_SUCCESS:
       return linkInstancesAdapter.addOne(action.payload.linkInstance, state);
     case LinkInstancesActionType.UPDATE_SUCCESS:
-      return linkInstancesAdapter.updateOne(
-        {id: action.payload.linkInstance.id, changes: action.payload.linkInstance},
-        state
-      );
+      return linkInstancesAdapter.upsertOne(action.payload.linkInstance, state);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.CLEAR:

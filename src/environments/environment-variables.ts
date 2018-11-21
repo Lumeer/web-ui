@@ -46,7 +46,7 @@ const locale: string = env['I18N_LOCALE'] || 'en';
 const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
-const pusherKey = env['PUSHER_KEY'] || '22b1d531f1fc10719c7c';
+const pusherKey = env['PUSHER_KEY'] || '';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,

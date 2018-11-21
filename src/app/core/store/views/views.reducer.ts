@@ -28,7 +28,7 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     case ViewsActionType.CREATE_SUCCESS:
       return viewsAdapter.addOne(action.payload.view, state);
     case ViewsActionType.UPDATE_SUCCESS:
-      return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
+      return viewsAdapter.upsertOne(action.payload.view, state);
     case ViewsActionType.DELETE_SUCCESS:
       return viewsAdapter.removeOne(action.payload.viewCode, state);
     case ViewsActionType.SET_PERMISSIONS_SUCCESS:

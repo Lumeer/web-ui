@@ -105,7 +105,7 @@ export namespace ViewsAction {
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {view: ViewModel; nextAction?: Action}) {}
+    public constructor(public payload: {view: ViewModel; nextAction?: Action; skipNotify?: boolean}) {}
   }
 
   export class UpdateFailure implements Action {

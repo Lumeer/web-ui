@@ -39,7 +39,7 @@ export function projectsReducer(
     case ProjectsActionType.CREATE_SUCCESS:
       return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:
-      return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
+      return projectsAdapter.upsertOne(action.payload.project, state);
     case ProjectsActionType.DELETE_SUCCESS:
       return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
