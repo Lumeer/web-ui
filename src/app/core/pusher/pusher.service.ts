@@ -24,7 +24,6 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {UserModel} from '../store/users/user.model';
-import {Subscription} from 'rxjs/index';
 import {filter, take} from 'rxjs/internal/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
@@ -50,7 +49,6 @@ import {PaymentConverter} from '../store/organizations/payment/payment.converter
 export class PusherService implements OnDestroy {
   private pusher: any;
   private channel: any;
-  private subscriptions = new Subscription();
 
   constructor(private store: Store<AppState>, private authService: AuthService) {
     if (environment.pusherKey) {
@@ -59,22 +57,18 @@ export class PusherService implements OnDestroy {
   }
 
   public init(): void {
-    this.subscriptions.add(
-      this.store
-        .pipe(
-          select(selectCurrentUser),
-          filter(user => !!user),
-          take(1)
-        )
-        .subscribe(user => {
-          this.subscribePusher(user);
-        })
-    );
+    this.store
+      .pipe(
+        select(selectCurrentUser),
+        filter(user => !!user),
+        take(1)
+      )
+      .subscribe(user => {
+        this.subscribePusher(user);
+      });
   }
 
   private subscribePusher(user: UserModel): void {
-    const thisRef = this;
-
     //Pusher.logToConsole = true;
     this.pusher = new Pusher(environment.pusherKey, {
       cluster: environment.pusherCluster,
@@ -88,92 +82,85 @@ export class PusherService implements OnDestroy {
 
     this.channel = this.pusher.subscribe('private-' + user.id);
 
-    this.channel.bind('Organization:create', function(data) {
-      thisRef.store.dispatch(
-        new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)})
-      );
+    this.channel.bind('Organization:create', data => {
+      this.store.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
-    this.channel.bind('Organization:update', function(data) {
-      thisRef.store.dispatch(
-        new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data)})
-      );
+    this.channel.bind('Organization:update', data => {
+      this.store.dispatch(new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
-    this.channel.bind('Organization:remove', function(data) {
-      thisRef.store.dispatch(new OrganizationsAction.DeleteSuccess({organizationId: data.id}));
+    this.channel.bind('Organization:remove', data => {
+      this.store.dispatch(new OrganizationsAction.DeleteSuccess({organizationId: data.id}));
     });
 
-    this.channel.bind('Project:create', function(data) {
-      thisRef.store.dispatch(
+    this.channel.bind('Project:create', data => {
+      this.store.dispatch(
         new ProjectsAction.CreateSuccess({project: ProjectConverter.fromDto(data.resource, data.parentId)})
       );
     });
-    this.channel.bind('Project:update', function(data) {
-      thisRef.store.dispatch(
+    this.channel.bind('Project:update', data => {
+      this.store.dispatch(
         new ProjectsAction.UpdateSuccess({project: ProjectConverter.fromDto(data.resource, data.parentId)})
       );
     });
-    this.channel.bind('Project:remove', function(data) {
-      thisRef.store.dispatch(new ProjectsAction.DeleteSuccess({projectId: data.id}));
+    this.channel.bind('Project:remove', data => {
+      this.store.dispatch(new ProjectsAction.DeleteSuccess({projectId: data.id}));
     });
 
-    this.channel.bind('View:create', function(data) {
-      thisRef.store.dispatch(new ViewsAction.CreateSuccess({view: ViewConverter.convertToModel(data)}));
+    this.channel.bind('View:create', data => {
+      this.store.dispatch(new ViewsAction.CreateSuccess({view: ViewConverter.convertToModel(data)}));
     });
-    this.channel.bind('View:update', function(data) {
-      thisRef.store.dispatch(
-        new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data), skipNotify: true})
-      );
+    this.channel.bind('View:update', data => {
+      this.store.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data), skipNotify: true}));
     });
-    this.channel.bind('View:remove', function(data) {
-      thisRef.store.dispatch(
+    this.channel.bind('View:remove', data => {
+      this.store.dispatch(
         new ViewsAction.DeleteSuccess({viewCode: data.id}) // backend sends code in id in case of View for simplicity
       );
     });
 
-    this.channel.bind('Collection:create', function(data) {
-      thisRef.store.dispatch(new CollectionsAction.CreateSuccess({collection: CollectionConverter.fromDto(data)}));
+    this.channel.bind('Collection:create', data => {
+      this.store.dispatch(new CollectionsAction.CreateSuccess({collection: CollectionConverter.fromDto(data)}));
     });
-    this.channel.bind('Collection:update', function(data) {
-      thisRef.store.dispatch(new CollectionsAction.UpdateSuccess({collection: CollectionConverter.fromDto(data)}));
+    this.channel.bind('Collection:update', data => {
+      this.store.dispatch(new CollectionsAction.UpdateSuccess({collection: CollectionConverter.fromDto(data)}));
     });
-    this.channel.bind('Collection:remove', function(data) {
-      thisRef.store.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));
-    });
-
-    this.channel.bind('Document:create', function(data) {
-      thisRef.store.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data)}));
-    });
-    this.channel.bind('Document:update', function(data) {
-      thisRef.store.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data)}));
-    });
-    this.channel.bind('Document:remove', function(data) {
-      thisRef.store.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
+    this.channel.bind('Collection:remove', data => {
+      this.store.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));
     });
 
-    this.channel.bind('CompanyContact:update', function(data) {
-      thisRef.store.dispatch(new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(data)}));
+    this.channel.bind('Document:create', data => {
+      this.store.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data)}));
+    });
+    this.channel.bind('Document:update', data => {
+      this.store.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data)}));
+    });
+    this.channel.bind('Document:remove', data => {
+      this.store.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
     });
 
-    this.channel.bind('ServiceLimits:update', function(data) {
-      thisRef.store.dispatch(
+    this.channel.bind('CompanyContact:update', data => {
+      this.store.dispatch(new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(data)}));
+    });
+
+    this.channel.bind('ServiceLimits:update', data => {
+      this.store.dispatch(
         new ServiceLimitsAction.GetServiceLimitsSuccess({
           serviceLimits: ServiceLimitsConverter.fromDto(data.organizationId, data.entity),
         })
       );
     });
 
-    this.channel.bind('Payment:update', function(data) {
-      thisRef.store.dispatch(
+    this.channel.bind('Payment:update', data => {
+      this.store.dispatch(
         new PaymentsAction.GetPaymentSuccess({payment: PaymentConverter.fromDto(data.organizationId, data.entity)})
       );
     });
   }
 
   public ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     if (this.channel) {
       this.channel.unbind_all();
-      this.channel.unsubscribe();
+      this.pusher.unsubscribe();
     }
   }
 }
