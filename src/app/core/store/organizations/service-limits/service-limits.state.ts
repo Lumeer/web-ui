@@ -37,9 +37,12 @@ export const selectAllServiceLimits = createSelector(
   serviceLimitsAdapter.getSelectors().selectAll
 );
 export const selectServiceLimitsByOrganizationId = organizationId =>
-  createSelector(selectAllServiceLimits, serviceLimits => {
-    return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organizationId);
-  });
+  createSelector(
+    selectAllServiceLimits,
+    serviceLimits => {
+      return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organizationId);
+    }
+  );
 export const selectServiceLimitsByWorkspace = createSelector(
   selectAllServiceLimits,
   selectOrganizationByWorkspace,

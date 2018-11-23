@@ -45,19 +45,38 @@ export const initialUsersState: UsersState = usersAdapter.getInitialState({
 
 export const selectUsersState = (state: AppState) => state.users;
 
-const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
-export const selectUsersDictionary = createSelector(selectUsersState, usersAdapter.getSelectors().selectEntities);
-export const selectAllUsers = createSelector(selectAllUsersRaw, users => filterUserFunctions(users));
+const selectAllUsersRaw = createSelector(
+  selectUsersState,
+  usersAdapter.getSelectors().selectAll
+);
+export const selectUsersDictionary = createSelector(
+  selectUsersState,
+  usersAdapter.getSelectors().selectEntities
+);
+export const selectAllUsers = createSelector(
+  selectAllUsersRaw,
+  users => filterUserFunctions(users)
+);
 export const selectUsersLoadedForOrganization = createSelector(
   selectUsersState,
   usersState => usersState.loadedForOrganizationId
 );
 
-export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
+export const selectCurrentUser = createSelector(
+  selectUsersState,
+  usersState => usersState.currentUser
+);
 
-export const selectUsersPending = createSelector(selectUsersState, state => state.pending);
+export const selectUsersPending = createSelector(
+  selectUsersState,
+  state => state.pending
+);
 
-export const selectUserById = (userId: string) => createSelector(selectUsersDictionary, usersMap => usersMap[userId]);
+export const selectUserById = (userId: string) =>
+  createSelector(
+    selectUsersDictionary,
+    usersMap => usersMap[userId]
+  );
 
 export const selectCurrentUserForWorkspace = createSelector(
   selectCurrentUser,
@@ -68,9 +87,13 @@ export const selectCurrentUserForWorkspace = createSelector(
 );
 
 export const selectCurrentUserForOrganization = (organization: OrganizationModel) =>
-  createSelector(selectCurrentUser, selectGroupsDictionary, (user, groups) => {
-    return mapGroupsOnUser(user, organization.id, groups);
-  });
+  createSelector(
+    selectCurrentUser,
+    selectGroupsDictionary,
+    (user, groups) => {
+      return mapGroupsOnUser(user, organization.id, groups);
+    }
+  );
 
 export const selectUsersForWorkspace = createSelector(
   selectAllUsers,
