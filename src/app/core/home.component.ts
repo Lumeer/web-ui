@@ -34,6 +34,7 @@ import {selectCurrentUser} from './store/users/users.state';
 import {DialogService} from '../dialog/dialog.service';
 import {NotificationService} from './notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PusherService} from './pusher/pusher.service';
 
 @Component({
   template: '',

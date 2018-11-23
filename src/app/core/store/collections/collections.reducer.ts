@@ -41,10 +41,7 @@ export function collectionsReducer(
     case CollectionsActionType.IMPORT_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:
-      return collectionsAdapter.updateOne(
-        {id: action.payload.collection.id, changes: action.payload.collection},
-        state
-      );
+      return collectionsAdapter.upsertOne(action.payload.collection, state);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.REMOVE_FAVORITE_SUCCESS:
