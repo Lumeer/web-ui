@@ -10,9 +10,6 @@ Cypress.Commands.add('login', () => {
     scope: 'openid email profile name username groups roles',
   });
 
-  // clear tokens in order to always start as unauthenticated user
-  cy.clearLocalStorage();
-
   // first make the browser open our app so that we use its local storage
   cy.visit('/ui/auth');
 
@@ -22,6 +19,7 @@ Cypress.Commands.add('login', () => {
   // wait for the token
   cy.window({timeout: 30000}).should(() => {
     expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
+    Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
   });
 });
 
@@ -92,5 +90,20 @@ Cypress.Commands.add('dismissAgreement', () => {
       .its('body')
       .its('length')
       .should('gt', 0);
+  });
+});
+
+Cypress.Commands.add('createCollection', (name, icon, color) => {
+  cy.request({
+    method: 'POST',
+    url: Cypress.env('engineUrl') + 'rest/organizations/SRLMR/projects/PRJ1/collections',
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: {
+      name,
+      icon,
+      color,
+    },
   });
 });
