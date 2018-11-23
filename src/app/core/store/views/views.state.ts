@@ -47,25 +47,54 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 
 export const selectViewsState = (state: AppState) => state.views;
 
-export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
-export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
-export const selectViewByCode = (code: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[code]);
-export const selectCurrentView = createSelector(selectNavigation, selectViewsDictionary, (navigation, viewsMap) => {
-  return navigation.workspace && navigation.workspace.viewCode ? viewsMap[navigation.workspace.viewCode] : null;
-});
+export const selectAllViews = createSelector(
+  selectViewsState,
+  viewsAdapter.getSelectors().selectAll
+);
+export const selectViewsDictionary = createSelector(
+  selectViewsState,
+  viewsAdapter.getSelectors().selectEntities
+);
+export const selectViewByCode = (code: string) =>
+  createSelector(
+    selectViewsDictionary,
+    viewsMap => viewsMap[code]
+  );
+export const selectCurrentView = createSelector(
+  selectNavigation,
+  selectViewsDictionary,
+  (navigation, viewsMap) => {
+    return navigation.workspace && navigation.workspace.viewCode ? viewsMap[navigation.workspace.viewCode] : null;
+  }
+);
 
-export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
+export const selectViewsLoaded = createSelector(
+  selectViewsState,
+  state => state.loaded
+);
 
-export const selectViewConfig = createSelector(selectViewsState, views => views.config);
-export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
-export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
+export const selectViewConfig = createSelector(
+  selectViewsState,
+  views => views.config
+);
+export const selectViewSearchConfig = createSelector(
+  selectViewConfig,
+  config => config.search
+);
+export const selectViewTableConfig = createSelector(
+  selectViewConfig,
+  config => config.table
+);
 export const selectViewsByQuery = createSelector(
   selectAllViews,
   selectQuery,
   (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query))
 );
 
-export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
+export const selectViewCursor = createSelector(
+  selectViewsState,
+  state => state.cursor
+);
 
 export const selectPerspectiveConfig = createSelector(
   selectPerspective,

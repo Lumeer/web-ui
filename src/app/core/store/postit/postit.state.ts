@@ -31,7 +31,16 @@ export const initialPostItState: PostItState = {
 
 export const selectPostItState = (state: AppState) => state.postIts;
 
-export const selectPostItConfig = createSelector(selectPostItState, state => state.config);
+export const selectPostItConfig = createSelector(
+  selectPostItState,
+  state => state.config
+);
 
-export const selectPostItsSize = createSelector(selectPostItConfig, config => config.size);
-export const selectPostItsOrder = createSelector(selectPostItConfig, config => config.documentIdsOrder);
+export const selectPostItsSize = createSelector(
+  selectPostItConfig,
+  config => config.size
+);
+export const selectPostItsOrder = createSelector(
+  selectPostItConfig,
+  config => config.documentIdsOrder
+);

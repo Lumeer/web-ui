@@ -36,8 +36,7 @@ export function createMapTileLayer(tiles: MapTiles): TileLayer {
 }
 
 function createOpenStreetMapTileLayer(): TileLayer {
-  return tileLayer('//{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', {
-    foo: 'bar',
+  return tileLayer('//{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: LUMEER_ATTRIBUTION,
     detectRetina: true,
   });
