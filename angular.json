@@ -48,6 +48,42 @@
           "configurations": {
             "production": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "baseline": "3215kb",
+                  "maximumWarning": "3500kb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-detail",
+                  "baseline": "71kb",
+                  "warning": "10%",
+                  "error": "50%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-chart",
+                  "baseline": "2800kb",
+                  "maximumWarning": "3000kb",
+                  "maximumError": "3500kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-map",
+                  "baseline": "174kb",
+                  "warning": "10%",
+                  "error": "50%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-search",
+                  "baseline": "87kb",
+                  "warning": "10%",
+                  "error": "50%"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
