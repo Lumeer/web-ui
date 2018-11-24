@@ -56,7 +56,7 @@ import {PostItCollectionComponent} from './post-it-collection.component/post-it-
 import {Perspective} from '../../view/perspectives/perspective';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
-import * as Icons from '../picker/icon-picker/icons';
+import {safeGetRandomIcon} from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
@@ -99,7 +99,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public collectionsLoaded: boolean;
 
   private postItLayout: ElementRef;
-  private icons = Icons.solid;
   private colors = Colors.palette;
   private subscriptions = new Subscription();
 
@@ -181,7 +180,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     return {
       name: '',
       color: this.colors[Math.round(Math.random() * this.colors.length)],
-      icon: this.icons[Math.round(Math.random() * this.icons.length)],
+      icon: safeGetRandomIcon(),
       description: '',
       attributes: [],
     };
