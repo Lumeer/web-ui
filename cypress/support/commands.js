@@ -10,19 +10,39 @@ Cypress.Commands.add('login', () => {
     scope: 'openid email profile name username groups roles',
   });
 
-  // clear tokens in order to always start as unauthenticated user
-  cy.clearLocalStorage();
+  const lumeerAuth = window['lumeerAuth'];
+  if (lumeerAuth) {
+    // restore tokens from previous login
+    const {authAccessToken, authIdToken, authExpiresAt} = lumeerAuth;
+    Cypress.env('authAccessToken', authAccessToken);
+    window.localStorage.setItem('auth_access_token', authAccessToken);
+    window.localStorage.setItem('auth_id_token', authIdToken);
+    window.localStorage.setItem('auth_expires_at', authExpiresAt);
+  } else {
+    // login via auth0 API
+    auth.login({username: 'user1@lumeer.io', password: 'userOne123'});
 
-  // first make the browser open our app so that we use its local storage
-  cy.visit('/ui/auth');
+    // wait for the token
+    cy.window({timeout: 30000}).should(() => {
+      expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
+      Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
+      window['lumeerAuth'] = {
+        authAccessToken: window.localStorage.getItem('auth_access_token'),
+        authIdToken: window.localStorage.getItem('auth_id_token'),
+        authExpiresAt: window.localStorage.getItem('auth_expires_at'),
+      };
+    });
+  }
+});
 
-  // login via auth0 API
-  auth.login({username: 'user1@lumeer.io', password: 'userOne123'});
+Cypress.Commands.add('loginAndDismissAgreement', () => {
+  const lumeerAuth = window['lumeerAuth'];
 
-  // wait for the token
-  cy.window({timeout: 30000}).should(() => {
-    expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
-  });
+  cy.login();
+
+  if (!lumeerAuth) {
+    cy.dismissAgreement();
+  }
 });
 
 // allows to perform actions using access token like calling backend API
@@ -92,5 +112,20 @@ Cypress.Commands.add('dismissAgreement', () => {
       .its('body')
       .its('length')
       .should('gt', 0);
+  });
+});
+
+Cypress.Commands.add('createCollection', (name, icon, color) => {
+  cy.request({
+    method: 'POST',
+    url: Cypress.env('engineUrl') + 'rest/organizations/SRLMR/projects/PRJ1/collections',
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: {
+      name,
+      icon,
+      color,
+    },
   });
 });
