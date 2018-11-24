@@ -21,7 +21,8 @@
      (keydown)="onKeyDown($event)"
      [class.uninitialized-column]="!column?.attributeId"
      [style.width]="column | columnWidth:canManageConfig | pixel"
-     class="table-border-right table-border-bottom data-input">
+     class="table-border-right table-border-bottom data-input"
+     data-test="table-data-cell-input">
 </div>
 
 <document-hints *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"

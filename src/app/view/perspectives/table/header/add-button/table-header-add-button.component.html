@@ -2,6 +2,7 @@
   <button type="button"
           class="add-part-button"
           data-toggle="dropdown"
+          data-test="table-header-add-button"
           id="tableHeaderAddButton"
           title="Add collection"
           i18n-title="@@table.header.add-button"
@@ -19,6 +20,7 @@
     <a *ngFor="let linkType of data.linkTypes"
        [title]="linkType[0]?.name"
        class="dropdown-item"
+       data-test="table-header-add-linktype-option"
        (click)="onUseLinkType(linkType[0])">
       <icons-presenter [colors]="[linkType[1]?.color, linkType[2]?.color]"
                        [icons]="[linkType[1]?.icon, linkType[2]?.icon]"
@@ -38,6 +40,7 @@
     <a *ngFor="let collection of data.collections"
        [title]="collection.name"
        class="dropdown-item"
+       data-test="table-header-add-collection-option"
        (click)="onUseCollection(collection)">
       <icons-presenter [colors]="[collection.color]"
                        [icons]="[collection.icon]"

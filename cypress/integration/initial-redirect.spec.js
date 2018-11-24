@@ -1,10 +1,7 @@
 describe('Initial web page loading', function() {
   before(() => {
-    cy.login();
-    cy.dismissAgreement();
+    cy.loginAndDismissAgreement();
   });
-
-  after(() => cy.logout());
 
   it('Opens Lumeer and waits to be redirected to the default project', function() {
     cy.visit('/ui');

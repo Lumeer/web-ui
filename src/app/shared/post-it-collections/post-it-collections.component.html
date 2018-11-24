@@ -2,48 +2,50 @@
 
   <ng-container *ngIf="collections.length; else noCollections">
 
-    <div class="d-flex mt-2" *ngIf="{write : project | permissions:'write' | async} as projectPermissions">
-      <post-it-collection-add-button
-        class="ml-1"
-        [disabled]="!projectPermissions.write"
-        (clicked)="createNewCollection()">
+    <div class="d-flex mt-2"
+         *ngIf="{write : project | permissions:'write' | async} as projectPermissions">
+      <post-it-collection-add-button class="ml-1"
+                                     [disabled]="!projectPermissions.write"
+                                     (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
-      <post-it-collection-import-button
-        class="ml-2"
-        [disabled]="!projectPermissions.write"
-        (error)="notifyOfError($event)"
-        (import)="onImportCollection($event)">
+      <post-it-collection-import-button class="ml-2"
+                                        [disabled]="!projectPermissions.write"
+                                        (error)="notifyOfError($event)"
+                                        (import)="onImportCollection($event)">
       </post-it-collection-import-button>
     </div>
 
-    <div class="post-it-collection-layout my-2" #postItLayout>
+    <div class="post-it-collection-layout my-2"
+         #postItLayout>
 
       <ng-container *ngIf="layout">
 
-        <post-it-collection
-          class="layout-item" layout-item
-          *ngFor="let collection of (maxShown > 0 ? (collections | slice:0:maxShown) : collections); trackBy:trackByCollection; let idx = index"
-          [class.focused]="panelVisible && focusedPanel === idx"
-          [class.selected]="selectedCollection === collection"
-          [collection]="collection"
-          [layout]="layout"
-          [forceLayoutIndex]="idx"
-          [focused]="panelVisible && focusedPanel === idx"
-          [selected]="selectedCollection === collection"
-          [workspace]="workspace"
-          (resize)="forceLayout()"
-          (select)="onCollectionSelect(collection)"
-          (unselect)="onCollectionUnselect()"
-          (update)="updateCollection($event)"
-          (create)="createCollection($event)"
-          (delete)="confirmDeletion(collection)"
-          (favoriteChange)="onFavoriteChange(collection.id, $event)"
-          (togglePanel)="togglePanelVisible($event, idx)">
+        <post-it-collection class="layout-item"
+                            layout-item
+                            *ngFor="let collection of (maxShown > 0 ? (collections | slice:0:maxShown) : collections); trackBy:trackByCollection; let idx = index"
+                            [class.focused]="panelVisible && focusedPanel === idx"
+                            [class.selected]="selectedCollection === collection"
+                            [collection]="collection"
+                            [layout]="layout"
+                            [forceLayoutIndex]="idx"
+                            [focused]="panelVisible && focusedPanel === idx"
+                            [selected]="selectedCollection === collection"
+                            [workspace]="workspace"
+                            (resize)="forceLayout()"
+                            (select)="onCollectionSelect(collection)"
+                            (unselect)="onCollectionUnselect()"
+                            (update)="updateCollection($event)"
+                            (create)="createCollection($event)"
+                            (delete)="confirmDeletion(collection)"
+                            (favoriteChange)="onFavoriteChange(collection.id, $event)"
+                            (togglePanel)="togglePanelVisible($event, idx)"
+                            data-test="collection-card">
         </post-it-collection>
 
 
-        <div class="layout-item" layout-item
+        <div class="layout-item"
+             layout-item
              *ngIf="maxShown > 0 && maxShown < collections.length"
              (click)="onShowAllClicked()"
              [layout]="layout"
@@ -70,4 +72,3 @@
                      (error)="notifyOfError($event)">
   </empty-collections>
 </ng-template>
-
