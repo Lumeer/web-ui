@@ -10,17 +10,39 @@ Cypress.Commands.add('login', () => {
     scope: 'openid email profile name username groups roles',
   });
 
-  // first make the browser open our app so that we use its local storage
-  cy.visit('/ui/auth');
+  const lumeerAuth = window['lumeerAuth'];
+  if (lumeerAuth) {
+    // restore tokens from previous login
+    const {authAccessToken, authIdToken, authExpiresAt} = lumeerAuth;
+    Cypress.env('authAccessToken', authAccessToken);
+    window.localStorage.setItem('auth_access_token', authAccessToken);
+    window.localStorage.setItem('auth_id_token', authIdToken);
+    window.localStorage.setItem('auth_expires_at', authExpiresAt);
+  } else {
+    // login via auth0 API
+    auth.login({username: 'user1@lumeer.io', password: 'userOne123'});
 
-  // login via auth0 API
-  auth.login({username: 'user1@lumeer.io', password: 'userOne123'});
+    // wait for the token
+    cy.window({timeout: 30000}).should(() => {
+      expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
+      Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
+      window['lumeerAuth'] = {
+        authAccessToken: window.localStorage.getItem('auth_access_token'),
+        authIdToken: window.localStorage.getItem('auth_id_token'),
+        authExpiresAt: window.localStorage.getItem('auth_expires_at'),
+      };
+    });
+  }
+});
 
-  // wait for the token
-  cy.window({timeout: 30000}).should(() => {
-    expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
-    Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
-  });
+Cypress.Commands.add('loginAndDismissAgreement', () => {
+  const lumeerAuth = window['lumeerAuth'];
+
+  cy.login();
+
+  if (!lumeerAuth) {
+    cy.dismissAgreement();
+  }
 });
 
 // allows to perform actions using access token like calling backend API
