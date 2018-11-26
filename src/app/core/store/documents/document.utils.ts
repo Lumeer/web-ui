@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Dictionary} from 'lodash';
 import {CollectionModel} from '../collections/collection.model';
 import {QueryConverter} from '../navigation/query.converter';
 import {ConditionType} from '../navigation/query.model';
+import {QueryModel} from './../navigation/query.model';
+import {UserModel} from './../users/user.model';
 import {DocumentModel} from './document.model';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
@@ -47,7 +48,11 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): {[docume
   }, {});
 }
 
-export function generateDocumentData(collection: CollectionModel, filters: string[]): {[attributeId: string]: any} {
+export function generateDocumentData(
+  collection: CollectionModel,
+  filters: string[],
+  currentUser?: UserModel
+): {[attributeId: string]: any} {
   if (!collection) {
     return [];
   }
@@ -78,13 +83,28 @@ export function generateDocumentData(collection: CollectionModel, filters: strin
           case ConditionType.LowerThanEquals:
           case ConditionType.Equals:
           default:
-            data[attrFilter.attributeId] = attrFilter.value;
+            if (currentUser && attrFilter.value === 'userEmail()') {
+              data[attrFilter.attributeId] = currentUser.email;
+            } else {
+              data[attrFilter.attributeId] = attrFilter.value;
+            }
         }
       }
     });
   }
 
   return data;
+}
+
+export function generateDocumentDataByQuery(query: QueryModel, currentUser: UserModel) {
+  const collectionId = query.collectionIds[0];
+  const collection: CollectionModel = {
+    id: collectionId,
+    name: '',
+    attributes: [],
+  };
+
+  return generateDocumentData(collection, query.filters, currentUser);
 }
 
 export function calculateDocumentHierarchyLevel(
