@@ -22,6 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {selectChartConfig} from '../charts/charts.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
@@ -29,7 +30,7 @@ import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
-import {areConfigsEqual} from './view.utils';
+import {isViewConfigChanged} from './view.utils';
 
 export interface ViewsState extends EntityState<ViewModel> {
   loaded: boolean;
@@ -116,9 +117,12 @@ export const selectPerspectiveViewConfig = createSelector(
   (view, perspective) => view && view.config && view.config[perspective]
 );
 export const selectViewConfigChanged = createSelector(
+  selectPerspective,
   selectPerspectiveConfig,
   selectPerspectiveViewConfig,
-  (perspectiveConfig, viewConfig) => perspectiveConfig && viewConfig && !areConfigsEqual(perspectiveConfig, viewConfig)
+  selectDocumentsDictionary,
+  (perspective, perspectiveConfig, viewConfig, documentsMap) =>
+    viewConfig && perspectiveConfig && isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap)
 );
 
 export const selectViewQueryChanged = createSelector(
