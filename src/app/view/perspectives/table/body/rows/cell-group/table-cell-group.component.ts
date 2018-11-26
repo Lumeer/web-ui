@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, first} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
@@ -125,10 +124,7 @@ export class TableCellGroupComponent implements OnChanges {
   }
 
   private bindDocuments(collectionId: string, documentIds: string[]) {
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByIds(documentIds)),
-      map(documents => (documents && documents.length ? documents : [{collectionId, data: {}}]))
-    );
+    this.documents$ = this.store$.pipe(select(selectDocumentsByIds(documentIds)));
   }
 
   private bindLinkInstances(linkTypeId: string, linkInstanceIds: string[]) {
