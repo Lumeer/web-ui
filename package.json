@@ -24,7 +24,6 @@
     "start:en": "npm run reset-env && ng serve --configuration=en",
     "test": "ng test",
     "test:watch": "ng test --watch",
-    "workaround": "sed -i -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js",
     "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run"
   },
