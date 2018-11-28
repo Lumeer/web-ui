@@ -1,7 +1,28 @@
 @import '../../../../../styles/variables';
+@import '../../../../../styles/bootstrap_var';
 
 /deep/.search-documents-value {
   color: $primary;
   font-style: normal;
   font-size: 100%;
+}
+
+.detail {
+  &.card {
+    border: $card-border-width solid transparent;
+
+    &:hover {
+      border: $card-border-width solid $card-border-color;
+      box-shadow: $shadow-default;
+      -webkit-box-shadow: $shadow-default;
+      -moz-box-shadow: $shadow-default;
+    }
+
+    .title {
+      font-size: 1rem;
+    }
+  }
+
+  cursor: pointer;
+  transition: box-shadow $animation-duration;
 }

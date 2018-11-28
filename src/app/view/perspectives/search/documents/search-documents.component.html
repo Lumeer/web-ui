@@ -6,7 +6,10 @@
        (scrolled)="onScrollDown($event)">
     <size-slider class="d-flex justify-content-end mb-2"
                  [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
-    <div *ngFor="let document of (maxLines > 0 ? (getDocuments() | slice:0:maxLines) : getDocuments()); trackBy:trackByDocument">
+    <div class="detail card p-2 mb-2"
+         (click)="toggleDocument(document)"
+         (dblclick)="onDetailClick(document)"
+         *ngFor="let document of (maxLines > 0 ? (getDocuments() | slice:0:maxLines) : getDocuments()); trackBy:trackByDocument">
 
       <search-document-header
         (toggle)="toggleDocument(document)"
@@ -17,7 +20,6 @@
         [collection]="collectionsMap[document.collectionId]">
         <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
       </search-document-header>
-      <hr/>
     </div>
 
     <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
