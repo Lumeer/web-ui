@@ -54,15 +54,15 @@ export class AttributeValueComponent implements OnInit {
   private conditionValueInput: ElementRef;
 
   public ngOnInit() {
-    this.lastCommittedValue = this.queryItem.conditionValue;
+    this.lastCommittedValue = this.queryItem.value;
   }
 
   public get conditionValueControl(): AbstractControl {
-    return this.queryItemForm && this.queryItemForm.get('conditionValue');
+    return this.queryItemForm && this.queryItemForm.get('value');
   }
 
   public onBlur() {
-    const trimmedValue = this.queryItem.conditionValue.trim();
+    const trimmedValue = this.queryItem.value.trim();
     this.setValue(trimmedValue);
 
     if (trimmedValue !== this.lastCommittedValue && this.conditionValueControl.valid) {
@@ -77,7 +77,7 @@ export class AttributeValueComponent implements OnInit {
 
   private setValue(value: string) {
     this.conditionValueControl.setValue(value);
-    this.queryItem.conditionValue = value;
+    this.queryItem.value = value;
   }
 
   public onKeyDown(event: KeyboardEvent) {

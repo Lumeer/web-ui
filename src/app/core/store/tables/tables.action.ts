@@ -22,10 +22,10 @@ import {Dictionary} from 'lodash';
 import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstanceModel} from '../link-instances/link-instance.model';
-import {QueryModel} from '../navigation/query.model';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
 import {EditedAttribute} from './tables.state';
+import {QueryModel} from '../navigation/query.model';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',

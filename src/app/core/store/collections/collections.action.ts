@@ -19,8 +19,6 @@
 
 import {Action} from '@ngrx/store';
 import {ImportedCollection} from '../../dto/imported-collection';
-import {QueryModel} from '../navigation/query.model';
-import {Workspace} from '../navigation/workspace.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
 

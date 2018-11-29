@@ -18,8 +18,9 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
+
+import {select, Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
@@ -29,10 +30,9 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {selectAllDocuments} from '../../../core/store/documents/documents.state';
-import {getCollectionsIdsFromView} from '../../../core/store/collections/collection.util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {Role} from '../../../core/model/role';
+import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
 
 @Pipe({
   name: 'collectionPermissions',
@@ -101,8 +101,8 @@ export class CollectionPermissionsPipe implements PipeTransform {
   }
 
   private getViewCollectionIds(view: ViewModel): Observable<string[]> {
-    return observableCombineLatest(this.store.select(selectAllLinkTypes), this.store.select(selectAllDocuments)).pipe(
-      map(([linkTypes, documents]) => getCollectionsIdsFromView(view, linkTypes, documents))
-    );
+    return this.store
+      .pipe(select(selectAllLinkTypes))
+      .pipe(map(linkTypes => getAllCollectionIdsFromQuery(view.query, linkTypes)));
   }
 }

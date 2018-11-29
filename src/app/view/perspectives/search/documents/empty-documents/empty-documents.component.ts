@@ -19,8 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {QueryModel} from '../../../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'empty-documents',

@@ -31,7 +31,6 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/service/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {
   selectCollectionsByQuery,
@@ -43,6 +42,7 @@ import {QueryConverter} from '../../../../core/store/navigation/query.converter'
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {Router} from '@angular/router';
 import {searchDocumentEntriesHtml, searchDocumentValuesHtml} from './search-document-html-helper';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 
 const PAGE_SIZE = 40;
 

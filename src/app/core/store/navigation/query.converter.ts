@@ -19,33 +19,63 @@
 
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../dto';
-import {AttributeFilter, QueryModel} from './query.model';
 import {conditionFromString} from './query.util';
+import {AttributeFilterModel, QueryModel, QueryStemModel} from './query.model';
+import {AttributeFilter, QueryStem} from '../../dto/query';
 
 export class QueryConverter {
   public static fromDto(dto: Query): QueryModel {
     return {
-      collectionIds: dto.collectionIds,
-      documentIds: dto.documentIds,
-      filters: dto.filters,
-      fulltext: dto.fulltext,
-      linkTypeIds: dto.linkTypeIds,
+      stems: dto.stems && dto.stems.map(stem => this.fromStemDto(stem)),
+      fulltexts: dto.fulltexts,
       page: dto.page,
       pageSize: dto.pageSize,
-      // TODO convert other fields as well
     };
   }
 
   public static toDto(model: QueryModel): Query {
     return {
-      collectionIds: model.collectionIds,
-      documentIds: model.documentIds,
-      linkTypeIds: model.linkTypeIds,
-      filters: model.filters,
-      fulltext: model.fulltext,
+      stems: model.stems && model.stems.map(stem => this.toStemDto(stem)),
+      fulltexts: model.fulltexts,
       page: model.page,
       pageSize: model.pageSize,
-      // TODO convert other fields as well
+    };
+  }
+
+  public static fromStemDto(dto: QueryStem): QueryStemModel {
+    return {
+      collectionId: dto.collectionId,
+      documentIds: dto.documentIds,
+      linkTypeIds: dto.linkTypeIds,
+      filters: dto.filters && dto.filters.map(filter => this.fromAttributeFilterDto(filter)),
+    };
+  }
+
+  public static toStemDto(model: QueryStemModel): QueryStem {
+    return {
+      collectionId: model.collectionId,
+      documentIds: model.documentIds,
+      linkTypeIds: model.linkTypeIds,
+      filters: model.filters && model.filters.map(filter => this.toAttributeFilterDto(filter)),
+    };
+  }
+
+  public static fromAttributeFilterDto(dto: AttributeFilter): AttributeFilterModel {
+    return {
+      collectionId: dto.collectionId,
+      attributeId: dto.attributeId,
+      conditionType: conditionFromString(dto.condition),
+      condition: dto.condition,
+      value: dto.value,
+    };
+  }
+
+  public static toAttributeFilterDto(model: AttributeFilterModel): AttributeFilter {
+    return {
+      collectionId: model.collectionId,
+      attributeId: model.attributeId,
+      condition: model.condition,
+      value: model.value,
     };
   }
 
@@ -62,10 +92,8 @@ export class QueryConverter {
     const parsedQuery = stringQuery ? this.parseStringQuery(stringQuery) : {};
     const query: QueryModel = parsedQuery ? parsedQuery : {};
 
-    query.collectionIds = query.collectionIds || [];
-    query.documentIds = query.documentIds || [];
-    query.filters = query.filters || [];
-    query.linkTypeIds = query.linkTypeIds || [];
+    query.stems = query.stems || [];
+    query.fulltexts = query.fulltexts || [];
     query.pageSize = isNullOrUndefined(query.pageSize) ? null : query.pageSize;
     query.page = isNullOrUndefined(query.page) ? null : query.page;
 
@@ -78,18 +106,5 @@ export class QueryConverter {
     } catch (e) {
       return null;
     }
-  }
-
-  public static parseFilter(filter: string): AttributeFilter {
-    const [collectionId, attributeId, condition] = filter.split(':', 3);
-
-    const [conditionTypeString, ...values] = condition.replace(/ +/g, ' ').split(' ');
-    const value = values.join(' ');
-    const conditionType = conditionFromString(conditionTypeString.trim().toLowerCase());
-    if (conditionType == null) {
-      return null;
-    }
-
-    return {collectionId, conditionType, attributeId, value};
   }
 }

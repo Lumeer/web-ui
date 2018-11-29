@@ -18,8 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryModel} from '../../core/store/navigation/query.model';
+
 import {queryIsEmpty} from '../../core/store/navigation/query.util';
+import {QueryModel} from '../../core/store/navigation/query.model';
 
 @Pipe({
   name: 'emptyQuery',

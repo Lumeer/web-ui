@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {QueryModel} from '../navigation/query.model';
 import {LinkInstanceModel} from './link-instance.model';
+import {QueryModel} from '../navigation/query.model';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',

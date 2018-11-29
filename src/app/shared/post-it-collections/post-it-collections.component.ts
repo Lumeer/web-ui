@@ -49,7 +49,6 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
@@ -61,6 +60,7 @@ import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
+import {QueryModel} from '../../core/store/navigation/query.model';
 
 const UNCREATED_THRESHOLD = 5;
 

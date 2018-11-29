@@ -21,16 +21,15 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take, tap} from 'rxjs/operators';
-import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
-import {QueryModel} from '../core/store/navigation/query.model';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
+import {QueryModel} from '../core/store/navigation/query.model';
 
 @Component({
   templateUrl: './view.component.html',
@@ -106,7 +105,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadQuery(query: Query, name?: string) {
+  private loadQuery(query: QueryModel, name?: string) {
     this.view = {
       name: name ? `${name} - copy` : '',
       query: query,

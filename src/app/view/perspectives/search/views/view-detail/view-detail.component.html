@@ -1,33 +1,38 @@
-<div class="card p-2 mb-2 pb-3 view"
-     (click)="onClicked()">
+<ng-container *ngIf="{queryItems: queryItems$ | async,
+                  clickable: queryItems$ | async | containsDeletedQueryItem} as data">
 
-  <div class="d-flex flex-row">
-    <div class="flex-column align-self-center">
-      <i class="fa-fw fa-3x mr-2 {{getIconForPerspective(view.perspective)}} align-self-center" aria-hidden="true"></i>&nbsp;
-    </div>
-    <div class="flex-column flex-fill">
-      <div class="d-flex flex-row align-items-center">
-        <span class="ml-1 text-nowrap text-truncate title font-weight-bold">{{view.name}}</span>
+  <div class="card p-2 mb-2 pb-3"
+       [class.view-hover]="data.clickable"
+       (click)="data.clickable && onClicked()">
 
-        <i *ngIf="view | permissions:'manage' | async"
-           class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
-           (click)="$event.stopPropagation(); onDelete()"
-           title="Delete" i18n-title="@@delete"
-           aria-hidden="true">
-        </i>
-
+    <div class="d-flex flex-row">
+      <div class="flex-column align-self-center">
+        <i class="fa-fw fa-3x mr-2 {{getIconForPerspective(view.perspective)}} align-self-center" aria-hidden="true"></i>&nbsp;
       </div>
+      <div class="flex-column flex-fill">
+        <div class="d-flex flex-row align-items-center">
+          <span class="ml-1 text-nowrap text-truncate title font-weight-bold">{{view.name}}</span>
 
-      <div class="d-flex flex-wrap">
-        <query-item *ngFor="let queryItem of queryItems; trackBy:trackByQueryItem; let isLast = last"
-                    [queryItem]="queryItem"
-                    [readonly]="true"
-                    class="d-inline-flex mt-1 align-items-center"
-                    [class.mr-1]="!isLast">
-        </query-item>
+          <i *ngIf="view | permissions:'manage' | async"
+             class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
+             (click)="$event.stopPropagation(); onDelete()"
+             title="Delete" i18n-title="@@delete"
+             aria-hidden="true">
+          </i>
+
+        </div>
+
+        <div class="d-flex flex-wrap">
+          <query-item *ngFor="let queryItem of data.queryItems; trackBy:trackByQueryItem; let isLast = last"
+                      [queryItem]="queryItem"
+                      [readonly]="true"
+                      class="d-inline-flex mt-1 align-items-center"
+                      [class.mr-1]="!isLast">
+          </query-item>
+        </div>
       </div>
     </div>
+
   </div>
 
-
-</div>
+</ng-container>

@@ -33,6 +33,7 @@ import {SearchResultsDirective} from './search-results.directive';
 import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
+import {ContainsDeletedQueryItemPipe} from './views/view-detail/contains-deleted-query-item.pipe';
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import {ViewDetailComponent} from './views/view-detail/view-detail.component';
     EmptyDataComponent,
     EmptyViewsComponent,
     ViewDetailComponent,
+    ContainsDeletedQueryItemPipe,
   ],
   entryComponents: [
     SearchAllComponent,

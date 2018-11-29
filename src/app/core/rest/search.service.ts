@@ -19,19 +19,16 @@
 
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {Collection} from '../dto/collection';
-import {DocumentDto} from '../dto/document.dto';
-import {Query} from '../dto/query';
-import {SuggestionType} from '../dto/suggestion-type';
-import {Suggestions} from '../dto/suggestions';
-import {View} from '../dto/view';
+import {SuggestionType, Suggestions, DocumentDto, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {LinkInstanceModel} from '../store/link-instances/link-instance.model';
 
 @Injectable()
 export class SearchService {
@@ -50,16 +47,12 @@ export class SearchService {
     });
   }
 
-  public searchCollections(query: Query, workspace?: Workspace): Observable<Collection[]> {
-    return this.http.post<Collection[]>(`${this.searchPath(workspace)}/collections`, query);
+  public searchLinkInstances(query: Query, workspace?: Workspace): Observable<LinkInstanceModel[]> {
+    return this.http.post<LinkInstanceModel[]>(`${this.searchPath(workspace)}/linkIstances`, query);
   }
 
   public searchDocuments(query: Query): Observable<DocumentDto[]> {
     return this.http.post<DocumentDto[]>(`${this.searchPath()}/documents`, query);
-  }
-
-  public searchViews(query: Query): Observable<View[]> {
-    return this.http.post<View[]>(`${this.searchPath()}/views`, query);
   }
 
   private searchPath(workspace?: Workspace): string {

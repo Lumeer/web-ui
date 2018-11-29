@@ -20,7 +20,6 @@ import {createSelector} from '@ngrx/store';
 import {isArraySubset} from '../../../shared/utils/array.utils';
 import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
-import {getCollectionsIdsFromView} from '../collections/collection.util';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
@@ -29,18 +28,19 @@ import {filterDocumentsByQuery} from '../documents/documents.filters';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {QueryModel} from '../navigation/query.model';
 import {selectCurrentUser} from '../users/users.state';
 import {selectCurrentView} from '../views/views.state';
+import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
+import {selectAllLinkInstances} from '../link-instances/link-instances.state';
+import {QueryModel} from '../navigation/query.model';
 
 export const selectCollectionsByReadPermission = createSelector(
-  selectAllDocuments,
   selectAllCollections,
   selectAllLinkTypes,
   selectCurrentView,
   selectCurrentUser,
-  (documents, collections, linkTypes, view, user) => {
-    const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
+  (collections, linkTypes, view, user) => {
+    const collectionIdsFromView = getAllCollectionIdsFromQuery(view.query, linkTypes);
     return collections.filter(
       collection =>
         userHasRoleInResource(user, collection, Role.Read) ||
@@ -55,8 +55,9 @@ export const selectCollectionsByReadPermission = createSelector(
 export const selectCollectionsByQuery = createSelector(
   selectCollectionsByReadPermission,
   selectAllDocuments,
+  selectAllLinkTypes,
   selectQuery,
-  (collections, documents, query) => filterCollectionsByQuery(collections, documents, query)
+  (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
 );
 
 export const selectDocumentsByReadPermission = createSelector(
@@ -70,18 +71,29 @@ export const selectDocumentsByReadPermission = createSelector(
 
 export const selectDocumentsByQuery = createSelector(
   selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
   selectQuery,
   selectCurrentUser,
-  (documents, query, currentUser): DocumentModel[] =>
-    filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query, currentUser)
+  (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
+    sortDocumentsByCreationDate(
+      filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser)
+    )
 );
 
 export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,
+    selectCollectionsByReadPermission,
+    selectAllLinkTypes,
+    selectAllLinkInstances,
     selectCurrentUser,
-    (documents, currentUser) =>
-      filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, currentUser, includeChildren)
+    (documents, collections, linkTypes, linkInstances, currentUser) =>
+      sortDocumentsByCreationDate(
+        filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, includeChildren),
+        desc
+      )
   );
 
 export const selectLinkTypesByReadPermission = createSelector(

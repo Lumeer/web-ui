@@ -49,10 +49,6 @@ export class LinkInstanceService {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
-  public getLinkInstances(query: Query): Observable<LinkInstance[]> {
-    return this.httpClient.post<LinkInstance[]>(this.restApiPrefix() + '/search', query);
-  }
-
   private restApiPrefix(id?: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;

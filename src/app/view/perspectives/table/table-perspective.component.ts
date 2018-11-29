@@ -35,7 +35,6 @@ import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
@@ -49,6 +48,7 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 declare let $: any;
 

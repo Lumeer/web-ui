@@ -35,7 +35,6 @@ import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -51,6 +50,7 @@ import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
 import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'post-it-perspective',

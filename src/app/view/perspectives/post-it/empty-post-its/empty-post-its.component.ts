@@ -18,9 +18,10 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'empty-post-its',

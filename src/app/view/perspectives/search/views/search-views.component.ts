@@ -33,11 +33,11 @@ import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
 import {filter} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {isNullOrUndefined} from 'util';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'search-views',

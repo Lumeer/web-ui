@@ -21,6 +21,8 @@ import {AttributeModel, CollectionModel} from '../../../../../core/store/collect
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
+import {AttributeFilterModel} from '../../../../../core/store/navigation/query.model';
+import {conditionFromString} from '../../../../../core/store/navigation/query.util';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -29,7 +31,7 @@ export class AttributeQueryItem implements QueryItem {
     public collection: CollectionModel,
     public attribute: AttributeModel,
     public condition: string,
-    public conditionValue: string
+    public value: string
   ) {}
 
   public get text() {
@@ -49,7 +51,17 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public getFilter(): string {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.value}`;
+  }
+
+  public getAttributeFilter(): AttributeFilterModel {
+    return {
+      collectionId: this.collection.id,
+      attributeId: this.attribute.id,
+      condition: this.condition,
+      conditionType: conditionFromString(this.condition),
+      value: this.value,
+    };
   }
 
   public dependsOn(queryItem: QueryItem): boolean {

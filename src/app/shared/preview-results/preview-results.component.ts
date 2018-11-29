@@ -36,7 +36,6 @@ import {CollectionModel} from '../../core/store/collections/collection.model';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectViewCursor} from '../../core/store/views/views.state';
@@ -44,6 +43,8 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
+import {QueryModel} from '../../core/store/navigation/query.model';
+import {getQueryFiltersForCollection} from '../../core/store/navigation/query.util';
 
 @Component({
   selector: 'preview-results',
@@ -157,7 +158,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getData(collection: CollectionModel) {
-    const collectionQuery = {...this.query, collectionIds: [collection.id]};
+    const collectionQuery = {...this.query, stems: [{collectionId: collection.id}]};
     this.updateDataSubscription(collectionQuery);
     this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
     this.allSubscriptions.add(
@@ -225,7 +226,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
         document: {
           collectionId: this.selectedCollection.id,
           correlationId: CorrelationIdGenerator.generate(),
-          data: generateDocumentData(this.selectedCollection, this.query.filters),
+          data: generateDocumentData(
+            this.selectedCollection,
+            getQueryFiltersForCollection(this.query, this.selectedCollection.id)
+          ),
         },
         callback: id => {
           this.store.dispatch(

@@ -19,9 +19,11 @@
 
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
+import {AttributeFilterModel, QueryModel, QueryStemModel, ConditionType} from './query.model';
+import {LinkTypeModel} from '../link-types/link-type.model';
+import {isArraySubset} from '../../../shared/utils/array.utils';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -105,18 +107,78 @@ export function conditionFromString(condition: string): ConditionType {
 }
 
 export function queryIsNotEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).find(val => (val instanceof Array ? val.length > 0 : val));
+  return (
+    (query.stems && query.stems.length > 0) ||
+    (query.fulltexts && query.fulltexts.length > 0) ||
+    query.page ||
+    query.pageSize
+  );
+}
+
+export function queryIsNotEmptyExceptPagination(query: QueryModel): boolean {
+  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
 }
 
 export function queryIsEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).every(val => (val instanceof Array ? val.length === 0 : !val));
+  return !queryIsNotEmpty(query);
+}
+
+export function queryIsEmptyExceptPagination(query: QueryModel): boolean {
+  return !queryIsNotEmpty(query);
 }
 
 export function isSingleCollectionQuery(query: QueryModel): boolean {
+  return query && query.stems && query.stems.length === 1;
+}
+
+export function isAnyCollectionQuery(query: QueryModel): boolean {
+  return query && query.stems && query.stems.length > 1;
+}
+
+export function isOnlyFulltextsQuery(query: QueryModel): boolean {
+  return (!query.stems || query.stems.length === 0) && query.fulltexts && query.fulltexts.length > 0;
+}
+
+export function getQueryFiltersForCollection(query: QueryModel, collectionId: string): AttributeFilterModel[] {
+  const stem = query && query.stems && query.stems.find(stem => stem.collectionId === collectionId);
+  return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
+}
+
+export function getAllCollectionIdsFromQuery(query: QueryModel, linkTypes: LinkTypeModel[]): string[] {
+  const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
+  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, stem.linkTypeIds], []);
+  const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));
+  const collectionIdsFromLinks = filteredLinkTypes
+    .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
+    .filter(id => !basicCollectionIds.includes(id));
+  return [...basicCollectionIds, ...collectionIdsFromLinks];
+}
+
+export function isQuerySubset(superset: QueryModel, subset: QueryModel): boolean {
+  if (!isArraySubset(superset.fulltexts || [], subset.fulltexts || [])) {
+    return false;
+  }
+
+  if (subset.stems.length > superset.stems.length) {
+    return false;
+  }
+
+  return subset.stems.every(stem => {
+    const supersetStem = superset.stems.find(s => s.collectionId === stem.collectionId);
+    return supersetStem && isQueryStemSubset(supersetStem, stem);
+  });
+}
+
+export function isQueryStemSubset(superset: QueryStemModel, subset: QueryStemModel): boolean {
   return (
-    query &&
-    Object.entries(query).every(([key, value]) =>
-      value instanceof Array ? (key === 'collectionIds' ? value.length > 0 : value.length === 0) : !value
-    )
+    superset.collectionId === subset.collectionId &&
+    isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || []) &&
+    isArraySubset(superset.documentIds || [], subset.documentIds || []) &&
+    isArraySubset(superset.filters || [], subset.filters || [])
   );
+}
+
+export function queryWithoutLinks(query: QueryModel): QueryModel {
+  const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
+  return {...query, stems};
 }

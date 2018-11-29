@@ -22,7 +22,6 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
@@ -33,6 +32,7 @@ import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'chart-perspective',

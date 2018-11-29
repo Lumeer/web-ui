@@ -20,8 +20,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {ProjectModel} from '../../../core/store/projects/project.model';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'empty-collections',

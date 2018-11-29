@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {QueryModel} from '../navigation/query.model';
 import {DocumentMetaData, DocumentModel} from './document.model';
+import {QueryModel} from '../navigation/query.model';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',

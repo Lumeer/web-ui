@@ -28,9 +28,9 @@ import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectNavigation, selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
-import {QueryModel} from './query.model';
 import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {QueryModel} from './query.model';
 
 @Injectable()
 export class NavigationEffects {

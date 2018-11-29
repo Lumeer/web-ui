@@ -18,21 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {combineLatest as observableCombineLatest, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Role} from '../../core/model/role';
 import {AppState} from '../../core/store/app.state';
-import {getCollectionsIdsFromView} from '../../core/store/collections/collection.util';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
-import {selectAllDocuments} from '../../core/store/documents/documents.state';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
 import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
+import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query.util';
 
 @Pipe({
   name: 'viewControlsInfo',
@@ -44,8 +43,7 @@ export class ViewControlsInfoPipe implements PipeTransform {
     view: ViewModel,
     name: string,
     config: ViewConfigModel,
-    perspective: Perspective,
-    query: QueryModel
+    perspective: Perspective
   ): Observable<{canClone: boolean; canManage: boolean}> {
     if (!view || !view.code) {
       return of({canClone: false, canManage: true});
@@ -61,11 +59,10 @@ export class ViewControlsInfoPipe implements PipeTransform {
     return observableCombineLatest(
       this.store$.select(selectCurrentUser),
       this.store$.select(selectAllLinkTypes),
-      this.store$.select(selectAllDocuments),
       this.store$.select(selectCollectionsDictionary)
     ).pipe(
-      map(([currentUser, linkTypes, documents, collectionsMap]) => {
-        return getCollectionsIdsFromView(view, linkTypes, documents)
+      map(([currentUser, linkTypes, collectionsMap]) => {
+        return getAllCollectionIdsFromQuery(view.query, linkTypes)
           .map(collectionId => collectionsMap[collectionId])
           .every(collection => collection && userHasRoleInResource(currentUser, collection, Role.Read));
       })

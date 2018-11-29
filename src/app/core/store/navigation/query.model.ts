@@ -18,22 +18,23 @@
  */
 
 export interface QueryModel {
-  collectionIds?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
+  stems?: QueryStemModel[];
+  fulltexts?: string[];
   page?: number;
   pageSize?: number;
-
-  and?: QueryModel[];
-  or?: QueryModel[];
-  not?: QueryModel;
 }
 
-export interface AttributeFilter {
+export interface QueryStemModel {
+  collectionId: string;
+  linkTypeIds?: string[];
+  documentIds?: string[];
+  filters?: AttributeFilterModel[];
+}
+
+export interface AttributeFilterModel {
   collectionId: string;
   conditionType: ConditionType;
+  condition: string;
   attributeId: string;
   value: any;
 }

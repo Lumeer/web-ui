@@ -49,7 +49,6 @@ import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryConverter} from '../navigation/query.converter';
-import {QueryModel} from '../navigation/query.model';
 import {RouterAction} from '../router/router.action';
 import {ViewCursor} from '../views/view.model';
 import {ViewsAction} from '../views/views.action';
@@ -84,6 +83,8 @@ import {
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
+import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
+import {QueryModel} from '../navigation/query.model';
 
 @Injectable()
 export class TablesEffects {
@@ -92,7 +93,7 @@ export class TablesEffects {
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
     filter(action => {
       const {query} = action.payload;
-      return query && query.collectionIds && query.collectionIds.length === 1;
+      return isSingleCollectionQuery(query);
     }),
     withLatestFrom(
       this.store$.select(selectCollectionsLoaded).pipe(
@@ -103,8 +104,9 @@ export class TablesEffects {
     flatMap(([action, collections]) => {
       const {config, query} = action.payload;
 
-      const collection = collections.find(col => col.id === query.collectionIds[0]);
-      const last = !query.linkTypeIds || query.linkTypeIds.length === 0;
+      const queryStem = query.stems[0];
+      const collection = collections.find(col => col.id === queryStem.collectionId);
+      const last = !queryStem.linkTypeIds || queryStem.linkTypeIds.length === 0;
       const part = createCollectionPart(collection, 0, last, config);
 
       const createTableAction: Action = new TablesAction.AddTable({
@@ -195,6 +197,10 @@ export class TablesEffects {
         action.payload.config
       );
 
+      const query: QueryModel = {
+        stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
+      };
+
       return [
         new TablesAction.RemoveEmptyColumns({
           cursor: {tableId: table.id, partIndex: lastPartIndex},
@@ -204,16 +210,8 @@ export class TablesEffects {
           parts: [linkTypePart, collectionPart],
         }),
         // TODO get data only in guards
-        new DocumentsAction.Get({
-          query: {
-            collectionIds: [collection.id],
-          },
-        }),
-        new LinkInstancesAction.Get({
-          query: {
-            linkTypeIds: [linkType.id],
-          },
-        }),
+        new DocumentsAction.Get({query}),
+        new LinkInstancesAction.Get({query}),
       ];
     })
   );
@@ -226,9 +224,9 @@ export class TablesEffects {
     withLatestFrom(this.store$.select(selectQuery)),
     map(([{action, table}, query]) => {
       const linkTypeIds = [table.parts[1].linkTypeId];
-      const collectionIds = [table.parts[2].collectionId];
+      const collectionId = table.parts[2].collectionId;
 
-      const newQuery: QueryModel = {...query, collectionIds, linkTypeIds};
+      const newQuery: QueryModel = {...query, stems: [{collectionId, linkTypeIds}]};
 
       return new RouterAction.Go({
         path: [],
@@ -251,7 +249,9 @@ export class TablesEffects {
       const linkTypeIds = table.parts
         .slice(0, action.payload.cursor.partIndex)
         .reduce((ids, part) => (part.linkTypeId ? ids.concat(part.linkTypeId) : ids), []);
-      const newQuery: QueryModel = {...query, linkTypeIds};
+
+      const stem = {...query.stems[0], linkTypeIds};
+      const newQuery: QueryModel = {...query, stems: [stem]};
 
       return new RouterAction.Go({
         path: [],
@@ -537,7 +537,7 @@ export class TablesEffects {
     switchMap(action =>
       combineLatest(
         this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))), // TODO maybe remove links from query
+        this.store$.pipe(select(selectDocumentsByCustomQuery(queryWithoutLinks(action.payload.query), false, true))),
         this.store$.pipe(select(selectMoveTableCursorDown))
       ).pipe(
         first(),

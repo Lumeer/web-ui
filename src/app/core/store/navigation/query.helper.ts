@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
+import {getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
 
@@ -32,18 +32,23 @@ export function areQueriesEqualExceptPagination(first: QueryModel, second: Query
 }
 
 export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
-  if (!deepArrayEquals(oldQuery.collectionIds, newQuery.collectionIds)) {
+  if (oldQuery.stems.length !== newQuery.stems.length) {
     return false;
   }
 
+  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
+  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+
   return (
-    newQuery.linkTypeIds.length > oldQuery.linkTypeIds.length &&
-    isArraySubset(newQuery.linkTypeIds, oldQuery.linkTypeIds)
+    newQueryLinkTypeIds.length > oldQueryLinkTypeIds.length && isArraySubset(newQueryLinkTypeIds, oldQueryLinkTypeIds)
   );
 }
 
 export function getNewLinkTypeIdFromQuery(oldQuery: QueryModel, newQuery: QueryModel): string {
-  const linkTypeIds = getArrayDifference(newQuery.linkTypeIds, oldQuery.linkTypeIds);
+  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
+  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+
+  const linkTypeIds = getArrayDifference(newQueryLinkTypeIds, oldQueryLinkTypeIds);
   if (linkTypeIds.length !== 1) {
     throw Error('No new link type IDs');
   }

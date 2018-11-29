@@ -18,6 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {isSingleCollectionQuery} from '../../../../core/store/navigation/query.util';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 
 @Pipe({
@@ -25,6 +27,6 @@ import {QueryModel} from '../../../../core/store/navigation/query.model';
 })
 export class DisplayablePipe implements PipeTransform {
   public transform(query: QueryModel): boolean {
-    return query && query.collectionIds && query.collectionIds.length === 1;
+    return isSingleCollectionQuery(query);
   }
 }

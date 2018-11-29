@@ -18,202 +18,300 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {getCollectionsIdsFromFilters} from '../collections/collection.util';
-import {QueryConverter} from '../navigation/query.converter';
-import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.model';
 import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
+import {AttributeFilterModel, ConditionType, QueryModel, QueryStemModel} from '../navigation/query.model';
+import {isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
+import {CollectionModel} from '../collections/collection.model';
+import {LinkTypeModel} from '../link-types/link-type.model';
+import {LinkInstanceModel} from '../link-instances/link-instance.model';
+import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
+import {arrayIntersection} from '../../../shared/utils/array.utils';
 
 export function filterDocumentsByQuery(
   documents: DocumentModel[],
+  collections: CollectionModel[],
+  linkTypes: LinkTypeModel[],
+  linkInstances: LinkInstanceModel[],
   query: QueryModel,
   currentUser: UserModel,
   includeChildren?: boolean
 ): DocumentModel[] {
-  documents = documents.filter(document => typeof document === 'object').filter(document => document);
+  const filteredDocuments = documents.filter(document => document && typeof document === 'object');
 
-  if (!query || !containsDocumentsQueryField(query)) {
-    return documents;
+  if (!query || queryIsEmptyExceptPagination(query)) {
+    return paginate(filteredDocuments, query);
   }
 
-  let filteredDocuments = filterDocumentsByDocumentsIds(documents, query.documentIds);
-  filteredDocuments = mergeDocuments(
-    filteredDocuments,
-    filterDocumentsByFiltersAndFulltext(documents, query, currentUser, includeChildren)
-  );
+  let documentsByStems: DocumentModel[] = [];
 
-  return paginate(filteredDocuments, query);
+  const documentsByCollectionsMap = groupDocumentsByCollection(filteredDocuments);
+  const queryWithFunctions = applyFunctionsToFilters(query, currentUser);
+
+  if (isOnlyFulltextsQuery(queryWithFunctions)) {
+    collections.forEach(collection => {
+      const documentsByCollection = this.filterDocumentsByFulltexts(
+        documentsByCollectionsMap[collection.id],
+        collection,
+        queryWithFunctions.fulltexts
+      );
+      if (includeChildren) {
+        documentsByStems.push(
+          ...getDocumentsWithChildren(documentsByCollection, documentsByCollectionsMap[collection.id])
+        );
+      } else {
+        documentsByStems.push(...documentsByCollection);
+      }
+    });
+  } else if (queryWithFunctions.stems) {
+    queryWithFunctions.stems.forEach(stem => {
+      const documentsByStem = this.filterDocumentsByStem(
+        documentsByCollectionsMap,
+        collections,
+        linkTypes,
+        linkInstances,
+        stem,
+        queryWithFunctions.fulltexts,
+        includeChildren
+      );
+      documentsByStems = mergeDocuments(documentsByStems, documentsByStem);
+    });
+  }
+
+  return paginate(documentsByStems, queryWithFunctions);
 }
 
-function containsDocumentsQueryField(query: QueryModel): boolean {
-  return (
-    (query.collectionIds && query.collectionIds.length > 0) ||
-    (query.documentIds && query.documentIds.length > 0) ||
-    (query.filters && query.filters.length > 0) ||
-    !!query.fulltext
-  );
+function applyFunctionsToFilters(query: QueryModel, currentUser: UserModel): QueryModel {
+  const stems =
+    query.stems &&
+    query.stems.map(stem => {
+      const filters =
+        stem.filters &&
+        stem.filters.map(filter => {
+          const value = applyFilterFunctions(filter, currentUser);
+          return {...filter, value};
+        });
+      return {...stem, filters};
+    });
+  return {...query, stems};
 }
 
-function filterDocumentsByDocumentsIds(documents: DocumentModel[], documentsIds: string[]): DocumentModel[] {
-  if (!documentsIds || documentsIds.length === 0) {
+function applyFilterFunctions(filter: AttributeFilterModel, currentUser: UserModel): any {
+  switch (filter.value) {
+    case 'userEmail()':
+      return currentUser && currentUser.email;
+    default:
+      return filter.value;
+  }
+}
+
+function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocuments: DocumentModel[]): DocumentModel[] {
+  const documentsWithChildren = currentDocuments;
+  const currentDocumentsIds = new Set(currentDocuments.map(doc => doc.id));
+  const documentsToSearch = allDocuments.filter(document => !currentDocumentsIds.has(document.id));
+  let foundParent = true;
+  while (foundParent) {
+    foundParent = false;
+    for (const document of documentsToSearch) {
+      if (document.metaData && currentDocumentsIds.has(document.metaData.parentId)) {
+        documentsWithChildren.push(document);
+        currentDocumentsIds.add(document.id);
+        foundParent = true;
+      }
+    }
+  }
+
+  return documentsWithChildren;
+}
+
+function filterDocumentsByStem(
+  documentsByCollectionMap: {[collectionId: string]: [DocumentModel]},
+  collections: CollectionModel[],
+  linkTypes: LinkTypeModel[],
+  linkInstances: LinkInstanceModel[],
+  stem: QueryStemModel,
+  fulltexts: string[],
+  includeChildren?: boolean
+): DocumentModel[] {
+  const baseCollection = collections.find(collection => collection.id === stem.collectionId);
+  if (!baseCollection) {
     return [];
   }
 
-  return documents.filter(document => documentsIds.includes(document.id));
-}
+  const baseStem = cleanStemForBaseCollection(stem, documentsByCollectionMap[stem.collectionId]);
+  const stemsPipeline = createStemsPipeline(stem, collections, linkTypes, documentsByCollectionMap);
 
-function filterDocumentsByFiltersAndFulltext(
-  documents: DocumentModel[],
-  query: QueryModel,
-  currentUser: UserModel,
-  includeChildren?: boolean
-): DocumentModel[] {
-  const collectionIdsFromQuery = getCollectionIdsFromQuery(query);
+  const documentsByBaseStem = filterDocumentsByAllConditions(
+    documentsByCollectionMap[baseCollection.id],
+    baseCollection,
+    baseStem,
+    fulltexts
+  );
+  const filteredDocuments = includeChildren
+    ? getDocumentsWithChildren(documentsByBaseStem, documentsByCollectionMap[baseStem.collectionId])
+    : documentsByBaseStem;
 
-  const documentsMap = includeChildren
-    ? documents.reduce((docsMap, document) => ({...docsMap, [document.id]: document}), {})
-    : {};
+  let lastStageDocuments = filteredDocuments;
 
-  if (collectionIdsFromQuery.length === 0 && query.fulltext) {
-    return filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
-  }
-
-  const documentsByCollectionsMap = groupDocumentsByCollection(documents);
-
-  return collectionIdsFromQuery.reduce((filteredDocuments, collectionId) => {
-    const documentsByCollection = documentsByCollectionsMap[collectionId] || [];
-    return mergeDocuments(
-      filteredDocuments,
-      filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query, currentUser, documentsMap)
+  for (const currentStageStem of stemsPipeline) {
+    const lastStageDocumentIds = new Set(lastStageDocuments.map(doc => doc.id));
+    const stageLinkInstances = linkInstances.filter(
+      li => lastStageDocumentIds.add(li.documentIds[0]) || lastStageDocumentIds.add(li.documentIds[1])
     );
-  }, []);
-}
+    const otherDocumentIds = stageLinkInstances
+      .reduce((ids, li) => [...ids, ...li.documentIds], [])
+      .filter(id => !lastStageDocumentIds.has(id));
 
-function getCollectionIdsFromQuery(query: QueryModel): string[] {
-  const collectionsIds = query.collectionIds || [];
-  return collectionsIds.concat(getCollectionsIdsFromFilters(query.filters));
-}
+    if (currentStageStem.documentIds && currentStageStem.documentIds.length > 0) {
+      currentStageStem.documentIds = arrayIntersection(currentStageStem.documentIds, otherDocumentIds);
+    } else {
+      currentStageStem.documentIds = otherDocumentIds;
+    }
 
-function filterCollectionDocumentsByFiltersAndFulltext(
-  documents: DocumentModel[],
-  query: QueryModel,
-  currentUser: UserModel,
-  documentsMap: {[id: string]: DocumentModel}
-): DocumentModel[] {
-  if (hasFiltersAndFulltext(query)) {
-    const filteredDocuments = filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
-    return filterDocumentsByFilters(filteredDocuments, query.filters, currentUser, documentsMap);
-  } else if (query.fulltext) {
-    return filterDocumentsByFulltext(documents, query.fulltext, documentsMap);
-  } else if (query.filters && query.filters.length > 0) {
-    return filterDocumentsByFilters(documents, query.filters, currentUser, documentsMap);
+    if (currentStageStem.documentIds.length === 0) {
+      break;
+    }
+
+    const currentStageCollection = collections.find(collection => collection.id === currentStageStem.collectionId);
+    const currentStageDocuments = filterDocumentsByAllConditions(
+      documentsByCollectionMap[currentStageStem.collectionId],
+      currentStageCollection,
+      currentStageStem,
+      fulltexts
+    );
+    if (currentStageDocuments.length === 0) {
+      break;
+    }
+
+    filteredDocuments.push(...currentStageDocuments);
+    lastStageDocuments = currentStageDocuments;
   }
 
-  return documents;
+  return filteredDocuments;
 }
 
-function hasFiltersAndFulltext(query: QueryModel): boolean {
-  return !!query.fulltext && (query.filters && query.filters.length > 0);
+function cleanStemForBaseCollection(stem: QueryStemModel, documents: DocumentModel[]): QueryStemModel {
+  return cleanStemForCollection(stem, documents, stem.collectionId);
 }
 
-export function filterDocumentsByFulltext(
+function cleanStemForCollection(
+  stem: QueryStemModel,
   documents: DocumentModel[],
-  fulltext: string,
-  documentsMap: {[id: string]: DocumentModel} = {}
-): DocumentModel[] {
-  if (!fulltext) {
-    return [];
+  collectionId: string
+): QueryStemModel {
+  const filters = getFiltersByCollection(stem.filters, collectionId);
+  const documentIds = getDocumentIdsByCollection(stem.documentIds, documents);
+  return {collectionId, filters, documentIds};
+}
+
+function getFiltersByCollection(filters: AttributeFilterModel[], collectionId: string): AttributeFilterModel[] {
+  return (filters && filters.filter(filter => filter.collectionId === collectionId)) || [];
+}
+
+function getDocumentIdsByCollection(documentsIds: string[], documentsByCollection: DocumentModel[]) {
+  return documentsIds.filter(id => documentsByCollection.find(document => document.id === id));
+}
+
+function createStemsPipeline(
+  stem: QueryStemModel,
+  collections: CollectionModel[],
+  linkTypes: LinkTypeModel[],
+  documentsByCollectionMap: {[collectionId: string]: [DocumentModel]}
+): QueryStemModel[] {
+  const pipeline: QueryStemModel[] = [];
+  let lastCollectionId = stem.collectionId;
+
+  const stemLinkTypeIds = stem.linkTypeIds || [];
+  let stemLinkTypes = linkTypes.filter(linkType => stemLinkTypeIds.includes(linkType.id));
+
+  for (let i = 0; i < stemLinkTypeIds.length; i++) {
+    const linkType = stemLinkTypes.find(linkType => linkType.collectionIds.includes(lastCollectionId));
+    if (!linkType) {
+      return pipeline;
+    }
+
+    const currentCollectionId = getOtherLinkedCollectionId(linkType, lastCollectionId);
+    if (!collections.find(collection => collection.id === currentCollectionId)) {
+      return pipeline;
+    }
+
+    pipeline.push(cleanStemForCollection(stem, documentsByCollectionMap[currentCollectionId], currentCollectionId));
+    lastCollectionId = currentCollectionId;
+    stemLinkTypes = stemLinkTypes.filter(lt => lt.id !== linkType.id);
   }
 
-  const matchingDocumentIds = new Set(
-    documents
-      .filter(document =>
-        Object.values(document.data).some(value =>
-          (value || '')
-            .toString()
-            .toLowerCase()
-            .includes(fulltext.toLowerCase())
-        )
-      )
-      .map(document => document.id)
-  );
+  return pipeline;
+}
+
+function filterDocumentsByAllConditions(
+  documents: DocumentModel[],
+  collection: CollectionModel,
+  stem: QueryStemModel,
+  fulltexts: string[]
+): DocumentModel[] {
+  let documentsToFilter = documents;
+  if (stem.documentIds && stem.documentIds.length > 0) {
+    documentsToFilter = documents.filter(document => stem.documentIds.includes(document.id));
+  }
+  return filterDocumentsByFiltersAndFulltexts(documentsToFilter, collection, stem.filters, fulltexts);
+}
+
+function filterDocumentsByFiltersAndFulltexts(
+  documents: DocumentModel[],
+  collection: CollectionModel,
+  filters: AttributeFilterModel[],
+  fulltexts: string[]
+): DocumentModel[] {
+  const fulltextsLowerCase = fulltexts.map(fulltext => fulltext.toLowerCase());
+  const matchedAttributesIds = collection.attributes
+    .filter(attribute => fulltextsLowerCase.every(fulltext => attribute.name.toLowerCase().includes(fulltext)))
+    .map(attribute => attribute.id);
 
   return documents.filter(
     document =>
-      matchingDocumentIds.has(document.id) || parentDocumentMatchesFulltext(document, matchingDocumentIds, documentsMap)
+      documentMeetsFilters(document, filters) &&
+      documentMeetsFulltexts(document, fulltextsLowerCase, matchedAttributesIds)
   );
 }
 
-function parentDocumentMatchesFulltext(
-  document: DocumentModel,
-  matchingDocumentIds: Set<string>,
-  documentsMap: {[id: string]: DocumentModel}
-): boolean {
-  if (!document || !document.metaData || !document.metaData.parentId) {
-    return false;
-  }
-
-  const parentDocument = documentsMap[document.metaData.parentId];
-  if (!parentDocument) {
-    return false;
-  }
-
-  return (
-    matchingDocumentIds.has(parentDocument.id) ||
-    parentDocumentMatchesFulltext(parentDocument, matchingDocumentIds, documentsMap)
-  );
-}
-
-function filterDocumentsByFilters(
+export function filterDocumentsByFulltexts(
   documents: DocumentModel[],
-  filters: string[],
-  currentUser: UserModel,
-  documentsMap: {[id: string]: DocumentModel}
+  collection: CollectionModel,
+  fulltexts: string[]
 ): DocumentModel[] {
-  if (!filters || filters.length === 0) {
-    return [];
-  }
-
-  const attributeFilters = filters
-    .map(filter => QueryConverter.parseFilter(filter))
-    .filter(filter => !isNullOrUndefined(filter));
-
-  return documents.filter(document => documentMeetsFilters(document, attributeFilters, currentUser, documentsMap));
+  return filterDocumentsByFiltersAndFulltexts(documents, collection, [], fulltexts);
 }
 
-function documentMeetsFilters(
-  document: DocumentModel,
-  filters: AttributeFilter[],
-  currentUser: UserModel,
-  documentsMap: {[id: string]: DocumentModel}
-): boolean {
-  return (
-    filters.every(filter => documentMeetFilter(document, filter, currentUser)) ||
-    parentDocumentMeetsFilters(document, filters, currentUser, documentsMap)
+function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: string[], matchedAttributesIds: string[]) {
+  const documentAttributesIds = Object.keys(document.data);
+  if (arrayIntersection(documentAttributesIds, matchedAttributesIds).length > 0) {
+    return true;
+  }
+
+  return Object.values(document.data).some(value =>
+    fulltextsLowerCase.every(fulltext =>
+      (value || '')
+        .toString()
+        .toLowerCase()
+        .includes(fulltext)
+    )
   );
 }
 
-function parentDocumentMeetsFilters(
-  document: DocumentModel,
-  filters: AttributeFilter[],
-  currentUser: UserModel,
-  documentsMap: {[id: string]: DocumentModel}
-): boolean {
-  if (!document.metaData || !document.metaData.parentId) {
-    return false;
+function documentMeetsFilters(document: DocumentModel, filters: AttributeFilterModel[]): boolean {
+  if (!filters || filters.length === 0) {
+    return true;
   }
-
-  const parentDocument = documentsMap[document.metaData.parentId];
-  return parentDocument && documentMeetsFilters(parentDocument, filters, currentUser, documentsMap);
+  return filters.every(filter => documentMeetFilter(document, filter));
 }
 
-function documentMeetFilter(document: DocumentModel, filter: AttributeFilter, currentUser: UserModel): boolean {
+function documentMeetFilter(document: DocumentModel, filter: AttributeFilterModel): boolean {
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
   const dataValue = document.data[filter.attributeId];
-  const filterValue = applyFilterFunctions(filter, currentUser);
+  const filterValue = filter.value;
   switch (filter.conditionType) {
     case ConditionType.Equals:
       return dataValue === filterValue;
@@ -232,18 +330,9 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilter, cu
 }
 
 function paginate(documents: DocumentModel[], query: QueryModel) {
-  if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
+  if (!query || isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
     return documents;
   }
 
   return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
-}
-
-function applyFilterFunctions(filter: AttributeFilter, currentUser: UserModel): any {
-  switch (filter.value) {
-    case 'userEmail()':
-      return currentUser && currentUser.email;
-    default:
-      return filter.value;
-  }
 }
