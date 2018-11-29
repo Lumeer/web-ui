@@ -1,0 +1,27 @@
+<div class="panel-item video mx-2" *ngIf="videos$ | async">
+  <div class="dropdown show">
+    <a href="#"
+       role="button"
+       id="videoDropdownLink"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false">
+        <i class="fab fa-lg fa-youtube"></i>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right video-dropdown"
+         aria-labelledby="videoDropdownLink">
+
+      <a
+        *ngFor="let video of videos$ | async"
+        (click)="openPlayer(video.id)"
+        class="dropdown-item"
+        [title]="video.summary">
+        <img [src]="'https://img.youtube.com/vi/'+ video.id +'/sddefault.jpg'" width="32px" class="mr-2"/>
+        <span>{{video.summary}}</span>
+        <span class="text-muted">{{video.description}}</span>
+      </a>
+
+    </div>
+  </div>
+</div>

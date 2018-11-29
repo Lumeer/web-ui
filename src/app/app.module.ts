@@ -32,6 +32,7 @@ import {CoreModule} from './core/core.module';
 import {DialogModule} from './dialog/dialog.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
+import {VideoPlayerModule} from './video-player/video-player.module';
 
 declare const require; // Use the require method provided by webpack
 
@@ -55,6 +56,7 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     CoreModule,
     CollectionModule,
     DialogModule,
+    VideoPlayerModule,
     ViewModule,
     WorkspaceModule,
     AppRoutingModule, // needs to be declared after all other routing modules
