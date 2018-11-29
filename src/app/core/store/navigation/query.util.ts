@@ -115,10 +115,6 @@ export function queryIsNotEmpty(query: QueryModel): boolean {
   );
 }
 
-export function queryIsNotEmptyExceptPagination(query: QueryModel): boolean {
-  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
-}
-
 export function queryIsEmpty(query: QueryModel): boolean {
   return !queryIsNotEmpty(query);
 }
@@ -152,6 +148,10 @@ export function getAllCollectionIdsFromQuery(query: QueryModel, linkTypes: LinkT
     .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
     .filter(id => !basicCollectionIds.includes(id));
   return [...basicCollectionIds, ...collectionIdsFromLinks];
+}
+
+export function getBaseCollectionIdsFromQuery(query: QueryModel): string[] {
+  return query.stems && query.stems.map(stem => stem.collectionId);
 }
 
 export function isQuerySubset(superset: QueryModel, subset: QueryModel): boolean {

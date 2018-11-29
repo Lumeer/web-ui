@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
+import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
+import {getBaseCollectionIdsFromQuery} from './query.util';
 
 export function areQueriesEqual(first: QueryModel, second: QueryModel): boolean {
   return QueryConverter.toString(first) === QueryConverter.toString(second);
@@ -32,7 +33,10 @@ export function areQueriesEqualExceptPagination(first: QueryModel, second: Query
 }
 
 export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
-  if (oldQuery.stems.length !== newQuery.stems.length) {
+  if (
+    oldQuery.stems.length !== newQuery.stems.length ||
+    !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
+  ) {
     return false;
   }
 

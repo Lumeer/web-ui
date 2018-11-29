@@ -39,7 +39,7 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return this.getFilter();
+    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.value}`;
   }
 
   public get icons(): string[] {
@@ -48,10 +48,6 @@ export class AttributeQueryItem implements QueryItem {
 
   public get colors(): string[] {
     return [this.collection.color];
-  }
-
-  public getFilter(): string {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.value}`;
   }
 
   public getAttributeFilter(): AttributeFilterModel {

@@ -263,10 +263,13 @@ function filterDocumentsByFiltersAndFulltexts(
   filters: AttributeFilterModel[],
   fulltexts: string[]
 ): DocumentModel[] {
-  const fulltextsLowerCase = fulltexts.map(fulltext => fulltext.toLowerCase());
-  const matchedAttributesIds = collection.attributes
-    .filter(attribute => fulltextsLowerCase.every(fulltext => attribute.name.toLowerCase().includes(fulltext)))
-    .map(attribute => attribute.id);
+  const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
+  const matchedAttributesIds =
+    (fulltextsLowerCase.length > 0 &&
+      collection.attributes
+        .filter(attribute => fulltextsLowerCase.every(fulltext => attribute.name.toLowerCase().includes(fulltext)))
+        .map(attribute => attribute.id)) ||
+    [];
 
   return documents.filter(
     document =>
@@ -284,6 +287,10 @@ export function filterDocumentsByFulltexts(
 }
 
 function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: string[], matchedAttributesIds: string[]) {
+  if (!fulltextsLowerCase || fulltextsLowerCase.length === 0) {
+    return true;
+  }
+
   const documentAttributesIds = Object.keys(document.data);
   if (arrayIntersection(documentAttributesIds, matchedAttributesIds).length > 0) {
     return true;
