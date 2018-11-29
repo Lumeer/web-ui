@@ -17,39 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const DEFAULT_GANTT_CHART_ID = 'default';
+import {Pipe, PipeTransform} from '@angular/core';
+import {GanttChartBarPropertyOptional} from '../../../../../core/store/gantt-charts/gantt-chart.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
-export interface GanttChartModel {
-  id: string;
-  config?: GanttChartConfig;
-}
+@Pipe({
+  name: 'barSelectPlaceholderPropertyOptional',
+})
+export class BarSelectPlaceholderPropertyOptionalPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
 
-export interface GanttChartConfig {
-  mode: GanttChartMode;
-  barsProperties: {[type: string]: GanttChartBarModel};
-}
-
-export interface GanttChartBarModel {
-  collectionId: string;
-  attributeId: string;
-}
-
-export enum GanttChartMode {
-  Day = 'Day',
-  QuarterDay = 'Quarter Day',
-  HalfDay = 'Half Day',
-  Week = 'Week',
-  Month = 'Month',
-}
-
-export enum GanttChartBarPropertyRequired {
-  NAME = 'name',
-  START = 'start',
-  END = 'end',
-}
-
-export enum GanttChartBarPropertyOptional {
-  ID = 'id',
-  DEPENDENCIES = 'dependencies',
-  PROGRESS = 'progress',
+  public transform(barProperty: GanttChartBarPropertyOptional): string {
+    return this.i18n(
+      {
+        id: 'ganttChart.barOptional.placeholder',
+        value: '{barProperty, select, id {id} dependencies {dependencies} progress {progress}}',
+      },
+      {
+        barProperty,
+      }
+    );
+  }
 }

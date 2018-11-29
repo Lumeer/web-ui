@@ -17,39 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const DEFAULT_GANTT_CHART_ID = 'default';
+import {Pipe, PipeTransform} from '@angular/core';
+import {GanttChartBarPropertyRequired} from '../../../../../core/store/gantt-charts/gantt-chart.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
-export interface GanttChartModel {
-  id: string;
-  config?: GanttChartConfig;
-}
+@Pipe({
+  name: 'barSelectEmptyValuePropertyRequired',
+})
+export class BarSelectEmptyValuePropertyRequiredPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
 
-export interface GanttChartConfig {
-  mode: GanttChartMode;
-  barsProperties: {[type: string]: GanttChartBarModel};
-}
-
-export interface GanttChartBarModel {
-  collectionId: string;
-  attributeId: string;
-}
-
-export enum GanttChartMode {
-  Day = 'Day',
-  QuarterDay = 'Quarter Day',
-  HalfDay = 'Half Day',
-  Week = 'Week',
-  Month = 'Month',
-}
-
-export enum GanttChartBarPropertyRequired {
-  NAME = 'name',
-  START = 'start',
-  END = 'end',
-}
-
-export enum GanttChartBarPropertyOptional {
-  ID = 'id',
-  DEPENDENCIES = 'dependencies',
-  PROGRESS = 'progress',
+  public transform(barProperty: GanttChartBarPropertyRequired): string {
+    return this.i18n(
+      {
+        id: 'ganttChart.barRequired.placeholder',
+        value: 'Select {barProperty, select, name {name} start {starting date} end {ending date}}',
+      },
+      {
+        barProperty,
+      }
+    );
+  }
 }

@@ -28,20 +28,23 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {map, take} from 'rxjs/operators';
 
-import {ViewModel} from "../../../core/store/views/view.model";
-import {AppState} from "../../../core/store/app.state";
-import {DocumentsAction} from "../../../core/store/documents/documents.action";
-import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from "../../../core/store/gantt-charts/gantt-chart.model";
-import {selectGanttChartConfig} from "../../../core/store/gantt-charts/gantt-charts.state";
-import {GanttChartAction} from "../../../core/store/gantt-charts/gantt-charts.action";
+import {ViewModel} from '../../../core/store/views/view.model';
+import {AppState} from '../../../core/store/app.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {
+  DEFAULT_GANTT_CHART_ID,
+  GanttChartConfig,
+  GanttChartMode,
+} from '../../../core/store/gantt-charts/gantt-chart.model';
+import {selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
+import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
 
 @Component({
   selector: 'gantt-chart-perspective',
   templateUrl: './gantt-chart-perspective.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
-
   public documents$: Observable<DocumentModel[]>;
   public collection$: Observable<CollectionModel>;
   public config$: Observable<GanttChartConfig>;
@@ -52,8 +55,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   private ganttChartId = DEFAULT_GANTT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -62,11 +64,10 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery))
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchDocuments(query);
-      });
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchDocuments(query);
+    });
     this.subscriptions.add(subscription);
   }
 
@@ -75,10 +76,13 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initGanttChart() {
-    const subscription = this.store$.pipe(select(selectCurrentView),
-      take(1))
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        take(1)
+      )
       .subscribe(view => {
-        const config = view && view.config && view.config.ganttChart || this.createDefaultConfig();
+        const config = (view && view.config && view.config.ganttChart) || this.createDefaultConfig();
         const ganttChart = {id: this.ganttChartId, config};
         this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart}));
       });
@@ -86,13 +90,15 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): GanttChartConfig {
-    return {mode: GanttChartMode.Day, bars: {}};
+    return {mode: GanttChartMode.Day, barsProperties: {}};
   }
 
   private subscribeData() {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collection$ = this.store$.pipe(select(selectCollectionsByQuery),
-      map(collections => collections[0]));
+    this.collection$ = this.store$.pipe(
+      select(selectCollectionsByQuery),
+      map(collections => collections[0])
+    );
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
@@ -195,6 +201,4 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   //
   //
   // }
-
-
 }

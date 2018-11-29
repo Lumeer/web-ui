@@ -1,8 +1,3 @@
-
-
-
-
-
 <div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
 
     <ng-container *ngIf="{collection: collection$ | async,  config: config$ | async} as data">
@@ -27,6 +22,6 @@
 <ng-template #notDisplayable>
   <div class="alert alert-warning m-3"
        role="alert"
-       i18n="@@chart.query.invalid">Gantt chart perspective cannot show the results of your query. The query needs to have exactly one collection.
+       i18n="@@ganttChart.query.invalid">Gantt chart perspective cannot show the results of your query. The query needs to have exactly one collection.
   </div>
 </ng-template>

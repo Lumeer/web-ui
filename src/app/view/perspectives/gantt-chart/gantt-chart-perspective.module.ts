@@ -16,36 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared/shared.module';
 import {GanttChartPerspectiveRoutingModule} from './gantt-chart-perspective-routing.module';
 import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
 import {GanttChartConfigComponent} from './gantt-chart-config/gantt-chart-config.component';
-import {PickerModule} from "../../../shared/picker/picker.module";
+import {PickerModule} from '../../../shared/picker/picker.module';
 import {GanttChartVisualizationComponent} from './gantt-chart-visualization/gantt-chart-visualization.component';
-import {GanttChartPipesModule} from "./pipes/gantt-chart-pipes.module";
-
+import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule,
-    PickerModule,
-    GanttChartPerspectiveRoutingModule,
-    GanttChartPipesModule
-  ],
-  declarations: [
-    GanttChartPerspectiveComponent,
-    GanttChartVisualizationComponent,
-    GanttChartConfigComponent
-  ],
-  entryComponents: [
-    GanttChartPerspectiveComponent
-  ],
-  exports: [
-    GanttChartPerspectiveComponent
-  ]
+  imports: [SharedModule, RouterModule, PickerModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
+  declarations: [GanttChartPerspectiveComponent, GanttChartVisualizationComponent, GanttChartConfigComponent],
+  entryComponents: [GanttChartPerspectiveComponent],
+  exports: [GanttChartPerspectiveComponent],
 })
-export class GanttChartPerspectiveModule { }
+export class GanttChartPerspectiveModule {}

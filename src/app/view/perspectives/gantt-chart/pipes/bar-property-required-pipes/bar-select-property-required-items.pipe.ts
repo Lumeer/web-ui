@@ -18,32 +18,44 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarModel, GanttChartBarType, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart.model';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {
+  GanttChartBarModel,
+  GanttChartBarPropertyRequired,
+  GanttChartConfig,
+} from '../../../../../core/store/gantt-charts/gantt-chart.model';
+import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
-  name: 'barSelectItems'
+  name: 'barPropertyRequiredSelectItems',
 })
-export class BarSelectItemsPipe implements PipeTransform {
-
-  public transform(collections: CollectionModel[], bar: GanttChartBarType, config: GanttChartConfig): SelectItemModel[] {
+export class BarSelectPropertyRequiredItemsPipe implements PipeTransform {
+  public transform(
+    collections: CollectionModel[],
+    bar: GanttChartBarPropertyRequired,
+    config: GanttChartConfig
+  ): SelectItemModel[] {
     const selectedAttributesIdsInsteadBar = this.getSelectedAttributesIdsInsteadBar(bar, config);
-    return collections.filter(collection => !!collection)
+    return collections
+      .filter(collection => !!collection)
       .reduce((items, collection) => {
         const itemsForCollection = this.getItemsForCollection(collection, selectedAttributesIdsInsteadBar);
         return [...items, ...itemsForCollection];
       }, []);
   }
 
-  public getSelectedAttributesIdsInsteadBar(axis: GanttChartBarType, config: GanttChartConfig): string[] {
-    return Object.entries(config.bars)
-      .filter(entry => entry[0] !== axis)
+  public getSelectedAttributesIdsInsteadBar(
+    barPropertyRequired: GanttChartBarPropertyRequired,
+    config: GanttChartConfig
+  ): string[] {
+    return Object.entries(config.barsProperties)
+      .filter(entry => entry[0] !== barPropertyRequired)
       .map(entry => entry[1].attributeId);
   }
 
   public getItemsForCollection(collection: CollectionModel, restrictedIds: string[]): SelectItemModel[] {
-    return collection.attributes.filter(attribute => !restrictedIds.includes(attribute.id))
+    return collection.attributes
+      .filter(attribute => !restrictedIds.includes(attribute.id))
       .map(attribute => this.attributeToItem(collection, attribute));
   }
 
@@ -51,5 +63,4 @@ export class BarSelectItemsPipe implements PipeTransform {
     const bar: GanttChartBarModel = {collectionId: collection.id, attributeId: attribute.id};
     return {id: bar, value: attribute.name, icon: collection.icon, iconColor: collection.color};
   }
-
 }

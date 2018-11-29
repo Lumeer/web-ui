@@ -18,24 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarType} from '../../../../core/store/gantt-charts/gantt-chart.model';
+import {GanttChartBarPropertyRequired} from '../../../../../core/store/gantt-charts/gantt-chart.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'barSelectEmptyValue'
+  name: 'barSelectPlaceholderPropertyRequired',
 })
-export class BarSelectEmptyValuePipe implements PipeTransform {
+export class BarSelectPlaceholderPropertyRequiredPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
 
-  public constructor(private i18n: I18n) {
+  public transform(barProperty: GanttChartBarPropertyRequired): string {
+    return this.i18n(
+      {
+        id: 'ganttChart.barRequired.placeholder',
+        value: '{barProperty, select, name {name} start {start} end {end}}',
+      },
+      {
+        barProperty,
+      }
+    );
   }
-
-  public transform(barType: GanttChartBarType): string {
-    return this.i18n({
-      id: 'ganttChart.bar.placeholder',
-      value: 'Select {barType, select, name {name} start {starting date} end {ending date}}'
-    }, {
-      barType
-    });
-  }
-
 }

@@ -1,17 +1,31 @@
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges, OnChanges, ViewEncapsulation, ViewChild, ElementRef} from '@angular/core';
-import {CollectionModel} from "../../../../core/store/collections/collection.model";
-import {DocumentModel} from "../../../../core/store/documents/document.model";
-import {GanttChartBarType, GanttChartConfig} from "../../../../core/store/gantt-charts/gantt-chart.model";
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  OnChanges,
+  ViewEncapsulation,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {
+  GanttChartBarPropertyOptional,
+  GanttChartBarPropertyRequired,
+  GanttChartConfig,
+} from '../../../../core/store/gantt-charts/gantt-chart.model';
 import * as frappeGantt from 'frappe-gantt';
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
   styleUrls: ['./gantt-chart-visualization.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
-
   @Input()
   public collection: CollectionModel;
 
@@ -24,13 +38,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
+  public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
+  public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
+
   public gantt_chart: frappeGantt;
 
-  // @ViewChild('ganttChart')
-  // private ganttChartElement: ElementRef;
-
-  constructor() {
-  }
+  constructor() {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.documents || changes.config) && this.config) {
@@ -39,44 +52,45 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private visualize() {
-
-    // if (this.config.mode != null) console.log('mode: '+this.config.mode);
-    // if (this.config.bars[GanttChartBarType.NAME] != null) console.log('name: '+this.config.bars[GanttChartBarType.NAME].attributeId);
-    // if (this.config.bars[GanttChartBarType.START] != null) console.log('start: '+this.config.bars[GanttChartBarType.START].attributeId);
-    // if (this.config.bars[GanttChartBarType.END] != null) console.log('end: '+this.config.bars[GanttChartBarType.END].attributeId);
-
-    // console.log("collectin: ",this.collection);
-
-    if (this.config.mode != null && this.config.bars[GanttChartBarType.NAME] != null && this.config.bars[GanttChartBarType.START] != null && this.config.bars[GanttChartBarType.END] != null){
-
+    if (
+      this.config.mode &&
+      this.config.barsProperties[GanttChartBarPropertyRequired.NAME] &&
+      this.config.barsProperties[GanttChartBarPropertyRequired.START] &&
+      this.config.barsProperties[GanttChartBarPropertyRequired.END]
+    ) {
       const tasks = [];
 
       for (const document of this.documents) {
-        const name = document.data[this.config.bars[GanttChartBarType.NAME].attributeId];
-        const start = document.data[this.config.bars[GanttChartBarType.START].attributeId];
-        const end = document.data[this.config.bars[GanttChartBarType.END].attributeId];
-        //
-        // console.log("document: ",document);
-        // console.log("this.config.bars[GanttChartBarType.NAME].attributeId: ",this.config.bars[GanttChartBarType.NAME].attributeId);
-        // console.log("this.config.bars[GanttChartBarType.START].attributeId: ",this.config.bars[GanttChartBarType.START].attributeId);
-        // console.log("this.config.bars[GanttChartBarType.END: ",this.config.bars[GanttChartBarType.END].attributeId);
+        const name = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.NAME].attributeId];
+        const start = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId];
+        const end = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId];
 
-        if (name != null && start != null && end != null) {
-          tasks.push({
-            name: name,
-            start: start,
-            end: end,
-            progress: 20
-          });
-        }
+        let id = null,
+          dependencies = null,
+          progress = null;
+
+        if (this.config.barsProperties[GanttChartBarPropertyOptional.ID])
+          id = document.data[this.config.barsProperties[GanttChartBarPropertyOptional.ID].attributeId];
+        if (this.config.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES])
+          dependencies =
+            document.data[this.config.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES].attributeId];
+        if (this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS])
+          progress = document.data[this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId];
+
+        tasks.push({
+          name: name,
+          start: start,
+          end: end,
+          id: id,
+          dependencies: dependencies,
+          progress: progress,
+        });
       }
 
-      if (tasks != null){
+      if (tasks.length > 0) {
         this.gantt_chart = new frappeGantt.default('#ganttChart', tasks);
         this.gantt_chart.change_view_mode(this.config.mode);
       }
     }
-
   }
-
 }
