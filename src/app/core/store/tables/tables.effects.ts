@@ -120,12 +120,12 @@ export class TablesEffects {
         },
       });
 
-      const createPartActions: Action[] = (query.linkTypeIds || []).map(
+      const createPartActions: Action[] = (queryStem.linkTypeIds || []).map(
         (linkTypeId, index) =>
           new TablesAction.CreatePart({
             tableId: action.payload.tableId,
             linkTypeId,
-            last: index === query.linkTypeIds.length - 1,
+            last: index === queryStem.linkTypeIds.length - 1,
             config,
           })
       );

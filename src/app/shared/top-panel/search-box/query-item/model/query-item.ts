@@ -28,6 +28,4 @@ export interface QueryItem {
 
   value: string;
   type: QueryItemType;
-
-  dependsOn(queryItem: QueryItem): boolean;
 }

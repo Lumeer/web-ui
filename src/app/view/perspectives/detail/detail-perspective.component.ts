@@ -24,6 +24,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'detail-perspective',
@@ -65,13 +66,13 @@ export class DetailPerspectiveComponent {
 
   private loadLinkInstances(document: DocumentModel) {
     if (document) {
-      const query = {documentIds: [document.id]};
+      const query: QueryModel = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
       this.store.dispatch(new LinkInstancesAction.Get({query}));
     }
   }
 
   private setQueryWithCollection(collection: CollectionModel) {
-    const query = {collectionIds: [collection.id]};
+    const query: QueryModel = {stems: [{collectionId: collection.id}]};
     this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 }

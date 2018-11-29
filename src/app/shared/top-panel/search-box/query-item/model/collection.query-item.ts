@@ -41,8 +41,4 @@ export class CollectionQueryItem implements QueryItem {
   public get colors(): string[] {
     return [this.collection.color];
   }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    return false;
-  }
 }

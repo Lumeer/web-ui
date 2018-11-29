@@ -25,7 +25,6 @@ import {Observable, Subscription} from 'rxjs';
 
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {Query} from '../../core/dto';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -39,6 +38,7 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
+import {QueryModel} from '../../core/store/navigation/query.model';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -128,7 +128,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public documentsQuery(collectionId: string): string {
-    const query: Query = {collectionIds: [collectionId]};
+    const query: QueryModel = {stems: [{collectionId: collectionId}]};
     return QueryConverter.toString(query);
   }
 

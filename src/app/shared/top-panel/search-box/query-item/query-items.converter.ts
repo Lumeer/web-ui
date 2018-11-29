@@ -56,7 +56,7 @@ export class QueryItemsConverter {
           query.stems[query.stems.length - 1].filters.push((queryItem as AttributeQueryItem).getAttributeFilter());
           return;
         case QueryItemType.Document:
-          query.stems[query.stems.length - 1].documentIds.push((queryItem as DocumentQueryItem).documentId);
+          query.stems[query.stems.length - 1].documentIds.push((queryItem as DocumentQueryItem).document.id);
           return;
         case QueryItemType.Fulltext:
           query.fulltexts.push((queryItem as FulltextQueryItem).text);
@@ -84,7 +84,7 @@ export class QueryItemsConverter {
     ];
   }
 
-  private createCollectionItem(collectionId: string): QueryItem {
+  public createCollectionItem(collectionId: string): QueryItem {
     const collection = this.data.collections.find(col => col.id === collectionId);
     if (collection) {
       return new CollectionQueryItem(collection);

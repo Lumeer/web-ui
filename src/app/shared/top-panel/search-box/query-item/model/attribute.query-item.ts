@@ -20,7 +20,6 @@
 import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
 import {AttributeFilterModel} from '../../../../../core/store/navigation/query.model';
 import {conditionFromString} from '../../../../../core/store/navigation/query.util';
 
@@ -31,7 +30,7 @@ export class AttributeQueryItem implements QueryItem {
     public collection: CollectionModel,
     public attribute: AttributeModel,
     public condition: string,
-    public value: string
+    public conditionValue: string
   ) {}
 
   public get text() {
@@ -39,7 +38,7 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.value}`;
+    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
   }
 
   public get icons(): string[] {
@@ -56,14 +55,7 @@ export class AttributeQueryItem implements QueryItem {
       attributeId: this.attribute.id,
       condition: this.condition,
       conditionType: conditionFromString(this.condition),
-      value: this.value,
+      value: this.conditionValue,
     };
-  }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    if (queryItem.type === QueryItemType.Collection) {
-      return (queryItem as CollectionQueryItem).collection.id === this.collection.id;
-    }
-    return false;
   }
 }

@@ -135,7 +135,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     ).pipe(
       map(([linkTypes, collectionsMap, query]) =>
         linkTypes
-          .filter(linkType => !query.linkTypeIds || !query.linkTypeIds.includes(linkType.id))
+          .filter(linkType => !query.stems[0].linkTypeIds || !query.stems[0].linkTypeIds.includes(linkType.id))
           .reduce<LinkedAttribute[]>((filtered, linkType) => {
             if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
               return filtered.slice(0, 5);

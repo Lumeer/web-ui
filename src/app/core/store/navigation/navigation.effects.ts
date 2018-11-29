@@ -30,7 +30,7 @@ import {selectNavigation, selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
 import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
-import {QueryModel} from './query.model';
+import {QueryModel, QueryStemModel} from './query.model';
 
 @Injectable()
 export class NavigationEffects {
@@ -45,9 +45,11 @@ export class NavigationEffects {
       )
     ),
     map(({action, query}) => {
-      const linkTypeIds = (query.linkTypeIds || []).concat(action.payload.linkTypeId);
+      const stem: QueryStemModel = query.stems[0]; // TODO be aware when using with more than 1 stem
+      const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
+      const newStem = {...stem, linkTypeIds};
 
-      return newQueryAction({...query, linkTypeIds});
+      return newQueryAction({...query, stems: [newStem]});
     })
   );
 
@@ -62,9 +64,10 @@ export class NavigationEffects {
       )
     ),
     map(({action, query}) => {
-      const collectionIds = (query.collectionIds || []).concat(action.payload.collectionId);
+      const stems = query.stems || [];
+      stems.push({collectionId: action.payload.collectionId});
 
-      return newQueryAction({...query, collectionIds});
+      return newQueryAction({...query, stems});
     })
   );
 
@@ -79,13 +82,9 @@ export class NavigationEffects {
       )
     ),
     map(({action, query}) => {
-      const collectionIds = query.collectionIds || [];
-      const indexToRemove = collectionIds.findIndex(id => id === action.payload.collectionId);
-      if (indexToRemove) {
-        collectionIds.splice(indexToRemove, 1);
-      }
+      const stems = (query.stems || []).filter(stem => stem.collectionId !== action.payload.collectionId);
 
-      return newQueryAction({...query, collectionIds});
+      return newQueryAction({...query, stems});
     })
   );
 

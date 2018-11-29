@@ -110,8 +110,8 @@ export function queryIsNotEmpty(query: QueryModel): boolean {
   return (
     (query.stems && query.stems.length > 0) ||
     (query.fulltexts && query.fulltexts.length > 0) ||
-    query.page ||
-    query.pageSize
+    !!query.page ||
+    !!query.pageSize
   );
 }
 
