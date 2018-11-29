@@ -2,7 +2,8 @@
                 [type]="'success'"
                 [width]="350"
                 (submit)="onSubmit()">
-  <span class="title" i18n="@@link.new.dialog.title">Create new link</span>
+  <span class="title"
+        i18n="@@link.new.dialog.title">Create new link</span>
 
   <div class="body">
     <form [formGroup]="form">
@@ -14,6 +15,9 @@
     </form>
   </div>
 
-  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
-  <span class="button-submit" i18n="@@button.create">Create</span>
+  <span class="button-cancel"
+        i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit"
+        data-test="create-link-dialog-create-button"
+        i18n="@@button.create">Create</span>
 </dialog-wrapper>

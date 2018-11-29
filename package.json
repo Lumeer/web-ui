@@ -24,7 +24,7 @@
     "start:en": "npm run reset-env && ng serve --configuration=en",
     "test": "ng test",
     "test:watch": "ng test --watch",
-    "workaround": "sed -i -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js",
+    "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run"
   },
   "repository": {
@@ -38,121 +38,122 @@
   "homepage": "https://github.com/Lumeer/web-ui#readme",
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.1.10",
-    "@angular/cdk": "^6.4.7",
-    "@angular/common": "^6.1.10",
-    "@angular/compiler": "^6.1.10",
-    "@angular/core": "^6.1.10",
-    "@angular/forms": "^6.1.10",
-    "@angular/http": "^6.1.10",
-    "@angular/platform-browser": "^6.1.10",
-    "@angular/platform-browser-dynamic": "^6.1.10",
-    "@angular/router": "^6.1.10",
-    "@ngrx/effects": "^6.1.0",
-    "@ngrx/entity": "^6.1.0",
-    "@ngrx/router-store": "^6.1.0",
-    "@ngrx/store": "^6.1.0",
-    "@ngrx/store-devtools": "^6.1.0",
+    "@angular/animations": "^7.1.0",
+    "@angular/cdk": "^7.1.0",
+    "@angular/common": "^7.1.0",
+    "@angular/compiler": "^7.1.0",
+    "@angular/core": "^7.1.0",
+    "@angular/forms": "^7.1.0",
+    "@angular/http": "^7.1.0",
+    "@angular/platform-browser": "^7.1.0",
+    "@angular/platform-browser-dynamic": "^7.1.0",
+    "@angular/router": "^7.1.0",
+    "@ngrx/effects": "^6.1.2",
+    "@ngrx/entity": "^6.1.2",
+    "@ngrx/router-store": "^6.1.2",
+    "@ngrx/store": "^6.1.2",
+    "@ngrx/store-devtools": "^6.1.2",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
-    "@sentry/browser": "^4.3.2",
+    "@sentry/browser": "^4.3.4",
     "angular-resizable-element": "^3.2.2",
-    "angulartics2": "^7.0.0",
-    "auth0-js": "^9.8.0",
+    "angulartics2": "^7.2.0",
+    "auth0-js": "^9.8.2",
     "bootstrap": "^4.1.3",
     "coordinate-parser": "^1.0.2",
     "core-js": "^2.5.7",
-    "flag-icon-css": "^3.2.0",
+    "flag-icon-css": "^3.2.1",
     "hammerjs": "^2.0.8",
-    "intersection-observer": "^0.5.0",
+    "intersection-observer": "^0.5.1",
     "jssha": "^2.3.1",
     "leaflet": "^1.3.4",
     "muuri": "^0.7.1",
     "ng-click-outside": "^4.0.0",
     "ng-snotify": "^4.3.1",
-    "ngx-contextmenu": "^5.0.3",
+    "ngx-contextmenu": "^5.1.1",
     "ngx-infinite-scroll": "^6.0.1",
-    "plotly.js": "^1.41.3",
+    "plotly.js": "^1.42.5",
+    "pusher-js": "^4.3.1",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.10.6",
-    "@angular-devkit/schematics": "^0.8.5",
-    "@angular/cli": "^6.2.5",
-    "@angular/compiler-cli": "^6.1.10",
-    "@angular/language-service": "^6.1.10",
-    "@compodoc/compodoc": "^1.1.5",
-    "@ngrx/schematics": "^6.1.0",
-    "@sentry/cli": "^1.36.1",
-    "@types/auth0-js": "^8.11.6",
-    "@types/d3": "^3.5.36",
-    "@types/jasmine": "^2.8.9",
-    "@types/jasminewd2": "~2.0.5",
+    "@angular-devkit/schematics": "^7.0.6",
+    "@angular/cli": "^7.0.6",
+    "@angular/compiler-cli": "^7.1.0",
+    "@angular/language-service": "^7.1.0",
+    "@compodoc/compodoc": "^1.1.6",
+    "@ngrx/schematics": "^6.1.2",
+    "@sentry/cli": "^1.36.4",
+    "@types/auth0-js": "^8.11.7",
+    "@types/d3": "^3.5.41",
+    "@types/jasmine": "^3.3.0",
+    "@types/jasminewd2": "~2.0.6",
     "@types/jssha": "^0.0.29",
-    "@types/leaflet": "^1.2.11",
-    "@types/node": "^8.10.36",
-    "@types/plotly.js": "^1.38.11",
+    "@types/leaflet": "^1.2.14",
+    "@types/node": "^10.12.10",
+    "@types/plotly.js": "^1.41.0",
     "bundlesize": "^0.17.0",
     "codelyzer": "^4.5.0",
-    "cypress": "^3.1.0",
-    "husky": "^1.1.3",
-    "jasmine": "~3.2.0",
-    "jasmine-core": "~3.2.1",
+    "cypress": "^3.1.2",
+    "husky": "^1.2.0",
+    "jasmine": "~3.3.0",
+    "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "^3.0.0",
+    "karma": "^3.1.1",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "~2.0.4",
-    "karma-jasmine": "~1.1.2",
-    "karma-jasmine-html-reporter": "^1.3.1",
-    "lint-staged": "^8.0.4",
+    "karma-jasmine": "~2.0.1",
+    "karma-jasmine-html-reporter": "^1.4.0",
+    "lint-staged": "^8.1.0",
+    "listr": "^0.14.3",
     "ngx-i18nsupport": "^0.17.1",
-    "prettier": "~1.15.1",
-    "protractor": "~5.4.1",
-    "rxjs-tslint-rules": "^4.10.0",
+    "prettier": "~1.15.2",
+    "rxjs-tslint-rules": "^4.12.0",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~2.9.2"
+    "typescript": "~3.1.6"
   },
   "bundlesize": [
     {
       "path": "./dist/lumeer/common*.js",
-      "maxSize": "3 kB"
+      "maxSize": "6160b"
     },
     {
       "path": "./dist/lumeer/main*.js",
-      "maxSize": "600 kB"
+      "maxSize": "5860kb"
     },
     {
       "path": "./dist/lumeer/perspectives-chart*.js",
-      "maxSize": "1 MB"
+      "maxSize": "9179kb"
     },
     {
       "path": "./dist/lumeer/perspectives-detail*.js",
-      "maxSize": "15 kB"
+      "maxSize": "121kb"
     },
     {
       "path": "./dist/lumeer/perspectives-map*.js",
-      "maxSize": "50 kB"
+      "maxSize": "479kb"
     },
     {
       "path": "./dist/lumeer/perspectives-search*.js",
-      "maxSize": "20 kB"
+      "maxSize": "157kb"
     },
     {
       "path": "./dist/lumeer/polyfills*.js",
-      "maxSize": "25 kB"
+      "maxSize": "213kb"
     },
     {
       "path": "./dist/lumeer/runtime*.js",
-      "maxSize": "2 kB"
+      "maxSize": "12kb"
     },
     {
       "path": "./dist/lumeer/scripts*.js",
-      "maxSize": "20 kB"
+      "maxSize": "192kb"
     },
     {
       "path": "./dist/lumeer/styles*css",
-      "maxSize": "40 kB"
+      "maxSize": "350kb"
     }
   ],
   "husky": {

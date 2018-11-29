@@ -31,7 +31,7 @@ export function documentsReducer(
     case DocumentsActionType.CREATE_SUCCESS:
       return documentsAdapter.addOne(action.payload.document, state);
     case DocumentsActionType.UPDATE_SUCCESS:
-      return documentsAdapter.updateOne({id: action.payload.document.id, changes: action.payload.document}, state);
+      return documentsAdapter.upsertOne(action.payload.document, state);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:

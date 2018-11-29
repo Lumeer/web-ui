@@ -570,3 +570,24 @@ export function getRowParentDocumentId(
     (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
   return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
 }
+
+export function isTableConfigChanged(
+  viewConfig: TableConfig,
+  perspectiveConfig: TableConfig,
+  documentsMap: {[id: string]: DocumentModel}
+): boolean {
+  if (JSON.stringify(viewConfig.parts) !== JSON.stringify(perspectiveConfig.parts)) {
+    return false;
+  }
+
+  const viewRows =
+    viewConfig.rows &&
+    viewConfig.rows.filter((row, index, rows) => {
+      // filter out rows with deleted documents and last empty row
+      return !(row.documentId && !documentsMap[row.documentId]) && !(!row.documentId && index === rows.length - 1);
+    });
+
+  const perspectiveRows = perspectiveConfig.rows && perspectiveConfig.rows.slice(0, viewRows.length);
+
+  return JSON.stringify(viewRows) !== JSON.stringify(perspectiveRows);
+}

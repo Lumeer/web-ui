@@ -1,13 +1,13 @@
 <ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async} as data">
 
   <ng-container *ngIf="{linkInstance: data.linkInstances && data.linkInstances[0] | linkInstancePermissions | async,
-                        document: data.documents && data.documents[0] | documentPermissions | async} as permissions">
+                        document: data.documents | dataCellDocument : data.part : rows[0] | async | documentPermissions | async} as permissions">
     <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
       <ng-container *ngIf="column | isSingleColumn; else emptyCell">
         <table-data-cell *ngIf="rows.length < 2; else collapsedCell"
                          [column]="column"
                          [cursor]="cursor | columnCursor:columnIndex"
-                         [document]="data.documents | dataCellDocument : data.part : rows[0]"
+                         [document]="data.documents | dataCellDocument : data.part : rows[0] | async"
                          [canManageConfig]="canManageConfig"
                          [linkInstance]="data.linkInstances ? data.linkInstances[0] : null"
                          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"

@@ -27,6 +27,7 @@ import {SnotifyService} from 'ng-snotify';
 import {filter, first} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
+import {PusherService} from './core/pusher/pusher.service';
 import {AppState} from './core/store/app.state';
 import {selectCurrentUser} from './core/store/users/users.state';
 
@@ -48,7 +49,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
-    private title: Title
+    private title: Title,
+    private pusherService: PusherService
   ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 

@@ -42,5 +42,9 @@
   &:not(.edited) {
     color: transparent;
     text-shadow: 0 0 0 $body-color;
+
+    &.uninitialized-record {
+      text-shadow: 0 0 0 $secondary;
+    }
   }
 }

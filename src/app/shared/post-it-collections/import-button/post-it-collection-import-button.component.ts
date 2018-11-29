@@ -52,7 +52,7 @@ export class PostItCollectionImportButtonComponent {
       const indexOfSuffix = file.name.lastIndexOf('.');
       const name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
       reader.onloadend = () => {
-        this.import.emit({result: reader.result, name, format: 'csv'});
+        this.import.emit({result: String(reader.result), name, format: 'csv'});
       };
       reader.readAsText(file);
     } else {

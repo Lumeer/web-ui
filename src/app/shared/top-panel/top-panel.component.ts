@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -26,12 +25,15 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {selectOrganizationByWorkspace} from 'src/app/core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from 'src/app/core/store/projects/projects.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
@@ -45,7 +47,7 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
   styleUrls: ['./top-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public mobile: boolean;
 
@@ -63,6 +65,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
 
+  private subscriptions = new Subscription();
+
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
@@ -70,6 +74,17 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     this.store$.dispatch(new OrganizationsAction.Get());
     this.store$.dispatch(new OrganizationsAction.GetCodes());
+
+    this.subscriptions.add(this.subscribeToWorkspaceChanges());
+  }
+
+  private subscribeToWorkspaceChanges(): Subscription {
+    return combineLatest(
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+      this.store$.pipe(select(selectProjectByWorkspace))
+    ).subscribe(() => {
+      setTimeout(() => this.setTopPanelSideWidth()); // TODO use ResizeObserver instead
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -82,8 +97,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
     this.setTopPanelLineHeight();
   }
 
-  public ngAfterViewChecked() {
-    this.setTopPanelSideWidth();
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   @HostListener('window:resize')

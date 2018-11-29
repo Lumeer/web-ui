@@ -17,6 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function areConfigsEqual(config1: any, config2: any): boolean {
-  return JSON.stringify(config1) === JSON.stringify(config2);
+import {Perspective} from 'src/app/view/perspectives/perspective';
+import {DocumentModel} from '../documents/document.model';
+import {isTableConfigChanged} from '../tables/table.utils';
+
+export function isViewConfigChanged(
+  perspective: Perspective,
+  viewConfig: any,
+  perspectiveConfig: any,
+  documentsMap: {[id: string]: DocumentModel}
+): boolean {
+  switch (perspective) {
+    case Perspective.Table:
+      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap);
+    default:
+      return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
+  }
 }

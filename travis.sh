@@ -57,5 +57,5 @@ echo "Stopping backend..."
 echo "Running production build..."
 LUMEER_ENV=production SKIP_SENTRY_UPLOAD=true mvn clean install
 
-echo "Checking bundle sizes..."
+echo "Printing bundle sizes..."
 npm run bundlesize

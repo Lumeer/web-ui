@@ -31,11 +31,17 @@ export const contactsAdapter = createEntityAdapter<ContactModel>({selectId: cont
 export const initialContactsState: ContactsState = contactsAdapter.getInitialState({});
 
 export const selectContactsState = (state: AppState) => state.contacts;
-export const selectAllContacts = createSelector(selectContactsState, contactsAdapter.getSelectors().selectAll);
+export const selectAllContacts = createSelector(
+  selectContactsState,
+  contactsAdapter.getSelectors().selectAll
+);
 export const selectContactByOrganizationId = organizationId =>
-  createSelector(selectAllContacts, contacts => {
-    return contacts.find(contact => contact.organizationId === organizationId);
-  });
+  createSelector(
+    selectAllContacts,
+    contacts => {
+      return contacts.find(contact => contact.organizationId === organizationId);
+    }
+  );
 export const selectContactByWorkspace = createSelector(
   selectAllContacts,
   selectOrganizationByWorkspace,

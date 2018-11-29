@@ -46,6 +46,7 @@ import {AppStoreModule} from './store/app-store.module';
 import {CollectionValidators} from './validators/collection.validators';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
+import {PusherService} from './pusher/pusher.service';
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import {ProjectValidators} from './validators/project.validators';
     CollectionValidators,
     OrganizationValidators,
     ProjectValidators,
+    PusherService,
   ],
   exports: [HomeComponent, NotificationsModule],
 })
