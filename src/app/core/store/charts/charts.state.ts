@@ -29,8 +29,18 @@ export const chartsAdapter = createEntityAdapter<ChartModel>({selectId: chart =>
 export const initialChartsState: ChartsState = chartsAdapter.getInitialState();
 
 export const selectChartState = (state: AppState) => state.charts;
-export const selectChartsDictionary = createSelector(selectChartState, chartsAdapter.getSelectors().selectEntities);
-export const selectChartById = id => createSelector(selectChartsDictionary, charts => charts[id]);
+export const selectChartsDictionary = createSelector(
+  selectChartState,
+  chartsAdapter.getSelectors().selectEntities
+);
+export const selectChartById = id =>
+  createSelector(
+    selectChartsDictionary,
+    charts => charts[id]
+  );
 
 export const selectDefaultChart = selectChartById(DEFAULT_CHART_ID);
-export const selectChartConfig = createSelector(selectDefaultChart, chart => chart && chart.config);
+export const selectChartConfig = createSelector(
+  selectDefaultChart,
+  chart => chart && chart.config
+);

@@ -30,7 +30,7 @@ export function linkTypesReducer(
     case LinkTypesActionType.CREATE_SUCCESS:
       return linkTypesAdapter.addOne(action.payload.linkType, state);
     case LinkTypesActionType.UPDATE_SUCCESS:
-      return linkTypesAdapter.updateOne({id: action.payload.linkType.id, changes: action.payload.linkType}, state);
+      return linkTypesAdapter.upsertOne(action.payload.linkType, state);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
     case LinkTypesActionType.CLEAR:

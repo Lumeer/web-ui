@@ -146,6 +146,7 @@ export class ViewsEffects {
         this.store$.dispatch(action.payload.nextAction);
       }
     }),
+    filter(action => !action.payload.skipNotify),
     map(() => {
       const message = this.i18n({id: 'view.update.success', value: 'View has been updated'});
       return new NotificationsAction.Success({message});

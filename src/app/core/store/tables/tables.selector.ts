@@ -26,50 +26,77 @@ import {selectTableById} from './tables.state';
 
 export const selectDefaultTable = selectTableById(DEFAULT_TABLE_ID);
 
-export const selectTableConfig = createSelector(selectDefaultTable, table => table && table.config);
+export const selectTableConfig = createSelector(
+  selectDefaultTable,
+  table => table && table.config
+);
 
 export const selectHasNextTableParts = (cursor: TableCursor) =>
   cursor &&
-  createSelector(selectTableById(cursor.tableId), table => {
-    return table && table.parts && cursor.partIndex < table.parts.length - 1;
-  });
+  createSelector(
+    selectTableById(cursor.tableId),
+    table => {
+      return table && table.parts && cursor.partIndex < table.parts.length - 1;
+    }
+  );
 
 export const selectTablePart = (cursor: TableCursor) =>
-  createSelector(selectTableById(cursor.tableId), table => {
-    return table && table.parts && table.parts[cursor.partIndex];
-  });
+  createSelector(
+    selectTableById(cursor.tableId),
+    table => {
+      return table && table.parts && table.parts[cursor.partIndex];
+    }
+  );
 
 export const selectTableRows = (tableId: string) =>
-  createSelector(selectTableById(tableId), table => {
-    return (table && table.config && table.config.rows) || [];
-  });
+  createSelector(
+    selectTableById(tableId),
+    table => {
+      return (table && table.config && table.config.rows) || [];
+    }
+  );
 
 export const selectTableRow = (cursor: TableBodyCursor) =>
   cursor &&
-  createSelector(selectTableRows(cursor.tableId), rows => {
-    return findTableRow(rows, cursor.rowPath);
-  });
+  createSelector(
+    selectTableRows(cursor.tableId),
+    rows => {
+      return findTableRow(rows, cursor.rowPath);
+    }
+  );
 
 export const selectTableRowParentDocumentId = (cursor: TableBodyCursor) =>
   cursor &&
-  createSelector(selectTableRow(cursor), selectDocumentsDictionary, (row, documentsMap) => {
-    const document = documentsMap[row.documentId];
-    return row.documentId ? document && document.metaData && document.metaData.parentId : row.parentDocumentId;
-  });
+  createSelector(
+    selectTableRow(cursor),
+    selectDocumentsDictionary,
+    (row, documentsMap) => {
+      const document = documentsMap[row.documentId];
+      return row.documentId ? document && document.metaData && document.metaData.parentId : row.parentDocumentId;
+    }
+  );
 
 export const selectTableRowsWithHierarchyLevels = (tableId: string) =>
-  createSelector(selectTableRows(tableId), selectDocumentsDictionary, (rows, documentsMap) => {
-    const documentIds = new Set(rows.filter(row => !!row.documentId).map(row => row.documentId));
-    return rows.map(row => ({row, level: calculateRowHierarchyLevel(row, documentIds, documentsMap)}));
-  });
+  createSelector(
+    selectTableRows(tableId),
+    selectDocumentsDictionary,
+    (rows, documentsMap) => {
+      const documentIds = new Set(rows.filter(row => !!row.documentId).map(row => row.documentId));
+      return rows.map(row => ({row, level: calculateRowHierarchyLevel(row, documentIds, documentsMap)}));
+    }
+  );
 
 export const selectTableRowWithHierarchyLevel = (cursor: TableBodyCursor) =>
   cursor &&
-  createSelector(selectTableRowsWithHierarchyLevels(cursor.tableId), levels => levels && levels[cursor.rowPath[0]]);
+  createSelector(
+    selectTableRowsWithHierarchyLevels(cursor.tableId),
+    levels => levels && levels[cursor.rowPath[0]]
+  );
 
 export const selectTableHierarchyMaxLevel = (tableId: string) =>
-  createSelector(selectTableRowsWithHierarchyLevels(tableId), rowsWithLevels =>
-    Math.max(0, ...rowsWithLevels.map(row => row.level))
+  createSelector(
+    selectTableRowsWithHierarchyLevels(tableId),
+    rowsWithLevels => Math.max(0, ...rowsWithLevels.map(row => row.level))
   );
 
 export const selectTableRowIndentable = (cursor: TableBodyCursor) =>
@@ -88,14 +115,18 @@ export const selectTableRowIndentable = (cursor: TableBodyCursor) =>
 
 export const selectTableRowOutdentable = (cursor: TableBodyCursor) =>
   cursor &&
-  createSelector(selectTableRow(cursor), selectDocumentsDictionary, (row, documentsMap) => {
-    if (cursor.partIndex > 0 || cursor.rowPath[0] === 0 || !row) {
-      return false;
-    }
+  createSelector(
+    selectTableRow(cursor),
+    selectDocumentsDictionary,
+    (row, documentsMap) => {
+      if (cursor.partIndex > 0 || cursor.rowPath[0] === 0 || !row) {
+        return false;
+      }
 
-    const document = documentsMap[row.documentId];
-    return Boolean((document && document.metaData && document.metaData.parentId) || row.parentDocumentId);
-  });
+      const document = documentsMap[row.documentId];
+      return Boolean((document && document.metaData && document.metaData.parentId) || row.parentDocumentId);
+    }
+  );
 
 export const selectTableLastCollectionId = (tableId: string) =>
   createSelector(

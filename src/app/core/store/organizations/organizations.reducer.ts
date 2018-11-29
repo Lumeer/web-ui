@@ -35,10 +35,7 @@ export function organizationsReducer(
     case OrganizationsActionType.CREATE_SUCCESS:
       return organizationsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      return organizationsAdapter.updateOne(
-        {id: action.payload.organization.id, changes: action.payload.organization},
-        state
-      );
+      return organizationsAdapter.upsertOne(action.payload.organization, state);
     case OrganizationsActionType.DELETE_SUCCESS:
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:

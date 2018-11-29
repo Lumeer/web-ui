@@ -34,7 +34,10 @@ export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialSta
 });
 
 export const selectPaymentsState = (state: AppState) => state.payments;
-export const selectAllPayments = createSelector(selectPaymentsState, paymentsAdapter.getSelectors().selectAll);
+export const selectAllPayments = createSelector(
+  selectPaymentsState,
+  paymentsAdapter.getSelectors().selectAll
+);
 export const selectPaymentsByWorkspace = createSelector(
   selectAllPayments,
   selectOrganizationByWorkspace,
@@ -42,7 +45,13 @@ export const selectPaymentsByWorkspace = createSelector(
     return payments.filter(payment => organization && payment.organizationId === organization.id);
   }
 );
-export const selectPaymentsByWorkspaceSorted = createSelector(selectPaymentsByWorkspace, payments => {
-  return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
-});
-export const selectLastCreatedPayment = createSelector(selectPaymentsState, state => state.lastCreatedPayment);
+export const selectPaymentsByWorkspaceSorted = createSelector(
+  selectPaymentsByWorkspace,
+  payments => {
+    return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
+  }
+);
+export const selectLastCreatedPayment = createSelector(
+  selectPaymentsState,
+  state => state.lastCreatedPayment
+);

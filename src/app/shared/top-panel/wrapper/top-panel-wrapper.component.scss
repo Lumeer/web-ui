@@ -1,5 +1,5 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: calc(100% - var(--top-panel-offset-top, 0px));
+  height: 100%;
 }

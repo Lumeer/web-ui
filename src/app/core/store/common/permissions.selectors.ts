@@ -77,8 +77,11 @@ export const selectDocumentsByQuery = createSelector(
 );
 
 export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) =>
-  createSelector(selectDocumentsByReadPermission, selectCurrentUser, (documents, currentUser) =>
-    filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, currentUser, includeChildren)
+  createSelector(
+    selectDocumentsByReadPermission,
+    selectCurrentUser,
+    (documents, currentUser) =>
+      filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query, currentUser, includeChildren)
   );
 
 export const selectLinkTypesByReadPermission = createSelector(
@@ -91,6 +94,7 @@ export const selectLinkTypesByReadPermission = createSelector(
 );
 
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
-  createSelector(selectLinkTypesByReadPermission, linkTypes =>
-    linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
+  createSelector(
+    selectLinkTypesByReadPermission,
+    linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
   );

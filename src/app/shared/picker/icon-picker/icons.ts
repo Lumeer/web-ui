@@ -6502,3 +6502,21 @@ export function searchIconsByMeta(meta: string): string[] {
 
   return result;
 }
+
+export function safeGetRandomIcon(): string {
+  const unsafe = [
+    'fa-coffin',
+    'fa-book-dead',
+    'fa-skull-crossbones',
+    'fa-tombstone',
+    'fa-tombstone-alt',
+    'fa-flask-poison',
+    'fa-hockey-mask',
+  ];
+  let icon: string;
+  do {
+    icon = icons[Math.round(Math.random() * icons.length)];
+  } while (unsafe.indexOf(icon) > -1);
+
+  return 'fas ' + icon;
+}

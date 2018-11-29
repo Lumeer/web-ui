@@ -298,11 +298,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     attributeId: string,
     value: string
   ) {
-    const data = {[attributeId]: value};
     const document: DocumentModel = {
       ...this.document,
       correlationId: row && row.correlationId,
-      data: data,
+      data: {...this.document.data, [attributeId]: value},
       metaData: this.createDocumentMetaData(row),
     };
 

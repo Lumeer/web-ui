@@ -22,6 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {selectChartConfig} from '../charts/charts.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
@@ -29,7 +30,7 @@ import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
-import {areConfigsEqual} from './view.utils';
+import {isViewConfigChanged} from './view.utils';
 
 export interface ViewsState extends EntityState<ViewModel> {
   loaded: boolean;
@@ -47,25 +48,54 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 
 export const selectViewsState = (state: AppState) => state.views;
 
-export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
-export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
-export const selectViewByCode = (code: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[code]);
-export const selectCurrentView = createSelector(selectNavigation, selectViewsDictionary, (navigation, viewsMap) => {
-  return navigation.workspace && navigation.workspace.viewCode ? viewsMap[navigation.workspace.viewCode] : null;
-});
+export const selectAllViews = createSelector(
+  selectViewsState,
+  viewsAdapter.getSelectors().selectAll
+);
+export const selectViewsDictionary = createSelector(
+  selectViewsState,
+  viewsAdapter.getSelectors().selectEntities
+);
+export const selectViewByCode = (code: string) =>
+  createSelector(
+    selectViewsDictionary,
+    viewsMap => viewsMap[code]
+  );
+export const selectCurrentView = createSelector(
+  selectNavigation,
+  selectViewsDictionary,
+  (navigation, viewsMap) => {
+    return navigation.workspace && navigation.workspace.viewCode ? viewsMap[navigation.workspace.viewCode] : null;
+  }
+);
 
-export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
+export const selectViewsLoaded = createSelector(
+  selectViewsState,
+  state => state.loaded
+);
 
-export const selectViewConfig = createSelector(selectViewsState, views => views.config);
-export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
-export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
+export const selectViewConfig = createSelector(
+  selectViewsState,
+  views => views.config
+);
+export const selectViewSearchConfig = createSelector(
+  selectViewConfig,
+  config => config.search
+);
+export const selectViewTableConfig = createSelector(
+  selectViewConfig,
+  config => config.table
+);
 export const selectViewsByQuery = createSelector(
   selectAllViews,
   selectQuery,
   (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query))
 );
 
-export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
+export const selectViewCursor = createSelector(
+  selectViewsState,
+  state => state.cursor
+);
 
 export const selectPerspectiveConfig = createSelector(
   selectPerspective,
@@ -87,9 +117,12 @@ export const selectPerspectiveViewConfig = createSelector(
   (view, perspective) => view && view.config && view.config[perspective]
 );
 export const selectViewConfigChanged = createSelector(
+  selectPerspective,
   selectPerspectiveConfig,
   selectPerspectiveViewConfig,
-  (perspectiveConfig, viewConfig) => perspectiveConfig && viewConfig && !areConfigsEqual(perspectiveConfig, viewConfig)
+  selectDocumentsDictionary,
+  (perspective, perspectiveConfig, viewConfig, documentsMap) =>
+    viewConfig && perspectiveConfig && isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap)
 );
 
 export const selectViewQueryChanged = createSelector(

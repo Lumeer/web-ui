@@ -36,12 +36,12 @@ import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
   styleUrls: ['./payments-order.component.scss'],
 })
 export class PaymentsOrderComponent implements OnInit {
-  private static CZK_FULL = 205;
-  private static CZK_SALE = 169;
-  private static EUR_FULL = 8.0;
-  private static EUR_SALE = 6.7;
-  private static USD_FULL = 9.9;
-  private static USD_SALE = 8.3;
+  private static CZK_FULL = 219;
+  private static CZK_SALE = 189;
+  private static EUR_FULL = 8.39;
+  private static EUR_SALE = 6.99;
+  private static USD_FULL = 9.59;
+  private static USD_SALE = 7.99;
 
   public discountAmount = 0;
   public discountDescription: string;
