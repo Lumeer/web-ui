@@ -30,6 +30,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkInstanceConverter} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstancesQueries} from './link-instances.state';
+import {QueryConverter} from '../navigation/query.converter';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -39,7 +40,7 @@ export class LinkInstancesEffects {
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) =>
-      this.searchService.searchLinkInstances(action.payload.query).pipe(
+      this.searchService.searchLinkInstances(QueryConverter.toDto(action.payload.query)).pipe(
         map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
         map(
           linkInstances =>

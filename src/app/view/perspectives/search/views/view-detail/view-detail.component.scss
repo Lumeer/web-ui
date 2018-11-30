@@ -1,20 +1,22 @@
 @import '../../../../../../styles/variables';
 @import '../../../../../../styles/bootstrap_var';
 
-.view-hover {
+.view {
   &.card {
     border: $card-border-width solid transparent;
+  }
+}
 
-    &:hover {
-      border: $card-border-width solid $card-border-color;
-      box-shadow: $shadow-default;
-      -webkit-box-shadow: $shadow-default;
-      -moz-box-shadow: $shadow-default;
-    }
+.view-hover {
+  &:hover {
+    border: $card-border-width solid $card-border-color;
+    box-shadow: $shadow-default;
+    -webkit-box-shadow: $shadow-default;
+    -moz-box-shadow: $shadow-default;
+  }
 
-    .title {
-      font-size: 1rem;
-    }
+  .title {
+    font-size: 1rem;
   }
 
   cursor: pointer;

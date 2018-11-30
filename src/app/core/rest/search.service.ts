@@ -48,7 +48,7 @@ export class SearchService {
   }
 
   public searchLinkInstances(query: Query, workspace?: Workspace): Observable<LinkInstanceModel[]> {
-    return this.http.post<LinkInstanceModel[]>(`${this.searchPath(workspace)}/linkIstances`, query);
+    return this.http.post<LinkInstanceModel[]>(`${this.searchPath(workspace)}/linkInstances`, query);
   }
 
   public searchDocuments(query: Query): Observable<DocumentDto[]> {

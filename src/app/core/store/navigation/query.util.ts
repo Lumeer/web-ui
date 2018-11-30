@@ -119,8 +119,12 @@ export function queryIsEmpty(query: QueryModel): boolean {
   return !queryIsNotEmpty(query);
 }
 
+export function queryIsNotEmptyExceptPagination(query: QueryModel): boolean {
+  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
+}
+
 export function queryIsEmptyExceptPagination(query: QueryModel): boolean {
-  return !queryIsNotEmpty(query);
+  return !queryIsNotEmptyExceptPagination(query);
 }
 
 export function isSingleCollectionQuery(query: QueryModel): boolean {

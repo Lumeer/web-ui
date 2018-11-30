@@ -64,8 +64,8 @@ export class QueryConverter {
     return {
       collectionId: dto.collectionId,
       attributeId: dto.attributeId,
-      conditionType: conditionFromString(dto.condition),
-      condition: dto.condition,
+      conditionType: conditionFromString(dto.operator),
+      condition: dto.operator,
       value: dto.value,
     };
   }
@@ -74,7 +74,7 @@ export class QueryConverter {
     return {
       collectionId: model.collectionId,
       attributeId: model.attributeId,
-      condition: model.condition,
+      operator: model.condition,
       value: model.value,
     };
   }

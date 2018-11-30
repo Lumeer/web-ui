@@ -58,6 +58,15 @@ function filterCollectionsByFulltexts(
 
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];
-    return filterDocumentsByFulltexts(documentByCollections, collection, fulltexts).length > 0;
+    return (
+      collectionMeetFulltexts(collection, fulltexts) ||
+      filterDocumentsByFulltexts(documentByCollections, collection, fulltexts).length > 0
+    );
   });
+}
+
+function collectionMeetFulltexts(collection: CollectionModel, fulltexts: string[]): boolean {
+  return (fulltexts || [])
+    .map(fulltext => fulltext.toLowerCase())
+    .every(fulltext => collection.name.toLowerCase().includes(fulltext));
 }

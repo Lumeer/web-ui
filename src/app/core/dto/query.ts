@@ -33,7 +33,7 @@ export interface QueryStem {
 
 export interface AttributeFilter {
   collectionId: string;
-  condition: string;
+  operator: string;
   attributeId: string;
   value: any;
 }

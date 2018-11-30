@@ -1,7 +1,7 @@
 <ng-container *ngIf="{queryItems: queryItems$ | async,
-                  clickable: queryItems$ | async | containsDeletedQueryItem} as data">
+                  clickable: !(queryItems$ | async | containsDeletedQueryItem)} as data">
 
-  <div class="card p-2 mb-2 pb-3"
+  <div class="card p-2 mb-2 pb-3 view"
        [class.view-hover]="data.clickable"
        (click)="data.clickable && onClicked()">
 

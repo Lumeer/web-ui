@@ -147,6 +147,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
         return this.addDocumentItem(queryItem as DocumentQueryItem);
       case QueryItemType.Fulltext:
         return this.addItemToEnd(queryItem);
+      case QueryItemType.View:
+        return this.addItemToEnd(queryItem);
     }
   }
 
@@ -408,8 +410,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private removeQueryItem(index: number) {
-    const queryItems = this.queryItems$.getValue();
-    this.queryItems$.next(queryItems.splice(index, 1));
+    const queryItems = this.queryItems$.getValue().slice();
+    queryItems.splice(index, 1);
+    this.queryItems$.next(queryItems);
     this.queryItemsControl.removeAt(index);
   }
 
@@ -419,7 +422,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onSearch(redirect?: boolean) {
+  public onSearch() {
     if (!this.form$.getValue().valid) {
       return;
     }
@@ -428,7 +431,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.showByQueryItems(redirect);
+    this.showByQueryItems();
   }
 
   private showView(): boolean {
@@ -445,14 +448,14 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
-  private showByQueryItems(redirect: boolean) {
+  private showByQueryItems() {
     const query = QueryItemsConverter.toQueryString(this.queryItems$.getValue());
-    this.navigateToQuery(query, redirect);
+    this.navigateToQuery(query);
   }
 
-  private navigateToQuery(query: string, redirect: boolean) {
+  private navigateToQuery(query: string) {
     const searchUrl = ['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'];
-    const url = redirect || !this.perspective ? searchUrl : [];
+    const url = !this.perspective ? searchUrl : [];
     this.router.navigate(url, {queryParams: {query}});
   }
 

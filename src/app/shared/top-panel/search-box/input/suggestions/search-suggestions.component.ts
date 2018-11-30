@@ -115,7 +115,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    if (!this.isFullTextPresented() && this.text) {
+    if (this.text) {
       return queryItems.concat(new FulltextQueryItem(this.text));
     } else {
       return queryItems;
@@ -130,8 +130,10 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
+    const allowedTypes = [QueryItemType.Attribute, QueryItemType.Link, QueryItemType.Document];
     return queryItems.filter(
       queryItem =>
+        allowedTypes.includes(queryItem.type) ||
         !this.queryItems.find(usedItem => {
           return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
         })
@@ -151,15 +153,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     this.onUseSuggestion(queryItem);
   }
 
-  private isFullTextPresented(): boolean {
-    return this.queryItems && !!this.queryItems.find(q => q.type === QueryItemType.Fulltext);
-  }
-
   public onUseSuggestion(queryItem: QueryItem) {
-    if (queryItem.type === QueryItemType.Fulltext && this.isFullTextPresented()) {
-      return;
-    }
-
     this.useSuggestion.emit(queryItem);
     this.suggestions$.next([]);
   }

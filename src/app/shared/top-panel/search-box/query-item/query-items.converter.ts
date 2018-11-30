@@ -34,6 +34,10 @@ export class QueryItemsConverter {
   constructor(private data: QueryData) {}
 
   public static toQueryString(queryItems: QueryItem[]): string {
+    return QueryConverter.toString(this.toQueryModel(queryItems));
+  }
+
+  public static toQueryModel(queryItems: QueryItem[]): QueryModel {
     const query: QueryModel = {
       stems: [],
       fulltexts: [],
@@ -64,7 +68,7 @@ export class QueryItemsConverter {
       }
     });
 
-    return QueryConverter.toString(query);
+    return query;
   }
 
   public fromQuery(query: QueryModel): QueryItem[] {
