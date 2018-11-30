@@ -17,16 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {VideoMetaData, VideoModel} from './video.model';
+import {VideoItem, VideoMetaData, VideoModel} from './video.model';
 
 export class VideoConverter {
-  public static fromDto(dto: VideoMetaData): VideoModel {
+  private static fromItem(dto: VideoItem, priority?: number): VideoModel {
     return {
-      id: dto.items[0].id,
-      summary: dto.items[0].snippet.title,
-      description: dto.items[0].snippet.description,
-      priority: 1,
-      thumbnail: dto.items[0].snippet.thumbnails.default.url,
+      id: dto.id,
+      summary: dto.snippet.title,
+      description: dto.snippet.description,
+      priority: priority ? priority : 100,
+      thumbnail: dto.snippet.thumbnails.medium.url,
     };
+  }
+
+  public static fromDto(videosMeta: VideoMetaData, priorities: {[id: string]: number}): VideoModel[] {
+    let videos: VideoModel[] = [];
+
+    videosMeta.items.forEach(videoItem => {
+      let priority = priorities[videoItem.id];
+      if (!priority) {
+        priority = 100;
+      }
+      videos.push(VideoConverter.fromItem(videoItem, priority));
+    });
+
+    return videos;
   }
 }

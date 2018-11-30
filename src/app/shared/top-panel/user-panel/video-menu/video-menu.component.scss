@@ -1,8 +1,34 @@
+@import '../../../../../styles/variables';
+
 .panel-item.video .dropdown a#videoDropdownLink {
   color: #c4302b;
 }
-.panel-item {
+
+.panel-item.video {
   height: var(--top-panel-line-height);
   line-height: var(--top-panel-line-height);
   white-space: nowrap;
+}
+
+a.dropdown-item {
+  line-height: 1.1rem;
+
+  div {
+    display: inline-block;
+  }
+
+  img {
+    vertical-align: top;
+    margin-top: 0.15rem;
+  }
+
+  span.text-muted {
+    white-space: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-break: strict;
+    max-width: var(--top-panel-side-width);
+    display: inline-block;
+    max-height: 4.4rem;
+  }
 }

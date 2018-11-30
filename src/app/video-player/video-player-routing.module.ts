@@ -17,16 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialVideosState, videosAdapter, VideosState} from './videos.state';
-import {VideosAction, VideosActionType} from './videos.action';
+import {RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
+import {EmbeddedVideoComponent} from './embedded-video/embedded-video.component';
 
-export function videosReducer(state: VideosState = initialVideosState, action: VideosAction.All): VideosState {
-  switch (action.type) {
-    case VideosActionType.CLEAR_VIDEOS:
-      return videosAdapter.removeAll(state);
-    case VideosActionType.REGISTER_VIDEOS:
-      return videosAdapter.upsertMany(action.payload, state);
-    default:
-      return state;
-  }
-}
+const routes: Routes = [
+  {
+    path: ':videoId',
+    component: EmbeddedVideoComponent,
+    outlet: 'video',
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class VideoPlayerRoutingModule {}

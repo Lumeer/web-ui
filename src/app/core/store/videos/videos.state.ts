@@ -39,3 +39,13 @@ export const selectVideosByPriority = createSelector(
     return videos.sort((video1, video2) => video1.priority - video2.priority);
   }
 );
+export const selectVideosDictionary = createSelector(
+  selectVideosState,
+  videosAdapter.getSelectors().selectEntities
+);
+export const selectVideoById = (id: string) =>
+  createSelector(
+    selectVideosDictionary,
+    videosMap => videosMap[id]
+  );
+export const selectVideosByUrl = (url: string) => createSelector(selectVideosByPriority);

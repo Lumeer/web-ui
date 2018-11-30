@@ -35,6 +35,7 @@ export interface EnvironmentVariables {
   sessionTimeout: number;
   pusherCluster: string;
   pusherKey: string;
+  videoKey: string;
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
@@ -47,6 +48,7 @@ const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
+const videoKey = env['VIDEO_KEY'] || 'AIzaSyBE5f3ziaRBNTrtbc_CCB6Q8jT6Mw0ouCo';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
@@ -59,4 +61,5 @@ export const environmentVariables: EnvironmentVariables = {
   sessionTimeout,
   pusherCluster,
   pusherKey,
+  videoKey,
 };

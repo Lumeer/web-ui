@@ -424,7 +424,12 @@ div[contenteditable='true'].form-control {
 
 // Containers ==================================================================
 .modal .close {
-  color: $white;
+  color: $primary;
+
+  &:not(:disabled):not(.disabled):hover,
+  .close:not(:disabled):not(.disabled):focus {
+    color: $primary-hover;
+  }
 }
 
 .card-template {

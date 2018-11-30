@@ -21,10 +21,12 @@ import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {VideoPlayerService} from './video-player.service';
 import {VideoPlayerComponent} from './video-player.component';
+import {EmbeddedVideoComponent} from './embedded-video/embedded-video.component';
+import {VideoPlayerRoutingModule} from './video-player-routing.module';
 
 @NgModule({
-  declarations: [VideoPlayerComponent],
-  imports: [SharedModule],
+  declarations: [VideoPlayerComponent, EmbeddedVideoComponent],
+  imports: [SharedModule, VideoPlayerRoutingModule],
   providers: [VideoPlayerService],
   exports: [VideoPlayerComponent],
 })

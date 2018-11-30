@@ -19,6 +19,10 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '../core/store/app.state';
+import {VideosAction} from '../core/store/videos/videos.action';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +30,11 @@ import {Router} from '@angular/router';
 export class VideoPlayerService {
   private open: boolean;
 
-  public constructor(private router: Router) {}
+  public constructor(private router: Router, private store: Store<AppState>) {
+    this.store.dispatch(
+      new VideosAction.LoadVideos({videos: {etoqX2slVEw: 20, _msiz33O9Tg: 40}, apiKey: environment.videoKey})
+    );
+  }
 
   public closePlayer(): Promise<boolean> {
     return this.navigateToPlayer(null);

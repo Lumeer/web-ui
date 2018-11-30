@@ -42,6 +42,10 @@ export interface VideoSnippet {
 
 export interface VideoThumbnails {
   default: VideoThumbnail;
+  medium: VideoThumbnail;
+  standard: VideoThumbnail;
+  high: VideoThumbnail;
+  maxres: VideoThumbnail;
 }
 
 export interface VideoThumbnail {

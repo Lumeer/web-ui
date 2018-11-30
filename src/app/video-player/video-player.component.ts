@@ -1,21 +1,38 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {NavigationStart, Router} from '@angular/router';
 import {VideoPlayerService} from './video-player.service';
 import {filter, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {VideosAction} from '../core/store/videos/videos.action';
 
 declare let $: any;
 
 @Component({
   selector: 'video-player',
   templateUrl: './video-player.component.html',
-  styleUrls: ['./video-player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly playerId = 'videoPlayerModal';
 
   public open: boolean;
@@ -38,7 +55,9 @@ export class VideoPlayerComponent implements OnInit {
       .pipe(
         filter(event => !this.open && event instanceof NavigationStart),
         tap((event: NavigationStart) => this.publishVideos(event.url)),
-        filter((event: NavigationStart) => event.url.includes('(video:'))
+        filter((event: NavigationStart) => {
+          return event.url.includes('(video:');
+        })
       )
       .subscribe(event => this.openPlayer());
   }
@@ -83,7 +102,7 @@ export class VideoPlayerComponent implements OnInit {
 
   private publishVideos(url: string): void {
     //this.store.dispatch(new VideosAction.LoadVideo({id: 'etoqX2slVEw', apiKey: ''}));
-    this.store.dispatch(
+    /*this.store.dispatch(
       new VideosAction.SetVideos({
         videos: [
           {
@@ -95,6 +114,6 @@ export class VideoPlayerComponent implements OnInit {
           },
         ],
       })
-    );
+    );*/
   }
 }

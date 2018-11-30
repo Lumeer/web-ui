@@ -1,4 +1,4 @@
-<div class="panel-item video mx-2" *ngIf="videos$ | async">
+<div class="panel-item video mx-2" *ngIf="(videos$ | async) && (videos$ | async).length > 0">
   <div class="dropdown show">
     <a href="#"
        role="button"
@@ -17,9 +17,11 @@
         (click)="openPlayer(video.id)"
         class="dropdown-item"
         [title]="video.summary">
-        <img [src]="'https://img.youtube.com/vi/'+ video.id +'/sddefault.jpg'" width="32px" class="mr-2"/>
-        <span>{{video.summary}}</span>
-        <span class="text-muted">{{video.description}}</span>
+        <img [src]="video.thumbnail" width="64px" class="mr-2"/>
+        <div>
+          <span>{{video.summary}}</span><br/>
+          <span class="text-muted">{{video.description}}</span>
+        </div>
       </a>
 
     </div>

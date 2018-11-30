@@ -33,24 +33,25 @@ import {VideoConverter} from './video.converter';
 @Injectable()
 export class VideosEffects {
   @Effect()
-  public getVideo$: Observable<Action> = this.actions$.pipe(
-    ofType<VideosAction.LoadVideo>(VideosActionType.LOAD_VIDEO),
-    mergeMap(action =>
-      this.videoService.getVideoMetadata(action.payload.id, action.payload.apiKey).pipe(
-        map(video => new VideosAction.RegisterVideo(VideoConverter.fromDto(video))),
-        catchError(error => of(new VideosAction.LoadVideoFailure({error: error})))
-      )
-    )
+  public getVideos$: Observable<Action> = this.actions$.pipe(
+    ofType<VideosAction.LoadVideos>(VideosActionType.LOAD_VIDEOS),
+    mergeMap(action => {
+      const keys = Object.keys(action.payload.videos).join(',');
+      return this.videoService.getVideoMetadata(keys, action.payload.apiKey).pipe(
+        map(videos => new VideosAction.RegisterVideos(VideoConverter.fromDto(videos, action.payload.videos))),
+        catchError(error => of(new VideosAction.LoadVideosFailure({error: error})))
+      );
+    })
   );
 
   @Effect()
-  public loadVideoFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<VideosAction.LoadVideoFailure>(VideosActionType.LOAD_VIDEO_FAILURE),
+  public loadVideosFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<VideosAction.LoadVideosFailure>(VideosActionType.LOAD_VIDEOS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({
         id: 'video.metadata.get.fail',
-        value: 'Unable to read instructions video information',
+        value: 'Unable to read instructions videos. The videos will not be available.',
       });
       return new NotificationsAction.Error({message});
     })

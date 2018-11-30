@@ -22,10 +22,9 @@ import {Action} from '@ngrx/store';
 
 export enum VideosActionType {
   CLEAR_VIDEOS = '[Videos] Clear Videos',
-  SET_VIDEOS = '[Videos] Set Videos',
-  LOAD_VIDEO = '[Videos] Load Video',
-  LOAD_VIDEO_FAILURE = '[Videos] Load Video Failure',
-  REGISTER_VIDEO = '[Videos] Register Video',
+  LOAD_VIDEOS = '[Videos] Load Videos',
+  LOAD_VIDEOS_FAILURE = '[Videos] Load Video Failure',
+  REGISTER_VIDEOS = '[Videos] Register Video',
 }
 
 export namespace VideosAction {
@@ -35,29 +34,23 @@ export namespace VideosAction {
     public constructor() {}
   }
 
-  export class SetVideos implements Action {
-    public readonly type = VideosActionType.SET_VIDEOS;
+  export class LoadVideos implements Action {
+    public readonly type = VideosActionType.LOAD_VIDEOS;
 
-    public constructor(public payload: {videos: VideoModel[]}) {}
+    public constructor(public payload: {videos: {[id: string]: number}; apiKey: string}) {}
   }
 
-  export class LoadVideo implements Action {
-    public readonly type = VideosActionType.LOAD_VIDEO;
-
-    public constructor(public payload: {id: string; apiKey: string}) {}
-  }
-
-  export class LoadVideoFailure implements Action {
-    public readonly type = VideosActionType.LOAD_VIDEO_FAILURE;
+  export class LoadVideosFailure implements Action {
+    public readonly type = VideosActionType.LOAD_VIDEOS_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
 
-  export class RegisterVideo implements Action {
-    public readonly type = VideosActionType.REGISTER_VIDEO;
+  export class RegisterVideos implements Action {
+    public readonly type = VideosActionType.REGISTER_VIDEOS;
 
-    public constructor(public payload: VideoModel) {}
+    public constructor(public payload: VideoModel[]) {}
   }
 
-  export type All = ClearVideos | SetVideos | LoadVideo | LoadVideoFailure | RegisterVideo;
+  export type All = ClearVideos | LoadVideos | LoadVideosFailure | RegisterVideos;
 }
