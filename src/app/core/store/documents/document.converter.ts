@@ -27,7 +27,7 @@ export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: stri
   return {
     id: dto.id,
     collectionId: dto.collectionId,
-    data: data,
+    data: data, // TODO convert values
     metaData: dto.metaData,
     favorite: dto.favorite,
     creationDate: new Date(dto.creationDate),
@@ -43,7 +43,7 @@ export function convertDocumentModelToDto(model: DocumentModel | Partial<Documen
   return {
     id: model.id,
     collectionId: model.collectionId,
-    data: model.data,
+    data: model.data, // TODO convert values
     metaData: model.metaData,
     favorite: model.favorite,
   };

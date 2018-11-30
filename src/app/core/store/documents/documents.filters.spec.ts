@@ -101,12 +101,12 @@ const collections: CollectionModel[] = [
   {
     id: 'COMPANIES_COLLECTION',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'a1', constraints: []}, {id: 'a2', name: 'a2', constraints: []}],
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
   {
     id: 'BANDS_COLLECTION',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'a1', constraints: []}, {id: 'a2', name: 'a2', constraints: []}],
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
 ];
 
