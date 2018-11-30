@@ -475,7 +475,28 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    event[EDITABLE_EVENT] = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    const writeWithView = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    event[EDITABLE_EVENT] = writeWithView;
+
+    if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
+      event.stopPropagation();
+      switch (event.code) {
+        case KeyCode.ArrowRight:
+          this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+          return;
+        case KeyCode.ArrowLeft:
+          this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+          return;
+        case KeyCode.ArrowUp:
+          this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+          return;
+        case KeyCode.ArrowDown:
+          this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+          return;
+      }
+    }
   }
 
   public onMouseDown(event: MouseEvent) {

@@ -3,13 +3,23 @@
   <ng-template *ngIf="indentable$ | async"
                (execute)="onIndent()"
                contextMenuItem>
-    <i class="fa fa-fw fa-indent mr-1" aria-hidden="true"></i>
-    <span i18n="@@table.body.row.indent">Indent</span>
+    <div class="d-flex align-items-baseline">
+      <i class="fa fa-fw fa-indent mr-1"
+         aria-hidden="true"></i>
+      <span class="flex-grow-1"
+            i18n="@@table.body.row.indent">Indent</span>
+      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
+    </div>
   </ng-template>
   <ng-template *ngIf="outdentable$ | async"
                (execute)="onOutdent()"
                contextMenuItem>
-    <i class="fa fa-fw fa-outdent mr-1" aria-hidden="true"></i>
-    <span i18n="@@table.body.row.outdent">Outdent</span>
+    <div class="d-flex align-items-baseline">
+      <i class="fa fa-fw fa-outdent mr-1"
+         aria-hidden="true"></i>
+      <span class="flex-grow-1"
+            i18n="@@table.body.row.outdent">Outdent</span>
+      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
+    </div>
   </ng-template>
 </context-menu>
