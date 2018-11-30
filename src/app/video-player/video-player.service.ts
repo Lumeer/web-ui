@@ -33,7 +33,9 @@ export class VideoPlayerService {
 
   constructor(private router: Router, private store: Store<AppState>) {
     if (environment.videoKey) {
-      this.store.dispatch(new VideosAction.LoadVideos({videos: VideosData.allVideos, apiKey: environment.videoKey}));
+      this.store.dispatch(
+        new VideosAction.LoadVideos({videos: VideosData.getAllVideos(), apiKey: environment.videoKey})
+      );
     }
   }
 

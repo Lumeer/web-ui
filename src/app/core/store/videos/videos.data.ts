@@ -18,24 +18,41 @@
  */
 
 /* tslint:disable */
-export class VideosData {
-  private static readonly VIDEO_HR = 'etoqX2slVEw';
-  private static readonly VIDEO_GOV = '_msiz33O9Tg';
+import {environment} from '../../../../environments/environment';
 
-  public static readonly allVideos = {
+export class VideosData {
+  private static readonly VIDEO_HR = {en: 'etoqX2slVEw', cs: ''};
+  private static readonly VIDEO_GOV = {en: '_msiz33O9Tg', cs: ''};
+
+  private static readonly allVideos = {
     // 'etoqX2slVEw': 20, // HR
     // '_msiz33O9Tg': 40, // local government
   };
 
+  private static readonly allVideosCs = {
+    // 'etoqX2slVEw': 20, // HR
+    // '_msiz33O9Tg': 40, // local government
+  };
+
+  public static getAllVideos() {
+    switch (environment.locale) {
+      case 'cs':
+        return this.allVideosCs;
+      default:
+        return this.allVideos;
+    }
+  }
+
   public static getVideosByUrl(url: string): string[] {
     let videos = [];
-
+    // const locale = environment.locale === 'cs' ? 'cs' : 'en';
+    //
     // if (/^\/organization\/.*/.test(url)) {
-    //   videos.push(VideosData.VIDEO_HR);
+    //   videos.push(VideosData.VIDEO_HR[locale]);
     // }
     //
     // if (/^\/w\/.*/.test(url)) {
-    //   videos.push(VideosData.VIDEO_GOV);
+    //   videos.push(VideosData.VIDEO_GOV[locale]);
     // }
 
     return videos;
