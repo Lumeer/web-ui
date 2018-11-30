@@ -13,8 +13,14 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
 import './commands';
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+beforeEach(() => {
+  cy.loginAndDismissAgreement();
+
+  const projectCode = Math.random()
+    .toString(36)
+    .substr(2);
+  Cypress.env('projectCode', projectCode);
+  cy.createProject(projectCode, 'Test project');
+});
