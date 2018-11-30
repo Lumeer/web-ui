@@ -21,6 +21,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {VideoModel} from './video.model';
+import {filterVideosByIds} from './videos.filters';
+import {VideosData} from './videos.data';
 
 export interface VideosState extends EntityState<VideoModel> {}
 
@@ -48,4 +50,8 @@ export const selectVideoById = (id: string) =>
     selectVideosDictionary,
     videosMap => videosMap[id]
   );
-export const selectVideosByUrl = (url: string) => createSelector(selectVideosByPriority);
+export const selectVideosByUrl = (url: string) =>
+  createSelector(
+    selectVideosByPriority,
+    videos => filterVideosByIds(videos, VideosData.getVideosByUrl(url))
+  );

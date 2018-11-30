@@ -17,39 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface VideoModel {
-  id?: string;
-  summary: string;
-  description: string;
-  priority: number;
-  thumbnail: string;
-}
+/* tslint:disable */
+export class VideosData {
+  private static readonly VIDEO_HR = 'etoqX2slVEw';
+  private static readonly VIDEO_GOV = '_msiz33O9Tg';
 
-export interface VideoMetaData {
-  items: VideoItem[];
-}
+  public static readonly allVideos = {
+    // 'etoqX2slVEw': 20, // HR
+    // '_msiz33O9Tg': 40, // local government
+  };
 
-export interface VideoItem {
-  id: string;
-  snippet: VideoSnippet;
-}
+  public static getVideosByUrl(url: string): string[] {
+    let videos = [];
 
-export interface VideoSnippet {
-  title: string;
-  description: string;
-  thumbnails: VideoThumbnails;
-}
+    // if (/^\/organization\/.*/.test(url)) {
+    //   videos.push(VideosData.VIDEO_HR);
+    // }
+    //
+    // if (/^\/w\/.*/.test(url)) {
+    //   videos.push(VideosData.VIDEO_GOV);
+    // }
 
-export interface VideoThumbnails {
-  default: VideoThumbnail;
-  medium: VideoThumbnail;
-  standard: VideoThumbnail;
-  high: VideoThumbnail;
-  maxres: VideoThumbnail;
-}
-
-export interface VideoThumbnail {
-  url: string;
-  width: number;
-  height: number;
+    return videos;
+  }
 }

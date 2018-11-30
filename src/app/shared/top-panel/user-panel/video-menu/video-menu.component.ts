@@ -25,6 +25,8 @@ import {VideoModel} from '../../../../core/store/videos/video.model';
 import {selectVideosByUrl} from '../../../../core/store/videos/videos.state';
 import {VideoPlayerService} from '../../../../video-player/video-player.service';
 import {Router} from '@angular/router';
+import {selectUrl} from '../../../../core/store/navigation/navigation.state';
+import {mergeMap} from 'rxjs/operators';
 
 @Component({
   selector: 'video-menu',
@@ -38,12 +40,10 @@ export class VideoMenuComponent implements OnInit {
   constructor(private store: Store<AppState>, private videoPlayerService: VideoPlayerService, private router: Router) {}
 
   public ngOnInit(): void {
-    this.videos$ = this.store.pipe(select(selectVideosByUrl('')));
-    /*this.videos$ = this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationStart),
-        mergeMap((event: NavigationStart) => this.store.pipe(select(selectVideosByUrl(event.url))))
-      );*/
+    this.videos$ = this.store.pipe(
+      select(selectUrl),
+      mergeMap(url => this.store.pipe(select(selectVideosByUrl(url))))
+    );
   }
 
   public openPlayer(id: string): void {

@@ -51,7 +51,8 @@ export class VideosEffects {
     map(() => {
       const message = this.i18n({
         id: 'video.metadata.get.fail',
-        value: 'Unable to read instructions videos. The videos will not be available.',
+        value:
+          'Unable to read training videos. I am sorry, the videos will not be available now. The problem is being worked on.',
       });
       return new NotificationsAction.Error({message});
     })

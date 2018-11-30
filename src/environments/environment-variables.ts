@@ -48,7 +48,7 @@ const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
-const videoKey = env['VIDEO_KEY'] || 'AIzaSyBE5f3ziaRBNTrtbc_CCB6Q8jT6Mw0ouCo';
+const videoKey = env['VIDEO_KEY'] || '';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,

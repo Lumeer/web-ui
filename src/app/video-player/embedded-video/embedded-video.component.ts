@@ -41,7 +41,14 @@ export class EmbeddedVideoComponent implements OnInit {
   public ngOnInit() {
     this.videoLink = this.route.paramMap.pipe(
       map(params => params.get('videoId')),
-      filter(videoId => !!videoId),
+      filter(
+        videoId =>
+          !!videoId &&
+          videoId.length <= 16 &&
+          videoId.indexOf('<') < 0 &&
+          videoId.indexOf('"') < 0 &&
+          videoId.indexOf("'") < 0
+      ),
       map(videoId =>
         this.sanitizer.bypassSecurityTrustResourceUrl(
           `https://www.youtube.com/embed/${videoId}?autoplay=1&fs=1&origin=https://get.lumeer.io/`

@@ -17,39 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface VideoModel {
-  id?: string;
-  summary: string;
-  description: string;
-  priority: number;
-  thumbnail: string;
-}
+import {VideoModel} from './video.model';
 
-export interface VideoMetaData {
-  items: VideoItem[];
-}
-
-export interface VideoItem {
-  id: string;
-  snippet: VideoSnippet;
-}
-
-export interface VideoSnippet {
-  title: string;
-  description: string;
-  thumbnails: VideoThumbnails;
-}
-
-export interface VideoThumbnails {
-  default: VideoThumbnail;
-  medium: VideoThumbnail;
-  standard: VideoThumbnail;
-  high: VideoThumbnail;
-  maxres: VideoThumbnail;
-}
-
-export interface VideoThumbnail {
-  url: string;
-  width: number;
-  height: number;
+export function filterVideosByIds(videos: VideoModel[], ids: string[]) {
+  return videos.filter(video => ids.indexOf(video.id) >= 0);
 }
