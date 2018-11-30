@@ -21,12 +21,13 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot} from '@angular/router';
 import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
+import {Angulartics2} from 'angulartics2';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
-  public constructor(private authService: AuthService) {}
+  public constructor(private angulartics2: Angulartics2, private authService: AuthService) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     return this.isAuthenticated(state);
@@ -38,6 +39,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   private isAuthenticated(state: RouterStateSnapshot): boolean {
     if (environment.auth && !this.authService.isAuthenticated()) {
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({action: 'arrival'});
+      }
       this.authService.login(state.url);
       return false;
     }
