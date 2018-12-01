@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
 import {VideosAction} from '../core/store/videos/videos.action';
 import {environment} from '../../environments/environment';
-import {VideosData} from '../core/store/videos/videos.data';
+import {getAllVideos} from '../core/store/videos/videos.data';
 
 @Injectable({
   providedIn: 'root',
@@ -33,9 +33,7 @@ export class VideoPlayerService {
 
   constructor(private router: Router, private store: Store<AppState>) {
     if (environment.videoKey) {
-      this.store.dispatch(
-        new VideosAction.LoadVideos({videos: VideosData.getAllVideos(), apiKey: environment.videoKey})
-      );
+      this.store.dispatch(new VideosAction.LoadVideos({videos: getAllVideos(), apiKey: environment.videoKey}));
     }
   }
 

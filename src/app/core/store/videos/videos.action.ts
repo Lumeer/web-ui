@@ -49,7 +49,7 @@ export namespace VideosAction {
   export class RegisterVideos implements Action {
     public readonly type = VideosActionType.REGISTER_VIDEOS;
 
-    public constructor(public payload: VideoModel[]) {}
+    public constructor(public payload: {videos: VideoModel[]}) {}
   }
 
   export type All = ClearVideos | LoadVideos | LoadVideosFailure | RegisterVideos;

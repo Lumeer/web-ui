@@ -17,44 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* tslint:disable */
 import {environment} from '../../../../environments/environment';
 
-export class VideosData {
-  private static readonly VIDEO_HR = {en: 'etoqX2slVEw', cs: ''};
-  private static readonly VIDEO_GOV = {en: '_msiz33O9Tg', cs: ''};
+const VIDEO_HR = {en: 'etoqX2slVEw', cs: ''};
+const VIDEO_GOV = {en: '_msiz33O9Tg', cs: ''};
 
-  private static readonly allVideos = {
-    // 'etoqX2slVEw': 20, // HR
-    // '_msiz33O9Tg': 40, // local government
-  };
+const ALL_VIDEOS_EN = {
+  // [VIDEO_HR.en]: 20,
+  // [VIDEO_GOV.en]: 40,
+};
 
-  private static readonly allVideosCs = {
-    // 'etoqX2slVEw': 20, // HR
-    // '_msiz33O9Tg': 40, // local government
-  };
+const ALL_VIDEOS_CS = {
+  // [VIDEO_HR.cs]: 20,
+  // [VIDEO_GOV.cs]: 40,
+};
 
-  public static getAllVideos() {
-    switch (environment.locale) {
-      case 'cs':
-        return this.allVideosCs;
-      default:
-        return this.allVideos;
-    }
+export function getAllVideos() {
+  switch (environment.locale) {
+    case 'cs':
+      return ALL_VIDEOS_CS;
+    default:
+      return ALL_VIDEOS_EN;
   }
+}
 
-  public static getVideosByUrl(url: string): string[] {
-    let videos = [];
-    // const locale = environment.locale === 'cs' ? 'cs' : 'en';
-    //
-    // if (/^\/organization\/.*/.test(url)) {
-    //   videos.push(VideosData.VIDEO_HR[locale]);
-    // }
-    //
-    // if (/^\/w\/.*/.test(url)) {
-    //   videos.push(VideosData.VIDEO_GOV[locale]);
-    // }
+export function getVideosByUrl(url: string): string[] {
+  let videos = [];
+  // const locale = environment.locale === 'cs' ? 'cs' : 'en';
+  //
+  // if (/^\/organization\/.*/.test(url)) {
+  //   videos.push(VIDEO_HR[locale]);
+  // }
+  //
+  // if (/^\/w\/.*/.test(url)) {
+  //   videos.push(VIDEO_GOV[locale]);
+  // }
 
-    return videos;
-  }
+  return videos;
 }

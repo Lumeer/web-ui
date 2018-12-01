@@ -47,7 +47,7 @@ import {CollectionValidators} from './validators/collection.validators';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {PusherService} from './pusher/pusher.service';
-import {VideoService} from './rest/video.service';
+import {VideoService} from './api/video/video.service';
 
 @NgModule({
   imports: [

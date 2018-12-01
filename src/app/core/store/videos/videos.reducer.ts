@@ -25,7 +25,7 @@ export function videosReducer(state: VideosState = initialVideosState, action: V
     case VideosActionType.CLEAR_VIDEOS:
       return videosAdapter.removeAll(state);
     case VideosActionType.REGISTER_VIDEOS:
-      return videosAdapter.upsertMany(action.payload, state);
+      return videosAdapter.upsertMany(action.payload.videos, state);
     default:
       return state;
   }

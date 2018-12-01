@@ -27,7 +27,7 @@ import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {VideosAction, VideosActionType} from './videos.action';
-import {VideoService} from '../../rest/video.service';
+import {VideoService} from '../../api/video/video.service';
 import {VideoConverter} from './video.converter';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class VideosEffects {
     mergeMap(action => {
       const keys = Object.keys(action.payload.videos).join(',');
       return this.videoService.getVideoMetadata(keys, action.payload.apiKey).pipe(
-        map(videos => new VideosAction.RegisterVideos(VideoConverter.fromDto(videos, action.payload.videos))),
+        map(videos => new VideosAction.RegisterVideos({videos: VideoConverter.fromDto(videos, action.payload.videos)})),
         catchError(error => of(new VideosAction.LoadVideosFailure({error: error})))
       );
     })

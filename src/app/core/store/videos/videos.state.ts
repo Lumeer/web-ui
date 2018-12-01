@@ -22,7 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {VideoModel} from './video.model';
 import {filterVideosByIds} from './videos.filters';
-import {VideosData} from './videos.data';
+import {getVideosByUrl} from './videos.data';
 
 export interface VideosState extends EntityState<VideoModel> {}
 
@@ -53,5 +53,5 @@ export const selectVideoById = (id: string) =>
 export const selectVideosByUrl = (url: string) =>
   createSelector(
     selectVideosByPriority,
-    videos => filterVideosByIds(videos, VideosData.getVideosByUrl(url))
+    videos => filterVideosByIds(videos, getVideosByUrl(url))
   );
