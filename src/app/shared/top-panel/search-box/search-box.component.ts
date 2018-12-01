@@ -80,7 +80,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeViewData();
     this.subscribeToQuery();
     this.subscribeToNavigation();
-    this.initForm();
   }
 
   private subscribeViewData() {
@@ -92,7 +91,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     const querySubscription = this.store
       .pipe(select(selectQuery))
       .pipe(
-        filter(query => !isNullOrUndefined(query)),
+        filter(query => !!query),
         flatMap(query => observableCombineLatest(of(query), this.loadData())),
         tap(([query, data]) => (this.queryData = data)),
         map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
@@ -485,7 +484,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       const form = this.formBuilder.group({
         queryItems: this.formBuilder.array(queryItems.map(qi => queryItemToForm(qi))),
       });
-      this.queryItemsControl = <FormArray>form.controls['queryItems'];
+      this.queryItemsControl = form.get('queryItems') as FormArray;
       this.form$.next(form);
     }
   }
