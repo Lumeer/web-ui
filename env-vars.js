@@ -16,6 +16,7 @@ config.AUTH_DOMAIN = env.AUTH_DOMAIN;
 config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 config.PUSHER_CLUSTER = env.PUSHER_CLUSTER;
 config.PUSHER_KEY = env.PUSHER_KEY;
+config.VIDEO_KEY = env.VIDEO_KEY;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 

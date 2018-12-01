@@ -58,6 +58,8 @@ import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
+import {videosReducer} from './videos/videos.reducer';
+import {VideosEffects} from './videos/videos.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -78,6 +80,7 @@ const reducers: ActionReducerMap<AppState> = {
   views: viewsReducer,
   postIts: postItReducer,
   charts: chartsReducer,
+  videos: videosReducer,
 };
 
 const effects = [
@@ -98,6 +101,7 @@ const effects = [
   TablesEffects,
   UsersEffects,
   ViewsEffects,
+  VideosEffects,
 ];
 
 @NgModule({

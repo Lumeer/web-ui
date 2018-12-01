@@ -47,6 +47,7 @@ import {CollectionValidators} from './validators/collection.validators';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {PusherService} from './pusher/pusher.service';
+import {VideoService} from './rest/video.service';
 
 @NgModule({
   imports: [
@@ -84,6 +85,7 @@ import {PusherService} from './pusher/pusher.service';
     OrganizationValidators,
     ProjectValidators,
     PusherService,
+    VideoService,
   ],
   exports: [HomeComponent, NotificationsModule],
 })
