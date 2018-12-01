@@ -226,7 +226,7 @@ function createStemsPipeline(
   let stemLinkTypes = linkTypes.filter(linkType => stemLinkTypeIds.includes(linkType.id));
 
   for (let i = 0; i < stemLinkTypeIds.length; i++) {
-    const linkType = stemLinkTypes.find(linkType => linkType.collectionIds.includes(lastCollectionId));
+    const linkType = stemLinkTypes.find(lt => lt.collectionIds.includes(lastCollectionId));
     if (!linkType) {
       return pipeline;
     }

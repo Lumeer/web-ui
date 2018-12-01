@@ -154,7 +154,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private addItemBeforeFulltexts(queryItem: QueryItem) {
     const queryItems = this.queryItems$.getValue();
-    const fulltextIndex = queryItems.findIndex(queryItem => queryItem.type === QueryItemType.Fulltext);
+    const fulltextIndex = queryItems.findIndex(qi => qi.type === QueryItemType.Fulltext);
     const insertIndex = fulltextIndex !== -1 ? fulltextIndex : queryItems.length;
     this.addQueryItemAtIndex(queryItem, insertIndex);
   }
@@ -383,7 +383,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
     const {collectionId, index} = stemData;
     const currentQuery = QueryItemsConverter.toQueryModel(this.queryItems$.getValue());
-    const stem = (currentQuery.stems || []).find(stem => stem.collectionId === collectionId);
+    const stem = (currentQuery.stems || []).find(st => st.collectionId === collectionId);
 
     const linkTypeIds = (stem && stem.linkTypeIds) || [];
     const linkTypeIndex = linkIndex - (index + 1);
@@ -391,7 +391,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     stem.linkTypeIds = linkTypeIds.slice(0, linkTypeIndex);
 
     const collectionIdsFromLinks = [collectionId, ...this.collectionIdsFromLinks(stem.linkTypeIds)];
-    stem.filters = stem.filters && stem.filters.filter(filter => collectionIdsFromLinks.includes(filter.collectionId));
+    stem.filters = stem.filters && stem.filters.filter(filt => collectionIdsFromLinks.includes(filt.collectionId));
 
     // TODO filter documentIds once documentItems are used
 

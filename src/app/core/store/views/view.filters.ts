@@ -22,7 +22,7 @@ import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
 import {QueryModel} from '../navigation/query.model';
 
 export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewModel[] {
-  let filteredViews = views.slice();
+  const filteredViews = views.slice();
 
   if (!query || queryIsEmpty(query)) {
     return filteredViews;

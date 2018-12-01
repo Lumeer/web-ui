@@ -26,7 +26,7 @@ import {QueryItemType} from '../../../../../shared/top-panel/search-box/query-it
   name: 'containsDeletedQueryItem',
 })
 export class ContainsDeletedQueryItemPipe implements PipeTransform {
-  transform(queryItems: QueryItem[]): boolean {
+  public transform(queryItems: QueryItem[]): boolean {
     return !!queryItems.find(queryItem => queryItem.type === QueryItemType.Deleted);
   }
 }

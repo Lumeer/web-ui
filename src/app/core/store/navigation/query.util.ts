@@ -140,7 +140,7 @@ export function isOnlyFulltextsQuery(query: QueryModel): boolean {
 }
 
 export function getQueryFiltersForCollection(query: QueryModel, collectionId: string): AttributeFilterModel[] {
-  const stem = query && query.stems && query.stems.find(stem => stem.collectionId === collectionId);
+  const stem = query && query.stems && query.stems.find(st => st.collectionId === collectionId);
   return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
 }
 
