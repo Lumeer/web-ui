@@ -33,7 +33,6 @@ export interface QueryStemModel {
 
 export interface AttributeFilterModel {
   collectionId: string;
-  conditionType: ConditionType;
   condition: string;
   attributeId: string;
   value: any;

@@ -21,7 +21,6 @@ import {AttributeModel, CollectionModel} from '../../../../../core/store/collect
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {AttributeFilterModel} from '../../../../../core/store/navigation/query.model';
-import {conditionFromString} from '../../../../../core/store/navigation/query.util';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -54,7 +53,6 @@ export class AttributeQueryItem implements QueryItem {
       collectionId: this.collection.id,
       attributeId: this.attribute.id,
       condition: this.condition,
-      conditionType: conditionFromString(this.condition),
       value: this.conditionValue,
     };
   }

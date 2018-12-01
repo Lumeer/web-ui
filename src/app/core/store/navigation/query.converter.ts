@@ -19,7 +19,6 @@
 
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../dto';
-import {conditionFromString} from './query.util';
 import {AttributeFilterModel, QueryModel, QueryStemModel} from './query.model';
 import {AttributeFilter, QueryStem} from '../../dto/query';
 
@@ -64,7 +63,6 @@ export class QueryConverter {
     return {
       collectionId: dto.collectionId,
       attributeId: dto.attributeId,
-      conditionType: conditionFromString(dto.operator),
       condition: dto.operator,
       value: dto.value,
     };

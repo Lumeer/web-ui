@@ -22,7 +22,7 @@ import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
 import {AttributeFilterModel, ConditionType, QueryModel, QueryStemModel} from '../navigation/query.model';
-import {isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
+import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {LinkInstanceModel} from '../link-instances/link-instance.model';
@@ -321,7 +321,7 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilterMode
   }
   const dataValue = document.data[filter.attributeId];
   const filterValue = filter.value;
-  switch (filter.conditionType) {
+  switch (conditionFromString(filter.condition || '')) {
     case ConditionType.Equals:
       return dataValue === filterValue;
     case ConditionType.NotEquals:

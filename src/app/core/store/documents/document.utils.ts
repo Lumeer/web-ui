@@ -21,7 +21,7 @@ import {CollectionModel} from '../collections/collection.model';
 import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
 import {AttributeFilterModel, QueryModel, ConditionType} from '../navigation/query.model';
-import {getQueryFiltersForCollection} from '../navigation/query.util';
+import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];
@@ -64,7 +64,7 @@ export function generateDocumentData(
     const isNumber = !isNaN(Number(filter.value));
     const value = isNumber ? +filter.value : filter.value.toString();
 
-    switch (filter.conditionType) {
+    switch (conditionFromString(filter.condition || '')) {
       case ConditionType.GreaterThan:
         data[filter.attributeId] = isNumber ? value + 1 : value + 'a';
         break;

@@ -45,8 +45,7 @@ import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {LinkQueryItem} from './query-item/model/link.query-item';
 import {CollectionQueryItem} from './query-item/model/collection.query-item';
-import {arrayIntersection, getArrayDifference} from '../../utils/array.utils';
-import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {getArrayDifference} from '../../utils/array.utils';
 import {DocumentQueryItem} from './query-item/model/documents.query-item';
 import {AttributeQueryItem} from './query-item/model/attribute.query-item';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -229,7 +228,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     if (queryStartData) {
       const queryItems = this.queryItems$.getValue();
       const {index, distanceFromCollection} = queryStartData;
-      console.log(queryStartData);
       for (let i = index + 1; i < queryItems.length; i++) {
         const queryItem = queryItems[i];
         if (queryItem.type === QueryItemType.Attribute) {
@@ -262,15 +260,15 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     if (queryStartData) {
       const queryItems = this.queryItems$.getValue();
       const {index, distanceFromCollection} = queryStartData;
-      const foundDocumentCollectionIds = new Set();
       for (let i = index + 1; i < queryItems.length; i++) {
         const queryItem = queryItems[i];
         if (queryItem.type === QueryItemType.Document) {
           const currentDocumentItem = queryItem as DocumentQueryItem;
           if (currentDocumentItem.document.collectionId !== documentItem.document.collectionId) {
-            foundDocumentCollectionIds.add(currentDocumentItem.document.collectionId);
-
-            if (distanceFromCollection < foundDocumentCollectionIds.size) {
+            const documentStartData = this.findQueryStemStartIndexForCollection(
+              currentDocumentItem.document.collectionId
+            );
+            if (distanceFromCollection < documentStartData.distanceFromCollection) {
               // we found documentItem which should be behind adding item
               this.addQueryItemAtIndex(documentItem, i);
               return;
