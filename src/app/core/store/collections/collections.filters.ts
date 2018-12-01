@@ -21,7 +21,7 @@ import {CollectionModel} from './collection.model';
 import {DocumentModel} from '../documents/document.model';
 import {mergeCollections} from './collection.util';
 import {groupDocumentsByCollection} from '../documents/document.utils';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {filterDocumentsByFulltexts} from '../documents/documents.filters';
@@ -30,7 +30,7 @@ export function filterCollectionsByQuery(
   collections: CollectionModel[],
   documents: DocumentModel[],
   linkTypes: LinkTypeModel[],
-  query: QueryModel
+  query: Query
 ): CollectionModel[] {
   const filteredCollections = collections.filter(collection => collection && typeof collection === 'object');
   if (!query || queryIsEmptyExceptPagination(query)) {

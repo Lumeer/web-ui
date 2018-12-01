@@ -28,7 +28,7 @@ import {MapConfig, MapModel} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'map-perspective',
@@ -38,7 +38,7 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 })
 export class MapPerspectiveComponent implements OnInit, OnDestroy {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   public collections$: Observable<CollectionModel[]>;
   public documents$: Observable<DocumentModel[]>;

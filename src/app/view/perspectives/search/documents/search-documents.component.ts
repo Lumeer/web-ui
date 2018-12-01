@@ -38,11 +38,11 @@ import {
 } from '../../../../core/store/common/permissions.selectors';
 import {PerspectiveService} from '../../../../core/service/perspective.service';
 import {Perspective} from '../../perspective';
-import {QueryConverter} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {Router} from '@angular/router';
 import {searchDocumentEntriesHtml, searchDocumentValuesHtml} from './search-document-html-helper';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {Query} from '../../../../core/store/navigation/query';
 
 const PAGE_SIZE = 40;
 
@@ -73,7 +73,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public collectionsMap: {[collectionId: string]: CollectionModel};
   public documentsOrder: string[] = [];
   public loaded$: Observable<boolean>;
-  public query: QueryModel;
+  public query: Query;
 
   private page = 0;
   private workspace: Workspace;
@@ -170,7 +170,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onShowAll() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {
-      queryParams: {query: QueryConverter.toString(this.query)},
+      queryParams: {query: convertQueryModelToString(this.query)},
     });
   }
 
@@ -227,7 +227,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.subscribeDocuments();
   }
 
-  private getPaginationQuery(): QueryModel {
+  private getPaginationQuery(): Query {
     return {...this.query, page: this.page, pageSize: PAGE_SIZE};
   }
 

@@ -37,8 +37,8 @@ import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {QueryConverter} from '../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
+import {Query} from '../../../core/store/navigation/query';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 
 @Component({
@@ -59,7 +59,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public summary$: Observable<string>;
   public rows$: Observable<UiRow[]>;
 
-  private query: QueryModel;
+  private query: Query;
   private subscriptions = new Subscription();
 
   constructor(
@@ -167,7 +167,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public goToTablePerspective(): void {
     let collectionQuery: string = null;
     if (!isSingleCollectionQuery(this.query)) {
-      collectionQuery = QueryConverter.toString({stems: [{collectionId: this.collection.id}]});
+      collectionQuery = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
     }
     this.perspective.switchPerspective(
       perspectivesMap[Perspective.Table],

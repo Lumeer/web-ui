@@ -43,7 +43,7 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
+import {Query} from '../../core/store/navigation/query';
 import {getQueryFiltersForCollection} from '../../core/store/navigation/query.util';
 
 @Component({
@@ -72,7 +72,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   private dataSubscription = new Subscription();
   private collectionSubscription = new Subscription();
 
-  private query: QueryModel;
+  private query: Query;
   private lastCollectionId: string;
 
   constructor(private store: Store<AppState>) {}
@@ -166,7 +166,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
-  private updateDataSubscription(collectionQuery: QueryModel) {
+  private updateDataSubscription(collectionQuery: Query) {
     this.documents$ = this.store.select(selectDocumentsByCustomQuery(collectionQuery));
 
     this.dataSubscription.unsubscribe();

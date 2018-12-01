@@ -33,7 +33,16 @@ export interface QueryStem {
 
 export interface AttributeFilter {
   collectionId: string;
-  operator: string;
+  condition: string;
   attributeId: string;
   value: any;
+}
+
+export enum ConditionType {
+  Equals,
+  NotEquals,
+  LowerThan,
+  LowerThanEquals,
+  GreaterThan,
+  GreaterThanEquals,
 }

@@ -18,7 +18,7 @@
  */
 
 import {LinkQueryItem} from './model/link.query-item';
-import {QueryConverter} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {QueryData} from '../query-data';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {CollectionQueryItem} from './model/collection.query-item';
@@ -28,58 +28,58 @@ import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {isNullOrUndefined} from 'util';
 import {DeletedQueryItem} from './model/deleted.query-item';
-import {AttributeFilterModel, QueryModel, QueryStemModel} from '../../../../core/store/navigation/query.model';
+import {AttributeFilter, Query, QueryStem} from '../../../../core/store/navigation/query';
+
+export function convertQueryItemsToString(queryItems: QueryItem[]): string {
+  return convertQueryModelToString(convertQueryItemsToQueryModel(queryItems));
+}
+
+export function convertQueryItemsToQueryModel(queryItems: QueryItem[]): Query {
+  const query: Query = {
+    stems: [],
+    fulltexts: [],
+  };
+
+  queryItems.forEach(queryItem => {
+    switch (queryItem.type) {
+      case QueryItemType.Collection:
+        query.stems.push({
+          collectionId: (queryItem as CollectionQueryItem).collection.id,
+          linkTypeIds: [],
+          filters: [],
+          documentIds: [],
+        });
+        return;
+      case QueryItemType.Link:
+        query.stems[query.stems.length - 1].linkTypeIds.push((queryItem as LinkQueryItem).linkType.id);
+        return;
+      case QueryItemType.Attribute:
+        query.stems[query.stems.length - 1].filters.push((queryItem as AttributeQueryItem).getAttributeFilter());
+        return;
+      case QueryItemType.Document:
+        query.stems[query.stems.length - 1].documentIds.push((queryItem as DocumentQueryItem).document.id);
+        return;
+      case QueryItemType.Fulltext:
+        query.fulltexts.push((queryItem as FulltextQueryItem).text);
+        return;
+    }
+  });
+
+  return query;
+}
 
 export class QueryItemsConverter {
   constructor(private data: QueryData) {}
 
-  public static toQueryString(queryItems: QueryItem[]): string {
-    return QueryConverter.toString(this.toQueryModel(queryItems));
-  }
-
-  public static toQueryModel(queryItems: QueryItem[]): QueryModel {
-    const query: QueryModel = {
-      stems: [],
-      fulltexts: [],
-    };
-
-    queryItems.forEach(queryItem => {
-      switch (queryItem.type) {
-        case QueryItemType.Collection:
-          query.stems.push({
-            collectionId: (queryItem as CollectionQueryItem).collection.id,
-            linkTypeIds: [],
-            filters: [],
-            documentIds: [],
-          });
-          return;
-        case QueryItemType.Link:
-          query.stems[query.stems.length - 1].linkTypeIds.push((queryItem as LinkQueryItem).linkType.id);
-          return;
-        case QueryItemType.Attribute:
-          query.stems[query.stems.length - 1].filters.push((queryItem as AttributeQueryItem).getAttributeFilter());
-          return;
-        case QueryItemType.Document:
-          query.stems[query.stems.length - 1].documentIds.push((queryItem as DocumentQueryItem).document.id);
-          return;
-        case QueryItemType.Fulltext:
-          query.fulltexts.push((queryItem as FulltextQueryItem).text);
-          return;
-      }
-    });
-
-    return query;
-  }
-
-  public fromQuery(query: QueryModel): QueryItem[] {
+  public fromQuery(query: Query): QueryItem[] {
     return [...this.createStemsItems(query.stems), ...this.createFulltextsItems(query.fulltexts)];
   }
 
-  private createStemsItems(stems: QueryStemModel[]): QueryItem[] {
+  private createStemsItems(stems: QueryStem[]): QueryItem[] {
     return (stems && stems.reduce((items, stem) => [...items, ...this.createStemItems(stem)], [])) || [];
   }
 
-  private createStemItems(stem: QueryStemModel): QueryItem[] {
+  private createStemItems(stem: QueryStem): QueryItem[] {
     return [
       this.createCollectionItem(stem.collectionId),
       ...this.createLinkItems(stem.linkTypeIds),
@@ -117,7 +117,7 @@ export class QueryItemsConverter {
     );
   }
 
-  private createAttributeItems(filters: AttributeFilterModel[]): QueryItem[] {
+  private createAttributeItems(filters: AttributeFilter[]): QueryItem[] {
     return (
       (filters &&
         filters.map(filter => {

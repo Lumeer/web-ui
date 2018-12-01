@@ -22,10 +22,10 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {SearchTab} from './search-tab';
 import {Workspace} from './workspace.model';
-import {QueryModel} from './query.model';
+import {Query} from './query';
 
 export interface NavigationState {
-  query: QueryModel;
+  query: Query;
   workspace: Workspace;
   perspective?: Perspective;
   searchTab?: SearchTab;

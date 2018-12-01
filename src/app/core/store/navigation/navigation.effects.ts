@@ -27,10 +27,10 @@ import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectNavigation, selectQuery} from './navigation.state';
-import {QueryConverter} from './query.converter';
+import {convertQueryModelToString} from './query.converter';
 import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
-import {QueryModel, QueryStemModel} from './query.model';
+import {Query, QueryStem} from './query';
 
 @Injectable()
 export class NavigationEffects {
@@ -45,7 +45,7 @@ export class NavigationEffects {
       )
     ),
     map(({action, query}) => {
-      const stem: QueryStemModel = query.stems[0]; // TODO be aware when using with more than 1 stem
+      const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
       const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
       const newStem = {...stem, linkTypeIds};
 
@@ -144,11 +144,11 @@ export class NavigationEffects {
   constructor(private actions$: Actions, private router: Router, private store$: Store<AppState>) {}
 }
 
-function newQueryAction(query: QueryModel): Action {
+function newQueryAction(query: Query): Action {
   return new RouterAction.Go({
     path: [],
     queryParams: {
-      query: QueryConverter.toString(query),
+      query: convertQueryModelToString(query),
     },
     extras: {
       queryParamsHandling: 'merge',

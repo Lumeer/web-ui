@@ -25,7 +25,7 @@ import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
 import {EditedAttribute} from './tables.state';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',
@@ -102,7 +102,7 @@ export namespace TablesAction {
   export class CreateTable implements Action {
     public readonly type = TablesActionType.CREATE_TABLE;
 
-    public constructor(public payload: {tableId: string; query: QueryModel; config: TableConfig}) {}
+    public constructor(public payload: {tableId: string; query: Query; config: TableConfig}) {}
   }
 
   export class AddTable implements Action {
@@ -219,7 +219,7 @@ export namespace TablesAction {
   export class SyncPrimaryRows implements Action {
     public readonly type = TablesActionType.SYNC_PRIMARY_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor; query: QueryModel}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; query: Query}) {}
   }
 
   /**

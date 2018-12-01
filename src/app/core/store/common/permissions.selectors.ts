@@ -32,7 +32,7 @@ import {selectCurrentUser} from '../users/users.state';
 import {selectCurrentView} from '../views/views.state';
 import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
 export const selectCollectionsByReadPermission = createSelector(
   selectAllCollections,
@@ -82,7 +82,7 @@ export const selectDocumentsByQuery = createSelector(
     )
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean, includeChildren?: boolean) =>
+export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,
     selectCollectionsByReadPermission,

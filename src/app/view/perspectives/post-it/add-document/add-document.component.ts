@@ -23,7 +23,7 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {Query} from '../../../../core/store/navigation/query';
 import {getQueryFiltersForCollection} from '../../../../core/store/navigation/query.util';
 
 @Component({
@@ -36,7 +36,7 @@ export class PostItAddDocumentComponent {
   public disabled: boolean;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public collection: CollectionModel;

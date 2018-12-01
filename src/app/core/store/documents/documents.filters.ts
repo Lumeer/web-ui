@@ -21,7 +21,7 @@ import {isNullOrUndefined} from 'util';
 import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {AttributeFilterModel, ConditionType, QueryModel, QueryStemModel} from '../navigation/query.model';
+import {AttributeFilter, ConditionType, Query, QueryStem} from '../navigation/query';
 import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
@@ -34,7 +34,7 @@ export function filterDocumentsByQuery(
   collections: CollectionModel[],
   linkTypes: LinkTypeModel[],
   linkInstances: LinkInstanceModel[],
-  query: QueryModel,
+  query: Query,
   currentUser: UserModel,
   includeChildren?: boolean
 ): DocumentModel[] {
@@ -82,7 +82,7 @@ export function filterDocumentsByQuery(
   return paginate(documentsByStems, queryWithFunctions);
 }
 
-function applyFunctionsToFilters(query: QueryModel, currentUser: UserModel): QueryModel {
+function applyFunctionsToFilters(query: Query, currentUser: UserModel): Query {
   const stems =
     query.stems &&
     query.stems.map(stem => {
@@ -97,7 +97,7 @@ function applyFunctionsToFilters(query: QueryModel, currentUser: UserModel): Que
   return {...query, stems};
 }
 
-function applyFilterFunctions(filter: AttributeFilterModel, currentUser: UserModel): any {
+function applyFilterFunctions(filter: AttributeFilter, currentUser: UserModel): any {
   switch (filter.value) {
     case 'userEmail()':
       return currentUser && currentUser.email;
@@ -130,7 +130,7 @@ function filterDocumentsByStem(
   collections: CollectionModel[],
   linkTypes: LinkTypeModel[],
   linkInstances: LinkInstanceModel[],
-  stem: QueryStemModel,
+  stem: QueryStem,
   fulltexts: string[],
   includeChildren?: boolean
 ): DocumentModel[] {
@@ -191,21 +191,17 @@ function filterDocumentsByStem(
   return filteredDocuments;
 }
 
-function cleanStemForBaseCollection(stem: QueryStemModel, documents: DocumentModel[]): QueryStemModel {
+function cleanStemForBaseCollection(stem: QueryStem, documents: DocumentModel[]): QueryStem {
   return cleanStemForCollection(stem, documents, stem.collectionId);
 }
 
-function cleanStemForCollection(
-  stem: QueryStemModel,
-  documents: DocumentModel[],
-  collectionId: string
-): QueryStemModel {
+function cleanStemForCollection(stem: QueryStem, documents: DocumentModel[], collectionId: string): QueryStem {
   const filters = getFiltersByCollection(stem.filters, collectionId);
   const documentIds = getDocumentIdsByCollection(stem.documentIds, documents);
   return {collectionId, filters, documentIds};
 }
 
-function getFiltersByCollection(filters: AttributeFilterModel[], collectionId: string): AttributeFilterModel[] {
+function getFiltersByCollection(filters: AttributeFilter[], collectionId: string): AttributeFilter[] {
   return (filters && filters.filter(filter => filter.collectionId === collectionId)) || [];
 }
 
@@ -214,12 +210,12 @@ function getDocumentIdsByCollection(documentsIds: string[], documentsByCollectio
 }
 
 function createStemsPipeline(
-  stem: QueryStemModel,
+  stem: QueryStem,
   collections: CollectionModel[],
   linkTypes: LinkTypeModel[],
   documentsByCollectionMap: {[collectionId: string]: [DocumentModel]}
-): QueryStemModel[] {
-  const pipeline: QueryStemModel[] = [];
+): QueryStem[] {
+  const pipeline: QueryStem[] = [];
   let lastCollectionId = stem.collectionId;
 
   const stemLinkTypeIds = stem.linkTypeIds || [];
@@ -249,7 +245,7 @@ function createStemsPipeline(
 function filterDocumentsByAllConditions(
   documents: DocumentModel[],
   collection: CollectionModel,
-  stem: QueryStemModel,
+  stem: QueryStem,
   fulltexts: string[]
 ): DocumentModel[] {
   let documentsToFilter = documents;
@@ -262,7 +258,7 @@ function filterDocumentsByAllConditions(
 function filterDocumentsByFiltersAndFulltexts(
   documents: DocumentModel[],
   collection: CollectionModel,
-  filters: AttributeFilterModel[],
+  filters: AttributeFilter[],
   fulltexts: string[]
 ): DocumentModel[] {
   const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
@@ -308,14 +304,14 @@ function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: str
   );
 }
 
-function documentMeetsFilters(document: DocumentModel, filters: AttributeFilterModel[]): boolean {
+function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
   if (!filters || filters.length === 0) {
     return true;
   }
   return filters.every(filter => documentMeetFilter(document, filter));
 }
 
-function documentMeetFilter(document: DocumentModel, filter: AttributeFilterModel): boolean {
+function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): boolean {
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
@@ -338,7 +334,7 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilterMode
   return true;
 }
 
-function paginate(documents: DocumentModel[], query: QueryModel) {
+function paginate(documents: DocumentModel[], query: Query) {
   if (!query || isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
     return documents;
   }

@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {LinkInstanceModel} from './link-instance.model';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
@@ -46,13 +46,13 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: QueryModel}) {}
+    public constructor(public payload: {query: Query}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkInstances: LinkInstanceModel[]; query: QueryModel}) {}
+    public constructor(public payload: {linkInstances: LinkInstanceModel[]; query: Query}) {}
   }
 
   export class GetFailure implements Action {

@@ -20,7 +20,7 @@
 import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {AttributeFilterModel} from '../../../../../core/store/navigation/query.model';
+import {AttributeFilter} from '../../../../../core/store/navigation/query';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -48,7 +48,7 @@ export class AttributeQueryItem implements QueryItem {
     return [this.collection.color];
   }
 
-  public getAttributeFilter(): AttributeFilterModel {
+  public getAttributeFilter(): AttributeFilter {
     return {
       collectionId: this.collection.id,
       attributeId: this.attribute.id,

@@ -23,10 +23,10 @@ import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {DocumentModel} from './document.model';
 import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
-  queries: QueryModel[];
+  queries: Query[];
 }
 
 export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: document => document.id});
@@ -56,7 +56,7 @@ export const selectCurrentQueryDocumentsLoaded = createSelector(
   (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
 );
 
-export const selectQueryDocumentsLoaded = (query: QueryModel) =>
+export const selectQueryDocumentsLoaded = (query: Query) =>
   createSelector(
     selectDocumentsQueries,
     queries => !!queries.find(q => areQueriesEqualExceptPagination(q, query))

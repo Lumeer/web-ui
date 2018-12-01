@@ -21,7 +21,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {ProjectModel} from '../../../core/store/projects/project.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-collections',
@@ -29,7 +29,7 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 })
 export class EmptyCollectionsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public project: ProjectModel;

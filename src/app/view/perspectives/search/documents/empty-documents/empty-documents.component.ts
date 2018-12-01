@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
+import {Query} from '../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-documents',
@@ -29,7 +29,7 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 })
 export class EmptyDocumentsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public collections: CollectionModel[];

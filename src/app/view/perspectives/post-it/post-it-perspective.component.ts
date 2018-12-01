@@ -50,7 +50,7 @@ import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
 import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'post-it-perspective',
@@ -85,7 +85,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
   public postItsOrder$ = new BehaviorSubject<string[]>([]);
-  public query: QueryModel;
+  public query: Query;
   public loaded$: Observable<boolean>;
   public canManageConfig = false;
   public documents: DocumentModel[];
@@ -266,7 +266,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscribeDocuments();
   }
 
-  private getPaginationQuery(): QueryModel {
+  private getPaginationQuery(): Query {
     return {...this.query, page: this.page, pageSize: this.getPageSize()};
   }
 

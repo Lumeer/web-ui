@@ -19,19 +19,19 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Perspective} from '../../view/perspectives/perspective';
-import {QueryModel} from '../../core/store/navigation/query.model';
+import {Query} from '../../core/store/navigation/query';
 import {isAnyCollectionQuery, isSingleCollectionQuery} from '../../core/store/navigation/query.util';
 
 @Pipe({
   name: 'filterPerspectives',
 })
 export class FilterPerspectivesPipe implements PipeTransform {
-  public transform(perspectives: Perspective[], query: QueryModel): Perspective[] {
+  public transform(perspectives: Perspective[], query: Query): Perspective[] {
     return perspectives.filter(perspective => canShowPerspective(perspective, query));
   }
 }
 
-function canShowPerspective(perspective: Perspective, query: QueryModel): boolean {
+function canShowPerspective(perspective: Perspective, query: Query): boolean {
   switch (perspective) {
     case Perspective.Table:
     case Perspective.Chart:

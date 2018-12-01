@@ -36,7 +36,7 @@ import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {Direction} from '../direction';
 import {DocumentHintColumn} from './document-hint-column';
-import {QueryModel} from '../../core/store/navigation/query.model';
+import {Query} from '../../core/store/navigation/query';
 
 @Component({
   selector: 'document-hints',
@@ -97,7 +97,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   }
 
   private bindDocuments() {
-    const query: QueryModel = {
+    const query: Query = {
       stems: [{collectionId: this.collectionId}],
     };
 

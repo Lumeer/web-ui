@@ -34,7 +34,11 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryData} from './query-data';
 import {QueryItem} from './query-item/model/query-item';
 import {QueryItemType} from './query-item/model/query-item-type';
-import {QueryItemsConverter} from './query-item/query-items.converter';
+import {
+  convertQueryItemsToQueryModel,
+  convertQueryItemsToString,
+  QueryItemsConverter,
+} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {isNullOrUndefined} from 'util';
@@ -48,7 +52,7 @@ import {CollectionQueryItem} from './query-item/model/collection.query-item';
 import {getArrayDifference} from '../../utils/array.utils';
 import {DocumentQueryItem} from './query-item/model/documents.query-item';
 import {AttributeQueryItem} from './query-item/model/attribute.query-item';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 const allowAutomaticSubmission = true;
 
@@ -363,13 +367,13 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private removeCollectionStem(item: CollectionQueryItem) {
     const collectionId = item.collection.id;
-    const currentQuery = QueryItemsConverter.toQueryModel(this.queryItems$.getValue());
+    const currentQuery = convertQueryItemsToQueryModel(this.queryItems$.getValue());
 
     const stems = (currentQuery.stems || []).filter(stem => stem.collectionId !== collectionId);
     this.setNewQueryItemsByQuery({...currentQuery, stems});
   }
 
-  private setNewQueryItemsByQuery(query: QueryModel) {
+  private setNewQueryItemsByQuery(query: Query) {
     const newQueryItems = new QueryItemsConverter(this.queryData).fromQuery(query);
 
     this.queryItems$.next(newQueryItems);
@@ -382,7 +386,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return;
     }
     const {collectionId, index} = stemData;
-    const currentQuery = QueryItemsConverter.toQueryModel(this.queryItems$.getValue());
+    const currentQuery = convertQueryItemsToQueryModel(this.queryItems$.getValue());
     const stem = (currentQuery.stems || []).find(st => st.collectionId === collectionId);
 
     const linkTypeIds = (stem && stem.linkTypeIds) || [];
@@ -448,7 +452,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private showByQueryItems(redirect?: boolean) {
-    const query = QueryItemsConverter.toQueryString(this.queryItems$.getValue());
+    const query = convertQueryItemsToString(this.queryItems$.getValue());
     this.navigateToQuery(query, redirect);
   }
 

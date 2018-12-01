@@ -17,32 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryModel {
-  stems?: QueryStemModel[];
+export interface QueryDto {
+  stems?: QueryStemDto[];
   fulltexts?: string[];
   page?: number;
   pageSize?: number;
 }
 
-export interface QueryStemModel {
+export interface QueryStemDto {
   collectionId: string;
   linkTypeIds?: string[];
   documentIds?: string[];
-  filters?: AttributeFilterModel[];
+  filters?: AttributeFilterDto[];
 }
 
-export interface AttributeFilterModel {
+export interface AttributeFilterDto {
   collectionId: string;
-  condition: string;
+  operator: string;
   attributeId: string;
   value: any;
-}
-
-export enum ConditionType {
-  Equals,
-  NotEquals,
-  LowerThan,
-  LowerThanEquals,
-  GreaterThan,
-  GreaterThanEquals,
 }

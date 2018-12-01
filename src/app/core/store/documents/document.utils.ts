@@ -20,7 +20,7 @@ import {Dictionary} from 'lodash';
 import {CollectionModel} from '../collections/collection.model';
 import {UserModel} from '../users/user.model';
 import {DocumentModel} from './document.model';
-import {AttributeFilterModel, QueryModel, ConditionType} from '../navigation/query.model';
+import {AttributeFilter, Query, ConditionType} from '../navigation/query';
 import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
@@ -49,7 +49,7 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): {[collec
 
 export function generateDocumentData(
   collection: CollectionModel,
-  collectionFilters: AttributeFilterModel[],
+  collectionFilters: AttributeFilter[],
   currentUser?: UserModel
 ): {[attributeId: string]: any} {
   if (!collection) {
@@ -88,7 +88,7 @@ export function generateDocumentData(
   return data;
 }
 
-export function generateDocumentDataByQuery(query: QueryModel, currentUser: UserModel): {[attributeId: string]: any} {
+export function generateDocumentDataByQuery(query: Query, currentUser: UserModel): {[attributeId: string]: any} {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
   const collection: CollectionModel = {
     id: collectionId,

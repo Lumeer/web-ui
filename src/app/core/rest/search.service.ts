@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {SuggestionType, Suggestions, DocumentDto, Query} from '../dto';
+import {SuggestionType, Suggestions, DocumentDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -47,11 +47,11 @@ export class SearchService {
     });
   }
 
-  public searchLinkInstances(query: Query, workspace?: Workspace): Observable<LinkInstanceModel[]> {
+  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceModel[]> {
     return this.http.post<LinkInstanceModel[]>(`${this.searchPath(workspace)}/linkInstances`, query);
   }
 
-  public searchDocuments(query: Query): Observable<DocumentDto[]> {
+  public searchDocuments(query: QueryDto): Observable<DocumentDto[]> {
     return this.http.post<DocumentDto[]>(`${this.searchPath()}/documents`, query);
   }
 

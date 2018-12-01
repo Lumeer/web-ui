@@ -29,7 +29,7 @@ import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
-import {QueryModel} from '../core/store/navigation/query.model';
+import {Query} from '../core/store/navigation/query';
 
 @Component({
   templateUrl: './view.component.html',
@@ -41,7 +41,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   public viewsExist$: Observable<boolean>;
 
   public workspace: Workspace;
-  private query: QueryModel;
+  private query: Query;
 
   private subscriptions = new Subscription();
 
@@ -105,7 +105,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadQuery(query: QueryModel, name?: string) {
+  private loadQuery(query: Query, name?: string) {
     this.view = {
       name: name ? `${name} - copy` : '',
       query: query,

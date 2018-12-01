@@ -48,7 +48,7 @@ import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-inst
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {QueryConverter} from '../navigation/query.converter';
+import {convertQueryModelToString} from '../navigation/query.converter';
 import {RouterAction} from '../router/router.action';
 import {ViewCursor} from '../views/view.model';
 import {ViewsAction} from '../views/views.action';
@@ -84,7 +84,7 @@ import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
 import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
 @Injectable()
 export class TablesEffects {
@@ -197,7 +197,7 @@ export class TablesEffects {
         action.payload.config
       );
 
-      const query: QueryModel = {
+      const query: Query = {
         stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
       };
 
@@ -226,12 +226,12 @@ export class TablesEffects {
       const linkTypeIds = [table.parts[1].linkTypeId];
       const collectionId = table.parts[2].collectionId;
 
-      const newQuery: QueryModel = {...query, stems: [{collectionId, linkTypeIds}]};
+      const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds}]};
 
       return new RouterAction.Go({
         path: [],
         queryParams: {
-          query: QueryConverter.toString(newQuery),
+          query: convertQueryModelToString(newQuery),
         },
         extras: {
           queryParamsHandling: 'merge',
@@ -251,12 +251,12 @@ export class TablesEffects {
         .reduce((ids, part) => (part.linkTypeId ? ids.concat(part.linkTypeId) : ids), []);
 
       const stem = {...query.stems[0], linkTypeIds};
-      const newQuery: QueryModel = {...query, stems: [stem]};
+      const newQuery: Query = {...query, stems: [stem]};
 
       return new RouterAction.Go({
         path: [],
         queryParams: {
-          query: QueryConverter.toString(newQuery),
+          query: convertQueryModelToString(newQuery),
         },
         extras: {
           queryParamsHandling: 'merge',

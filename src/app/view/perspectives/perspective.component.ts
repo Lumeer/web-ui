@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from '../../core/dto/query';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {ViewConfigModel} from '../../core/store/views/view.model';
+import {QueryDto} from '../../core/dto';
 
 export interface PerspectiveComponent {
-  query: Query;
+  query: QueryDto;
   config: ViewConfigModel;
   embedded: boolean;
   linkedDocument: DocumentModel;

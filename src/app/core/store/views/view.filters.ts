@@ -19,9 +19,9 @@
 
 import {ViewModel} from './view.model';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
-import {QueryModel} from '../navigation/query.model';
+import {Query} from '../navigation/query';
 
-export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewModel[] {
+export function filterViewsByQuery(views: ViewModel[], query: Query): ViewModel[] {
   const filteredViews = views.slice();
 
   if (!query || queryIsEmpty(query)) {

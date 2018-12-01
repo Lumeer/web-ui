@@ -22,14 +22,14 @@ import {Perspective, perspectivesMap} from '../../../view/perspectives/perspecti
 import {AppState} from '../app.state';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
-import {QueryConverter} from './query.converter';
+import {convertStringToQueryModel} from './query.converter';
 import {SearchTab, searchTabsMap} from './search-tab';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
 
   return {
-    query: QueryConverter.fromString(queryParams['query']),
+    query: convertStringToQueryModel(queryParams['query']),
     workspace: {
       organizationCode: params['organizationCode'],
       projectCode: params['projectCode'],

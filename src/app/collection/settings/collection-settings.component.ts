@@ -33,12 +33,12 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {selectCollectionByWorkspace, selectCollectionNames} from '../../core/store/collections/collections.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
 import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
-import {QueryModel} from '../../core/store/navigation/query.model';
+import {Query} from '../../core/store/navigation/query';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -128,8 +128,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public documentsQuery(collectionId: string): string {
-    const query: QueryModel = {stems: [{collectionId: collectionId}]};
-    return QueryConverter.toString(query);
+    const query: Query = {stems: [{collectionId: collectionId}]};
+    return convertQueryModelToString(query);
   }
 
   private workspacePath(): string {

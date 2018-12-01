@@ -32,7 +32,7 @@ import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'chart-perspective',
@@ -46,7 +46,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query$ = new BehaviorSubject<QueryModel>(null);
+  public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
@@ -67,7 +67,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: QueryModel) {
+  private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

@@ -21,7 +21,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-post-its',
@@ -29,7 +29,7 @@ import {QueryModel} from '../../../../core/store/navigation/query.model';
 })
 export class EmptyPostItsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public collections: CollectionModel[];

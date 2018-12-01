@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {SearchTab} from './search-tab';
-import {QueryModel} from './query.model';
+import {Query} from './query';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
@@ -56,13 +56,13 @@ export namespace NavigationAction {
   export class SetQuery implements Action {
     public readonly type = NavigationActionType.SET_QUERY;
 
-    public constructor(public payload: {query: QueryModel}) {}
+    public constructor(public payload: {query: Query}) {}
   }
 
   export class RemoveViewFromUrl implements Action {
     public readonly type = NavigationActionType.REMOVE_VIEW_FROM_URL;
 
-    public constructor(public payload: {setQuery?: QueryModel}) {}
+    public constructor(public payload: {setQuery?: Query}) {}
   }
 
   export class NavigateToPreviousUrl implements Action {

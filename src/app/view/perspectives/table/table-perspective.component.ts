@@ -48,7 +48,7 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 
 declare let $: any;
 
@@ -68,7 +68,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public linkInstance: LinkInstanceModel;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public tableId: string;
@@ -145,7 +145,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private createTable(query: QueryModel, config?: TableConfig) {
+  private createTable(query: Query, config?: TableConfig) {
     if (!this.tableId) {
       throw new Error('tableId has not been set');
     }
@@ -218,12 +218,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private addTablePart(query: QueryModel) {
+  private addTablePart(query: Query) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
     this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId, last: true}));
   }
 
-  private refreshTable(query: QueryModel, config: TableConfig) {
+  private refreshTable(query: Query, config: TableConfig) {
     this.destroyTable();
     this.createTable(query, config);
   }

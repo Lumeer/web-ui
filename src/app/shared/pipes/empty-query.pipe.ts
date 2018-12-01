@@ -20,13 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {queryIsEmpty} from '../../core/store/navigation/query.util';
-import {QueryModel} from '../../core/store/navigation/query.model';
+import {Query} from '../../core/store/navigation/query';
 
 @Pipe({
   name: 'emptyQuery',
 })
 export class EmptyQueryPipe implements PipeTransform {
-  public transform(query: QueryModel): boolean {
+  public transform(query: Query): boolean {
     return queryIsEmpty(query);
   }
 }

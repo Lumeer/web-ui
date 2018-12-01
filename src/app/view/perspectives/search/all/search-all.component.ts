@@ -32,7 +32,7 @@ import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/view
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -43,7 +43,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public hasDocument: boolean;
   public hasView: boolean;
   public workspace: Workspace;
-  public query: QueryModel;
+  public query: Query;
 
   private documentsLoaded: boolean;
   private subscriptions = new Subscription();
