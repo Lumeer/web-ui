@@ -30,6 +30,9 @@ import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
 import {Query} from '../core/store/navigation/query';
+import {NotificationService} from '../core/notifications/notification.service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {convertQueryModelToString} from '../core/store/navigation/query.converter';
 
 @Component({
   templateUrl: './view.component.html',
@@ -45,7 +48,12 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private dialogService: DialogService, private store: Store<AppState>) {}
+  constructor(
+    private dialogService: DialogService,
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToNavigation());
@@ -107,14 +115,18 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private loadQuery(query: Query, name?: string) {
     this.view = {
-      name: name ? `${name} - copy` : '',
+      name: name ? `${name}` : '',
       query: query,
       perspective: null,
       config: {},
     };
   }
 
-  public onSave(name: string) {
+  public onSaveOrClone(name: string) {
+    this.onSave(name, true);
+  }
+
+  public onSave(name: string, clone?: boolean) {
     this.subscriptions.add(
       combineLatest(this.store.select(selectPerspectiveConfig), this.store.select(selectPerspective))
         .pipe(take(1))
@@ -122,11 +134,49 @@ export class ViewComponent implements OnInit, OnDestroy {
           const view: ViewModel = {...this.view, query: this.query, name, config: {[perspective]: config}, perspective};
 
           if (view.code) {
-            this.updateView(view);
+            if (clone) {
+              this.askToCloneView(view);
+            } else {
+              this.updateView(view);
+            }
           } else {
             this.saveView(view);
           }
         })
+    );
+  }
+
+  private askToCloneView(view: ViewModel) {
+    const title = null;
+    const message = this.i18n({
+      id: 'view.dialog.clone.message',
+      value: 'Do you want to create a copy of the view or just rename?',
+    });
+    const cloneButtonText = this.i18n({id: 'view.dialog.clone.clone', value: 'Create a copy'});
+    const renameButtonText = this.i18n({id: 'view.dialog.clone.rename', value: 'Rename'});
+
+    this.notificationService.confirm(message, title, [
+      {text: cloneButtonText, action: () => this.cloneView(view), bold: false},
+      {text: renameButtonText, action: () => this.updateView(view), bold: false},
+    ]);
+  }
+
+  private cloneView(view: ViewModel) {
+    const path: any[] = [
+      'w',
+      this.workspace.organizationCode,
+      this.workspace.projectCode,
+      'view',
+      this.view.perspective,
+    ];
+    this.store.dispatch(
+      new RouterAction.Go({
+        path,
+        queryParams: {
+          query: convertQueryModelToString(view.query),
+          viewName: `${view.name}`,
+        },
+      })
     );
   }
 

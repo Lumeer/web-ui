@@ -42,7 +42,6 @@ import {
   selectSearchTab,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
-import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
 import {areQueriesEqual} from '../../core/store/navigation/query.helper';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
@@ -75,6 +74,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public save = new EventEmitter<string>();
 
+  @Output()
+  public saveOrClone = new EventEmitter<string>();
+
   public name: string;
 
   public config$: Observable<ViewConfigModel>;
@@ -104,20 +106,26 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
     this.subscriptions.add(this.subscribeToSearchTab());
+    this.subscriptions.add(this.subscribeToQuery());
 
-    this.config$ = this.store$.select(selectPerspectiveViewConfig).pipe(tap(config => (this.currentConfig = config)));
+    this.config$ = this.store$
+      .pipe(select(selectPerspectiveViewConfig))
+      .pipe(tap(config => (this.currentConfig = config)));
     this.perspective$ = this.store$
-      .select(selectPerspective)
+      .pipe(select(selectPerspective))
       .pipe(tap(perspective => (this.currentPerspective = perspective)));
-    this.query$ = this.store$.select(selectQuery).pipe(tap(query => (this.currentQuery = query)));
   }
 
   private subscribeToWorkspace(): Subscription {
-    return this.store$.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+    return this.store$.pipe(select(selectWorkspace)).subscribe(workspace => (this.workspace = workspace));
   }
 
   private subscribeToSearchTab(): Subscription {
-    return this.store$.select(selectSearchTab).subscribe(tab => (this.searchTab = tab));
+    return this.store$.pipe(select(selectSearchTab)).subscribe(tab => (this.searchTab = tab));
+  }
+
+  private subscribeToQuery(): Subscription {
+    return this.store$.pipe(select(selectQuery)).subscribe(query => (this.currentQuery = query));
   }
 
   public onNameInput(name: string) {
@@ -169,16 +177,19 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const queryChanged = !areQueriesEqual(this.view.query, this.currentQuery);
-    const configChanged =
-      JSON.stringify(this.currentConfig[this.currentPerspective]) !==
-      JSON.stringify(this.view.config[this.currentPerspective]);
-
-    if (queryChanged || configChanged) {
+    if (this.queryChanged() || this.configChanged()) {
       this.askToDiscardChanges();
     } else {
       this.navigateToUrlWithoutView({});
     }
+  }
+
+  private queryChanged(): boolean {
+    return !areQueriesEqual(this.view.query, this.currentQuery);
+  }
+
+  private configChanged(): boolean {
+    return JSON.stringify(this.currentConfig) !== JSON.stringify(this.view.config[this.currentPerspective]);
   }
 
   private askToDiscardChanges() {
@@ -222,27 +233,18 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     return ['w', this.workspace.organizationCode, this.workspace.projectCode];
   }
 
-  public onSave() {
-    this.save.emit(this.name.trim());
+  public onSave(canClone: boolean) {
+    const value = this.name.trim();
+    console.log(this.configChanged(), this.queryChanged(), this.view.name, value);
+    if (canClone && this.onlyViewNameChanged(value)) {
+      this.saveOrClone.emit(value);
+    } else {
+      this.save.emit(value);
+    }
   }
 
-  public onCopy() {
-    const path: any[] = [
-      'w',
-      this.workspace.organizationCode,
-      this.workspace.projectCode,
-      'view',
-      this.view.perspective,
-    ];
-    this.store$.dispatch(
-      new RouterAction.Go({
-        path,
-        queryParams: {
-          query: convertQueryModelToString(this.view.query),
-          viewName: `${this.view.name}`,
-        },
-      })
-    );
+  private onlyViewNameChanged(newName: string): boolean {
+    return !this.configChanged() && !this.queryChanged() && this.view.name !== newName;
   }
 
   public onShareClick() {

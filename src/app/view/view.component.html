@@ -3,6 +3,7 @@
                  [novice]="!(viewsExist$ | async)"
                  [view]="view"
                  (save)="onSave($event)"
+                 (saveOrClone)="onSaveOrClone($event)"
                  class="controls">
   </view-controls>
 
