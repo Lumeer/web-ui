@@ -146,7 +146,7 @@ export function getQueryFiltersForCollection(query: QueryModel, collectionId: st
 
 export function getAllCollectionIdsFromQuery(query: QueryModel, linkTypes: LinkTypeModel[]): string[] {
   const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
-  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, stem.linkTypeIds], []);
+  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], []);
   const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));
   const collectionIdsFromLinks = filteredLinkTypes
     .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])

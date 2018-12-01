@@ -77,7 +77,7 @@ export class AttributeConditionComponent implements OnInit {
   private setValue(value: string) {
     this.conditionInput.nativeElement.textContent = value;
     this.conditionControl.setValue(value);
-    this.queryItem.conditionValue = value;
+    this.queryItem.condition = value;
   }
 
   public onFocus() {

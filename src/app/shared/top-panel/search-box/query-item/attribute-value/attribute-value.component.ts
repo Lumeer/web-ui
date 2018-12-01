@@ -58,7 +58,7 @@ export class AttributeValueComponent implements OnInit {
   }
 
   public get conditionValueControl(): AbstractControl {
-    return this.queryItemForm && this.queryItemForm.get('value');
+    return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
   public onBlur() {

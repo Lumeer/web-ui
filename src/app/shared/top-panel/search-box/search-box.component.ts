@@ -45,10 +45,11 @@ import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {LinkQueryItem} from './query-item/model/link.query-item';
 import {CollectionQueryItem} from './query-item/model/collection.query-item';
-import {arrayIntersection} from '../../utils/array.utils';
+import {arrayIntersection, getArrayDifference} from '../../utils/array.utils';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {DocumentQueryItem} from './query-item/model/documents.query-item';
 import {AttributeQueryItem} from './query-item/model/attribute.query-item';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 
 const allowAutomaticSubmission = true;
 
@@ -155,35 +156,72 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private addItemBeforeFulltexts(queryItem: QueryItem) {
     const queryItems = this.queryItems$.getValue();
     const fulltextIndex = queryItems.findIndex(queryItem => queryItem.type === QueryItemType.Fulltext);
-    const insertIndex = Math.max(fulltextIndex - 1, 0);
+    const insertIndex = fulltextIndex !== -1 ? fulltextIndex : queryItems.length;
     this.addQueryItemAtIndex(queryItem, insertIndex);
   }
 
   private addLinkItem(linkItem: LinkQueryItem) {
     const queryItems = this.queryItems$.getValue();
-    let added = false;
+    let skipItems = false;
     for (let i = queryItems.length - 1; i >= 0; i--) {
       const queryItem = queryItems[i];
-      if (queryItem.type === QueryItemType.Link) {
-        if (arrayIntersection(linkItem.collectionIds, (queryItem as LinkQueryItem).collectionIds).length > 0) {
+      if (queryItem.type === QueryItemType.Link && !skipItems) {
+        const linkingCollectionId = this.getLinkingCollectionIdForLinkIndex(i);
+        if (linkingCollectionId && linkItem.collectionIds.includes(linkingCollectionId)) {
           this.addQueryItemAtIndex(linkItem, i + 1);
-          added = true;
-          break;
+          return;
         }
+        skipItems = true;
       } else if (queryItem.type === QueryItemType.Collection) {
-        if (linkItem.collectionIds.includes((queryItem as CollectionQueryItem).collection.id)) {
+        if (!skipItems && linkItem.collectionIds.includes((queryItem as CollectionQueryItem).collection.id)) {
           this.addQueryItemAtIndex(linkItem, i + 1);
-          added = true;
-          break;
+          return;
         }
+        skipItems = false;
       }
     }
 
-    if (!added) {
-      const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(linkItem.collectionIds[0]);
-      this.addItemBeforeFulltexts(collectionItem);
-      this.addItemBeforeFulltexts(linkItem);
+    const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(linkItem.collectionIds[0]);
+    this.addItemBeforeFulltexts(collectionItem);
+    this.addItemBeforeFulltexts(linkItem);
+  }
+
+  private getLinkingCollectionIdForLinkIndex(linkIndex: number): string {
+    const stemData = this.getStemCollectionIdForLinkIndex(linkIndex);
+    if (!stemData) {
+      return null;
     }
+
+    const {collectionId, index} = stemData;
+    const queryItems = this.queryItems$.getValue();
+
+    let linkingCollectionId = collectionId;
+    for (let i = index + 1; i <= linkIndex; i++) {
+      const linkItem = queryItems[i] as LinkQueryItem;
+      const otherCollectionIds = getArrayDifference(linkItem.collectionIds, [linkingCollectionId]);
+      if (otherCollectionIds.length !== 1) {
+        return null;
+      }
+      linkingCollectionId = otherCollectionIds[0];
+    }
+    return linkingCollectionId;
+  }
+
+  private getStemCollectionIdForLinkIndex(index: number): {collectionId: string; index: number} {
+    const queryItems = this.queryItems$.getValue();
+
+    let collectionItemIndex = index;
+    let currentItem: QueryItem = queryItems[index];
+    while (currentItem.type === QueryItemType.Link) {
+      collectionItemIndex--;
+      currentItem = queryItems[collectionItemIndex];
+    }
+
+    if (collectionItemIndex < 0 || currentItem.type !== QueryItemType.Collection) {
+      return null;
+    }
+
+    return {collectionId: (currentItem as CollectionQueryItem).collection.id, index: collectionItemIndex};
   }
 
   private addAttributeItem(attributeItem: AttributeQueryItem) {
@@ -191,33 +229,27 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     if (queryStartData) {
       const queryItems = this.queryItems$.getValue();
       const {index, distanceFromCollection} = queryStartData;
-      const foundAttributeCollectionIds = new Set();
-      let added = false;
+      console.log(queryStartData);
       for (let i = index + 1; i < queryItems.length; i++) {
         const queryItem = queryItems[i];
         if (queryItem.type === QueryItemType.Attribute) {
           const currentAttributeItem = queryItem as AttributeQueryItem;
           if (currentAttributeItem.collection.id !== attributeItem.collection.id) {
-            foundAttributeCollectionIds.add(currentAttributeItem.collection.id);
-
-            if (distanceFromCollection < foundAttributeCollectionIds.size) {
+            const attributeStartData = this.findQueryStemStartIndexForCollection(currentAttributeItem.collection.id);
+            if (distanceFromCollection < attributeStartData.distanceFromCollection) {
               // we found attributeItem which should be behind adding item
               this.addQueryItemAtIndex(attributeItem, i);
-              added = true;
-              break;
+              return;
             }
           }
         } else if ([QueryItemType.Collection, QueryItemType.Document].includes(queryItem.type)) {
           // index is now at the end of attributes or at the start of another query stem
           this.addQueryItemAtIndex(attributeItem, i);
-          added = true;
-          break;
+          return;
         }
       }
 
-      if (!added) {
-        this.addItemBeforeFulltexts(attributeItem);
-      }
+      this.addItemBeforeFulltexts(attributeItem);
     } else {
       const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(attributeItem.collection.id);
       this.addItemBeforeFulltexts(collectionItem);
@@ -225,44 +257,39 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addDocumentItem(documentQueryItem: DocumentQueryItem) {
-    const queryStartData = this.findQueryStemStartIndexForCollection(documentQueryItem.document.collectionId);
+  private addDocumentItem(documentItem: DocumentQueryItem) {
+    const queryStartData = this.findQueryStemStartIndexForCollection(documentItem.document.collectionId);
     if (queryStartData) {
       const queryItems = this.queryItems$.getValue();
       const {index, distanceFromCollection} = queryStartData;
       const foundDocumentCollectionIds = new Set();
-      let added = false;
       for (let i = index + 1; i < queryItems.length; i++) {
         const queryItem = queryItems[i];
         if (queryItem.type === QueryItemType.Document) {
           const currentDocumentItem = queryItem as DocumentQueryItem;
-          if (currentDocumentItem.document.collectionId !== documentQueryItem.document.collectionId) {
+          if (currentDocumentItem.document.collectionId !== documentItem.document.collectionId) {
             foundDocumentCollectionIds.add(currentDocumentItem.document.collectionId);
 
             if (distanceFromCollection < foundDocumentCollectionIds.size) {
               // we found documentItem which should be behind adding item
-              this.addQueryItemAtIndex(documentQueryItem, i);
-              added = true;
-              break;
+              this.addQueryItemAtIndex(documentItem, i);
+              return;
             }
           }
         } else if (queryItem.type === QueryItemType.Collection) {
           // index is now at the end of documents or at the start of another query stem
-          this.addQueryItemAtIndex(documentQueryItem, i);
-          added = true;
-          break;
+          this.addQueryItemAtIndex(documentItem, i);
+          return;
         }
       }
 
-      if (!added) {
-        this.addItemBeforeFulltexts(documentQueryItem);
-      }
+      this.addItemBeforeFulltexts(documentItem);
     } else {
       const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(
-        documentQueryItem.document.collectionId
+        documentItem.document.collectionId
       );
       this.addItemBeforeFulltexts(collectionItem);
-      this.addItemBeforeFulltexts(documentQueryItem);
+      this.addItemBeforeFulltexts(documentItem);
     }
   }
 
@@ -275,10 +302,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
         if ((queryItem as LinkQueryItem).collectionIds.includes(collectionId)) {
           properLinkIndex = index;
         }
-      } else if (properLinkIndex !== -1 || queryItem.type === QueryItemType.Collection) {
-        if (properLinkIndex !== -1 || collectionId === (queryItem as CollectionQueryItem).collection.id) {
-          const distanceFromCollection = Math.max(0, properLinkIndex - index);
+      } else if (queryItem.type === QueryItemType.Collection) {
+        if (properLinkIndex !== -1) {
+          const distanceFromCollection = properLinkIndex - index;
           return {index, distanceFromCollection};
+        } else if (collectionId === (queryItem as CollectionQueryItem).collection.id) {
+          return {index, distanceFromCollection: 0};
         }
       }
     }
@@ -299,7 +328,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onRemoveLastQueryItem() {
     const lastIndex = this.queryItems$.getValue().length - 1;
-    this.onRemoveQueryItem(lastIndex);
+    if (lastIndex >= 0) {
+      this.onRemoveQueryItem(lastIndex);
+    }
   }
 
   public onRemoveQueryItem(index: number) {
@@ -320,9 +351,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     const queryItem = this.queryItems$.getValue()[index];
     switch (queryItem.type) {
       case QueryItemType.Collection:
-        return this.removeQueryStemFromIndex(index);
+        return this.removeCollectionStem(queryItem as CollectionQueryItem);
       case QueryItemType.Link:
-        return this.removeLinkTypesFromIndex(index);
+        return this.removeLinkChainFromStem(index);
       case QueryItemType.Attribute:
         return this.removeQueryItem(index);
       case QueryItemType.Document:
@@ -332,81 +363,51 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  private removeQueryStemFromIndex(index: number) {
-    const endIndex = this.findEndOfQueryStemFromIndex(index);
-    if (endIndex < 0) {
+  private removeCollectionStem(item: CollectionQueryItem) {
+    const collectionId = item.collection.id;
+    const currentQuery = QueryItemsConverter.toQueryModel(this.queryItems$.getValue());
+
+    const stems = (currentQuery.stems || []).filter(stem => stem.collectionId !== collectionId);
+    this.setNewQueryItemsByQuery({...currentQuery, stems});
+  }
+
+  private setNewQueryItemsByQuery(query: QueryModel) {
+    const newQueryItems = new QueryItemsConverter(this.queryData).fromQuery(query);
+
+    this.queryItems$.next(newQueryItems);
+    this.initForm(newQueryItems);
+  }
+
+  private removeLinkChainFromStem(linkIndex: number) {
+    const stemData = this.getStemCollectionIdForLinkIndex(linkIndex);
+    if (!stemData) {
       return;
     }
-    for (let i = endIndex; i >= index; i--) {
-      this.removeQueryItem(i);
-    }
+    const {collectionId, index} = stemData;
+    const currentQuery = QueryItemsConverter.toQueryModel(this.queryItems$.getValue());
+    const stem = (currentQuery.stems || []).find(stem => stem.collectionId === collectionId);
+
+    const linkTypeIds = (stem && stem.linkTypeIds) || [];
+    const linkTypeIndex = linkIndex - (index + 1);
+
+    stem.linkTypeIds = linkTypeIds.slice(0, linkTypeIndex);
+
+    const collectionIdsFromLinks = [collectionId, ...this.collectionIdsFromLinks(stem.linkTypeIds)];
+    stem.filters = stem.filters && stem.filters.filter(filter => collectionIdsFromLinks.includes(filter.collectionId));
+
+    // TODO filter documentIds once documentItems are used
+
+    this.setNewQueryItemsByQuery(currentQuery);
   }
 
-  private findEndOfQueryStemFromIndex(index: number) {
-    const queryItems = this.queryItems$.getValue();
-    if (queryItems.length - 1 === index) {
-      return index;
-    }
-    for (let i = index + 1; i < queryItems.length; i++) {
-      const queryItem = queryItems[i];
-      if (queryItem.type === QueryItemType.Collection || QueryItemType.Fulltext) {
-        return i - 1;
-      }
-    }
-
-    return queryItems.length - 1;
-  }
-
-  private removeLinkTypesFromIndex(index: number) {
-    const removedCollectionIds = new Set();
-    const queryItems = this.queryItems$.getValue();
-
-    const removingQueryItem = queryItems[index] as LinkQueryItem;
-    const previousQueryItem = queryItems[index - 1];
-
-    let connectedCollectionId: string;
-    if (previousQueryItem.type === QueryItemType.Collection) {
-      connectedCollectionId = (previousQueryItem as CollectionQueryItem).collection.id;
-    } else {
-      connectedCollectionId = arrayIntersection(
-        removingQueryItem.collectionIds,
-        (previousQueryItem as LinkQueryItem).collectionIds
-      )[0];
-    }
-
-    let currentQueryItem: QueryItem = removingQueryItem;
-    while (currentQueryItem && currentQueryItem.type === QueryItemType.Link) {
-      const otherCollectionId = getOtherLinkedCollectionId(removingQueryItem.linkType, connectedCollectionId);
-      removedCollectionIds.add(otherCollectionId);
-      this.removeQueryItem(index);
-
-      connectedCollectionId = otherCollectionId;
-      currentQueryItem = this.queryItems$.getValue()[index];
-    }
-
-    this.removeLinkRelatedItemsToNextStem(index, removedCollectionIds);
-  }
-
-  private removeLinkRelatedItemsToNextStem(index: number, collectionIds: Set<string>) {
-    const endIndex = this.findEndOfQueryStemFromIndex(index);
-    if (endIndex < 0) {
-      return;
-    }
-    const queryItems = this.queryItems$.getValue();
-    for (let i = endIndex; i >= index; i--) {
-      const queryItem = queryItems[i];
-      if (queryItem.type === QueryItemType.Document) {
-        if (collectionIds.has((queryItem as DocumentQueryItem).document.collectionId)) {
-          this.removeQueryItem(i);
-        }
-      } else if (queryItem.type === QueryItemType.Attribute) {
-        if (collectionIds.has((queryItem as AttributeQueryItem).collection.id)) {
-          this.removeQueryItem(i);
-        }
-      } else {
-        return;
-      }
-    }
+  private collectionIdsFromLinks(linkTypesIds: string[]): string[] {
+    return this.queryData.linkTypes
+      .filter(linkType => linkTypesIds.includes(linkType.id))
+      .reduce((ids, linkType) => {
+        const idsToAdd = linkType.collectionIds.filter(id => !ids.includes(id));
+        ids.push(...idsToAdd);
+        return ids;
+      }, []);
   }
 
   private removeQueryItem(index: number) {

@@ -298,8 +298,8 @@ function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: str
     return true;
   }
 
-  return Object.values(document.data).some(value =>
-    fulltextsLowerCase.every(fulltext =>
+  return fulltextsLowerCase.every(fulltext =>
+    Object.values(document.data).some(value =>
       (value || '')
         .toString()
         .toLowerCase()
