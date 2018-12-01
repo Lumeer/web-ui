@@ -31,14 +31,14 @@ import {
 } from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {QueryConverter} from '../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Subject, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {CollectionValidators} from '../../../core/validators/collection.validators';
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
+import {Query} from '../../../core/store/navigation/query';
 
 declare let $: any;
 
@@ -176,8 +176,8 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public queryForCollectionDocuments(): string {
-    const query: QueryModel = {collectionIds: [this.collection.id]};
-    return QueryConverter.toString(query);
+    const query: Query = {stems: [{collectionId: this.collection.id}]};
+    return convertQueryModelToString(query);
   }
 
   public refreshValidators() {

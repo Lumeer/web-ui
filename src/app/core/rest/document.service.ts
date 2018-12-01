@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {DocumentDto} from '../dto';
 import {DocumentMetaDataDto} from '../dto/document.dto';
@@ -100,16 +100,6 @@ export class DocumentService {
 
   public getDocument(collectionId: string, documentId: string): Observable<DocumentDto> {
     return this.httpClient.get<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`);
-  }
-
-  public getDocuments(collectionId: string, pageNumber?: number, pageSize?: number): Observable<DocumentDto[]> {
-    const queryParams = new HttpParams();
-
-    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
-    }
-
-    return this.httpClient.get<DocumentDto[]>(this.apiPrefix(collectionId), {params: queryParams});
   }
 
   private apiPrefix(collectionId: string): string {

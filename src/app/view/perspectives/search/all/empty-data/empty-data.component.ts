@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
+import {Query} from '../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-data',
@@ -28,7 +28,7 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 })
 export class EmptyDataComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Output()
   public collectionsTab = new EventEmitter();

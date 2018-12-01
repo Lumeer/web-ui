@@ -18,12 +18,31 @@
  */
 
 export interface Query {
-  collectionIds?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
-
+  stems?: QueryStem[];
+  fulltexts?: string[];
   page?: number;
   pageSize?: number;
+}
+
+export interface QueryStem {
+  collectionId: string;
+  linkTypeIds?: string[];
+  documentIds?: string[];
+  filters?: AttributeFilter[];
+}
+
+export interface AttributeFilter {
+  collectionId: string;
+  condition: string;
+  attributeId: string;
+  value: any;
+}
+
+export enum ConditionType {
+  Equals,
+  NotEquals,
+  LowerThan,
+  LowerThanEquals,
+  GreaterThan,
+  GreaterThanEquals,
 }

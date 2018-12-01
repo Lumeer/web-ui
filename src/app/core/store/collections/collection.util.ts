@@ -18,10 +18,6 @@
  */
 
 import {CollectionModel} from './collection.model';
-import {QueryConverter} from '../navigation/query.converter';
-import {ViewModel} from '../views/view.model';
-import {LinkTypeModel} from '../link-types/link-type.model';
-import {DocumentModel} from '../documents/document.model';
 
 export function getDefaultAttributeId(collection: CollectionModel): string {
   if (collection.defaultAttributeId) {
@@ -52,69 +48,4 @@ export function mergeCollections(collectionsA: CollectionModel[], collectionsB: 
   const collectionsAIds = collectionsA.map(collection => collection.id);
   const collectionsBToAdd = collectionsB.filter(collection => !collectionsAIds.includes(collection.id));
   return collectionsA.concat(collectionsBToAdd);
-}
-
-export function getCollectionsIdsFromView(
-  view: ViewModel,
-  linkTypes: LinkTypeModel[],
-  documents: DocumentModel[]
-): string[] | null {
-  if (!view) {
-    return null;
-  }
-
-  const query = view.query || {};
-  const collectionIds = [...((query && query.collectionIds) || [])];
-  collectionIds.push(...getCollectionsIdsFromFilters(query.filters));
-
-  const linkTypesFromView = (query.linkTypeIds || [])
-    .map(id => linkTypes.find(linkType => linkType.id === id))
-    .filter(linkType => !!linkType);
-
-  collectionIds.push(...getCollectionsIdsFromLinkTypes(linkTypesFromView));
-
-  const documentsFromView = (query.documentIds || [])
-    .map(id => documents.find(document => document.id === id))
-    .filter(document => !!document);
-
-  collectionIds.push(...getCollectionsIdsFromDocuments(documentsFromView));
-
-  return collectionIds;
-}
-
-export function getCollectionsIdsFromFilters(filters: string[]): string[] {
-  if (!filters) {
-    return [];
-  }
-  return (
-    (filters &&
-      filters
-        .map(filter => QueryConverter.parseFilter(filter))
-        .filter(filter => !!filter)
-        .map(filter => filter.collectionId)) ||
-    []
-  );
-}
-
-function getCollectionsIdsFromLinkTypes(linkTypes: LinkTypeModel[]): string[] {
-  if (!linkTypes) {
-    return [];
-  }
-  return linkTypes.reduce((ids, linkType) => {
-    ids.push(...linkType.collectionIds);
-    return ids;
-  }, []);
-}
-
-export function getCollectionsIdsFromDocuments(documents: DocumentModel[]): string[] {
-  if (!documents) {
-    return [];
-  }
-
-  return documents.reduce((ids, document) => {
-    if (!ids.includes(document.collectionId)) {
-      ids.push(document.collectionId);
-    }
-    return ids;
-  }, []);
 }

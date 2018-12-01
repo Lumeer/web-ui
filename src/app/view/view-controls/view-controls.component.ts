@@ -42,9 +42,8 @@ import {
   selectSearchTab,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
 import {areQueriesEqual} from '../../core/store/navigation/query.helper';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
@@ -56,6 +55,7 @@ import {
 } from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
+import {Query} from '../../core/store/navigation/query';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -79,12 +79,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public config$: Observable<ViewConfigModel>;
   public perspective$: Observable<Perspective>;
-  public query$: Observable<QueryModel>;
+  public query$: Observable<Query>;
 
   public nameChanged$ = new BehaviorSubject(false);
   public viewChanged$: Observable<boolean>;
 
-  private currentQuery: QueryModel;
+  private currentQuery: Query;
   private currentPerspective: Perspective;
   private currentConfig: ViewConfigModel;
   private searchTab?: string;
@@ -192,11 +192,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
     this.notificationService.confirm(message, title, [
       {text: save, action: () => this.save.emit(this.view.name)},
-      {text: discard, action: () => this.navigateToUrlWithoutView(), bold: false},
+      {text: discard, action: () => this.navigateToUrlWithoutView({}), bold: false},
     ]);
   }
 
-  public navigateToUrlWithoutView(query?: QueryModel) {
+  public navigateToUrlWithoutView(query?: Query) {
     this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 
@@ -238,7 +238,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       new RouterAction.Go({
         path,
         queryParams: {
-          query: QueryConverter.toString(this.view.query),
+          query: convertQueryModelToString(this.view.query),
           viewName: `${this.view.name}`,
         },
       })

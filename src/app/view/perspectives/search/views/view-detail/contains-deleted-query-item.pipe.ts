@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Query} from '../../../../../core/store/navigation/query';
-import {isSingleCollectionQuery} from '../../../../../core/store/navigation/query.util';
+import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemType} from '../../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 
 @Pipe({
-  name: 'displayable',
+  name: 'containsDeletedQueryItem',
 })
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isSingleCollectionQuery(query);
+export class ContainsDeletedQueryItemPipe implements PipeTransform {
+  public transform(queryItems: QueryItem[]): boolean {
+    return !!queryItems.find(queryItem => queryItem.type === QueryItemType.Deleted);
   }
 }

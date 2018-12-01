@@ -49,18 +49,18 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ActivatedRoute, Router} from '@angular/router';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
 import {safeGetRandomIcon} from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
+import {Query} from '../../core/store/navigation/query';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -95,7 +95,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public project: ProjectModel;
   public focusedPanel: number;
   public workspace: Workspace;
-  public query: QueryModel;
+  public query: Query;
   public collectionsLoaded: boolean;
 
   private postItLayout: ElementRef;
@@ -251,7 +251,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   public onShowAllClicked() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
-      queryParams: {query: QueryConverter.toString(this.query)},
+      queryParams: {query: convertQueryModelToString(this.query)},
     });
   }
 

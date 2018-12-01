@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from './query';
+import {QueryDto} from './query.dto';
 import {Resource} from './resource';
 
 export interface View extends Resource {
   perspective: string;
-  query: Query;
+  query: QueryDto;
   config: any; // TODO create DTO
   authorRights?: {[collectionId: string]: string[]};
 }

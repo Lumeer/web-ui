@@ -33,6 +33,7 @@ import {ViewModel} from '../../../../../core/store/views/view.model';
 import {QueryData} from '../../../../../shared/top-panel/search-box/query-data';
 import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'view-detail',
@@ -53,7 +54,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Output()
   public delete = new EventEmitter();
 
-  public queryItems: QueryItem[] = [];
+  public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
 
   public ngOnInit() {
     this.createQueryItems();
@@ -83,6 +84,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     if (!this.queryData) {
       return;
     }
-    this.queryItems = new QueryItemsConverter(this.queryData).fromQuery(this.view.query);
+    this.queryItems$.next(new QueryItemsConverter(this.queryData).fromQuery(this.view.query));
   }
 }

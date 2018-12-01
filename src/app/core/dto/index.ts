@@ -30,7 +30,7 @@ export {Organization} from './organization';
 export {Permission} from './permission';
 export {Permissions} from './permissions';
 export {Project} from './project';
-export {Query} from './query';
+export {QueryDto} from './query.dto';
 export {Resource} from './resource';
 export {SuggestionType} from './suggestion-type';
 export {Suggestions} from './suggestions';

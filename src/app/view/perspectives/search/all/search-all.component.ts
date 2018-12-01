@@ -27,12 +27,12 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -43,7 +43,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public hasDocument: boolean;
   public hasView: boolean;
   public workspace: Workspace;
-  public query: QueryModel;
+  public query: Query;
 
   private documentsLoaded: boolean;
   private subscriptions = new Subscription();
