@@ -109,7 +109,7 @@ function applyFilterFunctions(filter: AttributeFilter, currentUser: UserModel): 
 function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocuments: DocumentModel[]): DocumentModel[] {
   const documentsWithChildren = currentDocuments;
   const currentDocumentsIds = new Set(currentDocuments.map(doc => doc.id));
-  const documentsToSearch = allDocuments.filter(document => !currentDocumentsIds.has(document.id));
+  let documentsToSearch = allDocuments.filter(document => !currentDocumentsIds.has(document.id));
   let foundParent = true;
   while (foundParent) {
     foundParent = false;
@@ -120,6 +120,7 @@ function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocument
         foundParent = true;
       }
     }
+    documentsToSearch = documentsToSearch.filter(document => !currentDocumentsIds.has(document.id));
   }
 
   return documentsWithChildren;
