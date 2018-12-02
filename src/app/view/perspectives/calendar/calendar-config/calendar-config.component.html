@@ -1,0 +1,16 @@
+<br>
+<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
+
+  <ng-container *ngFor="let calendarBarPropertyRequired of calendarBarsPropertiesRequired; let isLast = last">
+    <select-item
+      [class.mr-2]="!isLast"
+      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyRequired:config "
+      [selectedId]="config.barsProperties[calendarBarPropertyRequired]"
+      [placeholderText]="calendarBarPropertyRequired "
+      [emptyValue]="calendarBarPropertyRequired"
+      (select)="onBarPropertyRequiredSelect(calendarBarPropertyRequired, $event)"
+      (remove)="onBarPropertyRequiredRemoved(calendarBarPropertyRequired)">
+    </select-item>
+  </ng-container>
+
+</div>

@@ -17,23 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {CalendarComponent} from './calendar.component';
+import {Pipe, PipeTransform} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {CalendarBarPropertyRequired} from "../../../../../core/store/calendar/calendar.model";
 
-const calendarRoutes: Routes = [
-  {
-    path: '',
-    component: CalendarComponent
-  }
-];
-
-@NgModule({
-  imports: [
-    RouterModule.forChild(calendarRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+@Pipe({
+  name: 'barSelectPlaceholderPropertyRequired',
 })
-export class CalendarRoutingModule { }
+export class BarSelectPlaceholderPropertyRequiredPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(barProperty: CalendarBarPropertyRequired): string {
+    return this.i18n(
+      {
+        id: 'calendar.barRequired.placeholder',
+        value: '{barProperty, select, name {name} start {start} end {end}}',
+      },
+      {
+        barProperty,
+      }
+    );
+  }
+}

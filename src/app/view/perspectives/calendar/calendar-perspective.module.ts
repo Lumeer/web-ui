@@ -17,20 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../../shared/shared.module';
-import {CalendarComponent} from './calendar.component';
-import {CalendarRoutingModule} from './calendar-routing.module';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {CalendarPerspectiveComponent} from './calendar-perspective.component';
+import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {UtilsModule} from './utils/module';
-import {ContextMenuModule} from "ngx-contextmenu";
+import {ContextMenuModule} from 'ngx-contextmenu';
 
-import { FormsModule } from '@angular/forms';
-import {FlatpickrModule} from "angularx-flatpickr";
-import {NgbModalModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {MatDialogModule} from "@angular/material";
+import {FormsModule} from '@angular/forms';
+import {FlatpickrModule} from 'angularx-flatpickr';
+import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {MatDialogModule} from '@angular/material';
+import {CalendarConfigComponent} from './calendar-config/calendar-config.component';
+import {CalendarPipesModule} from './pipes/calendar-pipes.module';
+import {CalendarVisualizationComponent} from './calendar-visualization/calendar-visualization.component';
 
 @NgModule({
   imports: [    //not sure
@@ -43,16 +46,22 @@ import {MatDialogModule} from "@angular/material";
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    CalendarRoutingModule,
+    CalendarPerspectiveRoutingModule,
     FlatpickrModule.forRoot(),
     ContextMenuModule.forRoot({
       useBootstrap4: true
     }),
     UtilsModule,
-    MatDialogModule
+    MatDialogModule,
+    CalendarPipesModule
   ],
   declarations: [
-    CalendarComponent
-  ]
+    CalendarPerspectiveComponent,
+    CalendarConfigComponent,
+    CalendarVisualizationComponent
+  ],
+  entryComponents: [CalendarPerspectiveComponent],
+  exports: [CalendarPerspectiveComponent],
 })
-export class CalendarModules { }
+export class CalendarPerspectiveModule {
+}

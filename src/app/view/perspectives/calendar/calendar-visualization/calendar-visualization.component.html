@@ -5,20 +5,22 @@
   </mwl-utils-calendar-header>
 
   <ng-template
-    #popContent>
-      <div
-        *ngFor="let event of shownEvents"
-      >
-        <i class="fa fa-circle" [style.color]="event.color.primary"></i>
-        <b *ngIf="event.allDay !== true">
-          {{event.start.toLocaleTimeString(undefined, {
-            hour: '2-digit',
-            minute: '2-digit'
-            })
-          }}
-        </b>
-        {{event.title}}
-      </div>
+    #popContent
+    class="popover-block"
+  >
+    <div
+      *ngFor="let event of shownEvents"
+    >
+      <i class="fa fa-circle" [style.color]="event.color.primary"></i>
+      <b *ngIf="event.allDay !== true">
+        {{event.start.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+        })
+        }}
+      </b>
+      {{event.title}}
+    </div>
 
   </ng-template>
 
@@ -41,7 +43,7 @@
           })"
     >
       <div class="cal-cell-top">
-        <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+        <span class="cal-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
         <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
       </div>
       <div class="cal-events">
@@ -54,7 +56,7 @@
           (mouseleave)="unhighlightDay.emit({event: event})"
           [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
           [tooltipPlacement]="tooltipPlacement"
-          >
+        >
         </div>
       </div>
     </div>
@@ -81,7 +83,7 @@
     <div
       class="cal-hour-segment"
       [ngClass]="segment.cssClass"
-      >
+    >
       <div [hidden]="!segment.isStart" class="cal-time">
         {{ segment.date | calendarDate:'dayViewHour':locale }}
       </div>
@@ -95,16 +97,18 @@
       [viewDate]="viewDate"
       [events]="events"
       [refresh]="refresh"
+      [weekStartsOn]="1"
       (dayClicked)="dayClicked($event.day)"
       [cellTemplate]="monthCellTemplate"
       (eventTimesChanged)="eventTimesChanged($event)"
-      >
+    >
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
       *ngSwitchCase="CalendarView.Week"
       [viewDate]="viewDate"
       [events]="events"
       [refresh]="refresh"
+      [weekStartsOn]="1"
       (dayClicked)="dayClicked($event.day)"
       [headerTemplate]="weekHeaderTemplate"
       (eventTimesChanged)="eventTimesChanged($event)">
