@@ -25,3 +25,5 @@ node_js:
   - 'lts/*'
 script:
   - './travis.sh'
+before_cache:
+  - rm -rf ~/.engine/*/target/
