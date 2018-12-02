@@ -23,10 +23,9 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {VideoModel} from '../../../../core/store/videos/video.model';
 import {selectVideosByUrl} from '../../../../core/store/videos/videos.state';
-import {VideoPlayerService} from '../../../../video-player/video-player.service';
-import {Router} from '@angular/router';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {mergeMap} from 'rxjs/operators';
+import {DialogService} from '../../../../dialog/dialog.service';
 
 @Component({
   selector: 'video-menu',
@@ -37,7 +36,7 @@ import {mergeMap} from 'rxjs/operators';
 export class VideoMenuComponent implements OnInit {
   public videos$: Observable<VideoModel[]>;
 
-  constructor(private store: Store<AppState>, private videoPlayerService: VideoPlayerService, private router: Router) {}
+  constructor(private store: Store<AppState>, private dialogService: DialogService) {}
 
   public ngOnInit(): void {
     this.videos$ = this.store.pipe(
@@ -47,6 +46,6 @@ export class VideoMenuComponent implements OnInit {
   }
 
   public openPlayer(id: string): void {
-    this.videoPlayerService.openPlayer(id);
+    this.dialogService.openVideoPlayer(id);
   }
 }

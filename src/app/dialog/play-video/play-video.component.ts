@@ -18,21 +18,21 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {filter, map, mergeMap} from 'rxjs/operators';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {AppState} from '../../core/store/app.state';
+import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
+import {AppState} from '../../core/store/app.state';
+import {filter, map, mergeMap} from 'rxjs/operators';
 import {selectVideoById} from '../../core/store/videos/videos.state';
 
 @Component({
-  selector: 'embedded-video',
-  templateUrl: './embedded-video.component.html',
-  styleUrls: ['./embedded-video.component.scss'],
+  selector: 'play-video',
+  templateUrl: './play-video.component.html',
+  styleUrls: ['./play-video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmbeddedVideoComponent implements OnInit {
+export class PlayVideoComponent implements OnInit {
   public videoLink: Observable<SafeUrl>;
   public summary$: Observable<string>;
 

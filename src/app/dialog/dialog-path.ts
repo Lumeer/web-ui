@@ -25,6 +25,7 @@ export enum DialogPath {
   SHARE_VIEW = 'share-view',
   CREATE_ORGANIZATION = 'create-organization',
   CREATE_PROJECT = 'create-project',
+  PLAY_VIDEO = 'video',
 }
 
 export const dialogPathsMap: {[id: string]: DialogPath} = {
@@ -35,4 +36,5 @@ export const dialogPathsMap: {[id: string]: DialogPath} = {
   [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
   [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
   [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT,
+  [DialogPath.PLAY_VIDEO]: DialogPath.PLAY_VIDEO,
 };

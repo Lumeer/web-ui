@@ -23,7 +23,6 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {SharedModule} from '../shared/shared.module';
 import {DialogBaseComponent} from './dialog-base.component';
 import {DialogRoutingModule} from './dialog-routing.module';
-import {DialogService} from './dialog.service';
 import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
@@ -35,6 +34,7 @@ import {ResourceNameInputComponent} from './create-resource/resource-name-input/
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
+import {PlayVideoComponent} from './play-video/play-video.component';
 
 @NgModule({
   imports: [
@@ -57,8 +57,8 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
     FeedbackDialogComponent,
+    PlayVideoComponent,
   ],
-  providers: [DialogService],
   entryComponents: [
     CreateCollectionDialogComponent,
     CreateLinkDialogComponent,
