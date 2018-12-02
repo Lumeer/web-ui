@@ -26,6 +26,7 @@ import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
+import {PlayVideoComponent} from './play-video/play-video.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,12 @@ const routes: Routes = [
     path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
     component: CreateResourceDialogComponent,
     outlet: 'dialog',
+  },
+  {
+    path: `${DialogPath.PLAY_VIDEO}/:videoId`,
+    component: PlayVideoComponent,
+    outlet: 'dialog',
+    data: {modalDialogClass: 'modal-lg'},
   },
 ];
 
