@@ -162,12 +162,11 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       .subscribe(collection => (this.collection = collection));
     this.subscriptions.add(sub2);
 
-    const sub3 = this.store$
+    this.store$
       .pipe(
         select(selectPreviousUrl),
         take(1)
       )
       .subscribe(url => (this.previousUrl = url));
-    this.subscriptions.add(sub3);
   }
 }
