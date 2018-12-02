@@ -57,11 +57,6 @@ import {PlayVideoComponent} from './play-video/play-video.component';
     FeedbackDialogComponent,
     PlayVideoComponent,
   ],
-  entryComponents: [
-    CreateCollectionDialogComponent,
-    CreateLinkDialogComponent,
-    CreateResourceDialogComponent,
-  ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],
 })
