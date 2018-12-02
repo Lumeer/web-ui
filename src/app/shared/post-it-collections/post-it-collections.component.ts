@@ -31,9 +31,9 @@ import {
   ViewChildren,
 } from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
@@ -48,7 +48,6 @@ import {isNullOrUndefined} from 'util';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
@@ -105,7 +104,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   constructor(
     private i18n: I18n,
     private router: Router,
-    private store: Store<AppState>,
+    private store$: Store<AppState>,
     private zone: NgZone,
     private activatedRoute: ActivatedRoute,
     private changeDetector: ChangeDetectorRef,
@@ -127,7 +126,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.subscribeOnRoute();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
-    this.dispatchActions();
   }
 
   public ngOnDestroy() {
@@ -190,27 +188,27 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     const {favorite, onlyStore} = data;
     if (onlyStore) {
       if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}));
+        this.store$.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}));
       } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}));
+        this.store$.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}));
       }
     } else {
       if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}));
+        this.store$.dispatch(new CollectionsAction.AddFavorite({collectionId}));
       } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}));
+        this.store$.dispatch(new CollectionsAction.RemoveFavorite({collectionId}));
       }
     }
   }
 
   public updateCollection(collection: CollectionModel) {
     if (collection.id) {
-      this.store.dispatch(new CollectionsAction.Update({collection, callback: () => this.refreshPostIts()}));
+      this.store$.dispatch(new CollectionsAction.Update({collection}));
     }
   }
 
   public createCollection(newCollection: CollectionModel) {
-    this.store.dispatch(
+    this.store$.dispatch(
       new CollectionsAction.Create({
         collection: newCollection,
         callback: collection => this.onCreateCollection(collection),
@@ -230,7 +228,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(
+    this.store$.dispatch(
       new CollectionsAction.Import({
         format: importInfo.format,
         importedCollection,
@@ -241,12 +239,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   public forceLayout() {
     this.layout.refresh();
-  }
-
-  public refreshPostIts() {
-    this.postIts && this.postIts.forEach(postIt => postIt.refreshValidators());
-
-    this.checkForPendingUpdatesNames();
   }
 
   public onShowAllClicked() {
@@ -283,9 +275,9 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeOnNavigation() {
-    const navigationSubscription = this.store
-      .select(selectNavigation)
+    const navigationSubscription = this.store$
       .pipe(
+        select(selectNavigation),
         filter(navigation =>
           Boolean(
             navigation &&
@@ -301,24 +293,23 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(navigationSubscription);
 
-    const projectSubscription = this.store
-      .select(selectProjectByWorkspace)
-      .pipe(filter(project => !isNullOrUndefined(project)))
+    const projectSubscription = this.store$
+      .pipe(
+        select(selectProjectByWorkspace),
+        filter(project => !isNullOrUndefined(project))
+      )
       .subscribe(project => (this.project = project));
     this.subscriptions.add(projectSubscription);
   }
 
   private subscribeOnCollections() {
-    const collectionsSubscription = this.store
-      .select(selectCollectionsByQuery)
-      .pipe(withLatestFrom(this.store.select(selectCurrentUserForWorkspace)))
-      .subscribe(([collections, user]) => {
-        this.collections = this.sortCollectionsFromStore(collections);
-      });
+    const collectionsSubscription = this.store$
+      .pipe(select(selectCollectionsByQuery))
+      .subscribe(collections => (this.collections = this.sortCollectionsFromStore(collections)));
     this.subscriptions.add(collectionsSubscription);
 
-    const loadedSubscription = this.store
-      .select(selectCollectionsLoaded)
+    const loadedSubscription = this.store$
+      .pipe(select(selectCollectionsLoaded))
       .subscribe(loaded => (this.collectionsLoaded = loaded));
     this.subscriptions.add(loadedSubscription);
   }
@@ -370,7 +361,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       value: 'Do you really want to delete this collection?',
     });
 
-    this.store.dispatch(
+    this.store$.dispatch(
       new NotificationsAction.Confirm({
         title,
         message,
@@ -389,20 +380,14 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private onCreateCollection(collection: CollectionModel) {
     if (queryIsNotEmpty(this.query)) {
-      this.store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+      this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
     }
-    this.refreshPostIts();
   }
 
   private onRemoveCollection(collectionId: string) {
     if (queryIsNotEmpty(this.query)) {
-      this.store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
+      this.store$.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
     }
-    this.refreshPostIts();
-  }
-
-  private dispatchActions() {
-    this.store.dispatch(new CollectionsAction.GetNames());
   }
 
   private checkNumberOfUncreatedCollections() {
@@ -421,27 +406,5 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  private checkForPendingUpdatesNames() {
-    if (!this.postIts) {
-      return;
-    }
-
-    const pendingUpdates = this.postIts.reduce((updates, postIt, index) => {
-      updates.push(postIt.getPendingUpdateName());
-      return updates;
-    }, []);
-
-    const performedUpdates = [];
-
-    pendingUpdates.forEach((update, index) => {
-      if (update && !performedUpdates.includes(update)) {
-        const success = this.postIts.toArray()[index].performPendingUpdateName();
-        if (success) {
-          performedUpdates.push(update);
-        }
-      }
-    });
   }
 }

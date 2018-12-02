@@ -26,14 +26,12 @@ import {CollectionModel} from './collection.model';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
   loaded: boolean;
-  collectionNames: string[];
 }
 
 export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.id});
 
 export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({
   loaded: false,
-  collectionNames: null,
 });
 
 export const selectCollectionsState = (state: AppState) => state.collections;
@@ -79,8 +77,3 @@ export const selectCollectionsByLinkType = (linkTypeId: string) =>
       return linkType.collectionIds.map(id => collectionsMap[id]);
     }
   );
-
-export const selectCollectionNames = createSelector(
-  selectCollectionsState,
-  (state: CollectionsState) => state.collectionNames
-);

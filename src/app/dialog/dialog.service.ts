@@ -82,11 +82,6 @@ export class DialogService {
     this.navigateToDialog([DialogPath.FEEDBACK]);
   }
 
-  public openOverwriteViewDialog(existingViewCode: string, callback?: () => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.OVERWRITE_VIEW, existingViewCode]);
-  }
-
   public openShareViewDialog(viewCode: string) {
     this.navigateToDialog([DialogPath.SHARE_VIEW, viewCode]);
   }

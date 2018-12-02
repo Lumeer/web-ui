@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
@@ -37,22 +37,21 @@ import {convertQueryModelToString} from '../core/store/navigation/query.converte
 @Component({
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewComponent implements OnInit, OnDestroy {
-  public view: ViewModel;
-
+  public view$ = new BehaviorSubject<ViewModel>(null);
   public viewsExist$: Observable<boolean>;
 
-  public workspace: Workspace;
+  private workspace: Workspace;
   private query: Query;
-
   private subscriptions = new Subscription();
 
   constructor(
     private dialogService: DialogService,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -61,9 +60,11 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation(): Subscription {
-    return this.store
-      .select(selectNavigation)
-      .pipe(filter(this.validNavigation))
+    return this.store$
+      .pipe(
+        select(selectNavigation),
+        filter(this.validNavigation)
+      )
       .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
@@ -76,10 +77,33 @@ export class ViewComponent implements OnInit, OnDestroy {
       });
   }
 
+  private loadView(code: string) {
+    this.subscriptions.add(
+      this.store$
+        .pipe(
+          select(selectViewByCode(code)),
+          filter(view => !!view)
+        )
+        .subscribe(view => this.setView(view))
+    );
+  }
+
+  private setView(view: ViewModel) {
+    this.view$.next({...view});
+    this.store$.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
+  }
+
+  private loadQuery(query: Query, name?: string) {
+    const view = {name: name || '', query: query, perspective: null, config: {}};
+    this.view$.next(view);
+  }
+
   private bindToViews() {
-    this.viewsExist$ = this.store.select(selectAllViews).pipe(
+    this.viewsExist$ = this.store$.pipe(
+      select(selectAllViews),
       tap(views => {
-        if (this.view.code && !views.find(v => v.code === this.view.code)) {
+        const viewCode = this.view$.getValue().code;
+        if (viewCode && !views.find(v => v.code === viewCode)) {
           this.loadQuery({});
         }
       }),
@@ -88,12 +112,11 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private validNavigation(navigation: NavigationState): boolean {
-    return Boolean(
-      navigation &&
-        navigation.workspace &&
-        navigation.workspace.projectCode &&
-        navigation.workspace.organizationCode &&
-        navigation.perspective
+    return (
+      !!navigation.workspace &&
+      navigation.workspace.projectCode &&
+      navigation.workspace.organizationCode &&
+      !!navigation.perspective
     );
   }
 
@@ -101,49 +124,64 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private loadView(code: string) {
-    this.subscriptions.add(
-      this.store
-        .select(selectViewByCode(code))
-        .pipe(filter(view => Boolean(view)))
-        .subscribe(view => {
-          this.view = {...view};
-          this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
-        })
-    );
-  }
-
-  private loadQuery(query: Query, name?: string) {
-    this.view = {
-      name: name ? `${name}` : '',
-      query: query,
-      perspective: null,
-      config: {},
-    };
-  }
-
   public onSaveOrClone(name: string) {
     this.onSave(name, true);
   }
 
   public onSave(name: string, clone?: boolean) {
-    this.subscriptions.add(
-      combineLatest(this.store.select(selectPerspectiveConfig), this.store.select(selectPerspective))
-        .pipe(take(1))
-        .subscribe(([config, perspective]) => {
-          const view: ViewModel = {...this.view, query: this.query, name, config: {[perspective]: config}, perspective};
+    combineLatest(
+      this.store$.pipe(select(selectPerspectiveConfig)),
+      this.store$.pipe(select(selectPerspective)),
+      this.getViewByName(name)
+    )
+      .pipe(take(1))
+      .subscribe(([config, perspective, viewByName]) => {
+        const view: ViewModel = {
+          ...this.view$.getValue(),
+          query: this.query,
+          name,
+          config: {[perspective]: config},
+          perspective,
+        };
 
-          if (view.code) {
-            if (clone) {
-              this.askToCloneView(view);
-            } else {
-              this.updateView(view);
-            }
+        if (viewByName && (!view.code || view.code !== viewByName.code)) {
+          this.informAboutSameNameView(view);
+        } else if (view.code) {
+          if (clone) {
+            this.askToCloneView(view);
           } else {
-            this.saveView(view);
+            this.updateView(view);
           }
-        })
+        } else {
+          this.createView(view);
+        }
+      });
+  }
+
+  private getViewByName(viewName: string): Observable<ViewModel> {
+    return this.store$.pipe(select(selectAllViews)).pipe(
+      first(),
+      map(views => views.find(view => view.name === viewName))
     );
+  }
+
+  private informAboutSameNameView(view: ViewModel) {
+    const title = this.i18n({
+      id: 'view.name.exists',
+      value: 'View already exist',
+    });
+    const message = this.i18n(
+      {
+        id: 'view.name.exists.message',
+        value: 'Do you really want to change view name?',
+      },
+      {name: view.name}
+    );
+
+    this.notificationService.confirm(message, title, [
+      {text: 'No'},
+      {text: 'Yes', action: () => this.updateView(view), bold: false},
+    ]);
   }
 
   private askToCloneView(view: ViewModel) {
@@ -156,71 +194,16 @@ export class ViewComponent implements OnInit, OnDestroy {
     const renameButtonText = this.i18n({id: 'view.dialog.clone.rename', value: 'Rename'});
 
     this.notificationService.confirm(message, title, [
-      {text: cloneButtonText, action: () => this.cloneView(view), bold: false},
+      {text: cloneButtonText, action: () => this.createView({...view, code: null}), bold: false},
       {text: renameButtonText, action: () => this.updateView(view), bold: false},
     ]);
   }
 
-  private cloneView(view: ViewModel) {
-    const path: any[] = [
-      'w',
-      this.workspace.organizationCode,
-      this.workspace.projectCode,
-      'view',
-      this.view.perspective,
-    ];
-    this.store.dispatch(
-      new RouterAction.Go({
-        path,
-        queryParams: {
-          query: convertQueryModelToString(view.query),
-          viewName: `${view.name}`,
-        },
-      })
-    );
-  }
-
-  private saveView(view: ViewModel) {
-    this.getViewByName(view.name).subscribe(existingView => {
-      if (existingView) {
-        this.confirmAndUpdateView(existingView, view);
-      } else {
-        this.createView(view);
-      }
-    });
-  }
-
-  private getViewByName(viewName: string): Observable<ViewModel> {
-    return this.store.select(selectAllViews).pipe(
-      first(),
-      map(views => views.find(view => view.name === viewName))
-    );
-  }
-
-  private confirmAndUpdateView(existingView: ViewModel, newView: ViewModel) {
-    this.dialogService.openOverwriteViewDialog(existingView.code, () => {
-      const view = {...newView, id: existingView.id, code: existingView.code};
-      this.onConfirmOverwrite(view);
-    });
-  }
-
-  private onConfirmOverwrite(view: ViewModel) {
-    const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
-
-    this.store.dispatch(
-      new ViewsAction.Update({
-        viewCode: view.code,
-        view,
-        nextAction: new RouterAction.Go({path}),
-      })
-    );
-  }
-
   private createView(view: ViewModel) {
-    this.store.dispatch(new ViewsAction.Create({view}));
+    this.store$.dispatch(new ViewsAction.Create({view}));
   }
 
   private updateView(view: ViewModel) {
-    this.store.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
+    this.store$.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
   }
 }

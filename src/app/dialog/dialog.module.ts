@@ -25,7 +25,6 @@ import {DialogBaseComponent} from './dialog-base.component';
 import {DialogRoutingModule} from './dialog-routing.module';
 import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
-import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
@@ -52,7 +51,6 @@ import {PlayVideoComponent} from './play-video/play-video.component';
     LinkNameInputComponent,
     CreateLinkDialogComponent,
     DialogBaseComponent,
-    OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
@@ -62,9 +60,9 @@ import {PlayVideoComponent} from './play-video/play-video.component';
   entryComponents: [
     CreateCollectionDialogComponent,
     CreateLinkDialogComponent,
-    OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
   ],
+  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],
 })
 export class DialogModule {}
