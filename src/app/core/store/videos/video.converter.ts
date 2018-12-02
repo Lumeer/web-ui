@@ -31,7 +31,7 @@ export class VideoConverter {
   }
 
   public static fromDto(videosMeta: VideoMetaData, priorities: {[id: string]: number}): VideoModel[] {
-    let videos: VideoModel[] = [];
+    const videos: VideoModel[] = [];
 
     videosMeta.items.forEach(videoItem => {
       let priority = priorities[videoItem.id];

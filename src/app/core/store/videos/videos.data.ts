@@ -42,7 +42,7 @@ export function getAllVideos() {
 }
 
 export function getVideosByUrl(url: string): string[] {
-  let videos = [];
+  const videos = [];
   // const locale = environment.locale === 'cs' ? 'cs' : 'en';
   //
   // if (/^\/organization\/.*/.test(url)) {

@@ -30,8 +30,6 @@ export enum VideosActionType {
 export namespace VideosAction {
   export class ClearVideos implements Action {
     public readonly type = VideosActionType.CLEAR_VIDEOS;
-
-    public constructor() {}
   }
 
   export class LoadVideos implements Action {
