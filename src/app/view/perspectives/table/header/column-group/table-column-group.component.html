@@ -1,54 +1,59 @@
-<div [style.height.px]="table | headerHeight:cursor">
-  <div class="muuri {{columnGroupId | prefix:containerClassPrefix}} h-100">
-    <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
-         [style.z-index]="resizedColumnIndex === columnIndex ? '10' : null"
-         class="muuri-item h-100">
-      <div *ngIf="cursor | columnChildCursor:columnIndex as columnCursor"
-           class="muuri-item-content h-100">
-        <div *ngIf="column | isCompoundColumn"
-             mwlResizable
-             [enableGhostResize]="true"
-             [ghostElementPositioning]="'absolute'"
-             [resizeCursorPrecision]="column?.parent?.attributeId ? 8 : 0"
-             [resizeEdges]="canManageConfig ? (column | resizeEdges:table:cursor) : {}"
-             [resizeSnapGrid]="{left: 10, right: 10}"
-             [style.width.px]="column | columnWidth:canManageConfig"
-             [validateResize]="column | resizeValidate:canManageConfig"
-             (resizeStart)="onResizeStart(columnIndex, $event)"
-             (resizeEnd)="onResizeEnd(columnCursor, $event)"
-             [class.resizable-column]="canManageConfig">
-          <div class="d-flex flex-column">
-            <table-single-column [table]="table"
-                                 [cursor]="columnCursor"
-                                 [column]="column.parent"
-                                 [allowedPermissions]="allowedPermissions"
-                                 [collection]="collection"
-                                 [canManageConfig]="canManageConfig"
-                                 [linkType]="linkType"
-                                 [leaf]="!column.children.length"
-                                 [style.height.px]="column | columnHeight:table:cursor"
-                                 class="d-block">
-            </table-single-column>
-            <table-column-group *ngIf="column.children.length"
-                                [table]="table"
-                                [cursor]="columnCursor"
-                                [columns]="column.children"
-                                [canManageConfig]="canManageConfig"
-                                [allowedPermissions]="allowedPermissions"
-                                [collection]="collection"
-                                [linkType]="linkType"
-                                class="d-block">
-            </table-column-group>
-          </div>
-        </div>
-
-        <table-hidden-column *ngIf="(column | isHiddenColumn) && canManageConfig"
-                             [table]="table"
-                             [column]="column"
+<div cdkDropList
+     cdkDropListOrientation="horizontal"
+     [style.height.px]="table | headerHeight:cursor"
+     (cdkDropListDropped)="onDrop($event)"
+     class="d-flex">
+  <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
+       cdkDrag
+       cdkDragLockAxis="x">
+    <div *ngIf="cursor | columnChildCursor:columnIndex as columnCursor"
+         class="position-relative">
+      <div *ngIf="column | isCompoundColumn"
+           mwlResizable
+           [enableGhostResize]="true"
+           [ghostElementPositioning]="'absolute'"
+           [resizeSnapGrid]="{left: 10, right: 10}"
+           [style.width.px]="column | columnWidth:canManageConfig"
+           [validateResize]="column | resizeValidate:canManageConfig"
+           (resizeStart)="onResizeStart(columnIndex, $event)"
+           (resizeEnd)="onResizeEnd(columnCursor, $event)"
+           [class.resizable-column]="canManageConfig"
+           class="d-flex flex-column">
+        <table-single-column [table]="table"
                              [cursor]="columnCursor"
-                             class="d-block h-100">
-        </table-hidden-column>
+                             [column]="column.parent"
+                             [allowedPermissions]="allowedPermissions"
+                             [collection]="collection"
+                             [canManageConfig]="canManageConfig"
+                             [linkType]="linkType"
+                             [leaf]="!column.children.length"
+                             [style.height.px]="column | columnHeight:table:cursor"
+                             cdkDragHandle
+                             class="d-block">
+        </table-single-column>
+        <table-column-group *ngIf="column.children.length"
+                            [table]="table"
+                            [cursor]="columnCursor"
+                            [columns]="column.children"
+                            [canManageConfig]="canManageConfig"
+                            [allowedPermissions]="allowedPermissions"
+                            [collection]="collection"
+                            [linkType]="linkType"
+                            class="d-block">
+        </table-column-group>
+        <div mwlResizeHandle
+             [resizeEdges]="canManageConfig ? (column | resizeEdges:table:cursor) : {}"
+             [style.width.px]="column?.parent?.attributeId ? 5 : 0"
+             class="resize-handle h-100">
+        </div>
       </div>
+
+      <table-hidden-column *ngIf="(column | isHiddenColumn) && canManageConfig"
+                           [table]="table"
+                           [column]="column"
+                           [cursor]="columnCursor"
+                           class="d-block h-100">
+      </table-hidden-column>
     </div>
   </div>
 </div>

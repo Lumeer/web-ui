@@ -28,7 +28,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Actions} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -162,7 +162,8 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   private bindToSelected() {
-    this.selected$ = this.store$.select(selectTableCursorSelected(this.cursor)).pipe(
+    this.selected$ = this.store$.pipe(
+      select(selectTableCursorSelected(this.cursor)),
       // TODO do not use tap as selected$ might be used several times
       tap(selected => {
         this.edited = selected ? this.edited : false;
