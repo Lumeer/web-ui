@@ -74,23 +74,24 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: UserModel;
   private queryData: QueryData;
 
-  constructor(private router: Router, private store: Store<AppState>, private formBuilder: FormBuilder) {}
+  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
+    this.initForm();
     this.subscribeViewData();
     this.subscribeToQuery();
     this.subscribeToNavigation();
   }
 
   private subscribeViewData() {
-    this.subscriptions.add(this.store.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user)));
-    this.subscriptions.add(this.store.pipe(select(selectCurrentView)).subscribe(view => this.currentView$.next(view)));
+    this.subscriptions.add(this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user)));
+    this.subscriptions.add(this.store$.pipe(select(selectCurrentView)).subscribe(view => this.currentView$.next(view)));
   }
 
   private subscribeToQuery() {
-    const querySubscription = this.store
-      .pipe(select(selectQuery))
+    const querySubscription = this.store$
       .pipe(
+        select(selectQuery),
         filter(query => !!query),
         flatMap(query => observableCombineLatest(of(query), this.loadData())),
         tap(([query, data]) => (this.queryData = data)),
@@ -105,7 +106,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const navigationSubscription = this.store.pipe(select(selectNavigation)).subscribe(navigation => {
+    const navigationSubscription = this.store$.pipe(select(selectNavigation)).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.perspective = navigation.perspective;
     });
@@ -114,10 +115,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private loadData(): Observable<QueryData> {
     return observableCombineLatest(
-      this.store.pipe(select(selectAllCollections)),
-      this.store.pipe(select(selectAllLinkTypes)),
-      this.store.pipe(select(selectCollectionsLoaded)),
-      this.store.pipe(select(selectLinkTypesLoaded))
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+      this.store$.pipe(select(selectCollectionsLoaded)),
+      this.store$.pipe(select(selectLinkTypesLoaded))
     ).pipe(
       filter(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => {
@@ -336,7 +337,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onRemoveQueryItem(index: number) {
     if (this.shouldInvalidateQuery()) {
-      this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: {}}));
+      this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: {}}));
     } else {
       this.removeQueryItemWithRelatedItems(index);
       this.onQueryItemsChanged();

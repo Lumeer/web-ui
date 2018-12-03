@@ -30,12 +30,6 @@ export function collectionsReducer(
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
       return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
-    case CollectionsActionType.GET_NAMES_SUCCESS:
-      return {...state, collectionNames: action.payload.collectionNames};
-    case CollectionsActionType.ADD_NAME:
-      return addCollectionName(state, action.payload.name);
-    case CollectionsActionType.DELETE_NAME:
-      return deleteCollectionName(state, action.payload.name);
     case CollectionsActionType.CREATE_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.IMPORT_SUCCESS:
@@ -71,38 +65,6 @@ export function collectionsReducer(
     default:
       return state;
   }
-}
-
-function addCollectionName(state: CollectionsState, name: string): CollectionsState {
-  const names = state.collectionNames || [];
-  return {...state, collectionNames: [...names, name]};
-}
-
-function deleteCollectionName(state: CollectionsState, name: string): CollectionsState {
-  const names = state.collectionNames || [];
-  const index = names.findIndex(n => n === name);
-  if (index >= 0) {
-    names.splice(index, 1);
-  }
-  return {...state, collectionNames: names};
-}
-
-function updateCollectionNames(state: CollectionsState, addName?: string, removeName?: string): CollectionsState {
-  if (!addName && !removeName) {
-    return state;
-  }
-
-  const collectionNames = state.collectionNames || [];
-  const indexToRemove = collectionNames.findIndex(name => name === removeName);
-  if (indexToRemove >= 0) {
-    collectionNames.splice(indexToRemove, 1);
-  }
-
-  if (addName) {
-    collectionNames.push(addName);
-  }
-
-  return {...state, collectionNames};
 }
 
 function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string): CollectionsState {

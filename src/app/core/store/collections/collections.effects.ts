@@ -40,13 +40,7 @@ import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {
-  selectCollectionById,
-  selectCollectionNames,
-  selectCollectionsDictionary,
-  selectCollectionsLoaded,
-} from './collections.state';
-import {isNullOrUndefined} from 'util';
+import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
 
 @Injectable()
 export class CollectionsEffects {
@@ -76,25 +70,6 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public getNames$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES),
-    withLatestFrom(this.store$.select(selectCollectionNames)),
-    filter(([action, collectionNames]) => isNullOrUndefined(collectionNames)),
-    mergeMap(() =>
-      this.collectionService.getAllCollectionNames().pipe(
-        map(collectionNames => new CollectionsAction.GetNamesSuccess({collectionNames})),
-        catchError(error => of(new CollectionsAction.GetNamesFailure({error: error})))
-      )
-    )
-  );
-
-  @Effect({dispatch: false})
-  public getNamesFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.GetNamesFailure>(CollectionsActionType.GET_NAMES_FAILURE),
-    tap((action: CollectionsAction.GetNamesFailure) => console.error(action.payload.error))
-  );
-
-  @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Create>(CollectionsActionType.CREATE),
     mergeMap(action => {
@@ -103,10 +78,7 @@ export class CollectionsEffects {
       return this.collectionService.createCollection(collectionDto).pipe(
         map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
         mergeMap(collection => {
-          const actions: Action[] = [
-            new CollectionsAction.CreateSuccess({collection}),
-            new CollectionsAction.AddName({name: collection.name}),
-          ];
+          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
 
           const {callback} = action.payload;
           if (callback) {
@@ -212,11 +184,6 @@ export class CollectionsEffects {
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.UpdateSuccess({collection})];
 
-          if (oldName && oldName !== collection.name) {
-            actions.push(new CollectionsAction.DeleteName({name: oldName}));
-            actions.push(new CollectionsAction.AddName({name: collection.name}));
-          }
-
           const {callback} = action.payload;
           if (callback) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => callback()}));
@@ -242,16 +209,11 @@ export class CollectionsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    mergeMap(([action, collections]) => {
-      const collection = collections[action.payload.collectionId];
-      const collectionName = (collection && collection.name) || null;
-
-      return this.collectionService.removeCollection(action.payload.collectionId).pipe(
+    mergeMap(action =>
+      this.collectionService.removeCollection(action.payload.collectionId).pipe(
         mergeMap(collectionId => {
           const actions: Action[] = [
             new CollectionsAction.DeleteSuccess({collectionId}),
-            new CollectionsAction.DeleteName({name: collectionName}),
             new DocumentsAction.ClearByCollection({collectionId}),
           ];
 
@@ -263,8 +225,8 @@ export class CollectionsEffects {
           return actions;
         }),
         catchError(error => of(new CollectionsAction.DeleteFailure({error: error})))
-      );
-    })
+      )
+    )
   );
 
   @Effect()

@@ -73,10 +73,6 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams});
   }
 
-  public getAllCollectionNames(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/names`);
-  }
-
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
     return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
   }

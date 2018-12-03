@@ -36,14 +36,7 @@ import {debounceTime, map, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {
-  selectPerspective,
-  selectQuery,
-  selectSearchTab,
-  selectWorkspace,
-} from '../../core/store/navigation/navigation.state';
-import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
-import {areQueriesEqual} from '../../core/store/navigation/query.helper';
+import {selectPerspective, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
@@ -75,18 +68,20 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public save = new EventEmitter<string>();
 
+  @Output()
+  public saveOrClone = new EventEmitter<string>();
+
   public name: string;
 
   public config$: Observable<ViewConfigModel>;
   public perspective$: Observable<Perspective>;
-  public query$: Observable<Query>;
 
   public nameChanged$ = new BehaviorSubject(false);
   public viewChanged$: Observable<boolean>;
 
-  private currentQuery: Query;
+  private configChanged: boolean;
+  private queryChanged: boolean;
   private currentPerspective: Perspective;
-  private currentConfig: ViewConfigModel;
   private searchTab?: string;
   private workspace: Workspace;
 
@@ -105,19 +100,20 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.subscribeToWorkspace());
     this.subscriptions.add(this.subscribeToSearchTab());
 
-    this.config$ = this.store$.select(selectPerspectiveViewConfig).pipe(tap(config => (this.currentConfig = config)));
-    this.perspective$ = this.store$
-      .select(selectPerspective)
-      .pipe(tap(perspective => (this.currentPerspective = perspective)));
-    this.query$ = this.store$.select(selectQuery).pipe(tap(query => (this.currentQuery = query)));
+    this.config$ = this.store$.pipe(select(selectPerspectiveViewConfig));
+
+    this.perspective$ = this.store$.pipe(
+      select(selectPerspective),
+      tap(perspective => (this.currentPerspective = perspective))
+    );
   }
 
   private subscribeToWorkspace(): Subscription {
-    return this.store$.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+    return this.store$.pipe(select(selectWorkspace)).subscribe(workspace => (this.workspace = workspace));
   }
 
   private subscribeToSearchTab(): Subscription {
-    return this.store$.select(selectSearchTab).subscribe(tab => (this.searchTab = tab));
+    return this.store$.pipe(select(selectSearchTab)).subscribe(tab => (this.searchTab = tab));
   }
 
   public onNameInput(name: string) {
@@ -153,6 +149,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewPerspectiveChanged))
     ).pipe(
       debounceTime(100),
+      tap(([nameChanged, configChanged, queryChanged]) => {
+        this.configChanged = configChanged;
+        this.queryChanged = queryChanged;
+      }),
       map(
         ([nameChanged, configChanged, queryChanged, perspectiveChanged]) =>
           nameChanged || configChanged || queryChanged || perspectiveChanged
@@ -169,12 +169,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const queryChanged = !areQueriesEqual(this.view.query, this.currentQuery);
-    const configChanged =
-      JSON.stringify(this.currentConfig[this.currentPerspective]) !==
-      JSON.stringify(this.view.config[this.currentPerspective]);
-
-    if (queryChanged || configChanged) {
+    if (this.queryChanged || this.configChanged) {
       this.askToDiscardChanges();
     } else {
       this.navigateToUrlWithoutView({});
@@ -222,27 +217,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     return ['w', this.workspace.organizationCode, this.workspace.projectCode];
   }
 
-  public onSave() {
-    this.save.emit(this.name.trim());
+  public onSave(canClone: boolean) {
+    const value = this.name.trim();
+    if (canClone && this.onlyViewNameChanged()) {
+      this.saveOrClone.emit(value);
+    } else {
+      this.save.emit(value);
+    }
   }
 
-  public onCopy() {
-    const path: any[] = [
-      'w',
-      this.workspace.organizationCode,
-      this.workspace.projectCode,
-      'view',
-      this.view.perspective,
-    ];
-    this.store$.dispatch(
-      new RouterAction.Go({
-        path,
-        queryParams: {
-          query: convertQueryModelToString(this.view.query),
-          viewName: `${this.view.name}`,
-        },
-      })
-    );
+  private onlyViewNameChanged(): boolean {
+    return !this.configChanged && !this.queryChanged && this.nameChanged$.getValue();
   }
 
   public onShareClick() {
