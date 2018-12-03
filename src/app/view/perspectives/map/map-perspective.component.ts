@@ -20,13 +20,15 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {first} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {MapConfig, MapModel} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query';
 
@@ -43,6 +45,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<CollectionModel[]>;
   public documents$: Observable<DocumentModel[]>;
   public map$: Observable<MapModel>;
+  public validQuery$: Observable<boolean>;
 
   private mapId = DEFAULT_MAP_ID;
 
@@ -51,6 +54,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
+    this.bindValidQuery();
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.bindMap(this.mapId);
@@ -75,6 +79,13 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       this.store$
         .pipe(select(selectMapConfig))
         .subscribe(config => this.store$.dispatch(new MapsAction.CreateMap({mapId, config: config || initConfig})))
+    );
+  }
+
+  private bindValidQuery() {
+    this.validQuery$ = this.store$.pipe(
+      select(selectQuery),
+      map(query => isSingleCollectionQuery(query))
     );
   }
 

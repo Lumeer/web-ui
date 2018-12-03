@@ -1,4 +1,4 @@
-<ng-container *ngIf="query | singleCollectionQuery; else invalidQuery">
+<ng-container *ngIf="validQuery$ | async; else invalidQuery">
   <ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async, map: map$ | async} as data">
     <map-panel [collections]="data.collections"
                [map]="data.map"
