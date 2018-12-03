@@ -133,7 +133,7 @@ export function isSingleCollectionQuery(query: Query): boolean {
 }
 
 export function isAnyCollectionQuery(query: Query): boolean {
-  return query && query.stems && query.stems.length > 1;
+  return query && query.stems && query.stems.length > 0;
 }
 
 export function isOnlyFulltextsQuery(query: Query): boolean {
