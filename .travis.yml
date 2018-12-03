@@ -26,4 +26,6 @@ node_js:
 script:
   - './travis.sh'
 before_cache:
+  - rm -rf ./dist/ ./target/
   - rm -rf ~/.engine/*/target/
+  - rm -rf ~/.m2/repository/io/lumeer/
