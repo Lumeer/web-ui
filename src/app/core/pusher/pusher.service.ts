@@ -42,6 +42,8 @@ import {ServiceLimitsAction} from '../store/organizations/service-limits/service
 import {ServiceLimitsConverter} from '../store/organizations/service-limits/service-limits.converter';
 import {PaymentsAction} from '../store/organizations/payment/payments.action';
 import {PaymentConverter} from '../store/organizations/payment/payment.converter';
+import {UserNotificationsAction} from '../store/user-notifications/user-notifications.action';
+import {UserNotificationConverter} from '../store/user-notifications/user-notification.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -153,6 +155,12 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Payment:update', data => {
       this.store.dispatch(
         new PaymentsAction.GetPaymentSuccess({payment: PaymentConverter.fromDto(data.organizationId, data.entity)})
+      );
+    });
+
+    this.channel.bind('UserNotification:create', data => {
+      this.store.dispatch(
+        new UserNotificationsAction.UpdateSuccess({userNotification: UserNotificationConverter.fromDto(data)})
       );
     });
   }

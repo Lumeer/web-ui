@@ -37,6 +37,7 @@ import {initialPaymentsState, PaymentsState} from './organizations/payment/payme
 import {initialPostItState, PostItState} from './postit/postit.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
 import {initialVideosState, VideosState} from './videos/videos.state';
+import {initialUserNotificationsState, UserNotificationsState} from './user-notifications/user-notifications.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -58,6 +59,7 @@ export interface AppState {
   postIts: PostItState;
   charts: ChartsState;
   videos: VideosState;
+  userNotifications: UserNotificationsState;
 }
 
 export function initialAppState(): AppState {
@@ -81,5 +83,6 @@ export function initialAppState(): AppState {
     postIts: initialPostItState,
     charts: initialChartsState,
     videos: initialVideosState,
+    userNotifications: initialUserNotificationsState,
   };
 }
