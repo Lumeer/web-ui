@@ -1,0 +1,45 @@
+<div class="panel-item mx-2 notifications">
+  <div class="dropdown show">
+    <a href="#"
+       role="button"
+       id="notificationsDropdownLink"
+       data-toggle="dropdown"
+       data-offset="0,10"
+       aria-haspopup="true"
+       aria-expanded="false">
+
+      <span class="fa-stack">
+        <i class="fa fa-bell fa-stack-2x"
+          [class.text-primary]="unreadNotifications.length > 0"
+          [class.text-secondary]="unreadNotifications.length === 0"
+        ></i>
+        <span class="fa-stack-1x" *ngIf="unreadNotifications.length > 0">
+          <span class="notifications-count">{{unreadNotifications.length}}</span>
+        </span>
+      </span>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right pre-scrollable"
+         aria-labelledby="notificationsDropdownLink">
+
+      <a class="dropdown-item cursor-default">
+        <span class="notification-title clearfix">
+          <span class="status unread float-right"><span class="align-text-top small text-muted">new</span><i class="fa fa-eye-slash text-success ml-1 cursor-pointer"></i></span>
+          <span class="status small text-muted float-left">23.4.2108</span>
+        </span>
+        <span class="notification-content unread cursor-pointer">Badam dam pšššt.</span>
+      </a>
+
+      <a class="dropdown-item cursor-default">
+        <span class="notification-title clearfix">
+          <span class="status read float-right"><span class="align-text-top small text-muted">read on 23.12.2019</span><i class="fa fa-eye text-success ml-1 cursor-pointer"></i></span>
+          <span class="status small text-muted float-left">23.4.2108</span>
+        </span>
+        <span class="notification-content read text-notice cursor-pointer">
+          Badam dam pšššt. S velmi dlouhým a komplexním textem, který může obsahovat
+          ledacos. A může vést až za zatáčku.
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

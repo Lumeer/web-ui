@@ -32,6 +32,7 @@ import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
+import {NotificationsMenuComponent} from './user-panel/notifications-menu/notifications-menu.component';
 
 @NgModule({
   imports: [CommonModule, PipesModule, RouterModule, ResourceMenuModule, SearchBoxModule],
@@ -45,6 +46,7 @@ import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
     UserPanelComponent,
     ControlsToggleComponent,
     VideoMenuComponent,
+    NotificationsMenuComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
 })

@@ -1,0 +1,62 @@
+@import '../../../../../styles/variables';
+
+.panel-item.notifications {
+  height: var(--top-panel-line-height);
+  line-height: var(--top-panel-line-height);
+  white-space: nowrap;
+
+  .dropdown-menu {
+    width: var(--top-panel-side-width);
+  }
+
+  span.notifications-count {
+    font-size: 0.6rem;
+    padding: 0 3px;
+    color: white;
+    background-color: red;
+    border-radius: 10px;
+  }
+
+  a.dropdown-item {
+    line-height: initial;
+
+    &:not(:last-child) {
+      padding-bottom: 1rem;
+    }
+
+    .notification-title {
+      display: inline-block;
+      width: 100%;
+      line-height: 1.2rem;
+      vertical-align: top;
+    }
+
+    .status {
+      vertical-align: baseline;
+    }
+
+    .notification-content {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      text-align: justify;
+
+      &.unread,
+      &.unread:hover,
+      &.unread:active,
+      &.unread:focus {
+        font-weight: bold;
+        color: $primary;
+      }
+
+      &.read,
+      &.read:hover,
+      &.read:active,
+      &.read:focus {
+        font-weight: lighter;
+        font-style: italic;
+        color: $gray-500;
+      }
+    }
+  }
+}
