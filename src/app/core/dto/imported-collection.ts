@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from './collection';
+import {CollectionDto} from './collection.dto';
 import {CollectionModel} from '../store/collections/collection.model';
 
 export interface ImportedCollection {

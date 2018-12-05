@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from './query.dto';
-import {Resource} from './resource';
+import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {ViewModel} from '../../../../../../core/store/views/view.model';
+import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 
-export interface View extends Resource {
-  perspective: string;
-  query: QueryDto;
-  config: any; // TODO create DTO
-  authorRights?: {[collectionId: string]: string[]};
+export interface Suggestions {
+  attributes: CollectionModel[];
+  collections: CollectionModel[];
+  views: ViewModel[];
+  linkTypes: LinkTypeModel[];
 }

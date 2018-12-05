@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {SuggestionType, Suggestions, DocumentDto, QueryDto} from '../dto';
+import {SuggestionType, SuggestionsDto, DocumentDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -41,8 +41,8 @@ export class SearchService {
       .subscribe(workspace => (this.workspace = workspace));
   }
 
-  public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
-    return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`, {
+  public suggest(text: string, type: SuggestionType): Observable<SuggestionsDto> {
+    return this.http.get<SuggestionsDto>(`${this.searchPath()}/suggestions`, {
       params: new HttpParams().set('text', text).set('type', type.toString()),
     });
   }

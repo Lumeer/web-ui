@@ -25,7 +25,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {Collection, Permission} from '../../dto';
+import {CollectionDto, Permission} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -52,7 +52,7 @@ export class CollectionsEffects {
     map(([action]) => action),
     mergeMap(() => {
       return this.collectionService.getCollections().pipe(
-        map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
+        map((dtos: CollectionDto[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
         map(collections => new CollectionsAction.GetSuccess({collections: collections})),
         catchError(error => of(new CollectionsAction.GetFailure({error: error})))
       );
@@ -180,7 +180,7 @@ export class CollectionsEffects {
       const correlationId = oldCollection && oldCollection.correlationId;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: Collection) => CollectionConverter.fromDto(dto, correlationId)),
+        map((dto: CollectionDto) => CollectionConverter.fromDto(dto, correlationId)),
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.UpdateSuccess({collection})];
 

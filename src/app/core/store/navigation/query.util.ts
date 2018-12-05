@@ -179,8 +179,12 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
     superset.collectionId === subset.collectionId &&
     isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || []) &&
     isArraySubset(superset.documentIds || [], subset.documentIds || []) &&
-    isArraySubset(superset.filters || [], subset.filters || [])
+    isQueryFiltersSubset(superset.filters || [], subset.filters || [])
   );
+}
+
+function isQueryFiltersSubset(superset: AttributeFilter[], subset: AttributeFilter[]): boolean {
+  return subset.every(sub => !!superset.find(sup => JSON.stringify(sup) === JSON.stringify(sub)));
 }
 
 export function queryWithoutLinks(query: Query): Query {

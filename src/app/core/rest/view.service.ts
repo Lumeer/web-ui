@@ -22,36 +22,36 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
-import {View} from '../dto';
+import {ViewDto} from '../dto';
 import {PermissionService} from './permission.service';
 import {map} from 'rxjs/operators';
 
 @Injectable()
 export class ViewService extends PermissionService {
-  public createView(view: View): Observable<View> {
-    return this.httpClient.post<View>(this.apiPrefix(), view);
+  public createView(view: ViewDto): Observable<ViewDto> {
+    return this.httpClient.post<ViewDto>(this.apiPrefix(), view);
   }
 
-  public updateView(code: string, view: View): Observable<View> {
-    return this.httpClient.put<View>(this.apiPrefix(code), view);
+  public updateView(code: string, view: ViewDto): Observable<ViewDto> {
+    return this.httpClient.put<ViewDto>(this.apiPrefix(code), view);
   }
 
-  public getView(code: string): Observable<View> {
-    return this.httpClient.get<View>(this.apiPrefix(code));
+  public getView(code: string): Observable<ViewDto> {
+    return this.httpClient.get<ViewDto>(this.apiPrefix(code));
   }
 
   public deleteView(code: string): Observable<string> {
     return this.httpClient.delete(this.apiPrefix(code)).pipe(map(() => code));
   }
 
-  public getViews(pageNumber?: number, pageSize?: number): Observable<View[]> {
+  public getViews(pageNumber?: number, pageSize?: number): Observable<ViewDto[]> {
     const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
       queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
 
-    return this.httpClient.get<View[]>(this.apiPrefix(), {params: queryParams});
+    return this.httpClient.get<ViewDto[]>(this.apiPrefix(), {params: queryParams});
   }
 
   protected actualApiPrefix(): string {

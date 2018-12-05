@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, LinkType, View} from '.';
+export interface LinkTypeDto {
+  id?: string; // TODO make compulsory
+  name: string;
 
-export interface Suggestions {
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  linkTypes: LinkType[];
+  collectionIds?: [string, string];
+
+  attributes?: string[]; // TODO use complex object
 }

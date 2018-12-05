@@ -18,13 +18,13 @@
  */
 
 import {perspectivesMap} from '../../../view/perspectives/perspective';
-import {View} from '../../dto/view';
+import {ViewDto} from '../../dto/view.dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
 import {ViewModel} from './view.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 
 export class ViewConverter {
-  public static convertToModel(dto: View): ViewModel {
+  public static convertToModel(dto: ViewDto): ViewModel {
     return {
       id: dto.id,
       code: dto.code,
@@ -38,7 +38,7 @@ export class ViewConverter {
     };
   }
 
-  public static convertToDto(model: ViewModel): View {
+  public static convertToDto(model: ViewModel): ViewDto {
     return {
       code: model.code,
       name: model.name,
