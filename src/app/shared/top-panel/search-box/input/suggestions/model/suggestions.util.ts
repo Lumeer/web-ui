@@ -67,7 +67,15 @@ function queryItemsAreEmptyExceptFulltexts(queryItems: QueryItem[]): boolean {
   return !queryItems || queryItems.filter(item => item.type !== QueryItemType.Fulltext).length === 0;
 }
 
+export function getCollectionIdsChainForItems(queryItems: QueryItem[]): string[] {
+  const lastStemItems = filterLastQueryStemItems(queryItems);
+  return getCollectionIdsChainForStemItems(lastStemItems);
+}
+
 function filterLastQueryStemItems(queryItems: QueryItem[]): QueryItem[] {
+  if (queryItemsAreEmpty(queryItems)) {
+    return [];
+  }
   const lastCollectionIndex = findLastIndexOfCollectionItem(queryItems);
   return queryItems.slice(lastCollectionIndex).filter(item => item.type !== QueryItemType.Fulltext);
 }
@@ -112,7 +120,10 @@ function createCollectionQueryItems(collections: CollectionModel[]): QueryItem[]
 }
 
 function createAttributeQueryItems(collections: CollectionModel[]): QueryItem[] {
-  return collections.map(collection => new AttributeQueryItem(collection, collection.attributes[0], '', ''));
+  return collections.reduce(
+    (items, collection) => [...items, ...collection.attributes.map(a => new AttributeQueryItem(collection, a, '', ''))],
+    []
+  );
 }
 
 function createViewQueryItems(views: ViewModel[]): QueryItem[] {

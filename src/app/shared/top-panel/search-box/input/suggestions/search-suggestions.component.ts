@@ -39,7 +39,7 @@ import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
 import {convertSuggestionsDtoToModel} from './model/suggestions.converter';
-import {convertSuggestionsToQueryItemsSorted} from './model/suggestions.util';
+import {convertSuggestionsToQueryItemsSorted, getCollectionIdsChainForItems} from './model/suggestions.util';
 
 @Component({
   selector: 'search-suggestions',
@@ -108,7 +108,9 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private retrieveSuggestions(text: string): Observable<SuggestionsDto> {
     if (this.suggesting && text) {
-      return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
+      const priorityCollectionIds = getCollectionIdsChainForItems(this.queryItems);
+      const dto = {text: text.toLowerCase(), type: SuggestionType.All, priorityCollectionIds};
+      return this.searchService.suggest(dto);
     }
     return of<SuggestionsDto>(null);
   }
