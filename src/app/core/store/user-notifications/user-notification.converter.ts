@@ -18,7 +18,7 @@
  */
 
 import {UserNotificationDto} from '../../dto/user-notification.dto';
-import {UserNotification, UserNotificationType, UserNotificationTypeIndexer} from '../../model/user-notification';
+import {UserNotification, UserNotificationType, UserNotificationTypeMap} from '../../model/user-notification';
 
 export namespace UserNotificationConverter {
   export function fromDtos(dtos: UserNotificationDto[]): UserNotification[] {
@@ -27,7 +27,7 @@ export namespace UserNotificationConverter {
 
   export function fromDto(dto: UserNotificationDto): UserNotification {
     let model = {
-      type: UserNotificationTypeIndexer[dto.type],
+      type: UserNotificationTypeMap[dto.type],
       id: dto.id,
       userId: dto.userId,
       createdAt: dto.createdAt ? new Date(dto.createdAt) : undefined,

@@ -22,7 +22,15 @@
     <div class="dropdown-menu dropdown-menu-right pre-scrollable"
          aria-labelledby="notificationsDropdownLink">
 
-      <a *ngFor="let notification of (notifications$ | async);"
+      <form class="px-2 text-right">
+        <span class="small text-muted mr-1 align-text-top">Show only unread</span>
+        <label class="switch">
+          <input type="checkbox" [checked]="unreadOnly"  (click)="toggleUnreadFilter($event)">
+          <span class="slider round" (click)="$event.stopPropagation()"></span>
+        </label>
+      </form>
+
+      <a *ngFor="let notification of ((unreadOnly ? unreadNotifications$ : notifications$) | async);"
          class="dropdown-item cursor-default">
         <span class="notification-title clearfix">
           <span class="status small text-muted float-left">{{notification.createdAt | date:'shortDate' }}</span>
@@ -51,12 +59,11 @@
               [class.read]="notification.read"
               [class.text-notice]="notification.read"
               [class.unread]="!notification.read">
-          Badam dam pšššt. S velmi dlouhým a komplexním textem, který může obsahovat
-          ledacos. A může vést až za zatáčku.
+          <ng-container *ngTemplateOutlet="getTemplate(notification.type); context: { $implicit: notification }"></ng-container>
         </span>
       </a>
 
-      <a *ngIf="!(notifications$ | async) || (notifications$ | async).length === 0"
+      <a *ngIf="!((unreadOnly ? unreadNotifications$ : notifications$) | async) || ((unreadOnly ? unreadNotifications$ : notifications$) | async).length === 0"
          class="dropdown-item cursor-default"
          i18n="@@userNotifications.empty">
         There are no notifications.
@@ -64,3 +71,35 @@
     </div>
   </div>
 </div>
+
+<ng-template #organizationShared let-notification>
+  <ng-container *ngIf="{organizations: organizations$ | async} as data">
+    A new organization was shared with you. Click here to open it!
+    <ng-container *ngIf="data.organizations[notification.organizationId] as organization;">
+      <br/>
+      <span class="d-inline-block pt-2">
+        <span class="nowrap mr-1">
+          <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+          [{{organization.code}}]
+        </span>
+        {{organization.name}}
+      </span>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #projectShared let-notification>
+  project
+</ng-template>
+
+<ng-template #collectionShared let-notification>
+  collection
+</ng-template>
+
+<ng-template #viewShared let-notification>
+  view
+</ng-template>
+
+<ng-template #unknown let-notification>
+  view
+</ng-template>

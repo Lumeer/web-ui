@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {UserNotification, UserNotificationType} from '../../../../core/model/user-notification';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {
@@ -28,6 +28,12 @@ import {
 } from '../../../../core/store/user-notifications/user-notifications.state';
 import {UserNotificationsAction} from '../../../../core/store/user-notifications/user-notifications.action';
 import {UserNotificationsLoaderService} from '../../../../core/service/user-notifications-loader.service';
+import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {
+  selectAllOrganizations,
+  selectOrganizationsDictionary,
+} from '../../../../core/store/organizations/organizations.state';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'notifications-menu',
@@ -38,21 +44,32 @@ import {UserNotificationsLoaderService} from '../../../../core/service/user-noti
 export class NotificationsMenuComponent implements OnInit {
   public notifications$: Observable<UserNotification[]>;
   public unreadNotifications$: Observable<UserNotification[]>;
-  public unreadNotifications: UserNotification[] = [];
+
+  public unreadOnly = false;
+
+  @ViewChild('organizationShared')
+  private organizationSharedTemplate: TemplateRef<any>;
+
+  @ViewChild('projectShared')
+  private projectSharedTemplate: TemplateRef<any>;
+
+  @ViewChild('collectionShared')
+  private collectionSharedTemplate: TemplateRef<any>;
+
+  @ViewChild('viewShared')
+  private viewSharedTemplate: TemplateRef<any>;
+
+  @ViewChild('unknown')
+  private unknownTemplate: TemplateRef<any>;
+
+  private organizations$: Observable<Dictionary<OrganizationModel>>;
 
   // need to include the notification loader service here for it to initially load notifications and to do that just once
   constructor(private store: Store<AppState>, private notificationsLoader: UserNotificationsLoaderService) {}
 
   public ngOnInit(): void {
     this.subscribeToNotifications();
-    this.unreadNotifications.push({
-      id: '111',
-      userId: '111',
-      read: false,
-      createdAt: new Date(),
-      type: UserNotificationType.OrganizationShared,
-      organizationId: 'aaa',
-    });
+    this.subscribeToResources();
   }
 
   private subscribeToNotifications(): void {
@@ -60,9 +77,34 @@ export class NotificationsMenuComponent implements OnInit {
     this.unreadNotifications$ = this.store.pipe(select(selectUnreadUserNotifications));
   }
 
+  private subscribeToResources(): void {
+    this.organizations$ = this.store.pipe(select(selectOrganizationsDictionary));
+  }
+
   private setNotificationReadStatus($event: MouseEvent, notification: UserNotification, read: boolean): void {
     $event.stopPropagation();
+    console.log(notification);
     notification.read = read;
     this.store.dispatch(new UserNotificationsAction.Update({userNotification: notification}));
+  }
+
+  public toggleUnreadFilter($event: MouseEvent): void {
+    $event.stopPropagation();
+    this.unreadOnly = !this.unreadOnly;
+  }
+
+  public getTemplate(type: UserNotificationType): TemplateRef<any> {
+    switch (type) {
+      case UserNotificationType.OrganizationShared:
+        return this.organizationSharedTemplate;
+      case UserNotificationType.ProjectShared:
+        return this.projectSharedTemplate;
+      case UserNotificationType.CollectionShared:
+        return this.collectionSharedTemplate;
+      case UserNotificationType.ViewShared:
+        return this.viewSharedTemplate;
+      default:
+        return this.unknownTemplate;
+    }
   }
 }

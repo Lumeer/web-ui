@@ -24,7 +24,7 @@ export enum UserNotificationType {
   ViewShared = 'VIEW_SHARED',
 }
 
-export const UserNotificationTypeIndexer = {
+export const UserNotificationTypeMap = {
   [UserNotificationType.OrganizationShared]: UserNotificationType.OrganizationShared,
   [UserNotificationType.ProjectShared]: UserNotificationType.ProjectShared,
   [UserNotificationType.CollectionShared]: UserNotificationType.CollectionShared,

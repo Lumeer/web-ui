@@ -6,7 +6,12 @@
   white-space: nowrap;
 
   .dropdown-menu {
-    width: var(--top-panel-side-width);
+    width: 18rem;
+    max-width: 90vw;
+
+    form {
+      line-height: 1.1rem;
+    }
   }
 
   span.notifications-count {
@@ -15,6 +20,12 @@
     color: white;
     background-color: red;
     border-radius: 10px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    line-height: 0.9rem;
+    min-width: 0.9rem;
+    text-align: center;
   }
 
   a.dropdown-item {
@@ -47,6 +58,7 @@
     .notification-content {
       display: block;
       width: 100%;
+      line-height: 1.15rem;
       white-space: normal;
       text-align: justify;
 
@@ -68,4 +80,64 @@
       }
     }
   }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 2.1rem;
+    height: 1.1rem;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+
+      &:before {
+        position: absolute;
+        content: '';
+        height: 1rem;
+        width: 1rem;
+        left: 0.05rem;
+        bottom: 0.05rem;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      /* Rounded sliders */
+      &.round {
+        border-radius: 1rem;
+
+        &:before {
+          border-radius: 50%;
+        }
+      }
+    }
+
+    input:checked + .slider {
+      background-color: $success;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(0.95rem);
+      -ms-transform: translateX(0.95rem);
+      transform: translateX(0.95rem);
+    }
+  }
+}
+
+span.nowrap {
+  white-space: nowrap;
 }
