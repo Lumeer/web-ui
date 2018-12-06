@@ -25,7 +25,7 @@ import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {DialogService} from '../../../../dialog/dialog.service';
-import {selectCurrentUser} from './../../../../core/store/users/users.state';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
 
 @Component({
   selector: 'user-menu',

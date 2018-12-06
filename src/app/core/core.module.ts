@@ -48,6 +48,7 @@ import {ProjectValidators} from './validators/project.validators';
 import {PusherService} from './pusher/pusher.service';
 import {VideoService} from './api/video/video.service';
 import {UserNotificationsService} from './rest/user-notifications.service';
+import {UserNotificationsLoaderService} from './service/user-notifications-loader.service';
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import {UserNotificationsService} from './rest/user-notifications.service';
     PusherService,
     VideoService,
     UserNotificationsService,
+    UserNotificationsLoaderService,
   ],
   exports: [HomeComponent, NotificationsModule],
 })

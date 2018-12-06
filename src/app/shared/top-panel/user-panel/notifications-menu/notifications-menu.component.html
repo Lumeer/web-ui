@@ -10,11 +10,11 @@
 
       <span class="fa-stack">
         <i class="fa fa-bell fa-stack-2x"
-          [class.text-primary]="unreadNotifications.length > 0"
-          [class.text-secondary]="unreadNotifications.length === 0"
+           [class.text-primary]="(unreadNotifications$ | async)?.length > 0"
+           [class.text-secondary]="!(unreadNotifications$ | async) || (unreadNotifications$ | async).length === 0"
         ></i>
-        <span class="fa-stack-1x" *ngIf="unreadNotifications.length > 0">
-          <span class="notifications-count">{{unreadNotifications.length}}</span>
+        <span class="fa-stack-1x" *ngIf="(unreadNotifications$ | async)?.length > 0">
+          <span class="notifications-count">{{(unreadNotifications$ | async).length}}</span>
         </span>
       </span>
     </a>
@@ -22,23 +22,44 @@
     <div class="dropdown-menu dropdown-menu-right pre-scrollable"
          aria-labelledby="notificationsDropdownLink">
 
-      <a class="dropdown-item cursor-default">
+      <a *ngFor="let notification of (notifications$ | async);"
+         class="dropdown-item cursor-default">
         <span class="notification-title clearfix">
-          <span class="status unread float-right"><span class="align-text-top small text-muted">new</span><i class="fa fa-eye-slash text-success ml-1 cursor-pointer"></i></span>
-          <span class="status small text-muted float-left">23.4.2108</span>
+          <span class="status small text-muted float-left">{{notification.createdAt | date:'shortDate' }}</span>
+          <span class="status float-right"
+                [class.read]="notification.read"
+                [class.unread]="!notification.read">
+            <span class="align-text-top small text-muted">
+              <span *ngIf="!notification.firstReadAt" i18n="@@userNotifications.new">new</span>
+              <span *ngIf="notification.read && notification.firstReadAt" i18n="@@userNotifications.readOn">read on</span>
+              <span *ngIf="!notification.read && notification.firstReadAt" i18n="@@userNotifications.originallyReadOn">originally read on</span>
+              <span *ngIf="notification.firstReadAt">{{' ' + (notification.firstReadAt | date:'shortDate')}}</span>
+            </span>
+            <i *ngIf="notification.read"
+               (click)="setNotificationReadStatus($event, notification, false)"
+               class="fa fa-eye text-success ml-1 cursor-pointer"
+               title="Mark as unread"
+               title.i18n="@@userNotifications.mark.unread"></i>
+            <i *ngIf="!notification.read"
+               (click)="setNotificationReadStatus($event, notification, true)"
+               class="fa fa-eye-slash text-success ml-1 cursor-pointer"
+               title="Mark as read"
+               title.i18n="@@userNotifications.mark.read"></i>
+          </span>
         </span>
-        <span class="notification-content unread cursor-pointer">Badam dam pšššt.</span>
-      </a>
-
-      <a class="dropdown-item cursor-default">
-        <span class="notification-title clearfix">
-          <span class="status read float-right"><span class="align-text-top small text-muted">read on 23.12.2019</span><i class="fa fa-eye text-success ml-1 cursor-pointer"></i></span>
-          <span class="status small text-muted float-left">23.4.2108</span>
-        </span>
-        <span class="notification-content read text-notice cursor-pointer">
+        <span class="notification-content read text-notice cursor-pointer"
+              [class.read]="notification.read"
+              [class.text-notice]="notification.read"
+              [class.unread]="!notification.read">
           Badam dam pšššt. S velmi dlouhým a komplexním textem, který může obsahovat
           ledacos. A může vést až za zatáčku.
         </span>
+      </a>
+
+      <a *ngIf="!(notifications$ | async) || (notifications$ | async).length === 0"
+         class="dropdown-item cursor-default"
+         i18n="@@userNotifications.empty">
+        There are no notifications.
       </a>
     </div>
   </div>

@@ -20,6 +20,15 @@
   a.dropdown-item {
     line-height: initial;
 
+    &:active,
+    &:focus {
+      .notification-content {
+        &.unread {
+          color: $gray-500;
+        }
+      }
+    }
+
     &:not(:last-child) {
       padding-bottom: 1rem;
     }
@@ -41,17 +50,17 @@
       white-space: normal;
       text-align: justify;
 
-      &.unread,
-      &.unread:hover,
-      &.unread:active,
-      &.unread:focus {
-        font-weight: bold;
+      &.unread {
         color: $primary;
+        font-weight: bold;
+        &:active,
+        &:focus {
+          color: $light;
+        }
       }
 
       &.read,
       &.read:hover,
-      &.read:active,
       &.read:focus {
         font-weight: lighter;
         font-style: italic;

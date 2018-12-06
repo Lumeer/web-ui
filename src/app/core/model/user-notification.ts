@@ -18,11 +18,18 @@
  */
 
 export enum UserNotificationType {
-  OrganizationShared = 'OrganizationShared',
-  ProjectShared = 'ProjectShared',
-  CollectionShared = 'CollectionShared',
-  ViewShared = 'ViewShared',
+  OrganizationShared = 'ORGANIZATION_SHARED',
+  ProjectShared = 'PROJECT_SHARED',
+  CollectionShared = 'COLLECTION_SHARED',
+  ViewShared = 'VIEW_SHARED',
 }
+
+export const UserNotificationTypeIndexer = {
+  [UserNotificationType.OrganizationShared]: UserNotificationType.OrganizationShared,
+  [UserNotificationType.ProjectShared]: UserNotificationType.ProjectShared,
+  [UserNotificationType.CollectionShared]: UserNotificationType.CollectionShared,
+  [UserNotificationType.ViewShared]: UserNotificationType.ViewShared,
+};
 
 interface BasicUserNotification {
   id?: string;
