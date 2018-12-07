@@ -19,6 +19,7 @@
 
 import {UserNotificationDto} from '../../dto/user-notification.dto';
 import {UserNotification, UserNotificationType, UserNotificationTypeMap} from '../../model/user-notification';
+import {perspectivesMap} from '../../../view/perspectives/perspective';
 
 export namespace UserNotificationConverter {
   export function fromDtos(dtos: UserNotificationDto[]): UserNotification[] {
@@ -46,20 +47,37 @@ export namespace UserNotificationConverter {
           ...model,
           organizationId: dto.data.organizationId,
           projectId: dto.data.projectId,
+          projectIcon: dto.data.projectIcon,
+          projectColor: dto.data.projectColor,
+          projectCode: dto.data.projectCode,
+          projectName: dto.data.projectName,
         };
       case UserNotificationType.CollectionShared:
         return {
           ...model,
           organizationId: dto.data.organizationId,
           projectId: dto.data.projectId,
+          projectIcon: dto.data.projectIcon,
+          projectColor: dto.data.projectColor,
+          projectCode: dto.data.projectCode,
+          projectName: dto.data.projectName,
           collectionId: dto.data.collectionId,
+          collectionIcon: dto.data.collectionIcon,
+          collectionColor: dto.data.collectionColor,
+          collectionName: dto.data.collectionName,
         };
       case UserNotificationType.ViewShared:
         return {
           ...model,
           organizationId: dto.data.organizationId,
           projectId: dto.data.projectId,
+          projectIcon: dto.data.projectIcon,
+          projectColor: dto.data.projectColor,
+          projectCode: dto.data.projectCode,
+          projectName: dto.data.projectName,
           viewId: dto.data.viewId,
+          viewName: dto.data.viewName,
+          viewPerspective: perspectivesMap[dto.data.viewPerspective],
         };
       default:
         return null;

@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Perspective} from '../../view/perspectives/perspective';
+
 export enum UserNotificationType {
   OrganizationShared = 'ORGANIZATION_SHARED',
   ProjectShared = 'PROJECT_SHARED',
@@ -48,20 +50,25 @@ export interface ProjectSharedUserNotification extends BasicUserNotification {
   type: UserNotificationType.OrganizationShared;
   organizationId: string;
   projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
 }
 
-export interface CollectionSharedUserNotification extends BasicUserNotification {
+export interface CollectionSharedUserNotification extends ProjectSharedUserNotification {
   type: UserNotificationType.OrganizationShared;
-  organizationId: string;
-  projectId: string;
   collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
 }
 
-export interface ViewSharedUserNotification extends BasicUserNotification {
+export interface ViewSharedUserNotification extends ProjectSharedUserNotification {
   type: UserNotificationType.OrganizationShared;
-  organizationId: string;
-  projectId: string;
   viewId: string;
+  viewName: string;
+  viewPerspective: Perspective;
 }
 
 export type UserNotification =

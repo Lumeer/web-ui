@@ -34,6 +34,9 @@ import {
   selectOrganizationsDictionary,
 } from '../../../../core/store/organizations/organizations.state';
 import {Dictionary} from '@ngrx/entity';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {perspectiveIconsMap} from '../../../../view/perspectives/perspective';
 
 @Component({
   selector: 'notifications-menu',
@@ -46,6 +49,8 @@ export class NotificationsMenuComponent implements OnInit {
   public unreadNotifications$: Observable<UserNotification[]>;
 
   public unreadOnly = false;
+
+  public perspectiveIcons = perspectiveIconsMap;
 
   @ViewChild('organizationShared')
   private organizationSharedTemplate: TemplateRef<any>;
@@ -64,6 +69,8 @@ export class NotificationsMenuComponent implements OnInit {
 
   private organizations$: Observable<Dictionary<OrganizationModel>>;
 
+  private currentWorkspace$: Observable<Workspace>;
+
   // need to include the notification loader service here for it to initially load notifications and to do that just once
   constructor(private store: Store<AppState>, private notificationsLoader: UserNotificationsLoaderService) {}
 
@@ -79,6 +86,7 @@ export class NotificationsMenuComponent implements OnInit {
 
   private subscribeToResources(): void {
     this.organizations$ = this.store.pipe(select(selectOrganizationsDictionary));
+    this.currentWorkspace$ = this.store.pipe(select(selectWorkspace));
   }
 
   private setNotificationReadStatus($event: MouseEvent, notification: UserNotification, read: boolean): void {
