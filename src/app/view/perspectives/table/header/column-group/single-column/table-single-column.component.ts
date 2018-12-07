@@ -141,7 +141,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private bindAttribute() {
     this.attributes = this.extractAttributes();
-    this.attribute = this.findAttribute(this.attributes) || {name: this.column.attributeName, constraints: []};
+    this.attribute = this.findAttribute(this.attributes) || {name: this.column.attributeName};
 
     if (!this.lastName) {
       this.lastName = extractAttributeLastName(this.attribute.name);

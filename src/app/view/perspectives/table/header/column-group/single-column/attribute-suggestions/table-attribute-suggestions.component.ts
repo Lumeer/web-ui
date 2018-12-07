@@ -94,7 +94,6 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public createAttribute() {
     const attribute: AttributeModel = {
       name: this.attributeName,
-      constraints: [],
     };
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({

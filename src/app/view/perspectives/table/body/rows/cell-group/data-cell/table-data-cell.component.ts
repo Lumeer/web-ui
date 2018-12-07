@@ -280,7 +280,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       document,
       callback: this.createLinkInstanceCallback(table),
     });
-    const newAttribute = {name: attributeName, constraints: []};
+    const newAttribute = {name: attributeName};
 
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
@@ -358,7 +358,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       newData: {[attributeName]: {value}},
     };
     const patchDocumentAction = new DocumentsAction.PatchData({document});
-    const newAttribute = {name: attributeName, constraints: []};
+    const newAttribute = {name: attributeName};
 
     this.store$
       .pipe(

@@ -254,7 +254,6 @@ export class DocumentUi {
         if (updatedDocument.newData && Object.getOwnPropertyNames(updatedDocument.newData).length > 0) {
           const newAttributes = Object.keys(updatedDocument.newData).map(name => ({
             name,
-            constraints: [],
             correlationId: updatedDocument.newData[name].correlationId,
           }));
 

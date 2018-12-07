@@ -61,8 +61,6 @@ export class CollectionConverter {
     return {
       id: attributeDto.id,
       name: attributeDto.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeDto.constraints,
       usageCount: attributeDto.usageCount,
       correlationId: correlationId,
     };
@@ -72,8 +70,7 @@ export class CollectionConverter {
     return {
       id: attributeModel.id,
       name: attributeModel.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeModel.constraints,
+      constraints: [],
       usageCount: attributeModel.usageCount, // TODO maybe not needed this way
     };
   }
