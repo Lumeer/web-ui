@@ -973,7 +973,6 @@ function createParentAttributeAction(
     attribute: {
       id: oldAttribute.id,
       name: oldAttribute.name,
-      constraints: [],
     },
     nextAction,
   });
@@ -991,7 +990,6 @@ function createSecondChildAttributeAction(
     attribute: {
       id: `${oldAttribute.id}.${name}`,
       name,
-      constraints: [],
     },
     nextAction,
   });

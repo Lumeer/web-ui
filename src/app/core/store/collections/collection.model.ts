@@ -18,12 +18,14 @@
  */
 
 import {ResourceModel} from '../../model/resource.model';
+import {Constraint} from './../../model/data/constraint';
 
 export interface AttributeModel {
   id?: string;
   name: string;
 
-  constraints: string[]; // TODO use complex objects instead
+  constraint?: Constraint; // TODO make compulsory
+
   usageCount?: number;
   intermediate?: boolean;
 
