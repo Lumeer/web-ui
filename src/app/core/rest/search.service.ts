@@ -17,19 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {SuggestionType, SuggestionsDto, DocumentDto, QueryDto} from '../dto';
+import {SuggestionsDto, DocumentDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {LinkInstanceModel} from '../store/link-instances/link-instance.model';
-import {SuggestDto} from '../dto/suggest.dto';
+import {SuggestionQueryDto} from '../dto/suggestion-query.dto';
 
 @Injectable()
 export class SearchService {
@@ -44,7 +44,7 @@ export class SearchService {
       .subscribe(workspace => (this.workspace = workspace));
   }
 
-  public suggest(dto: SuggestDto): Observable<SuggestionsDto> {
+  public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
     return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 

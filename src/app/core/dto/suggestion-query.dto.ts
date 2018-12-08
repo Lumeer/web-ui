@@ -19,7 +19,7 @@
 
 import {SuggestionType} from './suggestion-type';
 
-export interface SuggestDto {
+export interface SuggestionQueryDto {
   text: string;
   type: SuggestionType;
   priorityCollectionIds: string[];
