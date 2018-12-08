@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -34,7 +34,7 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailPerspectiveComponent {
+export class DetailPerspectiveComponent implements OnDestroy {
   @Input()
   public embedded: boolean;
 
@@ -43,6 +43,10 @@ export class DetailPerspectiveComponent {
   private collectionSubsription = new Subscription();
 
   public constructor(private store$: Store<AppState>) {}
+
+  public ngOnDestroy() {
+    this.collectionSubsription.unsubscribe();
+  }
 
   public selectCollection(collection: CollectionModel) {
     this.select(collection, undefined);

@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -53,7 +52,7 @@ import {generateCorrelationId} from '../utils/resource.utils';
   styleUrls: ['./preview-results.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public selectedCollection: CollectionModel;
 
   @Input() public selectedDocument: DocumentModel;
@@ -117,8 +116,6 @@ export class PreviewResultsComponent implements OnInit, AfterViewInit, OnDestroy
       this.updateDefaultCollectionSubscription();
     }
   }
-
-  public ngAfterViewInit() {}
 
   private updateDefaultCollectionSubscription() {
     this.collectionSubscription.unsubscribe();
