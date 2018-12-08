@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -29,7 +30,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../core/store/collections/collection.model';
@@ -40,11 +41,11 @@ import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {Query} from '../../core/store/navigation/query';
 import {getQueryFiltersForCollection} from '../../core/store/navigation/query.util';
+import {generateCorrelationId} from '../utils/resource.utils';
 
 @Component({
   selector: 'preview-results',
@@ -52,7 +53,7 @@ import {getQueryFiltersForCollection} from '../../core/store/navigation/query.ut
   styleUrls: ['./preview-results.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
+export class PreviewResultsComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @Input() public selectedCollection: CollectionModel;
 
   @Input() public selectedDocument: DocumentModel;
@@ -75,7 +76,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   private query: Query;
   private lastCollectionId: string;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeAll();
@@ -83,14 +84,14 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private subscribeAll() {
-    this.collections$ = this.store.select(selectCollectionsByQuery);
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
 
     this.allSubscriptions.add(
-      this.store
-        .select(selectNavigation)
+      this.store$
         .pipe(
+          select(selectNavigation),
           filter(navigation => this.validWorkspace(navigation.workspace)),
-          withLatestFrom(this.store.select(selectCollectionsByQuery))
+          withLatestFrom(this.store$.pipe(select(selectCollectionsByQuery)))
         )
         .subscribe(([navigation, collections]) => {
           this.query = navigation.query;
@@ -117,14 +118,16 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  public ngAfterViewInit() {}
+
   private updateDefaultCollectionSubscription() {
     this.collectionSubscription.unsubscribe();
-    this.collectionSubscription = this.store
-      .select(selectCollectionsByQuery)
+    this.collectionSubscription = this.store$
       .pipe(
+        select(selectCollectionsByQuery),
         filter(collections => this.shouldChangeSelectedCollection(collections)),
         take(1),
-        withLatestFrom(this.store.select(selectViewCursor))
+        withLatestFrom(this.store$.pipe(select(selectViewCursor)))
       )
       .subscribe(([collections, cursor]) => {
         let collection: CollectionModel;
@@ -151,30 +154,42 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.selectedCollection && this.selectedCollection.id !== this.lastCollectionId) {
-      this.lastCollectionId = this.selectedCollection.id;
-      this.getData(this.selectedCollection);
+    if (changes.selectedCollection) {
+      this.getDataIfNeeded(this.selectedCollection);
+    }
+  }
+
+  private getDataIfNeeded(collection: CollectionModel) {
+    if (collection && collection.id !== this.lastCollectionId) {
+      this.lastCollectionId = collection.id;
+      this.getData(collection);
     }
   }
 
   private getData(collection: CollectionModel) {
     const collectionQuery = {...this.query, stems: [{collectionId: collection.id}]};
     this.updateDataSubscription(collectionQuery);
-    this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-    this.allSubscriptions.add(
-      this.store.select(selectQueryDocumentsLoaded(collectionQuery)).subscribe(loaded => this.loaded$.next(loaded))
-    );
+    this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+
+    this.loaded$.next(false);
+    this.store$
+      .pipe(
+        select(selectQueryDocumentsLoaded(collectionQuery)),
+        filter(loaded => loaded),
+        take(1)
+      )
+      .subscribe(loaded => this.loaded$.next(loaded));
   }
 
   private updateDataSubscription(collectionQuery: Query) {
-    this.documents$ = this.store.select(selectDocumentsByCustomQuery(collectionQuery));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
 
     this.dataSubscription.unsubscribe();
     this.dataSubscription = this.documents$
       .pipe(
         filter(documents => this.shouldChangeSelectedDocument(documents)),
         take(1),
-        withLatestFrom(this.store.select(selectViewCursor))
+        withLatestFrom(this.store$.pipe(select(selectViewCursor)))
       )
       .subscribe(([documents, cursor]) => {
         let document: DocumentModel;
@@ -212,7 +227,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
   private updateCursor() {
     if (this.selectedCollection && this.selectedDocument) {
-      this.store.dispatch(
+      this.store$.dispatch(
         new ViewsAction.SetCursor({
           cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id},
         })
@@ -221,18 +236,18 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onNewDocument() {
-    this.store.dispatch(
+    this.store$.dispatch(
       new DocumentsAction.Create({
         document: {
           collectionId: this.selectedCollection.id,
-          correlationId: CorrelationIdGenerator.generate(),
+          correlationId: generateCorrelationId(),
           data: generateDocumentData(
             this.selectedCollection,
             getQueryFiltersForCollection(this.query, this.selectedCollection.id)
           ),
         },
         callback: id => {
-          this.store.dispatch(
+          this.store$.dispatch(
             new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
           );
         },
