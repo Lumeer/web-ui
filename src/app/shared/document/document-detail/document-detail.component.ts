@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -47,10 +47,11 @@ import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util
   styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit, OnDestroy {
+export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collection: CollectionModel;
 
+  @Input()
   public document: DocumentModel;
 
   public createdBy$: Observable<string>;
@@ -70,17 +71,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private perspective: PerspectiveService
   ) {}
 
-  get _document(): DocumentModel {
-    return this.document;
-  }
-
-  @Input('document')
-  set _document(model: DocumentModel) {
-    this.document = model;
-
-    this.renewSubscriptions();
-  }
-
   public ngOnInit() {
     this.fetchUsers();
   }
@@ -97,6 +87,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.add(this.store.select(selectQuery).subscribe(query => (this.query = query)));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.document) {
+      this.renewSubscriptions();
+    }
   }
 
   private renewSubscriptions(): void {
