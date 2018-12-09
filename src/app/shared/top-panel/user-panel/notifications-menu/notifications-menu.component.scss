@@ -131,8 +131,6 @@
     }
 
     input:checked + .slider:before {
-      -webkit-transform: translateX(0.95rem);
-      -ms-transform: translateX(0.95rem);
       transform: translateX(0.95rem);
     }
   }

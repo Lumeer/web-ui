@@ -27,7 +27,7 @@ export namespace UserNotificationConverter {
   }
 
   export function fromDto(dto: UserNotificationDto): UserNotification {
-    let model = {
+    const model = {
       type: UserNotificationTypeMap[dto.type],
       id: dto.id,
       userId: dto.userId,
@@ -75,7 +75,7 @@ export namespace UserNotificationConverter {
           projectColor: dto.data.projectColor,
           projectCode: dto.data.projectCode,
           projectName: dto.data.projectName,
-          viewId: dto.data.viewId,
+          viewCode: dto.data.viewCode,
           viewName: dto.data.viewName,
           viewPerspective: perspectivesMap[dto.data.viewPerspective],
         };
@@ -90,7 +90,7 @@ export namespace UserNotificationConverter {
       userId: model.userId,
       type: UserNotificationType[model.type],
       read: model.read,
-      data: {}, // cannot be updated by frontend anyway
+      // data cannot be updated by frontend anyway
       // no date fields can be updated by frontend
     };
   }

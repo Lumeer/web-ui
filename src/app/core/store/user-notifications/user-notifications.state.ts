@@ -22,13 +22,17 @@ import {UserNotification, UserNotificationType} from '../../model/user-notificat
 import {AppState} from '../app.state';
 import {createSelector} from '@ngrx/store';
 
-export interface UserNotificationsState extends EntityState<UserNotification> {}
+export interface UserNotificationsState extends EntityState<UserNotification> {
+  loaded: boolean;
+}
 
 export const userNotificationsAdapter = createEntityAdapter<UserNotification>({
   selectId: notification => notification.id,
 });
 
-export const initialUserNotificationsState: UserNotificationsState = userNotificationsAdapter.getInitialState({});
+export const initialUserNotificationsState: UserNotificationsState = userNotificationsAdapter.getInitialState({
+  loaded: false,
+});
 
 export const selectUserNotificationsState = (state: AppState) => state.userNotifications;
 export const selectAllUserNotifications = createSelector(

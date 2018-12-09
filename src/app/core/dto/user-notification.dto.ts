@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentDataDto} from './document.dto';
-
 export interface UserNotificationDto {
   id?: string;
   userId: string;
@@ -26,5 +24,5 @@ export interface UserNotificationDto {
   read: boolean;
   firstReadAt?: number;
   type: string;
-  data: DocumentDataDto;
+  data?: Record<string, string>;
 }

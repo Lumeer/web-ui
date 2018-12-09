@@ -1,4 +1,4 @@
-<div class="panel-item mx-2 notifications">
+<div class="panel-item mx-2 notifications" *ngIf="{unread: unreadNotifications$ | async, all: notifications$ | async} as notifications">
   <div class="dropdown show">
     <a href="#"
        role="button"
@@ -10,11 +10,11 @@
 
       <span class="fa-stack">
         <i class="fa fa-bell fa-stack-2x"
-           [class.text-primary]="(unreadNotifications$ | async)?.length > 0"
-           [class.text-secondary]="!(unreadNotifications$ | async) || (unreadNotifications$ | async).length === 0"
+           [class.text-primary]="notifications.unread?.length > 0"
+           [class.text-secondary]="!notifications.unread || notifications.unread.length === 0"
         ></i>
-        <span class="fa-stack-1x" *ngIf="(unreadNotifications$ | async)?.length > 0">
-          <span class="notifications-count">{{(unreadNotifications$ | async).length}}</span>
+        <span class="fa-stack-1x" *ngIf="notifications.unread?.length > 0">
+          <span class="notifications-count">{{notifications.unread.length}}</span>
         </span>
       </span>
     </a>
@@ -30,7 +30,7 @@
         </label>
       </form>
 
-      <a *ngFor="let notification of ((unreadOnly ? unreadNotifications$ : notifications$) | async);"
+      <a *ngFor="let notification of (unreadOnly ? notifications.unread : notifications.all);"
          class="dropdown-item cursor-default">
         <span class="notification-title clearfix">
           <span class="status small text-muted float-left">{{notification.createdAt | date:'shortDate' }}</span>
@@ -44,12 +44,12 @@
               <span *ngIf="notification.firstReadAt">{{' ' + (notification.firstReadAt | date:'shortDate')}}</span>
             </span>
             <i *ngIf="notification.read"
-               (click)="setNotificationReadStatus($event, notification, false)"
+               (click)="setNotificationReadEvent($event, notification, false)"
                class="fa fa-eye text-success ml-1 cursor-pointer"
                title="Mark as unread"
                title.i18n="@@userNotifications.mark.unread"></i>
             <i *ngIf="!notification.read"
-               (click)="setNotificationReadStatus($event, notification, true)"
+               (click)="setNotificationReadEvent($event, notification, true)"
                class="fa fa-eye-slash text-success ml-1 cursor-pointer"
                title="Mark as read"
                title.i18n="@@userNotifications.mark.read"></i>
@@ -59,11 +59,15 @@
               [class.read]="notification.read"
               [class.text-notice]="notification.read"
               [class.unread]="!notification.read">
-          <ng-container *ngTemplateOutlet="getTemplate(notification.type); context: { $implicit: notification }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="getTemplate(notification.type); context: { $implicit: notification }"
+            (click)="navigateToTarget(notification)"
+          >
+          </ng-container>
         </span>
       </a>
 
-      <a *ngIf="!((unreadOnly ? unreadNotifications$ : notifications$) | async) || ((unreadOnly ? unreadNotifications$ : notifications$) | async).length === 0"
+      <a *ngIf="!(unreadOnly ? notifications.unread : notifications.all) || (unreadOnly ? notifications.unread : notifications.all).length === 0"
          class="dropdown-item cursor-default"
          i18n="@@userNotifications.empty">
         There are no notifications.

@@ -47,7 +47,7 @@ export interface OrganizationSharedUserNotification extends BasicUserNotificatio
 }
 
 export interface ProjectSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.OrganizationShared;
+  type: UserNotificationType.ProjectShared;
   organizationId: string;
   projectId: string;
   projectIcon: string;
@@ -56,17 +56,29 @@ export interface ProjectSharedUserNotification extends BasicUserNotification {
   projectName: string;
 }
 
-export interface CollectionSharedUserNotification extends ProjectSharedUserNotification {
-  type: UserNotificationType.OrganizationShared;
+export interface CollectionSharedUserNotification extends BasicUserNotification {
+  type: UserNotificationType.CollectionShared;
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
   collectionId: string;
   collectionIcon: string;
   collectionColor: string;
   collectionName: string;
 }
 
-export interface ViewSharedUserNotification extends ProjectSharedUserNotification {
-  type: UserNotificationType.OrganizationShared;
-  viewId: string;
+export interface ViewSharedUserNotification extends BasicUserNotification {
+  type: UserNotificationType.ViewShared;
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  viewCode: string;
   viewName: string;
   viewPerspective: Perspective;
 }

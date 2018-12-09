@@ -30,7 +30,10 @@ export function userNotificationsReducer(
 ): UserNotificationsState {
   switch (action.type) {
     case UserNotificationsActionType.GET_SUCCESS:
-      return userNotificationsAdapter.upsertMany(action.payload.userNotifications, state);
+      return {
+        ...userNotificationsAdapter.upsertMany(action.payload.userNotifications, state),
+        loaded: true,
+      };
     case UserNotificationsActionType.UPDATE_SUCCESS:
       return userNotificationsAdapter.upsertOne(action.payload.userNotification, state);
     default:
