@@ -26,6 +26,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
@@ -73,7 +74,6 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   private collectionSubscription = new Subscription();
 
   private query: Query;
-  private lastCollectionId: string;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -151,16 +151,16 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCollection) {
-      this.getDataIfNeeded(this.selectedCollection);
+    if (changes.selectedCollection && this.shouldGetData(changes.selectedCollection)) {
+      this.getData(this.selectedCollection);
     }
   }
 
-  private getDataIfNeeded(collection: CollectionModel) {
-    if (collection && collection.id !== this.lastCollectionId) {
-      this.lastCollectionId = collection.id;
-      this.getData(collection);
-    }
+  private shouldGetData(selectedChange: SimpleChange): boolean {
+    return (
+      selectedChange.currentValue &&
+      (!selectedChange.previousValue || selectedChange.currentValue.id !== selectedChange.previousValue.id)
+    );
   }
 
   private getData(collection: CollectionModel) {
