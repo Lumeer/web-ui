@@ -3,6 +3,7 @@
      role="button"
      id="profileDropdownLink"
      data-toggle="dropdown"
+     data-offset="0,10"
      aria-haspopup="true"
      aria-expanded="false"
      class="text-primary">
@@ -11,6 +12,10 @@
 
   <div class="dropdown-menu dropdown-menu-right profile-dropdown"
        aria-labelledby="profileDropdownLink">
+    <span *ngIf="currentUser$ | async as currentUser"
+          class="dropdown-item-text text-secondary">
+      {{ currentUser.email }}
+    </span>
     <a *ngIf="locale !== 'cs'"
        [href]="url$ | async | languageLink:'cs'"
        class="dropdown-item"
@@ -27,7 +32,6 @@
       <span>English</span>
       (<span i18n="@@language.english">English</span>)
     </a>
-    <div class="dropdown-divider"></div>
     <a (click)="onFeedbackClick()"
        class="dropdown-item"
        title="Send feedback"
@@ -37,11 +41,6 @@
          aria-hidden="true"></i>&nbsp;
       <span i18n="@@menu.sendFeedback">Send Feedback</span>
     </a>
-    <div class="dropdown-divider"></div>
-    <span *ngIf="currentUser$ | async as currentUser"
-          class="dropdown-item-text text-secondary">
-      {{ currentUser.email }}
-    </span>
     <a *ngIf="false"
        class="dropdown-item"
        title="Account"

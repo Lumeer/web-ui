@@ -39,7 +39,6 @@ export class UserPanelComponent implements OnInit {
   public workspace: Workspace;
 
   public freePlan$: Observable<boolean>;
-  public notifications = 0;
 
   constructor(private router: Router, private store$: Store<AppState>) {}
 
