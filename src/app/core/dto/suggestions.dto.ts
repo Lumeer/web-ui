@@ -17,15 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../core/dto/link-type';
-import {Collection} from '../../core/dto/collection';
+import {CollectionDto, LinkTypeDto, ViewDto} from '.';
 
-export class LinkHelper {
-  public static filterRelatedLinkTypes(collection: Collection, linkTypes: LinkType[]): LinkType[] {
-    return linkTypes.filter(linkType => linkType.collectionIds.includes(collection.id));
-  }
-
-  public static getOtherCollectionId(linkType: LinkType, collectionId: string): string {
-    return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
-  }
+export interface SuggestionsDto {
+  attributes: CollectionDto[];
+  collections: CollectionDto[];
+  views: ViewDto[];
+  linkTypes: LinkTypeDto[];
 }

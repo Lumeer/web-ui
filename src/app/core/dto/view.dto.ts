@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface LinkType {
-  id?: string; // TODO make compulsory
-  name: string;
+import {QueryDto} from './query.dto';
+import {Resource} from './resource';
 
-  collectionIds?: [string, string];
-
-  attributes?: string[]; // TODO use complex object
+export interface ViewDto extends Resource {
+  perspective: string;
+  query: QueryDto;
+  config: any; // TODO create DTO
+  authorRights?: {[collectionId: string]: string[]};
 }

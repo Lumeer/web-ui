@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from './attribute';
-import {CollectionDto} from './collection.dto';
+import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {ViewModel} from '../../../../../../core/store/views/view.model';
+import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 
-export class LinkedAttribute {
-  public value: Attribute;
-  public collection: CollectionDto;
-
-  constructor(attribute: Attribute, collection: CollectionDto) {
-    this.value = attribute;
-    this.collection = collection;
-  }
+export interface Suggestions {
+  attributes: CollectionModel[];
+  collections: CollectionModel[];
+  views: ViewModel[];
+  linkTypes: LinkTypeModel[];
 }

@@ -17,12 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from './query.dto';
-import {Resource} from './resource';
+import {SuggestionType} from './suggestion-type';
 
-export interface View extends Resource {
-  perspective: string;
-  query: QueryDto;
-  config: any; // TODO create DTO
-  authorRights?: {[collectionId: string]: string[]};
+export interface SuggestionQueryDto {
+  text: string;
+  type: SuggestionType;
+  priorityCollectionIds: string[];
 }

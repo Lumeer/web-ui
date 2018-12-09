@@ -20,7 +20,7 @@
 import {Attribute} from './attribute';
 import {Resource} from './resource';
 
-export interface Collection extends Resource {
+export interface CollectionDto extends Resource {
   attributes?: Attribute[];
   defaultAttributeId?: string;
   documentsCount?: number;

@@ -17,38 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {SuggestionType, Suggestions, DocumentDto, QueryDto} from '../dto';
+import {SuggestionsDto, DocumentDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {LinkInstanceModel} from '../store/link-instances/link-instance.model';
+import {SuggestionQueryDto} from '../dto/suggestion-query.dto';
 
 @Injectable()
 export class SearchService {
   private workspace: Workspace;
 
-  constructor(private http: HttpClient, private store: Store<AppState>) {
-    this.store
-      .select(selectWorkspace)
-      .pipe(filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode))
+  constructor(private http: HttpClient, private store$: Store<AppState>) {
+    this.store$
+      .pipe(
+        select(selectWorkspace),
+        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
+      )
       .subscribe(workspace => (this.workspace = workspace));
   }
 
-  public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
-    return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`, {
-      params: new HttpParams().set('text', text).set('type', type.toString()),
-    });
+  public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
+    return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
-  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceModel[]> {
-    return this.http.post<LinkInstanceModel[]>(`${this.searchPath(workspace)}/linkInstances`, query);
+  public searchLinkInstances(query: QueryDto): Observable<LinkInstanceModel[]> {
+    return this.http.post<LinkInstanceModel[]>(`${this.searchPath()}/linkInstances`, query);
   }
 
   public searchDocuments(query: QueryDto): Observable<DocumentDto[]> {
