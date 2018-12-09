@@ -100,18 +100,18 @@ const linkTypeQueryItems = linkTypes.map(l => new LinkQueryItem(l));
 
 const fulltextQueryItems = [new FulltextQueryItem('la'), new FulltextQueryItem('he')];
 
-fdescribe('Suggestions util', () => {
-  fit('should filter undefined suggestions', () => {
+describe('Suggestions util', () => {
+  it('should filter undefined suggestions', () => {
     expect(convertSuggestionsToQueryItemsSorted(undefined, [])).toEqual([]);
   });
 
-  fit('should filter empty suggestions', () => {
+  it('should filter empty suggestions', () => {
     expect(
       convertSuggestionsToQueryItemsSorted({views: [], collections: [], attributes: [], linkTypes: []}, [])
     ).toEqual([]);
   });
 
-  fit('should filter empty current query items', () => {
+  it('should filter empty current query items', () => {
     expect(convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, [])).toEqual([
       ...viewsQueryItems,
       ...collectionQueryItems,
@@ -120,13 +120,13 @@ fdescribe('Suggestions util', () => {
     ]);
   });
 
-  fit('should filter with only fulltext query items', () => {
+  it('should filter with only fulltext query items', () => {
     expect(
       convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, fulltextQueryItems)
     ).toEqual([...collectionQueryItems, ...linkTypeQueryItems, ...attributeQueryItems]);
   });
 
-  fit('should filter with collection as last query item', () => {
+  it('should filter with collection as last query item', () => {
     expect(
       convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, [
         collectionQueryItems[0],
@@ -141,7 +141,7 @@ fdescribe('Suggestions util', () => {
     ]);
   });
 
-  fit('should filter with link as last query item', () => {
+  it('should filter with link as last query item', () => {
     expect(
       convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes: [linkTypes[1]]}, [
         collectionQueryItems[0],
@@ -156,7 +156,7 @@ fdescribe('Suggestions util', () => {
     ]);
   });
 
-  fit('should filter with attribute as last query item', () => {
+  it('should filter with attribute as last query item', () => {
     expect(
       convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes: [linkTypes[1]]}, [
         collectionQueryItems[0],
