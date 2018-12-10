@@ -50,16 +50,16 @@ const collectionQueryItems = collections.map(c => new CollectionQueryItem(c));
 const attributes: CollectionModel[] = [
   {
     ...collections[0],
-    attributes: [{id: 'a1', name: 'a1', constraints: []}],
+    attributes: [{id: 'a1', name: 'a1'}],
   },
   {
     ...collections[1],
-    attributes: [{id: 'a2', name: 'a2', constraints: []}],
+    attributes: [{id: 'a2', name: 'a2'}],
   },
   {
     id: 'lala',
     name: 'lala',
-    attributes: [{id: 'a2', name: 'a2', constraints: []}],
+    attributes: [{id: 'a2', name: 'a2'}],
   },
 ];
 const attributeQueryItems = attributes.map(a => new AttributeQueryItem(a, a.attributes[0], '', ''));
