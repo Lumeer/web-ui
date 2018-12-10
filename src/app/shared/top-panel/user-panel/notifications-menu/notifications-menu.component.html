@@ -56,12 +56,12 @@
           </span>
         </span>
         <span class="notification-content read text-notice cursor-pointer"
+              (click)="navigateToTarget(notification)"
               [class.read]="notification.read"
               [class.text-notice]="notification.read"
               [class.unread]="!notification.read">
           <ng-container
             *ngTemplateOutlet="getTemplate(notification.type); context: { $implicit: notification }"
-            (click)="navigateToTarget(notification)"
           >
           </ng-container>
         </span>
@@ -78,43 +78,46 @@
 
 <ng-template #organizationShared let-notification>
   <ng-container *ngIf="{organizations: organizations$ | async} as data">
-    <span i18n="@@userNotifications.organizationShared">A new organization has been shared with you.</span>&emsp;
+    <span class="trail" i18n="@@userNotifications.organizationShared">A new organization has been shared with you.</span>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
     <ng-container *ngIf="data.organizations[notification.organizationId] as organization;">
-      <br/>
-      <span class="d-inline-block pt-2">
-        <span class="nowrap mr-1">
-          <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
-          [{{organization.code}}]
-        </span>
-        {{organization.name}}
+      <span class="d-block pt-2">
+        <ng-container *ngIf="notification.organizationId; else deleted">
+          <span class="nowrap mr-1">
+            <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+            [{{organization.code}}]
+          </span>
+          {{organization.name}}
+        </ng-container>
       </span>
     </ng-container>
   </ng-container>
 </ng-template>
 
 <ng-template #projectShared let-notification>
-  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async} as data">
-    <span i18n="@@userNotifications.projectShared">A new project has been shared with you.</span>&emsp;
+  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async, project: currentProject$ | async} as data">
+    <span class="trail" i18n="@@userNotifications.projectShared">A new project has been shared with you.</span>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
     <ng-container *ngIf="data.organizations[notification.organizationId] as organization;">
-      <span class="d-inline-block py-2">
-        <span class="nowrap mr-1">
-          <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
-          [{{notification.projectCode}}]
-        </span>
-        {{notification.projectName}}
+      <span class="d-block py-2">
+        <ng-container *ngIf="notification.projectCode; else deleted">
+          <span class="nowrap mr-1">
+            <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
+            [{{notification.projectCode}}]
+          </span>
+          {{notification.projectName}}
+        </ng-container>
       </span>
       <ng-container *ngIf="data.workspace.organizationCode !== organization.code">
-        <br/>
         <span i18n="@@userNotifications.inOrganization">in organization:</span>
-        <br/>
-        <span class="d-inline-block pt-2">
-          <span class="nowrap mr-1">
-            <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
-            [{{organization.code}}]
-          </span>
-          {{organization.name}}
+        <span class="d-block pt-2">
+          <ng-container *ngIf="notification.organizationId; else deleted">
+            <span class="nowrap mr-1">
+              <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+              [{{organization.code}}]
+            </span>
+            {{organization.name}}
+          </ng-container>
         </span>
       </ng-container>
     </ng-container>
@@ -122,37 +125,39 @@
 </ng-template>
 
 <ng-template #collectionShared let-notification>
-  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async} as data">
-    <span i18n="@@userNotifications.collectionShared">A new collection has been shared with you.</span>&emsp;
+  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async, project: currentProject$ | async} as data">
+    <span class="trail" i18n="@@userNotifications.collectionShared">A new collection has been shared with you.</span>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
     <ng-container *ngIf="data.organizations[notification.organizationId] as organization;">
-      <span class="d-inline-block py-2">
+      <span class="d-block py-2">
         <span class="nowrap mr-1">
-          <i [class]="notification.collectionIcon" class="mr-1" [style.color]="notification.collectionColor"></i>
-          {{notification.collectionName}}
+          <ng-container *ngIf="notification.collectionName; else deleted">
+            <i [class]="notification.collectionIcon" class="mr-1" [style.color]="notification.collectionColor"></i>
+            {{notification.collectionName}}
+          </ng-container>
         </span>
       </span>
-      <ng-container *ngIf="data.workspace.projectCode !== notification.projectCode">
-        <br/>
+      <ng-container *ngIf="data.project?.id !== notification.projectId">
         <span i18n="@@userNotifications.inProject">in project:</span>
-        <br/>
-        <span class="d-inline-block py-2">
-          <span class="nowrap mr-1">
-            <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
-            [{{notification.projectCode}}]
-          </span>
-          {{notification.projectName}}
+        <span class="d-block py-2">
+          <ng-container *ngIf="notification.projectCode; else deleted">
+            <span class="nowrap mr-1">
+              <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
+              [{{notification.projectCode}}]
+            </span>
+            {{notification.projectName}}
+          </ng-container>
         </span>
         <ng-container *ngIf="data.workspace.organizationCode !== organization.code">
-          <br/>
           <span i18n="@@userNotifications.inOrganization">in organization:</span>
-          <br/>
-          <span class="d-inline-block pt-2">
-            <span class="nowrap mr-1">
-              <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
-              [{{organization.code}}]
-            </span>
-            {{organization.name}}
+          <span class="d-block pt-2">
+            <ng-container *ngIf="notification.organizationId; else deleted">
+              <span class="nowrap mr-1">
+                <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+                [{{organization.code}}]
+              </span>
+              {{organization.name}}
+            </ng-container>
           </span>
         </ng-container>
       </ng-container>
@@ -161,37 +166,39 @@
 </ng-template>
 
 <ng-template #viewShared let-notification>
-  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async} as data">
-    <span i18n="@@userNotifications.viewShared">A new view has been shared with you.</span>&emsp;
+  <ng-container *ngIf="{organizations: organizations$ | async, workspace: currentWorkspace$ | async, project: currentProject$ | async} as data">
+    <span class="trail" i18n="@@userNotifications.viewShared">A new view has been shared with you.</span>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
     <ng-container *ngIf="data.organizations[notification.organizationId] as organization;">
-      <span class="d-inline-block py-2">
+      <span class="d-block py-2">
         <span class="nowrap mr-1">
-          <i [class]="perspectiveIcons[notification.viewPerspective]" class="mr-1"></i>
-          {{notification.viewName}}
+          <ng-container *ngIf="notification.viewName; else deleted">
+            <i [class]="perspectiveIcons[notification.viewPerspective]" class="mr-1"></i>
+            {{notification.viewName}}
+          </ng-container>
         </span>
       </span>
-      <ng-container *ngIf="data.workspace.projectCode !== notification.projectCode">
-        <br/>
+      <ng-container *ngIf="data.project?.id !== notification.projectId">
         <span i18n="@@userNotifications.inProject">in project:</span>
-        <br/>
-        <span class="d-inline-block py-2">
-          <span class="nowrap mr-1">
-            <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
-            [{{notification.projectCode}}]
-          </span>
-          {{notification.projectName}}
+        <span class="d-block py-2">
+          <ng-container *ngIf="notification.projectCode; else deleted">
+            <span class="nowrap mr-1">
+              <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
+              [{{notification.projectCode}}]
+            </span>
+            {{notification.projectName}}
+          </ng-container>
         </span>
         <ng-container *ngIf="data.workspace.organizationCode !== organization.code">
-          <br/>
           <span i18n="@@userNotifications.inOrganization">in organization:</span>
-          <br/>
-          <span class="d-inline-block pt-2">
-            <span class="nowrap mr-1">
-              <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
-              [{{organization.code}}]
-            </span>
-            {{organization.name}}
+          <span class="d-block pt-2">
+            <ng-container *ngIf="notification.organizationId; else deleted">
+              <span class="nowrap mr-1">
+                <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+                [{{organization.code}}]
+              </span>
+              {{organization.name}}
+            </ng-container>
           </span>
         </ng-container>
       </ng-container>
@@ -201,4 +208,8 @@
 
 <ng-template #unknown let-notification>
   <!-- unknown notification, display nothing -->
+</ng-template>
+
+<ng-template #deleted>
+  <span i18n="@@userNotifications.unavailable">Unavailable</span>
 </ng-template>

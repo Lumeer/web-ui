@@ -74,6 +74,6 @@ export const selectCollectionsByLinkType = (linkTypeId: string) =>
     selectCollectionsDictionary,
     selectLinkTypeById(linkTypeId),
     (collectionsMap, linkType) => {
-      return linkType.collectionIds.map(id => collectionsMap[id]);
+      return (linkType && linkType.collectionIds.map(id => collectionsMap[id])) || [];
     }
   );

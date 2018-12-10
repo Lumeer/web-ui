@@ -55,9 +55,11 @@ export function getVideosByUrl(url: string): string[] {
   const videos = [];
   const locale = environment.locale === 'cs' ? 'cs' : 'en';
 
-  videos.push(VIDEO_SEARCH_DATA[locale]);
-  videos.push(VIDEO_PERSPECTIVES[locale]);
-  videos.push(VIDEO_VIEWS[locale]);
+  if (!/^\/organization\/.*/.test(url)) {
+    videos.push(VIDEO_SEARCH_DATA[locale]);
+    videos.push(VIDEO_PERSPECTIVES[locale]);
+    videos.push(VIDEO_VIEWS[locale]);
+  }
 
   if (/^\/w\/.*\/view\/search\/.*/.test(url)) {
     videos.push(VIDEO_FIRST_TIME[locale]);

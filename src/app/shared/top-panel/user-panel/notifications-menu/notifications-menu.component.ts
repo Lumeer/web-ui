@@ -35,11 +35,13 @@ import {
 } from '../../../../core/store/organizations/organizations.state';
 import {Dictionary} from '@ngrx/entity';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
-import {filter, take} from 'rxjs/operators';
+import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
+import {ProjectModel} from '../../../../core/store/projects/project.model';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'notifications-menu',
@@ -74,6 +76,8 @@ export class NotificationsMenuComponent implements OnInit {
 
   public currentWorkspace$: Observable<Workspace>;
 
+  public currentProject$: Observable<ProjectModel>;
+
   // need to include the notification loader service here for it to initially load notifications and to do that just once
   constructor(private store: Store<AppState>, private router: Router) {}
 
@@ -98,6 +102,7 @@ export class NotificationsMenuComponent implements OnInit {
   private subscribeToResources(): void {
     this.organizations$ = this.store.pipe(select(selectOrganizationsDictionary));
     this.currentWorkspace$ = this.store.pipe(select(selectWorkspace));
+    this.currentProject$ = this.store.pipe(select(selectProjectByWorkspace));
   }
 
   public setNotificationReadEvent($event: MouseEvent, notification: UserNotification, read: boolean): void {
@@ -106,6 +111,8 @@ export class NotificationsMenuComponent implements OnInit {
   }
 
   private setNotificationRead(notification: UserNotification, read: boolean): void {
+    console.log(notification);
+
     notification.read = read;
     this.store.dispatch(new UserNotificationsAction.Update({userNotification: notification}));
   }
@@ -138,43 +145,61 @@ export class NotificationsMenuComponent implements OnInit {
         this.store
           .pipe(
             select(selectOrganizationById(userNotification.organizationId)),
+            filter(organization => !!organization.code),
+            withLatestFrom(this.store.pipe(select(selectUrl))),
             take(1)
           )
-          .subscribe(organization => {
+          .subscribe(([organization, url]) => {
             const path = ['w', organization.code];
-            this.router.navigate(path);
+            if (!url.startsWith(this.router.createUrlTree(path).toString())) {
+              this.router.navigate(path);
+            }
           });
         return;
       case UserNotificationType.ProjectShared:
         this.store
           .pipe(
             select(selectOrganizationById(userNotification.organizationId)),
+            filter(organization => !!organization.code),
+            withLatestFrom(this.store.pipe(select(selectUrl))),
             take(1)
           )
-          .subscribe(organization => {
+          .subscribe(([organization, url]) => {
             const path = ['w', organization.code, userNotification.projectCode];
-            this.router.navigate(path);
+            if (userNotification.projectCode && !url.startsWith(this.router.createUrlTree(path).toString())) {
+              this.router.navigate(path);
+            }
           });
         return;
       case UserNotificationType.CollectionShared:
         this.store
           .pipe(
             select(selectOrganizationById(userNotification.organizationId)),
+            filter(organization => !!organization.code),
+            withLatestFrom(this.store.pipe(select(selectUrl))),
             take(1)
           )
-          .subscribe(organization => {
+          .subscribe(([organization, url]) => {
             const path = ['w', organization.code, userNotification.projectCode, 'view', Perspective.Table];
             const query = convertQueryModelToString({stems: [{collectionId: userNotification.collectionId}]});
-            this.router.navigate(path, {queryParams: {query}});
+            if (
+              userNotification.projectCode &&
+              userNotification.collectionId &&
+              !url.startsWith(this.router.createUrlTree(path, {queryParams: {query}}).toString())
+            ) {
+              this.router.navigate(path, {queryParams: {query}});
+            }
           });
         return;
       case UserNotificationType.ViewShared:
         this.store
           .pipe(
             select(selectOrganizationById(userNotification.organizationId)),
+            filter(organization => !!organization.code),
+            withLatestFrom(this.store.pipe(select(selectUrl))),
             take(1)
           )
-          .subscribe(organization => {
+          .subscribe(([organization, url]) => {
             const path = [
               'w',
               organization.code,
@@ -182,7 +207,13 @@ export class NotificationsMenuComponent implements OnInit {
               'view',
               {vc: userNotification.viewCode},
             ];
-            this.router.navigate(path);
+            if (
+              userNotification.projectCode &&
+              userNotification.viewCode &&
+              !url.startsWith(this.router.createUrlTree(path).toString())
+            ) {
+              this.router.navigate(path);
+            }
           });
         return;
     }

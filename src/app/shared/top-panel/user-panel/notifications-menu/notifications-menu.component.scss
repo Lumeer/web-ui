@@ -138,3 +138,7 @@
 span.nowrap {
   white-space: nowrap;
 }
+
+span.trail:after {
+  content: ' ';
+}

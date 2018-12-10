@@ -39,17 +39,24 @@ export const selectAllUserNotifications = createSelector(
   selectUserNotificationsState,
   userNotificationsAdapter.getSelectors().selectAll
 );
-export const selectUnreadUserNotifications = createSelector(
+export const selectAllUserNotificationsSorted = createSelector(
   selectAllUserNotifications,
+  userNotifications =>
+    userNotifications.sort(
+      (a, b) => (b.createdAt ? b.createdAt.getTime() : 0) - (a.createdAt ? a.createdAt.getTime() : 0)
+    )
+);
+export const selectUnreadUserNotifications = createSelector(
+  selectAllUserNotificationsSorted,
   userNotifications => userNotifications.filter(notification => !notification.read)
 );
 export const selectUserNotificationsByType = (type: UserNotificationType) =>
   createSelector(
-    selectAllUserNotifications,
+    selectAllUserNotificationsSorted,
     userNotifications => userNotifications.filter(notification => notification.type === type)
   );
 export const selectUnreadNotificationsByType = (type: UserNotificationType) =>
   createSelector(
-    selectAllUserNotifications,
+    selectAllUserNotificationsSorted,
     userNotifications => userNotifications.filter(notification => !notification.read && notification.type === type)
   );
