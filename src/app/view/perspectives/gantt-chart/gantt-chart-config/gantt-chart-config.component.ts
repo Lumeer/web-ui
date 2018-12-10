@@ -29,12 +29,16 @@ export class GanttChartConfigComponent {
   public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
   public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
 
+  public propertiesNotSetYet: boolean = true;
+
   public allRequiredPropertiesSet() {
+    //this.propertiesNotSetYet = false;
     return (
       this.config.mode &&
       this.config.barsProperties[GanttChartBarPropertyRequired.NAME] &&
       this.config.barsProperties[GanttChartBarPropertyRequired.START] &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.END]
+      this.config.barsProperties[GanttChartBarPropertyRequired.END] &&
+      !(this.propertiesNotSetYet = false)
     );
   }
 
