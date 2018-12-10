@@ -35,9 +35,11 @@ export interface CalendarBarModel {
 
 export enum CalendarBarPropertyRequired {
   NAME = 'name',
-  START = 'start',
-  END = 'end',
+  START_DATE = 'start',
+  END_DATE = 'end',
 }
 
 export enum CalendarBarPropertyOptional {
+  START_TIME = 'startTime',
+  END_TIME = 'endTime',
 }

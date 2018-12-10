@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarBarPropertyRequired, CalendarConfig} from '../../../../core/store/calendar/calendar.model';
+import {CalendarBarPropertyOptional, CalendarBarPropertyRequired, CalendarConfig} from '../../../../core/store/calendar/calendar.model';
 import {
   CalendarEvent,
   CalendarEventAction,
@@ -69,8 +69,8 @@ export class CalendarVisualizationComponent implements OnChanges {
   private visualize() {
     if (
       this.config.barsProperties[CalendarBarPropertyRequired.NAME] &&
-      this.config.barsProperties[CalendarBarPropertyRequired.START] &&
-      this.config.barsProperties[CalendarBarPropertyRequired.END]
+      this.config.barsProperties[CalendarBarPropertyRequired.START_DATE] &&
+      this.config.barsProperties[CalendarBarPropertyRequired.END_DATE]
     ) {
 
       this.events = [];
@@ -84,12 +84,12 @@ export class CalendarVisualizationComponent implements OnChanges {
         start = undefined;
         end = undefined;
         i = i + 1;
-        if (CalendarVisualizationComponent.isValidDate(document.data[this.config.barsProperties[CalendarBarPropertyRequired.START].attributeId])
-          || CalendarVisualizationComponent.isValidDate(document.data[this.config.barsProperties[CalendarBarPropertyRequired.END].attributeId])) {
+        if (CalendarVisualizationComponent.isValidDate(document.data[this.config.barsProperties[CalendarBarPropertyRequired.START_DATE].attributeId])
+          || CalendarVisualizationComponent.isValidDate(document.data[this.config.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId])) {
 
           let titleFromDocument = document.data[this.config.barsProperties[CalendarBarPropertyRequired.NAME].attributeId];
-          let startFromDocument = document.data[this.config.barsProperties[CalendarBarPropertyRequired.START].attributeId];
-          let endFromDocument = document.data[this.config.barsProperties[CalendarBarPropertyRequired.END].attributeId];
+          let startFromDocument = document.data[this.config.barsProperties[CalendarBarPropertyRequired.START_DATE].attributeId];
+          let endFromDocument = document.data[this.config.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId];
 
           if (titleFromDocument !== '')
             title = titleFromDocument;
@@ -104,12 +104,50 @@ export class CalendarVisualizationComponent implements OnChanges {
           else
             end = CalendarVisualizationComponent.createDate(startFromDocument);
 
+          //optional
+          if (this.config.barsProperties[CalendarBarPropertyOptional.START_TIME] &&
+            this.config.barsProperties[CalendarBarPropertyOptional.END_TIME]) {
+            let startTime = document.data[this.config.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId];
+            if (CalendarVisualizationComponent.isValidTime(startTime)
+              && (typeof startTime !== 'undefined')) {
+              let time = CalendarVisualizationComponent.createTime(startTime);
+              start.setHours(time[0]);
+              start.setMinutes(time[1]);
+            }
+            else if (CalendarVisualizationComponent.isValidTime(startTime) && (typeof startTime == 'undefined')) {
+              start.setHours(0);
+              start.setMinutes(0);
+            }
+            let endTime = document.data[this.config.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId];
+            if (CalendarVisualizationComponent.isValidTime(endTime)
+              && (typeof endTime !== 'undefined')) {
+              let time = CalendarVisualizationComponent.createTime(endTime);
+              end.setHours(time[0]);
+              end.setMinutes(time[1]);
+            }
+            else if (CalendarVisualizationComponent.isValidTime(endTime) && (typeof endTime == 'undefined')) {
+              end.setHours(23);
+              end.setMinutes(59);
+            }
+            console.log(start);
+            console.log(end);
+          }
+
           this.events.push({
             title: title,
             start: start,
             end: end,
             color: this.getColor(i % 2 === 0, this.collection.color),
-            allDay: true
+            allDay: false,
+            draggable: true,
+            resizable:{
+              beforeStart: true,
+              afterEnd: true
+            },
+            meta:{
+              documentId: document.id,
+              collectionId: document.collectionId
+            }
           });
         }
       }
@@ -121,6 +159,24 @@ export class CalendarVisualizationComponent implements OnChanges {
     let separators = ['\\.', '\\-', '\\/'];
     let bits = dateString.split(new RegExp(separators.join('|'), 'g'));
     return new Date(bits[2], bits[1] - 1, bits[0]);
+  }
+
+  private static createTime(dateString) {
+    let separators = ['\\:', '\\.'];
+    return dateString.split(new RegExp(separators.join('|'), 'g'));
+  }
+
+  //expected input hh:mm or hh.mm
+  private static isValidTime(string) {
+    if (string != undefined) {
+      let separators = ['\\:', '\\.'];
+      let bits = string.split(new RegExp(separators.join('|'), 'g'));
+      let date = new Date();
+      date.setHours(bits[0]);
+      date.setMinutes(bits[1]);
+      return date.getHours() == bits[0] && date.getMinutes() == bits[1];
+    }
+    else return "0:00";
   }
 
   //expected input dd/mm/yyyy or dd.mm.yyyy or dd-mm-yyyy
@@ -138,7 +194,6 @@ export class CalendarVisualizationComponent implements OnChanges {
     this.viewDate = date;
   }
 
-
   eventTimesChanged({
                       event,
                       newStart,
@@ -146,10 +201,25 @@ export class CalendarVisualizationComponent implements OnChanges {
                     }: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
     event.end = newEnd;
+    console.log(this.events);
+    this.decomposeEvent(event);
     this.refresh.next();
   }
 
-  private getColor (allDay: boolean, color: string){
+  dateToString (date: Date) {
+    return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+  }
+
+  decomposeEvent(event){
+    let originalDocument = this.documents.find(document => document.id === event.meta.documentId);
+    originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.NAME].attributeId] = event.title;
+    originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.START_DATE].attributeId] = this.dateToString(event.start);
+    originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId] = this.dateToString(event.end);
+    console.log(originalDocument);
+    this.patchData.emit(originalDocument);
+  }
+
+private getColor (allDay: boolean, color: string){
 
     if (allDay)
       return {

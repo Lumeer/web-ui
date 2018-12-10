@@ -1,9 +1,10 @@
 <br>
 <div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
 
+
   <ng-container *ngFor="let calendarBarPropertyRequired of calendarBarsPropertiesRequired; let isLast = last">
     <select-item
-      [class.mr-2]="!isLast"
+      [class.mr-2]="true"
       [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyRequired:config "
       [selectedId]="config.barsProperties[calendarBarPropertyRequired]"
       [placeholderText]="calendarBarPropertyRequired "
@@ -13,4 +14,28 @@
     </select-item>
   </ng-container>
 
+  <button class="show_button"
+    *ngIf="allRequiredPropertiesSet()"
+    (click)="toggleOptionalBar()"
+
+
+  >
+    <b>{{shownOptionalBar ? 'Hide' : 'More'}}</b>
+  </button>
+</div>
+
+<br>
+
+<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="shownOptionalBar">
+  <ng-container *ngFor="let calendarBarPropertyOptional of calendarBarsPropertiesOptional; let isLast = last">
+    <select-item
+      [class.mr-2]="!isLast"
+      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyOptional:config "
+      [selectedId]="config.barsProperties[calendarBarPropertyOptional]"
+      [placeholderText]="calendarBarPropertyOptional "
+      [emptyValue]="calendarBarPropertyOptional"
+      (select)="onBarPropertyOptionalSelect(calendarBarPropertyOptional, $event)"
+      (remove)="onBarPropertyOptionalRemoved(calendarBarPropertyOptional)">
+    </select-item>
+  </ng-container>
 </div>
