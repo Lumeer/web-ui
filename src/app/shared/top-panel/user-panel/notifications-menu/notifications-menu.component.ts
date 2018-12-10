@@ -111,8 +111,6 @@ export class NotificationsMenuComponent implements OnInit {
   }
 
   private setNotificationRead(notification: UserNotification, read: boolean): void {
-    console.log(notification);
-
     notification.read = read;
     this.store.dispatch(new UserNotificationsAction.Update({userNotification: notification}));
   }
