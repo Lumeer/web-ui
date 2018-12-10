@@ -8,6 +8,11 @@
   height: var(--top-panel-line-height);
   line-height: var(--top-panel-line-height);
   white-space: nowrap;
+
+  .dropdown-menu {
+    width: 25rem;
+    max-width: 90vw;
+  }
 }
 
 a.dropdown-item {
@@ -15,6 +20,7 @@ a.dropdown-item {
 
   div {
     display: inline-block;
+    width: calc(100% - 64px);
   }
 
   img {
@@ -27,8 +33,12 @@ a.dropdown-item {
     text-overflow: ellipsis;
     overflow: hidden;
     line-break: strict;
-    max-width: var(--top-panel-side-width);
     display: inline-block;
     max-height: 4.4rem;
+  }
+
+  .summary {
+    display: block;
+    white-space: normal;
   }
 }
