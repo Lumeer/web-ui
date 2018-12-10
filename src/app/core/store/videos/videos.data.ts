@@ -19,17 +19,27 @@
 
 import {environment} from '../../../../environments/environment';
 
-const VIDEO_HR = {en: 'etoqX2slVEw', cs: ''};
-const VIDEO_GOV = {en: '_msiz33O9Tg', cs: ''};
+const VIDEO_FIRST_TIME = {en: 'yDGLyzwcaxA', cs: 'yDGLyzwcaxA'}; // First time in Lumeer
+const VIDEO_SEARCH_DATA = {en: 'cLpEfln1-z8', cs: 'cLpEfln1-z8'}; // How to search for data
+const VIDEO_PERSPECTIVES = {en: 'Oj1TF6NgmaY', cs: 'Oj1TF6NgmaY'}; // Visual perspectives explained
+const VIDEO_VIEWS = {en: '_1X1buZJ4dY', cs: '_1X1buZJ4dY'}; // Storing screen as views
+const VIDEO_PERSPECTIVE_SEARCH_BASIC = {en: '7lSFgc-2DDU', cs: '7lSFgc-2DDU'}; // Search perspective basics
+//const VIDEO_ = {en: '', cs: ''}; //
 
 const ALL_VIDEOS_EN = {
-  // [VIDEO_HR.en]: 20,
-  // [VIDEO_GOV.en]: 40,
+  [VIDEO_FIRST_TIME.en]: 150,
+  [VIDEO_SEARCH_DATA.en]: 1060,
+  [VIDEO_PERSPECTIVES.en]: 1070,
+  [VIDEO_VIEWS.en]: 1080,
+  [VIDEO_PERSPECTIVE_SEARCH_BASIC.en]: 1090,
 };
 
 const ALL_VIDEOS_CS = {
-  // [VIDEO_HR.cs]: 20,
-  // [VIDEO_GOV.cs]: 40,
+  [VIDEO_FIRST_TIME.cs]: 150,
+  [VIDEO_SEARCH_DATA.cs]: 1060,
+  [VIDEO_PERSPECTIVES.cs]: 1070,
+  [VIDEO_VIEWS.cs]: 1080,
+  [VIDEO_PERSPECTIVE_SEARCH_BASIC.cs]: 1090,
 };
 
 export function getAllVideos() {
@@ -43,15 +53,16 @@ export function getAllVideos() {
 
 export function getVideosByUrl(url: string): string[] {
   const videos = [];
-  // const locale = environment.locale === 'cs' ? 'cs' : 'en';
-  //
-  // if (/^\/organization\/.*/.test(url)) {
-  //   videos.push(VIDEO_HR[locale]);
-  // }
-  //
-  // if (/^\/w\/.*/.test(url)) {
-  //   videos.push(VIDEO_GOV[locale]);
-  // }
+  const locale = environment.locale === 'cs' ? 'cs' : 'en';
+
+  videos.push(VIDEO_SEARCH_DATA[locale]);
+  videos.push(VIDEO_PERSPECTIVES[locale]);
+  videos.push(VIDEO_VIEWS[locale]);
+
+  if (/^\/w\/.*\/view\/search\/.*/.test(url)) {
+    videos.push(VIDEO_FIRST_TIME[locale]);
+    videos.push(VIDEO_PERSPECTIVE_SEARCH_BASIC[locale]);
+  }
 
   return videos;
 }
