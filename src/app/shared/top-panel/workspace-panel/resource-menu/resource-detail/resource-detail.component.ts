@@ -47,6 +47,9 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
   public organization: OrganizationModel;
   public project: ProjectModel;
 
+  public readonly organizationType = ResourceType.Organization;
+  public readonly projectType = ResourceType.Project;
+
   constructor(private store: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
@@ -64,10 +67,6 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  public isOrganizationType(): boolean {
-    return this.type === ResourceType.Organization;
   }
 
   public goToOrganizationSettings(page: string) {

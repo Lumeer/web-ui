@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Axis {
-  X = 'x',
-  Y = 'y',
+export function isNullOrUndefined(object: any): object is null | undefined {
+  return object === null || object === undefined;
+}
+
+export function isNotNullOrUndefind(object: any): boolean {
+  return !isNullOrUndefined(object);
 }

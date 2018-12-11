@@ -44,7 +44,6 @@ import {Workspace} from '../../core/store/navigation/workspace.model';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {isNullOrUndefined} from 'util';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -60,6 +59,8 @@ import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query';
+import {ResourceType} from '../../core/model/resource-type';
+import {isNullOrUndefined} from '../utils/common.utils';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -96,6 +97,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public workspace: Workspace;
   public query: Query;
   public collectionsLoaded: boolean;
+
+  public readonly projectType = ResourceType.Project;
 
   private postItLayout: ElementRef;
   private colors = Colors.palette;

@@ -17,20 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class HashCodeGenerator {
-  public static hashString(str: string): number {
-    let hash = 0;
+import {createSelector} from '@ngrx/store';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectProjectByWorkspace} from '../projects/projects.state';
 
-    if (!str || str.length === 0) {
-      return hash;
-    }
-
-    for (let i = 0; i < str.length; i++) {
-      const character = str.charCodeAt(i);
-      hash = (hash << 5) - hash + character;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-
-    return hash;
-  }
-}
+export const selectWorkspaceModels = createSelector(
+  selectOrganizationByWorkspace,
+  selectProjectByWorkspace,
+  (organization, project) => ({organization, project})
+);

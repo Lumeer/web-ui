@@ -21,21 +21,23 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {CollectionService} from '../core/rest';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
 import {CollectionModel} from '../core/store/collections/collection.model';
 import {CollectionsAction} from '../core/store/collections/collections.action';
-import {isNullOrUndefined} from 'util';
 import {OrganizationModel} from '../core/store/organizations/organization.model';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {UsersAction} from '../core/store/users/users.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {userHasManageRoleInResource} from '../shared/utils/resource.utils';
+import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
 import {WorkspaceService} from '../workspace/workspace.service';
+import {isNullOrUndefined} from '../shared/utils/common.utils';
+import {UserModel} from '../core/store/users/user.model';
+import {ProjectModel} from '../core/store/projects/project.model';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -44,50 +46,94 @@ export class CollectionSettingsGuard implements CanActivate {
     private router: Router,
     private collectionService: CollectionService,
     private workspaceService: WorkspaceService,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const organizationCode = next.paramMap.get('organizationCode');
+    const projectCode = next.paramMap.get('projectCode');
     const collectionId = next.paramMap.get('collectionId');
 
-    return this.loadCollections().pipe(
-      mergeMap(() => this.store.select(selectCollectionById(collectionId))),
-      withLatestFrom(this.workspaceService.getOrganizationFromStoreOrApi(organizationCode)),
-      mergeMap(([collection, organization]) =>
-        this.store.select(selectCurrentUserForWorkspace).pipe(
-          filter(user => !isNullOrUndefined(user)),
-          take(1),
-          map(user => ({collection, organization, user}))
-        )
-      ),
-      map(({collection, organization, user}) => {
-        if (isNullOrUndefined(collection)) {
+    return this.selectCollection(collectionId).pipe(
+      mergeMap(collection => {
+        if (!collection) {
           this.dispatchErrorActionsNotExist();
-          return false;
+          return of(false);
         }
 
-        if (!userHasManageRoleInResource(user, collection)) {
-          this.dispatchErrorActionsNotPermission();
-          return false;
-        }
-
-        this.dispatchDataEvents(organization, collection);
-        return true;
+        return this.checkCollection(collection, organizationCode, projectCode);
       }),
+      take(1),
       catchError(() => of(false))
     );
   }
 
+  private selectCollection(collectionId: string): Observable<CollectionModel> {
+    return this.loadCollections().pipe(mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId)))));
+  }
+
   private loadCollections(): Observable<boolean> {
-    return this.store.select(selectCollectionsLoaded).pipe(
+    return this.store$.pipe(
+      select(selectCollectionsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store.dispatch(new CollectionsAction.Get());
+          this.store$.dispatch(new CollectionsAction.Get());
         }
       }),
       filter(loaded => loaded),
       take(1)
+    );
+  }
+
+  private checkCollection(
+    collection: CollectionModel,
+    organizationCode: string,
+    projectCode: string
+  ): Observable<boolean> {
+    return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
+      map(({user, organization, project}) => {
+        if (!userHasManageRoleInResource(user, collection) || !userIsManagerInWorkspace(user, organization, project)) {
+          this.dispatchErrorActionsNotPermission();
+          return false;
+        }
+        this.dispatchDataEvents(organization, collection);
+        return true;
+      })
+    );
+  }
+
+  private selectUserAndWorkspace(
+    organizationCode: string,
+    projectCode: string
+  ): Observable<{user?: UserModel; organization?: OrganizationModel; project?: ProjectModel}> {
+    return this.workspaceService
+      .getOrganizationFromStoreOrApi(organizationCode)
+      .pipe(
+        mergeMap(organization =>
+          this.selectUserAndProject(organization, projectCode).pipe(
+            map(({user, project}) => ({user, organization, project}))
+          )
+        )
+      );
+  }
+
+  private selectUserAndProject(
+    organization: OrganizationModel,
+    projectCode: string
+  ): Observable<{user?: UserModel; project?: ProjectModel}> {
+    if (organization) {
+      return combineLatest(
+        this.selectUser(),
+        this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode)
+      ).pipe(map(([user, project]) => ({user, project})));
+    }
+    return this.selectUser().pipe(map(user => ({user})));
+  }
+
+  private selectUser(): Observable<UserModel> {
+    return this.store$.pipe(
+      select(selectCurrentUserForWorkspace),
+      filter(user => !isNullOrUndefined(user))
     );
   }
 
@@ -106,11 +152,11 @@ export class CollectionSettingsGuard implements CanActivate {
 
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
-    this.store.dispatch(new NotificationsAction.Error({message}));
+    this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
   private dispatchDataEvents(organization: OrganizationModel, collection: CollectionModel) {
-    this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
 }

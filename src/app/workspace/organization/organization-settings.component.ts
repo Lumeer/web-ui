@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -41,12 +40,15 @@ import {Router} from '@angular/router';
 
 @Component({
   templateUrl: './organization-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
   public organizationCodes$: Observable<string[]>;
-  public organization: OrganizationModel;
+  public organization$ = new BehaviorSubject<OrganizationModel>(null);
+
+  public readonly organizationType = ResourceType.Organization;
 
   private firstProject: ProjectModel = null;
   private previousUrl: string;
@@ -68,10 +70,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public getResourceType(): ResourceType {
-    return ResourceType.Organization;
-  }
-
   public onDelete() {
     const message = this.i18n({
       id: 'organization.delete.dialog.message',
@@ -88,27 +86,27 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onNewDescription(newDescription: string) {
-    const organizationCopy = {...this.organization, description: newDescription};
+    const organizationCopy = {...this.organization$.getValue(), description: newDescription};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewName(name: string) {
-    const organizationCopy = {...this.organization, name};
+    const organizationCopy = {...this.organization$.getValue(), name};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewCode(code: string) {
-    const organizationCopy = {...this.organization, code};
+    const organizationCopy = {...this.organization$.getValue(), code};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewIcon(icon: string) {
-    const organizationCopy = {...this.organization, icon};
+    const organizationCopy = {...this.organization$.getValue(), icon};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewColor(color: string) {
-    const organizationCopy = {...this.organization, color};
+    const organizationCopy = {...this.organization$.getValue(), color};
     this.updateOrganization(organizationCopy);
   }
 
@@ -120,16 +118,20 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
         previousUrl: this.previousUrl,
-        organizationCode: this.organization.code,
+        organizationCode: this.organization$.getValue().code,
         projectCode: this.firstProject ? this.firstProject.code : null,
       })
     );
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store$.select(selectAllUsers).pipe(map(users => (users ? users.length : 0)));
+    this.userCount$ = this.store$.pipe(
+      select(selectAllUsers),
+      map(users => (users ? users.length : 0))
+    );
 
-    this.projectsCount$ = this.store$.select(selectProjectsForWorkspace).pipe(
+    this.projectsCount$ = this.store$.pipe(
+      select(selectProjectsForWorkspace),
       tap(projects => {
         if (projects && projects.length > 0) {
           this.firstProject = projects[0];
@@ -140,15 +142,19 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.store$
-        .select(selectOrganizationByWorkspace)
-        .pipe(filter(organization => !isNullOrUndefined(organization)))
-        .subscribe(organization => (this.organization = organization))
+        .pipe(
+          select(selectOrganizationByWorkspace),
+          filter(organization => !!organization)
+        )
+        .subscribe(organization => this.organization$.next(organization))
     );
 
     this.subscriptions.add(
       this.store$
-        .select(selectPreviousUrl)
-        .pipe(take(1))
+        .pipe(
+          select(selectPreviousUrl),
+          take(1)
+        )
         .subscribe(url => (this.previousUrl = url))
     );
 
@@ -163,7 +169,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   private deleteOrganization() {
     this.store$.dispatch(
       new OrganizationsAction.Delete({
-        organizationId: this.organization.id,
+        organizationId: this.organization$.getValue().id,
         onSuccess: () => this.router.navigate(['/']),
       })
     );

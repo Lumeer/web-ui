@@ -55,7 +55,7 @@ export class CanCreateResourcePipe implements PipeTransform {
         filter(([organization, serviceLimits]) => !!organization && !!serviceLimits),
         mergeMap(([organization, serviceLimits]) =>
           this.permissionsPipe
-            .transform(organization, Role.Write)
+            .transform(organization, type, Role.Write)
             .pipe(map(allowed => allowed && projects.length < serviceLimits.projects))
         )
       );

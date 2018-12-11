@@ -41,11 +41,10 @@ import {
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
-import {isNullOrUndefined} from 'util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {UserModel} from '../../../core/store/users/user.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {userHasManageRoleInResource} from '../../utils/resource.utils';
+import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {LinkQueryItem} from './query-item/model/link.query-item';
 import {CollectionQueryItem} from './query-item/model/collection.query-item';
@@ -53,6 +52,10 @@ import {getArrayDifference} from '../../utils/array.utils';
 import {DocumentQueryItem} from './query-item/model/documents.query-item';
 import {AttributeQueryItem} from './query-item/model/attribute.query-item';
 import {Query} from '../../../core/store/navigation/query';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
+import {isNullOrUndefined} from '../../utils/common.utils';
 
 const allowAutomaticSubmission = true;
 
@@ -70,6 +73,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   private workspace: Workspace;
+  private organization: OrganizationModel;
+  private project: ProjectModel;
   private perspective: Perspective;
   private currentUser: UserModel;
   private queryData: QueryData;
@@ -111,6 +116,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       this.perspective = navigation.perspective;
     });
     this.subscriptions.add(navigationSubscription);
+
+    const workspaceSubscription = this.store$.pipe(select(selectWorkspaceModels)).subscribe(models => {
+      this.organization = models.organization;
+      this.project = models.project;
+    });
+    this.subscriptions.add(workspaceSubscription);
   }
 
   private loadData(): Observable<QueryData> {
@@ -346,7 +357,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private shouldInvalidateQuery(): boolean {
     const currentView = this.currentView$.getValue();
-    return currentView && !userHasManageRoleInResource(this.currentUser, currentView);
+    return (
+      currentView &&
+      !userHasManageRoleInResource(this.currentUser, currentView) &&
+      !userIsManagerInWorkspace(this.currentUser, this.organization, this.project)
+    );
   }
 
   private removeQueryItemWithRelatedItems(index: number) {

@@ -18,13 +18,15 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ResourceModel} from '../../../core/model/resource.model';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {userHasRoleInResource} from '../../utils/resource.utils';
+import {userHasManageRoleInResource, userHasRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
+import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
+import {ResourceType} from '../../../core/model/resource-type';
 
 @Pipe({
   name: 'permissions',
@@ -34,16 +36,27 @@ import {userHasRoleInResource} from '../../utils/resource.utils';
   providedIn: 'root',
 })
 export class PermissionsPipe implements PipeTransform {
-  public constructor(private store: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>) {}
 
-  public transform(resource: ResourceModel, role: string): Observable<boolean> {
-    return this.store.select(selectCurrentUserForWorkspace).pipe(
-      map(currentUser => {
-        if (!currentUser || !resource) {
+  public transform(resource: ResourceModel, type: ResourceType, role: string): Observable<boolean> {
+    return combineLatest(
+      this.store$.pipe(select(selectWorkspaceModels)),
+      this.store$.pipe(select(selectCurrentUserForWorkspace))
+    ).pipe(
+      map(([workspace, user]) => {
+        if (!user || !resource) {
           return false;
         }
 
-        return userHasRoleInResource(currentUser, resource, role);
+        const {organization, project} = workspace;
+        if (type === ResourceType.Organization) {
+          return userHasRoleInResource(user, resource, role);
+        } else if (type === ResourceType.Project) {
+          return userHasRoleInResource(user, resource, role) || (project && userHasManageRoleInResource(user, project));
+        }
+
+        const isManager = userIsManagerInWorkspace(user, organization, project);
+        return isManager || userHasRoleInResource(user, resource, role);
       })
     );
   }

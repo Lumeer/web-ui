@@ -10,7 +10,7 @@
 
 <ng-template #clickableRow let-linkRow>
   <tr class="clickable-row table-row"
-      *ngIf="{read: otherCollection | permissions:'read' | async} as permissions"
+      *ngIf="{read: otherCollection | permissions:collectionType:'read' | async} as permissions"
       (dblclick)="permissions.read && documentSelected(otherCollection, linkRow)">
     <td *ngFor="let attr of otherCollection.attributes" title="{{linkRow.document.data[attr.id]}}">
       {{linkRow.document.data[attr.id]}}

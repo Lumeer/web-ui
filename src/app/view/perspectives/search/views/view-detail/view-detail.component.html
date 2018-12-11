@@ -13,7 +13,7 @@
         <div class="d-flex flex-row align-items-center">
           <span class="ml-1 text-nowrap text-truncate title font-weight-bold">{{view.name}}</span>
 
-          <i *ngIf="view | permissions:'manage' | async"
+          <i *ngIf="view | permissions:viewType:'manage' | async"
              class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
              (click)="$event.stopPropagation(); onDelete()"
              title="Delete" i18n-title="@@delete"

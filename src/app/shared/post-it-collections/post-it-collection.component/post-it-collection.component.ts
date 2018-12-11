@@ -22,11 +22,10 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Subject, Subscription} from 'rxjs';
-import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
-import {FormControl} from '@angular/forms';
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
 import {Query} from '../../../core/store/navigation/query';
+import {isNullOrUndefined} from '../../utils/common.utils';
 
 declare let $: any;
 
@@ -54,7 +53,6 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   public collectionNameComponent: PostItCollectionNameComponent;
 
   public isPickerVisible: boolean = false;
-  public nameFormControl: FormControl;
   public newDropdownId = 'dropdown-' + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
   private lastSyncedFavorite: boolean;
   private favoriteChange$ = new Subject<boolean>();

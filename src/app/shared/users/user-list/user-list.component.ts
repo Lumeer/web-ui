@@ -20,13 +20,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
-import {filterUsersByFilter} from '../../../core/store/users/user.filters';
 import {ResourceType} from '../../../core/model/resource-type';
-import {PermissionModel, PermissionsModel} from '../../../core/store/permissions/permissions.model';
+import {PermissionModel} from '../../../core/store/permissions/permissions.model';
 import {ResourceModel} from '../../../core/model/resource.model';
-import {isNullOrUndefined} from 'util';
-import {HtmlModifier} from '../../utils/html-modifier';
-import {AttributeModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'user-list',

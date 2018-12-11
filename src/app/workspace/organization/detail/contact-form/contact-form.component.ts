@@ -76,7 +76,10 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   public save() {
-    this.contact = {...this.invoicingContact.form.value, code: this.organizationSettingsComponent.organization.code};
+    this.contact = {
+      ...this.invoicingContact.form.value,
+      code: this.organizationSettingsComponent.organization$.getValue().code,
+    };
     this.updateContact.emit(this.contact);
     this.invoicingContact.form.markAsPristine();
     this.savingState = true;

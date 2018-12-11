@@ -1,5 +1,5 @@
 <user-list
-  *ngIf="organizationId"
+  *ngIf="organizationId$ | async"
   [resourceType]="resourceType"
   [currentUser]="currentUser$ | async"
   [users]="users$ | async"
