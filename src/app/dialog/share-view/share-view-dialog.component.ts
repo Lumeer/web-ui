@@ -51,6 +51,8 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public userRoles: {[id: string]: string[]} = {};
   public initialUserRoles: {[id: string]: string[]} = {};
   public currentUser: UserModel;
+  public organization: OrganizationModel;
+  public project: ProjectModel;
 
   public text$ = new BehaviorSubject<string>('');
   public suggestions$ = new BehaviorSubject<string[]>([]);
@@ -60,8 +62,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public viewResourceType = ResourceType.View;
 
   private view: ViewModel;
-  private organization: OrganizationModel;
-  private project: ProjectModel;
   private users: UserModel[] = [];
   private subscriptions = new Subscription();
 
