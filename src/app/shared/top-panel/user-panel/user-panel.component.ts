@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 
 @Component({
@@ -26,11 +26,7 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
   styleUrls: ['./user-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPanelComponent implements OnInit {
+export class UserPanelComponent {
   @Input()
   public workspace: Workspace;
-
-  constructor() {}
-
-  public ngOnInit() {}
 }
