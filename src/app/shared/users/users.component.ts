@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {MemoizedSelector, select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
@@ -35,6 +35,9 @@ import {PermissionModel, PermissionType} from '../../core/store/permissions/perm
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 
 @Component({
   selector: 'users',
@@ -46,11 +49,12 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public users$: Observable<UserModel[]>;
   public currentUser$: Observable<UserModel>;
-  public organizationId$ = new BehaviorSubject<string>(null);
+  public organization$ = new BehaviorSubject<OrganizationModel>(null);
+  public project$ = new BehaviorSubject<ProjectModel>(null);
   public resource$: Observable<ResourceModel>;
 
   private resourceId: string;
-  private organizationSubscription: Subscription;
+  private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>) {}
 
@@ -59,9 +63,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   private sortUsers(users: UserModel[]): UserModel[] {
@@ -70,17 +72,22 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public onNewUser(email: string) {
     const user: UserModel = {email, groupsMap: {}};
-    user.groupsMap[this.organizationId$.getValue()] = [];
+    user.groupsMap[this.getOrganizationId()] = [];
 
-    this.store$.dispatch(new UsersAction.Create({organizationId: this.organizationId$.getValue(), user}));
+    this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
   }
 
   public onUserUpdated(user: UserModel) {
-    this.store$.dispatch(new UsersAction.Update({organizationId: this.organizationId$.getValue(), user}));
+    this.store$.dispatch(new UsersAction.Update({organizationId: this.getOrganizationId(), user}));
   }
 
   public onUserDeleted(user: UserModel) {
-    this.store$.dispatch(new UsersAction.Delete({organizationId: this.organizationId$.getValue(), userId: user.id}));
+    this.store$.dispatch(new UsersAction.Delete({organizationId: this.getOrganizationId(), userId: user.id}));
+  }
+
+  private getOrganizationId(): string {
+    const organization = this.organization$.getValue();
+    return organization && organization.id;
   }
 
   public onUserPermissionChanged(data: {
@@ -140,13 +147,16 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.organizationSubscription = this.store$
+    const subscription = this.store$
       .pipe(
-        select(selectOrganizationByWorkspace),
-        filter(organization => !!organization),
-        map(organization => organization.id)
+        select(selectWorkspaceModels),
+        filter(models => !!models.organization)
       )
-      .subscribe(organizationId => this.organizationId$.next(organizationId));
+      .subscribe(models => {
+        this.organization$.next(models.organization);
+        this.project$.next(models.project);
+      });
+    this.subscriptions.add(subscription);
 
     this.users$ = this.store$.pipe(
       select(selectUsersForWorkspace),

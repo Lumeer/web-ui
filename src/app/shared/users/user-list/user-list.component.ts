@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
 import {ResourceType} from '../../../core/model/resource-type';
 import {PermissionModel} from '../../../core/store/permissions/permissions.model';
 import {ResourceModel} from '../../../core/model/resource.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 
 @Component({
   selector: 'user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent {
   @Input() public resourceType: ResourceType;
@@ -37,6 +40,10 @@ export class UserListComponent {
   @Input() public currentUser: UserModel;
 
   @Input() public resource: ResourceModel;
+
+  @Input() public organization: OrganizationModel;
+
+  @Input() public project: ProjectModel;
 
   @Output() public userCreated = new EventEmitter<string>();
 
@@ -51,28 +58,7 @@ export class UserListComponent {
     onlyStore: boolean;
   }>();
 
-  public expanded: {[email: string]: boolean} = {};
   public searchString: string;
-
-  public canAddUsers(): boolean {
-    return this.resourceType === ResourceType.Organization;
-  }
-
-  public canEditUser(userId: string): boolean {
-    return this.resourceType === ResourceType.Organization && !this.isCurrentUser(userId);
-  }
-
-  public canChangeRoles(userId: string): boolean {
-    return !this.isCurrentUser(userId);
-  }
-
-  private isCurrentUser(userId: string): boolean {
-    return userId === this.getCurrentUserId();
-  }
-
-  private getCurrentUserId(): string {
-    return (this.currentUser && this.currentUser.id) || '';
-  }
 
   private getUserPermission(userId: string): PermissionModel {
     return (

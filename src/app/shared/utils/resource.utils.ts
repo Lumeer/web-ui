@@ -27,8 +27,8 @@ import {ProjectModel} from '../../core/store/projects/project.model';
 
 export function userIsManagerInWorkspace(
   user: UserModel,
-  organization: OrganizationModel,
-  project: ProjectModel
+  organization?: OrganizationModel,
+  project?: ProjectModel
 ): boolean {
   return (
     (organization && userHasManageRoleInResource(user, organization)) ||

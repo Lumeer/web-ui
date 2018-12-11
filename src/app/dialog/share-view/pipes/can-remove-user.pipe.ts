@@ -17,30 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-
-import {ResourceType} from '../../core/model/resource-type';
-import {Role} from '../../core/model/role';
+import {Pipe, PipeTransform} from '@angular/core';
+import {UserModel} from '../../../core/store/users/user.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {userIsManagerInWorkspace} from '../../../shared/utils/resource.utils';
 
 @Pipe({
-  name: 'resourceRoles',
+  name: 'canRemoveUser',
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class ResourceRolesPipe implements PipeTransform {
-  public transform(resourceType: ResourceType): string[] {
-    switch (resourceType) {
-      case ResourceType.Organization:
-        return [Role.Read, Role.Write, Role.Manage];
-      case ResourceType.Project:
-        return [Role.Read, Role.Write, Role.Manage];
-      case ResourceType.Collection:
-        return [Role.Read, Role.Write, Role.Manage];
-      case ResourceType.View:
-        return [Role.Read, Role.Write, Role.Manage];
-      default:
-        return [];
+export class CanRemoveUserPipe implements PipeTransform {
+  public transform(
+    user: UserModel,
+    currentUser: UserModel,
+    organization: OrganizationModel,
+    project: ProjectModel
+  ): boolean {
+    if (user.id === currentUser.id) {
+      return false;
     }
+    return !userIsManagerInWorkspace(user, organization, project);
   }
 }

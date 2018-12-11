@@ -23,7 +23,6 @@ import {ResourceStatusLineComponent} from './resource-detail/resource-status-lin
 import {ResourceDetailComponent} from './resource-detail/resource-detail.component';
 import {ResourceMenuComponent} from './resource-menu.component';
 import {ResourceListComponent} from './resource-list/resource-list.component';
-import {IsOrganizationTypePipe} from './pipes/is-organization-type.pipe';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
 
@@ -34,7 +33,6 @@ import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
     ResourceDetailComponent,
     ResourceListComponent,
     ResourceStatusLineComponent,
-    IsOrganizationTypePipe,
     CanCreateResourcePipe,
   ],
   exports: [ResourceMenuComponent],

@@ -92,7 +92,7 @@ export class CollectionSettingsGuard implements CanActivate {
   ): Observable<boolean> {
     return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
       map(({user, organization, project}) => {
-        if (!userHasManageRoleInResource(user, collection) || !userIsManagerInWorkspace(user, organization, project)) {
+        if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
           this.dispatchErrorActionsNotPermission();
           return false;
         }

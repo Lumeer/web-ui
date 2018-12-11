@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'isOrganizationType',
+})
+@Injectable({
+  providedIn: 'root',
 })
 export class IsOrganizationTypePipe implements PipeTransform {
   public transform(type: ResourceType): boolean {

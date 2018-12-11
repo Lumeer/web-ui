@@ -19,23 +19,26 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription} from 'rxjs';
-import {filter, map, mergeMap} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {PermissionType} from '../../core/store/permissions/permissions.model';
 import {UserModel} from '../../core/store/users/user.model';
-import {UsersAction} from '../../core/store/users/users.action';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
 import {KeyCode} from '../../shared/key-code';
 import {ClipboardService} from '../../core/service/clipboard.service';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {ResourceType} from '../../core/model/resource-type';
+import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
+import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 
 @Component({
   selector: 'share-view-dialog',
@@ -46,8 +49,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public selectedUsers: UserModel[] = [];
   public userRoles: {[id: string]: string[]};
   public initialUserRoles: {[id: string]: string[]};
-  public users: UserModel[] = [];
-  public view: ViewModel;
   public currentUser: UserModel;
 
   public text$ = new BehaviorSubject<string>('');
@@ -55,14 +56,20 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public selectedIndex$ = new BehaviorSubject<number>(null);
   public viewShareUrl$ = new BehaviorSubject<string>('');
 
+  public viewResourceType = ResourceType.View;
+
+  private view: ViewModel;
   private organization: OrganizationModel;
+  private project: ProjectModel;
+  private users: UserModel[] = [];
   private subscriptions = new Subscription();
 
   public constructor(
     private i18n: I18n,
     private clipboardService: ClipboardService,
+    private userRolesInResourcePipe: UserRolesInResourcePipe,
     private route: ActivatedRoute,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -189,38 +196,55 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   public share() {
     const permissions = Object.keys(this.userRoles).map(id => ({id, roles: this.userRoles[id]}));
-    this.store.dispatch(
+    this.store$.dispatch(
       new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions})
     );
   }
 
   private subscribeToView() {
-    this.subscriptions.add(
-      this.route.paramMap
-        .pipe(
-          map(params => params.get('viewCode')),
-          filter(viewCode => !!viewCode),
-          mergeMap(viewCode =>
-            observableCombineLatest(this.store.select(selectViewByCode(viewCode)), this.store.select(selectAllUsers))
+    this.route.paramMap
+      .pipe(
+        map(params => params.get('viewCode')),
+        filter(viewCode => !!viewCode),
+        mergeMap(viewCode =>
+          observableCombineLatest(
+            this.store$.pipe(select(selectViewByCode(viewCode))),
+            this.store$.pipe(select(selectWorkspaceModels)),
+            this.store$.pipe(select(selectAllUsers))
           )
-        )
-        .subscribe(([view, users]) => {
-          this.view = view;
-          this.users = users;
-          this.selectedUsers = this.view.permissions.users.reduce((acc, userPerm) => {
-            const user = users.find(u => u.id === userPerm.id);
-            if (user) {
-              acc.push(user);
-            }
-            return acc;
-          }, []);
-          this.userRoles = this.view.permissions.users.reduce((acc, userPerm) => {
-            acc[userPerm.id] = userPerm.roles;
-            return acc;
-          }, {});
-          this.initialUserRoles = {...this.userRoles};
-        })
-    );
+        ),
+        filter(([view, models, users]) => view && users && users.length > 0),
+        take(1)
+      )
+      .subscribe(([view, models, users]) => {
+        this.view = view;
+        this.users = users;
+        this.organization = models.organization;
+        this.project = models.project;
+        this.initUsers();
+      });
+  }
+
+  private initUsers() {
+    this.userRoles = {};
+    this.users
+      .filter(
+        user =>
+          userIsManagerInWorkspace(user, this.organization, this.project) ||
+          this.view.permissions.users.find(u => u.id === user.id)
+      )
+      .forEach(user => {
+        this.selectedUsers.push(user);
+        this.userRoles[user.id] = this.userRolesInResourcePipe.transform(
+          user,
+          this.view,
+          this.viewResourceType,
+          this.organization,
+          this.project
+        );
+      });
+
+    this.initialUserRoles = {...this.userRoles};
   }
 
   private parseViewShareUrl() {
@@ -232,19 +256,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.subscriptions.add(
-      this.store
-        .select(selectOrganizationByWorkspace)
-        .pipe(filter(organization => !isNullOrUndefined(organization)))
-        .subscribe(organization => {
-          if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
-            this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-          }
-          this.organization = organization;
-        })
-    );
-
-    this.subscriptions.add(this.store.select(selectCurrentUser).subscribe(user => (this.currentUser = user)));
+    this.subscriptions.add(this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user)));
   }
 
   public trackByUser(index: number, user: UserModel): string {

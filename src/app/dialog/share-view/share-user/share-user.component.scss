@@ -4,18 +4,28 @@ i {
   transition: all 0.25s ease;
 }
 
-.role-selected {
+.role-clickable.role-selected {
   color: $success;
+  cursor: pointer;
 
   &:hover {
     color: $success-hover;
   }
 }
 
-i:not(.role-selected) {
+.role-clickable:not(role-selected) {
   color: $secondary;
+  cursor: pointer;
 
   &:hover {
     color: $secondary-hover;
   }
+}
+
+.role-selected:not(.role-clickable) {
+  color: $success;
+}
+
+i:not(.role-selected):not(.role-clickable) {
+  color: $secondary;
 }

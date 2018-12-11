@@ -19,8 +19,8 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
 import {ResourceModel} from '../../../core/model/resource.model';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
@@ -39,24 +39,31 @@ export class PermissionsPipe implements PipeTransform {
   public constructor(private store$: Store<AppState>) {}
 
   public transform(resource: ResourceModel, type: ResourceType, role: string): Observable<boolean> {
-    return combineLatest(
-      this.store$.pipe(select(selectWorkspaceModels)),
-      this.store$.pipe(select(selectCurrentUserForWorkspace))
-    ).pipe(
-      map(([workspace, user]) => {
+    return this.store$.pipe(
+      select(selectCurrentUserForWorkspace),
+      mergeMap(user => {
         if (!user || !resource) {
-          return false;
+          return of(false);
         }
 
-        const {organization, project} = workspace;
         if (type === ResourceType.Organization) {
-          return userHasRoleInResource(user, resource, role);
-        } else if (type === ResourceType.Project) {
-          return userHasRoleInResource(user, resource, role) || (project && userHasManageRoleInResource(user, project));
+          return of(userHasRoleInResource(user, resource, role));
         }
 
-        const isManager = userIsManagerInWorkspace(user, organization, project);
-        return isManager || userHasRoleInResource(user, resource, role);
+        return this.store$.pipe(
+          select(selectWorkspaceModels),
+          map(models => {
+            const {organization, project} = models;
+            if (type === ResourceType.Project) {
+              return (
+                userHasRoleInResource(user, resource, role) ||
+                (organization && userHasManageRoleInResource(user, organization))
+              );
+            }
+            const isManager = userIsManagerInWorkspace(user, organization, project);
+            return isManager || userHasRoleInResource(user, resource, role);
+          })
+        );
       })
     );
   }

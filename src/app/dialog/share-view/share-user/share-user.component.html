@@ -4,7 +4,8 @@
 
 <td class="d-flex">
   <i *ngFor="let role of viewResourceType | resourceRoles"
-     class="fas fa-fw {{role | roleIcon}} mx-1 cursor-pointer"
+     class="fas fa-fw {{role | roleIcon}} mx-1"
+     [class.role-clickable]="changeRoles"
      [class.role-selected]="roles | includes:role"
      aria-hidden="true"
      [title]="role | roleTitle"

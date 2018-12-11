@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {UserModel} from '../../../core/store/users/user.model';
+import {UserModel} from '../../../../core/store/users/user.model';
 
 @Pipe({
   name: 'userFilter',
