@@ -12,6 +12,11 @@
 
   <div class="dropdown-menu dropdown-menu-right profile-dropdown"
        aria-labelledby="profileDropdownLink">
+    <a *ngIf="freePlan$ | async"
+       class="dropdown-item text-center bg-danger text-white"
+       (click)="goToOrganizationDetail()">
+      <span i18n="@@panel.plan.free">Free&nbsp;Plan</span>
+    </a>
     <span *ngIf="currentUser$ | async as currentUser"
           class="dropdown-item-text text-secondary">
       {{ currentUser.email }}
