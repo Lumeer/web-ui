@@ -1,9 +1,9 @@
 <top-panel-wrapper>
-  <div *ngIf="project"
+  <div *ngIf="project$ | async as project"
        class="col-12 col-lg-11 col-xl-10 mx-auto content">
     <resource-header
       [resource]="project"
-      [resourceType]="getResourceType()"
+      [resourceType]="projectType"
       [restrictedValues]="projectCodes$ | async"
       (back)="goBack()"
       (delete)="onDelete()"

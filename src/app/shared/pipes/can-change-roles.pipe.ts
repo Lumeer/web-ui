@@ -18,29 +18,28 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {isNullOrUndefined} from 'util';
-import {containsSameElements} from '../../shared/utils/array.utils';
+
+import {UserModel} from '../../core/store/users/user.model';
+import {ResourceType} from '../../core/model/resource-type';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
 
 @Pipe({
-  name: 'viewPermissionsChanged',
+  name: 'canChangeRoles',
 })
-export class ViewPermissionsChangedPipe implements PipeTransform {
+export class CanChangeRolesPipe implements PipeTransform {
   public transform(
-    initialUserPermissions: {[id: string]: string[]},
-    currentUserPermissions: {[id: string]: string[]}
+    user: UserModel,
+    resourceType: ResourceType,
+    organization?: OrganizationModel,
+    project?: ProjectModel
   ): boolean {
-    if (Object.keys(initialUserPermissions).length !== Object.keys(currentUserPermissions).length) {
+    if (resourceType === ResourceType.Organization) {
       return true;
+    } else if (resourceType === ResourceType.Project) {
+      return !userHasManageRoleInResource(user, organization);
     }
-
-    for (const id of Object.keys(initialUserPermissions)) {
-      const currentRoles = currentUserPermissions[id];
-      const userRoles = initialUserPermissions[id];
-      if (isNullOrUndefined(currentRoles) || !containsSameElements(currentRoles, userRoles)) {
-        return true;
-      }
-    }
-
-    return false;
+    return !userIsManagerInWorkspace(user, organization, project);
   }
 }

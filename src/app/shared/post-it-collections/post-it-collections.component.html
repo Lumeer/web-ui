@@ -3,7 +3,7 @@
   <ng-container *ngIf="collections.length; else noCollections">
 
     <div class="d-flex mt-2"
-         *ngIf="{write : project | permissions:'write' | async} as projectPermissions">
+         *ngIf="{write : project | permissions:projectType:'write' | async} as projectPermissions">
       <post-it-collection-add-button class="ml-1"
                                      [disabled]="!projectPermissions.write"
                                      (clicked)="createNewCollection()">

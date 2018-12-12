@@ -18,7 +18,11 @@
  */
 import {createSelector} from '@ngrx/store';
 import {isArraySubset} from '../../../shared/utils/array.utils';
-import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
+import {
+  authorHasRoleInView,
+  userHasRoleInResource,
+  userIsManagerInWorkspace,
+} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections} from '../collections/collections.state';
@@ -33,13 +37,27 @@ import {selectCurrentView} from '../views/views.state';
 import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {Query} from '../navigation/query';
+import {selectWorkspaceModels} from './common.selectors';
+
+export const selectCurrentUserIsManager = createSelector(
+  selectCurrentUser,
+  selectWorkspaceModels,
+  (user, workspace) => {
+    const {organization, project} = workspace;
+    return userIsManagerInWorkspace(user, organization, project);
+  }
+);
 
 export const selectCollectionsByReadPermission = createSelector(
+  selectCurrentUserIsManager,
   selectAllCollections,
   selectAllLinkTypes,
   selectCurrentView,
   selectCurrentUser,
-  (collections, linkTypes, view, user) => {
+  (isManager, collections, linkTypes, view, user) => {
+    if (isManager) {
+      return collections;
+    }
     const collectionIdsFromView = view && getAllCollectionIdsFromQuery(view.query, linkTypes);
     return collections.filter(
       collection =>

@@ -17,14 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+
+import {UserModel} from '../../../../core/store/users/user.model';
 
 @Pipe({
-  name: 'isOrganizationType',
+  name: 'userFilter',
 })
-export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType): boolean {
-    return type === ResourceType.Organization;
+@Injectable()
+export class UserFilterPipe implements PipeTransform {
+  public transform(users: UserModel[], value: string): UserModel[] {
+    if (!users || !value) {
+      return users;
+    }
+    return users.filter(user => user.email.toLowerCase().includes(value.toLocaleLowerCase()));
   }
 }

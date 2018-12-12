@@ -17,28 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {UserModel} from '../../../core/store/users/user.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {userIsManagerInWorkspace} from '../../../shared/utils/resource.utils';
 
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Query} from '../../../../core/store/navigation/query';
-
-@Component({
-  selector: 'empty-post-its',
-  templateUrl: './empty-post-its.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'canRemoveUser',
 })
-export class EmptyPostItsComponent {
-  @Input()
-  public query: Query;
-
-  @Input()
-  public collections: CollectionModel[];
-
-  @Output()
-  public createPostIt = new EventEmitter<DocumentModel>();
-
-  public onCreatePostIt(documentModel: DocumentModel) {
-    this.createPostIt.emit(documentModel);
+export class CanRemoveUserPipe implements PipeTransform {
+  public transform(
+    user: UserModel,
+    currentUser: UserModel,
+    organization: OrganizationModel,
+    project: ProjectModel
+  ): boolean {
+    if (user.id === currentUser.id) {
+      return false;
+    }
+    return !userIsManagerInWorkspace(user, organization, project);
   }
 }

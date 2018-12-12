@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Axis {
-  X = 'x',
-  Y = 'y',
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {ResourceType} from '../../core/model/resource-type';
+
+@Pipe({
+  name: 'isOrganizationType',
+})
+@Injectable({
+  providedIn: 'root',
+})
+export class IsOrganizationTypePipe implements PipeTransform {
+  public transform(type: ResourceType): boolean {
+    return type === ResourceType.Organization;
+  }
 }

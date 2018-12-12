@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {UserModel} from '../../core/store/users/user.model';
+import {createSelector} from '@ngrx/store';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectProjectByWorkspace} from '../projects/projects.state';
 
-@Pipe({
-  name: 'userRoles',
-})
-export class UserRolesPipe implements PipeTransform {
-  public transform(user: UserModel, userRoles: {[id: string]: string[]}): string[] {
-    return userRoles[user.id] || [];
-  }
-}
+export const selectWorkspaceModels = createSelector(
+  selectOrganizationByWorkspace,
+  selectProjectByWorkspace,
+  (organization, project) => ({organization, project})
+);

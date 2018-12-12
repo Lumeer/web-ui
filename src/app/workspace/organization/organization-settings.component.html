@@ -1,9 +1,9 @@
 <top-panel-wrapper>
-  <div *ngIf="organization"
+  <div *ngIf="organization$ | async as organization"
        class="col-12 col-lg-11 col-xl-10 mx-auto content">
     <resource-header
       [resource]="organization"
-      [resourceType]="getResourceType()"
+      [resourceType]="organizationType"
       [restrictedValues]="organizationCodes$ | async"
       (back)="goBack()"
       (delete)="onDelete()"

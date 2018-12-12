@@ -32,6 +32,7 @@ import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query.util';
+import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'viewControlsInfo',
@@ -51,7 +52,7 @@ export class ViewControlsInfoPipe implements PipeTransform {
 
     return observableCombineLatest(
       this.hasDirectAccessToView(view),
-      this.permissionsPipe.transform(view, Role.Manage)
+      this.permissionsPipe.transform(view, ResourceType.View, Role.Manage)
     ).pipe(map(([canClone, canManage]) => ({canClone, canManage})));
   }
 
