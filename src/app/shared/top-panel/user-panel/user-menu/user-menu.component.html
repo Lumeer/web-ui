@@ -13,9 +13,9 @@
   <div class="dropdown-menu dropdown-menu-right profile-dropdown"
        aria-labelledby="profileDropdownLink">
     <a *ngIf="freePlan$ | async"
-       class="dropdown-item text-center bg-danger text-white"
+       class="dropdown-item text-center bg-danger text-white free-plan"
        (click)="goToOrganizationDetail()">
-      <span i18n="@@panel.plan.free">Free&nbsp;Plan</span>
+      <span i18n="@@panel.plan.free">Free&nbsp;Plan: Upgrade now!</span>
     </a>
     <span *ngIf="currentUser$ | async as currentUser"
           class="dropdown-item-text text-secondary">
