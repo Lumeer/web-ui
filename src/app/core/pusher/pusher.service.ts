@@ -35,7 +35,7 @@ import {ProjectConverter} from '../store/projects/project.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {ViewConverter} from '../store/views/view.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {CollectionConverter} from '../store/collections/collection.converter';
+import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
@@ -121,10 +121,10 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('Collection:create', data => {
-      this.store.dispatch(new CollectionsAction.CreateSuccess({collection: CollectionConverter.fromDto(data)}));
+      this.store.dispatch(new CollectionsAction.CreateSuccess({collection: convertCollectionDtoToModel(data)}));
     });
     this.channel.bind('Collection:update', data => {
-      this.store.dispatch(new CollectionsAction.UpdateSuccess({collection: CollectionConverter.fromDto(data)}));
+      this.store.dispatch(new CollectionsAction.UpdateSuccess({collection: convertCollectionDtoToModel(data)}));
     });
     this.channel.bind('Collection:remove', data => {
       this.store.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));

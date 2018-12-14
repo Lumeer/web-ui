@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from './attribute';
-import {CollectionDto} from './collection.dto';
+export interface AttributeDto {
+  id?: string;
+  name: string;
+  constraint?: ConstraintDto;
+  usageCount?: number;
+}
 
-export class LinkedAttribute {
-  public value: Attribute;
-  public collection: CollectionDto;
-
-  constructor(attribute: Attribute, collection: CollectionDto) {
-    this.value = attribute;
-    this.collection = collection;
-  }
+export interface ConstraintDto {
+  type: string;
+  config: any;
 }

@@ -24,7 +24,7 @@ export interface AttributeModel {
   id?: string;
   name: string;
 
-  constraint?: Constraint; // TODO make compulsory
+  constraint?: Constraint;
 
   usageCount?: number;
   intermediate?: boolean;

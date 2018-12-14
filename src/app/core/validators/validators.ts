@@ -17,10 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Validator {
-  public static validateEmail(email: string): Boolean {
-    // tslint:disable:max-line-length
-    const regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regExp.test(email);
-  }
+import {FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+
+export function minMaxValidator(minControlName: string, maxControlName: string): ValidatorFn {
+  return (form: FormGroup): ValidationErrors | null => {
+    const minControl = form.get(minControlName);
+    const maxControl = form.get(maxControlName);
+
+    const min = minControl && minControl.value !== null ? Number(minControl.value) : NaN;
+    const max = maxControl && maxControl.value !== null ? Number(maxControl.value) : NaN;
+
+    return !isNaN(min) && !isNaN(max) && min > max ? {minMaxInvalid: true} : null;
+  };
 }

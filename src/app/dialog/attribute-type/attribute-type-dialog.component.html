@@ -1,0 +1,50 @@
+<div *ngIf="{collection: collection$ | async, attribute: attribute$ | async} as data"
+     class="modal-content">
+  <div class="modal-header rounded-top">
+    <h5 class="modal-title">
+      <icons-presenter [colors]="[data.collection?.color]"
+                       [icons]="[data.collection?.icon]">
+      </icons-presenter>
+      <span [style.color]="data.collection?.color"
+            class="ml-1">
+        {{data.collection?.name}}.{{data.attribute?.name}}
+      </span>
+    </h5>
+    <button aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+            title="Close"
+            i18n-title="@@dialog.close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <attribute-type-form *ngIf="data.attribute; else notFound"
+                         [attribute]="data.attribute"
+                         (attributeChange)="onAttributeChange(data.collection?.id, $event)">
+    </attribute-type-form>
+
+    <ng-template #notFound>
+      <span i18n="@@attribute.config.dialog.not.exists">Attribute does not exist.</span>
+    </ng-template>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-secondary"
+            data-dismiss="modal"
+            i18n="@@button.cancel">
+      Cancel
+    </button>
+    <button [attr.aria-disabled]="constraintForm?.form.invalid"
+            [disabled]="constraintForm?.form.invalid"
+            (click)="onSubmit()"
+            type="button"
+            class="btn btn-primary"
+            i18n="@@button.save">
+      Save
+    </button>
+  </div>
+</div>

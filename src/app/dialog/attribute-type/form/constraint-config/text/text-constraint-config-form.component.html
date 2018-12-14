@@ -1,0 +1,47 @@
+<div [formGroup]="form">
+  <div class="form-group">
+    <label for="textCaseStyle"
+           i18n="@@constraint.text.caseStyle.label">
+      Case style
+    </label>
+    <select class="custom-select"
+            formControlName="caseStyle"
+            id="textCaseStyle">
+      <option *ngFor="let caseStyle of caseStyles"
+              [value]="caseStyle"
+              i18n="@@constraint.text.caseStyle.value">
+        {caseStyle, select, None {None} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Title case} SentenceCase {Sentence case}}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="form.errors && form.errors['minMaxInvalid']"
+       class="alert alert-danger"
+       i18n="@@form.errors.minMaxInvalid">
+    Minimum must be less or equal than maximum.
+  </div>
+
+  <div class="d-flex">
+    <div class="form-group">
+      <label for="textMinLength"
+             i18n="@@constraint.text.minLength.label">
+        Minimum length
+      </label>
+      <input class="form-control"
+             formControlName="minLength"
+             id="textMinLength"
+             type="number">
+    </div>
+
+    <div class="form-group ml-3">
+      <label for="textMaxLength"
+             i18n="@@constraint.text.maxLength.label">
+        Maximum length
+      </label>
+      <input class="form-control"
+             formControlName="maxLength"
+             id="textMaxLength"
+             type="number">
+    </div>
+  </div>
+</div>

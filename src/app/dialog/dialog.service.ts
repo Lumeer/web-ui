@@ -53,6 +53,10 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
+  public openAttributeConfigDialog(collectionId: string, attributeId: string) {
+    this.navigateToDialog([DialogPath.ATTRIBUTE_TYPE, collectionId, attributeId]);
+  }
+
   public openCreateOrganizationDialog(callback?: (organization: OrganizationModel) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);

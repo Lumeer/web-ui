@@ -254,7 +254,14 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE;
 
     public constructor(
-      public payload: {collectionId: string; attributeId: string; attribute: AttributeModel; nextAction?: Action}
+      public payload: {
+        collectionId: string;
+        attributeId: string;
+        attribute: AttributeModel;
+        nextAction?: Action;
+        onSuccess?: (attribute: AttributeModel) => void;
+        onFailure?: (error: any) => void;
+      }
     ) {}
   }
 
