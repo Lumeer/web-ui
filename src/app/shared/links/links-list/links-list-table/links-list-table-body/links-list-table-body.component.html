@@ -19,11 +19,11 @@
       <i class="fas fa-eye clickable mr-1"
          *ngIf="permissions.read"
          (click)="documentSelected(otherCollection, linkRow)"
-         title.i18n="@@select" title="Select" aria-hidden="true"></i>
+         i18n-title="@@select" title="Select" aria-hidden="true"></i>
       <i class="fas fa-unlink clickable"
          *ngIf="!readonly"
          (click)="unlinkDocument(linkRow)"
-         title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
+         i18n-title="@@unlink" title="Unlink" aria-hidden="true"></i>
     </td>
   </tr>
 </ng-template>
@@ -46,7 +46,7 @@
     </td>
     <td class="fixed-column border-0">
       <i class="fas fa-trash clickable clickable-danger" (click)="removeEmptyLinkRow(linkRow)"
-         title.i18n="@@remove" title="Remove" aria-hidden="true"></i>
+         i18n-title="@@remove" title="Remove" aria-hidden="true"></i>
     </td>
 
   </tr>
