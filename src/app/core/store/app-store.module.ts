@@ -58,6 +58,10 @@ import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
+import {videosReducer} from './videos/videos.reducer';
+import {VideosEffects} from './videos/videos.effects';
+import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
+import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
 import {postItReducer} from './postit/postit.reducer';
 import {chartsReducer} from './charts/charts.reducer';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
@@ -81,6 +85,8 @@ const reducers: ActionReducerMap<AppState> = {
   views: viewsReducer,
   postIts: postItReducer,
   charts: chartsReducer,
+  videos: videosReducer,
+  userNotifications: userNotificationsReducer,
   ganttCharts: ganttChartsReducer,
 };
 
@@ -102,6 +108,8 @@ const effects = [
   TablesEffects,
   UsersEffects,
   ViewsEffects,
+  VideosEffects,
+  UserNotificationsEffects,
 ];
 
 @NgModule({
