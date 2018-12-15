@@ -24,7 +24,7 @@ import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {QueryConverter} from '../store/navigation/query.converter';
+import {convertQueryModelToString} from '../store/navigation/query.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -48,7 +48,7 @@ export class ViewRedirectGuard implements CanActivate {
       withLatestFrom(this.store$.select(selectWorkspace)),
       map(([view, workspace]) => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
-        const query = view ? QueryConverter.toString(view.query) : null;
+        const query = view ? convertQueryModelToString(view.query) : null;
 
         const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
         if (viewCode) {

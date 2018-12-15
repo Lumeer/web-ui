@@ -20,7 +20,6 @@
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
 
 export class LinkQueryItem implements QueryItem {
   public type = QueryItemType.Link;
@@ -41,12 +40,5 @@ export class LinkQueryItem implements QueryItem {
 
   public get value(): string {
     return this.linkType.id;
-  }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    if (queryItem.type === QueryItemType.Collection) {
-      return (queryItem as CollectionQueryItem).collection.id === this.collectionIds[0];
-    }
-    return false;
   }
 }

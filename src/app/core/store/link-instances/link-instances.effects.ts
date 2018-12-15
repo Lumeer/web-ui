@@ -23,13 +23,14 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {LinkInstanceService} from '../../rest';
+import {LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkInstanceConverter} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstancesQueries} from './link-instances.state';
+import {convertQueryModelToDto} from '../navigation/query.converter';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -39,7 +40,7 @@ export class LinkInstancesEffects {
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) =>
-      this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
+      this.searchService.searchLinkInstances(convertQueryModelToDto(action.payload.query)).pipe(
         map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
         map(
           linkInstances =>
@@ -162,6 +163,7 @@ export class LinkInstancesEffects {
   constructor(
     private actions$: Actions,
     private i18n: I18n,
+    private searchService: SearchService,
     private linkInstanceService: LinkInstanceService,
     private store$: Store<AppState>
   ) {}

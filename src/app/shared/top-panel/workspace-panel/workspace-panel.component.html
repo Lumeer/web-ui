@@ -1,7 +1,7 @@
 <ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-truncate"
+    <a class="nav-link text-truncate"
        href="#"
        id="navbarDropdown1"
        role="button"
@@ -23,8 +23,9 @@
       (onNewResource)="createNewOrganization()">
     </resource-menu>
   </li>
+  <li class="nav-separator"><i class="fas fa-chevron-right"></i></li>
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-truncate"
+    <a class="nav-link text-truncate"
        href="#"
        id="navbarDropdown2"
        role="button"

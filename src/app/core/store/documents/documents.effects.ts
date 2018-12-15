@@ -30,7 +30,7 @@ import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectCollectionById} from '../collections/collections.state';
 import {CommonAction} from '../common/common.action';
-import {QueryConverter} from '../navigation/query.converter';
+import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
@@ -48,7 +48,7 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.select(selectDocumentsQueries)),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => {
-      const queryDto = QueryConverter.toDto(action.payload.query);
+      const queryDto = convertQueryModelToDto(action.payload.query);
 
       return this.searchService.searchDocuments(queryDto).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),

@@ -29,6 +29,7 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'links-list',
@@ -101,7 +102,7 @@ export class LinksListComponent implements OnChanges {
 
   private readDocuments(linkType: LinkTypeModel) {
     if (linkType) {
-      const query = {linkTypeIds: [linkType.id]}; // TODO maybe we can find efficient way to fetch linked documents
+      const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
       this.store.dispatch(new DocumentsAction.Get({query}));
     }
   }

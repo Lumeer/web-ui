@@ -31,12 +31,12 @@
         <div class="col">
           <preview-results-tabs
             [collections]="data.collections"
-            [selectedCollection]="selectedCollection.id"
+            [selectedCollection]="selectedCollection?.id"
             (select)="setActiveCollection($event)">
           </preview-results-tabs>
         </div>
       </div>
-      <div class="row justify-content-center" *ngIf="data.collections.length > 1 || data.documents.length > 1">
+      <div class="row justify-content-center">
         <div class="col">
           <preview-results-table
             [documents]="data.documents"

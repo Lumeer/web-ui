@@ -38,13 +38,15 @@ import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {ResourceRolesPipe} from './resource-roles.pipe';
 import {RoleIconPipe} from './role-icon.pipe';
 import {RoleTitlePipe} from './role-title.pipe';
-import {UserRolesInResource} from './user-roles-in-resource.pipe';
 import {IncludesPipe} from './includes.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import {LogPipe} from './log.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
+import {IsOrganizationTypePipe} from './is-organization-type.pipe';
+import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
+import {CanChangeRolesPipe} from './can-change-roles.pipe';
 
 @NgModule({
   imports: [CommonModule, PermissionsPipesModule],
@@ -68,12 +70,14 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     ResourceRolesPipe,
     RoleIconPipe,
     RoleTitlePipe,
-    UserRolesInResource,
+    UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
+    IsOrganizationTypePipe,
+    CanChangeRolesPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -95,13 +99,15 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     ResourceRolesPipe,
     RoleIconPipe,
     RoleTitlePipe,
-    UserRolesInResource,
+    UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
     PermissionsPipesModule,
+    IsOrganizationTypePipe,
+    CanChangeRolesPipe,
   ],
 })
 export class PipesModule {}

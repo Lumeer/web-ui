@@ -25,7 +25,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
-import {Attribute, Collection} from '../dto';
+import {Attribute, CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -36,12 +36,12 @@ export class CollectionService extends PermissionService {
     super(httpClient, store);
   }
 
-  public createCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.post<Collection>(this.apiPrefix(), collection);
+  public createCollection(collection: CollectionDto): Observable<CollectionDto> {
+    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
   }
 
-  public updateCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.put<Collection>(`${this.apiPrefix()}/${collection.id}`, collection);
+  public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
+    return this.httpClient.put<CollectionDto>(`${this.apiPrefix()}/${collection.id}`, collection);
   }
 
   public removeCollection(collectionId: string): Observable<string> {
@@ -58,11 +58,11 @@ export class CollectionService extends PermissionService {
     return this.httpClient.delete(`${this.apiPrefix()}/${collectionId}/favorite`);
   }
 
-  public getCollection(collectionId: string): Observable<Collection> {
-    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`);
+  public getCollection(collectionId: string): Observable<CollectionDto> {
+    return this.httpClient.get<CollectionDto>(`${this.apiPrefix()}/${collectionId}`);
   }
 
-  public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
+  public getCollections(pageNumber?: number, pageSize?: number): Observable<CollectionDto[]> {
     let queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
@@ -70,11 +70,7 @@ export class CollectionService extends PermissionService {
     }
     queryParams = queryParams.set('fromViews', 'true');
 
-    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams});
-  }
-
-  public getAllCollectionNames(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/names`);
+    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(), {params: queryParams});
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {

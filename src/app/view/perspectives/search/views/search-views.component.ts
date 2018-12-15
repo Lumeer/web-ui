@@ -32,12 +32,12 @@ import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.s
 import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
 import {filter} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
-import {QueryConverter} from '../../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {isNullOrUndefined} from 'util';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   selector: 'search-views',
@@ -55,7 +55,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   private viewsLoaded: boolean;
 
   private workspace: Workspace;
-  public query: QueryModel;
+  public query: Query;
 
   constructor(
     private router: Router,
@@ -129,7 +129,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   public onShowAll() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {
-      queryParams: {query: QueryConverter.toString(this.query)},
+      queryParams: {query: convertQueryModelToString(this.query)},
     });
   }
 

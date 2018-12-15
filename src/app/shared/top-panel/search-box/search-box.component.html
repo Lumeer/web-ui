@@ -1,7 +1,7 @@
 <div class="form-control w-100 h-100 p-0">
-  <form class="d-flex" [formGroup]="form">
+  <form class="d-flex" *ngIf="form$ | async as form" [formGroup]="form">
     <div class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1" [style.width.px]="1" formArrayName="queryItems">
-      <query-item *ngFor="let queryItem of queryItems; trackBy:trackByTypeAndText; let itemIndex = index;"
+      <query-item *ngFor="let queryItem of queryItems$ | async; trackBy:trackByTypeAndText; let itemIndex = index;"
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   (enter)="searchInput.focusInput()"
@@ -11,7 +11,7 @@
       </query-item>
 
       <search-input #searchInput
-                    [queryItems]="queryItems"
+                    [queryItems]="queryItems$ | async"
                     [currentView]="currentView$ | async"
                     (addQueryItem)="onAddQueryItem($event)"
                     (removeQueryItem)="onRemoveLastQueryItem()"

@@ -22,6 +22,19 @@ import {Role} from '../../core/model/role';
 import {UserModel} from '../../core/store/users/user.model';
 import {PermissionModel} from '../../core/store/permissions/permissions.model';
 import {ViewModel} from '../../core/store/views/view.model';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../core/store/projects/project.model';
+
+export function userIsManagerInWorkspace(
+  user: UserModel,
+  organization?: OrganizationModel,
+  project?: ProjectModel
+): boolean {
+  return (
+    (organization && userHasManageRoleInResource(user, organization)) ||
+    (project && userHasManageRoleInResource(user, project))
+  );
+}
 
 export function userHasManageRoleInResource(user: UserModel, resource: ResourceModel): boolean {
   return userHasRoleInResource(user, resource, Role.Manage);
@@ -35,7 +48,7 @@ export function userRolesInResource(user: UserModel, resource: ResourceModel): s
   const permissions = (resource && resource.permissions) || {users: [], groups: []};
   const allUserRoles = userRoles(user, permissions.users);
   allUserRoles.push(...userGroupRoles(user, permissions.groups));
-  return allUserRoles;
+  return rolesWithTransitionRoles(allUserRoles);
 }
 
 function userRoles(user: UserModel, permissions: PermissionModel[]): string[] {
@@ -64,9 +77,25 @@ export function authorHasRoleInView(view: ViewModel, collectionId: string, role:
 
 export function authorRolesInView(view: ViewModel, collectionId: string): string[] {
   const authorRights = view.authorRights || {};
-  return authorRights[collectionId] || [];
+  return rolesWithTransitionRoles(authorRights[collectionId] || []);
 }
 
 export function generateCorrelationId(): string {
   return Date.now() + ':' + Math.random();
+}
+
+function rolesWithTransitionRoles(roles: string[]): string[] {
+  if (!roles || roles.length === 0) {
+    return [];
+  }
+  const rolesTransition = roles.reduce((arr, role) => [...arr, ...roleWithTransitionRoles(role)], []);
+  const rolesTransitionSet = new Set(rolesTransition);
+  return Array.from(rolesTransitionSet);
+}
+
+function roleWithTransitionRoles(role: string): string[] {
+  if (role === Role.Manage) {
+    return [Role.Read, Role.Write, Role.Comment, Role.Share, Role.Clone, Role.Manage];
+  }
+  return [role];
 }

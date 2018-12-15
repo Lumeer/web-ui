@@ -18,7 +18,7 @@
  */
 
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationStart, Router} from '@angular/router';
+import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {DialogService} from './dialog.service';
@@ -34,12 +34,15 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public open: boolean;
 
+  public modalDialogClass: string = '';
+
   private subscriptions = new Subscription();
 
-  public constructor(private dialogService: DialogService, private router: Router) {}
+  public constructor(private dialogService: DialogService, private router: Router, private route: ActivatedRoute) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToOpenDialog());
+    this.subscriptions.add(this.subscribeToActivatedRoute());
     this.subscriptions.add(this.subscribeToCloseDialog());
   }
 
@@ -50,6 +53,12 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
         filter((event: NavigationStart) => event.url.includes('(dialog:'))
       )
       .subscribe(event => this.openDialog());
+  }
+
+  private subscribeToActivatedRoute(): Subscription {
+    return this.route.data.subscribe(data => {
+      this.modalDialogClass = data.modalDialogClass ? data.modalDialogClass : '';
+    });
   }
 
   private subscribeToCloseDialog(): Subscription {

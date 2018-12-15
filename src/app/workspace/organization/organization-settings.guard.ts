@@ -20,11 +20,10 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of} from 'rxjs';
-import {filter, mergeMap, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {catchError, filter, map, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
@@ -33,6 +32,7 @@ import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -40,7 +40,7 @@ export class OrganizationSettingsGuard implements CanActivate {
     private i18n: I18n,
     private router: Router,
     private workspaceService: WorkspaceService,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -48,23 +48,24 @@ export class OrganizationSettingsGuard implements CanActivate {
 
     return combineLatest(
       this.workspaceService.getOrganizationFromStoreOrApi(organizationCode),
-      this.store.select(selectCurrentUserForWorkspace)
+      this.store$.pipe(select(selectCurrentUserForWorkspace))
     ).pipe(
       filter(([organization, user]) => !isNullOrUndefined(user)),
       take(1),
-      mergeMap(([organization, user]) => {
+      map(([organization, user]) => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActionsNotExist();
-          return of(false);
+          return false;
         }
 
         if (!userHasManageRoleInResource(user, organization)) {
           this.dispatchErrorActionsNotPermission();
-          return of(false);
+          return false;
         }
         this.dispatchDataEvents(organization);
-        return of(true);
-      })
+        return true;
+      }),
+      catchError(() => of(false))
     );
   }
 
@@ -83,12 +84,12 @@ export class OrganizationSettingsGuard implements CanActivate {
 
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
-    this.store.dispatch(new NotificationsAction.Error({message}));
+    this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
   private dispatchDataEvents(organization: OrganizationModel) {
-    this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-    this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store.dispatch(new GroupsAction.Get());
+    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    //this.store$.dispatch(new GroupsAction.Get());
   }
 }

@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {QueryModel} from '../navigation/query.model';
 import {DocumentMetaData, DocumentModel} from './document.model';
+import {Query} from '../navigation/query';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -62,13 +62,13 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: QueryModel}) {}
+    public constructor(public payload: {query: Query}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {documents: DocumentModel[]; query: QueryModel}) {}
+    public constructor(public payload: {documents: DocumentModel[]; query: Query}) {}
   }
 
   export class GetFailure implements Action {

@@ -77,7 +77,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   private computeProperties() {
-    this.mCurrentValue = (this.initialValue && this.initialValue.trim()) || '';
+    this.mCurrentValue = (this.initialValue && this.initialValue.toString().trim()) || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;

@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {LinkType} from '../dto';
+import {LinkTypeDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -41,21 +41,21 @@ export class LinkTypeService {
       .subscribe(workspace => (this.workspace = workspace));
   }
 
-  public createLinkType(linkType: LinkType): Observable<LinkType> {
-    return this.httpClient.post<LinkType>(this.restApiPrefix(), linkType);
+  public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
+    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(), linkType);
   }
 
-  public updateLinkType(id: string, linkType: LinkType): Observable<LinkType> {
-    return this.httpClient.put<LinkType>(this.restApiPrefix(id), linkType);
+  public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
+    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id), linkType);
   }
 
   public deleteLinkType(id: string): Observable<string> {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
-  public getLinkTypes(): Observable<LinkType[]> {
+  public getLinkTypes(): Observable<LinkTypeDto[]> {
     const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkType[]>(this.restApiPrefix(), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(), {params: queryParams});
   }
 
   private restApiPrefix(id?: string): string {

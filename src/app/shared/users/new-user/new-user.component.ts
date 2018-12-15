@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-
-import {Validator} from '../../../core/validators/validator';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {UserModel} from '../../../core/store/users/user.model';
 
@@ -27,6 +25,7 @@ import {UserModel} from '../../../core/store/users/user.model';
   selector: 'new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewUserComponent {
   @Input()
@@ -43,6 +42,11 @@ export class NewUserComponent {
   public onAddUser() {
     this.userCreated.emit(this.email);
     this.clearInputs();
+  }
+
+  public onInputChanged(value: string) {
+    this.email = value;
+    this.checkDuplicates();
   }
 
   public checkDuplicates() {

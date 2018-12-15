@@ -19,14 +19,14 @@
 
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourceModel} from '../../model/resource.model';
-import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart.model';
+import {Query} from '../navigation/query';
 
 export interface ViewModel extends ResourceModel {
   perspective: Perspective;
-  query: QueryModel;
+  query: Query;
   config: ViewConfigModel;
   authorRights?: {[collectionId: string]: string[]};
 }

@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
 import {ResourceType} from '../../core/model/resource-type';
 import {Role} from '../../core/model/role';
 
 @Pipe({
   name: 'resourceRoles',
+})
+@Injectable({
+  providedIn: 'root',
 })
 export class ResourceRolesPipe implements PipeTransform {
   public transform(resourceType: ResourceType): string[] {

@@ -23,6 +23,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {searchDocumentDefaultAttributeHtml} from '../search-document-html-helper';
 import {SizeType} from '../../../../../shared/slider/size-type';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'search-document-header',
@@ -48,6 +49,9 @@ export class SearchDocumentHeaderComponent {
 
   @Output()
   public detail = new EventEmitter();
+
+  public readonly collectionType = ResourceType.Collection;
+  public readonly sSize = SizeType.S;
 
   public onToggleDocument() {
     this.toggle.emit();

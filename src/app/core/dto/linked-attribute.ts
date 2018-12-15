@@ -18,13 +18,13 @@
  */
 
 import {Attribute} from './attribute';
-import {Collection} from './collection';
+import {CollectionDto} from './collection.dto';
 
 export class LinkedAttribute {
   public value: Attribute;
-  public collection: Collection;
+  public collection: CollectionDto;
 
-  constructor(attribute: Attribute, collection: Collection) {
+  constructor(attribute: Attribute, collection: CollectionDto) {
     this.value = attribute;
     this.collection = collection;
   }
