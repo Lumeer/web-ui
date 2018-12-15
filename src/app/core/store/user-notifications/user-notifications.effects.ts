@@ -84,6 +84,27 @@ export class UserNotificationsEffects {
     })
   );
 
+  @Effect()
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<UserNotificationsAction.Delete>(UserNotificationsActionType.DELETE),
+    mergeMap(action =>
+      this.userNotificationsService.removeNotification(action.payload.id).pipe(
+        map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
+        catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error})))
+      )
+    )
+  );
+
+  @Effect()
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UserNotificationsAction.DeleteFailure>(UserNotificationsActionType.DELETE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'userNotification.delete.fail', value: 'Could not delete notification'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private i18n: I18n,
     private store$: Store<AppState>,

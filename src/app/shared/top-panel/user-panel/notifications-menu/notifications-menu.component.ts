@@ -78,7 +78,6 @@ export class NotificationsMenuComponent implements OnInit {
 
   public currentProject$: Observable<ProjectModel>;
 
-  // need to include the notification loader service here for it to initially load notifications and to do that just once
   constructor(private store: Store<AppState>, private router: Router) {}
 
   public ngOnInit(): void {
@@ -215,5 +214,10 @@ export class NotificationsMenuComponent implements OnInit {
           });
         return;
     }
+  }
+
+  public deleteNotificationEvent($event: MouseEvent, notification: UserNotification) {
+    $event.stopPropagation();
+    this.store.dispatch(new UserNotificationsAction.Delete({id: notification.id}));
   }
 }

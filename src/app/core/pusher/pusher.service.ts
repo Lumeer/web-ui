@@ -163,6 +163,9 @@ export class PusherService implements OnDestroy {
         new UserNotificationsAction.UpdateSuccess({userNotification: UserNotificationConverter.fromDto(data)})
       );
     });
+    this.channel.bind('UserNotification:remove', data => {
+      this.store.dispatch(new UserNotificationsAction.DeleteSuccess({id: data.id}));
+    });
   }
 
   public ngOnDestroy(): void {

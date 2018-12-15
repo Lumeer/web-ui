@@ -36,6 +36,8 @@ export function userNotificationsReducer(
       };
     case UserNotificationsActionType.UPDATE_SUCCESS:
       return userNotificationsAdapter.upsertOne(action.payload.userNotification, state);
+    case UserNotificationsActionType.DELETE_SUCCESS:
+      return userNotificationsAdapter.removeOne(action.payload.id, state);
     default:
       return state;
   }

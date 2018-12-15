@@ -28,6 +28,10 @@ export enum UserNotificationsActionType {
   UPDATE = '[UserNotifications] Update',
   UPDATE_SUCCESS = '[UserNotifications] Update :: Success',
   UPDATE_FAILURE = '[UserNotifications] Update :: Failure',
+
+  DELETE = '[UserNotifications] Delete',
+  DELETE_SUCCESS = '[UserNotifications] Delete :: Success',
+  DELETE_FAILURE = '[UserNotifications] Delete :: Failure',
 }
 
 export namespace UserNotificationsAction {
@@ -65,5 +69,32 @@ export namespace UserNotificationsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export type All = Get | GetSuccess | GetFailure | Update | UpdateSuccess | UpdateFailure;
+  export class Delete implements Action {
+    public readonly type = UserNotificationsActionType.DELETE;
+
+    public constructor(public payload: {id: string}) {}
+  }
+
+  export class DeleteSuccess implements Action {
+    public readonly type = UserNotificationsActionType.DELETE_SUCCESS;
+
+    public constructor(public payload: {id: string}) {}
+  }
+
+  export class DeleteFailure implements Action {
+    public readonly type = UserNotificationsActionType.DELETE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export type All =
+    | Get
+    | GetSuccess
+    | GetFailure
+    | Update
+    | UpdateSuccess
+    | UpdateFailure
+    | Delete
+    | DeleteSuccess
+    | DeleteFailure;
 }
