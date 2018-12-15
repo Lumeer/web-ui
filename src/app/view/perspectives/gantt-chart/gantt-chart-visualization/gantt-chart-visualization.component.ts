@@ -18,6 +18,7 @@ import {
   GanttChartConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart.model';
 import * as frappeGantt from 'frappe-gantt';
+import * as moment from 'moment';
 
 declare let $: any;
 
@@ -87,11 +88,35 @@ export class GanttChartVisualizationComponent implements OnChanges {
           id: id,
           dependencies: dependencies,
           progress: progress,
+          document_id: document.id,
         });
       }
 
       if (tasks.length > 0) {
-        this.gantt_chart = new frappeGantt.default('#ganttChart', tasks);
+        this.gantt_chart = new frappeGantt.default('#ganttChart', tasks, {
+          on_date_change: (task, start, end) => {
+            let startAttID = this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId;
+            let endAttID = this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId;
+
+            let startTimeTask = moment(task.start).format('YYYY-MM-DD');
+            let startTime = moment(start).format('YYYY-MM-DD');
+
+            let endTimeTask = moment(task.end).format('YYYY-MM-DD');
+            let endTime = moment(end).format('YYYY-MM-DD');
+
+            //start time changed
+            if (startTimeTask != startTime) this.onValueChanged(task.document_id, startAttID, startTime);
+
+            //end time changed
+            if (endTimeTask != endTime) this.onValueChanged(task.document_id, endAttID, endTime);
+          },
+
+          on_progress_change: (task, progress) => {
+            let progressAttID = this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId;
+
+            this.onValueChanged(task.document_id, progressAttID, progress);
+          },
+        });
         this.gantt_chart.change_view_mode(this.config.mode);
 
         let textColor = this.getContrastYIQ(this.collection.color.substring(1, 6));
@@ -104,6 +129,16 @@ export class GanttChartVisualizationComponent implements OnChanges {
         }
       }
     }
+  }
+
+  private onValueChanged(documentId: string, attributeId: string, value: string) {
+    const changedDocument = this.documents.find(document => document.id === documentId);
+    if (!changedDocument) {
+      return;
+    }
+
+    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
+    this.patchData.emit(patchDocument);
   }
 
   private getContrastYIQ(hexcolor) {
