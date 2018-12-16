@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -72,13 +72,14 @@ export class DetailPerspectiveComponent implements OnDestroy {
     this.collectionSubsription = this.store$
       .pipe(
         select(selectCollectionById(collection.id)),
-        mergeMap(collection => {
+        mergeMap(coll => {
           if (document) {
-            return this.store$
-              .pipe(select(selectDocumentById(document.id)))
-              .pipe(map(document => ({collection, document})));
+            return this.store$.pipe(
+              select(selectDocumentById(document.id)),
+              map(doc => ({collection: coll, document: doc}))
+            );
           }
-          return of({collection, document});
+          return of({collection: coll, document});
         })
       )
       .subscribe(selected => this.emit(selected));
