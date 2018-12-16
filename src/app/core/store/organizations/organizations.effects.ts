@@ -39,6 +39,7 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {selectNavigation} from '../navigation/navigation.state';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -118,12 +119,10 @@ export class OrganizationsEffects {
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     map(([action, codes]) => {
       const newCodes = (codes && [...codes]) || [];
-      console.log('create succ effect', newCodes);
       if (!newCodes.includes(action.payload.organization.code)) {
         newCodes.push(action.payload.organization.code);
-        return new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes});
       }
-      return action;
+      return new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes});
     })
   );
 
@@ -147,7 +146,11 @@ export class OrganizationsEffects {
       return this.organizationService.updateOrganization(oldOrganization.code, organizationDto).pipe(
         map(dto => OrganizationConverter.fromDto(dto)),
         map(
-          organization => new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}})
+          organization =>
+            new OrganizationsAction.UpdateSuccess({
+              organization: {...organization, id: organization.id},
+              oldCode: oldOrganization.code,
+            })
         ),
         catchError(error => of(new OrganizationsAction.UpdateFailure({error: error})))
       );
@@ -157,32 +160,23 @@ export class OrganizationsEffects {
   @Effect()
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.UpdateSuccess>(OrganizationsActionType.UPDATE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-    flatMap(([[action, organizations], codes]) => {
-      const organization = action.payload.organization;
-      const oldOrganization = organizations[organization.id];
+    flatMap(([action, codes]) => {
+      const {organization, oldCode} = action.payload;
       let newCodes = (codes && [...codes]) || [];
-      if (oldOrganization) {
-        newCodes = newCodes.map(code => (code === oldOrganization.code ? organization.code : code));
+      if (oldCode) {
+        newCodes = newCodes.map(code => (code === oldCode ? organization.code : code));
       } else {
         newCodes.push(organization.code);
       }
-
-      console.log('update succ effect', oldOrganization, newCodes);
 
       const actions: Action[] = [new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes})];
 
       const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
       const orgCodeInRoute = paramMap.get('organizationCode');
-      if (
-        orgCodeInRoute &&
-        oldOrganization &&
-        orgCodeInRoute === oldOrganization.code &&
-        organization.code !== oldOrganization.code
-      ) {
+      if (orgCodeInRoute && oldCode && orgCodeInRoute === oldCode && organization.code !== oldCode) {
         const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
-        const index = paths.indexOf(oldOrganization.code, 1);
+        const index = paths.indexOf(oldCode, 1);
         if (index !== -1) {
           paths[index] = organization.code;
           actions.push(new RouterAction.Go({path: paths}));
@@ -214,7 +208,7 @@ export class OrganizationsEffects {
           const codes = organizationCodes.filter(code => code !== organization.code);
 
           const actions: Action[] = [
-            new OrganizationsAction.DeleteSuccess(action.payload),
+            new OrganizationsAction.DeleteSuccess({...action.payload, organizationCode: organization.code}),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}),
           ];
 
@@ -232,16 +226,22 @@ export class OrganizationsEffects {
   @Effect()
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.DeleteSuccess>(OrganizationsActionType.DELETE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-    flatMap(([[action, organizations], codes]) => {
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
+    flatMap(([[action, codes], navigation]) => {
+      const {organizationCode} = action.payload;
       let newCodes = (codes && [...codes]) || [];
-      const organization = organizations[action.payload.organizationId];
-      if (organization) {
-        newCodes = newCodes.filter(code => code !== organization.code);
+      if (organizationCode) {
+        newCodes = newCodes.filter(code => code !== organizationCode);
       }
 
-      return [new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes})];
+      const actions: Action[] = [new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes})];
+
+      if (navigation && navigation.workspace && navigation.workspace.organizationCode === organizationCode) {
+        actions.push(new RouterAction.Go({path: ['/']}));
+      }
+
+      return actions;
     })
   );
 

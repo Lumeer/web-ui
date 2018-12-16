@@ -27,9 +27,8 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {ResourceDto} from '../../../../core/dto';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -38,6 +37,7 @@ import {selectAllOrganizations} from '../../../../core/store/organizations/organ
 import {Project} from '../../../../core/store/projects/project';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {selectProjectsForWorkspace} from '../../../../core/store/projects/projects.state';
+import {Resource} from '../../../../core/model/resource';
 
 @Component({
   selector: 'resource-menu',
@@ -47,18 +47,18 @@ import {selectProjectsForWorkspace} from '../../../../core/store/projects/projec
 export class ResourceMenuComponent implements OnInit, OnChanges {
   @Input() public labelledBy: string = '';
   @Input() public type: ResourceType;
-  @Input() public resource: ResourceDto;
+  @Input() public resource: Resource;
   @Input() public workspace: Workspace;
 
   @Output() public onNewResource = new EventEmitter<ResourceType>();
-  @Output() public onResourceSelect = new EventEmitter<ResourceDto>();
+  @Output() public onResourceSelect = new EventEmitter<Resource>();
 
   public organizations$: Observable<Organization[]>;
   public projects$: Observable<Project[]>;
 
   private dispatched = false;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindData();
@@ -69,21 +69,21 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
   }
 
   private bindData(): void {
-    this.organizations$ = this.store.select(selectAllOrganizations);
-    this.projects$ = this.store.select(selectProjectsForWorkspace);
+    this.organizations$ = this.store$.pipe(select(selectAllOrganizations));
+    this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
   }
 
   public newResource(): void {
     this.onNewResource.emit(this.type);
   }
 
-  public selectResource(resource: ResourceDto): void {
+  public selectResource(resource: Resource): void {
     this.onResourceSelect.emit(resource);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (!this.dispatched && this.resource && !this.isOrganizationType()) {
-      this.store.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+      this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
       this.dispatched = true;
     }
   }

@@ -26,7 +26,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {map, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, take} from 'rxjs/operators';
 import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View} from '../../../core/store/views/view';
@@ -90,7 +90,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.documents$ = this.store$.pipe(
+      select(selectDocumentsByQuery),
+      distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y))
+    );
     this.collection$ = this.store$.pipe(
       select(selectCollectionsByQuery),
       map(collections => collections[0])

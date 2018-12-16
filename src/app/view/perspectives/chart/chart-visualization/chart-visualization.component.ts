@@ -68,7 +68,7 @@ export class ChartVisualizationComponent implements OnChanges {
   constructor(private ngZone: NgZone) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((this.documentsChanged(changes) || changes.config) && this.config) {
+    if ((changes.documents || changes.config) && this.config) {
       this.visualize();
     }
     if (changes.allowedPermissions && this.allowedPermissions) {

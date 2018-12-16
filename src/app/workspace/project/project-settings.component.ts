@@ -126,7 +126,10 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store$.select(selectAllUsers).pipe(map(users => (users ? users.length : 0)));
+    this.userCount$ = this.store$.pipe(
+      select(selectAllUsers),
+      map(users => (users ? users.length : 0))
+    );
 
     this.subscriptions.add(
       this.store$
@@ -167,7 +170,6 @@ export class ProjectSettingsComponent implements OnInit {
       new ProjectsAction.Delete({
         organizationId: this.project$.getValue().organizationId,
         projectId: this.project$.getValue().id,
-        onSuccess: () => this.router.navigate(['/']),
       })
     );
   }

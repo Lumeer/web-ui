@@ -24,7 +24,6 @@ import {filter, first, map, take, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {Workspace} from '../core/store/navigation/workspace';
-import {RouterAction} from '../core/store/router/router.action';
 import {View} from '../core/store/views/view';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
@@ -32,7 +31,6 @@ import {DialogService} from '../dialog/dialog.service';
 import {Query} from '../core/store/navigation/query';
 import {NotificationService} from '../core/notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {convertQueryModelToString} from '../core/store/navigation/query.converter';
 
 @Component({
   templateUrl: './view.component.html',
@@ -101,12 +99,6 @@ export class ViewComponent implements OnInit, OnDestroy {
   private bindToViews() {
     this.viewsExist$ = this.store$.pipe(
       select(selectAllViews),
-      tap(views => {
-        const viewCode = this.view$.getValue().code;
-        if (viewCode && !views.find(v => v.code === viewCode)) {
-          this.loadQuery({});
-        }
-      }),
       map(views => views && views.length > 0)
     );
   }

@@ -70,7 +70,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.workspace$ = this.store$.select(selectWorkspace);
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
 
     this.store$.dispatch(new OrganizationsAction.Get());
     this.store$.dispatch(new OrganizationsAction.GetCodes());

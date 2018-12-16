@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
+import {Organization} from '../organizations/organization';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -124,7 +125,7 @@ export namespace ProjectsAction {
   export class UpdateSuccess implements Action {
     public readonly type = ProjectsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {project: Project}) {}
+    public constructor(public payload: {project: Project; oldCode?: string}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -148,7 +149,7 @@ export namespace ProjectsAction {
   export class DeleteSuccess implements Action {
     public readonly type = ProjectsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {projectId: string}) {}
+    public constructor(public payload: {projectId: string; organizationId?: string; projectCode?: string}) {}
   }
 
   export class DeleteFailure implements Action {
@@ -191,7 +192,7 @@ export namespace ProjectsAction {
   export class SwitchWorkspace implements Action {
     public readonly type = ProjectsActionType.SWITCH_WORKSPACE;
 
-    public constructor(public payload: {organizationId: string; projectId: string}) {}
+    public constructor(public payload: {organizationId: string; projectId: string; nextAction?: Action}) {}
   }
 
   export class ClearWorkspaceData implements Action {

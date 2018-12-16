@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -161,8 +161,13 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new OrganizationsAction.GetCodes());
     this.organizationCodes$ = this.store$.pipe(
       select(selectOrganizationCodes),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
-      map(([codes, organization]) => (codes && codes.filter(code => code !== organization.code)) || [])
+      mergeMap(codes =>
+        this.store$.pipe(select(selectOrganizationByWorkspace)).pipe(
+          filter(organization => !!organization),
+          map(organization => ({codes, organization}))
+        )
+      ),
+      map(({codes, organization}) => (codes && codes.filter(code => code !== organization.code)) || [])
     );
   }
 

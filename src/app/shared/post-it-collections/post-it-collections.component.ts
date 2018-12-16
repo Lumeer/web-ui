@@ -365,10 +365,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       new NotificationsAction.Confirm({
         title,
         message,
-        action: new CollectionsAction.Delete({
-          collectionId: collection.id,
-          callback: collectionId => this.onRemoveCollection(collectionId),
-        }),
+        action: new CollectionsAction.Delete({collectionId: collection.id}),
       })
     );
   }
@@ -381,12 +378,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   private onCreateCollection(collection: Collection) {
     if (queryIsNotEmpty(this.query)) {
       this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
-    }
-  }
-
-  private onRemoveCollection(collectionId: string) {
-    if (queryIsNotEmpty(this.query)) {
-      this.store$.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
     }
   }
 

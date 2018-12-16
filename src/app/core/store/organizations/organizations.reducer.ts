@@ -34,10 +34,8 @@ export function organizationsReducer(
     case OrganizationsActionType.GET_CODES_SUCCESS:
       return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:
-      console.log('create success');
       return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      console.log('update create success');
       return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.DELETE_SUCCESS:
       return organizationsAdapter.removeOne(action.payload.organizationId, state);

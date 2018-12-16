@@ -26,18 +26,19 @@ import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFr
 import {PermissionDto, ViewDto} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
-import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
+import {selectNavigation, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
 import {ViewConverter} from './view.converter';
 import {View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectCurrentView, selectViewsDictionary, selectViewsLoaded} from './views.state';
+import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions';
 import {NavigationAction} from '../navigation/navigation.action';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
+import {Router} from '@angular/router';
 
 @Injectable()
 export class ViewsEffects {
@@ -146,17 +147,22 @@ export class ViewsEffects {
     ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
     mergeMap(action => {
       return this.viewService.deleteView(action.payload.viewCode).pipe(
-        withLatestFrom(this.store$.pipe(select(selectCurrentView))),
-        flatMap(([_, view]) => {
-          const actions: Action[] = [new ViewsAction.DeleteSuccess(action.payload)];
-          if (view && view.code === action.payload.viewCode) {
-            actions.push(new RemoveViewFromUrl({setQuery: {}}));
-          }
-
-          return actions;
-        }),
+        map(() => new ViewsAction.DeleteSuccess(action.payload)),
         catchError(error => of(new ViewsAction.DeleteFailure({error: error})))
       );
+    })
+  );
+
+  @Effect()
+  public deleteSuccess$ = this.actions$.pipe(
+    ofType<ViewsAction.DeleteSuccess>(ViewsActionType.DELETE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
+    flatMap(([action, navigation]) => {
+      const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
+      if (viewCodeInUrl && viewCodeInUrl === action.payload.viewCode) {
+        return [new RemoveViewFromUrl({})];
+      }
+      return [];
     })
   );
 
@@ -204,6 +210,7 @@ export class ViewsEffects {
   constructor(
     private actions$: Actions,
     private i18n: I18n,
+    private router: Router,
     private store$: Store<AppState>,
     private viewService: ViewService
   ) {}

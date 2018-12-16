@@ -46,6 +46,8 @@ import {
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
+import {selectNavigation} from '../navigation/navigation.state';
+import {NavigationAction} from '../navigation/navigation.action';
 
 @Injectable()
 export class CollectionsEffects {
@@ -230,6 +232,21 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.DeleteFailure({error: error})))
       )
     )
+  );
+
+  @Effect()
+  public deleteSuccess: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
+    map(([action, navigation]) => {
+      const {collectionId} = action.payload;
+      const isCollectionSettingsPage =
+        navigation && navigation.workspace && navigation.workspace.collectionId === collectionId;
+      if (isCollectionSettingsPage) {
+        return new RouterAction.Go({path: ['/']});
+      }
+      return new NavigationAction.RemoveCollectionFromQuery({collectionId});
+    })
   );
 
   @Effect()

@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map, mergeMap, skipWhile, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
@@ -31,6 +31,11 @@ import {convertQueryModelToString} from './query.converter';
 import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Query, QueryStem} from './query';
+import {DialogPath} from '../../../dialog/dialog-path';
+import {selectAllLinkTypes, selectLinkTypesDictionary} from '../link-types/link-types.state';
+import {LinkType} from '../link-types/link.type';
+import {Dictionary} from '@ngrx/entity';
+import {filterStemCollectionInLinks} from './query.util';
 
 @Injectable()
 export class NavigationEffects {
@@ -38,7 +43,8 @@ export class NavigationEffects {
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
     mergeMap(action =>
-      this.store$.select(selectQuery).pipe(
+      this.store$.pipe(
+        select(selectQuery),
         skipWhile(query => !query),
         take(1),
         map(query => ({action, query}))
@@ -57,7 +63,8 @@ export class NavigationEffects {
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
     mergeMap(action =>
-      this.store$.select(selectQuery).pipe(
+      this.store$.pipe(
+        select(selectQuery),
         skipWhile(query => !query),
         take(1),
         map(query => ({action, query}))
@@ -75,16 +82,28 @@ export class NavigationEffects {
   public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
     mergeMap(action =>
-      this.store$.select(selectQuery).pipe(
-        skipWhile(query => !query),
+      this.store$.pipe(
+        select(selectQuery),
+        filter(query => !!query),
         take(1),
         map(query => ({action, query}))
       )
     ),
-    map(({action, query}) => {
-      const stems = (query.stems || []).filter(stem => stem.collectionId !== action.payload.collectionId);
+    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
+    map(([{action, query}, linkTypes]) => {
+      const {collectionId} = action.payload;
+      const newStems: QueryStem[] = [];
 
-      return newQueryAction({...query, stems});
+      for (const stem of query.stems || []) {
+        if (stem.collectionId !== collectionId) {
+          const linkTypeIndex = (stem.linkTypeIds || [])
+            .map(id => linkTypes.find(lt => lt.id === id))
+            .findIndex(linkType => !linkType || linkType.collectionIds.includes(collectionId));
+          newStems.push(filterStemCollectionInLinks(stem, linkTypeIndex, linkTypes));
+        }
+      }
+
+      return newQueryAction({...query, stems: newStems});
     })
   );
 
@@ -123,13 +142,14 @@ export class NavigationEffects {
   @Effect()
   public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
-    withLatestFrom(this.store$.select(selectNavigation)),
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
     filter(([action, navigation]) => !!navigation.workspace && !!navigation.perspective),
     map(([action, navigation]) => {
       const {organizationCode, projectCode} = navigation.workspace;
       const {perspective, searchTab} = navigation;
 
-      const path: any[] = ['w', organizationCode, projectCode, ...['view', perspective]];
+      const path: any[] = ['w', organizationCode, projectCode, 'view', perspective];
+      console.log(navigation);
       if (perspective === Perspective.Search && searchTab) {
         path.push(searchTab);
       }
@@ -137,7 +157,15 @@ export class NavigationEffects {
       const extras: NavigationExtras = action.payload.setQuery
         ? {queryParams: action.payload.setQuery}
         : {queryParamsHandling: 'merge'};
-      return new RouterAction.Go({path, extras});
+
+      const containsViewDialog = this.router.url.includes(`dialog:${DialogPath.SHARE_VIEW}`);
+      let nextAction: Action = null;
+      if (containsViewDialog) {
+        const removeDialogPath: any[] = ['', {outlets: {dialog: null}}];
+        nextAction = new RouterAction.Go({path: removeDialogPath, extras});
+      }
+
+      return new RouterAction.Go({path, extras, nextAction});
     })
   );
 

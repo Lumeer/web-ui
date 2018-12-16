@@ -117,7 +117,7 @@ export namespace OrganizationsAction {
   export class UpdateSuccess implements Action {
     public readonly type = OrganizationsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {organization: Organization}) {}
+    public constructor(public payload: {organization: Organization; oldCode?: string}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -135,7 +135,7 @@ export namespace OrganizationsAction {
   export class DeleteSuccess implements Action {
     public readonly type = OrganizationsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; organizationCode?: string}) {}
   }
 
   export class DeleteFailure implements Action {

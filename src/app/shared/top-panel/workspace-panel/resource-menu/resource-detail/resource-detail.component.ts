@@ -17,57 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {filter, tap} from 'rxjs/operators';
-import {ResourceDto} from '../../../../../core/dto';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {AppState} from '../../../../../core/store/app.state';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {Project} from '../../../../../core/store/projects/project';
-import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
-import {UsersAction} from '../../../../../core/store/users/users.action';
+import {Resource} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'resource-detail',
   templateUrl: './resource-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceDetailComponent implements OnInit, OnDestroy {
+export class ResourceDetailComponent {
   @Input() public type: ResourceType;
-  @Input() public resource: ResourceDto;
+  @Input() public resource: Resource;
   @Input() public workspace: Workspace;
 
-  private subscriptions = new Subscription();
-
-  public organization: Organization;
-  public project: Project;
-
-  public readonly organizationType = ResourceType.Organization;
-  public readonly projectType = ResourceType.Project;
-
-  constructor(private store: Store<AppState>, private router: Router) {}
-
-  public ngOnInit() {
-    this.subscriptions.add(
-      this.store
-        .select(selectOrganizationByWorkspace)
-        .pipe(
-          filter(organization => !!organization),
-          tap(organization => this.store.dispatch(new UsersAction.Get({organizationId: organization.id})))
-        )
-        .subscribe(organization => (this.organization = organization))
-    );
-    this.subscriptions.add(this.store.select(selectProjectByWorkspace).subscribe(project => (this.project = project)));
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
+  constructor(private router: Router) {}
 
   public goToOrganizationSettings(page: string) {
     if (this.workspace && this.workspace.organizationCode) {

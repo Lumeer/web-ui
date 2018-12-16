@@ -40,7 +40,7 @@ import {
   QueryItemsConverter,
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {queryItemToForm} from '../../../core/store/navigation/query.util';
+import {filterStemCollectionInLinks, queryItemToForm} from '../../../core/store/navigation/query.util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -402,29 +402,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
     const {collectionId, index} = stemData;
     const currentQuery = convertQueryItemsToQueryModel(this.queryItems$.getValue());
-    const stem = (currentQuery.stems || []).find(st => st.collectionId === collectionId);
+    const stemIndex = (currentQuery.stems || []).findIndex(st => st.collectionId === collectionId);
 
-    const linkTypeIds = (stem && stem.linkTypeIds) || [];
-    const linkTypeIndex = linkIndex - (index + 1);
-
-    stem.linkTypeIds = linkTypeIds.slice(0, linkTypeIndex);
-
-    const collectionIdsFromLinks = [collectionId, ...this.collectionIdsFromLinks(stem.linkTypeIds)];
-    stem.filters = stem.filters && stem.filters.filter(filt => collectionIdsFromLinks.includes(filt.collectionId));
-
-    // TODO filter documentIds once documentItems are used
-
-    this.setNewQueryItemsByQuery(currentQuery);
-  }
-
-  private collectionIdsFromLinks(linkTypesIds: string[]): string[] {
-    return this.queryData.linkTypes
-      .filter(linkType => linkTypesIds.includes(linkType.id))
-      .reduce((ids, linkType) => {
-        const idsToAdd = linkType.collectionIds.filter(id => !ids.includes(id));
-        ids.push(...idsToAdd);
-        return ids;
-      }, []);
+    if (stemIndex !== -1) {
+      currentQuery[stemIndex] = filterStemCollectionInLinks(currentQuery[stemIndex], index, this.queryData.linkTypes);
+      this.setNewQueryItemsByQuery(currentQuery);
+    }
   }
 
   private removeQueryItem(index: number) {

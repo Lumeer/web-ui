@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {User} from '../store/users/user';
-import {filter, take} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -49,6 +49,8 @@ import {LinkInstancesAction} from '../store/link-instances/link-instances.action
 import {LinkInstanceConverter} from '../store/link-instances/link-instance.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {LinkTypeConverter} from '../store/link-types/link-type.converter';
+import {selectOrganizationsDictionary} from '../store/organizations/organizations.state';
+import {selectProjectsDictionary} from '../store/projects/projects.state';
 
 @Injectable({
   providedIn: 'root',
@@ -108,46 +110,69 @@ export class PusherService implements OnDestroy {
 
   private bindOrganizationEvents() {
     this.channel.bind('Organization:create', data => {
-      console.log('Organization:create', data);
       this.store$.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
     this.channel.bind('Organization:update', data => {
-      console.log('Organization:update', data);
-      this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data)}));
+      this.getOrganization(data.id, oldOrganization => {
+        const oldCode = oldOrganization && oldOrganization.code;
+        this.store$.dispatch(
+          new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data), oldCode})
+        );
+      });
     });
     this.channel.bind('Organization:remove', data => {
-      console.log('Organization:remove', data);
-      this.store$.dispatch(new OrganizationsAction.DeleteSuccess({organizationId: data.id}));
+      this.getOrganization(data.id, oldOrganization => {
+        const organizationCode = oldOrganization && oldOrganization.code;
+        this.store$.dispatch(new OrganizationsAction.DeleteSuccess({organizationId: data.id, organizationCode}));
+      });
     });
+  }
+
+  private getOrganization(id: string, action: (Organization) => void) {
+    this.store$
+      .pipe(
+        select(selectOrganizationsDictionary),
+        map(organizations => organizations[id]),
+        take(1)
+      )
+      .subscribe(oldOrganization => action(oldOrganization));
   }
 
   private bindProjectEvents() {
     this.channel.bind('Project:create', data => {
-      console.log('Project:create', data, this.isCurrentOrganization(data));
-      if (this.isCurrentOrganization(data)) {
-        this.store$.dispatch(
-          new ProjectsAction.CreateSuccess({project: ProjectConverter.fromDto(data.object, data.organizationId)})
-        );
-      }
+      this.store$.dispatch(
+        new ProjectsAction.CreateSuccess({project: ProjectConverter.fromDto(data.object, data.organizationId)})
+      );
     });
     this.channel.bind('Project:update', data => {
-      console.log('Project:update', data, this.isCurrentOrganization(data));
-      if (this.isCurrentOrganization(data)) {
+      this.getProject(data.object.id, oldProject => {
+        const oldCode = oldProject && oldProject.code;
         this.store$.dispatch(
-          new ProjectsAction.UpdateSuccess({project: ProjectConverter.fromDto(data.object, data.organizationId)})
+          new ProjectsAction.UpdateSuccess({
+            project: ProjectConverter.fromDto(data.object, data.organizationId),
+            oldCode,
+          })
         );
-      }
+      });
     });
     this.channel.bind('Project:remove', data => {
-      console.log('Project:remove', data, this.isCurrentOrganization(data));
-      if (this.isCurrentOrganization(data)) {
-        this.store$.dispatch(new ProjectsAction.DeleteSuccess({projectId: data.id}));
-      }
+      this.getProject(data.id, oldProject => {
+        const projectCode = oldProject && oldProject.code;
+        this.store$.dispatch(
+          new ProjectsAction.DeleteSuccess({projectId: data.id, organizationId: data.organizationId, projectCode})
+        );
+      });
     });
   }
 
-  private isCurrentOrganization(data: any): boolean {
-    return data.organizationId === this.currentOrganizationId;
+  private getProject(id: string, action: (Project) => void) {
+    this.store$
+      .pipe(
+        select(selectProjectsDictionary),
+        map(projects => projects[id]),
+        take(1)
+      )
+      .subscribe(oldProject => action(oldProject));
   }
 
   private bindCollectionEvents() {
@@ -168,7 +193,6 @@ export class PusherService implements OnDestroy {
       }
     });
     this.channel.bind('Collection:remove', data => {
-      console.log('Collection:remove', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));
       }
@@ -177,19 +201,16 @@ export class PusherService implements OnDestroy {
 
   private bindViewEvents() {
     this.channel.bind('View:create', data => {
-      console.log('View:create', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
       }
     });
     this.channel.bind('View:update', data => {
-      console.log('View:update', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
       }
     });
     this.channel.bind('View:remove', data => {
-      console.log('View:remove', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new ViewsAction.DeleteSuccess({viewCode: data.id}) // backend sends code in id in case of View for simplicity
@@ -200,19 +221,16 @@ export class PusherService implements OnDestroy {
 
   private bindDocumentEvents() {
     this.channel.bind('Document:create', data => {
-      console.log('Document:create', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data.object)}));
       }
     });
     this.channel.bind('Document:update', data => {
-      console.log('Document:update', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data.object)}));
       }
     });
     this.channel.bind('Document:remove', data => {
-      console.log('Document:remove', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
       }
@@ -221,19 +239,16 @@ export class PusherService implements OnDestroy {
 
   private bindLinkTypeEvents() {
     this.channel.bind('LinkType:create', data => {
-      console.log('LinkType:create', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkTypesAction.CreateSuccess({linkType: LinkTypeConverter.fromDto(data.object)}));
       }
     });
     this.channel.bind('LinkType:update', data => {
-      console.log('LinkType:update', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkTypesAction.UpdateSuccess({linkType: LinkTypeConverter.fromDto(data.object)}));
       }
     });
     this.channel.bind('LinkType:remove', data => {
-      console.log('LinkType:remove', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkTypesAction.DeleteSuccess({linkTypeId: data.id}));
       }
@@ -242,7 +257,6 @@ export class PusherService implements OnDestroy {
 
   private bindLinkInstanceEvents() {
     this.channel.bind('LinkInstance:create', data => {
-      console.log('LinkInstance:create', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new LinkInstancesAction.CreateSuccess({linkInstance: LinkInstanceConverter.fromDto(data.object)})
@@ -250,7 +264,6 @@ export class PusherService implements OnDestroy {
       }
     });
     this.channel.bind('LinkInstance:update', data => {
-      console.log('LinkInstance:update', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new LinkInstancesAction.UpdateSuccess({linkInstance: LinkInstanceConverter.fromDto(data.object)})
@@ -258,7 +271,6 @@ export class PusherService implements OnDestroy {
       }
     });
     this.channel.bind('LinkInstance:remove', data => {
-      console.log('LinkInstance:remove', data, this.isCurrentWorkspace(data));
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkInstancesAction.DeleteSuccess({linkInstanceId: data.id}));
       }
@@ -267,12 +279,10 @@ export class PusherService implements OnDestroy {
 
   private bindOtherEvents() {
     this.channel.bind('CompanyContact:update', data => {
-      console.log('CompanyContact:update', data, this.isCurrentOrganization(data));
       this.store$.dispatch(new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(data)}));
     });
 
     this.channel.bind('ServiceLimits:update', data => {
-      console.log('ServiceLimits:update', data, this.isCurrentOrganization(data));
       this.store$.dispatch(
         new ServiceLimitsAction.GetServiceLimitsSuccess({
           serviceLimits: ServiceLimitsConverter.fromDto(data.organizationId, data.object),
@@ -281,14 +291,12 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('Payment:update', data => {
-      console.log('Payment:update', data, this.isCurrentOrganization(data));
       this.store$.dispatch(
         new PaymentsAction.GetPaymentSuccess({payment: PaymentConverter.fromDto(data.organizationId, data.object)})
       );
     });
 
     this.channel.bind('UserNotification:create', data => {
-      console.log('UserNotification:create', data, this.isCurrentWorkspace(data));
       this.store$.dispatch(
         new UserNotificationsAction.UpdateSuccess({userNotification: UserNotificationConverter.fromDto(data)})
       );

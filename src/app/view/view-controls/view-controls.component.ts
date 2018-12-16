@@ -123,13 +123,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.view) {
-      const previousCode = changes.view.previousValue && changes.view.previousValue.code;
-      const currentCode = changes.view.currentValue.code;
-
-      if (previousCode && !currentCode) {
-        this.navigateToUrlWithoutView();
-      }
-
       if (this.view && this.view.name) {
         this.name = this.view.name;
       } else {

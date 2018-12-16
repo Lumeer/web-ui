@@ -191,3 +191,20 @@ export function queryWithoutLinks(query: Query): Query {
   const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
 }
+
+export function filterStemCollectionInLinks(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
+  const stemCopy = {...stem};
+  const stemLinkTypes = stem.linkTypeIds.map(id => linkTypes.find(lt => lt.id === id));
+  const removingLinkTypes = stemLinkTypes.slice(linkIndex);
+  stemCopy.linkTypeIds = stem.linkTypeIds.slice(0, linkIndex);
+
+  const removingCollections = removingLinkTypes.reduce((ids, linkType) => {
+    const idsToAdd = linkType.collectionIds.filter(id => !ids.includes(id));
+    return [...ids, ...idsToAdd];
+  }, []);
+  stemCopy.filters = stem.filters && stem.filters.filter(filter => !removingCollections.includes(filter.collectionId));
+
+  // TODO filter documents once implemented
+
+  return stemCopy;
+}
