@@ -21,12 +21,12 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AttributeModel, CollectionModel} from '../../core/store/collections/collection.model';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {DialogService} from '../dialog.service';
+import {Attribute, Collection} from '../../core/store/collections/collection';
 
 @Component({
   selector: 'attribute-type-dialog',
@@ -38,8 +38,8 @@ export class AttributeTypeDialogComponent implements OnInit {
   @ViewChild(AttributeTypeFormComponent)
   public constraintForm: AttributeTypeFormComponent;
 
-  public collection$: Observable<CollectionModel>;
-  public attribute$: Observable<AttributeModel>;
+  public collection$: Observable<Collection>;
+  public attribute$: Observable<Attribute>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,7 +52,7 @@ export class AttributeTypeDialogComponent implements OnInit {
     this.attribute$ = this.selectAttribute(this.collection$);
   }
 
-  private selectCollection(): Observable<CollectionModel> {
+  private selectCollection(): Observable<Collection> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('collectionId')),
       filter(collectionId => !!collectionId),
@@ -60,7 +60,7 @@ export class AttributeTypeDialogComponent implements OnInit {
     );
   }
 
-  private selectAttribute(collection$: Observable<CollectionModel>): Observable<AttributeModel> {
+  private selectAttribute(collection$: Observable<Collection>): Observable<Collection> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('attributeId')),
       filter(attributeId => !!attributeId),
@@ -73,7 +73,7 @@ export class AttributeTypeDialogComponent implements OnInit {
     );
   }
 
-  public onAttributeChange(collectionId: string, attribute: AttributeModel) {
+  public onAttributeChange(collectionId: string, attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
         collectionId,

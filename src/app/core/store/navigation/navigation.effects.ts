@@ -149,7 +149,6 @@ export class NavigationEffects {
       const {perspective, searchTab} = navigation;
 
       const path: any[] = ['w', organizationCode, projectCode, 'view', perspective];
-      console.log(navigation);
       if (perspective === Perspective.Search && searchTab) {
         path.push(searchTab);
       }
