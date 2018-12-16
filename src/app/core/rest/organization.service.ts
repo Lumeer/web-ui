@@ -21,66 +21,66 @@ import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {Contact, Organization} from '../dto';
+import {ContactDto, OrganizationDto} from '../dto';
 import {PermissionService} from './permission.service';
-import {ServiceLimits} from '../dto/service-limits';
-import {Payment} from '../dto/payment';
+import {ServiceLimitsDto} from '../dto/service-limits.dto';
+import {PaymentDto} from '../dto/payment.dto';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
-  public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get<Organization[]>(this.apiPrefix());
+  public getOrganizations(): Observable<OrganizationDto[]> {
+    return this.httpClient.get<OrganizationDto[]>(this.apiPrefix());
   }
 
   public getOrganizationsCodes(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe();
   }
 
-  public getOrganization(code: string): Observable<Organization> {
-    return this.httpClient.get<Organization>(this.apiPrefix(code));
+  public getOrganization(code: string): Observable<OrganizationDto> {
+    return this.httpClient.get<OrganizationDto>(this.apiPrefix(code));
   }
 
   public deleteOrganization(code: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(this.apiPrefix(code), {observe: 'response', responseType: 'text'});
   }
 
-  public createOrganization(organization: Organization): Observable<Organization> {
-    return this.httpClient.post<Organization>(this.apiPrefix(), organization);
+  public createOrganization(organization: OrganizationDto): Observable<OrganizationDto> {
+    return this.httpClient.post<OrganizationDto>(this.apiPrefix(), organization);
   }
 
-  public editOrganization(code: string, organization: Organization): Observable<Organization> {
-    return this.httpClient.put<Organization>(this.apiPrefix(code), organization);
+  public updateOrganization(code: string, organization: OrganizationDto): Observable<OrganizationDto> {
+    return this.httpClient.put<OrganizationDto>(this.apiPrefix(code), organization);
   }
 
-  public getOrganizationContact(code: string): Observable<Contact> {
-    return this.httpClient.get<Contact>(`${this.apiPrefix(code)}/contact`);
+  public getOrganizationContact(code: string): Observable<ContactDto> {
+    return this.httpClient.get<ContactDto>(`${this.apiPrefix(code)}/contact`);
   }
 
-  public setOrganizationContact(code: string, contact: Contact): Observable<Contact> {
-    return this.httpClient.put<Contact>(`${this.apiPrefix(code)}/contact`, contact);
+  public setOrganizationContact(code: string, contact: ContactDto): Observable<ContactDto> {
+    return this.httpClient.put<ContactDto>(`${this.apiPrefix(code)}/contact`, contact);
   }
 
-  public getServiceLimits(code: string): Observable<ServiceLimits> {
-    return this.httpClient.get<ServiceLimits>(`${this.apiPrefix(code)}/serviceLimit`);
+  public getServiceLimits(code: string): Observable<ServiceLimitsDto> {
+    return this.httpClient.get<ServiceLimitsDto>(`${this.apiPrefix(code)}/serviceLimit`);
   }
 
-  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimits}> {
-    return this.httpClient.get<{[organizationId: string]: ServiceLimits}>(`${this.apiPrefix()}/info/serviceLimits`);
+  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
+    return this.httpClient.get<{[organizationId: string]: ServiceLimitsDto}>(`${this.apiPrefix()}/info/serviceLimits`);
   }
 
-  public getPayments(): Observable<Payment[]> {
-    return this.httpClient.get<Payment[]>(`${this.actualApiPrefix()}/payments`);
+  public getPayments(): Observable<PaymentDto[]> {
+    return this.httpClient.get<PaymentDto[]>(`${this.actualApiPrefix()}/payments`);
   }
 
-  public getPayment(paymentId: string): Observable<Payment> {
-    return this.httpClient.get<Payment>(`${this.actualApiPrefix()}/payment/${paymentId}`);
+  public getPayment(paymentId: string): Observable<PaymentDto> {
+    return this.httpClient.get<PaymentDto>(`${this.actualApiPrefix()}/payment/${paymentId}`);
   }
 
-  public createPayment(payment: Payment, returnUrl: string): Observable<Payment> {
-    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment, {
+  public createPayment(payment: PaymentDto, returnUrl: string): Observable<PaymentDto> {
+    return this.httpClient.post<PaymentDto>(`${this.actualApiPrefix()}/payments`, payment, {
       headers: {
         RETURN_URL: returnUrl,
       },

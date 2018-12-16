@@ -17,23 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GroupModel} from '../groups/group.model';
-
-export interface UserModel {
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: {[organizationId: string]: string[]};
-  groups?: GroupModel[];
-  defaultWorkspace?: DefaultWorkspaceModel;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
-}
-
-export interface DefaultWorkspaceModel {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+export interface PaymentDto {
+  id: string;
+  date: number;
+  amount: number;
+  paymentId: string;
+  start: number;
+  validUntil: number;
+  state: string;
+  serviceLevel: string;
+  users: number;
+  language: string;
+  currency: string;
+  gwUrl: string;
+  version?: number;
 }

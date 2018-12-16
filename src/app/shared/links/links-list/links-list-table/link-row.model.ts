@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 export interface LinkRowModel {
-  linkInstance?: LinkInstanceModel;
+  linkInstance?: LinkInstance;
   document?: DocumentModel;
   correlationId?: string;
 }

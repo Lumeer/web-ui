@@ -17,16 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../model/data/data-value';
+import {Collection} from '../store/collections/collection';
 
-export interface LinkInstanceModel {
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
-
-  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
-}
-
-export function getOtherLinkedDocumentId(linkInstance: LinkInstanceModel, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
+export interface ImportedCollectionDto {
+  collection: Collection;
+  data: string;
 }

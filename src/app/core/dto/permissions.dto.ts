@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DefaultWorkspace {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+import {PermissionDto} from './permission.dto';
+
+export interface PermissionsDto {
+  users: PermissionDto[];
+  groups: PermissionDto[];
 }

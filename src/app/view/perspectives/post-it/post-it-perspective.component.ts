@@ -37,16 +37,16 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {UserSettingsService} from '../../../core/service/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
+import {PostItConfig, View} from '../../../core/store/views/view';
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
 import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
@@ -80,7 +80,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
-  public collections: CollectionModel[];
+  public collections: Collection[];
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
@@ -183,7 +183,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private dispatchInitConfigActions(postItConfig: PostItConfigModel) {
+  private dispatchInitConfigActions(postItConfig: PostItConfig) {
     this.store.dispatch(new PostItAction.ChangeSize({size: postItConfig.size}));
     this.store.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: postItConfig.documentIdsOrder}));
   }
@@ -207,7 +207,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.store.select(selectPostItsOrder).subscribe(order => this.postItsOrder$.next(order)));
   }
 
-  private viewPostItSize(view: ViewModel): SizeType | null {
+  private viewPostItSize(view: View): SizeType | null {
     return (view && view.config && view.config.postit && view.config.postit.size) || null;
   }
 
@@ -299,7 +299,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.mapNewDocumentsWithPriority(documents, []);
   }
 
-  private mapNewDocumentsWithConfig(documents: DocumentModel[], config: PostItConfigModel) {
+  private mapNewDocumentsWithConfig(documents: DocumentModel[], config: PostItConfig) {
     this.mapNewDocumentsWithPriority(documents, config.documentIdsOrder);
   }
 

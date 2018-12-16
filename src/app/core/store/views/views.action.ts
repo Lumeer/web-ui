@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
-import {SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {SearchConfig, ViewConfig, ViewCursor, View} from './view';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -69,7 +69,7 @@ export namespace ViewsAction {
   export class GetSuccess implements Action {
     public readonly type = ViewsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {views: ViewModel[]}) {}
+    public constructor(public payload: {views: View[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -81,13 +81,13 @@ export namespace ViewsAction {
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: {view: ViewModel}) {}
+    public constructor(public payload: {view: View}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ViewsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {view: ViewModel}) {}
+    public constructor(public payload: {view: View}) {}
   }
 
   export class CreateFailure implements Action {
@@ -99,13 +99,13 @@ export namespace ViewsAction {
   export class Update implements Action {
     public readonly type = ViewsActionType.UPDATE;
 
-    public constructor(public payload: {viewCode: string; view: ViewModel; nextAction?: Action}) {}
+    public constructor(public payload: {viewCode: string; view: View; nextAction?: Action}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {view: ViewModel; nextAction?: Action; skipNotify?: boolean}) {}
+    public constructor(public payload: {view: View; nextAction?: Action}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -117,13 +117,13 @@ export namespace ViewsAction {
   export class SetPermissions implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS;
 
-    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: PermissionModel[]}) {}
+    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class SetPermissionsSuccess implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
 
-    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: PermissionModel[]}) {}
+    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class SetPermissionsFailure implements Action {
@@ -153,13 +153,13 @@ export namespace ViewsAction {
   export class ChangeConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_CONFIG;
 
-    public constructor(public payload: {config: ViewConfigModel}) {}
+    public constructor(public payload: {config: ViewConfig}) {}
   }
 
   export class ChangeSearchConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
 
-    public constructor(public payload: {config: SearchConfigModel}) {}
+    public constructor(public payload: {config: SearchConfig}) {}
   }
 
   export class SetCursor implements Action {

@@ -17,27 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../collections/collection.model';
-import {Constraint} from '../../model/data/constraint';
-
-export interface LinkTypeAttributeModel {
-  id: string;
-  name: string;
-
-  constraint?: Constraint; // TODO make compulsory
-
-  usageCount: number;
-  intermediate?: boolean;
-}
-
-export interface LinkTypeModel {
+export interface Contact {
   id?: string;
-  name: string;
-
-  collectionIds: [string, string];
-  collections?: [CollectionModel, CollectionModel];
-
-  attributes?: LinkTypeAttributeModel[];
-
-  correlationId?: string;
+  organizationId: string;
+  company: string;
+  firstName: string;
+  lastName: string;
+  address1: string;
+  address2: string;
+  city: string;
+  zip: string;
+  state: string;
+  country: string;
+  email: string;
+  phone: string;
+  ic: string;
+  dic: string;
+  version?: number;
 }

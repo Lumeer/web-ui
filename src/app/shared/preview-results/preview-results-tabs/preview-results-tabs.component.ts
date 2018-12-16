@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 
 @Component({
   selector: 'preview-results-tabs',
@@ -28,13 +28,13 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 })
 export class PreviewResultsTabsComponent implements OnInit {
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 
   @Input()
   public selectedCollection: string;
 
   @Output()
-  public select = new EventEmitter<CollectionModel>();
+  public select = new EventEmitter<Collection>();
 
   public ngOnInit() {
     if (!this.selectedCollection) {
@@ -42,7 +42,7 @@ export class PreviewResultsTabsComponent implements OnInit {
     }
   }
 
-  public setActiveCollection(collection: CollectionModel) {
+  public setActiveCollection(collection: Collection) {
     this.selectedCollection = collection.id;
     this.select.emit(collection);
   }

@@ -28,8 +28,8 @@ import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
 import {selectNavigation, selectQuery} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {ViewModel} from '../../../core/store/views/view.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../core/store/views/view';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryData} from './query-data';
 import {QueryItem} from './query-item/model/query-item';
@@ -42,7 +42,7 @@ import {
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {UserModel} from '../../../core/store/users/user.model';
+import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
@@ -52,8 +52,8 @@ import {getArrayDifference} from '../../utils/array.utils';
 import {DocumentQueryItem} from './query-item/model/documents.query-item';
 import {AttributeQueryItem} from './query-item/model/attribute.query-item';
 import {Query} from '../../../core/store/navigation/query';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../../core/store/projects/project.model';
+import {Organization} from '../../../core/store/organizations/organization';
+import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 
@@ -65,7 +65,7 @@ const allowAutomaticSubmission = true;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
-  public currentView$ = new BehaviorSubject<ViewModel>(null);
+  public currentView$ = new BehaviorSubject<View>(null);
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
   public form$ = new BehaviorSubject<FormGroup>(null);
   public queryItemsControl: FormArray;
@@ -73,10 +73,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   private workspace: Workspace;
-  private organization: OrganizationModel;
-  private project: ProjectModel;
+  private organization: Organization;
+  private project: Project;
   private perspective: Perspective;
-  private currentUser: UserModel;
+  private currentUser: User;
   private queryData: QueryData;
 
   constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
@@ -462,7 +462,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     return !!viewQueryItem;
   }
 
-  private navigateToView(view: ViewModel) {
+  private navigateToView(view: View) {
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 

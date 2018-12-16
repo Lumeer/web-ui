@@ -27,14 +27,14 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {ProjectModel} from '../../../../core/store/projects/project.model';
+import {Project} from '../../../../core/store/projects/project';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -42,7 +42,7 @@ import {ProjectModel} from '../../../../core/store/projects/project.model';
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
   public dataLoaded$: Observable<boolean>;
-  public project$: Observable<ProjectModel>;
+  public project$: Observable<Project>;
   public hasCollection$: Observable<boolean>;
   public hasDocument$: Observable<boolean>;
   public hasView$: Observable<boolean>;

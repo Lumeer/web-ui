@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
@@ -28,7 +28,7 @@ import {environment} from '../../../environments/environment';
 import {AttributeDto, CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class CollectionService extends PermissionService {
@@ -36,8 +36,9 @@ export class CollectionService extends PermissionService {
     super(httpClient, store);
   }
 
-  public createCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
+  public createCollection(collection: CollectionDto, correlationId?: string): Observable<CollectionDto> {
+    const headers = new HttpHeaders().set('correlation_id', correlationId);
+    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection, {headers});
   }
 
   public updateCollection(collection: CollectionDto): Observable<CollectionDto> {

@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceModel} from '../../model/resource.model';
+import {Resource} from '../../model/resource';
 import {Constraint} from './../../model/data/constraint';
 
-export interface AttributeModel {
+export interface Attribute {
   id?: string;
   name: string;
 
@@ -32,8 +32,8 @@ export interface AttributeModel {
   correlationId?: string;
 }
 
-export interface CollectionModel extends ResourceModel {
-  attributes?: AttributeModel[];
+export interface Collection extends Resource {
+  attributes?: Attribute[];
   defaultAttributeId?: string;
   lastTimeUsed?: Date;
 

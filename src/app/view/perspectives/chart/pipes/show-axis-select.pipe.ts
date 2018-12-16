@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart.model';
+import {ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
 
 @Pipe({
   name: 'showAxisSelect',

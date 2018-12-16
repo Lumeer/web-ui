@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartType} from '../../../../../core/store/charts/chart';
 import {PlotMaker} from './plot-maker';
 import {PiePlotMaker} from './pie-plot-maker';
 import {BarPlotMaker} from './bar-plot-maker';

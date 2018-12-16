@@ -24,15 +24,15 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
-import {CollectionModel} from '../../store/collections/collection.model';
+import {Collection} from '../../store/collections/collection';
 import {CollectionsAction} from '../../store/collections/collections.action';
 import {selectAllCollections, selectCollectionsLoaded} from '../../store/collections/collections.state';
 
 @Injectable()
-export class CollectionsGuard implements Resolve<CollectionModel[]> {
+export class CollectionsGuard implements Resolve<Collection[]> {
   constructor(private store$: Store<AppState>) {}
 
-  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CollectionModel[]> {
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Collection[]> {
     return this.store$.select(selectCollectionsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {

@@ -23,22 +23,19 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
-import {Permission, ViewDto} from '../../dto';
+import {PermissionDto, ViewDto} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
-import {SearchTab} from '../navigation/search-tab';
-import {Workspace} from '../navigation/workspace.model';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
 import {ViewConverter} from './view.converter';
-import {ViewModel} from './view.model';
+import {View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectCurrentView, selectViewsDictionary, selectViewsLoaded} from './views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions';
 import {NavigationAction} from '../navigation/navigation.action';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 
@@ -47,12 +44,12 @@ export class ViewsEffects {
   @Effect()
   public get: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
-    withLatestFrom(this.store$.select(selectViewsLoaded)),
+    withLatestFrom(this.store$.pipe(select(selectViewsLoaded))),
     filter(([action, loaded]) => !loaded),
     mergeMap(() => {
       return this.viewService.getViews().pipe(
         map((dtos: ViewDto[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
-        map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
+        map((views: View[]) => new ViewsAction.GetSuccess({views})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))
       );
     })
@@ -61,12 +58,12 @@ export class ViewsEffects {
   @Effect()
   public getByCode$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE),
-    withLatestFrom(this.store$.select(selectViewsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
     filter(([action, views]) => !(action.payload.viewCode in views)),
     mergeMap(([action]) =>
       this.viewService.getView(action.payload.viewCode).pipe(
         map((dto: ViewDto) => ViewConverter.convertToModel(dto)),
-        map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
+        map((view: View) => new ViewsAction.GetSuccess({views: [view]})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))
       )
     )
@@ -100,17 +97,13 @@ export class ViewsEffects {
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectWorkspace)), this.store$.pipe(select(selectSearchTab))),
-    flatMap(([action, workspace, searchTab]) => {
-      const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
+    map(([action, workspace, searchTab]) => {
       const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
-      if (!isNullOrUndefined(searchTab)) {
+      if (searchTab) {
         paths.push(Perspective.Search);
         paths.push(searchTab);
       }
-      return [
-        new NotificationsAction.Success({message}),
-        new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}}),
-      ];
+      return new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}});
     })
   );
 
@@ -139,21 +132,6 @@ export class ViewsEffects {
   );
 
   @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
-    tap(action => {
-      if (action.payload.nextAction) {
-        this.store$.dispatch(action.payload.nextAction);
-      }
-    }),
-    filter(action => !action.payload.skipNotify),
-    map(() => {
-      const message = this.i18n({id: 'view.update.success', value: 'View has been updated'});
-      return new NotificationsAction.Success({message});
-    })
-  );
-
-  @Effect()
   public updateFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -168,7 +146,7 @@ export class ViewsEffects {
     ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
     mergeMap(action => {
       return this.viewService.deleteView(action.payload.viewCode).pipe(
-        withLatestFrom(this.store$.select(selectCurrentView)),
+        withLatestFrom(this.store$.pipe(select(selectCurrentView))),
         flatMap(([_, view]) => {
           const actions: Action[] = [new ViewsAction.DeleteSuccess(action.payload)];
           if (view && view.code === action.payload.viewCode) {
@@ -196,7 +174,7 @@ export class ViewsEffects {
   public setPermission$ = this.actions$.pipe(
     ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
     concatMap(action => {
-      const permissionsDto: Permission[] = action.payload.permissions.map(model =>
+      const permissionsDto: PermissionDto[] = action.payload.permissions.map(model =>
         PermissionsConverter.toPermissionDto(model)
       );
 

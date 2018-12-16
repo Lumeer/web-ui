@@ -21,13 +21,12 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {Permission} from '../../dto';
+import {PermissionDto} from '../../dto';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {CollectionsAction} from '../collections/collections.action';
@@ -38,7 +37,7 @@ import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
 import {UsersAction} from '../users/users.action';
 import {selectCurrentUser} from '../users/users.state';
@@ -46,17 +45,18 @@ import {ViewsAction} from '../views/views.action';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class ProjectsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Get>(ProjectsActionType.GET),
-    withLatestFrom(this.store$.select(selectProjectsLoaded)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsLoaded))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     filter(([[action, projectsLoaded], organizationsEntities]) => {
       const organizationId = action.payload.organizationId;
-      return !projectsLoaded[organizationId] && !isNullOrUndefined(organizationsEntities[organizationId]);
+      return !projectsLoaded[organizationId] && !!organizationsEntities[organizationId];
     }),
     map(([[action, projectsLoaded], organizationsEntities]) => ({action, organizationsEntities})),
     mergeMap(({action, organizationsEntities}) => {
@@ -83,13 +83,11 @@ export class ProjectsEffects {
   @Effect()
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
-    withLatestFrom(this.store$.select(selectProjectsCodes)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     filter(([[action, projectCodes], organizationsEntities]) => {
       const organizationId = action.payload.organizationId;
-      return (
-        isNullOrUndefined(projectCodes[organizationId]) && !isNullOrUndefined(organizationsEntities[organizationId])
-      );
+      return isNullOrUndefined(projectCodes[organizationId]) && !!organizationsEntities[organizationId];
     }),
     map(([[action], organizationsEntities]) => ({action, organizationsEntities})),
     mergeMap(({action, organizationsEntities}) => {
@@ -111,7 +109,7 @@ export class ProjectsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
       const organization = organizationsEntities[action.payload.project.organizationId];
       const correlationId = action.payload.project.correlationId;
@@ -119,7 +117,7 @@ export class ProjectsEffects {
 
       return this.projectService.createProject(organization.code, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId)),
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
         mergeMap(([project, projectCodes]) => {
           const codes = [...projectCodes[project.organizationId], project.code];
           const actions: Action[] = [
@@ -143,7 +141,7 @@ export class ProjectsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectSelectedOrganization)),
+    withLatestFrom(this.store$.pipe(select(selectSelectedOrganization))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
@@ -177,7 +175,7 @@ export class ProjectsEffects {
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
         flatMap(([project, projectCodes]) => {
           const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
           const codesByOrg = projectCodes && projectCodes[project.organizationId];
@@ -225,7 +223,7 @@ export class ProjectsEffects {
       const organization = state.organizations.entities[action.payload.organizationId];
       const project = state.projects.entities[action.payload.projectId];
       return this.projectService.deleteProject(organization.code, project.code).pipe(
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
         flatMap(([, projectCodes]) => {
           const actions: Action[] = [new ProjectsAction.DeleteSuccess(action.payload)];
           let codes = projectCodes[action.payload.organizationId];
@@ -258,13 +256,13 @@ export class ProjectsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
-    withLatestFrom(this.store$.select(selectProjectsDictionary)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     concatMap(([[action, projects], organizations]) => {
       const project = projects[action.payload.projectId];
       const organization = organizations[project.organizationId];
       const workspace = {organizationCode: organization.code, projectCode: project.code};
-      const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
+      const permissionDto: PermissionDto = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
@@ -304,7 +302,7 @@ export class ProjectsEffects {
   @Effect()
   public switchWorkspace$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.SwitchWorkspace>(ProjectsActionType.SWITCH_WORKSPACE),
-    withLatestFrom(this.store$.select(selectCurrentUser)),
+    withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
     mergeMap(([action, user]) => {
       const {organizationId, projectId} = action.payload;
       const workspace = user.defaultWorkspace;

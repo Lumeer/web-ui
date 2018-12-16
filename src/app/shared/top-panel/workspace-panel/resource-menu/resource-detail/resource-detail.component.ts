@@ -22,13 +22,13 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter, tap} from 'rxjs/operators';
-import {Resource} from '../../../../../core/dto';
+import {ResourceDto} from '../../../../../core/dto';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {AppState} from '../../../../../core/store/app.state';
-import {Workspace} from '../../../../../core/store/navigation/workspace.model';
-import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {Organization} from '../../../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {ProjectModel} from '../../../../../core/store/projects/project.model';
+import {Project} from '../../../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
 import {UsersAction} from '../../../../../core/store/users/users.action';
 
@@ -39,13 +39,13 @@ import {UsersAction} from '../../../../../core/store/users/users.action';
 })
 export class ResourceDetailComponent implements OnInit, OnDestroy {
   @Input() public type: ResourceType;
-  @Input() public resource: Resource;
+  @Input() public resource: ResourceDto;
   @Input() public workspace: Workspace;
 
   private subscriptions = new Subscription();
 
-  public organization: OrganizationModel;
-  public project: ProjectModel;
+  public organization: Organization;
+  public project: Project;
 
   public readonly organizationType = ResourceType.Organization;
   public readonly projectType = ResourceType.Project;

@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../../dto/group';
-import {GroupModel} from './group.model';
+import {GroupDto} from '../../dto/group.dto';
+import {Group} from './group';
 
 export class GroupConverter {
-  public static fromDto(dto: Group): GroupModel {
+  public static fromDto(dto: GroupDto): Group {
     return {
       id: dto.id,
       name: dto.name,
     };
   }
 
-  public static toDto(group: GroupModel): Group {
+  public static toDto(group: Group): GroupDto {
     return {
       id: group.id,
       name: group.name,

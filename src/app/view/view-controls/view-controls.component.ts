@@ -37,9 +37,9 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPerspective, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
-import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
+import {ViewConfig, View} from '../../core/store/views/view';
 import {
   selectPerspectiveViewConfig,
   selectViewConfigChanged,
@@ -63,7 +63,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public novice: boolean;
 
   @Input()
-  public view: ViewModel;
+  public view: View;
 
   @Output()
   public save = new EventEmitter<string>();
@@ -73,7 +73,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public name: string;
 
-  public config$: Observable<ViewConfigModel>;
+  public config$: Observable<ViewConfig>;
   public perspective$: Observable<Perspective>;
 
   public nameChanged$ = new BehaviorSubject(false);

@@ -25,11 +25,11 @@ import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
 import {OrganizationService, ProjectService} from '../core/rest';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
-import {OrganizationModel} from '../core/store/organizations/organization.model';
+import {Organization} from '../core/store/organizations/organization';
 import {OrganizationsAction} from '../core/store/organizations/organizations.action';
 import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
 import {ProjectConverter} from '../core/store/projects/project.converter';
-import {ProjectModel} from '../core/store/projects/project.model';
+import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects} from '../core/store/projects/projects.state';
 import {isNullOrUndefined} from '../shared/utils/common.utils';
@@ -42,7 +42,7 @@ export class WorkspaceService {
     private store$: Store<AppState>
   ) {}
 
-  public getOrganizationFromStoreOrApi(code: string): Observable<OrganizationModel> {
+  public getOrganizationFromStoreOrApi(code: string): Observable<Organization> {
     return this.getOrganizationFromStore(code).pipe(
       mergeMap(organization => {
         if (!isNullOrUndefined(organization)) {
@@ -53,7 +53,7 @@ export class WorkspaceService {
     );
   }
 
-  private getOrganizationFromStore(code: string): Observable<OrganizationModel> {
+  private getOrganizationFromStore(code: string): Observable<Organization> {
     return this.store$.pipe(
       select(selectAllOrganizations),
       map(organizations => organizations.find(org => org.code === code)),
@@ -61,7 +61,7 @@ export class WorkspaceService {
     );
   }
 
-  private getOrganizationFromApi(code: string): Observable<OrganizationModel> {
+  private getOrganizationFromApi(code: string): Observable<Organization> {
     return this.organizationService.getOrganization(code).pipe(
       map(organization => OrganizationConverter.fromDto(organization)),
       tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
@@ -71,7 +71,7 @@ export class WorkspaceService {
     );
   }
 
-  public getProjectFromStoreOrApi(orgCode: string, orgId: string, projCode: string): Observable<ProjectModel> {
+  public getProjectFromStoreOrApi(orgCode: string, orgId: string, projCode: string): Observable<Project> {
     return this.getProjectFromStore(projCode).pipe(
       mergeMap(project => {
         if (!isNullOrUndefined(project)) {
@@ -82,7 +82,7 @@ export class WorkspaceService {
     );
   }
 
-  private getProjectFromStore(code: string): Observable<ProjectModel> {
+  private getProjectFromStore(code: string): Observable<Project> {
     return this.store$.pipe(
       select(selectAllProjects),
       map(projects => projects.find(proj => proj.code === code)),
@@ -90,7 +90,7 @@ export class WorkspaceService {
     );
   }
 
-  private getProjectFromApi(orgCode: string, orgId: string, projCode: string): Observable<ProjectModel> {
+  private getProjectFromApi(orgCode: string, orgId: string, projCode: string): Observable<Project> {
     return this.projectService.getProject(orgCode, projCode).pipe(
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),

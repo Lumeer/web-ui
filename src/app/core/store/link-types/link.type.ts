@@ -17,18 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PaymentModel {
+import {Collection} from '../collections/collection';
+import {Constraint} from '../../model/data/constraint';
+
+export interface LinkTypeAttribute {
   id: string;
-  organizationId: string;
-  date: Date;
-  amount: number;
-  paymentId: string;
-  start: Date;
-  validUntil: Date;
-  state: string;
-  serviceLevel: string;
-  users: number;
-  language: string;
-  currency: string;
-  gwUrl: string;
+  name: string;
+
+  constraint?: Constraint; // TODO make compulsory
+
+  usageCount: number;
+  intermediate?: boolean;
+}
+
+export interface LinkType {
+  id?: string;
+  name: string;
+  version?: number;
+
+  collectionIds: [string, string];
+  collections?: [Collection, Collection];
+
+  attributes?: LinkTypeAttribute[];
+
+  correlationId?: string;
 }

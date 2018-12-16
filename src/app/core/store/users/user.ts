@@ -17,7 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Permission {
-  id: string;
-  roles: string[];
+import {Group} from '../groups/group';
+
+export interface User {
+  id?: string;
+  name?: string;
+  email: string;
+  groupsMap: {[organizationId: string]: string[]};
+  groups?: Group[];
+  defaultWorkspace?: DefaultWorkspace;
+  agreement?: boolean;
+  agreementDate?: Date;
+  newsletter?: boolean;
+}
+
+export interface DefaultWorkspace {
+  organizationCode?: string;
+  organizationId: string;
+  projectCode?: string;
+  projectId: string;
 }

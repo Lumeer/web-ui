@@ -29,13 +29,13 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {Resource} from '../../../../core/dto';
+import {ResourceDto} from '../../../../core/dto';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {Organization} from '../../../../core/store/organizations/organization';
 import {selectAllOrganizations} from '../../../../core/store/organizations/organizations.state';
-import {ProjectModel} from '../../../../core/store/projects/project.model';
+import {Project} from '../../../../core/store/projects/project';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {selectProjectsForWorkspace} from '../../../../core/store/projects/projects.state';
 
@@ -47,14 +47,14 @@ import {selectProjectsForWorkspace} from '../../../../core/store/projects/projec
 export class ResourceMenuComponent implements OnInit, OnChanges {
   @Input() public labelledBy: string = '';
   @Input() public type: ResourceType;
-  @Input() public resource: Resource;
+  @Input() public resource: ResourceDto;
   @Input() public workspace: Workspace;
 
   @Output() public onNewResource = new EventEmitter<ResourceType>();
-  @Output() public onResourceSelect = new EventEmitter<Resource>();
+  @Output() public onResourceSelect = new EventEmitter<ResourceDto>();
 
-  public organizations$: Observable<OrganizationModel[]>;
-  public projects$: Observable<ProjectModel[]>;
+  public organizations$: Observable<Organization[]>;
+  public projects$: Observable<Project[]>;
 
   private dispatched = false;
 
@@ -77,13 +77,13 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
     this.onNewResource.emit(this.type);
   }
 
-  public selectResource(resource: Resource): void {
+  public selectResource(resource: ResourceDto): void {
     this.onResourceSelect.emit(resource);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (!this.dispatched && this.resource && !this.isOrganizationType()) {
-      this.store.dispatch(new ProjectsAction.Get({organizationId: (this.resource as ProjectModel).organizationId}));
+      this.store.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
       this.dispatched = true;
     }
   }

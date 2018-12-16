@@ -23,15 +23,15 @@ import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {Resource} from '../../../core/dto';
+import {ResourceDto} from '../../../core/dto';
 import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {AppState} from '../../../core/store/app.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {Organization} from '../../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {ProjectModel} from '../../../core/store/projects/project.model';
+import {Project} from '../../../core/store/projects/project';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {
   selectProjectByWorkspace,
@@ -54,8 +54,8 @@ export class WorkspacePanelComponent implements OnInit {
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
-  public organization$: Observable<OrganizationModel>;
-  public project$: Observable<ProjectModel>;
+  public organization$: Observable<Organization>;
+  public project$: Observable<Project>;
 
   constructor(
     private dialogService: DialogService,
@@ -71,7 +71,7 @@ export class WorkspacePanelComponent implements OnInit {
     this.project$ = this.store$.select(selectProjectByWorkspace);
   }
 
-  public goToProject(organization: OrganizationModel, project: ProjectModel) {
+  public goToProject(organization: Organization, project: Project) {
     if (organization && project) {
       this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
       this.store$.dispatch(new ProjectsAction.Select({projectId: project.id}));
@@ -81,7 +81,7 @@ export class WorkspacePanelComponent implements OnInit {
     }
   }
 
-  public selectOrganization(organization: OrganizationModel): void {
+  public selectOrganization(organization: Organization): void {
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
     this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: organization.id}));
 
@@ -95,28 +95,28 @@ export class WorkspacePanelComponent implements OnInit {
       )
       .subscribe(project => {
         if (project) {
-          this.goToProject(organization as OrganizationModel, project);
+          this.goToProject(organization as Organization, project);
         } else {
           this.createNewProject(organization);
         }
       });
   }
 
-  public selectProject(organization: OrganizationModel, project: Resource): void {
-    this.goToProject(organization, project as ProjectModel);
+  public selectProject(organization: Organization, project: ResourceDto): void {
+    this.goToProject(organization, project as Project);
   }
 
   public createNewOrganization(): void {
     this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
   }
 
-  public createNewProject(parentOrganization: OrganizationModel): void {
+  public createNewProject(parentOrganization: Organization): void {
     this.dialogService.openCreateProjectDialog(parentOrganization.id, project =>
       this.onCreateProject(parentOrganization, project)
     );
   }
 
-  private onCreateOrganization(organization: OrganizationModel) {
+  private onCreateOrganization(organization: Organization) {
     const successMessage = this.i18n({
       id: 'organization.create.success',
       value: 'Organization was successfully created',
@@ -126,7 +126,7 @@ export class WorkspacePanelComponent implements OnInit {
     this.createNewProject(organization);
   }
 
-  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
+  private onCreateProject(organization: Organization, project: Project) {
     const successMessage = this.i18n({
       id: 'project.create.success',
       value: 'Project was successfully created',

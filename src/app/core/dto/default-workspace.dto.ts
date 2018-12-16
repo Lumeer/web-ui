@@ -17,20 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ContactModel {
-  id?: string;
+export interface DefaultWorkspaceDto {
+  organizationCode?: string;
   organizationId: string;
-  company: string;
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  zip: string;
-  state: string;
-  country: string;
-  email: string;
-  phone: string;
-  ic: string;
-  dic: string;
+  projectCode?: string;
+  projectId: string;
 }

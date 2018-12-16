@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
 export class CollectionQueryItem implements QueryItem {
   public type = QueryItemType.Collection;
 
-  public constructor(public collection: CollectionModel) {}
+  public constructor(public collection: Collection) {}
 
   public get text(): string {
     return this.collection.name;

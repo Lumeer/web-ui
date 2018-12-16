@@ -17,9 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
+export const DEFAULT_CHART_ID = 'default';
 
-export interface Organization extends Resource {
-  projects?: Project[];
+export interface Chart {
+  id: string;
+  config?: ChartConfig;
+}
+
+export interface ChartConfig {
+  type: ChartType;
+  axes: {[type: string]: ChartAxis};
+}
+
+export interface ChartAxis {
+  collectionId: string;
+  attributeId: string;
+}
+
+export enum ChartType {
+  Line = 'line',
+  Bar = 'bar',
+  Pie = 'pie',
+}
+
+export const chartTypesMap: {[id: string]: ChartType} = {
+  [ChartType.Line]: ChartType.Line,
+  [ChartType.Bar]: ChartType.Bar,
+  [ChartType.Pie]: ChartType.Pie,
+};
+
+export const chartTypesIconsMap: {[id: string]: string} = {
+  [ChartType.Line]: 'far fa-chart-line',
+  [ChartType.Bar]: 'far fa-chart-bar',
+  [ChartType.Pie]: 'far fa-chart-pie',
+};
+
+export enum ChartAxisType {
+  X = 'x',
+  Y1 = 'y1',
+  Y2 = 'y2',
 }

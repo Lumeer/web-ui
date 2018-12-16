@@ -33,11 +33,11 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from '../../core/store/collections/collection';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
@@ -54,17 +54,17 @@ import {generateCorrelationId} from '../utils/resource.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() public selectedCollection: CollectionModel;
+  @Input() public selectedCollection: Collection;
 
   @Input() public selectedDocument: DocumentModel;
 
   @Output()
-  public selectCollection = new EventEmitter<CollectionModel>();
+  public selectCollection = new EventEmitter<Collection>();
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
-  public collections$: Observable<CollectionModel[]>;
+  public collections$: Observable<Collection[]>;
 
   public documents$: Observable<DocumentModel[]>;
   public loaded$ = new BehaviorSubject<boolean>(false);
@@ -103,7 +103,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     return !!(workspace && workspace.organizationCode && workspace.projectCode);
   }
 
-  private checkCollectionsAfterQueryChange(newCollections: CollectionModel[]) {
+  private checkCollectionsAfterQueryChange(newCollections: Collection[]) {
     if (!this.selectedCollection) {
       return;
     }
@@ -127,7 +127,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
         withLatestFrom(this.store$.pipe(select(selectViewCursor)))
       )
       .subscribe(([collections, cursor]) => {
-        let collection: CollectionModel;
+        let collection: Collection;
         if (cursor && cursor.collectionId) {
           collection = collections.find(c => c.id === cursor.collectionId);
         }
@@ -139,14 +139,14 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
-  private shouldChangeSelectedCollection(collections: CollectionModel[]): boolean {
+  private shouldChangeSelectedCollection(collections: Collection[]): boolean {
     return (
       collections.length > 0 &&
       (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id))
     );
   }
 
-  public setActiveCollection(collection: CollectionModel) {
+  public setActiveCollection(collection: Collection) {
     this.selectCollection.emit(collection);
   }
 
@@ -163,7 +163,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
-  private getData(collection: CollectionModel) {
+  private getData(collection: Collection) {
     const collectionQuery = {...this.query, stems: [{collectionId: collection.id}]};
     this.updateDataSubscription(collectionQuery);
     this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));

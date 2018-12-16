@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 
@@ -33,7 +33,7 @@ export class TableColumnContextMenuComponent {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public attribute: AttributeModel;
+  public attribute: Attribute;
 
   @Input()
   public defaultAttribute: boolean;

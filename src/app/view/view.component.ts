@@ -23,9 +23,9 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
-import {Workspace} from '../core/store/navigation/workspace.model';
+import {Workspace} from '../core/store/navigation/workspace';
 import {RouterAction} from '../core/store/router/router.action';
-import {ViewModel} from '../core/store/views/view.model';
+import {View} from '../core/store/views/view';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
@@ -40,7 +40,7 @@ import {convertQueryModelToString} from '../core/store/navigation/query.converte
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewComponent implements OnInit, OnDestroy {
-  public view$ = new BehaviorSubject<ViewModel>(null);
+  public view$ = new BehaviorSubject<View>(null);
   public viewsExist$: Observable<boolean>;
 
   private workspace: Workspace;
@@ -88,7 +88,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private setView(view: ViewModel) {
+  private setView(view: View) {
     this.view$.next({...view});
     this.store$.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
   }
@@ -136,7 +136,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     )
       .pipe(take(1))
       .subscribe(([config, perspective, viewByName]) => {
-        const view: ViewModel = {
+        const view: View = {
           ...this.view$.getValue(),
           query: this.query,
           name,
@@ -158,14 +158,14 @@ export class ViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getViewByName(viewName: string): Observable<ViewModel> {
+  private getViewByName(viewName: string): Observable<View> {
     return this.store$.pipe(select(selectAllViews)).pipe(
       first(),
       map(views => views.find(view => view.name === viewName))
     );
   }
 
-  private informAboutSameNameView(view: ViewModel) {
+  private informAboutSameNameView(view: View) {
     const title = this.i18n({
       id: 'view.name.exists',
       value: 'View already exist',
@@ -184,7 +184,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  private askToCloneView(view: ViewModel) {
+  private askToCloneView(view: View) {
     const title = null;
     const message = this.i18n({
       id: 'view.dialog.clone.message',
@@ -199,11 +199,11 @@ export class ViewComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  private createView(view: ViewModel) {
+  private createView(view: View) {
     this.store$.dispatch(new ViewsAction.Create({view}));
   }
 
-  private updateView(view: ViewModel) {
+  private updateView(view: View) {
     this.store$.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
   }
 }

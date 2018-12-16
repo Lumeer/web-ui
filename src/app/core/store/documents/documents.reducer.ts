@@ -19,6 +19,7 @@
 
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
+import {DocumentModel} from './document.model';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,
@@ -26,12 +27,11 @@ export function documentsReducer(
 ): DocumentsState {
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
-      const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
-      return documentsAdapter.addMany(action.payload.documents, queriesState);
+      return addDocuments(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
-      return documentsAdapter.addOne(action.payload.document, state);
+      return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_SUCCESS:
-      return documentsAdapter.upsertOne(action.payload.document, state);
+      return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
@@ -49,6 +49,33 @@ export function documentsReducer(
     default:
       return state;
   }
+}
+
+function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {
+  const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
+
+  const filteredDocuments = action.payload.documents.filter(document => {
+    const oldDocument = state.entities[document.id];
+    return !oldDocument || isDocumentNewer(document, oldDocument);
+  });
+
+  return documentsAdapter.addMany(filteredDocuments, queriesState);
+}
+
+function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): DocumentsState {
+  const oldDocument = state.entities[document.id];
+  if (!oldDocument) {
+    return documentsAdapter.addOne(document, state);
+  }
+
+  if (isDocumentNewer(document, oldDocument)) {
+    return documentsAdapter.upsertOne(document, state);
+  }
+  return state;
+}
+
+function isDocumentNewer(document: DocumentModel, oldDocument: DocumentModel): boolean {
+  return document.dataVersion && (!oldDocument.dataVersion || document.dataVersion > oldDocument.dataVersion);
 }
 
 function findCollectionDocumentIds(state: DocumentsState, collectionId: string): string[] {

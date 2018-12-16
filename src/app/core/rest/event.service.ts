@@ -26,7 +26,7 @@ import {LocalStorage} from '../../shared/utils/local-storage';
 import {Event} from '../dto/event';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 
 const EVENTS_KEY = 'events';
 

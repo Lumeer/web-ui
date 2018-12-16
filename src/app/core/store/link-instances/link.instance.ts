@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum PermissionType {
-  Users = 'users',
-  Groups = 'groups',
+import {DataValue} from '../../model/data/data-value';
+
+export interface LinkInstance {
+  id?: string;
+  linkTypeId: string;
+  documentIds: [string, string];
+  version?: number;
+
+  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
 }
 
-export interface PermissionModel {
-  id: string;
-  roles: string[];
-}
-
-export interface PermissionsModel {
-  users: PermissionModel[];
-  groups: PermissionModel[];
+export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
+  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
 }

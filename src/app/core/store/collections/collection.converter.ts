@@ -19,11 +19,11 @@
 
 import {AttributeDto, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {AttributeModel, CollectionModel} from './collection.model';
 import {Constraint, constraintTypesMap} from '../../model/data/constraint';
 import {ConstraintDto} from '../../dto/attribute.dto';
+import {Attribute, Collection} from './collection';
 
-export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): CollectionModel {
+export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
     id: dto.id,
     code: dto.code,
@@ -45,7 +45,7 @@ export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: 
   };
 }
 
-export function convertCollectionModelToDto(model: CollectionModel): CollectionDto {
+export function convertCollectionModelToDto(model: Collection): CollectionDto {
   return {
     id: model.id,
     code: model.code,
@@ -58,7 +58,7 @@ export function convertCollectionModelToDto(model: CollectionModel): CollectionD
   };
 }
 
-export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): AttributeModel {
+export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
     id: dto.id,
     name: dto.name,
@@ -68,7 +68,7 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
   };
 }
 
-export function convertAttributeModelToDto(model: AttributeModel): AttributeDto {
+export function convertAttributeModelToDto(model: Attribute): AttributeDto {
   return {
     id: model.id,
     name: model.name,

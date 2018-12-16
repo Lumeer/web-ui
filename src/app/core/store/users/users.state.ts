@@ -22,20 +22,20 @@ import {Dictionary} from '@ngrx/entity/src/models';
 import {createSelector} from '@ngrx/store';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../app.state';
-import {GroupModel} from '../groups/group.model';
+import {Group} from '../groups/group';
 import {selectGroupsDictionary} from '../groups/groups.state';
-import {OrganizationModel} from '../organizations/organization.model';
+import {Organization} from '../organizations/organization';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
-import {UserModel} from './user.model';
+import {User} from './user';
 
-export interface UsersState extends EntityState<UserModel> {
+export interface UsersState extends EntityState<User> {
   pending: boolean;
   loadedForOrganizationId: string;
-  currentUser: UserModel;
+  currentUser: User;
 }
 
-export const usersAdapter = createEntityAdapter<UserModel>();
+export const usersAdapter = createEntityAdapter<User>();
 
 export const initialUsersState: UsersState = usersAdapter.getInitialState({
   pending: false,
@@ -86,7 +86,7 @@ export const selectCurrentUserForWorkspace = createSelector(
     user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined
 );
 
-export const selectCurrentUserForOrganization = (organization: OrganizationModel) =>
+export const selectCurrentUserForOrganization = (organization: Organization) =>
   createSelector(
     selectCurrentUser,
     selectGroupsDictionary,
@@ -104,7 +104,7 @@ export const selectUsersForWorkspace = createSelector(
   }
 );
 
-export function mapGroupsOnUser(user: UserModel, organizationId: string, groups: Dictionary<GroupModel>) {
+export function mapGroupsOnUser(user: User, organizationId: string, groups: Dictionary<Group>) {
   const groupIds = (user.groupsMap && user.groupsMap[organizationId]) || [];
   user.groups = groupIds.map(id => groups[id]).filter(group => !isNullOrUndefined(group));
   return user;

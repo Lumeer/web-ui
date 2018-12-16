@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'share-view-copy',

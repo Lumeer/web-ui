@@ -24,15 +24,15 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
-import {LinkTypeModel} from '../../store/link-types/link-type.model';
+import {LinkType} from '../../store/link-types/link.type';
 import {LinkTypesAction} from '../../store/link-types/link-types.action';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../store/link-types/link-types.state';
 
 @Injectable()
-export class LinkTypesGuard implements Resolve<LinkTypeModel[]> {
+export class LinkTypesGuard implements Resolve<LinkType[]> {
   constructor(private store$: Store<AppState>) {}
 
-  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkTypeModel[]> {
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkType[]> {
     return this.store$.select(selectLinkTypesLoaded).pipe(
       tap(loaded => {
         if (!loaded) {

@@ -18,11 +18,11 @@
  */
 
 import {UserDto} from '../../dto';
-import {DefaultWorkspaceModel, UserModel} from './user.model';
-import {DefaultWorkspace} from '../../dto/default-workspace';
+import {DefaultWorkspace, User} from './user';
+import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 
 export class DefaultWorkspaceConverter {
-  public static fromDto(dto: DefaultWorkspace): DefaultWorkspaceModel {
+  public static fromDto(dto: DefaultWorkspaceDto): DefaultWorkspace {
     return {
       organizationId: dto.organizationId,
       projectId: dto.projectId,
@@ -31,7 +31,7 @@ export class DefaultWorkspaceConverter {
     };
   }
 
-  public static toDto(model: DefaultWorkspaceModel): DefaultWorkspace {
+  public static toDto(model: DefaultWorkspace): DefaultWorkspaceDto {
     return {
       organizationId: model.organizationId,
       projectId: model.projectId,
@@ -42,7 +42,7 @@ export class DefaultWorkspaceConverter {
 }
 
 export class UserConverter {
-  public static fromDto(dto: UserDto): UserModel {
+  public static fromDto(dto: UserDto): User {
     return {
       id: dto.id,
       name: dto.name,
@@ -55,7 +55,7 @@ export class UserConverter {
     };
   }
 
-  public static toDto(user: Partial<UserModel>): UserDto {
+  public static toDto(user: Partial<User>): UserDto {
     return {
       id: user.id,
       name: user.name,

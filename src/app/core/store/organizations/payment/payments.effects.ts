@@ -19,7 +19,7 @@
 
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
@@ -29,9 +29,7 @@ import {NotificationsAction} from '../../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {PaymentsAction, PaymentsActionType} from './payments.action';
 import {PaymentConverter} from './payment.converter';
-import {selectOrganizationByWorkspace} from '../organizations.state';
 import {PlatformLocation} from '@angular/common';
-import {isNullOrUndefined} from 'util';
 import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/location/browser_platform_location';
 
 @Injectable()
@@ -96,11 +94,10 @@ export class PaymentsEffects {
   @Effect()
   public createPayment$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
-    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
-    mergeMap(([action, organization]) => {
-      const returnUrl = isNullOrUndefined(action.payload.returnUrl)
-        ? (this.location as BrowserPlatformLocation).location.href
-        : action.payload.returnUrl;
+    mergeMap(action => {
+      const returnUrl =
+        (action.payload.returnUrl && action.payload.returnUrl) ||
+        (this.location as BrowserPlatformLocation).location.href;
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),

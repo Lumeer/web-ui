@@ -26,9 +26,9 @@ import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
-import {CollectionModel} from '../core/store/collections/collection.model';
+import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
-import {OrganizationModel} from '../core/store/organizations/organization.model';
+import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {UsersAction} from '../core/store/users/users.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -36,8 +36,8 @@ import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/u
 import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
 import {WorkspaceService} from '../workspace/workspace.service';
 import {isNullOrUndefined} from '../shared/utils/common.utils';
-import {UserModel} from '../core/store/users/user.model';
-import {ProjectModel} from '../core/store/projects/project.model';
+import {User} from '../core/store/users/user';
+import {Project} from '../core/store/projects/project';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -68,7 +68,7 @@ export class CollectionSettingsGuard implements CanActivate {
     );
   }
 
-  private selectCollection(collectionId: string): Observable<CollectionModel> {
+  private selectCollection(collectionId: string): Observable<Collection> {
     return this.loadCollections().pipe(mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId)))));
   }
 
@@ -85,11 +85,7 @@ export class CollectionSettingsGuard implements CanActivate {
     );
   }
 
-  private checkCollection(
-    collection: CollectionModel,
-    organizationCode: string,
-    projectCode: string
-  ): Observable<boolean> {
+  private checkCollection(collection: Collection, organizationCode: string, projectCode: string): Observable<boolean> {
     return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
       map(({user, organization, project}) => {
         if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
@@ -105,7 +101,7 @@ export class CollectionSettingsGuard implements CanActivate {
   private selectUserAndWorkspace(
     organizationCode: string,
     projectCode: string
-  ): Observable<{user?: UserModel; organization?: OrganizationModel; project?: ProjectModel}> {
+  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
     return this.workspaceService
       .getOrganizationFromStoreOrApi(organizationCode)
       .pipe(
@@ -118,9 +114,9 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private selectUserAndProject(
-    organization: OrganizationModel,
+    organization: Organization,
     projectCode: string
-  ): Observable<{user?: UserModel; project?: ProjectModel}> {
+  ): Observable<{user?: User; project?: Project}> {
     if (organization) {
       return combineLatest(
         this.selectUser(),
@@ -130,7 +126,7 @@ export class CollectionSettingsGuard implements CanActivate {
     return this.selectUser().pipe(map(user => ({user})));
   }
 
-  private selectUser(): Observable<UserModel> {
+  private selectUser(): Observable<User> {
     return this.store$.pipe(
       select(selectCurrentUserForWorkspace),
       filter(user => !isNullOrUndefined(user))
@@ -155,7 +151,7 @@ export class CollectionSettingsGuard implements CanActivate {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  private dispatchDataEvents(organization: OrganizationModel, collection: CollectionModel) {
+  private dispatchDataEvents(organization: Organization, collection: Collection) {
     this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }

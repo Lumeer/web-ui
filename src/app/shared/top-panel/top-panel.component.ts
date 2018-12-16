@@ -36,7 +36,7 @@ import {selectOrganizationByWorkspace} from 'src/app/core/store/organizations/or
 import {selectProjectByWorkspace} from 'src/app/core/store/projects/projects.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';

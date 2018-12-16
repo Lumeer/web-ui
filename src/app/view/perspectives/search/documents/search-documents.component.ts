@@ -31,7 +31,7 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/service/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
@@ -39,7 +39,7 @@ import {
 import {PerspectiveService} from '../../../../core/service/perspective.service';
 import {Perspective} from '../../perspective';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
 import {searchDocumentEntriesHtml, searchDocumentValuesHtml} from './search-document-html-helper';
 import {Query} from '../../../../core/store/navigation/query';
@@ -70,7 +70,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public size: SizeType;
   public documentsMap: {[documentId: string]: DocumentModel};
   public expandedDocumentIds: string[] = [];
-  public collectionsMap: {[collectionId: string]: CollectionModel};
+  public collectionsMap: {[collectionId: string]: Collection};
   public documentsOrder: string[] = [];
   public loaded$: Observable<boolean>;
   public query: Query;

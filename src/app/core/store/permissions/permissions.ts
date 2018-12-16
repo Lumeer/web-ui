@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Payment {
+export enum PermissionType {
+  Users = 'users',
+  Groups = 'groups',
+}
+
+export interface Permission {
   id: string;
-  date: number;
-  amount: number;
-  paymentId: string;
-  start: number;
-  validUntil: number;
-  state: string;
-  serviceLevel: string;
-  users: number;
-  language: string;
-  currency: string;
-  gwUrl: string;
+  roles: string[];
+}
+
+export interface Permissions {
+  users: Permission[];
+  groups: Permission[];
 }

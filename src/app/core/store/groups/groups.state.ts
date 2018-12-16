@@ -20,12 +20,12 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {GroupModel} from './group.model';
+import {Group} from './group';
 import {GroupFilters} from './group.filters';
 
-export interface GroupsState extends EntityState<GroupModel> {}
+export interface GroupsState extends EntityState<Group> {}
 
-export const groupsAdapter = createEntityAdapter<GroupModel>();
+export const groupsAdapter = createEntityAdapter<Group>();
 
 export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
 

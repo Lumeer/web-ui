@@ -18,7 +18,7 @@
  */
 
 import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
-import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 
@@ -30,7 +30,7 @@ import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 })
 export class TableCaptionComponent implements AfterViewChecked {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public cursor: TableHeaderCursor;

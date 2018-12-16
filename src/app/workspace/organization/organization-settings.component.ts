@@ -27,13 +27,13 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
   selectOrganizationByWorkspace,
   selectOrganizationCodes,
 } from '../../core/store/organizations/organizations.state';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Router} from '@angular/router';
@@ -46,11 +46,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
   public organizationCodes$: Observable<string[]>;
-  public organization$ = new BehaviorSubject<OrganizationModel>(null);
+  public organization$ = new BehaviorSubject<Organization>(null);
 
   public readonly organizationType = ResourceType.Organization;
 
-  private firstProject: ProjectModel = null;
+  private firstProject: Project = null;
   private previousUrl: string;
 
   private subscriptions = new Subscription();
@@ -175,7 +175,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private updateOrganization(organization: OrganizationModel) {
+  private updateOrganization(organization: Organization) {
     this.store$.dispatch(new OrganizationsAction.Update({organization}));
   }
 }

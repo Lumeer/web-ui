@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {LinkTypeModel} from './link-type.model';
+import {LinkType} from './link.type';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',
@@ -48,7 +48,7 @@ export namespace LinkTypesAction {
   export class GetSuccess implements Action {
     public readonly type = LinkTypesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkTypes: LinkTypeModel[]}) {}
+    public constructor(public payload: {linkTypes: LinkType[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -60,13 +60,13 @@ export namespace LinkTypesAction {
   export class Create implements Action {
     public readonly type = LinkTypesActionType.CREATE;
 
-    public constructor(public payload: {linkType: LinkTypeModel; callback?: (linkType: LinkTypeModel) => void}) {}
+    public constructor(public payload: {linkType: LinkType; callback?: (linkType: LinkType) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = LinkTypesActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {linkType: LinkTypeModel}) {}
+    public constructor(public payload: {linkType: LinkType}) {}
   }
 
   export class CreateFailure implements Action {
@@ -78,13 +78,13 @@ export namespace LinkTypesAction {
   export class Update implements Action {
     public readonly type = LinkTypesActionType.UPDATE;
 
-    public constructor(public payload: {linkType: LinkTypeModel}) {}
+    public constructor(public payload: {linkType: LinkType}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = LinkTypesActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {linkType: LinkTypeModel}) {}
+    public constructor(public payload: {linkType: LinkType}) {}
   }
 
   export class UpdateFailure implements Action {

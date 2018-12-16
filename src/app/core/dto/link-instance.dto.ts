@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permission} from './permission';
+export interface LinkInstanceDto {
+  id?: string;
+  linkTypeId: string;
+  documentIds: [string, string];
+  version?: number;
 
-export interface Permissions {
-  users: Permission[];
-  groups: Permission[];
+  data?: {[key: string]: any};
 }

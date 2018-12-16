@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceModel} from '../../model/resource.model';
-
-export interface ProjectModel extends ResourceModel {
-  organizationId?: string;
-  collectionsCount?: number;
+export interface PermissionDto {
+  id: string;
+  roles: string[];
 }

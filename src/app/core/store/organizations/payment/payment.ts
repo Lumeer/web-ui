@@ -17,10 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionDto} from './collection.dto';
-import {CollectionModel} from '../store/collections/collection.model';
-
-export interface ImportedCollection {
-  collection: CollectionModel;
-  data: string;
+export interface Payment {
+  id: string;
+  organizationId: string;
+  date: Date;
+  amount: number;
+  paymentId: string;
+  start: Date;
+  validUntil: Date;
+  state: string;
+  serviceLevel: string;
+  users: number;
+  language: string;
+  currency: string;
+  gwUrl: string;
+  version?: number;
 }

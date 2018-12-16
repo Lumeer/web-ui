@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
-import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {DocumentHintColumn} from '../../../../document-hints/document-hint-column';
 
 @Component({
@@ -32,9 +32,9 @@ export class LinksListTableHeaderComponent {
   public cells: QueryList<ElementRef>;
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
-  public trackByAttribute(index: number, attribute: AttributeModel): string {
+  public trackByAttribute(index: number, attribute: Attribute): string {
     return attribute.correlationId || attribute.id;
   }
 

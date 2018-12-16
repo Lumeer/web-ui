@@ -22,7 +22,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
-import {LinkTypeModel} from '../link-types/link-type.model';
+import {LinkType} from '../link-types/link.type';
 import {isArraySubset} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from 'util';
 
@@ -145,7 +145,7 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
   return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
 }
 
-export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkTypeModel[]): string[] {
+export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
   const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
   const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], []);
   const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));

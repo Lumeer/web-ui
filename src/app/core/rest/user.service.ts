@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import {UserDto} from '../dto';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {DefaultWorkspace} from '../dto/default-workspace';
+import {DefaultWorkspaceDto} from '../dto/default-workspace.dto';
 import {FeedbackDto} from '../dto/feedback.dto';
 
 @Injectable()
@@ -61,7 +61,7 @@ export class UserService {
     return this.httpClient.patch<UserDto>(`${this.usersApiPrefix()}/current`, user);
   }
 
-  public saveDefaultWorkspace(defaultWorkspace: DefaultWorkspace): Observable<any> {
+  public saveDefaultWorkspace(defaultWorkspace: DefaultWorkspaceDto): Observable<any> {
     return this.httpClient.put(`${this.usersApiPrefix()}/workspace`, defaultWorkspace);
   }
 

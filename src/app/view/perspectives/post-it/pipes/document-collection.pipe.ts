@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'documentCollection',
 })
 export class DocumentCollectionPipe implements PipeTransform {
-  public transform(document: DocumentModel, collections: CollectionModel[]): CollectionModel {
+  public transform(document: DocumentModel, collections: Collection[]): Collection {
     const collectionId = document && document.collectionId;
     return collectionId && collections.find(coll => coll.id === collectionId);
   }

@@ -17,17 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionsModel} from '../store/permissions/permissions.model';
+import {Resource} from '../../model/resource';
 
-export interface ResourceModel {
-  id?: string;
-  code?: string;
-  name: string;
-  color?: string;
-  icon?: string;
-  description?: string;
-  permissions?: PermissionsModel;
-
-  correlationId?: string;
-  nonRemovable?: boolean;
-}
+export interface Organization extends Resource {}

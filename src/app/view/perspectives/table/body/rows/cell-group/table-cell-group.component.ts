@@ -22,7 +22,7 @@ import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
-import {LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
@@ -59,7 +59,7 @@ export class TableCellGroupComponent implements OnChanges {
   public canManageConfig: boolean;
 
   public documents$: Observable<DocumentModel[]>;
-  public linkInstances$: Observable<LinkInstanceModel[]>;
+  public linkInstances$: Observable<LinkInstance[]>;
 
   public columns$: Observable<TableColumn[]>;
   public part$: Observable<TablePart>;

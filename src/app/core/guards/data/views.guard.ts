@@ -25,12 +25,12 @@ import {Observable} from 'rxjs';
 import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
-import {ViewModel} from '../../store/views/view.model';
+import {View} from '../../store/views/view';
 import {ViewsAction} from '../../store/views/views.action';
 import {selectAllViews, selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
 
 @Injectable()
-export class ViewsGuard implements Resolve<ViewModel[]> {
+export class ViewsGuard implements Resolve<View[]> {
   constructor(
     private i18n: I18n,
     private notificationService: NotificationService,
@@ -38,7 +38,7 @@ export class ViewsGuard implements Resolve<ViewModel[]> {
     private store$: Store<AppState>
   ) {}
 
-  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ViewModel[]> {
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<View[]> {
     return this.store$.select(selectViewsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {

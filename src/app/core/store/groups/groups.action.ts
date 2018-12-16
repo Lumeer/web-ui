@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {GroupModel} from './group.model';
+import {Group} from './group';
 
 export enum GroupsActionType {
   GET = '[Groups] Get',
@@ -48,7 +48,7 @@ export namespace GroupsAction {
   export class GetSuccess implements Action {
     public readonly type = GroupsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {groups: GroupModel[]}) {}
+    public constructor(public payload: {groups: Group[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -60,13 +60,13 @@ export namespace GroupsAction {
   export class Create implements Action {
     public readonly type = GroupsActionType.CREATE;
 
-    public constructor(public payload: {group: GroupModel}) {}
+    public constructor(public payload: {group: Group}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = GroupsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {group: GroupModel}) {}
+    public constructor(public payload: {group: Group}) {}
   }
 
   export class CreateFailure implements Action {
@@ -78,13 +78,13 @@ export namespace GroupsAction {
   export class Update implements Action {
     public readonly type = GroupsActionType.UPDATE;
 
-    public constructor(public payload: {group: GroupModel}) {}
+    public constructor(public payload: {group: Group}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = GroupsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {group: GroupModel}) {}
+    public constructor(public payload: {group: Group}) {}
   }
 
   export class UpdateFailure implements Action {

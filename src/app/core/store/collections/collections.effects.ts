@@ -22,10 +22,10 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {CollectionDto, Permission} from '../../dto';
+import {CollectionDto, PermissionDto} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -34,7 +34,7 @@ import {DocumentsAction, DocumentsActionType} from '../documents/documents.actio
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
 import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {
@@ -43,7 +43,7 @@ import {
   convertCollectionDtoToModel,
   convertCollectionModelToDto,
 } from './collection.converter';
-import {AttributeModel, CollectionModel} from './collection.model';
+import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
 
@@ -52,7 +52,7 @@ export class CollectionsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Get>(CollectionsActionType.GET),
-    withLatestFrom(this.store$.select(selectCollectionsLoaded)),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsLoaded))),
     filter(([action, loaded]) => !loaded),
     map(([action]) => action),
     mergeMap(() => {
@@ -85,9 +85,8 @@ export class CollectionsEffects {
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
 
-          const {callback} = action.payload;
-          if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(collection)}));
+          if (action.payload.callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.callback(collection)}));
           }
 
           return actions;
@@ -101,7 +100,7 @@ export class CollectionsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
@@ -150,7 +149,7 @@ export class CollectionsEffects {
   public importFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
@@ -177,11 +176,10 @@ export class CollectionsEffects {
   @Effect()
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Update>(CollectionsActionType.UPDATE),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
     mergeMap(([action, collections]) => {
       const collectionDto = convertCollectionModelToDto(action.payload.collection);
       const oldCollection = collections[collectionDto.id];
-      const oldName = oldCollection && oldCollection.name;
       const correlationId = oldCollection && oldCollection.correlationId;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
@@ -300,7 +298,7 @@ export class CollectionsEffects {
   public setDefaultAttribute$ = this.actions$.pipe(
     ofType<CollectionsAction.SetDefaultAttribute>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE),
     tap(action => this.store$.dispatch(new CollectionsAction.SetDefaultAttributeSuccess(action.payload))),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
     concatMap(([action, collections]) => {
       const {collectionId, attributeId} = action.payload;
       const collection = collections[collectionId];
@@ -340,7 +338,7 @@ export class CollectionsEffects {
       const {callback, nextAction, collectionId} = action.payload;
       return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
         map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdMap[attr.name]))),
-        withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
+        withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
         flatMap(([attributes, collection]) => {
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
@@ -421,7 +419,7 @@ export class CollectionsEffects {
     mergeMap(action => {
       const {collectionId, attributeId} = action.payload;
       return this.collectionService.removeAttribute(collectionId, attributeId).pipe(
-        withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
+        withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
         flatMap(([, collection]) => {
           const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess(action.payload)];
           if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
@@ -452,7 +450,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
     concatMap(action => {
       const workspace = {collectionId: action.payload.collectionId};
-      const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
+      const permissionDto: PermissionDto = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
@@ -498,8 +496,8 @@ export class CollectionsEffects {
 }
 
 function createSetDefaultAttributeAction(
-  collection: CollectionModel,
-  suppliedAttributes?: AttributeModel[],
+  collection: Collection,
+  suppliedAttributes?: Attribute[],
   excludeAttributeId?: string
 ): Action {
   const attributes =
@@ -517,7 +515,7 @@ function createSetDefaultAttributeAction(
   return null;
 }
 
-function updateCreateAttributesNextAction(nextAction: Action, attributes: AttributeModel[]) {
+function updateCreateAttributesNextAction(nextAction: Action, attributes: Attribute[]) {
   if (nextAction.type === DocumentsActionType.CREATE) {
     const action = nextAction as DocumentsAction.Create;
     action.payload.document = convertNewAttributes(attributes, action);
@@ -533,7 +531,7 @@ function updateCreateAttributesNextAction(nextAction: Action, attributes: Attrib
 }
 
 function convertNewAttributes(
-  attributes: AttributeModel[],
+  attributes: Attribute[],
   action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData
 ): DocumentModel {
   const document = action.payload.document;
