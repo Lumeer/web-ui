@@ -296,6 +296,10 @@ export class TableSingleColumnComponent implements OnChanges {
     this.store$.dispatch(new TablesAction.AddColumn({cursor}));
   }
 
+  public onConfigure() {
+    this.dialogService.openAttributeConfigDialog(this.collection.id, this.attribute.id);
+  }
+
   public onEdit() {
     this.editableCellDirective.startEditing();
   }

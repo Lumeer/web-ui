@@ -17,12 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Attribute {
-  id?: string;
-  name: string;
-  constraints: string[];
-  usageCount: number;
+import {FormGroup} from '@angular/forms';
 
-  intermediate?: boolean;
-  depth?: number;
+export function removeAllFormControls(formGroup: FormGroup) {
+  Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
 }

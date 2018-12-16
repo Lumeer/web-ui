@@ -17,34 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {ConstraintConfig, ConstraintType} from '../../../../core/model/data/constraint';
+import {removeAllFormControls} from '../../../../shared/utils/form.utils';
 
 @Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html',
-  styleUrls: ['./dialog-wrapper.component.scss'],
+  selector: 'constraint-config-form',
+  templateUrl: './constraint-config-form.component.html',
+  styleUrls: ['./constraint-config-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogWrapperComponent {
+export class ConstraintConfigFormComponent implements OnChanges {
   @Input()
-  public submitDisabled: boolean;
-
-  @Input()
-  public showSubmit: boolean = true;
+  public config: ConstraintConfig;
 
   @Input()
-  public type: DialogType;
+  public form: FormGroup;
 
   @Input()
-  @HostBinding('style.max-width.px')
-  public width: number;
+  public type: ConstraintType;
 
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    if (!this.submitDisabled) {
-      this.submit.emit();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.type) {
+      removeAllFormControls(this.form);
     }
   }
 }

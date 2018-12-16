@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
@@ -37,7 +37,12 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
 import {RouterAction} from '../router/router.action';
 import {TablesAction, TablesActionType} from '../tables/tables.action';
-import {CollectionConverter} from './collection.converter';
+import {
+  convertAttributeDtoToModel,
+  convertAttributeModelToDto,
+  convertCollectionDtoToModel,
+  convertCollectionModelToDto,
+} from './collection.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
@@ -52,7 +57,7 @@ export class CollectionsEffects {
     map(([action]) => action),
     mergeMap(() => {
       return this.collectionService.getCollections().pipe(
-        map((dtos: CollectionDto[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
+        map((dtos: CollectionDto[]) => dtos.map(dto => convertCollectionDtoToModel(dto))),
         map(collections => new CollectionsAction.GetSuccess({collections: collections})),
         catchError(error => of(new CollectionsAction.GetFailure({error: error})))
       );
@@ -73,10 +78,10 @@ export class CollectionsEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Create>(CollectionsActionType.CREATE),
     mergeMap(action => {
-      const collectionDto = CollectionConverter.toDto(action.payload.collection);
+      const collectionDto = convertCollectionModelToDto(action.payload.collection);
 
       return this.collectionService.createCollection(collectionDto).pipe(
-        map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
+        map(collection => convertCollectionDtoToModel(collection, action.payload.collection.correlationId)),
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
 
@@ -125,7 +130,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
     mergeMap(action => {
       return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
-        map(collection => CollectionConverter.fromDto(collection)),
+        map(collection => convertCollectionDtoToModel(collection)),
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.ImportSuccess({collection: collection})];
 
@@ -174,13 +179,13 @@ export class CollectionsEffects {
     ofType<CollectionsAction.Update>(CollectionsActionType.UPDATE),
     withLatestFrom(this.store$.select(selectCollectionsDictionary)),
     mergeMap(([action, collections]) => {
-      const collectionDto = CollectionConverter.toDto(action.payload.collection);
+      const collectionDto = convertCollectionModelToDto(action.payload.collection);
       const oldCollection = collections[collectionDto.id];
       const oldName = oldCollection && oldCollection.name;
       const correlationId = oldCollection && oldCollection.correlationId;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: CollectionDto) => CollectionConverter.fromDto(dto, correlationId)),
+        map((dto: CollectionDto) => convertCollectionDtoToModel(dto, correlationId)),
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.UpdateSuccess({collection})];
 
@@ -326,7 +331,7 @@ export class CollectionsEffects {
   public createAttributes$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateAttributes>(CollectionsActionType.CREATE_ATTRIBUTES),
     mergeMap(action => {
-      const attributesDto = action.payload.attributes.map(attr => CollectionConverter.toAttributeDto(attr));
+      const attributesDto = action.payload.attributes.map(attr => convertAttributeModelToDto(attr));
       const correlationIdMap = action.payload.attributes.reduce((acc, attr) => {
         acc[attr.name] = attr.correlationId;
         return acc;
@@ -334,9 +339,7 @@ export class CollectionsEffects {
 
       const {callback, nextAction, collectionId} = action.payload;
       return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
-        map(attributes =>
-          attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))
-        ),
+        map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdMap[attr.name]))),
         withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
         flatMap(([attributes, collection]) => {
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
@@ -374,27 +377,31 @@ export class CollectionsEffects {
   public changeAttribute$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.ChangeAttribute>(CollectionsActionType.CHANGE_ATTRIBUTE),
     mergeMap(action => {
-      const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
+      const {attributeId, collectionId, onSuccess, onFailure} = action.payload;
+      const attributeDto = convertAttributeModelToDto(action.payload.attribute);
 
-      return this.collectionService
-        .updateAttribute(action.payload.collectionId, action.payload.attributeId, attributeDto)
-        .pipe(
-          map(result => CollectionConverter.fromAttributeDto(result)),
-          flatMap(attribute => {
-            const actions: Action[] = [
-              new CollectionsAction.ChangeAttributeSuccess({
-                collectionId: action.payload.collectionId,
-                attributeId: action.payload.attributeId,
-                attribute: attribute,
-              }),
-            ];
-            if (action.payload.nextAction) {
-              actions.push(action.payload.nextAction);
-            }
-            return actions;
-          }),
-          catchError(error => of(new CollectionsAction.ChangeAttributeFailure({error: error})))
-        );
+      return this.collectionService.updateAttribute(collectionId, attributeId, attributeDto).pipe(
+        map(result => convertAttributeDtoToModel(result)),
+        flatMap(attribute => {
+          const actions: Action[] = [
+            new CollectionsAction.ChangeAttributeSuccess({collectionId, attributeId, attribute: attribute}),
+          ];
+          if (action.payload.nextAction) {
+            actions.push(action.payload.nextAction);
+          }
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(attribute)}));
+          }
+          return actions;
+        }),
+        catchError(error => {
+          const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error: error})];
+          if (onFailure) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
+          }
+          return from(actions);
+        })
+      );
     })
   );
 

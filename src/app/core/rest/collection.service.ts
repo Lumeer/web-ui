@@ -25,7 +25,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
-import {Attribute, CollectionDto} from '../dto';
+import {AttributeDto, CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -80,22 +80,22 @@ export class CollectionService extends PermissionService {
   /**
    * @deprecated Get attributes from collection instead.
    */
-  public getAttributes(collectionId: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
+  public getAttributes(collectionId: string): Observable<AttributeDto[]> {
+    return this.httpClient.get<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
   }
 
-  public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
+  public createAttribute(collectionId: string, attribute: AttributeDto): Observable<AttributeDto> {
     return this.httpClient
-      .post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute])
+      .post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute])
       .pipe(map(attributes => attributes[0]));
   }
 
-  public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
-    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
+  public createAttributes(collectionId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
+    return this.httpClient.post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
   }
 
-  public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+  public updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
   }
 
   public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {

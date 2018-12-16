@@ -51,6 +51,9 @@ export class TableColumnContextMenuComponent {
   public add = new EventEmitter<boolean>();
 
   @Output()
+  public configure = new EventEmitter();
+
+  @Output()
   public edit = new EventEmitter();
 
   @Output()

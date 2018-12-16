@@ -18,7 +18,7 @@
  */
 
 import {LinkTypeDto, SuggestionsDto} from '../../../../../../core/dto';
-import {CollectionConverter} from '../../../../../../core/store/collections/collection.converter';
+import {convertCollectionDtoToModel} from '../../../../../../core/store/collections/collection.converter';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeConverter} from '../../../../../../core/store/link-types/link-type.converter';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
@@ -34,10 +34,10 @@ export function convertSuggestionsDtoToModel(
     return null;
   }
   const attributes: CollectionModel[] = suggestions.attributes.map(collection =>
-    CollectionConverter.fromDto(collection)
+    convertCollectionDtoToModel(collection)
   );
   const collections: CollectionModel[] = suggestions.collections.map(collection =>
-    CollectionConverter.fromDto(collection)
+    convertCollectionDtoToModel(collection)
   );
   const views: ViewModel[] = suggestions.views.map(view => ViewConverter.convertToModel(view));
   const linkTypes: LinkTypeModel[] = suggestions.linkTypes.map(link => convertLinkType(link, allCollections));

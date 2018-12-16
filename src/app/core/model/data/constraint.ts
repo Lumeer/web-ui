@@ -24,12 +24,11 @@ export enum ConstraintType {
   Boolean = 'Boolean',
   Coordinates = 'Coordinates',
   DateTime = 'DateTime',
-  Decimal = 'Decimal',
   Email = 'Email',
   Function = 'Function',
   Image = 'Image',
-  Integer = 'Integer',
   Link = 'Link',
+  Number = 'Number',
   Percentage = 'Percentage',
   Rating = 'Rating',
   Select = 'Select',
@@ -38,8 +37,27 @@ export enum ConstraintType {
   User = 'User',
 }
 
-export interface AddressConstraint {
-  type: ConstraintType.Address;
+export const constraintTypesMap = {
+  [ConstraintType.Address]: ConstraintType.Address,
+  [ConstraintType.Boolean]: ConstraintType.Boolean,
+  [ConstraintType.Coordinates]: ConstraintType.Coordinates,
+  [ConstraintType.DateTime]: ConstraintType.DateTime,
+  [ConstraintType.Email]: ConstraintType.Email,
+  [ConstraintType.Function]: ConstraintType.Function,
+  [ConstraintType.Image]: ConstraintType.Image,
+  [ConstraintType.Link]: ConstraintType.Link,
+  [ConstraintType.Number]: ConstraintType.Number,
+  [ConstraintType.Percentage]: ConstraintType.Percentage,
+  [ConstraintType.Rating]: ConstraintType.Rating,
+  [ConstraintType.Select]: ConstraintType.Select,
+  [ConstraintType.Tag]: ConstraintType.Tag,
+  [ConstraintType.Text]: ConstraintType.Text,
+  [ConstraintType.User]: ConstraintType.User,
+};
+
+export const ENABLED_CONSTRAINTS: string[] = [ConstraintType.DateTime, ConstraintType.Number, ConstraintType.Text];
+
+export interface AddressConstraintConfig {
   fields: {
     street: boolean;
     zip: boolean;
@@ -51,62 +69,42 @@ export interface AddressConstraint {
   };
 }
 
-export interface BooleanConstraint {
-  type: ConstraintType.Boolean;
-}
-
 export enum CoordinatesFormat {
   DecimalDegrees = 'DD',
   DegreesMinutesSeconds = 'DMS',
 }
 
-export interface CoordinatesConstraint {
-  type: ConstraintType.Coordinates;
+export interface CoordinatesConstraintConfig {
   format: CoordinatesFormat;
   precision: number;
 }
 
-export interface DateTimeConstraint {
-  type: ConstraintType.DateTime;
-  format: string; // TODO maybe restrict to enum
-}
-
-export interface DecimalConstraint {
-  type: ConstraintType.Decimal;
+export interface DateTimeConstraintConfig {
   format: string;
+  minDateTime: Date;
+  maxDateTime: Date;
+  range: boolean;
 }
 
-export interface EmailConstraint {
-  type: ConstraintType.Decimal;
-}
-
-export interface FunctionConstraint {
-  type: ConstraintType.Function;
+export interface FunctionConstraintConfig {
   function: ColumnFunction;
 }
 
-export interface ImageConstraint {
-  type: ConstraintType.Image;
-}
-
-export interface IntegerConstraint {
-  type: ConstraintType.Integer;
+export interface NumberConstraintConfig {
+  decimal: boolean;
   format: string;
+  minValue: number; // TODO use BigInt
+  maxValue: number; // TODO use BigInt
+  precision: number;
 }
 
-export interface LinkConstraint {
-  type: ConstraintType.Link;
-}
-
-export interface PercentageConstraint {
-  type: ConstraintType.Percentage;
+export interface PercentageConstraintConfig {
   format: string;
   minValue: number;
   maxValue: number;
 }
 
-export interface RatingConstraint {
-  type: ConstraintType.Rating;
+export interface RatingConstraintConfig {
   icon: string;
   text: boolean;
   minValue: number;
@@ -118,14 +116,12 @@ export interface SelectOption {
   icon: string;
 }
 
-export interface SelectConstraint {
-  type: ConstraintType.Select;
+export interface SelectConstraintConfig {
   defaultOptionIndex: number;
   options: SelectOption[];
 }
 
-export interface TagConstraint {
-  type: ConstraintType.Tag;
+export interface TagConstraintConfig {
   options: string[];
 }
 
@@ -137,34 +133,32 @@ export enum CaseStyle {
   SentenceCase = 'SentenceCase',
 }
 
-export interface TextConstraint {
-  type: ConstraintType.Text;
+export interface TextConstraintConfig {
   caseStyle: CaseStyle;
   minLength: number;
   maxLength: number;
   regexp: string;
 }
 
-export interface UserConstraint {
-  type: ConstraintType.User;
+export interface UserConstraintConfig {
   email: boolean;
   name: boolean;
 }
 
-export type Constraint =
-  | AddressConstraint
-  | BooleanConstraint
-  | CoordinatesConstraint
-  | DateTimeConstraint
-  | DecimalConstraint
-  | EmailConstraint
-  | FunctionConstraint
-  | ImageConstraint
-  | IntegerConstraint
-  | LinkConstraint
-  | PercentageConstraint
-  | RatingConstraint
-  | SelectConstraint
-  | TagConstraint
-  | TextConstraint
-  | UserConstraint;
+export type ConstraintConfig =
+  | AddressConstraintConfig
+  | CoordinatesConstraintConfig
+  | DateTimeConstraintConfig
+  | FunctionConstraintConfig
+  | NumberConstraintConfig
+  | PercentageConstraintConfig
+  | RatingConstraintConfig
+  | SelectConstraintConfig
+  | TagConstraintConfig
+  | TextConstraintConfig
+  | UserConstraintConfig;
+
+export interface Constraint {
+  type: ConstraintType;
+  config: Partial<ConstraintConfig>;
+}

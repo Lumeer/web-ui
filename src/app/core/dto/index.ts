@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {Attribute} from './attribute';
+export {AttributeDto} from './attribute.dto';
 export {CollectionDto} from './collection.dto';
 export {Contact} from './contact';
 export {DocumentDto} from './document.dto';
@@ -25,7 +25,6 @@ export {Event} from './event';
 export {Group} from './group';
 export {LinkInstance} from './link-instance';
 export {LinkTypeDto} from './link-type.dto';
-export {LinkedAttribute} from './linked-attribute';
 export {Organization} from './organization';
 export {Permission} from './permission';
 export {Permissions} from './permissions';
