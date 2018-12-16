@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {UserNotification, UserNotificationType} from '../../../../core/model/user-notification';
 
 @Pipe({
   name: 'validNotificationFilter',
 })
+@Injectable()
 export class ValidNotificationFilterPipe implements PipeTransform {
   public transform(value: UserNotification[], args?: any): UserNotification[] {
     return value.filter(notification => this.isValid(notification));
