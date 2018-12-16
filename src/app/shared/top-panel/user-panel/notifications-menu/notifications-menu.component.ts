@@ -37,11 +37,12 @@ import {Dictionary} from '@ngrx/entity';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
-import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {ProjectModel} from '../../../../core/store/projects/project.model';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
+import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 
 @Component({
   selector: 'notifications-menu',
@@ -78,7 +79,11 @@ export class NotificationsMenuComponent implements OnInit {
 
   public currentProject$: Observable<ProjectModel>;
 
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private validNotificationFilter: ValidNotificationFilterPipe
+  ) {}
 
   public ngOnInit(): void {
     this.subscribeToNotifications();
@@ -94,8 +99,14 @@ export class NotificationsMenuComponent implements OnInit {
   }
 
   private subscribeToNotifications(): void {
-    this.notifications$ = this.store.pipe(select(selectAllUserNotifications));
-    this.unreadNotifications$ = this.store.pipe(select(selectUnreadUserNotifications));
+    this.notifications$ = this.store.pipe(
+      select(selectAllUserNotifications),
+      map(notifications => this.validNotificationFilter.transform(notifications))
+    );
+    this.unreadNotifications$ = this.store.pipe(
+      select(selectUnreadUserNotifications),
+      map(notifications => this.validNotificationFilter.transform(notifications))
+    );
   }
 
   private subscribeToResources(): void {

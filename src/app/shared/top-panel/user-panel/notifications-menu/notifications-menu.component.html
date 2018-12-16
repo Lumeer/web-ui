@@ -30,7 +30,7 @@
         </label>
       </form>
 
-      <a *ngFor="let notification of (unreadOnly ? notifications.unread : notifications.all) | validNotificationFilter;"
+      <a *ngFor="let notification of (unreadOnly ? notifications.unread : notifications.all);"
          class="dropdown-item cursor-default">
         <span class="notification-title clearfix">
           <span class="status small text-muted float-left">{{notification.createdAt | date:'shortDate' }}</span>
