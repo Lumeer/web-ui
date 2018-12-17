@@ -166,10 +166,6 @@ export class ResourceHeaderComponent implements AfterViewInit {
     });
   }
 
-  public isCollection(): boolean {
-    return this.resourceType === ResourceType.Collection;
-  }
-
   public saveSelectedColor($event: MouseEvent): void {
     this.colorChange.emit(this.resource.color);
     this.iconChange.emit(this.resource.icon);

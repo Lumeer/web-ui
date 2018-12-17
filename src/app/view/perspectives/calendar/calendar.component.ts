@@ -24,7 +24,7 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {QueryStem} from '../../../core/store/navigation/query';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 //import {DEFAULT_MAP_ID, selectMapById} from "../../../core/store/maps/maps.state";
 import {map} from 'rxjs/operators';
@@ -33,35 +33,35 @@ import {map} from 'rxjs/operators';
   selector: 'calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-
   @Input()
-  public query: QueryModel;
+  public query: QueryStem;
 
   public collections$: Observable<CollectionModel[]>;
   public documents$: Observable<DocumentModel[]>;
   //public calendar$: Observable<MapModel>;
-  public validQuery$: Observable<boolean>;
+  //public validQuery$: Observable<boolean>;
   //private calendarId = DEFAULT_CALENDAR_ID;     //TODO
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
-    this.bindValidQuery();
+    // this.bindValidQuery();
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     //this.bindCalendar(this.calendarId);
   }
 
-  private bindValidQuery() {
-    this.validQuery$ = this.store$.pipe(
-      select(selectQuery),
-      map(query => query && query.collectionIds && query.collectionIds.length > 0)
-    );
-  }
+  // private bindValidQuery() {
+  //   this.validQuery$ = this.store$.pipe(
+  //     select(selectQuery),
+  //     map(query => {
+  //       return query && query.collectionId && query.collectionId.length > 0;
+  //     })
+  //   );
+  // }
 }

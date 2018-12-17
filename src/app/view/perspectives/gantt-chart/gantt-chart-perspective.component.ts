@@ -24,7 +24,7 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {Query} from '../../../core/store/navigation/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {map, take} from 'rxjs/operators';
 
@@ -50,7 +50,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query$ = new BehaviorSubject<QueryModel>(null);
+  public query$ = new BehaviorSubject<Query>(null);
 
   private ganttChartId = DEFAULT_GANTT_CHART_ID;
   private subscriptions = new Subscription();
@@ -71,7 +71,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: QueryModel) {
+  private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

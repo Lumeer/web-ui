@@ -22,7 +22,6 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
@@ -33,6 +32,7 @@ import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'chart-perspective',
@@ -46,7 +46,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query$ = new BehaviorSubject<QueryModel>(null);
+  public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
@@ -67,7 +67,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: QueryModel) {
+  private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

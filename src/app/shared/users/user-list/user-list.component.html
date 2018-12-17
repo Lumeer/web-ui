@@ -1,4 +1,4 @@
-<div *ngIf="canAddUsers()" class="row my-4">
+<div *ngIf="resourceType | isOrganizationType" class="row my-4">
   <div class="col">
     <div class="card">
       <div class="card-body">
@@ -13,7 +13,7 @@
 </div>
 <div class="row mt-4">
   <div class="col">
-    <h4 *ngIf="canAddUsers()" i18n="@@users.header.existingUsers">Existing users</h4>
+    <h4 *ngIf="resourceType | isOrganizationType" i18n="@@users.header.existingUsers">Existing users</h4>
     <table class="table table-striped table-sm">
       <thead [style.background-color]="resource.color | lightenColor:.5">
         <tr>
@@ -39,11 +39,9 @@
         <tr user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
             [resourceType]="resourceType"
             [user]="user"
-            [editable]="canEditUser(user.id)"
-            [changeRoles]="canChangeRoles(user.id)"
-            [expanded]="expanded[user.email]"
-            [userRoles]="user | userRolesInResource:resource"
-            (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+            [editable]="user.id !== currentUser.id && (resourceType | isOrganizationType)"
+            [changeRoles]="user.id !== currentUser.id && (user | canChangeRoles:resourceType:organization:project)"
+            [userRoles]="user | userRolesInResource:resource:resourceType:organization:project"
             (rolesUpdate)="onUserRolesChanged(user.id, $event)"
             (userUpdated)="userUpdated.emit($event)"
             (userDeleted)="userDeleted.emit($event)">

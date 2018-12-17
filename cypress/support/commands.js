@@ -20,7 +20,7 @@ Cypress.Commands.add('login', () => {
     window.localStorage.setItem('auth_expires_at', authExpiresAt);
   } else {
     // login via auth0 API
-    auth.login({username: 'user1@lumeer.io', password: 'userOne123'});
+    auth.login({username: Cypress.env('username'), password: Cypress.env('password')});
 
     // wait for the token
     cy.window({timeout: 30000}).should(() => {
@@ -118,7 +118,9 @@ Cypress.Commands.add('dismissAgreement', () => {
 Cypress.Commands.add('createCollection', (name, icon, color) => {
   cy.request({
     method: 'POST',
-    url: Cypress.env('engineUrl') + 'rest/organizations/SRLMR/projects/PRJ1/collections',
+    url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
+      'projectCode'
+    )}/collections`,
     auth: {
       bearer: Cypress.env('authAccessToken'),
     },
@@ -126,6 +128,30 @@ Cypress.Commands.add('createCollection', (name, icon, color) => {
       name,
       icon,
       color,
+    },
+  });
+});
+
+Cypress.Commands.add('createProject', (code, name) => {
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: {
+      code,
+      name,
+    },
+  });
+});
+
+Cypress.Commands.add('deleteOrganization', code => {
+  cy.request({
+    method: 'DELETE',
+    url: `${Cypress.env('engineUrl')}rest/organizations/${code}`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
     },
   });
 });

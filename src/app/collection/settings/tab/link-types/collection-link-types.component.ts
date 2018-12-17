@@ -35,6 +35,7 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {isNullOrUndefined} from 'util';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -83,12 +84,13 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
           return {...linkType, collections};
         })
       ),
-      tap(linkTypes => this.fetchLinkInstances(linkTypes))
+      tap(linkTypes => this.fetchLinkInstances(linkTypes, collectionId))
     );
   }
 
-  private fetchLinkInstances(linkTypes: LinkTypeModel[]) {
-    const query = {linkTypeIds: linkTypes.map(link => link.id)};
+  private fetchLinkInstances(linkTypes: LinkTypeModel[], collectionId: string) {
+    const linkTypeIds = linkTypes.map(link => link.id);
+    const query: Query = {stems: [{collectionId, linkTypeIds}]};
     this.store.dispatch(new LinkInstancesAction.Get({query}));
   }
 

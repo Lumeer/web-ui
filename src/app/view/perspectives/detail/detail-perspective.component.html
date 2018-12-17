@@ -1,18 +1,20 @@
 <div class="container-fluid col-12 col-lg-10 col-xl-9">
-  <preview-results
-    [selectedCollection]="selectedCollection"
-    [selectedDocument]="selectedDocument"
-    (selectCollection)="selectCollection($event)"
-    (selectDocument)="selectDocument($event)">
-  </preview-results>
-  <document-detail *ngIf="selectedDocument"
-                   [collection]="selectedCollection"
-                   [document]="selectedDocument">
-  </document-detail>
-  <links-list
-    *ngIf="selectedDocument"
-    [document]="selectedDocument"
-    [collection]="selectedCollection"
-    (select)="selectCollectionAndDocument($event)">
-  </links-list>
+  <ng-container *ngIf="selected$ | async as selected">
+    <preview-results
+      [selectedCollection]="selected.collection"
+      [selectedDocument]="selected.document"
+      (selectCollection)="selectCollection($event)"
+      (selectDocument)="selectDocument($event)">
+    </preview-results>
+    <document-detail *ngIf="selected.document"
+                     [collection]="selected.collection"
+                     [document]="selected.document">
+    </document-detail>
+    <links-list
+      *ngIf="selected.document"
+      [document]="selected.document"
+      [collection]="selected.collection"
+      (select)="selectCollectionAndDocument($event)">
+    </links-list>
+  </ng-container>
 </div>

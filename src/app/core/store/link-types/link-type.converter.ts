@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../dto';
+import {LinkTypeDto} from '../../dto';
 import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from './link-type.model';
 
 export class LinkTypeConverter {
-  public static fromDto(dto: LinkType, correlationId?: string): LinkTypeModel {
+  public static fromDto(dto: LinkTypeDto, correlationId?: string): LinkTypeModel {
     return {
       id: dto.id,
       name: dto.name,
@@ -32,7 +32,7 @@ export class LinkTypeConverter {
     };
   }
 
-  public static toDto(model: LinkTypeModel): LinkType {
+  public static toDto(model: LinkTypeModel): LinkTypeDto {
     return {
       id: model.id,
       name: model.name,

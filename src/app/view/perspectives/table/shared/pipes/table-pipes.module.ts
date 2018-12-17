@@ -36,7 +36,6 @@ import {DataCellDocumentPipe} from './data-cell-document.pipe';
 import {DataPipe} from './data.pipe';
 import {DisplayablePipe} from './displayable.pipe';
 import {DocumentHintColumnsPipe} from './document-hint-columns.pipe';
-import {DragClassPipe} from './drag-class.pipe';
 import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
 import {ExpandablePipe} from './expandable.pipe';
@@ -88,7 +87,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
-    DragClassPipe,
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
@@ -130,7 +128,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
-    DragClassPipe,
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,

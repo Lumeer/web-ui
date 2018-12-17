@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {LinkInstance, Query} from '../dto';
+import {LinkInstance, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -47,10 +47,6 @@ export class LinkInstanceService {
 
   public deleteLinkInstance(id: string): Observable<string> {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
-  }
-
-  public getLinkInstances(query: Query): Observable<LinkInstance[]> {
-    return this.httpClient.post<LinkInstance[]>(this.restApiPrefix() + '/search', query);
   }
 
   private restApiPrefix(id?: string): string {

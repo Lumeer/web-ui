@@ -27,6 +27,7 @@ import {
   selectTableRowIndentable,
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
+import {isMacOS} from 'src/app/shared/utils/system.utils';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
@@ -40,6 +41,8 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
 
   @ViewChild(ContextMenuComponent)
   public contextMenu: ContextMenuComponent;
+
+  public readonly macOS = isMacOS();
 
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;

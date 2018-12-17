@@ -56,3 +56,11 @@ export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
   const b = array2 || [];
   return a.filter(x => b.includes(x));
 }
+
+export function shiftArray<T>(array: T[], fromItem: T): T[] {
+  const index = array.findIndex(item => item === fromItem);
+  if (index === -1) {
+    return [...array];
+  }
+  return [...array.slice(index), ...array.slice(0, index)];
+}

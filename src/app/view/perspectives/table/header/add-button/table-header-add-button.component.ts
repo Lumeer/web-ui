@@ -85,7 +85,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId)))
     ).pipe(
       map(([linkTypes, collectionsMap, query, lastCollectionId]) => {
-        const linkTypeIds = (query && query.linkTypeIds) || [];
+        const linkTypeIds = (query && query.stems && query.stems[0] && query.stems[0].linkTypeIds) || [];
         return linkTypes
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))

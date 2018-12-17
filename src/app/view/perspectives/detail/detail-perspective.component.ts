@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {Query} from '../../../core/store/navigation/query';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'detail-perspective',
@@ -31,15 +34,19 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailPerspectiveComponent {
+export class DetailPerspectiveComponent implements OnDestroy {
   @Input()
   public embedded: boolean;
 
-  public selectedCollection: CollectionModel;
+  public selected$ = new BehaviorSubject<{collection?: CollectionModel; document?: DocumentModel}>({});
+  private selectedCollection: CollectionModel;
+  private collectionSubsription = new Subscription();
 
-  public selectedDocument: DocumentModel;
+  public constructor(private store$: Store<AppState>) {}
 
-  public constructor(private store: Store<AppState>, private detector: ChangeDetectorRef) {}
+  public ngOnDestroy() {
+    this.collectionSubsription.unsubscribe();
+  }
 
   public selectCollection(collection: CollectionModel) {
     this.select(collection, undefined);
@@ -58,20 +65,28 @@ export class DetailPerspectiveComponent {
 
   private select(collection: CollectionModel, document?: DocumentModel) {
     this.selectedCollection = collection;
-    this.selectedDocument = document;
 
-    this.detector.detectChanges();
+    this.collectionSubsription.unsubscribe();
+    this.collectionSubsription = this.store$
+      .pipe(select(selectCollectionById(collection.id)))
+      .subscribe(collectionById => this.emit(collectionById, document));
+  }
+
+  private emit(collection: CollectionModel, document?: DocumentModel) {
+    setTimeout(() => {
+      this.selected$.next({collection, document});
+    });
   }
 
   private loadLinkInstances(document: DocumentModel) {
     if (document) {
-      const query = {documentIds: [document.id]};
-      this.store.dispatch(new LinkInstancesAction.Get({query}));
+      const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
     }
   }
 
   private setQueryWithCollection(collection: CollectionModel) {
-    const query = {collectionIds: [collection.id]};
-    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
+    const query: Query = {stems: [{collectionId: collection.id}]};
+    this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 }

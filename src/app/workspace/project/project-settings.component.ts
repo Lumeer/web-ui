@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -38,15 +38,17 @@ import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
   templateUrl: './project-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSettingsComponent implements OnInit {
   public userCount$: Observable<number>;
   public projectCodes$: Observable<string[]>;
-  public project: ProjectModel;
-  public workspace: Workspace;
+  public project$ = new BehaviorSubject<ProjectModel>(null);
+
+  public readonly projectType = ResourceType.Project;
 
   private previousUrl: string;
-
+  private workspace: Workspace;
   private subscriptions = new Subscription();
 
   constructor(
@@ -62,10 +64,6 @@ export class ProjectSettingsComponent implements OnInit {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  public getResourceType(): ResourceType {
-    return ResourceType.Project;
   }
 
   public onDelete(): void {
@@ -85,34 +83,35 @@ export class ProjectSettingsComponent implements OnInit {
 
   public onCollectionsClick() {
     const organizationCode = this.workspace && this.workspace.organizationCode;
-    const projectCode = this.project && this.project.code;
+    const project = this.project$.getValue();
+    const projectCode = project && project.code;
     if (organizationCode && projectCode) {
       this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'collections']);
     }
   }
 
   public onNewDescription(newDescription: string) {
-    const projectCopy = {...this.project, description: newDescription};
+    const projectCopy = {...this.project$.getValue(), description: newDescription};
     this.updateProject(projectCopy);
   }
 
   public onNewName(name: string) {
-    const projectCopy = {...this.project, name};
+    const projectCopy = {...this.project$.getValue(), name};
     this.updateProject(projectCopy);
   }
 
   public onNewCode(code: string) {
-    const projectCopy = {...this.project, code};
+    const projectCopy = {...this.project$.getValue(), code};
     this.updateProject(projectCopy);
   }
 
   public onNewIcon(icon: string) {
-    const projectCopy = {...this.project, icon};
+    const projectCopy = {...this.project$.getValue(), icon};
     this.updateProject(projectCopy);
   }
 
   public onNewColor(color: string) {
-    const projectCopy = {...this.project, color};
+    const projectCopy = {...this.project$.getValue(), color};
     this.updateProject(projectCopy);
   }
 
@@ -131,10 +130,12 @@ export class ProjectSettingsComponent implements OnInit {
 
     this.subscriptions.add(
       this.store$
-        .select(selectProjectByWorkspace)
-        .pipe(filter(project => !isNullOrUndefined(project)))
+        .pipe(
+          select(selectProjectByWorkspace),
+          filter(project => !!project)
+        )
         .subscribe(project => {
-          this.project = project;
+          this.project$.next(project);
           this.projectCodes$ = this.store$.pipe(
             select(selectProjectsCodesForOrganization(project.organizationId)),
             map(codes => (codes && codes.filter(code => code !== project.code)) || [])
@@ -144,15 +145,19 @@ export class ProjectSettingsComponent implements OnInit {
 
     this.subscriptions.add(
       this.store$
-        .select(selectWorkspace)
-        .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+        .pipe(
+          select(selectWorkspace),
+          filter(workspace => !!workspace)
+        )
         .subscribe(workspace => (this.workspace = workspace))
     );
 
     this.subscriptions.add(
       this.store$
-        .select(selectPreviousUrl)
-        .pipe(take(1))
+        .pipe(
+          select(selectPreviousUrl),
+          take(1)
+        )
         .subscribe(url => (this.previousUrl = url))
     );
   }
@@ -160,8 +165,8 @@ export class ProjectSettingsComponent implements OnInit {
   private deleteProject() {
     this.store$.dispatch(
       new ProjectsAction.Delete({
-        organizationId: this.project.organizationId,
-        projectId: this.project.id,
+        organizationId: this.project$.getValue().organizationId,
+        projectId: this.project$.getValue().id,
         onSuccess: () => this.router.navigate(['/']),
       })
     );

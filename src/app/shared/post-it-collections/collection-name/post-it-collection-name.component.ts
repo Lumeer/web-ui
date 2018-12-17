@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, SimpleChange, ViewChild} from '@angular/core';
-
-import {FormControl} from '@angular/forms';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'post-it-collection-name',
@@ -31,62 +29,23 @@ export class PostItCollectionNameComponent {
 
   @Input() public editable: boolean;
   @Input() public collectionName: string;
-  @Input() public nameFormControl: FormControl;
 
   @Output() public changed = new EventEmitter<string>();
   @Output() public selected = new EventEmitter();
   @Output() public unselected = new EventEmitter();
 
-  private pendingUpdate = false;
-
   public onNameBlurred(value: string) {
     this.unselected.emit();
-
-    this.pendingUpdate = false;
 
     const trimmed = value.trim();
     if (trimmed === '') {
       this.input.nativeElement.textContent = this.collectionName;
     } else if (trimmed !== this.collectionName) {
-      if (this.nameFormControl && this.nameFormControl.valid) {
-        this.changed.emit(trimmed);
-      } else {
-        this.pendingUpdate = true;
-      }
+      this.changed.emit(trimmed);
     }
-  }
-
-  public onInput(value: string) {
-    this.nameFormControl && this.nameFormControl.setValue(value);
   }
 
   public onNameSelected() {
     this.selected.emit();
-  }
-
-  public getPendingUpdate(): string {
-    if (!this.shouldPerformPendingUpdate()) {
-      return null;
-    }
-    return this.input.nativeElement.textContent;
-  }
-
-  public performPendingUpdateIfNeeded(): boolean {
-    if (!this.shouldPerformPendingUpdate()) {
-      return false;
-    }
-    this.pendingUpdate = false;
-
-    const currentValue = this.input.nativeElement.textContent;
-    if (currentValue !== this.collectionName) {
-      this.changed.emit(currentValue);
-      return true;
-    }
-    return false;
-  }
-
-  private shouldPerformPendingUpdate(): boolean {
-    const currentValue = this.input.nativeElement.textContent;
-    return this.pendingUpdate && this.nameFormControl.valid && currentValue !== this.collectionName;
   }
 }

@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Role} from '../../../core/model/role';
 
 @Component({
   selector: '[share-user]',
@@ -30,6 +29,9 @@ import {Role} from '../../../core/model/role';
 export class ShareUserComponent {
   @Input()
   public canRemove: boolean;
+
+  @Input()
+  public changeRoles: boolean;
 
   @Input()
   public email: string;
@@ -45,7 +47,11 @@ export class ShareUserComponent {
 
   public viewResourceType = ResourceType.View;
 
-  public toggleRole(role: Role) {
+  public toggleRole(role: string) {
+    if (!this.changeRoles) {
+      return;
+    }
+
     const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role) : [...this.roles, role];
     this.rolesChange.emit(newRoles);
   }

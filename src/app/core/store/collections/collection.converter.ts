@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Collection} from '../../dto';
+import {Attribute, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 
 export class CollectionConverter {
-  public static fromDto(dto: Collection, correlationId?: string): CollectionModel {
+  public static fromDto(dto: CollectionDto, correlationId?: string): CollectionModel {
     return {
       id: dto.id,
       code: dto.code,
@@ -44,7 +44,7 @@ export class CollectionConverter {
     };
   }
 
-  public static toDto(model: CollectionModel): Collection {
+  public static toDto(model: CollectionModel): CollectionDto {
     return {
       id: model.id,
       code: model.code,
@@ -61,8 +61,6 @@ export class CollectionConverter {
     return {
       id: attributeDto.id,
       name: attributeDto.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeDto.constraints,
       usageCount: attributeDto.usageCount,
       correlationId: correlationId,
     };
@@ -72,8 +70,7 @@ export class CollectionConverter {
     return {
       id: attributeModel.id,
       name: attributeModel.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeModel.constraints,
+      constraints: [],
       usageCount: attributeModel.usageCount, // TODO maybe not needed this way
     };
   }

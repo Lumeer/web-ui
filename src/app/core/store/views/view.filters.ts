@@ -17,29 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryModel} from '../navigation/query.model';
 import {ViewModel} from './view.model';
-import {isNullOrUndefined} from 'util';
-import {arrayIntersection} from '../../../shared/utils/array.utils';
+import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
+import {Query} from '../navigation/query';
 
-export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewModel[] {
-  let filtered = views.slice();
+export function filterViewsByQuery(views: ViewModel[], query: Query): ViewModel[] {
+  const filteredViews = views.slice();
 
-  if (isNullOrUndefined(query)) {
-    return filtered;
+  if (!query || queryIsEmpty(query)) {
+    return filteredViews;
   }
 
-  if (query.fulltext && query.fulltext.length > 0) {
-    filtered = filtered.filter(view => view.name.toLowerCase().includes(query.fulltext.toLowerCase()));
-  }
+  const viewsByFulltexts =
+    query.fulltexts && query.fulltexts.length > 0 ? getViewsByFulltexts(filteredViews, query.fulltexts) : [];
 
-  if (query.collectionIds && query.collectionIds.length > 0) {
-    filtered = filtered.filter(
-      view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0
-    );
-  }
+  const viewsBySubset = filteredViews
+    .filter(view => isQuerySubset(view.query, query))
+    .filter(view => !viewsByFulltexts.find(v => v.id === view.id));
 
-  return filtered;
+  return [...viewsByFulltexts, ...viewsBySubset];
+}
+
+function getViewsByFulltexts(views: ViewModel[], fulltexts: string[]): ViewModel[] {
+  return views.filter(view => fulltexts.every(fulltext => view.name.toLowerCase().includes(fulltext.toLowerCase())));
 }
 
 export function sortViewsById(views: ViewModel[]): ViewModel[] {

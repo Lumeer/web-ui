@@ -24,7 +24,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {Permission, View} from '../../dto';
+import {Permission, ViewDto} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
@@ -51,7 +51,7 @@ export class ViewsEffects {
     filter(([action, loaded]) => !loaded),
     mergeMap(() => {
       return this.viewService.getViews().pipe(
-        map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
+        map((dtos: ViewDto[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
         map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))
       );
@@ -65,7 +65,7 @@ export class ViewsEffects {
     filter(([action, views]) => !(action.payload.viewCode in views)),
     mergeMap(([action]) =>
       this.viewService.getView(action.payload.viewCode).pipe(
-        map((dto: View) => ViewConverter.convertToModel(dto)),
+        map((dto: ViewDto) => ViewConverter.convertToModel(dto)),
         map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))
       )

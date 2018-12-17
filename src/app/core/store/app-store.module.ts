@@ -62,8 +62,6 @@ import {videosReducer} from './videos/videos.reducer';
 import {VideosEffects} from './videos/videos.effects';
 import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
-import {postItReducer} from './postit/postit.reducer';
-import {chartsReducer} from './charts/charts.reducer';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 
 const reducers: ActionReducerMap<AppState> = {

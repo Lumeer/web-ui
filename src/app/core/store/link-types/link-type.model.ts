@@ -18,12 +18,14 @@
  */
 
 import {CollectionModel} from '../collections/collection.model';
+import {Constraint} from '../../model/data/constraint';
 
 export interface LinkTypeAttributeModel {
   id: string;
   name: string;
 
-  constraints: string[]; // TODO use complex objects instead
+  constraint?: Constraint; // TODO make compulsory
+
   usageCount: number;
   intermediate?: boolean;
 }

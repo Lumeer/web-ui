@@ -17,18 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
@@ -41,9 +33,6 @@ import {
 } from '../../../../../core/store/tables/table.model';
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
-import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-column-group',
@@ -51,7 +40,7 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
+export class TableColumnGroupComponent implements AfterViewChecked {
   @Input()
   public table: TableModel;
 
@@ -73,88 +62,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public canManageConfig: boolean;
 
-  private columnsLayout: ColumnLayout;
-  public columnGroupId: string;
-
   public resizedColumnIndex: number;
 
-  public containerClassPrefix = 'table-';
-
-  public constructor(private element: ElementRef, private store$: Store<AppState>, private zone: NgZone) {}
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes) || this.canManageViewChanged(changes)) {
-      this.refreshLayout();
-    }
-  }
-
-  private hasPathChanged(changes: SimpleChanges): boolean {
-    if (!changes['path']) {
-      return false;
-    }
-    return this.cursor.columnPath && !deepArrayEquals(this.cursor.columnPath, changes['path'].previousValue);
-  }
-
-  private hasColumnsChanged(changes: SimpleChanges): boolean {
-    if (!changes['columns']) {
-      return false;
-    }
-    return this.columns && !deepArrayEquals(this.columns, changes['columns'].previousValue);
-  }
-
-  private canManageViewChanged(changes: SimpleChanges): boolean {
-    if (!changes.canManageView) {
-      return false;
-    }
-    return changes.canManageView.previousValue !== changes.canManageView.currentValue;
-  }
-
-  private refreshLayout() {
-    this.destroyLayout();
-    this.initLayout();
-  }
-
-  private initLayout() {
-    this.columnGroupId = this.createColumnGroupId();
-    this.columnsLayout = new ColumnLayout(
-      '.' + this.layoutContainerClass(),
-      {
-        layout: {
-          horizontal: true,
-          rounding: true,
-        },
-        dragEnabled: this.canManageConfig,
-        dragAxis: 'x',
-        dragStartPredicate: (item, event) => this.dragStartPredicate(item, event),
-      },
-      this.zone,
-      ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex)
-    );
-  }
-
-  private dragStartPredicate(item, event): boolean {
-    if (!event.target.className.includes(`drag-${this.columnGroupId}`)) {
-      return false;
-    }
-
-    const width = item._width;
-    const offset = event.srcEvent.offsetX || event.srcEvent.layerX;
-    return 8 < offset && offset < width - 8;
-  }
-
-  private layoutContainerClass(): string {
-    return this.containerClassPrefix + this.columnGroupId;
-  }
-
-  private createColumnGroupId(): string {
-    return `${this.table.id}-${this.cursor.partIndex}-${this.cursor.columnPath.join('-')}`;
-  }
-
-  private destroyLayout() {
-    if (this.columnsLayout) {
-      this.columnsLayout.destroy();
-    }
-  }
+  public constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngAfterViewChecked() {
     const element = this.element.nativeElement as HTMLElement;
@@ -162,14 +72,6 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
     const tableElement = getTableElement(this.cursor.tableId);
     tableElement.style.setProperty('--column-group-height', `${height}px`);
-  }
-
-  private onMoveColumn(fromIndex: number, toIndex: number) {
-    if (fromIndex === toIndex) {
-      return;
-    }
-    const cursor = {...this.cursor, columnPath: this.cursor.columnPath.concat(fromIndex)};
-    this.store$.dispatch(new TablesAction.MoveColumn({cursor, toIndex}));
   }
 
   public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
@@ -189,5 +91,14 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
     const delta = Number(event.edges.right);
     this.store$.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
+  }
+
+  public onDrop(event: any) {
+    const {currentIndex, previousIndex} = event;
+    if (currentIndex === previousIndex) {
+      return;
+    }
+    const cursor = {...this.cursor, columnPath: this.cursor.columnPath.concat(previousIndex)};
+    this.store$.dispatch(new TablesAction.MoveColumn({cursor, toIndex: currentIndex}));
   }
 }

@@ -40,7 +40,13 @@ Here is the example command to build the application WAR file with all configura
 ```bash
 $ LUMEER_ENV=production \
 > I18N_LOCALE=en \
+> AUTH_CLIENT_ID=<auth0 client id> \
+> AUTH_DOMAIN=<auth0 app domain> \
 > SENTRY_DSN=https://<key>@sentry.io/<project> \
+> SENTRY_AUTH_TOKEN=<secret token> \
+> PUSHER_CLUSTER=us1 \
+> PUSHER_KEY=<pusher api key> \
+> VIDEO_KEY=<youtube api key> \
 > BUILD_NUMBER=42 \
 > SESSION_TIMEOUT=30 \
 > LUMEER_ENGINE=lumeer-engine \
@@ -52,6 +58,10 @@ $ LUMEER_ENV=production \
 - `AUTH_CLIENT_ID`: client ID of Auth0 application
 - `AUTH_DOMAIN`: base URL for Auth0 authentication
 - `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
+- `SENTRY_AUTH_TOKEN`: Sentry authentication token
+- `PUSHER_CLUSTER`: Pusher.com for push notifications - the server cluster to be used
+- `PUSHER_KEY`: Pusher.com for push notifications - the secret API key
+- `VIDEO_KEY`: YouTube Google v3 API key
 - `BUILD_NUMBER`: build number to be shown in the application
 - `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
 - `LUMEER_ENGINE`: back-end deployment context root

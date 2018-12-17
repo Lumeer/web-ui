@@ -7,7 +7,6 @@
        [textContent]="collectionName"
        title="{{collectionName}}"
        (blur)="onNameBlurred(collectionNameInput.textContent)"
-       (input)="onInput(collectionNameInput.textContent)"
        (focus)="onNameSelected()"
        [attr.spellcheck]="false"
        (keydown.enter)="collectionNameInput.blur()"
