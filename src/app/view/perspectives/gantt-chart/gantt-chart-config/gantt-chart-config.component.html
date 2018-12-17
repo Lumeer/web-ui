@@ -20,11 +20,9 @@
       (remove)="onBarPropertyRequiredRemoved(ganttChartBarPropertyRequired)">
     </select-item>
   </ng-container>
-
 </div>
 
-<div *ngIf="allRequiredPropertiesSet()" class="d-flex justify-content-center flex-row align-items-center flex-wrap">
-
+<div *ngIf="allRequiredPropertiesSet()" class="d-flex justify-content-center flex-row align-items-center flex-wrap" style="margin-top: 10px">
   <ng-container *ngFor="let ganttChartBarPropertyOptional of ganttChartBarsPropertiesOptional; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
@@ -37,7 +35,6 @@
       (remove)="onBarPropertyOptionalRemoved(ganttChartBarPropertyOptional)">
     </select-item>
   </ng-container>
-
 </div>
 
 <div *ngIf="propertiesNotSetYet" class="flex-grow-1 " >
