@@ -17,16 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ServiceLevelType} from '../../../core/dto/service-level-type';
-import {AppState} from '../../../core/store/app.state';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {ServiceLimitsAction} from '../../../core/store/organizations/service-limits/service-limits.action';
-import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'user-panel',
@@ -34,29 +26,7 @@ import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/
   styleUrls: ['./user-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPanelComponent implements OnInit {
+export class UserPanelComponent {
   @Input()
   public workspace: Workspace;
-
-  public freePlan$: Observable<boolean>;
-  public notifications = 0;
-
-  constructor(private router: Router, private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.bindServiceLimits();
-  }
-
-  private bindServiceLimits() {
-    this.store$.dispatch(new ServiceLimitsAction.GetAll());
-    this.freePlan$ = this.store$
-      .select(selectServiceLimitsByWorkspace)
-      .pipe(map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE));
-  }
-
-  public goToOrganizationDetail() {
-    if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
-    }
-  }
 }

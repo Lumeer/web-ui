@@ -28,17 +28,18 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {catchError, debounceTime, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
-import {Suggestions, SuggestionType} from '../../../../../core/dto';
+import {catchError, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {SuggestionsDto, SuggestionType} from '../../../../../core/dto';
 import {SearchService} from '../../../../../core/rest';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
 import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
-import {SuggestionsConverter} from './suggestions.converter';
+import {convertSuggestionsDtoToModel} from './model/suggestions.converter';
+import {convertSuggestionsToQueryItemsSorted, getCollectionIdsChainForItems} from './model/suggestions.util';
 
 @Component({
   selector: 'search-suggestions',
@@ -72,10 +73,10 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('queryItems') && this.queryItems) {
+    if (changes.queryItems && this.queryItems) {
       this.suggesting = !this.queryItems.find(queryItem => queryItem.type === QueryItemType.View);
     }
-    if (changes.hasOwnProperty('text')) {
+    if (changes.text) {
       this.searchTerms$.next(this.text);
     }
   }
@@ -89,11 +90,9 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       .pipe(
         debounceTime(300),
         switchMap(text => this.retrieveSuggestions(text)),
-        withLatestFrom(this.store.select(selectAllCollections)),
-        mergeMap(([suggestions, collections]) =>
-          SuggestionsConverter.convertSuggestionsToQueryItems(suggestions, collections)
-        ),
-        map(queryItems => this.filterViewQueryItems(queryItems)),
+        withLatestFrom(this.store.pipe(select(selectAllCollections))),
+        map(([suggestionsDto, collections]) => convertSuggestionsDtoToModel(suggestionsDto, collections)),
+        map(suggestions => convertSuggestionsToQueryItemsSorted(suggestions, this.queryItems)),
         map(queryItems => this.addFulltextSuggestion(queryItems)),
         map(queryItems => this.filterUsedQueryItems(queryItems)),
         catchError(error => {
@@ -107,31 +106,28 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       });
   }
 
-  private retrieveSuggestions(text: string): Observable<Suggestions> {
+  private retrieveSuggestions(text: string): Observable<SuggestionsDto> {
     if (this.suggesting && text) {
-      return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
+      const priorityCollectionIds = getCollectionIdsChainForItems(this.queryItems);
+      const dto = {text: text.toLowerCase(), type: SuggestionType.All, priorityCollectionIds};
+      return this.searchService.suggest(dto);
     }
-    return of<Suggestions>(null);
+    return of<SuggestionsDto>(null);
   }
 
   private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    if (!this.isFullTextPresented() && this.text) {
+    if (this.text) {
       return queryItems.concat(new FulltextQueryItem(this.text));
     } else {
       return queryItems;
     }
   }
 
-  private filterViewQueryItems(queryItems: QueryItem[]): QueryItem[] {
-    if (this.queryItems.length > 0) {
-      return queryItems.filter(queryItem => queryItem.type !== QueryItemType.View);
-    }
-    return queryItems;
-  }
-
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
+    const allowedTypes = [QueryItemType.Attribute, QueryItemType.Link, QueryItemType.Document];
     return queryItems.filter(
       queryItem =>
+        allowedTypes.includes(queryItem.type) ||
         !this.queryItems.find(usedItem => {
           return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
         })
@@ -151,15 +147,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     this.onUseSuggestion(queryItem);
   }
 
-  private isFullTextPresented(): boolean {
-    return this.queryItems && !!this.queryItems.find(q => q.type === QueryItemType.Fulltext);
-  }
-
   public onUseSuggestion(queryItem: QueryItem) {
-    if (queryItem.type === QueryItemType.Fulltext && this.isFullTextPresented()) {
-      return;
-    }
-
     this.useSuggestion.emit(queryItem);
     this.suggestions$.next([]);
   }

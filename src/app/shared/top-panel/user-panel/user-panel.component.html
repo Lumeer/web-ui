@@ -1,28 +1,5 @@
 <div class="d-flex justify-content-end">
-  <div *ngIf="freePlan$ | async"
-       class="panel-item">
-    <a (click)="goToOrganizationDetail()">
-      <span class="bagde badge-danger badge-pill mr-2 py-1" i18n="@@panel.plan.free">Free&nbsp;Plan</span>
-    </a>
-  </div>
-
-  <!-- TODO remove once Angular supports ICU messages in attributes -->
-  <div hidden>
-        <span #notificationsTitle
-              i18n="@@panel.notifications">
-          {notifications, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other { {{notifications}} new notifications}}
-        </span>
-  </div>
-
-  <div class="panel-item mx-2"
-       [title]="notificationsTitle | removeHtmlComments">
-    <i *ngIf="notifications === 0; else newNotifications"
-       class="fa fa-bell fa-lg text-secondary">
-    </i>
-    <ng-template #newNotifications>
-      <i class="fa fa-bell fa-lg text-warning"></i>
-    </ng-template>
-  </div>
-
-  <user-menu></user-menu>
+  <video-menu></video-menu>
+  <notifications-menu></notifications-menu>
+  <user-menu [workspace]="workspace"></user-menu>
 </div>

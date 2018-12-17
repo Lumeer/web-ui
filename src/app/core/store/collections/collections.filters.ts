@@ -18,52 +18,39 @@
  */
 
 import {CollectionModel} from './collection.model';
-import {QueryModel} from '../navigation/query.model';
 import {DocumentModel} from '../documents/document.model';
-import {getCollectionsIdsFromFilters, mergeCollections} from './collection.util';
+import {mergeCollections} from './collection.util';
 import {groupDocumentsByCollection} from '../documents/document.utils';
-import {filterDocumentsByFulltext} from '../documents/documents.filters';
+import {Query} from '../navigation/query';
+import {LinkTypeModel} from '../link-types/link-type.model';
+import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
+import {filterDocumentsByFulltexts} from '../documents/documents.filters';
 
 export function filterCollectionsByQuery(
   collections: CollectionModel[],
   documents: DocumentModel[],
-  query: QueryModel
+  linkTypes: LinkTypeModel[],
+  query: Query
 ): CollectionModel[] {
-  collections = collections.filter(collection => typeof collection === 'object');
-
-  if (!query || !containsCollectionsQueryField(query)) {
+  const filteredCollections = collections.filter(collection => collection && typeof collection === 'object');
+  if (!query || queryIsEmptyExceptPagination(query)) {
     return collections;
   }
 
-  let filteredCollections = filterCollectionsByFulltext(collections, documents, query.fulltext);
-  filteredCollections = mergeCollections(
-    filteredCollections,
-    filterCollectionsByCollectionIds(collections, query.collectionIds)
-  );
-  filteredCollections = mergeCollections(filteredCollections, filterCollectionsByFilters(collections, query.filters));
-  filteredCollections = mergeCollections(
-    filteredCollections,
-    filterCollectionsByDocumentsIds(collections, documents, query.documentIds)
-  );
+  const collectionIds = getAllCollectionIdsFromQuery(query, linkTypes);
+  const collectionsByIds = filteredCollections.filter(collection => collectionIds.includes(collection.id));
 
-  return filteredCollections;
+  const collectionsByFullTexts = filterCollectionsByFulltexts(filteredCollections, documents, query.fulltexts);
+
+  return mergeCollections(collectionsByIds, collectionsByFullTexts);
 }
 
-function containsCollectionsQueryField(query: QueryModel): boolean {
-  return (
-    (query.collectionIds && query.collectionIds.length > 0) ||
-    (query.documentIds && query.documentIds.length > 0) ||
-    (query.filters && query.filters.length > 0) ||
-    !!query.fulltext
-  );
-}
-
-function filterCollectionsByFulltext(
+function filterCollectionsByFulltexts(
   collections: CollectionModel[],
   documents: DocumentModel[],
-  fulltext: string
+  fulltexts: string[]
 ): CollectionModel[] {
-  if (!fulltext) {
+  if (!fulltexts || fulltexts.length === 0) {
     return [];
   }
 
@@ -71,44 +58,15 @@ function filterCollectionsByFulltext(
 
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];
-    return filterDocumentsByFulltext(documentByCollections, fulltext).length > 0;
+    return (
+      collectionMeetFulltexts(collection, fulltexts) ||
+      filterDocumentsByFulltexts(documentByCollections, collection, fulltexts).length > 0
+    );
   });
 }
 
-function filterCollectionsByCollectionIds(collections: CollectionModel[], collectionIds: string[]): CollectionModel[] {
-  if (!collections || collectionIds.length === 0) {
-    return [];
-  }
-
-  return collections.filter(collection => collectionIds.includes(collection.id));
-}
-
-function filterCollectionsByFilters(collections: CollectionModel[], filters: string[]): CollectionModel[] {
-  if (!filters || filters.length === 0) {
-    return [];
-  }
-
-  const collectionIdsFromFilters = getCollectionsIdsFromFilters(filters);
-
-  return filterCollectionsByCollectionIds(collections, collectionIdsFromFilters);
-}
-
-function filterCollectionsByDocumentsIds(
-  collections: CollectionModel[],
-  documents: DocumentModel[],
-  documentsIds: string[]
-): CollectionModel[] {
-  if (!documentsIds || documentsIds.length === 0) {
-    return [];
-  }
-
-  const collectionsIdsFromDocuments = documents.reduce((collectionIds, document) => {
-    if (documentsIds.includes(document.id) && !collectionIds.includes(document.collectionId)) {
-      collectionIds.push(document.collectionId);
-    }
-
-    return collectionIds;
-  }, []);
-
-  return filterCollectionsByCollectionIds(collections, collectionsIdsFromDocuments);
+function collectionMeetFulltexts(collection: CollectionModel, fulltexts: string[]): boolean {
+  return (fulltexts || [])
+    .map(fulltext => fulltext.toLowerCase())
+    .every(fulltext => collection.name.toLowerCase().includes(fulltext));
 }

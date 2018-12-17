@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DataValue} from './../../model/data/data-value';
+
 export interface DocumentModel {
   id?: string;
   collectionId: string;
@@ -37,7 +39,7 @@ export interface DocumentModel {
 }
 
 export type DocumentData = {
-  [attributeId: string]: any;
+  [attributeId: string]: DataValue | any; // TODO remove any
 };
 
 export interface DocumentMetaData {

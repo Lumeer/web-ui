@@ -30,11 +30,11 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   selector: 'table-body',
@@ -47,7 +47,7 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
   public tableId: string;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public canManageConfig: boolean;

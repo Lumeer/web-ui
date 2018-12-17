@@ -20,23 +20,20 @@
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
 export class DocumentQueryItem implements QueryItem {
   public type = QueryItemType.Document;
 
-  public constructor(public documentId: string) {
+  public constructor(public document: DocumentModel) {
     // TODO use collection for icon and color
   }
 
   public get value(): string {
-    return this.documentId;
+    return this.document.id;
   }
 
   public get text(): string {
-    return this.documentId;
-  }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    return false;
+    return this.document.id;
   }
 }

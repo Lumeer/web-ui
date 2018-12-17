@@ -17,38 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
 import {QueryAction} from '../../../../core/model/query-action';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {Query} from '../../../../core/store/navigation/query';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
+import {ProjectModel} from '../../../../core/store/projects/project.model';
 
 @Component({
   templateUrl: './search-all.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
   public dataLoaded$: Observable<boolean>;
-  public hasCollection: boolean;
-  public hasDocument: boolean;
-  public hasView: boolean;
-  public workspace: Workspace;
-  public query: QueryModel;
+  public project$: Observable<ProjectModel>;
+  public hasCollection$: Observable<boolean>;
+  public hasDocument$: Observable<boolean>;
+  public hasView$: Observable<boolean>;
+  public query$ = new BehaviorSubject<Query>(null);
 
+  private workspace: Workspace;
   private documentsLoaded: boolean;
   private subscriptions = new Subscription();
 
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.subscribeDataInfo();
@@ -65,47 +69,48 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   private subscribeDataInfo() {
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+
     this.dataLoaded$ = combineLatest(
-      this.store.select(selectCollectionsLoaded),
-      this.store.select(selectViewsLoaded),
-      this.store.select(selectCurrentQueryDocumentsLoaded)
+      this.store$.pipe(select(selectCollectionsLoaded)),
+      this.store$.pipe(select(selectViewsLoaded)),
+      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded))
     ).pipe(
       tap(([collectionsLoaded, viewLoaded, documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );
 
-    const navigationSubscription = this.store
-      .select(selectNavigation)
-      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
+    const navigationSubscription = this.store$
+      .pipe(
+        select(selectNavigation),
+        filter(navigation => !!navigation.workspace && !!navigation.query)
+      )
       .subscribe(navigation => {
         this.workspace = navigation.workspace;
-        this.query = navigation.query;
+        this.query$.next(navigation.query);
         this.fetchDocuments();
       });
     this.subscriptions.add(navigationSubscription);
 
-    const collectionSubscription = this.store
-      .select(selectCollectionsByQuery)
-      .pipe(map(collections => collections && collections.length > 0))
-      .subscribe(hasCollection => (this.hasCollection = hasCollection));
-    this.subscriptions.add(collectionSubscription);
+    this.hasCollection$ = this.store$.pipe(
+      select(selectCollectionsByQuery),
+      map(collections => collections && collections.length > 0)
+    );
 
-    const viewsSubscription = this.store
-      .select(selectViewsByQuery)
-      .pipe(map(views => views && views.length > 0))
-      .subscribe(hasView => (this.hasView = hasView));
-    this.subscriptions.add(viewsSubscription);
+    this.hasView$ = this.store$.pipe(
+      select(selectViewsByQuery),
+      map(views => views && views.length > 0)
+    );
 
-    const documentSubscription = this.store
-      .select(selectDocumentsByQuery)
-      .pipe(map(documents => documents && documents.length > 0))
-      .subscribe(hasDocument => (this.hasDocument = hasDocument));
-    this.subscriptions.add(documentSubscription);
+    this.hasDocument$ = this.store$.pipe(
+      select(selectDocumentsByQuery),
+      map(documents => documents && documents.length > 0)
+    );
   }
 
   private fetchDocuments() {
-    const query = {...this.query, page: 0, pageSize: 5};
-    this.store.dispatch(new DocumentsAction.Get({query}));
+    const query = {...this.query$.getValue(), page: 0, pageSize: 5};
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private workspacePath(): string {

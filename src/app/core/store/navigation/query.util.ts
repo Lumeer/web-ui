@@ -19,9 +19,12 @@
 
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
+import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
+import {LinkTypeModel} from '../link-types/link-type.model';
+import {isArraySubset} from '../../../shared/utils/array.utils';
+import {isNullOrUndefined} from 'util';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -104,19 +107,87 @@ export function conditionFromString(condition: string): ConditionType {
   return null;
 }
 
-export function queryIsNotEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).find(val => (val instanceof Array ? val.length > 0 : val));
-}
-
-export function queryIsEmpty(query: QueryModel): boolean {
-  return query && Object.values(query).every(val => (val instanceof Array ? val.length === 0 : !val));
-}
-
-export function isSingleCollectionQuery(query: QueryModel): boolean {
+export function queryIsNotEmpty(query: Query): boolean {
   return (
-    query &&
-    Object.entries(query).every(([key, value]) =>
-      value instanceof Array ? (key === 'collectionIds' ? value.length > 0 : value.length === 0) : !value
-    )
+    (query.stems && query.stems.length > 0) ||
+    (query.fulltexts && query.fulltexts.length > 0) ||
+    !isNullOrUndefined(query.page) ||
+    !!query.pageSize
   );
+}
+
+export function queryIsEmpty(query: Query): boolean {
+  return !queryIsNotEmpty(query);
+}
+
+export function queryIsNotEmptyExceptPagination(query: Query): boolean {
+  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
+}
+
+export function queryIsEmptyExceptPagination(query: Query): boolean {
+  return !queryIsNotEmptyExceptPagination(query);
+}
+
+export function isSingleCollectionQuery(query: Query): boolean {
+  return query && query.stems && query.stems.length === 1;
+}
+
+export function isAnyCollectionQuery(query: Query): boolean {
+  return query && query.stems && query.stems.length > 0;
+}
+
+export function isOnlyFulltextsQuery(query: Query): boolean {
+  return (!query.stems || query.stems.length === 0) && query.fulltexts && query.fulltexts.length > 0;
+}
+
+export function getQueryFiltersForCollection(query: Query, collectionId: string): AttributeFilter[] {
+  const stem = query && query.stems && query.stems.find(st => st.collectionId === collectionId);
+  return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
+}
+
+export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkTypeModel[]): string[] {
+  const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
+  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], []);
+  const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));
+  const collectionIdsFromLinks = filteredLinkTypes
+    .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
+    .filter(id => !basicCollectionIds.includes(id));
+  return [...basicCollectionIds, ...collectionIdsFromLinks];
+}
+
+export function getBaseCollectionIdsFromQuery(query: Query): string[] {
+  return query.stems && query.stems.map(stem => stem.collectionId);
+}
+
+export function isQuerySubset(superset: Query, subset: Query): boolean {
+  if (!isArraySubset(superset.fulltexts || [], subset.fulltexts || [])) {
+    return false;
+  }
+
+  if (subset.stems.length > superset.stems.length) {
+    return false;
+  }
+
+  return subset.stems.every(stem => {
+    const supersetStem = superset.stems.find(s => s.collectionId === stem.collectionId);
+    return supersetStem && isQueryStemSubset(supersetStem, stem);
+  });
+}
+
+export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boolean {
+  return (
+    superset.collectionId === subset.collectionId &&
+    isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || []) &&
+    isArraySubset(superset.documentIds || [], subset.documentIds || []) &&
+    isQueryFiltersSubset(superset.filters || [], subset.filters || [])
+  );
+}
+
+function isQueryFiltersSubset(superset: AttributeFilter[], subset: AttributeFilter[]): boolean {
+  return subset.every(sub => !!superset.find(sup => JSON.stringify(sup) === JSON.stringify(sub)));
+}
+
+export function queryWithoutLinks(query: Query): Query {
+  const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
+  return {...query, stems};
 }

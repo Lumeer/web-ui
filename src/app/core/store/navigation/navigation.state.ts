@@ -20,12 +20,12 @@
 import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
-import {QueryModel} from './query.model';
 import {SearchTab} from './search-tab';
 import {Workspace} from './workspace.model';
+import {Query} from './query';
 
 export interface NavigationState {
-  query: QueryModel;
+  query: Query;
   workspace: Workspace;
   perspective?: Perspective;
   searchTab?: SearchTab;

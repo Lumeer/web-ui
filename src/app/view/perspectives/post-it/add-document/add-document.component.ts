@@ -22,8 +22,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
+import {Query} from '../../../../core/store/navigation/query';
+import {getQueryFiltersForCollection} from '../../../../core/store/navigation/query.util';
 
 @Component({
   selector: 'add-document',
@@ -35,7 +36,7 @@ export class PostItAddDocumentComponent {
   public disabled: boolean;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public collection: CollectionModel;
@@ -47,7 +48,7 @@ export class PostItAddDocumentComponent {
     this.createPostIt.emit({
       collectionId: this.collection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: generateDocumentData(this.collection, (this.query && this.query.filters) || []),
+      data: generateDocumentData(this.collection, getQueryFiltersForCollection(this.query, this.collection.id)),
     });
   }
 }

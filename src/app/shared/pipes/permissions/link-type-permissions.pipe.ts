@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
@@ -36,7 +36,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
   providedIn: 'root',
 })
 export class LinkTypePermissionsPipe implements PipeTransform {
-  public constructor(private store: Store<AppState>, private collectionsPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionPermissionsPipe) {}
 
   public transform(linkType: LinkTypeModel): Observable<AllowedPermissions> {
     if (!linkType) {
@@ -69,8 +69,9 @@ export class LinkTypePermissionsPipe implements PipeTransform {
   }
 
   private getCollectionsForLinkType(linkType: LinkTypeModel): Observable<CollectionModel[]> {
-    return this.store
-      .select(selectCollectionsByIds(linkType.collectionIds))
-      .pipe(map(collections => collections.filter(collection => !!collection)));
+    return this.store$.pipe(
+      select(selectCollectionsByIds(linkType.collectionIds)),
+      map(collections => collections.filter(collection => !!collection))
+    );
   }
 }

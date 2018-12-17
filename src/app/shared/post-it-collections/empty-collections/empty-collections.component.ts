@@ -17,19 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {ProjectModel} from '../../../core/store/projects/project.model';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Query} from '../../../core/store/navigation/query';
+import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
   selector: 'empty-collections',
   templateUrl: './empty-collections.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyCollectionsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public project: ProjectModel;
@@ -42,6 +44,8 @@ export class EmptyCollectionsComponent {
 
   @Output()
   public import = new EventEmitter<{result: string; name: string; format: string}>();
+
+  public readonly projectType = ResourceType.Project;
 
   constructor(public i18n: I18n) {}
 

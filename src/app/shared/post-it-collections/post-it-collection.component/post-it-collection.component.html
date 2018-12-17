@@ -81,15 +81,9 @@
 
   </div>
 
-  <small class="text-danger text-center px-2" *ngIf="!nameFormControl.valid"
-         i18n="@@collection.postit.name.duplicity">
-    I am sorry, this name is already taken. Try another?
-  </small>
-
   <post-it-collection-name
     [collectionName]="collection.name"
     [editable]="!collection.id || allowedPermissions.manage"
-    [nameFormControl]="nameFormControl"
     (changed)="onNameChanged($event)"
     (selected)="onNameSelect()"
     (unselected)="onNameUnselect()">

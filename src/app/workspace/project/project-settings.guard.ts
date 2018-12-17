@@ -20,19 +20,19 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of} from 'rxjs';
-import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {catchError, filter, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -40,7 +40,7 @@ export class ProjectSettingsGuard implements CanActivate {
     private i18n: I18n,
     private router: Router,
     private workspaceService: WorkspaceService,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -54,14 +54,16 @@ export class ProjectSettingsGuard implements CanActivate {
           return of(false);
         }
         return this.checkProject(organization, projectCode);
-      })
+      }),
+      take(1),
+      catchError(() => of(false))
     );
   }
 
   private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
     return combineLatest(
       this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode),
-      this.store.select(selectCurrentUserForWorkspace)
+      this.store$.pipe(select(selectCurrentUserForWorkspace))
     ).pipe(
       filter(([project, user]) => !isNullOrUndefined(user)),
       take(1),
@@ -71,7 +73,7 @@ export class ProjectSettingsGuard implements CanActivate {
           return false;
         }
 
-        if (!userHasManageRoleInResource(user, project)) {
+        if (!userIsManagerInWorkspace(user, organization, project)) {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
@@ -96,11 +98,11 @@ export class ProjectSettingsGuard implements CanActivate {
 
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
-    this.store.dispatch(new NotificationsAction.Error({message}));
+    this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
   private dispatchDataEvents(organization: OrganizationModel, project: ProjectModel) {
-    this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store.dispatch(new GroupsAction.Get());
+    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    //this.store$.dispatch(new GroupsAction.Get());
   }
 }

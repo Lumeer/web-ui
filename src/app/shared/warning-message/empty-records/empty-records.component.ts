@@ -19,8 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-records',
@@ -29,7 +29,7 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 })
 export class EmptyRecordsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public collections: CollectionModel[];

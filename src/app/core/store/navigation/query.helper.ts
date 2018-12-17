@@ -18,32 +18,41 @@
  */
 
 import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
-import {QueryConverter} from './query.converter';
-import {QueryModel} from './query.model';
+import {convertQueryModelToString} from './query.converter';
+import {Query} from './query';
+import {getBaseCollectionIdsFromQuery} from './query.util';
 
-export function areQueriesEqual(first: QueryModel, second: QueryModel): boolean {
-  return QueryConverter.toString(first) === QueryConverter.toString(second);
+export function areQueriesEqual(first: Query, second: Query): boolean {
+  return convertQueryModelToString(first) === convertQueryModelToString(second);
 }
 
-export function areQueriesEqualExceptPagination(first: QueryModel, second: QueryModel): boolean {
+export function areQueriesEqualExceptPagination(first: Query, second: Query): boolean {
   const firstWithoutPagination = {...first, page: null, pageSize: null};
   const secondWithoutPagination = {...second, page: null, pageSize: null};
-  return QueryConverter.toString(firstWithoutPagination) === QueryConverter.toString(secondWithoutPagination);
+  return convertQueryModelToString(firstWithoutPagination) === convertQueryModelToString(secondWithoutPagination);
 }
 
-export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
-  if (!deepArrayEquals(oldQuery.collectionIds, newQuery.collectionIds)) {
+export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
+  if (
+    oldQuery.stems.length !== newQuery.stems.length ||
+    !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
+  ) {
     return false;
   }
 
+  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
+  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+
   return (
-    newQuery.linkTypeIds.length > oldQuery.linkTypeIds.length &&
-    isArraySubset(newQuery.linkTypeIds, oldQuery.linkTypeIds)
+    newQueryLinkTypeIds.length > oldQueryLinkTypeIds.length && isArraySubset(newQueryLinkTypeIds, oldQueryLinkTypeIds)
   );
 }
 
-export function getNewLinkTypeIdFromQuery(oldQuery: QueryModel, newQuery: QueryModel): string {
-  const linkTypeIds = getArrayDifference(newQuery.linkTypeIds, oldQuery.linkTypeIds);
+export function getNewLinkTypeIdFromQuery(oldQuery: Query, newQuery: Query): string {
+  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
+  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+
+  const linkTypeIds = getArrayDifference(newQueryLinkTypeIds, oldQueryLinkTypeIds);
   if (linkTypeIds.length !== 1) {
     throw Error('No new link type IDs');
   }

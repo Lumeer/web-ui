@@ -34,10 +34,9 @@ body {
     color: $secondary;
     display: block;
     line-height: 18px;
-    padding: 10px 15px !important;
+    padding: 10px !important;
     margin-top: 5px;
     margin-bottom: 5px;
-    background: url('assets/img/crumbs2.gif') no-repeat right center;
 
     &:hover {
       color: $secondary-hover;
@@ -48,9 +47,9 @@ body {
     background: $white !important;
   }
 
-  .nav-item:last-child .nav-link {
-    //background: $white !important;
-    //background: url('../../_assets/img/crumbs-end.gif') no-repeat right center !important;
+  .nav-separator {
+    font-size: 1.2em;
+    color: $gray-500;
   }
 }
 
@@ -424,7 +423,12 @@ div[contenteditable='true'].form-control {
 
 // Containers ==================================================================
 .modal .close {
-  color: $white;
+  color: $primary;
+
+  &:not(:disabled):not(.disabled):hover,
+  .close:not(:disabled):not(.disabled):focus {
+    color: $primary-hover;
+  }
 }
 
 .card-template {

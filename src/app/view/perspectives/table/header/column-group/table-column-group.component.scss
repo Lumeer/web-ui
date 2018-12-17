@@ -5,13 +5,19 @@
   background-color: $light;
 }
 
-.muuri-item-dragging {
-  border-top: 1px solid $table-border-color;
-  border-left: 1px solid $table-border-color;
+.cdk-drag-placeholder {
+  opacity: 0;
 }
 
-mwlResizable {
-  box-sizing: border-box; // required for the enableGhostResize option to work
+.resize-handle {
+  position: absolute;
+  right: 0;
+  cursor: col-resize;
+}
+
+.resize-ghost-element {
+  border-right: 2px solid $table-border-color;
+  z-index: 10;
 }
 
 .resizable-column {

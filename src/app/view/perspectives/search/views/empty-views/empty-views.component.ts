@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
+import {Query} from '../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'empty-views',
@@ -28,5 +28,5 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 })
 export class EmptyViewsComponent {
   @Input()
-  public query: QueryModel;
+  public query: Query;
 }

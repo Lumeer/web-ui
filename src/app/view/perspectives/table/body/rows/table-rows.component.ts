@@ -32,11 +32,11 @@ import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
+import {Query} from '../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'table-rows',
@@ -49,7 +49,7 @@ export class TableRowsComponent implements OnChanges {
   public cursor: TableBodyCursor;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public canManageConfig: boolean;
@@ -67,7 +67,7 @@ export class TableRowsComponent implements OnChanges {
     }
   }
 
-  private bindRows(cursor: TableBodyCursor, query: QueryModel) {
+  private bindRows(cursor: TableBodyCursor, query: Query) {
     this.rows$ = combineLatest(
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
@@ -83,7 +83,7 @@ export class TableRowsComponent implements OnChanges {
     );
   }
 
-  private retrieveDocuments(query: QueryModel) {
+  private retrieveDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

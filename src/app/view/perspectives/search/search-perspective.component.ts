@@ -18,20 +18,21 @@
  */
 
 import {Component} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
+
+import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {QueryConverter} from '../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
 })
 export class SearchPerspectiveComponent {
-  public query: QueryModel = {};
+  public query: Query = {};
 
   private workspace: Workspace;
 
@@ -61,6 +62,6 @@ export class SearchPerspectiveComponent {
   }
 
   public stringifyQuery(): string {
-    return QueryConverter.toString(this.query);
+    return convertQueryModelToString(this.query);
   }
 }

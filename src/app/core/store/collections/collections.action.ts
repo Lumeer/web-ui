@@ -19,8 +19,6 @@
 
 import {Action} from '@ngrx/store';
 import {ImportedCollection} from '../../dto/imported-collection';
-import {QueryModel} from '../navigation/query.model';
-import {Workspace} from '../navigation/workspace.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
 
@@ -28,13 +26,6 @@ export enum CollectionsActionType {
   GET = '[Collections] Get',
   GET_SUCCESS = '[Collections] Get :: Success',
   GET_FAILURE = '[Collections] Get :: Failure',
-
-  GET_NAMES = '[Collections] Get Collection Names',
-  GET_NAMES_SUCCESS = '[Collections] Get Collection Names :: Success',
-  GET_NAMES_FAILURE = '[Collections] Get Collection Names :: Failure',
-
-  ADD_NAME = '[Collections] Add Collection Name',
-  DELETE_NAME = '[Collections] Delete Collection Name',
 
   CREATE = '[Collections] Create',
   CREATE_SUCCESS = '[Collections] Create :: Success',
@@ -98,34 +89,6 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.GET_FAILURE;
 
     public constructor(public payload: {error: any}) {}
-  }
-
-  export class GetNames implements Action {
-    public readonly type = CollectionsActionType.GET_NAMES;
-  }
-
-  export class GetNamesSuccess implements Action {
-    public readonly type = CollectionsActionType.GET_NAMES_SUCCESS;
-
-    public constructor(public payload: {collectionNames: string[]}) {}
-  }
-
-  export class GetNamesFailure implements Action {
-    public readonly type = CollectionsActionType.GET_NAMES_FAILURE;
-
-    public constructor(public payload: {error: any}) {}
-  }
-
-  export class AddName implements Action {
-    public readonly type = CollectionsActionType.ADD_NAME;
-
-    public constructor(public payload: {name: string}) {}
-  }
-
-  export class DeleteName implements Action {
-    public readonly type = CollectionsActionType.DELETE_NAME;
-
-    public constructor(public payload: {name: string}) {}
   }
 
   export class Create implements Action {
@@ -360,11 +323,6 @@ export namespace CollectionsAction {
     | Get
     | GetSuccess
     | GetFailure
-    | GetNames
-    | GetNamesSuccess
-    | GetNamesFailure
-    | AddName
-    | DeleteName
     | Create
     | CreateSuccess
     | CreateFailure

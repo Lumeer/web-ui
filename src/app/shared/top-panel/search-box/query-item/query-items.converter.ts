@@ -18,8 +18,7 @@
  */
 
 import {LinkQueryItem} from './model/link.query-item';
-import {QueryConverter} from '../../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {QueryData} from '../query-data';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {CollectionQueryItem} from './model/collection.query-item';
@@ -29,98 +28,116 @@ import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {isNullOrUndefined} from 'util';
 import {DeletedQueryItem} from './model/deleted.query-item';
+import {AttributeFilter, Query, QueryStem} from '../../../../core/store/navigation/query';
+
+export function convertQueryItemsToString(queryItems: QueryItem[]): string {
+  return convertQueryModelToString(convertQueryItemsToQueryModel(queryItems));
+}
+
+export function convertQueryItemsToQueryModel(queryItems: QueryItem[]): Query {
+  const query: Query = {
+    stems: [],
+    fulltexts: [],
+  };
+
+  queryItems.forEach(queryItem => {
+    switch (queryItem.type) {
+      case QueryItemType.Collection:
+        query.stems.push({
+          collectionId: (queryItem as CollectionQueryItem).collection.id,
+          linkTypeIds: [],
+          filters: [],
+          documentIds: [],
+        });
+        return;
+      case QueryItemType.Link:
+        query.stems[query.stems.length - 1].linkTypeIds.push((queryItem as LinkQueryItem).linkType.id);
+        return;
+      case QueryItemType.Attribute:
+        query.stems[query.stems.length - 1].filters.push((queryItem as AttributeQueryItem).getAttributeFilter());
+        return;
+      case QueryItemType.Document:
+        query.stems[query.stems.length - 1].documentIds.push((queryItem as DocumentQueryItem).document.id);
+        return;
+      case QueryItemType.Fulltext:
+        query.fulltexts.push((queryItem as FulltextQueryItem).text);
+        return;
+    }
+  });
+
+  return query;
+}
 
 export class QueryItemsConverter {
   constructor(private data: QueryData) {}
 
-  public static toQueryString(queryItems: QueryItem[]): string {
-    const query: QueryModel = {
-      collectionIds: [],
-      documentIds: [],
-      filters: [],
-      linkTypeIds: [],
-    };
-
-    queryItems.forEach(queryItem => {
-      switch (queryItem.type) {
-        case QueryItemType.Attribute:
-          query.filters.push((queryItem as AttributeQueryItem).getFilter());
-          return;
-        case QueryItemType.Collection:
-          query.collectionIds.push((queryItem as CollectionQueryItem).collection.id);
-          return;
-        case QueryItemType.Document:
-          query.documentIds.push((queryItem as DocumentQueryItem).documentId);
-          return;
-        case QueryItemType.Fulltext:
-          query.fulltext = (queryItem as FulltextQueryItem).text;
-          return;
-        case QueryItemType.Link:
-          query.linkTypeIds.push((queryItem as LinkQueryItem).linkType.id);
-          return;
-      }
-    });
-
-    return QueryConverter.toString(query);
+  public fromQuery(query: Query): QueryItem[] {
+    return [...this.createStemsItems(query.stems), ...this.createFulltextsItems(query.fulltexts)];
   }
 
-  public fromQuery(query: QueryModel): QueryItem[] {
+  private createStemsItems(stems: QueryStem[]): QueryItem[] {
+    return (stems && stems.reduce((items, stem) => [...items, ...this.createStemItems(stem)], [])) || [];
+  }
+
+  private createStemItems(stem: QueryStem): QueryItem[] {
     return [
-      ...this.createCollectionItems(query.collectionIds),
-      ...this.createAttributeItems(query.filters),
-      ...this.createDocumentItems(query.documentIds),
-      ...this.createFulltextItems(query.fulltext),
-      ...this.createLinkItems(query.linkTypeIds),
+      this.createCollectionItem(stem.collectionId),
+      ...this.createLinkItems(stem.linkTypeIds),
+      ...this.createAttributeItems(stem.filters),
+      ...this.createDocumentItems(stem.documentIds),
     ];
   }
 
-  private createAttributeItems(filters: string[]): QueryItem[] {
-    return filters.map(filter => {
-      const [collectionId, attributeId, fullCondition] = filter.split(':', 3);
-      const collection = this.data.collections.find(col => col.id === collectionId);
-      const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-      if (!attribute) {
-        return new DeletedQueryItem(QueryItemType.Attribute);
-      }
-
-      const [condition, conditionValue] = fullCondition.split(' ', 2);
-
-      return new AttributeQueryItem(collection, attribute, condition, conditionValue);
-    });
+  public createCollectionItem(collectionId: string): QueryItem {
+    const collection = this.data.collections.find(col => col.id === collectionId);
+    if (collection) {
+      return new CollectionQueryItem(collection);
+    }
+    return new DeletedQueryItem(QueryItemType.Collection);
   }
 
-  public createCollectionItems(collectionIds: string[]): QueryItem[] {
-    return collectionIds.map(collectionId => {
-      const collection = this.data.collections.find(col => col.id === collectionId);
-      if (!collection) {
-        return new DeletedQueryItem(QueryItemType.Collection);
-      }
-      return new CollectionQueryItem(collection);
-    });
+  private createLinkItems(linkTypeIds: string[]): QueryItem[] {
+    return (
+      (linkTypeIds &&
+        linkTypeIds
+          .map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
+          .filter(linkType => !!linkType)
+          .map(linkType => {
+            const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
+            const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
+            if (!collection1 || !collection2) {
+              return new DeletedQueryItem(QueryItemType.Link);
+            }
+
+            linkType.collections = [collection1, collection2];
+            return new LinkQueryItem(linkType);
+          })
+          .filter(queryItem => !isNullOrUndefined(queryItem))) ||
+      []
+    );
+  }
+
+  private createAttributeItems(filters: AttributeFilter[]): QueryItem[] {
+    return (
+      (filters &&
+        filters.map(filter => {
+          const collection = this.data.collections.find(col => col.id === filter.collectionId);
+          const attribute = collection && collection.attributes.find(attr => attr.id === filter.attributeId);
+          if (!attribute) {
+            return new DeletedQueryItem(QueryItemType.Attribute);
+          }
+
+          return new AttributeQueryItem(collection, attribute, filter.condition, filter.value);
+        })) ||
+      []
+    );
+  }
+
+  private createFulltextsItems(fulltexts: string[]): QueryItem[] {
+    return (fulltexts && fulltexts.map(fulltext => new FulltextQueryItem(fulltext))) || [];
   }
 
   private createDocumentItems(documentIds: string[]): QueryItem[] {
     return []; // TODO implement once documentIds are used somewhere so it can be tested
-  }
-
-  private createFulltextItems(fulltext: string): QueryItem[] {
-    return fulltext ? [new FulltextQueryItem(fulltext)] : [];
-  }
-
-  private createLinkItems(linkTypeIds: string[]): QueryItem[] {
-    return linkTypeIds
-      .map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
-      .filter(linkType => !!linkType)
-      .map(linkType => {
-        const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
-        const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
-        if (!collection1 || !collection2) {
-          return new DeletedQueryItem(QueryItemType.Link);
-        }
-
-        linkType.collections = [collection1, collection2];
-        return new LinkQueryItem(linkType);
-      })
-      .filter(queryItem => !isNullOrUndefined(queryItem));
   }
 }

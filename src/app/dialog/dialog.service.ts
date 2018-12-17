@@ -24,18 +24,29 @@ import {LinkTypeModel} from '../core/store/link-types/link-type.model';
 import {OrganizationModel} from '../core/store/organizations/organization.model';
 import {ProjectModel} from '../core/store/projects/project.model';
 import {DialogPath} from './dialog-path';
+import {environment} from '../../environments/environment';
+import {VideosAction} from '../core/store/videos/videos.action';
+import {getAllVideos} from '../core/store/videos/videos.data';
+import {AppState} from '../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
  * inside callback. If it was not implemented this way, the default redirect for closing the dialog would collide with
  * custom redirects made by a calling site inside the callback.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class DialogService {
   public callback: any;
   private open: boolean;
 
-  public constructor(private router: Router) {}
+  public constructor(private router: Router, private store: Store<AppState>) {
+    if (environment.videoKey) {
+      this.store.dispatch(new VideosAction.LoadVideos({videos: getAllVideos(), apiKey: environment.videoKey}));
+    }
+  }
 
   public closeDialog() {
     this.callback = null;
@@ -71,13 +82,12 @@ export class DialogService {
     this.navigateToDialog([DialogPath.FEEDBACK]);
   }
 
-  public openOverwriteViewDialog(existingViewCode: string, callback?: () => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.OVERWRITE_VIEW, existingViewCode]);
-  }
-
   public openShareViewDialog(viewCode: string) {
     this.navigateToDialog([DialogPath.SHARE_VIEW, viewCode]);
+  }
+
+  public openVideoPlayer(videoId: string) {
+    this.navigateToDialog([DialogPath.PLAY_VIDEO, videoId]);
   }
 
   public isDialogOpen(): boolean {

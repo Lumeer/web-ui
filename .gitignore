@@ -5,6 +5,7 @@ engine/
 cypress/videos/
 cypress/screenshots/
 
+.vscode/
 .idea/
 *.iml
 *.log

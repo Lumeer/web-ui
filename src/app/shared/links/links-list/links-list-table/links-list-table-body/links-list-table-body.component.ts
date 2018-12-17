@@ -26,6 +26,7 @@ import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.mode
 import {DocumentHintsComponent} from '../../../../document-hints/document-hints.component';
 import {Direction} from '../../../../direction';
 import {KeyCode} from '../../../../key-code';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -69,6 +70,8 @@ export class LinksListTableBodyComponent {
   public suggestingValue: string;
 
   public selectedLinkRowCorrId: string;
+
+  public readonly collectionType = ResourceType.Collection;
 
   public documentSelected(collection: CollectionModel, linkRow: LinkRowModel) {
     const document = linkRow.document;

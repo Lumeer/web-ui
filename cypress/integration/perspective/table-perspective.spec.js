@@ -1,11 +1,8 @@
 describe('Table perspective', () => {
-  beforeEach(() => {
-    cy.loginAndDismissAgreement();
-  });
-
   it('writes to first data cell in an empty table', () => {
     cy.createCollection('empty', 'fas fa-empty-set', '#cccccc');
-    cy.visit('/ui/w/SRLMR/PRJ1/view/search/collections');
+
+    cy.visit(`/ui/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
 
     cy.get('[data-test="collection-card"] i.fa-empty-set')
       .last()
@@ -39,7 +36,7 @@ describe('Table perspective', () => {
     cy.createCollection('first', 'fas fa-unicorn', '#ff66dd');
     cy.createCollection('second', 'fas fa-acorn', '#994400');
 
-    cy.visit('/ui/w/SRLMR/PRJ1/view/search/collections');
+    cy.visit(`/ui/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
 
     cy.get('[data-test="collection-card"] i.fa-unicorn')
       .last()

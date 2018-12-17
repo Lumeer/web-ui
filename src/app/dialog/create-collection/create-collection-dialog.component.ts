@@ -30,7 +30,6 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {CollectionValidators} from '../../core/validators/collection.validators';
 import {DialogService} from '../dialog.service';
 
 @Component({
@@ -49,12 +48,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private collectionValidators: CollectionValidators,
-    private dialogService: DialogService,
-    private route: ActivatedRoute,
-    private store: Store<AppState>
-  ) {
+  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store: Store<AppState>) {
     this.createForm();
   }
 
@@ -71,7 +65,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
   private createCollectionFormGroup() {
     const validators = [Validators.required, Validators.minLength(3)];
     return new FormGroup({
-      collectionName: new FormControl('', validators, this.collectionValidators.uniqueName()),
+      collectionName: new FormControl('', validators),
     });
   }
 

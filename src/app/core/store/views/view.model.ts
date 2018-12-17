@@ -64,7 +64,12 @@ export interface SearchConfigModel {
   searchTab?: string; // TODO maybe create enum
 }
 
+export interface GanttChartConfigModel {
+  //TODO
+  whateverConfig?: string;    //not sure
+}
+
 export interface CalendarConfigModel {
   //TODO
-  whateverConfig?: string; //not sure
+  whateverConfig?: string;    //not sure
 }

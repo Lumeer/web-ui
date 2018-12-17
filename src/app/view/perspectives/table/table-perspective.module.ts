@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
@@ -68,6 +69,7 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     ResizableModule,
     InfiniteScrollModule,
     TablePipesModule,
+    DragDropModule,
   ],
   declarations: [
     TablePerspectiveComponent,

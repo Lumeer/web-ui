@@ -29,8 +29,4 @@ export class FulltextQueryItem implements QueryItem {
   public get value(): string {
     return this.text;
   }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    return false;
-  }
 }

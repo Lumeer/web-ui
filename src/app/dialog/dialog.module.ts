@@ -23,10 +23,8 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {SharedModule} from '../shared/shared.module';
 import {DialogBaseComponent} from './dialog-base.component';
 import {DialogRoutingModule} from './dialog-routing.module';
-import {DialogService} from './dialog.service';
 import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
-import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
@@ -35,6 +33,7 @@ import {ResourceNameInputComponent} from './create-resource/resource-name-input/
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
+import {PlayVideoComponent} from './play-video/play-video.component';
 
 @NgModule({
   imports: [
@@ -52,19 +51,13 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
     LinkNameInputComponent,
     CreateLinkDialogComponent,
     DialogBaseComponent,
-    OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
     FeedbackDialogComponent,
+    PlayVideoComponent,
   ],
-  providers: [DialogService],
-  entryComponents: [
-    CreateCollectionDialogComponent,
-    CreateLinkDialogComponent,
-    OverwriteViewDialogComponent,
-    CreateResourceDialogComponent,
-  ],
+  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],
 })
 export class DialogModule {}
