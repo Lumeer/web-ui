@@ -37,3 +37,18 @@
   </ng-container>
 </div>
 
+<div *ngIf="propertiesNotSetYet" class="flex-grow-1 " >
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 20rem;">
+    <i class="fa-5x far fa-calendar-times"></i>
+    <h3> No temporal data found!</h3>
+    <div> Make sure you have selected an attribute with date and time.</div>
+  </div>
+</div>
+
+<!--<empty-state icon="far fa-map-marker-slash">-->
+  <!--<h3 i18n="@@map.placeholder.title">No places found!</h3>-->
+  <!--<div i18n="@@map.placeholder.description">Make sure you have selected an attribute with addresses or Earth coordinates.</div>-->
+<!--</empty-state>-->
+
+
+
