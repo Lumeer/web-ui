@@ -32,7 +32,7 @@ import {Dictionary} from 'lodash';
 import {ContextMenuComponent} from 'ngx-contextmenu';
 import {combineLatest, Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
-import {isMacOS} from 'src/app/shared/utils/system.utils';
+import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';

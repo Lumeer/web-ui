@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {tileLayer, TileLayer} from 'leaflet';
-import {MapTiles} from 'src/app/core/store/maps/map.model';
+import {MapTiles} from '../../../../../core/store/maps/map.model';
 import {environment} from '../../../../../../environments/environment';
 
 export const LUMEER_ATTRIBUTION = `<span class="lumeer-attribution">

@@ -20,9 +20,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {generateDocumentDataByQuery} from 'src/app/core/store/documents/document.utils';
-import {selectQuery} from 'src/app/core/store/navigation/navigation.state';
-import {selectCurrentUser} from 'src/app/core/store/users/users.state';
+import {generateDocumentDataByQuery} from '../../../../../core/store/documents/document.utils';
+import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
+import {selectCurrentUser} from '../../../../../core/store/users/users.state';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {TableConfigRow, TablePart} from '../../../../../core/store/tables/table.model';
 
