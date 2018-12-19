@@ -43,6 +43,8 @@ export enum LinkTypesActionType {
 export namespace LinkTypesAction {
   export class Get implements Action {
     public readonly type = LinkTypesActionType.GET;
+
+    public constructor(public payload: {force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {

@@ -40,7 +40,7 @@ import {
   QueryItemsConverter,
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {filterStemCollectionInLinks, queryItemToForm} from '../../../core/store/navigation/query.util';
+import {filterStemByLinkIndex, queryItemToForm} from '../../../core/store/navigation/query.util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -405,7 +405,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     const stemIndex = (currentQuery.stems || []).findIndex(st => st.collectionId === collectionId);
 
     if (stemIndex !== -1) {
-      currentQuery[stemIndex] = filterStemCollectionInLinks(currentQuery[stemIndex], index, this.queryData.linkTypes);
+      currentQuery.stems[stemIndex] = filterStemByLinkIndex(
+        currentQuery.stems[stemIndex],
+        index,
+        this.queryData.linkTypes
+      );
       this.setNewQueryItemsByQuery(currentQuery);
     }
   }

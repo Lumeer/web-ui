@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {User} from '../store/users/user';
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -51,6 +51,11 @@ import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {LinkTypeConverter} from '../store/link-types/link-type.converter';
 import {selectOrganizationsDictionary} from '../store/organizations/organizations.state';
 import {selectProjectsDictionary} from '../store/projects/projects.state';
+import {Project} from '../store/projects/project';
+import {Organization} from '../store/organizations/organization';
+import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {ResourceType} from '../model/resource-type';
+import {NotificationsAction} from '../store/notifications/notifications.action';
 
 @Injectable({
   providedIn: 'root',
@@ -58,8 +63,9 @@ import {selectProjectsDictionary} from '../store/projects/projects.state';
 export class PusherService implements OnDestroy {
   private pusher: any;
   private channel: any;
-  private currentOrganizationId: string;
-  private currentProjectId: string;
+  private currentOrganization: Organization;
+  private currentProject: Project;
+  private user: User;
 
   constructor(private store$: Store<AppState>, private authService: AuthService) {
     if (environment.pusherKey) {
@@ -77,7 +83,8 @@ export class PusherService implements OnDestroy {
       .pipe(
         select(selectCurrentUser),
         filter(user => !!user),
-        take(1)
+        take(1),
+        tap(user => (this.user = user))
       )
       .subscribe(user => {
         this.subscribePusher(user);
@@ -85,7 +92,7 @@ export class PusherService implements OnDestroy {
   }
 
   private subscribePusher(user: User): void {
-    //Pusher.logToConsole = true;
+    Pusher.logToConsole = true;
     this.pusher = new Pusher(environment.pusherKey, {
       cluster: environment.pusherCluster,
       authEndpoint: `${environment.apiUrl}/rest/pusher`,
@@ -113,6 +120,10 @@ export class PusherService implements OnDestroy {
       this.store$.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
     this.channel.bind('Organization:update', data => {
+      if (data.id === this.getCurrentOrganizationId()) {
+        this.checkIfUserGainManage(data);
+        this.checkIfUserLostManage(data, ResourceType.Organization);
+      }
       this.getOrganization(data.id, oldOrganization => {
         const oldCode = oldOrganization && oldOrganization.code;
         this.store$.dispatch(
@@ -138,6 +149,33 @@ export class PusherService implements OnDestroy {
       .subscribe(oldOrganization => action(oldOrganization));
   }
 
+  private checkIfUserGainManage(resource: Organization | Project) {
+    const hasManage = userHasManageRoleInResource(this.user, resource);
+    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
+    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
+
+    if (hasManage && !hadManageInOrg && !hadManageInProj) {
+      this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
+      this.store$.dispatch(new CollectionsAction.Get({force: true}));
+      this.store$.dispatch(new LinkTypesAction.Get({force: true}));
+      this.store$.dispatch(new ViewsAction.Get({force: true}));
+    }
+  }
+
+  private checkIfUserLostManage(resource: Organization | Project, type: ResourceType) {
+    const hasManage = userHasManageRoleInResource(this.user, resource);
+    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
+    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
+
+    if (
+      !hasManage &&
+      hadManageInOrg !== hadManageInProj &&
+      ((type === ResourceType.Organization && hadManageInOrg) || (type === ResourceType.Project && hadManageInProj))
+    ) {
+      this.store$.dispatch(new NotificationsAction.ForceRefresh());
+    }
+  }
+
   private bindProjectEvents() {
     this.channel.bind('Project:create', data => {
       this.store$.dispatch(
@@ -146,6 +184,10 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
+        if (data.object.id === this.getCurrentProjectId()) {
+          this.checkIfUserGainManage(data.object);
+          this.checkIfUserLostManage(data.object, ResourceType.Project);
+        }
         const oldCode = oldProject && oldProject.code;
         this.store$.dispatch(
           new ProjectsAction.UpdateSuccess({
@@ -188,7 +230,9 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Collection:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
-          new CollectionsAction.UpdateSuccess({collection: convertCollectionDtoToModel(data.object, data.correlationId)})
+          new CollectionsAction.UpdateSuccess({
+            collection: convertCollectionDtoToModel(data.object, data.correlationId),
+          })
         );
       }
     });
@@ -307,7 +351,15 @@ export class PusherService implements OnDestroy {
   }
 
   private isCurrentWorkspace(data: any): boolean {
-    return data.organizationId === this.currentOrganizationId && data.projectId === this.currentProjectId;
+    return data.organizationId === this.getCurrentOrganizationId() && data.projectId === this.getCurrentProjectId();
+  }
+
+  private getCurrentOrganizationId(): string {
+    return this.currentOrganization && this.currentOrganization.id;
+  }
+
+  private getCurrentProjectId(): string {
+    return this.currentProject && this.currentProject.id;
   }
 
   private subscribeToWorkspace() {
@@ -317,8 +369,8 @@ export class PusherService implements OnDestroy {
         filter(models => !!models)
       )
       .subscribe(models => {
-        this.currentOrganizationId = models.organization && models.organization.id;
-        this.currentProjectId = models.project && models.project.id;
+        this.currentOrganization = models.organization;
+        this.currentProject = models.project;
       });
   }
 

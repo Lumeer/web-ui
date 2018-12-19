@@ -31,6 +31,7 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfig, ViewCursor, View} from './view';
 import {isViewConfigChanged} from './view.utils';
+import {selectCurrentUser} from '../users/users.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -89,7 +90,8 @@ export const selectViewTableConfig = createSelector(
 export const selectViewsByQuery = createSelector(
   selectAllViews,
   selectQuery,
-  (views, query): View[] => sortViewsById(filterViewsByQuery(views, query))
+  selectCurrentUser,
+  (views, query, user): View[] => sortViewsById(filterViewsByQuery(views, query, user))
 );
 
 export const selectViewCursor = createSelector(

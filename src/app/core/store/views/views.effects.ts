@@ -46,7 +46,7 @@ export class ViewsEffects {
   public get: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectViewsLoaded))),
-    filter(([action, loaded]) => !loaded),
+    filter(([action, loaded]) => action.payload.force || !loaded),
     mergeMap(() => {
       return this.viewService.getViews().pipe(
         map((dtos: ViewDto[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),

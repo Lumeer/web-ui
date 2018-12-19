@@ -22,7 +22,7 @@ import {NavigationExtras, Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, map, mergeMap, skipWhile, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
@@ -32,25 +32,16 @@ import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Query, QueryStem} from './query';
 import {DialogPath} from '../../../dialog/dialog-path';
-import {selectAllLinkTypes, selectLinkTypesDictionary} from '../link-types/link-types.state';
-import {LinkType} from '../link-types/link.type';
-import {Dictionary} from '@ngrx/entity';
-import {filterStemCollectionInLinks} from './query.util';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {filterStemByAttributeIds, filterStemByLinkIndex} from './query.util';
 
 @Injectable()
 export class NavigationEffects {
   @Effect()
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    mergeMap(action =>
-      this.store$.pipe(
-        select(selectQuery),
-        skipWhile(query => !query),
-        take(1),
-        map(query => ({action, query}))
-      )
-    ),
-    map(({action, query}) => {
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    map(([action, query]) => {
       const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
       const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
       const newStem = {...stem, linkTypeIds};
@@ -60,17 +51,43 @@ export class NavigationEffects {
   );
 
   @Effect()
+  public removeLinkFromQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.RemoveLinkFromQuery>(NavigationActionType.REMOVE_LINK_FROM_QUERY),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
+    map(([[action, query], linkTypes]) => {
+      const {linkTypeId} = action.payload;
+      const newStems: QueryStem[] = [];
+
+      for (const stem of query.stems || []) {
+        const linkTypeIndex = (stem.linkTypeIds || []).findIndex(id => id === linkTypeId);
+        if (linkTypeIndex >= 0) {
+          newStems.push(filterStemByLinkIndex(stem, linkTypeIndex, linkTypes));
+        } else {
+          newStems.push(stem);
+        }
+      }
+
+      return newQueryAction({...query, stems: newStems});
+    })
+  );
+
+  @Effect()
+  public removeAttributesFromQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.RemoveAttributesFromQuery>(NavigationActionType.REMOVE_ATTRIBUTES_FROM_QUERY),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    map(([action, query]) => {
+      const {collectionId, attributeIds} = action.payload;
+      const newStems = (query.stems || []).map(stem => filterStemByAttributeIds(stem, collectionId, attributeIds));
+      return newQueryAction({...query, stems: newStems});
+    })
+  );
+
+  @Effect()
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
-    mergeMap(action =>
-      this.store$.pipe(
-        select(selectQuery),
-        skipWhile(query => !query),
-        take(1),
-        map(query => ({action, query}))
-      )
-    ),
-    map(({action, query}) => {
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    map(([action, query]) => {
       const stems = query.stems || [];
       stems.push({collectionId: action.payload.collectionId});
 
@@ -81,16 +98,9 @@ export class NavigationEffects {
   @Effect()
   public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
-    mergeMap(action =>
-      this.store$.pipe(
-        select(selectQuery),
-        filter(query => !!query),
-        take(1),
-        map(query => ({action, query}))
-      )
-    ),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
     withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
-    map(([{action, query}, linkTypes]) => {
+    map(([[action, query], linkTypes]) => {
       const {collectionId} = action.payload;
       const newStems: QueryStem[] = [];
 
@@ -99,7 +109,11 @@ export class NavigationEffects {
           const linkTypeIndex = (stem.linkTypeIds || [])
             .map(id => linkTypes.find(lt => lt.id === id))
             .findIndex(linkType => !linkType || linkType.collectionIds.includes(collectionId));
-          newStems.push(filterStemCollectionInLinks(stem, linkTypeIndex, linkTypes));
+          if (linkTypeIndex >= 0) {
+            newStems.push(filterStemByLinkIndex(stem, linkTypeIndex, linkTypes));
+          } else {
+            newStems.push(stem);
+          }
         }
       }
 

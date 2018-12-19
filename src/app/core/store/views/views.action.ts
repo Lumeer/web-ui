@@ -58,6 +58,8 @@ export enum ViewsActionType {
 export namespace ViewsAction {
   export class Get implements Action {
     public readonly type = ViewsActionType.GET;
+
+    public constructor(public payload: {force?: boolean}) {}
   }
 
   export class GetByCode implements Action {

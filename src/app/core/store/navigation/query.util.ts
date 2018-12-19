@@ -24,7 +24,7 @@ import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/mod
 import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
 import {LinkType} from '../link-types/link.type';
 import {isArraySubset} from '../../../shared/utils/array.utils';
-import {isNullOrUndefined} from 'util';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -141,14 +141,40 @@ export function isOnlyFulltextsQuery(query: Query): boolean {
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): AttributeFilter[] {
-  const stem = query && query.stems && query.stems.find(st => st.collectionId === collectionId);
-  return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
+  return (
+    (query &&
+      query.stems &&
+      query.stems.reduce((filters, stem) => {
+        const newFilters =
+          (stem.filters &&
+            stem.filters.filter(
+              filter =>
+                filter.collectionId === collectionId && !filters.find(f => JSON.stringify(f) === JSON.stringify(filter))
+            )) ||
+          [];
+        return [...filters, ...newFilters];
+      }, [])) ||
+    []
+  );
+}
+
+export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
+  return (
+    (query &&
+      query.stems &&
+      query.stems.reduce((ids, stem) => {
+        (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
+        return ids;
+      }, [])) ||
+    []
+  );
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
-  const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
-  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], []);
-  const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));
+  const basicCollectionIds = (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
+  const allLinkTypeIds =
+    (query && query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], [])) || [];
+  const filteredLinkTypes = (linkTypes || []).filter(linkType => allLinkTypeIds.includes(linkType.id));
   const collectionIdsFromLinks = filteredLinkTypes
     .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
     .filter(id => !basicCollectionIds.includes(id));
@@ -192,7 +218,7 @@ export function queryWithoutLinks(query: Query): Query {
   return {...query, stems};
 }
 
-export function filterStemCollectionInLinks(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
+export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
   const stemCopy = {...stem};
   const stemLinkTypes = stem.linkTypeIds.map(id => linkTypes.find(lt => lt.id === id));
   const removingLinkTypes = stemLinkTypes.slice(linkIndex);
@@ -207,4 +233,11 @@ export function filterStemCollectionInLinks(stem: QueryStem, linkIndex: number, 
   // TODO filter documents once implemented
 
   return stemCopy;
+}
+
+export function filterStemByAttributeIds(stem: QueryStem, collectionId: string, attributeIds: string[]): QueryStem {
+  const filters =
+    stem.filters &&
+    stem.filters.filter(filter => filter.collectionId !== collectionId || !attributeIds.includes(filter.attributeId));
+  return {...stem, filters};
 }

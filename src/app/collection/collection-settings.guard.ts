@@ -77,7 +77,7 @@ export class CollectionSettingsGuard implements CanActivate {
       select(selectCollectionsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new CollectionsAction.Get());
+          this.store$.dispatch(new CollectionsAction.Get({}));
         }
       }),
       filter(loaded => loaded),

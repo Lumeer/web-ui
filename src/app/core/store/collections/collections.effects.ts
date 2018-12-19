@@ -46,8 +46,10 @@ import {
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
-import {selectNavigation} from '../navigation/navigation.state';
+import {selectNavigation, selectQuery} from '../navigation/navigation.state';
 import {NavigationAction} from '../navigation/navigation.action';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {getAllCollectionIdsFromQuery, getQueryFiltersForCollection} from '../navigation/query.util';
 
 @Injectable()
 export class CollectionsEffects {
@@ -55,7 +57,7 @@ export class CollectionsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Get>(CollectionsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectCollectionsLoaded))),
-    filter(([action, loaded]) => !loaded),
+    filter(([action, loaded]) => action.payload.force || !loaded),
     map(([action]) => action),
     mergeMap(() => {
       return this.collectionService.getCollections().pipe(
@@ -80,15 +82,16 @@ export class CollectionsEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Create>(CollectionsActionType.CREATE),
     mergeMap(action => {
-      const collectionDto = convertCollectionModelToDto(action.payload.collection);
+      const {collection, callback} = action.payload;
+      const collectionDto = convertCollectionModelToDto(collection);
 
-      return this.collectionService.createCollection(collectionDto).pipe(
-        map(collection => convertCollectionDtoToModel(collection, action.payload.collection.correlationId)),
-        mergeMap(collection => {
-          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
+      return this.collectionService.createCollection(collectionDto, collection.correlationId).pipe(
+        map(dto => convertCollectionDtoToModel(dto, collection.correlationId)),
+        mergeMap(newCollection => {
+          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection: newCollection})];
 
-          if (action.payload.callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.callback(collection)}));
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(newCollection)}));
           }
 
           return actions;
@@ -200,6 +203,30 @@ export class CollectionsEffects {
       );
     })
   );
+  @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpdateSuccess>(CollectionsActionType.UPDATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+    map(([[action, query], collectionsMap]) => {
+      const collectionId = action.payload.collection.id;
+      const collection = collectionsMap[collectionId];
+      const collectionAttributeIds = ((collection && collection.attributes) || []).map(attribute => attribute.id);
+
+      const collectionFiltersInQuery = getQueryFiltersForCollection(query, collectionId);
+      const attributeIdsInQuery = collectionFiltersInQuery.map(attrFilter => attrFilter.attributeId);
+      const removedAttributeIds = attributeIdsInQuery.filter(
+        attributeId => !collectionAttributeIds.find(attrId => attrId === attributeId)
+      );
+
+      if (removedAttributeIds.length > 0) {
+        return new NavigationAction.RemoveAttributesFromQuery({collectionId, attributeIds: removedAttributeIds});
+      }
+
+      return null;
+    }),
+    filter(action => !!action)
+  );
 
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.pipe(
@@ -238,15 +265,24 @@ export class CollectionsEffects {
   public deleteSuccess: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    map(([action, navigation]) => {
+    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
+    map(([[action, navigation], linkTypes]) => {
       const {collectionId} = action.payload;
       const isCollectionSettingsPage =
         navigation && navigation.workspace && navigation.workspace.collectionId === collectionId;
       if (isCollectionSettingsPage) {
         return new RouterAction.Go({path: ['/']});
       }
-      return new NavigationAction.RemoveCollectionFromQuery({collectionId});
-    })
+
+      const query = navigation.query || {};
+      const collectionIdsFromQuery = getAllCollectionIdsFromQuery(query, linkTypes);
+      if (collectionIdsFromQuery.includes(collectionId)) {
+        return new NavigationAction.RemoveCollectionFromQuery({collectionId});
+      }
+
+      return null;
+    }),
+    filter(action => !!action)
   );
 
   @Effect()

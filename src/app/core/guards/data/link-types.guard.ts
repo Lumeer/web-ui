@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
@@ -33,14 +33,15 @@ export class LinkTypesGuard implements Resolve<LinkType[]> {
   constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkType[]> {
-    return this.store$.select(selectLinkTypesLoaded).pipe(
+    return this.store$.pipe(
+      select(selectLinkTypesLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new LinkTypesAction.Get());
+          this.store$.dispatch(new LinkTypesAction.Get({}));
         }
       }),
       skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.select(selectAllLinkTypes)),
+      mergeMap(() => this.store$.pipe(select(selectAllLinkTypes))),
       first()
     );
   }

@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
@@ -36,11 +36,11 @@ export class CollectionsGuard implements Resolve<Collection[]> {
     return this.store$.select(selectCollectionsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new CollectionsAction.Get());
+          this.store$.dispatch(new CollectionsAction.Get({}));
         }
       }),
       skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.select(selectAllCollections)),
+      mergeMap(() => this.store$.pipe(select(selectAllCollections))),
       first()
     );
   }

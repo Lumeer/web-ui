@@ -42,6 +42,7 @@ export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: 
     correlationId: correlationId,
     favorite: dto.favorite,
     lastTimeUsed: new Date(dto.lastTimeUsed),
+    version: dto.version,
   };
 }
 

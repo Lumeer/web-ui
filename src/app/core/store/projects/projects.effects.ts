@@ -47,6 +47,7 @@ import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
+import {NotificationService} from '../../notifications/notification.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -56,8 +57,8 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.pipe(select(selectProjectsLoaded))),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     filter(([[action, projectsLoaded], organizationsEntities]) => {
-      const organizationId = action.payload.organizationId;
-      return !projectsLoaded[organizationId] && !!organizationsEntities[organizationId];
+      const {force, organizationId} = action.payload;
+      return force || (!projectsLoaded[organizationId] && !!organizationsEntities[organizationId]);
     }),
     map(([[action, projectsLoaded], organizationsEntities]) => ({action, organizationsEntities})),
     mergeMap(({action, organizationsEntities}) => {
@@ -359,7 +360,8 @@ export class ProjectsEffects {
       }
 
       return actions;
-    })
+    }),
+    tap(() => this.notificationService.clear())
   );
 
   @Effect()
@@ -380,6 +382,7 @@ export class ProjectsEffects {
     private actions$: Actions,
     private i18n: I18n,
     private router: Router,
+    private notificationService: NotificationService,
     private projectService: ProjectService,
     private store$: Store<AppState>
   ) {}
