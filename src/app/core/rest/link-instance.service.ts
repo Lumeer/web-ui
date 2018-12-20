@@ -23,10 +23,10 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {LinkInstance, QueryDto} from '../dto';
+import {LinkInstanceDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 import {map} from 'rxjs/operators';
 
 @Injectable()
@@ -37,12 +37,12 @@ export class LinkInstanceService {
     this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
-  public createLinkInstance(linkInstance: LinkInstance): Observable<LinkInstance> {
-    return this.httpClient.post<LinkInstance>(this.restApiPrefix(), linkInstance);
+  public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
+    return this.httpClient.post<LinkInstanceDto>(this.restApiPrefix(), linkInstance);
   }
 
-  public updateLinkInstance(id: string, linkInstance: LinkInstance): Observable<LinkInstance> {
-    return this.httpClient.put<LinkInstance>(this.restApiPrefix(id), linkInstance);
+  public updateLinkInstance(id: string, linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
+    return this.httpClient.put<LinkInstanceDto>(this.restApiPrefix(id), linkInstance);
   }
 
   public deleteLinkInstance(id: string): Observable<string> {

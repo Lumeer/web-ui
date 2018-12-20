@@ -27,7 +27,7 @@ import {AppState} from '../../core/store/app.state';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
-import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
+import {ViewConfig, View} from '../../core/store/views/view';
 import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
@@ -41,9 +41,9 @@ export class ViewControlsInfoPipe implements PipeTransform {
   constructor(private permissionsPipe: PermissionsPipe, private store$: Store<AppState>) {}
 
   public transform(
-    view: ViewModel,
+    view: View,
     name: string,
-    config: ViewConfigModel,
+    config: ViewConfig,
     perspective: Perspective
   ): Observable<{canClone: boolean; canManage: boolean}> {
     if (!view || !view.code) {
@@ -56,7 +56,7 @@ export class ViewControlsInfoPipe implements PipeTransform {
     ).pipe(map(([canClone, canManage]) => ({canClone, canManage})));
   }
 
-  public hasDirectAccessToView(view: ViewModel): Observable<boolean> {
+  public hasDirectAccessToView(view: View): Observable<boolean> {
     return observableCombineLatest(
       this.store$.select(selectCurrentUser),
       this.store$.select(selectAllLinkTypes),

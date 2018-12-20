@@ -17,18 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PaymentModel {
-  id: string;
-  organizationId: string;
-  date: Date;
-  amount: number;
-  paymentId: string;
-  start: Date;
-  validUntil: Date;
-  state: string;
-  serviceLevel: string;
-  users: number;
-  language: string;
-  currency: string;
-  gwUrl: string;
+import {Resource} from '../../model/resource';
+import {Constraint} from './../../model/data/constraint';
+import {CollectionDto} from '../../dto';
+
+export interface Attribute {
+  id?: string;
+  name: string;
+
+  constraint?: Constraint;
+
+  usageCount?: number;
+  intermediate?: boolean;
+
+  correlationId?: string;
+}
+
+export interface Collection extends Resource {
+  attributes?: Attribute[];
+  defaultAttributeId?: string;
+  lastTimeUsed?: Date;
+
+  documentsCount?: number;
+
+  favorite?: boolean;
+}
+
+export interface ImportedCollection {
+  collection: Collection;
+  data: string;
 }

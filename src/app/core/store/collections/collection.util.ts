@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from './collection.model';
+import {Collection} from './collection';
 
-export function getDefaultAttributeId(collection: CollectionModel): string {
+export function getDefaultAttributeId(collection: Collection): string {
   if (collection.defaultAttributeId) {
     const defaultAttribute = collection.attributes.find(attr => attr.id === collection.defaultAttributeId);
     if (defaultAttribute) {
@@ -35,7 +35,7 @@ export function getDefaultAttributeId(collection: CollectionModel): string {
   return '';
 }
 
-export function sortCollectionsByFavoriteAndLastUsed(collections: CollectionModel[]): CollectionModel[] {
+export function sortCollectionsByFavoriteAndLastUsed(collections: Collection[]): Collection[] {
   return collections.sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
       return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
@@ -44,7 +44,7 @@ export function sortCollectionsByFavoriteAndLastUsed(collections: CollectionMode
   });
 }
 
-export function mergeCollections(collectionsA: CollectionModel[], collectionsB: CollectionModel[]): CollectionModel[] {
+export function mergeCollections(collectionsA: Collection[], collectionsB: Collection[]): Collection[] {
   const collectionsAIds = collectionsA.map(collection => collection.id);
   const collectionsBToAdd = collectionsB.filter(collection => !collectionsAIds.includes(collection.id));
   return collectionsA.concat(collectionsBToAdd);

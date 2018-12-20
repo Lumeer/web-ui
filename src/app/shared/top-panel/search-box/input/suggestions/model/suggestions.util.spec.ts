@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
 import {convertSuggestionsToQueryItemsSorted} from './suggestions.util';
-import {ViewModel} from '../../../../../../core/store/views/view.model';
+import {View} from '../../../../../../core/store/views/view';
 import {Perspective} from '../../../../../../view/perspectives/perspective';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {CollectionQueryItem} from '../../../query-item/model/collection.query-item';
 import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item';
 import {ViewQueryItem} from '../../../query-item/model/view.query-item';
 import {LinkQueryItem} from '../../../query-item/model/link.query-item';
 import {FulltextQueryItem} from '../../../query-item/model/fulltext.query-item';
 
-const collections: CollectionModel[] = [
+const collections: Collection[] = [
   {
     id: 'c1',
     name: 'lumeer',
@@ -47,7 +47,7 @@ const collections: CollectionModel[] = [
 ];
 const collectionQueryItems = collections.map(c => new CollectionQueryItem(c));
 
-const attributes: CollectionModel[] = [
+const attributes: Collection[] = [
   {
     ...collections[0],
     attributes: [{id: 'a1', name: 'a1'}],
@@ -64,7 +64,7 @@ const attributes: CollectionModel[] = [
 ];
 const attributeQueryItems = attributes.map(a => new AttributeQueryItem(a, a.attributes[0], '', ''));
 
-const views: ViewModel[] = [
+const views: View[] = [
   {
     id: 'v1',
     name: 'v1',
@@ -82,7 +82,7 @@ const views: ViewModel[] = [
 ];
 const viewsQueryItems = views.map(v => new ViewQueryItem(v));
 
-const linkTypes: LinkTypeModel[] = [
+const linkTypes: LinkType[] = [
   {
     id: 'l1',
     name: 'l1',

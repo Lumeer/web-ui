@@ -23,13 +23,13 @@ import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from './store/app.state';
-import {OrganizationModel} from './store/organizations/organization.model';
+import {Organization} from './store/organizations/organization';
 import {OrganizationsAction} from './store/organizations/organizations.action';
 import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organizations/organizations.state';
-import {ProjectModel} from './store/projects/project.model';
+import {Project} from './store/projects/project';
 import {ProjectsAction} from './store/projects/projects.action';
 import {selectAllProjects, selectProjectsLoaded} from './store/projects/projects.state';
-import {DefaultWorkspaceModel} from './store/users/user.model';
+import {DefaultWorkspace} from './store/users/user';
 import {selectCurrentUser} from './store/users/users.state';
 import {DialogService} from '../dialog/dialog.service';
 import {NotificationService} from './notifications/notification.service';
@@ -70,11 +70,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  private navigateToWorkspaceProject(
-    workspace: DefaultWorkspaceModel,
-    organizations: OrganizationModel[],
-    projects: ProjectModel[]
-  ) {
+  private navigateToWorkspaceProject(workspace: DefaultWorkspace, organizations: Organization[], projects: Project[]) {
     const workspaceOrganization =
       workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
     const workspaceProject = workspace.projectId && projects.find(proj => proj.id === workspace.projectId);
@@ -93,7 +89,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private navigateToAnyProject(organizations: OrganizationModel[], projects: ProjectModel[]) {
+  private navigateToAnyProject(organizations: Organization[], projects: Project[]) {
     const organization = organizations.find(org => projects.some(proj => proj.organizationId === org.id));
     if (organization) {
       const project = projects.find(proj => proj.organizationId === organization.id);
@@ -107,18 +103,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private navigateToProject(organization: OrganizationModel, project: ProjectModel) {
+  private navigateToProject(organization: Organization, project: Project) {
     this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search']);
   }
 
-  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+  private getDefaultWorkspace(): Observable<DefaultWorkspace> {
     return this.store$.select(selectCurrentUser).pipe(
       filter(user => !!user),
       map(user => user.defaultWorkspace)
     );
   }
 
-  private getOrganizations(): Observable<OrganizationModel[]> {
+  private getOrganizations(): Observable<Organization[]> {
     return this.store$.select(selectOrganizationsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
@@ -130,7 +126,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private getOrganizationsAndProjects(): Observable<{organizations: OrganizationModel[]; projects: ProjectModel[]}> {
+  private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
     return combineLatest(
       this.getOrganizations().pipe(
         tap(organizations =>
@@ -141,7 +137,7 @@ export class HomeComponent implements OnInit {
     ).pipe(
       filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
       switchMap(([organizations]) =>
-        this.store$.select(selectAllProjects).pipe(map((projects: ProjectModel[]) => ({organizations, projects})))
+        this.store$.select(selectAllProjects).pipe(map((projects: Project[]) => ({organizations, projects})))
       )
     );
   }
@@ -150,13 +146,13 @@ export class HomeComponent implements OnInit {
     this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
   }
 
-  public createNewProject(parentOrganization: OrganizationModel): void {
+  public createNewProject(parentOrganization: Organization): void {
     this.dialogService.openCreateProjectDialog(parentOrganization.id, project =>
       this.onCreateProject(parentOrganization, project)
     );
   }
 
-  private onCreateOrganization(organization: OrganizationModel) {
+  private onCreateOrganization(organization: Organization) {
     const successMessage = this.i18n({
       id: 'organization.create.success',
       value: 'Organization was successfully created',
@@ -166,7 +162,7 @@ export class HomeComponent implements OnInit {
     this.createNewProject(organization);
   }
 
-  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
+  private onCreateProject(organization: Organization, project: Project) {
     const successMessage = this.i18n({
       id: 'project.create.success',
       value: 'Project was successfully created',

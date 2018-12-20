@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Payment} from '../../../dto/payment';
-import {PaymentModel} from './payment.model';
+import {PaymentDto} from '../../../dto/payment.dto';
+import {Payment} from './payment';
 
 export class PaymentConverter {
-  public static fromDto(organizationId: string, dto: Payment): PaymentModel {
+  public static fromDto(organizationId: string, dto: PaymentDto): Payment {
     return {
       id: dto.id,
       organizationId: organizationId,
@@ -36,10 +36,11 @@ export class PaymentConverter {
       language: dto.language,
       currency: dto.currency,
       gwUrl: dto.gwUrl,
+      version: dto.version,
     };
   }
 
-  public static toDto(model: PaymentModel): Payment {
+  public static toDto(model: Payment): PaymentDto {
     return {
       id: model.id,
       date: model.date.getTime(),

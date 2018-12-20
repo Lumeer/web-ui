@@ -22,8 +22,8 @@ import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {
   TableColumn,
@@ -51,10 +51,10 @@ export class TableColumnGroupComponent implements AfterViewChecked {
   public columns: TableColumn[];
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
-  public linkType: LinkTypeModel;
+  public linkType: LinkType;
 
   @Input()
   public allowedPermissions: AllowedPermissions;

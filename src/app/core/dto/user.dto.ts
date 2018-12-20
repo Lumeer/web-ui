@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DefaultWorkspace} from './default-workspace';
+import {DefaultWorkspaceDto} from './default-workspace.dto';
 
 export interface UserDto {
   id?: string;
   name?: string;
   email: string;
   groups: {[organizationId: string]: string[]};
-  defaultWorkspace?: DefaultWorkspace;
+  defaultWorkspace?: DefaultWorkspaceDto;
   agreement?: boolean;
   agreementDate?: number;
   newsletter?: boolean;

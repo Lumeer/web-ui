@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {GroupModel} from '../../../../core/store/groups/group.model';
+import {Group} from '../../../../core/store/groups/group';
 
 @Component({
   selector: 'group-suggestions',
@@ -26,11 +26,11 @@ import {GroupModel} from '../../../../core/store/groups/group.model';
   styleUrls: ['./groups-suggestions.component.scss'],
 })
 export class GroupsSuggestionsComponent {
-  @Input() public groups: GroupModel[];
+  @Input() public groups: Group[];
 
-  @Output() public selectGroup = new EventEmitter<GroupModel>();
+  @Output() public selectGroup = new EventEmitter<Group>();
 
-  public onSelectGroup(group: GroupModel) {
+  public onSelectGroup(group: Group) {
     this.selectGroup.emit(group);
   }
 }

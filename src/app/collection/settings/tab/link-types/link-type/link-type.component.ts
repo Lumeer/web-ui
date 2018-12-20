@@ -28,7 +28,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {selectLinkInstancesByType} from '../../../../../core/store/link-instances/link-instances.state';
@@ -41,7 +41,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 })
 export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
-  public linkType: LinkTypeModel;
+  public linkType: LinkType;
 
   @Output()
   public delete = new EventEmitter<number>();

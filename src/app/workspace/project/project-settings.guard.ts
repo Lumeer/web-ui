@@ -26,10 +26,10 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {isNullOrUndefined} from '../../shared/utils/common.utils';
@@ -60,7 +60,7 @@ export class ProjectSettingsGuard implements CanActivate {
     );
   }
 
-  private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
+  private checkProject(organization: Organization, projectCode: string): Observable<boolean> {
     return combineLatest(
       this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode),
       this.store$.pipe(select(selectCurrentUserForWorkspace))
@@ -101,7 +101,7 @@ export class ProjectSettingsGuard implements CanActivate {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  private dispatchDataEvents(organization: OrganizationModel, project: ProjectModel) {
+  private dispatchDataEvents(organization: Organization, project: Project) {
     this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store$.dispatch(new GroupsAction.Get());
   }

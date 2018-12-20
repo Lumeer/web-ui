@@ -17,27 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceModel} from '../../model/resource.model';
-import {Constraint} from './../../model/data/constraint';
+import {DataValue} from '../../model/data/data-value';
 
-export interface AttributeModel {
+export interface LinkInstance {
   id?: string;
-  name: string;
+  linkTypeId: string;
+  documentIds: [string, string];
+  version?: number;
 
-  constraint?: Constraint;
-
-  usageCount?: number;
-  intermediate?: boolean;
-
-  correlationId?: string;
+  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
 }
 
-export interface CollectionModel extends ResourceModel {
-  attributes?: AttributeModel[];
-  defaultAttributeId?: string;
-  lastTimeUsed?: Date;
-
-  documentsCount?: number;
-
-  favorite?: boolean;
+export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
+  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
 }

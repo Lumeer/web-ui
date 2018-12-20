@@ -23,7 +23,7 @@ import {Marker} from 'leaflet';
 import {combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {GeocodingApiService} from '../../../../core/api/geocoding/geocoding-api.service';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -39,7 +39,7 @@ import {createMapMarker, parseCoordinates} from './render/map.utils';
 })
 export class MapContentComponent implements OnInit {
   @Input()
-  public collections: CollectionModel[] = [];
+  public collections: Collection[] = [];
 
   @Input()
   public documents: DocumentModel[] = [];
@@ -103,7 +103,7 @@ export class MapContentComponent implements OnInit {
 function createMarkerPropertiesList(
   documents: DocumentModel[],
   attributeIdsMap: AttributeIdsMap,
-  collectionsMap: {[id: string]: CollectionModel}
+  collectionsMap: {[id: string]: Collection}
 ): MapMarkerProperties[] {
   return documents.reduce((propertiesList, document) => {
     const attributeIds = attributeIdsMap[document.collectionId] || [];

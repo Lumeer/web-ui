@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Permission {
+export interface Payment {
   id: string;
-  roles: string[];
+  organizationId: string;
+  date: Date;
+  amount: number;
+  paymentId: string;
+  start: Date;
+  validUntil: Date;
+  state: string;
+  serviceLevel: string;
+  users: number;
+  language: string;
+  currency: string;
+  gwUrl: string;
+  version?: number;
 }

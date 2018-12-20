@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {AttributeModel} from '../../../core/store/collections/collection.model';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {
   Constraint,
@@ -27,6 +26,7 @@ import {
   constraintTypesMap,
   ENABLED_CONSTRAINTS,
 } from '../../../core/model/data/constraint';
+import {Attribute} from '../../../core/store/collections/collection';
 
 @Component({
   selector: 'attribute-type-form',
@@ -36,10 +36,10 @@ import {
 })
 export class AttributeTypeFormComponent implements OnChanges {
   @Input()
-  public attribute: AttributeModel;
+  public attribute: Attribute;
 
   @Output()
-  public attributeChange = new EventEmitter<AttributeModel>();
+  public attributeChange = new EventEmitter<Attribute>();
 
   public readonly types = Object.keys(ConstraintType).filter(type => ENABLED_CONSTRAINTS.includes(type));
 
@@ -64,7 +64,7 @@ export class AttributeTypeFormComponent implements OnChanges {
     this.attributeChange.emit(attribute);
   }
 
-  private createModifiedAttribute(): AttributeModel {
+  private createModifiedAttribute(): Attribute {
     const type = constraintTypesMap[this.typeControl.value];
     const constraint: Constraint = {type, config: this.createConstraintConfig(type)};
     return {...this.attribute, constraint};

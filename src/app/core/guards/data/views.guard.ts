@@ -19,18 +19,19 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
-import {ViewModel} from '../../store/views/view.model';
+import {View} from '../../store/views/view';
 import {ViewsAction} from '../../store/views/views.action';
-import {selectAllViews, selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
+import {selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
+import {selectViewsByRead} from '../../store/common/permissions.selectors';
 
 @Injectable()
-export class ViewsGuard implements Resolve<ViewModel[]> {
+export class ViewsGuard implements Resolve<View[]> {
   constructor(
     private i18n: I18n,
     private notificationService: NotificationService,
@@ -38,21 +39,22 @@ export class ViewsGuard implements Resolve<ViewModel[]> {
     private store$: Store<AppState>
   ) {}
 
-  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ViewModel[]> {
-    return this.store$.select(selectViewsLoaded).pipe(
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<View[]> {
+    return this.store$.pipe(
+      select(selectViewsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new ViewsAction.Get());
+          this.store$.dispatch(new ViewsAction.Get({}));
         }
       }),
       skipWhile(loaded => !loaded),
       mergeMap(() => {
         const viewCode = route.paramMap.get('vc');
         if (!viewCode) {
-          return this.store$.select(selectAllViews);
+          return this.store$.pipe(select(selectViewsByRead));
         }
 
-        return this.store$.select(selectViewsDictionary).pipe(
+        return this.store$.pipe(select(selectViewsDictionary)).pipe(
           map(viewsMap => {
             const view = viewsMap[viewCode];
             if (view) {

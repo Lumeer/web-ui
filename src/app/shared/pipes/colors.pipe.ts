@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceModel} from '../../core/model/resource.model';
+import {Resource} from '../../core/model/resource';
 
 @Pipe({
   name: 'colors',
 })
 export class ColorsPipe implements PipeTransform {
-  public transform(entities: ResourceModel[]): string[] {
+  public transform(entities: Resource[]): string[] {
     return entities.filter(entity => !!entity).map(entity => entity.color);
   }
 }

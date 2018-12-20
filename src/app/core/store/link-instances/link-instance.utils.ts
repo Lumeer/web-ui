@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstance} from '../../dto';
-import {LinkInstanceModel} from './link-instance.model';
+import {LinkInstanceDto} from '../../dto';
+import {LinkInstance} from './link.instance';
 
-export function isDocumentInLinkInstance(linkInstance: LinkInstanceModel, documentId: string): boolean {
+export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId: string): boolean {
   return linkInstance.documentIds.some(id => id === documentId);
 }
 
-export function findLinkInstanceByDocumentId(linkInstances: LinkInstanceModel[], documentId: string): LinkInstance {
+export function findLinkInstanceByDocumentId(linkInstances: LinkInstance[], documentId: string): LinkInstanceDto {
   return linkInstances.find(linkInstance => isDocumentInLinkInstance(linkInstance, documentId));
 }
 
-export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstanceModel, documentId: string): string {
+export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstance, documentId: string): string {
   const {documentIds} = linkInstance;
   return documentIds[0] === documentId ? documentIds[1] : documentIds[0];
 }

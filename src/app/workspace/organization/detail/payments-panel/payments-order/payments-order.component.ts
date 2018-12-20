@@ -27,7 +27,7 @@ import {filter} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../../core/store/app.state';
 import {DatePipe} from '@angular/common';
-import {ServiceLimitsModel} from '../../../../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
@@ -72,7 +72,7 @@ export class PaymentsOrderComponent implements OnInit {
   private serviceLimitsSubscription: Subscription;
 
   public trial: boolean = true; // are we on a trial subscription?
-  public serviceLimits: ServiceLimitsModel;
+  public serviceLimits: ServiceLimits;
 
   constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {
     this.discountDescription = this.i18n({

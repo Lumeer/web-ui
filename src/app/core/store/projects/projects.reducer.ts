@@ -20,6 +20,7 @@
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
+import {Project} from './project';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,
@@ -27,19 +28,17 @@ export function projectsReducer(
 ): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
-      const loaded = {...state.loaded};
-      loaded[action.payload.organizationId] = true;
-      return {...projectsAdapter.addMany(action.payload.projects, state), loaded};
+      return addProjects(state, action);
     case ProjectsActionType.GET_ONE_SUCCESS:
-      return projectsAdapter.addOne(action.payload.project, state);
+      return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.GET_CODES_SUCCESS:
       const projectCodes = {...state.projectCodes};
       projectCodes[action.payload.organizationId] = action.payload.projectCodes;
       return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
-      return projectsAdapter.addOne(action.payload.project, state);
+      return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.UPDATE_SUCCESS:
-      return projectsAdapter.upsertOne(action.payload.project, state);
+      return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.DELETE_SUCCESS:
       return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
@@ -51,6 +50,32 @@ export function projectsReducer(
     default:
       return state;
   }
+}
+
+function addProjects(state: ProjectsState, action: ProjectsAction.GetSuccess): ProjectsState {
+  const newState = {...state, loaded: {...state.loaded, [action.payload.organizationId]: true}};
+  const filteredProjects = action.payload.projects.filter(project => {
+    const oldProject = state.entities[project.id];
+    return !oldProject || isProjectNewer(project, oldProject);
+  });
+
+  return projectsAdapter.addMany(filteredProjects, newState);
+}
+
+function addOrUpdateProject(state: ProjectsState, project: Project): ProjectsState {
+  const oldProject = state.entities[project.id];
+  if (!oldProject) {
+    return projectsAdapter.addOne(project, state);
+  }
+
+  if (isProjectNewer(project, oldProject)) {
+    return projectsAdapter.upsertOne(project, state);
+  }
+  return state;
+}
+
+function isProjectNewer(project: Project, oldProject: Project): boolean {
+  return project.version && (!oldProject.version || project.version > oldProject.version);
 }
 
 function onChangePermission(

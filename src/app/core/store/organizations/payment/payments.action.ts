@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {PaymentModel} from './payment.model';
+import {Payment} from './payment';
 
 export enum PaymentsActionType {
   GET_PAYMENT = '[Organizations] Get Payment',
@@ -44,7 +44,7 @@ export namespace PaymentsAction {
   export class GetPaymentSuccess implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENT_SUCCESS;
 
-    public constructor(public payload: {payment: PaymentModel}) {}
+    public constructor(public payload: {payment: Payment}) {}
   }
 
   export class GetPaymentFailure implements Action {
@@ -56,13 +56,13 @@ export namespace PaymentsAction {
   export class CreatePayment implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT;
 
-    public constructor(public payload: {organizationId: string; payment: PaymentModel; returnUrl?: string}) {}
+    public constructor(public payload: {organizationId: string; payment: Payment; returnUrl?: string}) {}
   }
 
   export class CreatePaymentSuccess implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT_SUCCESS;
 
-    public constructor(public payload: {payment: PaymentModel}) {}
+    public constructor(public payload: {payment: Payment}) {}
   }
 
   export class CreatePaymentFailure implements Action {
@@ -80,7 +80,7 @@ export namespace PaymentsAction {
   export class GetPaymentsSuccess implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENTS_SUCCESS;
 
-    public constructor(public payload: {payments: PaymentModel[]}) {}
+    public constructor(public payload: {payments: Payment[]}) {}
   }
 
   export class GetPaymentsFailure implements Action {

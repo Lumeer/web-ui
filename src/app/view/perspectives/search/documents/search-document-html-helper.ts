@@ -19,10 +19,10 @@
 
 import {isArray, isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
-export function searchDocumentValuesHtml(document: DocumentModel, collection: CollectionModel): string {
+export function searchDocumentValuesHtml(document: DocumentModel, collection: Collection): string {
   if (!document.data || !collection) {
     return '';
   }
@@ -35,7 +35,7 @@ export function searchDocumentValuesHtml(document: DocumentModel, collection: Co
 
 export function searchDocumentEntriesHtml(
   document: DocumentModel,
-  collection: CollectionModel,
+  collection: Collection,
   showEmptyValues: boolean
 ): string {
   if (!document.data || !collection) {
@@ -55,7 +55,7 @@ export function searchDocumentEntriesHtml(
     .join(', ');
 }
 
-export function searchDocumentDefaultAttributeHtml(document: DocumentModel, collection: CollectionModel): string {
+export function searchDocumentDefaultAttributeHtml(document: DocumentModel, collection: Collection): string {
   if (!document.data || !collection) {
     return '';
   }
@@ -66,7 +66,7 @@ export function searchDocumentDefaultAttributeHtml(document: DocumentModel, coll
   return searchDocumentValueHtml(value);
 }
 
-function searchDocumentGetValues(document: DocumentModel, collection: CollectionModel): any[] {
+function searchDocumentGetValues(document: DocumentModel, collection: Collection): any[] {
   const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
   const filteredDocumentValues = Object.entries(document.data)
     .filter(([key]) => collectionAttributesIds.includes(key))
@@ -90,22 +90,22 @@ function searchDocumentGetValuesFromArray(array: any[]): string[] {
   }, []);
 }
 
-function searchDocumentAttributeHtml(attributeId: string, collection: CollectionModel) {
+function searchDocumentAttributeHtml(attributeId: string, collection: Collection) {
   return `<span class="${attributeHtmlClasses(attributeId, collection)}">${getAttributeName(
     collection,
     attributeId
   )}</span>: `;
 }
 
-function attributeHtmlClasses(attributeId: string, collection: CollectionModel): string {
+function attributeHtmlClasses(attributeId: string, collection: Collection): string {
   return `text-attribute ${isDefaultAttribute(attributeId, collection) ? 'text-default-attribute' : ''}`;
 }
 
-function isDefaultAttribute(attributeId: string, collection: CollectionModel): boolean {
+function isDefaultAttribute(attributeId: string, collection: Collection): boolean {
   return attributeId === getDefaultAttributeId(collection);
 }
 
-function getAttributeName(collection: CollectionModel, attributeId: string): string {
+function getAttributeName(collection: Collection, attributeId: string): string {
   const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
   return attribute && attribute.name;
 }

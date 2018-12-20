@@ -32,7 +32,7 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
-import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
@@ -40,7 +40,7 @@ import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableConfig} from '../../../core/store/tables/tables.selector';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
-import {ViewModel} from '../../../core/store/views/view.model';
+import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
@@ -65,7 +65,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public config: TableConfig;
 
   @Input()
-  public linkInstance: LinkInstanceModel;
+  public linkInstance: LinkInstance;
 
   @Input()
   public query: Query;
@@ -76,7 +76,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
-  public currentView$: Observable<ViewModel>;
+  public currentView$: Observable<View>;
   public table$ = new BehaviorSubject<TableModel>(null);
 
   private selectedCursor: TableCursor;

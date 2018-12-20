@@ -19,6 +19,7 @@
 
 import {ContactsAction, ContactsActionType} from './contacts.action';
 import {contactsAdapter, ContactsState, initialContactsState} from './contacts.state';
+import {Contact} from './contact';
 
 export function contactsReducer(
   state: ContactsState = initialContactsState,
@@ -26,10 +27,26 @@ export function contactsReducer(
 ): ContactsState {
   switch (action.type) {
     case ContactsActionType.GET_CONTACT_SUCCESS:
-      return contactsAdapter.upsertOne(action.payload.contact, state);
+      return addOrUpdateContact(state, action.payload.contact);
     case ContactsActionType.SET_CONTACT_SUCCESS:
-      return contactsAdapter.upsertOne(action.payload.contact, state);
+      return addOrUpdateContact(state, action.payload.contact);
     default:
       return state;
   }
+}
+
+function addOrUpdateContact(state: ContactsState, contact: Contact): ContactsState {
+  const oldContact = state.entities[contact.organizationId];
+  if (!oldContact) {
+    return contactsAdapter.addOne(contact, state);
+  }
+
+  if (isContactNewer(contact, oldContact)) {
+    return contactsAdapter.upsertOne(contact, state);
+  }
+  return state;
+}
+
+function isContactNewer(contact: Contact, oldContact: Contact): boolean {
+  return contact.version && (!oldContact.version || contact.version > oldContact.version);
 }

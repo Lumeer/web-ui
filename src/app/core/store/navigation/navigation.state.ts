@@ -21,7 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {SearchTab} from './search-tab';
-import {Workspace} from './workspace.model';
+import {Workspace} from './workspace';
 import {Query} from './query';
 
 export interface NavigationState {

@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisModel, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart.model';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 
 @Pipe({
   name: 'configAxisByType',
 })
 export class ConfigAxisByTypePipe implements PipeTransform {
-  public transform(type: ChartAxisType, config: ChartConfig): ChartAxisModel {
+  public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {
     return config.axes[type];
   }
 }

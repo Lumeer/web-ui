@@ -21,7 +21,7 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {ResourceModel} from '../../../core/model/resource.model';
+import {Resource} from '../../../core/model/resource';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userHasManageRoleInResource, userHasRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
@@ -38,7 +38,7 @@ import {ResourceType} from '../../../core/model/resource-type';
 export class PermissionsPipe implements PipeTransform {
   public constructor(private store$: Store<AppState>) {}
 
-  public transform(resource: ResourceModel, type: ResourceType, role: string): Observable<boolean> {
+  public transform(resource: Resource, type: ResourceType, role: string): Observable<boolean> {
     return this.store$.pipe(
       select(selectCurrentUserForWorkspace),
       mergeMap(user => {

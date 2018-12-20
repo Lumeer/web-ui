@@ -22,15 +22,15 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from '../organizations/organizations.state';
-import {ProjectModel} from './project.model';
+import {Project} from './project';
 
-export interface ProjectsState extends EntityState<ProjectModel> {
+export interface ProjectsState extends EntityState<Project> {
   selectedProjectId: string;
   projectCodes: {[organizationId: string]: string[]};
   loaded: {[organizationId: string]: boolean};
 }
 
-export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: project => project.id});
+export const projectsAdapter = createEntityAdapter<Project>({selectId: project => project.id});
 
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
   selectedProjectId: null,

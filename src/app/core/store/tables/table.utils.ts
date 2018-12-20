@@ -24,12 +24,12 @@ import {
   splitAttributeName,
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
-import {CollectionModel} from '../collections/collection.model';
+import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
-import {LinkInstanceModel} from '../link-instances/link-instance.model';
-import {LinkTypeModel} from '../link-types/link-type.model';
-import {AttributeModel} from './../collections/collection.model';
+import {LinkInstance} from '../link-instances/link.instance';
+import {LinkType} from '../link-types/link.type';
+import {Attribute} from '../collections/collection';
 import {TableCursor} from './table-cursor';
 import {
   TableColumn,
@@ -121,7 +121,7 @@ function getColumnIndex(path: number[]): number {
 }
 
 export function createTableColumnsBySiblingAttributeIds(
-  allAttributes: AttributeModel[],
+  allAttributes: Attribute[],
   attributeIds: string[]
 ): TableColumn[] {
   if (!attributeIds || attributeIds.length === 0) {
@@ -146,8 +146,8 @@ export function createTableColumnsBySiblingAttributeIds(
 }
 
 export function createTableColumnsFromAttributes(
-  allAttributes: AttributeModel[],
-  parentAttribute?: AttributeModel,
+  allAttributes: Attribute[],
+  parentAttribute?: Attribute,
   columnsConfig: TableConfigColumn[] = []
 ): TableColumn[] {
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
@@ -166,8 +166,8 @@ export function createTableColumnsFromAttributes(
 
 function createColumnsFromConfig(
   columnsConfig: TableConfigColumn[],
-  allAttributes: AttributeModel[],
-  attributes: AttributeModel[]
+  allAttributes: Attribute[],
+  attributes: Attribute[]
 ): TableColumn[] {
   const attributeIds = attributes.map(attribute => attribute.id);
 
@@ -257,7 +257,7 @@ export function containCompoundColumn(columns: TableColumn[]): boolean {
 }
 
 export function createCollectionPart(
-  collection: CollectionModel,
+  collection: Collection,
   index: number,
   last?: boolean,
   config?: TableConfig
@@ -280,12 +280,12 @@ export function createCollectionPart(
   };
 }
 
-export function createEmptyColumn(attributes: AttributeModel[]): TableCompoundColumn {
+export function createEmptyColumn(attributes: Attribute[]): TableCompoundColumn {
   const attributeName = generateAttributeName(attributes);
   return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
 }
 
-export function createLinkPart(linkType: LinkTypeModel, index: number, config?: TableConfig): TablePart {
+export function createLinkPart(linkType: LinkType, index: number, config?: TableConfig): TablePart {
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.linkTypeId === linkType.id ? configPart.columns : null;
 
@@ -455,7 +455,7 @@ export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {
   };
 }
 
-export function createTableRow(document: DocumentModel, linkInstance?: LinkInstanceModel): TableConfigRow {
+export function createTableRow(document: DocumentModel, linkInstance?: LinkInstance): TableConfigRow {
   return {
     documentId: document.id,
     linkInstanceId: linkInstance && linkInstance.id,

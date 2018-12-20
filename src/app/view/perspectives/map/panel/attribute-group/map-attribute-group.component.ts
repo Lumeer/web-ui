@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'map-attribute-group',
@@ -28,7 +28,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 })
 export class MapAttributeGroupComponent {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public attributeIds: string[];

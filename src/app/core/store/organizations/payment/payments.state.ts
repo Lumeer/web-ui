@@ -20,14 +20,14 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../../app.state';
-import {PaymentModel} from './payment.model';
+import {Payment} from './payment';
 import {selectOrganizationByWorkspace} from '../organizations.state';
 
-export interface PaymentsState extends EntityState<PaymentModel> {
-  lastCreatedPayment: PaymentModel;
+export interface PaymentsState extends EntityState<Payment> {
+  lastCreatedPayment: Payment;
 }
 
-export const paymentsAdapter = createEntityAdapter<PaymentModel>({selectId: payment => payment.id});
+export const paymentsAdapter = createEntityAdapter<Payment>({selectId: payment => payment.id});
 
 export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialState({
   lastCreatedPayment: null,

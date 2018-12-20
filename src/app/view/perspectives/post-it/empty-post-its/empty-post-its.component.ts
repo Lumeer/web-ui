@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Query} from '../../../../core/store/navigation/query';
 
@@ -33,7 +33,7 @@ export class EmptyPostItsComponent {
   public query: Query;
 
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 
   @Output()
   public createPostIt = new EventEmitter<DocumentModel>();

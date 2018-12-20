@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ChartConfig, ChartModel} from './chart.model';
+import {ChartConfig, Chart} from './chart';
 
 export enum ChartActionType {
   ADD_CHART = '[Chart] Add chart',
@@ -33,7 +33,7 @@ export namespace ChartAction {
   export class AddChart implements Action {
     public readonly type = ChartActionType.ADD_CHART;
 
-    public constructor(public payload: {chart: ChartModel}) {}
+    public constructor(public payload: {chart: Chart}) {}
   }
 
   export class RemoveChart implements Action {

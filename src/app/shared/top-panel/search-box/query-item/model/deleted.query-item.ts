@@ -36,8 +36,4 @@ export class DeletedQueryItem implements QueryItem {
   public get text(): string {
     return '';
   }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    return false;
-  }
 }

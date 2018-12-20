@@ -36,16 +36,15 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayout} from '../utils/layout/post-it-layout';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
@@ -61,6 +60,7 @@ import {selectCollectionsByQuery} from '../../core/store/common/permissions.sele
 import {Query} from '../../core/store/navigation/query';
 import {ResourceType} from '../../core/model/resource-type';
 import {isNullOrUndefined} from '../utils/common.utils';
+import {generateCorrelationId} from '../utils/resource.utils';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -86,13 +86,13 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public collections: CollectionModel[];
+  public collections: Collection[];
   public correlationIdsOrder: string[] = [];
-  public selectedCollection: CollectionModel;
+  public selectedCollection: Collection;
   public panelVisible: boolean = false;
   public clickedComponent: any;
   public layout: PostItLayout;
-  public project: ProjectModel;
+  public project: Project;
   public focusedPanel: number;
   public workspace: Workspace;
   public query: Query;
@@ -145,7 +145,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.focusedPanel = index;
   }
 
-  public onCollectionSelect(collection: CollectionModel) {
+  public onCollectionSelect(collection: Collection) {
     this.selectedCollection = collection;
   }
 
@@ -153,7 +153,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.selectedCollection = null;
   }
 
-  public confirmDeletion(collection: CollectionModel) {
+  public confirmDeletion(collection: Collection) {
     if (collection.id) {
       this.deleteInitializedPostIt(collection);
     } else {
@@ -162,10 +162,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public createNewCollection() {
-    const newCollection = {
-      ...this.emptyCollection(),
-      correlationId: CorrelationIdGenerator.generate(),
-    };
+    const newCollection = {...this.emptyCollection(), correlationId: generateCorrelationId()};
 
     if (this.collections) {
       this.collections.unshift(newCollection);
@@ -177,7 +174,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.correlationIdsOrder.unshift(newCollection.correlationId);
   }
 
-  private emptyCollection(): CollectionModel {
+  private emptyCollection(): Collection {
     return {
       name: '',
       color: this.colors[Math.round(Math.random() * this.colors.length)],
@@ -204,13 +201,13 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public updateCollection(collection: CollectionModel) {
+  public updateCollection(collection: Collection) {
     if (collection.id) {
       this.store$.dispatch(new CollectionsAction.Update({collection}));
     }
   }
 
-  public createCollection(newCollection: CollectionModel) {
+  public createCollection(newCollection: Collection) {
     this.store$.dispatch(
       new CollectionsAction.Create({
         collection: newCollection,
@@ -219,7 +216,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     );
   }
 
-  public trackByCollection(index: number, collection: CollectionModel): string {
+  public trackByCollection(index: number, collection: Collection): string {
     return collection.correlationId || collection.id;
   }
 
@@ -317,7 +314,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(loadedSubscription);
   }
 
-  private sortCollectionsFromStore(collections: CollectionModel[]): CollectionModel[] {
+  private sortCollectionsFromStore(collections: Collection[]): Collection[] {
     const uncreatedCollections = (this.collections && this.collections.filter(collection => !collection.id)) || [];
     this.filterCorrelationIds(uncreatedCollections, collections);
 
@@ -345,7 +342,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     return newCollections.concat(sortCollectionsByFavoriteAndLastUsed(collectionsCopy));
   }
 
-  private filterCorrelationIds(uncreatedCollections: CollectionModel[], newCollections: CollectionModel[]) {
+  private filterCorrelationIds(uncreatedCollections: Collection[], newCollections: Collection[]) {
     const uncreatedCorrelationIds = uncreatedCollections.map(collection => collection.correlationId);
     const currentUsedCorrelationIds = newCollections
       .filter(collection => collection.correlationId)
@@ -357,7 +354,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private deleteInitializedPostIt(collection: CollectionModel) {
+  private deleteInitializedPostIt(collection: Collection) {
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
     const message = this.i18n({
       id: 'collection.delete.dialog.message',
@@ -368,28 +365,19 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       new NotificationsAction.Confirm({
         title,
         message,
-        action: new CollectionsAction.Delete({
-          collectionId: collection.id,
-          callback: collectionId => this.onRemoveCollection(collectionId),
-        }),
+        action: new CollectionsAction.Delete({collectionId: collection.id}),
       })
     );
   }
 
-  private deleteUninitializedPostIt(collection: CollectionModel) {
+  private deleteUninitializedPostIt(collection: Collection) {
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
     this.correlationIdsOrder = this.correlationIdsOrder.filter(corrId => corrId !== collection.correlationId);
   }
 
-  private onCreateCollection(collection: CollectionModel) {
+  private onCreateCollection(collection: Collection) {
     if (queryIsNotEmpty(this.query)) {
       this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
-    }
-  }
-
-  private onRemoveCollection(collectionId: string) {
-    if (queryIsNotEmpty(this.query)) {
-      this.store$.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
     }
   }
 

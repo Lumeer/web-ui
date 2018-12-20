@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ServiceLimits} from '../../../dto/service-limits';
-import {ServiceLimitsModel} from './service-limits.model';
+import {ServiceLimitsDto} from '../../../dto/service-limits.dto';
+import {ServiceLimits} from './service.limits';
 import {serviceLevelMap, ServiceLevelType} from '../../../dto/service-level-type';
 
 export class ServiceLimitsConverter {
-  public static fromDto(organizationId: string, dto: ServiceLimits): ServiceLimitsModel {
+  public static fromDto(organizationId: string, dto: ServiceLimitsDto): ServiceLimits {
     return {
       organizationId: organizationId,
       serviceLevel: serviceLevelMap[dto.serviceLevel],
@@ -35,7 +35,7 @@ export class ServiceLimitsConverter {
     };
   }
 
-  public static toDto(model: ServiceLimitsModel): ServiceLimits {
+  public static toDto(model: ServiceLimits): ServiceLimitsDto {
     return {
       serviceLevel: model.serviceLevel,
       users: model.users,

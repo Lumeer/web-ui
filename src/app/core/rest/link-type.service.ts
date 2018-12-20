@@ -27,7 +27,7 @@ import {environment} from '../../../environments/environment';
 import {LinkTypeDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 import {filter, map} from 'rxjs/operators';
 
 @Injectable()

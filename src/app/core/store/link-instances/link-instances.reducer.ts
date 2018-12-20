@@ -19,6 +19,8 @@
 
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
+import {LinkInstance} from './link.instance';
+import {LinkType} from '../link-types/link.type';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -26,12 +28,11 @@ export function linkInstancesReducer(
 ): LinkInstancesState {
   switch (action.type) {
     case LinkInstancesActionType.GET_SUCCESS:
-      const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
-      return linkInstancesAdapter.addMany(action.payload.linkInstances, queriesState);
+      return addLinkInstances(state, action);
     case LinkInstancesActionType.CREATE_SUCCESS:
-      return linkInstancesAdapter.addOne(action.payload.linkInstance, state);
+      return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_SUCCESS:
-      return linkInstancesAdapter.upsertOne(action.payload.linkInstance, state);
+      return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.CLEAR:
@@ -39,4 +40,30 @@ export function linkInstancesReducer(
     default:
       return state;
   }
+}
+
+function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction.GetSuccess): LinkInstancesState {
+  const newState = {...state, queries: state.queries.concat(action.payload.query)};
+  const filteredLinkInstances = action.payload.linkInstances.filter(linkInstance => {
+    const oldLinkInstance = state.entities[linkInstance.id];
+    return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);
+  });
+
+  return linkInstancesAdapter.addMany(filteredLinkInstances, newState);
+}
+
+function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
+  return linkInstance.version && (!oldLinkInstance.version || linkInstance.version > oldLinkInstance.version);
+}
+
+function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {
+  const oldLinkInstance = state.entities[linkInstance.id];
+  if (!oldLinkInstance) {
+    return linkInstancesAdapter.addOne(linkInstance, state);
+  }
+
+  if (isLinkInstanceNewer(linkInstance, oldLinkInstance)) {
+    return linkInstancesAdapter.upsertOne(linkInstance, state);
+  }
+  return state;
 }

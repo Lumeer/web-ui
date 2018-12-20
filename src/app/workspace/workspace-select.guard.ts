@@ -30,7 +30,7 @@ import {OrganizationsAction} from '../core/store/organizations/organizations.act
 import {selectSelectedOrganization} from '../core/store/organizations/organizations.state';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectSelectedProject} from '../core/store/projects/projects.state';
-import {DefaultWorkspaceModel} from '../core/store/users/user.model';
+import {DefaultWorkspace} from '../core/store/users/user';
 import {selectCurrentUser} from '../core/store/users/users.state';
 
 @Injectable()
@@ -78,7 +78,7 @@ export class WorkspaceSelectGuard implements CanActivate {
     );
   }
 
-  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+  private getDefaultWorkspace(): Observable<DefaultWorkspace> {
     return this.store.select(selectCurrentUser).pipe(
       filter(user => !isNullOrUndefined(user)),
       map(user => user.defaultWorkspace)

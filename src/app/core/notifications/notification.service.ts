@@ -19,7 +19,7 @@
 
 import {Injectable, NgZone} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
+import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
 import {Observable} from 'rxjs';
 import {UserSettingsService} from '../service/user-settings.service';
 
@@ -59,12 +59,12 @@ export class NotificationService {
     );
   }
 
-  public warning(message: string): void {
+  public warning(message: string, config?: SnotifyToastConfig): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}))
+      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config)
     );
   }
 
@@ -115,6 +115,10 @@ export class NotificationService {
 
   public remove(id: number) {
     this.zone.runOutsideAngular(() => this.notifications.remove(id));
+  }
+
+  public clear() {
+    this.zone.runOutsideAngular(() => this.notifications.clear());
   }
 
   private areNotificationsDisabled(): boolean {

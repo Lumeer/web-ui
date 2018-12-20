@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Contact {
+export interface ContactDto {
   id?: string;
   organizationId: string;
   company: string;
@@ -33,4 +33,5 @@ export interface Contact {
   phone: string;
   ic: string;
   dic: string;
+  version?: number;
 }

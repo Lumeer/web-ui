@@ -19,7 +19,7 @@
 
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {ResourceModel} from '../../../core/model/resource.model';
+import {Resource} from '../../../core/model/resource';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Role} from '../../../core/model/role';
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
@@ -40,7 +40,7 @@ export class ResourcePostItComponent {
   public icon: ElementRef;
 
   @Input() public resourceType: ResourceType;
-  @Input() public resource: ResourceModel;
+  @Input() public resource: Resource;
   @Input() public roles: string[];
   @Input() public isSelected: boolean;
   @Input() public serviceLevel: ServiceLevelType;
@@ -50,8 +50,8 @@ export class ResourcePostItComponent {
   @Output() public settings = new EventEmitter();
   @Output() public delete = new EventEmitter();
   @Output() public warningMessage = new EventEmitter<string>();
-  @Output() public create = new EventEmitter<ResourceModel>();
-  @Output() public update = new EventEmitter<ResourceModel>();
+  @Output() public create = new EventEmitter<Resource>();
+  @Output() public update = new EventEmitter<Resource>();
 
   public isPickerVisible = false;
 

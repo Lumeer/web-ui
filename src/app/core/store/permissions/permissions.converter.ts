@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permission} from '../../dto/permission';
-import {Permissions} from '../../dto/permissions';
-import {PermissionModel, PermissionsModel} from './permissions.model';
+import {Permission, Permissions} from './permissions';
+import {PermissionDto, PermissionsDto} from '../../dto';
 
 export class PermissionsConverter {
-  public static fromDto(dto: Permissions): PermissionsModel {
+  public static fromDto(dto: PermissionsDto): Permissions {
     if (!dto) {
       return null;
     }
@@ -33,7 +32,7 @@ export class PermissionsConverter {
     };
   }
 
-  public static toDto(permissions: PermissionsModel): Permissions {
+  public static toDto(permissions: Permissions): PermissionsDto {
     if (!permissions) {
       return null;
     }
@@ -44,14 +43,14 @@ export class PermissionsConverter {
     };
   }
 
-  public static fromPermissionDto(dto: Permission): PermissionModel {
+  public static fromPermissionDto(dto: PermissionDto): Permission {
     return {
       id: dto.id,
       roles: dto.roles,
     };
   }
 
-  public static toPermissionDto(permission: PermissionModel): Permission {
+  public static toPermissionDto(permission: Permission): PermissionDto {
     return {
       id: permission.id,
       roles: permission.roles,

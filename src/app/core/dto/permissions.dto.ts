@@ -17,15 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ServiceLevelType} from '../../../dto/service-level-type';
+import {PermissionDto} from './permission.dto';
 
-export interface ServiceLimitsModel {
-  organizationId: string;
-  serviceLevel: ServiceLevelType;
-  users: number;
-  projects: number;
-  files: number;
-  documents: number;
-  dbSizeMb: number;
-  validUntil: Date;
+export interface PermissionsDto {
+  users: PermissionDto[];
+  groups: PermissionDto[];
 }

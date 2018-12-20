@@ -20,12 +20,12 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../../app.state';
-import {ServiceLimitsModel} from './service-limits.model';
+import {ServiceLimits} from './service.limits';
 import {selectOrganizationByWorkspace} from '../organizations.state';
 
-export interface ServiceLimitsState extends EntityState<ServiceLimitsModel> {}
+export interface ServiceLimitsState extends EntityState<ServiceLimits> {}
 
-export const serviceLimitsAdapter = createEntityAdapter<ServiceLimitsModel>({
+export const serviceLimitsAdapter = createEntityAdapter<ServiceLimits>({
   selectId: serviceLimits => serviceLimits.organizationId,
 });
 
