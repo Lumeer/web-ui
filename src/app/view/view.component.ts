@@ -20,17 +20,18 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take, tap} from 'rxjs/operators';
+import {filter, first, map, take} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {Workspace} from '../core/store/navigation/workspace';
 import {View} from '../core/store/views/view';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllViews, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
+import {selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
 import {Query} from '../core/store/navigation/query';
 import {NotificationService} from '../core/notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 
 @Component({
   templateUrl: './view.component.html',
@@ -98,7 +99,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private bindToViews() {
     this.viewsExist$ = this.store$.pipe(
-      select(selectAllViews),
+      select(selectViewsByRead),
       map(views => views && views.length > 0)
     );
   }
@@ -151,7 +152,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private getViewByName(viewName: string): Observable<View> {
-    return this.store$.pipe(select(selectAllViews)).pipe(
+    return this.store$.pipe(select(selectViewsByRead)).pipe(
       first(),
       map(views => views.find(view => view.name === viewName))
     );

@@ -25,7 +25,7 @@ import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription}
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Organization} from '../../core/store/organizations/organization';
-import {PermissionType} from '../../core/store/permissions/permissions';
+import {Permission, Permissions, PermissionType} from '../../core/store/permissions/permissions';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {View} from '../../core/store/views/view';
@@ -184,12 +184,23 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public share() {
-    const permissions = Object.keys(this.userRoles)
+    const changeablePermissions: Permission[] = Object.keys(this.userRoles)
       .filter(id => this.changeableUsers.find(user => user.id === id))
       .map(id => ({id, roles: this.userRoles[id]}));
+
+    const staticPermissions = this.staticUsers
+      .map(user => this.getUserPermissionsInView(user))
+      .filter(permission => permission && permission.roles && permission.roles.length > 0);
+
+    const permissions = [...changeablePermissions, ...staticPermissions];
+
     this.store$.dispatch(
       new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions})
     );
+  }
+
+  private getUserPermissionsInView(user: User): Permission {
+    return this.view.permissions.users.find(permission => permission.id === user.id);
   }
 
   private subscribeToView() {

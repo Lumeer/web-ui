@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
@@ -38,6 +38,7 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Query} from '../../../../core/store/navigation/query';
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'search-views',

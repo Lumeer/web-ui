@@ -20,12 +20,9 @@
 import {View} from './view';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
 import {Query} from '../navigation/query';
-import {User} from '../users/user';
-import {userHasRoleInResource} from '../../../shared/utils/resource.utils';
-import {Role} from '../../model/role';
 
-export function filterViewsByQuery(views: View[], query: Query, user: User): View[] {
-  const filteredViews = (views || []).slice().filter(view => userHasRoleInResource(user, view, Role.Read));
+export function filterViewsByQuery(views: View[], query: Query): View[] {
+  const filteredViews = (views || []).slice();
 
   if (!query || queryIsEmpty(query)) {
     return filteredViews;

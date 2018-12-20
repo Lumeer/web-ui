@@ -28,10 +28,8 @@ import {selectNavigation, selectPerspective, selectQuery} from '../navigation/na
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfig, ViewCursor, View} from './view';
 import {isViewConfigChanged} from './view.utils';
-import {selectCurrentUser} from '../users/users.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -86,12 +84,6 @@ export const selectViewSearchConfig = createSelector(
 export const selectViewTableConfig = createSelector(
   selectViewConfig,
   config => config.table
-);
-export const selectViewsByQuery = createSelector(
-  selectAllViews,
-  selectQuery,
-  selectCurrentUser,
-  (views, query, user): View[] => sortViewsById(filterViewsByQuery(views, query, user))
 );
 
 export const selectViewCursor = createSelector(

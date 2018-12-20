@@ -27,7 +27,8 @@ import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
 import {View} from '../../store/views/view';
 import {ViewsAction} from '../../store/views/views.action';
-import {selectAllViews, selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
+import {selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
+import {selectViewsByRead} from '../../store/common/permissions.selectors';
 
 @Injectable()
 export class ViewsGuard implements Resolve<View[]> {
@@ -50,7 +51,7 @@ export class ViewsGuard implements Resolve<View[]> {
       mergeMap(() => {
         const viewCode = route.paramMap.get('vc');
         if (!viewCode) {
-          return this.store$.pipe(select(selectAllViews));
+          return this.store$.pipe(select(selectViewsByRead));
         }
 
         return this.store$.pipe(select(selectViewsDictionary)).pipe(
