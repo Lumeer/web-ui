@@ -17,9 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ProjectDto} from './project.dto';
 import {ResourceDto} from './resource.dto';
 
-export interface OrganizationDto extends ResourceDto {
-  projects?: ProjectDto[];
-}
+export interface OrganizationDto extends ResourceDto {}

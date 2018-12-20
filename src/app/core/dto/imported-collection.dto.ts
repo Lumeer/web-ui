@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../store/collections/collection';
+import {CollectionDto} from './collection.dto';
 
 export interface ImportedCollectionDto {
-  collection: Collection;
+  collection: CollectionDto;
   data: string;
 }

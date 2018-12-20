@@ -36,9 +36,9 @@ import {selectContactByWorkspace} from '../../../core/store/organizations/contac
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
   public contact$: Observable<Contact>;
 
-  private contactSubscription: Subscription;
+  public organization: Organization;
 
-  private organization: Organization;
+  private contactSubscription: Subscription;
   private organizationSubscription: Subscription;
 
   constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
