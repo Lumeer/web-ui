@@ -23,7 +23,9 @@ import {UserNotification, UserNotificationType} from '../../../../core/model/use
 @Pipe({
   name: 'validNotificationFilter',
 })
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ValidNotificationFilterPipe implements PipeTransform {
   public transform(value: UserNotification[], args?: any): UserNotification[] {
     return value.filter(notification => this.isValid(notification));
