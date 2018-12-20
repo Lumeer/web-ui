@@ -21,7 +21,8 @@ import {AttributeDto, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {Constraint, constraintTypesMap} from '../../model/data/constraint';
 import {ConstraintDto} from '../../dto/attribute.dto';
-import {Attribute, Collection} from './collection';
+import {Attribute, Collection, ImportedCollection} from './collection';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
@@ -93,4 +94,11 @@ function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto 
       config: model.config,
     }
   );
+}
+
+export function convertImportedCollectionModelToDto(model: ImportedCollection): ImportedCollectionDto {
+  return {
+    collection: convertCollectionModelToDto(model.collection),
+    data: model.data,
+  };
 }

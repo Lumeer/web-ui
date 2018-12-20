@@ -42,6 +42,7 @@ import {
   convertAttributeModelToDto,
   convertCollectionDtoToModel,
   convertCollectionModelToDto,
+  convertImportedCollectionModelToDto,
 } from './collection.converter';
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
@@ -133,7 +134,8 @@ export class CollectionsEffects {
   public import$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
     mergeMap(action => {
-      return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
+      const dto = convertImportedCollectionModelToDto(action.payload.importedCollection);
+      return this.importService.importFile(action.payload.format, dto).pipe(
         map(collection => convertCollectionDtoToModel(collection)),
         mergeMap(collection => {
           const actions: Action[] = [new CollectionsAction.ImportSuccess({collection: collection})];

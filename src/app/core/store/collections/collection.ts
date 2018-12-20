@@ -19,6 +19,7 @@
 
 import {Resource} from '../../model/resource';
 import {Constraint} from './../../model/data/constraint';
+import {CollectionDto} from '../../dto';
 
 export interface Attribute {
   id?: string;
@@ -40,4 +41,9 @@ export interface Collection extends Resource {
   documentsCount?: number;
 
   favorite?: boolean;
+}
+
+export interface ImportedCollection {
+  collection: Collection;
+  data: string;
 }

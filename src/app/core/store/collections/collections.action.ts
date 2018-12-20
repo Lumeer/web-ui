@@ -18,9 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {Permission, PermissionType} from '../permissions/permissions';
-import {Attribute, Collection} from './collection';
+import {Attribute, Collection, ImportedCollection} from './collection';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
@@ -117,7 +116,7 @@ export namespace CollectionsAction {
     public constructor(
       public payload: {
         format: string;
-        importedCollection: ImportedCollectionDto;
+        importedCollection: ImportedCollection;
         callback?: (collection: Collection) => void;
       }
     ) {}
