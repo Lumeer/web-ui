@@ -3,7 +3,7 @@
 
 // Variables ===================================================================
 
-$web-font-path: 'https://lumeer-cdn.ams3.cdn.digitaloceanspaces.com/latofonts.limited.min.css' !default;
+$web-font-path: 'https://s3-eu-west-1.amazonaws.com/lumeer-cdn/latofonts.limited.min.css' !default;
 @import url($web-font-path);
 
 body {
