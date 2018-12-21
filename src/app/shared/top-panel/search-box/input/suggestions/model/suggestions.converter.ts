@@ -30,12 +30,8 @@ export function convertSuggestionsDtoToModel(suggestions: SuggestionsDto, allCol
   if (!suggestions) {
     return null;
   }
-  const attributes: Collection[] = suggestions.attributes.map(collection =>
-    convertCollectionDtoToModel(collection)
-  );
-  const collections: Collection[] = suggestions.collections.map(collection =>
-    convertCollectionDtoToModel(collection)
-  );
+  const attributes: Collection[] = suggestions.attributes.map(collection => convertCollectionDtoToModel(collection));
+  const collections: Collection[] = suggestions.collections.map(collection => convertCollectionDtoToModel(collection));
   const views: View[] = suggestions.views.map(view => ViewConverter.convertToModel(view));
   const linkTypes: LinkType[] = suggestions.linkTypes.map(link => convertLinkType(link, allCollections));
 
