@@ -92,7 +92,7 @@ export class PusherService implements OnDestroy {
   }
 
   private subscribePusher(user: User): void {
-    Pusher.logToConsole = true;
+    Pusher.logToConsole = !environment.production;
     this.pusher = new Pusher(environment.pusherKey, {
       cluster: environment.pusherCluster,
       authEndpoint: `${environment.apiUrl}/rest/pusher`,
