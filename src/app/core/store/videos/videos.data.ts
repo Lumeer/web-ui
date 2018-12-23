@@ -24,10 +24,24 @@ const VIDEO_SEARCH_DATA = {en: 'cLpEfln1-z8', cs: 'cLpEfln1-z8'}; // How to sear
 const VIDEO_PERSPECTIVES = {en: 'Oj1TF6NgmaY', cs: 'Oj1TF6NgmaY'}; // Visual perspectives explained
 const VIDEO_VIEWS = {en: '_1X1buZJ4dY', cs: '_1X1buZJ4dY'}; // Storing screen as views
 const VIDEO_PERSPECTIVE_SEARCH_BASIC = {en: '7lSFgc-2DDU', cs: '7lSFgc-2DDU'}; // Search perspective basics
+const VIDEO_FEEDBACK = {en: 'nsr4TV6FiRw', cs: 'nsr4TV6FiRw'}; // Sending feedback
+const VIDEO_IMPORT = {en: 'ZOWpZ2RPTD4', cs: 'ZOWpZ2RPTD4'}; // Importing data to Lumeer
+const VIDEO_COLLECTION_CONFIG = {en: 'TbnAK5dSuaY', cs: 'TbnAK5dSuaY'}; // Collection configuration
+const VIDEO_ORGANIZATION_SETTINGS = {en: '9vbQW8xS09Y', cs: '9vbQW8xS09Y'}; // Organization settings
+const VIDEO_UPGRADE = {en: 'K6LjTTuIP_4', cs: 'K6LjTTuIP_4'}; // Upgrade to overcome data limits
+const VIDEO_PROJECT_SETTINGS = {en: 'f631rZpP26w', cs: 'f631rZpP26w'}; // Project settings
+const VIDEO_USER_MANAGEMENT = {en: '5zYT9PAaAc0', cs: '5zYT9PAaAc0'}; // User management
 //const VIDEO_ = {en: '', cs: ''}; //
 
 const ALL_VIDEOS_EN = {
   [VIDEO_FIRST_TIME.en]: 150,
+  [VIDEO_IMPORT.en]: 160,
+  [VIDEO_COLLECTION_CONFIG.en]: 170,
+  [VIDEO_ORGANIZATION_SETTINGS.en]: 180,
+  [VIDEO_UPGRADE.en]: 190,
+  [VIDEO_PROJECT_SETTINGS.en]: 200,
+  [VIDEO_USER_MANAGEMENT.en]: 210,
+  [VIDEO_FEEDBACK.en]: 1000,
   [VIDEO_SEARCH_DATA.en]: 1060,
   [VIDEO_PERSPECTIVES.en]: 1070,
   [VIDEO_VIEWS.en]: 1080,
@@ -36,6 +50,13 @@ const ALL_VIDEOS_EN = {
 
 const ALL_VIDEOS_CS = {
   [VIDEO_FIRST_TIME.cs]: 150,
+  [VIDEO_IMPORT.cs]: 160,
+  [VIDEO_COLLECTION_CONFIG.cs]: 170,
+  [VIDEO_ORGANIZATION_SETTINGS.cs]: 180,
+  [VIDEO_UPGRADE.cs]: 190,
+  [VIDEO_PROJECT_SETTINGS.cs]: 200,
+  [VIDEO_USER_MANAGEMENT.cs]: 210,
+  [VIDEO_FEEDBACK.cs]: 1000,
   [VIDEO_SEARCH_DATA.cs]: 1060,
   [VIDEO_PERSPECTIVES.cs]: 1070,
   [VIDEO_VIEWS.cs]: 1080,
@@ -55,16 +76,34 @@ export function getVideosByUrl(url: string): string[] {
   const videos = [];
   const locale = environment.locale === 'cs' ? 'cs' : 'en';
 
+  videos.push(VIDEO_FEEDBACK[locale]);
+
   if (!/^\/organization\/.*/.test(url)) {
     videos.push(VIDEO_SEARCH_DATA[locale]);
     videos.push(VIDEO_PERSPECTIVES[locale]);
     videos.push(VIDEO_VIEWS[locale]);
   }
 
+  if (/^\/organization\/.*\/project\/.*/.test(url)) {
+    // just project
+    videos.push(VIDEO_PROJECT_SETTINGS[locale]);
+  } else if (/^\/organization\/.*/.test(url)) {
+    // just org
+    videos.push(VIDEO_ORGANIZATION_SETTINGS[locale]);
+    videos.push(VIDEO_USER_MANAGEMENT[locale]);
+  }
+
   if (/^\/w\/.*\/view\/search\/.*/.test(url)) {
+    videos.push(VIDEO_IMPORT[locale]);
     videos.push(VIDEO_FIRST_TIME[locale]);
     videos.push(VIDEO_PERSPECTIVE_SEARCH_BASIC[locale]);
+    videos.push(VIDEO_COLLECTION_CONFIG[locale]);
+    videos.push(VIDEO_ORGANIZATION_SETTINGS[locale]);
+    videos.push(VIDEO_PROJECT_SETTINGS[locale]);
+    videos.push(VIDEO_USER_MANAGEMENT[locale]);
   }
+
+  videos.push(VIDEO_UPGRADE[locale]);
 
   return videos;
 }
