@@ -18,9 +18,9 @@
  */
 
 import {AttributeDto} from './attribute.dto';
-import {Resource} from './resource';
+import {ResourceDto} from './resource.dto';
 
-export interface CollectionDto extends Resource {
+export interface CollectionDto extends ResourceDto {
   attributes?: AttributeDto[];
   defaultAttributeId?: string;
   documentsCount?: number;

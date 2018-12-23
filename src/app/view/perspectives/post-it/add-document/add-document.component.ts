@@ -19,7 +19,7 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
@@ -39,7 +39,7 @@ export class PostItAddDocumentComponent {
   public query: Query;
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Output()
   public createPostIt = new EventEmitter<DocumentModel>();

@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {AttributeModel, CollectionModel} from '../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
 
 @Pipe({
@@ -27,7 +27,7 @@ import {getDefaultAttributeId} from '../../core/store/collections/collection.uti
 })
 @Injectable()
 export class DefaultAttributePipe implements PipeTransform {
-  public transform(attribute: AttributeModel, collection: CollectionModel): boolean {
+  public transform(attribute: Attribute, collection: Collection): boolean {
     const defaultAttributeId = getDefaultAttributeId(collection);
     return defaultAttributeId === attribute.id;
   }

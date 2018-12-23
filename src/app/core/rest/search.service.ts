@@ -27,8 +27,8 @@ import {environment} from '../../../environments/environment';
 import {SuggestionsDto, DocumentDto, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
-import {LinkInstanceModel} from '../store/link-instances/link-instance.model';
+import {Workspace} from '../store/navigation/workspace';
+import {LinkInstance} from '../store/link-instances/link.instance';
 import {SuggestionQueryDto} from '../dto/suggestion-query.dto';
 
 @Injectable()
@@ -48,8 +48,8 @@ export class SearchService {
     return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
-  public searchLinkInstances(query: QueryDto): Observable<LinkInstanceModel[]> {
-    return this.http.post<LinkInstanceModel[]>(`${this.searchPath()}/linkInstances`, query);
+  public searchLinkInstances(query: QueryDto): Observable<LinkInstance[]> {
+    return this.http.post<LinkInstance[]>(`${this.searchPath()}/linkInstances`, query);
   }
 
   public searchDocuments(query: QueryDto): Observable<DocumentDto[]> {

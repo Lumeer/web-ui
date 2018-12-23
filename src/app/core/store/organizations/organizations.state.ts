@@ -20,16 +20,16 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {OrganizationModel} from './organization.model';
+import {Organization} from './organization';
 import {selectWorkspace} from '../navigation/navigation.state';
 
-export interface OrganizationsState extends EntityState<OrganizationModel> {
+export interface OrganizationsState extends EntityState<Organization> {
   selectedOrganizationId: string;
   organizationCodes: string[];
   loaded: boolean;
 }
 
-export const organizationsAdapter = createEntityAdapter<OrganizationModel>({
+export const organizationsAdapter = createEntityAdapter<Organization>({
   selectId: organization => organization.id,
 });
 

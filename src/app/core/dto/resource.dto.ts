@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ServiceLimits {
-  serviceLevel: string;
-  users: number;
-  projects: number;
-  files: number;
-  documents: number;
-  dbSizeMb: number;
-  validUntil: number;
+import {PermissionsDto} from './permissions.dto';
+
+export interface ResourceDto {
+  id?: string;
+  code?: string;
+  name: string;
+  color?: string;
+  icon?: string;
+  version?: number;
+  description: string;
+  nonRemovable?: boolean;
+  permissions?: PermissionsDto;
 }

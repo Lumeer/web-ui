@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
@@ -36,16 +36,17 @@ export class ViewRedirectGuard implements CanActivate {
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
 
-    return this.store$.select(selectViewsLoaded).pipe(
+    return this.store$.pipe(
+      select(selectViewsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new ViewsAction.Get());
+          this.store$.dispatch(new ViewsAction.Get({}));
         }
       }),
       skipWhile(loaded => !loaded),
-      switchMap(() => this.store$.select(selectViewByCode(viewCode))),
+      switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
       take(1),
-      withLatestFrom(this.store$.select(selectWorkspace)),
+      withLatestFrom(this.store$.pipe(select(selectWorkspace))),
       map(([view, workspace]) => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? convertQueryModelToString(view.query) : null;

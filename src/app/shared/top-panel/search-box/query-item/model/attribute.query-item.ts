@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {AttributeFilter} from '../../../../../core/store/navigation/query';
@@ -26,8 +26,8 @@ export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
 
   public constructor(
-    public collection: CollectionModel,
-    public attribute: AttributeModel,
+    public collection: Collection,
+    public attribute: Attribute,
     public condition: string,
     public conditionValue: string
   ) {}

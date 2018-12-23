@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {ProjectModel} from '../../../core/store/projects/project.model';
+import {Project} from '../../../core/store/projects/project';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Query} from '../../../core/store/navigation/query';
 import {ResourceType} from '../../../core/model/resource-type';
@@ -34,7 +34,7 @@ export class EmptyCollectionsComponent {
   public query: Query;
 
   @Input()
-  public project: ProjectModel;
+  public project: Project;
 
   @Output()
   public newCollection = new EventEmitter();

@@ -35,7 +35,7 @@ import {Direction} from '../../../shared/direction';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
-import {AttributeModel, CollectionModel} from '../collections/collection.model';
+import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} from '../collections/collections.state';
 import {selectDocumentsByCustomQuery} from '../common/permissions.selectors';
@@ -50,7 +50,7 @@ import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {convertQueryModelToString} from '../navigation/query.converter';
 import {RouterAction} from '../router/router.action';
-import {ViewCursor} from '../views/view.model';
+import {ViewCursor} from '../views/view';
 import {ViewsAction} from '../views/views.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
@@ -301,7 +301,7 @@ export class TablesEffects {
     );
   }
 
-  private getLatestAttributes(part: TablePart): Observable<AttributeModel[]> {
+  private getLatestAttributes(part: TablePart): Observable<Attribute[]> {
     if (part.collectionId) {
       return this.store$.select(selectCollectionById(part.collectionId)).pipe(
         first(),
@@ -963,8 +963,8 @@ function createReplaceColumnAction(
 }
 
 function createParentAttributeAction(
-  collection: CollectionModel,
-  oldAttribute: AttributeModel,
+  collection: Collection,
+  oldAttribute: Attribute,
   nextAction: TablesAction.ReplaceColumns
 ): CollectionsAction.ChangeAttribute {
   return new CollectionsAction.ChangeAttribute({
@@ -979,8 +979,8 @@ function createParentAttributeAction(
 }
 
 function createSecondChildAttributeAction(
-  collection: CollectionModel,
-  oldAttribute: AttributeModel,
+  collection: Collection,
+  oldAttribute: Attribute,
   name: string,
   nextAction: CollectionsAction.ChangeAttribute
 ): CollectionsAction.ChangeAttribute {
@@ -996,8 +996,8 @@ function createSecondChildAttributeAction(
 }
 
 function createFirstChildAttributeAction(
-  collection: CollectionModel,
-  oldAttribute: AttributeModel,
+  collection: Collection,
+  oldAttribute: Attribute,
   name: string,
   nextAction: CollectionsAction.ChangeAttribute
 ): CollectionsAction.ChangeAttribute {

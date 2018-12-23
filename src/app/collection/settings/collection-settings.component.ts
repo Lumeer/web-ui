@@ -27,14 +27,14 @@ import {filter, map, take} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../core/store/navigation/query.converter';
 import {SearchTab} from '../../core/store/navigation/search-tab';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {Query} from '../../core/store/navigation/query';
@@ -44,7 +44,7 @@ import {Query} from '../../core/store/navigation/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
-  public collection$ = new BehaviorSubject<CollectionModel>(null);
+  public collection$ = new BehaviorSubject<Collection>(null);
   public userCount$: Observable<number>;
 
   public readonly collectionType = ResourceType.Collection;
@@ -79,17 +79,13 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.updateCollection(collection);
   }
 
-  public onNewColor(color: string) {
-    const collection = {...this.collection$.getValue(), color};
+  public onNewColorOrIcon(event: {color: string; icon: string}) {
+    const {color, icon} = event;
+    const collection = {...this.collection$.getValue(), color, icon};
     this.updateCollection(collection);
   }
 
-  public onNewIcon(icon: string) {
-    const collection = {...this.collection$.getValue(), icon};
-    this.updateCollection(collection);
-  }
-
-  private updateCollection(collection: CollectionModel) {
+  private updateCollection(collection: Collection) {
     this.store$.dispatch(new CollectionsAction.Update({collection}));
   }
 

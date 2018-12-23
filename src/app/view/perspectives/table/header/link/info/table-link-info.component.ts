@@ -28,8 +28,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
-import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 
@@ -44,10 +44,10 @@ export class TableLinkInfoComponent implements AfterViewInit {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 
   @Input()
-  public linkType: LinkTypeModel;
+  public linkType: LinkType;
 
   @Input()
   public switchingEnabled: boolean;

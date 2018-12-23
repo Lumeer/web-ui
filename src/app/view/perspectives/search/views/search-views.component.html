@@ -1,16 +1,16 @@
-<div class="mt-2" *ngIf="views$ | async as views">
+<div class="mt-2" *ngIf="{views: views$ | async, queryData: queryData$ | async} as data">
 
-  <ng-container *ngIf="!isLoading()">
+  <ng-container *ngIf="!isLoading() && data.views">
 
-    <ng-container *ngIf="views.length; else noViews">
-      <view-detail *ngFor="let view of (maxLines > 0 ? (views | slice:0:maxLines) : views); trackBy:trackByView"
+    <ng-container *ngIf="data.views.length; else noViews">
+      <view-detail *ngFor="let view of (maxLines > 0 ? (data.views | slice:0:maxLines) : data.views); trackBy:trackByView"
                    [view]="view"
-                   [queryData]="queryData"
+                   [queryData]="data.queryData"
                    (delete)="onDeleteView(view)"
                    (clicked)="showView(view)">
       </view-detail>
       <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
-           *ngIf="maxLines > 0 && maxLines < views.length" i18n="@@search.result.more"
+           *ngIf="maxLines > 0 && maxLines < data.views.length" i18n="@@search.result.more"
            (click)="onShowAll()">
         See all
       </div>
@@ -21,5 +21,5 @@
 </div>
 
 <ng-template #noViews>
- <empty-views [query]="query"></empty-views>
+  <empty-views [query]="query"></empty-views>
 </ng-template>

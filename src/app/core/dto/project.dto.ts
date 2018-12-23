@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface LinkInstance {
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
+import {ResourceDto} from './resource.dto';
 
-  data?: {[key: string]: any};
+export interface ProjectDto extends ResourceDto {
+  collectionsCount?: number;
 }

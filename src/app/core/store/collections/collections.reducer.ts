@@ -18,10 +18,9 @@
  */
 
 import {PermissionsHelper} from '../permissions/permissions.helper';
-import {AttributeModel} from './collection.model';
+import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
-import {isNullOrUndefined} from 'util';
 
 export function collectionsReducer(
   state: CollectionsState = initialCollectionsState,
@@ -29,13 +28,13 @@ export function collectionsReducer(
 ): CollectionsState {
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
-      return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
+      return addCollections(state, action.payload.collections);
     case CollectionsActionType.CREATE_SUCCESS:
-      return collectionsAdapter.addOne(action.payload.collection, state);
+      return addOrUpdateCollection(state, action.payload.collection);
     case CollectionsActionType.IMPORT_SUCCESS:
-      return collectionsAdapter.addOne(action.payload.collection, state);
+      return addOrUpdateCollection(state, action.payload.collection);
     case CollectionsActionType.UPDATE_SUCCESS:
-      return collectionsAdapter.upsertOne(action.payload.collection, state);
+      return addOrUpdateCollection(state, action.payload.collection);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.REMOVE_FAVORITE_SUCCESS:
@@ -67,6 +66,32 @@ export function collectionsReducer(
   }
 }
 
+function addCollections(state: CollectionsState, collections: Collection[]): CollectionsState {
+  const newState = {...state, loaded: true};
+  const filteredCollections = collections.filter(collection => {
+    const oldCollection = state.entities[collection.id];
+    return !oldCollection || isCollectionNewer(collection, oldCollection);
+  });
+
+  return collectionsAdapter.addMany(filteredCollections, newState);
+}
+
+function addOrUpdateCollection(state: CollectionsState, collection: Collection): CollectionsState {
+  const oldCollection = state.entities[collection.id];
+  if (!oldCollection) {
+    return collectionsAdapter.addOne(collection, state);
+  }
+
+  if (isCollectionNewer(collection, oldCollection)) {
+    return collectionsAdapter.upsertOne(collection, state);
+  }
+  return state;
+}
+
+function isCollectionNewer(collection: Collection, oldCollection: Collection): boolean {
+  return collection.version && (!oldCollection.version || collection.version > oldCollection.version);
+}
+
 function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string): CollectionsState {
   return collectionsAdapter.updateOne({id: collectionId, changes: {defaultAttributeId: attributeId}}, state);
 }
@@ -74,7 +99,7 @@ function setDefaultAttribute(state: CollectionsState, collectionId: string, attr
 function onCreateAttributesSuccess(
   state: CollectionsState,
   collectionId: string,
-  attributes: AttributeModel[]
+  attributes: Attribute[]
 ): CollectionsState {
   const newAttributes = state.entities[collectionId].attributes.concat(attributes);
   return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
@@ -93,18 +118,14 @@ function onChangeAttributeSuccess(
     attributes.push(action.payload.attribute); // TODO preserve order
   }
 
-  if (!isNullOrUndefined(oldAttributeCopy) && oldAttributeCopy.name !== action.payload.attribute.name) {
+  if (oldAttributeCopy && oldAttributeCopy.name !== action.payload.attribute.name) {
     attributes = renameChildAttributes(attributes, oldAttributeCopy.name, action.payload.attribute.name);
   }
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function renameChildAttributes(
-  attributes: AttributeModel[],
-  oldParentName: string,
-  newParentName: string
-): AttributeModel[] {
+function renameChildAttributes(attributes: Attribute[], oldParentName: string, newParentName: string): Attribute[] {
   const prefix = oldParentName + '.';
   return attributes.map(attribute => {
     if (attribute.name.startsWith(prefix)) {

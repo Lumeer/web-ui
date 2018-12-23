@@ -18,7 +18,7 @@
  */
 
 import {Layout} from 'plotly.js';
-import {ChartAxisType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import * as d3 from 'd3';
 

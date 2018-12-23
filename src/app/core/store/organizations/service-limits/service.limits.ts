@@ -17,6 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceModel} from '../../model/resource.model';
+import {ServiceLevelType} from '../../../dto/service-level-type';
 
-export interface OrganizationModel extends ResourceModel {}
+export interface ServiceLimits {
+  organizationId: string;
+  serviceLevel: ServiceLevelType;
+  users: number;
+  projects: number;
+  files: number;
+  documents: number;
+  dbSizeMb: number;
+  validUntil: Date;
+}

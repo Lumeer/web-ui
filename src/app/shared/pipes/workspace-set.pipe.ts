@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Pipe({
   name: 'workspaceSet',

@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionDto} from './collection.dto';
-import {CollectionModel} from '../store/collections/collection.model';
+export interface LinkInstanceDto {
+  id?: string;
+  linkTypeId: string;
+  documentIds: [string, string];
+  version?: number;
 
-export interface ImportedCollection {
-  collection: CollectionModel;
-  data: string;
+  data?: {[key: string]: any};
 }

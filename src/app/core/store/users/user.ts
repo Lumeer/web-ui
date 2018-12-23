@@ -17,17 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum PermissionType {
-  Users = 'users',
-  Groups = 'groups',
+import {Group} from '../groups/group';
+
+export interface User {
+  id?: string;
+  name?: string;
+  email: string;
+  groupsMap: {[organizationId: string]: string[]};
+  groups?: Group[];
+  defaultWorkspace?: DefaultWorkspace;
+  agreement?: boolean;
+  agreementDate?: Date;
+  newsletter?: boolean;
 }
 
-export interface PermissionModel {
-  id: string;
-  roles: string[];
-}
-
-export interface PermissionsModel {
-  users: PermissionModel[];
-  groups: PermissionModel[];
+export interface DefaultWorkspace {
+  organizationCode?: string;
+  organizationId: string;
+  projectCode?: string;
+  projectId: string;
 }

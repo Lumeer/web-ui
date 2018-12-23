@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permission} from './permission';
+export enum PermissionType {
+  Users = 'users',
+  Groups = 'groups',
+}
+
+export interface Permission {
+  id: string;
+  roles: string[];
+}
 
 export interface Permissions {
   users: Permission[];

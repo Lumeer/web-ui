@@ -18,10 +18,10 @@
  */
 
 import {} from 'jasmine';
-import {UserModel} from '../users/user.model';
+import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
-import {CollectionModel} from '../collections/collection.model';
+import {Collection} from '../collections/collection';
 
 const documents: DocumentModel[] = [
   {
@@ -97,7 +97,7 @@ const documents: DocumentModel[] = [
   },
 ];
 
-const collections: CollectionModel[] = [
+const collections: Collection[] = [
   {
     id: 'COMPANIES_COLLECTION',
     name: 'collection',
@@ -110,12 +110,12 @@ const collections: CollectionModel[] = [
   },
 ];
 
-const turingUser: UserModel = {
+const turingUser: User = {
   email: 'aturing@lumeer.io',
   groupsMap: {},
 };
 
-const musicUser: UserModel = {
+const musicUser: User = {
   email: 'music@lumeer.io',
   groupsMap: {},
 };

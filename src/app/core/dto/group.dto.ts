@@ -17,15 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permissions} from './permissions';
-
-export interface Resource {
+export interface GroupDto {
   id?: string;
-  code?: string;
   name: string;
-  color?: string;
-  icon?: string;
-  description: string;
-  nonRemovable?: boolean;
-  permissions?: Permissions;
 }

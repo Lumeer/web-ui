@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
@@ -46,7 +46,7 @@ export class TableHeaderCollectionComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  public collection$: Observable<CollectionModel>;
+  public collection$: Observable<Collection>;
 
   public constructor(private store: Store<AppState>) {}
 

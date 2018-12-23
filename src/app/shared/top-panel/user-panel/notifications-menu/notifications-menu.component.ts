@@ -28,19 +28,19 @@ import {
   selectUserNotificationsState,
 } from '../../../../core/store/user-notifications/user-notifications.state';
 import {UserNotificationsAction} from '../../../../core/store/user-notifications/user-notifications.action';
-import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {Organization} from '../../../../core/store/organizations/organization';
 import {
   selectOrganizationById,
   selectOrganizationsDictionary,
 } from '../../../../core/store/organizations/organizations.state';
 import {Dictionary} from '@ngrx/entity';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
-import {ProjectModel} from '../../../../core/store/projects/project.model';
+import {Project} from '../../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 
@@ -73,11 +73,11 @@ export class NotificationsMenuComponent implements OnInit {
   @ViewChild('unknown')
   private unknownTemplate: TemplateRef<any>;
 
-  public organizations$: Observable<Dictionary<OrganizationModel>>;
+  public organizations$: Observable<Dictionary<Organization>>;
 
   public currentWorkspace$: Observable<Workspace>;
 
-  public currentProject$: Observable<ProjectModel>;
+  public currentProject$: Observable<Project>;
 
   constructor(
     private store: Store<AppState>,

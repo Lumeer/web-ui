@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../collections/collection.model';
+import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 
 export enum MapTiles {
@@ -55,7 +55,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
 };
 
 export interface MapMarkerProperties {
-  collection: CollectionModel;
+  collection: Collection;
   document: DocumentModel;
   attributeId: string;
   attributeType?: MapAttributeType;

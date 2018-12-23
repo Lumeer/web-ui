@@ -18,16 +18,16 @@
  */
 
 import {Perspective} from '../../../view/perspectives/perspective';
-import {ResourceModel} from '../../model/resource.model';
+import {Resource} from '../../model/resource';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
-import {ChartConfig} from '../charts/chart.model';
+import {ChartConfig} from '../charts/chart';
 import {Query} from '../navigation/query';
 
-export interface ViewModel extends ResourceModel {
+export interface View extends Resource {
   perspective: Perspective;
   query: Query;
-  config: ViewConfigModel;
+  config: ViewConfig;
   authorRights?: {[collectionId: string]: string[]};
 }
 
@@ -38,24 +38,24 @@ export interface ViewCursor {
   attributeId?: string;
 }
 
-export interface ViewConfigModel {
-  detail?: DetailConfigModel;
-  postit?: PostItConfigModel;
-  search?: SearchConfigModel;
+export interface ViewConfig {
+  detail?: DetailConfig;
+  postit?: PostItConfig;
+  search?: SearchConfig;
   table?: TableConfig;
   chart?: ChartConfig;
 }
 
-export interface DetailConfigModel {
+export interface DetailConfig {
   whateverConfig?: string;
 }
 
-export interface PostItConfigModel {
+export interface PostItConfig {
   size?: SizeType;
   documentIdsOrder?: string[];
 }
 
-export interface SearchConfigModel {
+export interface SearchConfig {
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
 }

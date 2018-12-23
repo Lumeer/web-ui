@@ -17,39 +17,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {ContactModel} from '../../../../core/store/organizations/contact/contact.model';
+import {Contact} from '../../../../core/store/organizations/contact/contact';
 import {CountriesData} from '../../../../core/store/organizations/contact/countries.data';
-import {OrganizationSettingsComponent} from '../../organization-settings.component';
 import {ActionsSubject} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ContactsActionType} from '../../../../core/store/organizations/contact/contacts.action';
+import {Organization} from '../../../../core/store/organizations/organization';
 
 @Component({
   selector: 'contact-form',
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.scss'],
 })
-export class ContactFormComponent implements OnInit, OnDestroy {
+export class ContactFormComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public contact: Contact;
+
+  @Input()
+  public organization: Organization;
+
   @ViewChild('invoicingContactForm')
   private invoicingContact: NgForm;
-
-  private contact: ContactModel;
 
   public countries = CountriesData.getCountryNames();
 
   public savingState: boolean = false; // are we performing the save operation?
 
   @Output()
-  public updateContact = new EventEmitter<ContactModel>();
+  public updateContact = new EventEmitter<Contact>();
 
   private contactSaveSuccessSubscription: Subscription;
 
-  constructor(
-    private organizationSettingsComponent: OrganizationSettingsComponent,
-    private actionsSubject: ActionsSubject
-  ) {}
+  constructor(private actionsSubject: ActionsSubject) {}
 
   public ngOnInit() {
     this.contactSaveSuccessSubscription = this.actionsSubject.subscribe(data => {
@@ -62,24 +73,20 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.contact && this.contact) {
+      this.invoicingContact.form.patchValue(this.contact);
+    }
+  }
+
   public ngOnDestroy() {
     if (this.contactSaveSuccessSubscription) {
       this.contactSaveSuccessSubscription.unsubscribe();
     }
   }
 
-  public setContact(contact: ContactModel) {
-    if (contact) {
-      this.contact = contact;
-      this.invoicingContact.form.patchValue(contact);
-    }
-  }
-
   public save() {
-    this.contact = {
-      ...this.invoicingContact.form.value,
-      code: this.organizationSettingsComponent.organization$.getValue().code,
-    };
+    this.contact = {...this.invoicingContact.form.value, code: this.organization.code};
     this.updateContact.emit(this.contact);
     this.invoicingContact.form.markAsPristine();
     this.savingState = true;

@@ -35,11 +35,11 @@ import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow, TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
@@ -71,7 +71,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public document: DocumentModel;
 
   @Input()
-  public linkInstance: LinkInstanceModel;
+  public linkInstance: LinkInstance;
 
   @Input()
   public canManageConfig: boolean;
@@ -312,7 +312,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.cursor.partIndex === 0 ? {parentId: row.parentDocumentId} : undefined;
   }
 
-  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {
+  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: Attribute[]) => void {
     const {cursor} = findTableColumnWithCursor(table, this.cursor.partIndex, attributeName);
 
     return attributes => {
@@ -334,7 +334,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
     return documentId => {
-      const linkInstance: LinkInstanceModel = {
+      const linkInstance: LinkInstance = {
         linkTypeId,
         documentIds: [previousRow.documentId, documentId],
       };

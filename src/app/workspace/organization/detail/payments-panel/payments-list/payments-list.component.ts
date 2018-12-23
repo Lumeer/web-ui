@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
+import {Organization} from '../../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
@@ -27,7 +27,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
-import {PaymentModel} from '../../../../../core/store/organizations/payment/payment.model';
+import {Payment} from '../../../../../core/store/organizations/payment/payment';
 import {selectPaymentsByWorkspaceSorted} from '../../../../../core/store/organizations/payment/payments.state';
 import {PaymentsAction} from '../../../../../core/store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
@@ -42,10 +42,10 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   @Output()
   public repay = new EventEmitter<string>();
 
-  private organization: OrganizationModel;
+  private organization: Organization;
   private organizationSubscription: Subscription;
 
-  public payments: PaymentModel[];
+  public payments: Payment[];
   private paymentsSubscription: Subscription;
 
   constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}

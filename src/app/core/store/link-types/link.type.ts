@@ -17,16 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../model/data/data-value';
+import {Collection} from '../collections/collection';
+import {Constraint} from '../../model/data/constraint';
 
-export interface LinkInstanceModel {
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
+export interface LinkTypeAttribute {
+  id: string;
+  name: string;
 
-  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
+  constraint?: Constraint; // TODO make compulsory
+
+  usageCount: number;
+  intermediate?: boolean;
 }
 
-export function getOtherLinkedDocumentId(linkInstance: LinkInstanceModel, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
+export interface LinkType {
+  id?: string;
+  name: string;
+  version?: number;
+
+  collectionIds: [string, string];
+  collections?: [Collection, Collection];
+
+  attributes?: LinkTypeAttribute[];
+
+  correlationId?: string;
 }

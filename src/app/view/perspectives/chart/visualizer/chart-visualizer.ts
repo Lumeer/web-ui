@@ -20,8 +20,8 @@
 import {ElementRef} from '@angular/core';
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {ChartConfig} from '../../../../core/store/charts/chart.model';
+import {Collection} from '../../../../core/store/collections/collection';
+import {ChartConfig} from '../../../../core/store/charts/chart';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
@@ -42,7 +42,7 @@ export class ChartVisualizer {
     private onValueChanged?: (documentId: string, attributeId: string, value: string) => void
   ) {}
 
-  public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+  public setData(collections: Collection[], documents: DocumentModel[], config: ChartConfig) {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type, this.chartElement);

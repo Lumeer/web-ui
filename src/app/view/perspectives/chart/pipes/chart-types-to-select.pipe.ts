@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartType, chartTypesIconsMap} from '../../../../core/store/charts/chart.model';
+import {ChartType, chartTypesIconsMap} from '../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 

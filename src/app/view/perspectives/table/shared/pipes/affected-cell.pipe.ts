@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {TableSingleColumn} from '../../../../../core/store/tables/table.model';
 import {EditedAttribute} from '../../../../../core/store/tables/tables.state';
 
@@ -29,7 +29,7 @@ import {EditedAttribute} from '../../../../../core/store/tables/tables.state';
 export class AffectedCellPipe implements PipeTransform {
   public transform(
     editedAttribute: EditedAttribute,
-    entities: (DocumentModel | LinkInstanceModel)[],
+    entities: (DocumentModel | LinkInstance)[],
     column: TableSingleColumn
   ): boolean {
     return (

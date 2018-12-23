@@ -18,9 +18,9 @@
  */
 
 import {QueryDto} from './query.dto';
-import {Resource} from './resource';
+import {ResourceDto} from './resource.dto';
 
-export interface ViewDto extends Resource {
+export interface ViewDto extends ResourceDto {
   perspective: string;
   query: QueryDto;
   config: any; // TODO create DTO

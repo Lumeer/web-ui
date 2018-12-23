@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface GroupModel {
+import {Permissions} from '../store/permissions/permissions';
+
+export interface Resource {
   id?: string;
+  code?: string;
   name: string;
+  color?: string;
+  icon?: string;
+  version?: number;
+  description?: string;
+  permissions?: Permissions;
+
+  correlationId?: string;
+  nonRemovable?: boolean;
 }

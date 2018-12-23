@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from './resource';
+import {Resource} from '../../model/resource';
 
 export interface Project extends Resource {
+  organizationId?: string;
   collectionsCount?: number;
 }

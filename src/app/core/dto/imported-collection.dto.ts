@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
+import {CollectionDto} from './collection.dto';
 
-export interface Organization extends Resource {
-  projects?: Project[];
+export interface ImportedCollectionDto {
+  collection: CollectionDto;
+  data: string;
 }

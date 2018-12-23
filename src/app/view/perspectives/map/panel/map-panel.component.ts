@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {MapModel} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 
@@ -34,11 +34,11 @@ export class MapPanelComponent {
   public map: MapModel;
 
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 
   constructor(private store$: Store<{}>) {}
 
-  public onSelect(collection: CollectionModel, [index, attributeId]: [number, string]) {
+  public onSelect(collection: Collection, [index, attributeId]: [number, string]) {
     this.store$.dispatch(
       new MapsAction.SelectAttribute({mapId: this.map.id, collectionId: collection.id, index, attributeId})
     );

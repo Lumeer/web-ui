@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ViewModel} from '../../../core/store/views/view.model';
+import {View} from '../../../core/store/views/view';
 import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -37,7 +37,7 @@ import {selectCurrentUserIsManager} from '../../../core/store/common/permissions
 export class CanManageConfigPipe implements PipeTransform {
   public constructor(private store$: Store<AppState>) {}
 
-  public transform(currentView: ViewModel): Observable<boolean> {
+  public transform(currentView: View): Observable<boolean> {
     if (!currentView) {
       return of(true);
     }
@@ -48,7 +48,7 @@ export class CanManageConfigPipe implements PipeTransform {
     );
   }
 
-  private checkView(view: ViewModel): Observable<boolean> {
+  private checkView(view: View): Observable<boolean> {
     return this.store$.pipe(
       select(selectCurrentUserForWorkspace),
       map(currentUser => {

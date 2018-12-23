@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {AttributeModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'conditionFilter',

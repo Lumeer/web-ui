@@ -3,7 +3,7 @@
 
 // Variables ===================================================================
 
-$web-font-path: 'https://fonts.googleapis.com/css?family=Lato:400,700,400italic&subset=latin-ext' !default;
+$web-font-path: 'https://s3-eu-west-1.amazonaws.com/lumeer-cdn/latofonts.limited.min.css' !default;
 @import url($web-font-path);
 
 body {
