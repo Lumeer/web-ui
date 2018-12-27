@@ -27,7 +27,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Actions} from '@ngrx/effects';
+import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
@@ -153,13 +153,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => this.editableCell.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
       .subscribe(() => this.deleteCellData());
   }
 

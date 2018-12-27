@@ -27,7 +27,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Actions} from '@ngrx/effects';
+import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
@@ -180,13 +180,13 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => this.editableCellDirective.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
       .subscribe(() => {
         this.lastName = '';
         this.editableCellDirective.startEditing(true);
