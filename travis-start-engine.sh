@@ -1,7 +1,7 @@
 #!/bin/bash
 ORIG=$(pwd)
 
-if [ -d ~/.engine -a -f ~/.engine/.git ]; then
+if [ -d ~/.engine -a -d ~/.engine/.git ]; then
   echo "Pulling latest engine updates..."
   cd ~/.engine
   git checkout devel
