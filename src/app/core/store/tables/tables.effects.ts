@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -37,7 +38,11 @@ import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
-import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} from '../collections/collections.state';
+import {
+  selectCollectionById,
+  selectCollectionsDictionary,
+  selectCollectionsLoaded,
+} from '../collections/collections.state';
 import {selectDocumentsByCustomQuery} from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -46,9 +51,11 @@ import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
-import {selectLinkTypeById} from '../link-types/link-types.state';
+import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
+import {Query} from '../navigation/query';
 import {convertQueryModelToString} from '../navigation/query.converter';
+import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
 import {RouterAction} from '../router/router.action';
 import {ViewCursor} from '../views/view';
 import {ViewsAction} from '../views/views.action';
@@ -83,8 +90,6 @@ import {
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
-import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
-import {Query} from '../navigation/query';
 
 @Injectable()
 export class TablesEffects {
@@ -96,41 +101,66 @@ export class TablesEffects {
       return isSingleCollectionQuery(query);
     }),
     withLatestFrom(
-      this.store$.select(selectCollectionsLoaded).pipe(
+      this.store$.pipe(
+        select(selectCollectionsLoaded),
         filter(loaded => loaded),
-        mergeMap(() => this.store$.select(selectAllCollections))
+        mergeMap(() => this.store$.select(selectCollectionsDictionary))
+      ),
+      this.store$.pipe(
+        select(selectLinkTypesLoaded),
+        filter(loaded => loaded),
+        mergeMap(() => this.store$.select(selectLinkTypesDictionary))
       )
     ),
-    flatMap(([action, collections]) => {
+    mergeMap(([action, collectionsMap, linkTypesMap]) => {
       const {config, query} = action.payload;
 
       const queryStem = query.stems[0];
-      const collection = collections.find(col => col.id === queryStem.collectionId);
-      const last = !queryStem.linkTypeIds || queryStem.linkTypeIds.length === 0;
-      const part = createCollectionPart(collection, 0, last, config);
+      const primaryCollection = collectionsMap[queryStem.collectionId];
+      const linkTypeIds = queryStem.linkTypeIds || [];
 
-      const createTableAction: Action = new TablesAction.AddTable({
+      let lastCollectionId = queryStem.collectionId;
+      const parts: TablePart[] = [createCollectionPart(primaryCollection, 0, linkTypeIds.length === 0, config)];
+      const loadDataActions: Action[] = [];
+
+      linkTypeIds.forEach((linkTypeId, index) => {
+        const linkType = linkTypesMap[linkTypeId];
+        const linkTypePart = createLinkPart(linkType, index * 2 + 1, action.payload.config);
+
+        const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
+        const collection = collectionsMap[collectionId];
+        const collectionPart = createCollectionPart(
+          collection,
+          index * 2 + 2,
+          index === linkTypeIds.length - 1,
+          config
+        );
+
+        lastCollectionId = collectionId;
+
+        parts.push(linkTypePart, collectionPart);
+
+        // TODO load in guard instead
+        const dataQuery: Query = {
+          stems: [{collectionId: collection.id, linkTypeIds: [linkTypeId]}],
+        };
+        loadDataActions.push(
+          new DocumentsAction.Get({query: dataQuery}),
+          new LinkInstancesAction.Get({query: dataQuery})
+        );
+      });
+
+      const addTableAction: Action = new TablesAction.AddTable({
         table: {
           id: action.payload.tableId,
-          parts: [part],
+          parts,
           config: config || {
-            parts: convertTablePartsToConfig([part]),
+            parts: convertTablePartsToConfig(parts),
             rows: [createEmptyTableRow()],
           },
         },
       });
-
-      const createPartActions: Action[] = (queryStem.linkTypeIds || []).map(
-        (linkTypeId, index) =>
-          new TablesAction.CreatePart({
-            tableId: action.payload.tableId,
-            linkTypeId,
-            last: index === queryStem.linkTypeIds.length - 1,
-            config,
-          })
-      );
-
-      return [createTableAction].concat(createPartActions);
+      return [addTableAction].concat(loadDataActions);
     })
   );
 
