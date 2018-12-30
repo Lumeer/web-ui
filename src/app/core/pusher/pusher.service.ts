@@ -113,6 +113,7 @@ export class PusherService implements OnDestroy {
     this.bindLinkTypeEvents();
     this.bindLinkInstanceEvents();
     this.bindOtherEvents();
+    this.bindFavoriteEvents();
   }
 
   private bindOrganizationEvents() {
@@ -347,6 +348,29 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('UserNotification:remove', data => {
       this.store$.dispatch(new UserNotificationsAction.DeleteSuccess({id: data.id}));
+    });
+  }
+
+  private bindFavoriteEvents() {
+    this.channel.bind('FavoriteDocument:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: data.id}));
+      }
+    });
+    this.channel.bind('FavoriteDocument:remove', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: data.id}));
+      }
+    });
+    this.channel.bind('FavoriteCollection:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId: data.id}));
+      }
+    });
+    this.channel.bind('FavoriteCollection:remove', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId: data.id}));
+      }
     });
   }
 
