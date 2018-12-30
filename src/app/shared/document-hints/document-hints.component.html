@@ -2,7 +2,8 @@
      [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
   <div *ngIf="documents.length"
        class="dropdown">
-    <div class="dropdown-menu show">
+    <div class="dropdown-menu show"
+         data-test="document-hints">
       <div *ngFor="let doc of documents; index as documentIndex"
            [class.selected]="(selectedIndex$ | async) === documentIndex"
            (mousedown)="onCreateLink(doc)"
@@ -12,7 +13,8 @@
              [style.width.px]="column.width"
              [innerHtml]="column.attributeId === attributeId ? (doc.data[column.attributeId] | highlightText: value) : doc.data[column.attributeId]"
              [title]="doc.data[column.attributeId] || ''"
-             class="text-truncate cursor-default p-1">
+             class="text-truncate cursor-default p-1"
+             data-test="document-hint">
         </div>
       </div>
     </div>
