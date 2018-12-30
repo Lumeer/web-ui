@@ -29,11 +29,13 @@ import {
 } from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -106,6 +108,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public constructor(
     private actions$: Actions,
     private contextMenuService: ContextMenuService,
+    private i18n: I18n,
+    private notificationService: NotificationService,
     private store$: Store<AppState>
   ) {}
 
@@ -204,7 +208,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.clearEditedAttribute();
 
     if (!isNullOrUndefined(value)) {
-      // TODO maybe null values in the future
       this.useSelectionOrSave(value);
     }
 
@@ -212,11 +215,36 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private useSelectionOrSave(value: string) {
+    if (!this.isPreviousLinkedRowInitialized()) {
+      this.showUninitializedLinkedRowWarningAndResetValue();
+      return;
+    }
+
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
     } else {
       this.saveData(value);
     }
+  }
+
+  private showUninitializedLinkedRowWarningAndResetValue() {
+    this.notificationService.warning(
+      this.i18n({
+        id: 'table.data.cell.linked.row.uninitialized',
+        value: 'You need to enter some value to the linked row in the previous table part first.',
+      })
+    );
+    this.editableCell.setValue('');
+    this.editedValue = '';
+  }
+
+  private isPreviousLinkedRowInitialized(): boolean {
+    if (this.cursor.partIndex === 0) {
+      return true;
+    }
+
+    const previousRow = findTableRow(this.table.config.rows, this.cursor.rowPath.slice(0, -1));
+    return previousRow && !!previousRow.documentId;
   }
 
   private clearEditedAttribute() {

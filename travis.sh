@@ -55,7 +55,7 @@ echo "Stopping backend..."
 #kill $PING_LOOP_PID
 
 echo "Running production build..."
-NODE_OPTIONS=--max_old_space_size=4500 LUMEER_ENV=production SKIP_SENTRY_UPLOAD=true mvn clean install
+LUMEER_ENV=production SKIP_SENTRY_UPLOAD=true mvn clean install
 
 echo "Printing bundle sizes..."
 npm run bundlesize
