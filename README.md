@@ -33,6 +33,16 @@ The third script runs the application on [http://localhost:7000/cs](http://local
 
 You also need to run our [back-end](https://github.com/Lumeer/engine) if you want to be able to work with the application.
 
+### Memory limits
+
+If the build process takes too long or fails because it runs out of memory, set `NODE_OPTIONS` environment property with the maximum amount of memory your machine can provide for this process (7000 MB is used in the following example):
+
+```bash
+NODE_OPTIONS=--max_old_space_size=7000 npm run start
+```
+
+It is recommended to save the commands above together with this environment property as run tasks in your IDE so you do not have to type long commands every time you start the application.
+
 ## Deployment
 
 Here is the example command to build the application WAR file with all configuration properties you might need:
@@ -95,8 +105,3 @@ TSLint is run with every pull-request so make sure your code complies with our l
 ```bash
 $ npm run lint
 ```
-
-### Bundle size
-
-Bundle size limits are automatically checked in every pull-request.
-If the Travis CI build fails because of this and you are sure that you have not introduced anything undesirable, you can change these limits in `package.json` file under `bundlesize` property.
