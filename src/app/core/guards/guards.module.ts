@@ -25,10 +25,19 @@ import {LinkTypesGuard} from './data/link-types.guard';
 import {ViewsGuard} from './data/views.guard';
 import {PageNotFoundGuard} from './page-not-found.guard';
 import {ViewRedirectGuard} from './view-redirect.guard';
+import {UsersGuard} from './data/users.guard';
 
 @NgModule({
   imports: [CommonModule],
   declarations: [],
-  providers: [CollectionsGuard, LinkTypesGuard, PageNotFoundGuard, ViewsGuard, ViewRedirectGuard, CurrentUserGuard],
+  providers: [
+    CollectionsGuard,
+    LinkTypesGuard,
+    PageNotFoundGuard,
+    ViewsGuard,
+    ViewRedirectGuard,
+    CurrentUserGuard,
+    UsersGuard,
+  ],
 })
 export class GuardsModule {}

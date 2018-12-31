@@ -25,7 +25,7 @@ import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription}
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Organization} from '../../core/store/organizations/organization';
-import {Permission, Permissions, PermissionType} from '../../core/store/permissions/permissions';
+import {Permission, PermissionType} from '../../core/store/permissions/permissions';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {View} from '../../core/store/views/view';
@@ -155,12 +155,16 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public suggest() {
     const textLowerCase = this.text$.getValue().toLowerCase();
     const newSuggestions = this.users
+      .filter(user => !this.isUserPresented(user))
       .map(user => user.email)
-      .filter(email => email.toLowerCase().includes(textLowerCase))
-      .filter(email => !this.changeableUsers.find(user => user.email === email));
+      .filter(email => email.toLowerCase().includes(textLowerCase));
 
     this.suggestions$.next(newSuggestions);
     this.recomputeSelectedIndex();
+  }
+
+  private isUserPresented(user: User): boolean {
+    return !!this.changeableUsers.find(u => u.id === user.id) || !!this.staticUsers.find(u => u.id === user.id);
   }
 
   private recomputeSelectedIndex() {
@@ -244,7 +248,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private addUserToStaticIfNotPresented(user: User) {
-    if (!this.staticUsers.find(su => su.id === user.id)) {
+    if (!this.isUserPresented(user)) {
       this.staticUsers.push(user);
       this.initRolesForUser(user);
     }
@@ -263,7 +267,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private addUserToChangeableIfNotPresented(user: User) {
-    if (!this.changeableUsers.find(chu => chu.id === user.id)) {
+    if (!this.isUserPresented(user)) {
       this.changeableUsers.push(user);
       this.initRolesForUser(user);
     }

@@ -19,18 +19,18 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, first, map, tap} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {AuthService} from '../../auth/auth.service';
 import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
-  constructor(private authService: AuthService, private router: Router, private store: Store<AppState>) {}
+  constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isCurrentUserLoaded(state);
@@ -51,10 +51,11 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
   }
 
   private checkStore(state: RouterStateSnapshot): Observable<boolean> {
-    return this.store.select(selectCurrentUserForWorkspace).pipe(
+    return this.store$.pipe(
+      select(selectCurrentUserForWorkspace),
       tap(currentUser => {
         if (isNullOrUndefined(currentUser)) {
-          this.store.dispatch(new UsersAction.GetCurrentUser());
+          this.store$.dispatch(new UsersAction.GetCurrentUser());
         }
       }),
       filter(currentUser => !isNullOrUndefined(currentUser)),
