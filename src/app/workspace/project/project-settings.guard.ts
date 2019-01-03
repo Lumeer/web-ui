@@ -27,9 +27,7 @@ import {catchError, filter, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Organization} from '../../core/store/organizations/organization';
-import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
-import {Project} from '../../core/store/projects/project';
 import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {isNullOrUndefined} from '../../shared/utils/common.utils';
@@ -77,7 +75,6 @@ export class ProjectSettingsGuard implements CanActivate {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
-        this.dispatchDataEvents(organization, project);
         return true;
       })
     );
@@ -99,10 +96,5 @@ export class ProjectSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
-  }
-
-  private dispatchDataEvents(organization: Organization, project: Project) {
-    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store$.dispatch(new GroupsAction.Get());
   }
 }

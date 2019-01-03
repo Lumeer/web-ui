@@ -26,9 +26,7 @@ import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
-import {filter, map, take} from 'rxjs/operators';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {filter, map} from 'rxjs/operators';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
@@ -71,20 +69,10 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.fetchUsers();
+    this.subscribeQuery();
   }
 
-  private fetchUsers() {
-    this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectOrganizationByWorkspace),
-          filter(organization => !!organization),
-          take(1)
-        )
-        .subscribe(organization => this.store$.dispatch(new UsersAction.Get({organizationId: organization.id})))
-    );
-
+  private subscribeQuery() {
     this.subscriptions.add(this.store$.pipe(select(selectQuery)).subscribe(query => (this.query = query)));
   }
 

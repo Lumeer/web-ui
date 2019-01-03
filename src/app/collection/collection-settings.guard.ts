@@ -30,7 +30,6 @@ import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
 import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {UsersAction} from '../core/store/users/users.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
@@ -92,7 +91,6 @@ export class CollectionSettingsGuard implements CanActivate {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
-        this.dispatchDataEvents(organization, collection);
         return true;
       })
     );
@@ -149,10 +147,5 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
-  }
-
-  private dispatchDataEvents(organization: Organization, collection: Collection) {
-    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store.dispatch(new GroupsAction.Get());
   }
 }

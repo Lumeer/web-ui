@@ -28,7 +28,6 @@ import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
@@ -89,7 +88,5 @@ export class OrganizationSettingsGuard implements CanActivate {
 
   private dispatchDataEvents(organization: Organization) {
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store$.dispatch(new GroupsAction.Get());
   }
 }

@@ -32,6 +32,7 @@ import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspec
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
+import {UsersGuard} from '../core/guards/data/users.guard';
 
 const viewRoutes: Routes = [
   {
@@ -43,6 +44,7 @@ const viewRoutes: Routes = [
       documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
       views: ViewsGuard,
+      users: UsersGuard,
     },
     component: ViewComponent,
     children: [
