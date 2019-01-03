@@ -17,37 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../dto';
+import {LinkTypeDto} from '../../dto';
 import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from './link-type.model';
 
 export class LinkTypeConverter {
-
-  public static fromDto(dto: LinkType, correlationId?: string): LinkTypeModel {
+  public static fromDto(dto: LinkTypeDto, correlationId?: string): LinkTypeModel {
     return {
       id: dto.id,
       name: dto.name,
       collectionIds: dto.collectionIds,
       attributes: [], // TODO
-      correlationId: correlationId
+      correlationId: correlationId,
     };
   }
 
-  public static toDto(model: LinkTypeModel): LinkType {
+  public static toDto(model: LinkTypeModel): LinkTypeDto {
     return {
       id: model.id,
       name: model.name,
       collectionIds: model.collectionIds,
-      attributes: [] // TODO
+      attributes: [], // TODO
     };
   }
 
   public static addCollections(linkType: LinkTypeModel, collections: CollectionModel[]): LinkTypeModel {
     const usedCollections: [CollectionModel, CollectionModel] = [
       collections.find(collection => collection.id === linkType.collectionIds[0]),
-      collections.find(collection => collection.id === linkType.collectionIds[1])
+      collections.find(collection => collection.id === linkType.collectionIds[1]),
     ];
     return {...linkType, collections: usedCollections};
   }
-
 }

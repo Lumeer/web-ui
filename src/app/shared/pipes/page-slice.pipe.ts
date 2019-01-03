@@ -20,10 +20,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'pageSlice'
+  name: 'pageSlice',
 })
 export class PageSlicePipe implements PipeTransform {
-
   public transform(array: any[], page: number, pageSize: number): any[] {
     const pages = Math.ceil(array.length / pageSize);
     const realPage = Math.min(Math.max(page, 0), pages);
@@ -32,5 +31,4 @@ export class PageSlicePipe implements PipeTransform {
 
     return array.slice(start, end);
   }
-
 }

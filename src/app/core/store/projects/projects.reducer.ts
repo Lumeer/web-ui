@@ -21,7 +21,10 @@ import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 
-export function projectsReducer(state: ProjectsState = initialProjectsState, action: ProjectsAction.All): ProjectsState {
+export function projectsReducer(
+  state: ProjectsState = initialProjectsState,
+  action: ProjectsAction.All
+): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
       const loaded = {...state.loaded};
@@ -36,7 +39,7 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
     case ProjectsActionType.CREATE_SUCCESS:
       return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:
-      return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
+      return projectsAdapter.upsertOne(action.payload.project, state);
     case ProjectsActionType.DELETE_SUCCESS:
       return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
@@ -50,9 +53,16 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
   }
 }
 
-function onChangePermission(state: ProjectsState, action: ProjectsAction.ChangePermissionSuccess | ProjectsAction.ChangePermissionFailure): ProjectsState {
+function onChangePermission(
+  state: ProjectsState,
+  action: ProjectsAction.ChangePermissionSuccess | ProjectsAction.ChangePermissionFailure
+): ProjectsState {
   const project = state.entities[action.payload.projectId];
-  const permissions = PermissionsHelper.changePermission(project.permissions, action.payload.type, action.payload.permission);
+  const permissions = PermissionsHelper.changePermission(
+    project.permissions,
+    action.payload.type,
+    action.payload.permission
+  );
 
   return projectsAdapter.updateOne({id: action.payload.projectId, changes: {permissions: permissions}}, state);
 }

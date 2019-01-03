@@ -3,6 +3,11 @@
 export SENTRY_ORG=answer-institute-sro
 export SENTRY_PROJECT=lumeerio
 
+if [ "$SKIP_SENTRY_UPLOAD" = true ]
+then
+  exit 0
+fi
+
 if [ "$LUMEER_ENV" != "production" -a "$LUMEER_ENV" != "staging" ]
 then
   exit 0
@@ -27,4 +32,4 @@ then
 fi
 
 ./node_modules/.bin/sentry-cli releases new $BUILD_NUMBER \
-  && ./node_modules/.bin/sentry-cli releases files $BUILD_NUMBER upload-sourcemaps --url-prefix https://get.lumeer.io$PUBLIC_PATH ./dist/lumeer
+  && ./node_modules/.bin/sentry-cli releases files $BUILD_NUMBER upload-sourcemaps --no-rewrite --url-prefix https://get.lumeer.io$PUBLIC_PATH ./dist/lumeer

@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {LinkInstance, Query} from '../dto';
+import {LinkInstance, QueryDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -31,12 +31,10 @@ import {map} from 'rxjs/operators';
 
 @Injectable()
 export class LinkInstanceService {
-
   private workspace: Workspace;
 
-  constructor(private httpClient: HttpClient,
-              private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
   public createLinkInstance(linkInstance: LinkInstance): Observable<LinkInstance> {
@@ -48,12 +46,7 @@ export class LinkInstanceService {
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    return this.httpClient.delete(this.restApiPrefix(id))
-      .pipe(map(() => id));
-  }
-
-  public getLinkInstances(query: Query): Observable<LinkInstance[]> {
-    return this.httpClient.post<LinkInstance[]>(this.restApiPrefix() + '/search', query);
+    return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
   private restApiPrefix(id?: string): string {
@@ -61,7 +54,8 @@ export class LinkInstanceService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
+    return `${
+      environment.apiUrl
+    }/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
   }
-
 }

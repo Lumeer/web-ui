@@ -20,14 +20,17 @@
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-types.state';
 
-export function linkTypesReducer(state: LinkTypesState = initialLinkTypesState, action: LinkTypesAction.All): LinkTypesState {
+export function linkTypesReducer(
+  state: LinkTypesState = initialLinkTypesState,
+  action: LinkTypesAction.All
+): LinkTypesState {
   switch (action.type) {
     case LinkTypesActionType.GET_SUCCESS:
       return linkTypesAdapter.addMany(action.payload.linkTypes, {...state, loaded: true});
     case LinkTypesActionType.CREATE_SUCCESS:
       return linkTypesAdapter.addOne(action.payload.linkType, state);
     case LinkTypesActionType.UPDATE_SUCCESS:
-      return linkTypesAdapter.updateOne({id: action.payload.linkType.id, changes: action.payload.linkType}, state);
+      return linkTypesAdapter.upsertOne(action.payload.linkType, state);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
     case LinkTypesActionType.CLEAR:

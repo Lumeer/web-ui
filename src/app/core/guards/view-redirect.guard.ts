@@ -24,20 +24,16 @@ import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {QueryConverter} from '../store/navigation/query.converter';
+import {convertQueryModelToString} from '../store/navigation/query.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
+  public constructor(private router: Router, private store$: Store<AppState>) {}
 
-  public constructor(private router: Router,
-                     private store$: Store<AppState>) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
 
     return this.store$.select(selectViewsLoaded).pipe(
@@ -46,13 +42,13 @@ export class ViewRedirectGuard implements CanActivate {
           this.store$.dispatch(new ViewsAction.Get());
         }
       }),
-      skipWhile((loaded) => !loaded),
+      skipWhile(loaded => !loaded),
       switchMap(() => this.store$.select(selectViewByCode(viewCode))),
       take(1),
       withLatestFrom(this.store$.select(selectWorkspace)),
       map(([view, workspace]) => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
-        const query = view ? QueryConverter.toString(view.query) : null;
+        const query = view ? convertQueryModelToString(view.query) : null;
 
         const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
         if (viewCode) {
@@ -66,5 +62,4 @@ export class ViewRedirectGuard implements CanActivate {
       })
     );
   }
-
 }

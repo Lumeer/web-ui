@@ -17,22 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import {perspectiveIconsMap} from '../../../perspective';
 import {ViewModel} from '../../../../../core/store/views/view.model';
 import {QueryData} from '../../../../../shared/top-panel/search-box/query-data';
 import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
+import {BehaviorSubject} from 'rxjs';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewDetailComponent implements OnInit, OnChanges {
-
   @Input()
   public view: ViewModel;
 
@@ -45,7 +55,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Output()
   public delete = new EventEmitter();
 
-  public queryItems: QueryItem[] = [];
+  public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
+
+  public readonly viewType = ResourceType.View;
 
   public ngOnInit() {
     this.createQueryItems();
@@ -75,6 +87,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     if (!this.queryData) {
       return;
     }
-    this.queryItems = new QueryItemsConverter(this.queryData).fromQuery(this.view.query);
+    this.queryItems$.next(new QueryItemsConverter(this.queryData).fromQuery(this.view.query));
   }
 }

@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
@@ -30,16 +30,13 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'documentPermissions',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentPermissionsPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>,
-                     private collectionsPermissionsPipe: CollectionPermissionsPipe) {
-  }
+  public constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionPermissionsPipe) {}
 
   public transform(document: DocumentModel): Observable<AllowedPermissions> {
     if (!document) {
@@ -58,7 +55,6 @@ export class DocumentPermissionsPipe implements PipeTransform {
   }
 
   private getCollectionForDocument(document: DocumentModel): Observable<CollectionModel> {
-    return this.store.select(selectCollectionById(document.collectionId));
+    return this.store$.pipe(select(selectCollectionById(document.collectionId)));
   }
-
 }

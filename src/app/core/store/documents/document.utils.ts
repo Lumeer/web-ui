@@ -16,16 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Dictionary} from 'lodash';
-import {DocumentModel} from './document.model';
-import {ConditionType} from '../navigation/query.model';
-import {QueryConverter} from '../navigation/query.converter';
 import {CollectionModel} from '../collections/collection.model';
+import {UserModel} from '../users/user.model';
+import {DocumentModel} from './document.model';
+import {AttributeFilter, Query, ConditionType} from '../navigation/query';
+import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];
-  return sortedDocuments.sort((a, b) => (a.creationDate.getTime() - b.creationDate.getTime()) * (sortDesc ? -1 : 1));
+  return sortedDocuments.sort((a, b) => {
+    const value = a.creationDate.getTime() - b.creationDate.getTime();
+    return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
+  });
 }
 
 export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {
@@ -34,7 +37,7 @@ export function mergeDocuments(documentsA: DocumentModel[], documentsB: Document
   return documentsA.concat(documentsBToAdd);
 }
 
-export function groupDocumentsByCollection(documents: DocumentModel[]): { [documentId: string]: [DocumentModel] } {
+export function groupDocumentsByCollection(documents: DocumentModel[]): {[collectionId: string]: [DocumentModel]} {
   return documents.reduce((map, document) => {
     if (!map[document.collectionId]) {
       map[document.collectionId] = [];
@@ -44,47 +47,63 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): { [docum
   }, {});
 }
 
-export function generateDocumentData(collection: CollectionModel, filters: string[]): { [attributeId: string]: any } {
+export function generateDocumentData(
+  collection: CollectionModel,
+  collectionFilters: AttributeFilter[],
+  currentUser?: UserModel
+): {[attributeId: string]: any} {
   if (!collection) {
-    return [];
+    return {};
   }
   const data = collection.attributes.reduce((acc, attr) => {
     acc[attr.id] = '';
     return acc;
   }, {});
 
-  if (filters) {
-    filters.map(filter => {
-      const attrFilter = QueryConverter.parseFilter(filter);
+  collectionFilters.forEach(filter => {
+    const isNumber = !isNaN(Number(filter.value));
+    const value = isNumber ? +filter.value : filter.value.toString();
 
-      if (attrFilter.collectionId === collection.id) {
-        const isNumber = !isNaN(Number(attrFilter.value));
-        const value = isNumber ? +attrFilter.value : attrFilter.value.toString();
-
-        switch (attrFilter.conditionType) {
-          case ConditionType.GreaterThan:
-            data[attrFilter.attributeId] = isNumber ? value + 1 : value + 'a';
-            break;
-          case ConditionType.LowerThan:
-            data[attrFilter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
-            break;
-          case ConditionType.NotEquals:
-            data[attrFilter.attributeId] = isNumber ? value + 1 : '';
-            break;
-          case ConditionType.GreaterThanEquals:
-          case ConditionType.LowerThanEquals:
-          case ConditionType.Equals:
-          default:
-            data[attrFilter.attributeId] = attrFilter.value;
+    switch (conditionFromString(filter.condition || '')) {
+      case ConditionType.GreaterThan:
+        data[filter.attributeId] = isNumber ? value + 1 : value + 'a';
+        break;
+      case ConditionType.LowerThan:
+        data[filter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
+        break;
+      case ConditionType.NotEquals:
+        data[filter.attributeId] = isNumber ? value + 1 : '';
+        break;
+      case ConditionType.GreaterThanEquals:
+      case ConditionType.LowerThanEquals:
+      case ConditionType.Equals:
+      default:
+        if (currentUser && filter.value === 'userEmail()') {
+          data[filter.attributeId] = currentUser.email;
+        } else {
+          data[filter.attributeId] = filter.value;
         }
-      }
-    });
-  }
-
+    }
+  });
   return data;
 }
 
-export function calculateDocumentHierarchyLevel(documentId: string, documentIdsFilter: Set<string>, documentsMap: Dictionary<DocumentModel>): number {
+export function generateDocumentDataByQuery(query: Query, currentUser: UserModel): {[attributeId: string]: any} {
+  const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
+  const collection: CollectionModel = {
+    id: collectionId,
+    name: '',
+    attributes: [],
+  };
+
+  return generateDocumentData(collection, getQueryFiltersForCollection(query, collectionId), currentUser);
+}
+
+export function calculateDocumentHierarchyLevel(
+  documentId: string,
+  documentIdsFilter: Set<string>,
+  documentsMap: Dictionary<DocumentModel>
+): number {
   if (!documentId || !documentIdsFilter.has(documentId)) {
     return 0;
   }

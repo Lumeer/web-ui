@@ -25,31 +25,31 @@ import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
-import {selectCollectionByWorkspace, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {
+  selectCollectionByWorkspace,
+  selectCollectionsDictionary,
+} from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {isNullOrUndefined} from 'util';
+import {Query} from '../../../../core/store/navigation/query';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
   styleUrls: ['./collection-link-types.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
-
   public linkTypes$: Observable<LinkTypeModel[]>;
   public collection$: Observable<CollectionModel>;
   public searchString$ = new BehaviorSubject<string>('');
 
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService,
-              private store: Store<AppState>) {
-  }
+  constructor(private i18n: I18n, private notificationService: NotificationService, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -58,9 +58,11 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.linkTypes$ = this.store.select(selectCollectionByWorkspace).pipe(
       filter(collection => !!collection),
-      mergeMap(collection => this.selectLinkTypesForCollection(collection.id)));
+      mergeMap(collection => this.selectLinkTypesForCollection(collection.id))
+    );
 
-    this.collection$ = this.store.select(selectCollectionByWorkspace)
+    this.collection$ = this.store
+      .select(selectCollectionByWorkspace)
       .pipe(filter(collection => !isNullOrUndefined(collection)));
   }
 
@@ -69,19 +71,26 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   }
 
   private selectLinkTypesForCollection(collectionId: string): Observable<LinkTypeModel[]> {
-    return observableCombineLatest(this.store.select(selectLinkTypesByCollectionId(collectionId)),
+    return observableCombineLatest(
+      this.store.select(selectLinkTypesByCollectionId(collectionId)),
       this.store.select(selectCollectionsDictionary)
     ).pipe(
-      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => {
-        const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
-        return {...linkType, collections};
-      })),
-      tap(linkTypes => this.fetchLinkInstances(linkTypes))
+      map(([linkTypes, collectionsMap]) =>
+        linkTypes.map(linkType => {
+          const collections: [CollectionModel, CollectionModel] = [
+            collectionsMap[linkType.collectionIds[0]],
+            collectionsMap[linkType.collectionIds[1]],
+          ];
+          return {...linkType, collections};
+        })
+      ),
+      tap(linkTypes => this.fetchLinkInstances(linkTypes, collectionId))
     );
   }
 
-  private fetchLinkInstances(linkTypes: LinkTypeModel[]) {
-    const query = {linkTypeIds: linkTypes.map(link => link.id)};
+  private fetchLinkInstances(linkTypes: LinkTypeModel[], collectionId: string) {
+    const linkTypeIds = linkTypes.map(link => link.id);
+    const query: Query = {stems: [{collectionId, linkTypeIds}]};
     this.store.dispatch(new LinkInstancesAction.Get({query}));
   }
 
@@ -99,22 +108,22 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
 
   private confirmDeletionLinkType(linkType: LinkTypeModel) {
     const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete link type?'});
-    const message = this.i18n({
-      id: 'collection.tab.linktypes.delete.message',
-      value: 'Do you really want to delete the link type "{{name}}" and all its usages?'
-    }, {
-      name: linkType.name
-    });
+    const message = this.i18n(
+      {
+        id: 'collection.tab.linktypes.delete.message',
+        value: 'Do you really want to delete the link type "{{name}}" and all its usages?',
+      },
+      {
+        name: linkType.name,
+      }
+    );
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message, title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false},
+    ]);
   }
 
   private deleteLinkType(linkType: LinkTypeModel) {
@@ -124,5 +133,4 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   public trackByLinkType(linkType: LinkTypeModel, index: number): string {
     return linkType.id;
   }
-
 }

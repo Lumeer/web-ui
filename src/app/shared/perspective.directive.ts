@@ -20,11 +20,8 @@
 import {Directive, ViewContainerRef} from '@angular/core';
 
 @Directive({
-  selector: '[perspective]'
+  selector: '[perspective]',
 })
 export class PerspectiveDirective {
-
-  constructor(public viewContainerRef: ViewContainerRef) {
-  }
-
+  constructor(public viewContainerRef: ViewContainerRef) {}
 }

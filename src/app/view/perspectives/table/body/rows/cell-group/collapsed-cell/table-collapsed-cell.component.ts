@@ -34,10 +34,9 @@ import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.
   selector: 'table-collapsed-cell',
   templateUrl: './table-collapsed-cell.component.html',
   styleUrls: ['./table-collapsed-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCollapsedCellComponent implements OnInit, OnChanges {
-
   @Input()
   public column: TableSingleColumn;
 
@@ -60,8 +59,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public values = '';
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindAffected();
@@ -69,9 +67,12 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   private bindAffected() {
     this.affected$ = this.store$.select(selectEditedAttribute).pipe(
-      map(edited => edited && edited.attributeId === this.column.attributeId &&
-        (!!(this.documents && this.documents.find(doc => doc.id === edited.documentId))
-          || !!(this.linkInstances && this.linkInstances.find(link => link.id === edited.linkInstanceId)))
+      map(
+        edited =>
+          edited &&
+          edited.attributeId === this.column.attributeId &&
+          (!!(this.documents && this.documents.find(doc => doc.id === edited.documentId)) ||
+            !!(this.linkInstances && this.linkInstances.find(link => link.id === edited.linkInstanceId)))
       ),
       distinctUntilChanged()
     );
@@ -84,7 +85,8 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   }
 
   public getDataValues(): string {
-    return this.getData().map(data => data[this.column.attributeId])
+    return this.getData()
+      .map(data => data[this.column.attributeId])
       .filter(data => data)
       .join(', ');
   }
@@ -109,5 +111,4 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
-
 }

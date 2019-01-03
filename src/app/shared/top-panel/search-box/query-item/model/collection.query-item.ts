@@ -22,11 +22,9 @@ import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
 export class CollectionQueryItem implements QueryItem {
-
   public type = QueryItemType.Collection;
 
-  public constructor(public collection: CollectionModel) {
-  }
+  public constructor(public collection: CollectionModel) {}
 
   public get text(): string {
     return this.collection.name;
@@ -43,9 +41,4 @@ export class CollectionQueryItem implements QueryItem {
   public get colors(): string[] {
     return [this.collection.color];
   }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    return false;
-  }
-
 }

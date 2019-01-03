@@ -20,8 +20,11 @@
 import {PermissionModel, PermissionsModel, PermissionType} from './permissions.model';
 
 export class PermissionsHelper {
-
-  public static changePermission(permissions: PermissionsModel, type: PermissionType, permission: PermissionModel): PermissionsModel {
+  public static changePermission(
+    permissions: PermissionsModel,
+    type: PermissionType,
+    permission: PermissionModel
+  ): PermissionsModel {
     const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
 
     const index = entityPermissions.findIndex(p => p.id === permission.id);
@@ -48,5 +51,4 @@ export class PermissionsHelper {
     permissionsCopy[type] = entityPermissions;
     return permissionsCopy;
   }
-
 }

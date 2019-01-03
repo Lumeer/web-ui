@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {areTableCursorsEqual, TableCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Pipe({
-  name: 'cursorEquals'
+  name: 'cursorEquals',
 })
 export class CursorEqualsPipe implements PipeTransform {
-
   public transform(cursor1: TableCursor, cursor2: TableCursor): boolean {
     return areTableCursorsEqual(cursor1, cursor2);
   }
-
 }

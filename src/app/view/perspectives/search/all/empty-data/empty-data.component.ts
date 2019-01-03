@@ -19,23 +19,28 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
+import {Query} from '../../../../../core/store/navigation/query';
+import {ProjectModel} from '../../../../../core/store/projects/project.model';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'empty-data',
   templateUrl: './empty-data.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyDataComponent {
-
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Output()
   public collectionsTab = new EventEmitter();
 
+  @Input()
+  public project: ProjectModel;
+
+  public readonly projectType = ResourceType.Project;
+
   public onSwitchToCollectionsTab() {
     this.collectionsTab.emit();
   }
-
 }

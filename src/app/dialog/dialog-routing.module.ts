@@ -24,59 +24,55 @@ import {CreateLinkDialogComponent} from './create-link/create-link-dialog.compon
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
-import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
+import {PlayVideoComponent} from './play-video/play-video.component';
 
 const routes: Routes = [
   {
     path: `${DialogPath.CREATE_COLLECTION}/:linkedCollectionId`,
     component: CreateCollectionDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: DialogPath.CREATE_COLLECTION,
     component: CreateCollectionDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_LINK}/:linkCollectionIds`,
     component: CreateLinkDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: DialogPath.FEEDBACK,
     component: FeedbackDialogComponent,
-    outlet: 'dialog'
-  },
-  {
-    path: `${DialogPath.OVERWRITE_VIEW}/:existingViewCode`,
-    component: OverwriteViewDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.SHARE_VIEW}/:viewCode`,
     component: ShareViewDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_ORGANIZATION}`,
     component: CreateResourceDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
   },
   {
     path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
     component: CreateResourceDialogComponent,
-    outlet: 'dialog'
+    outlet: 'dialog',
+  },
+  {
+    path: `${DialogPath.PLAY_VIDEO}/:videoId`,
+    component: PlayVideoComponent,
+    outlet: 'dialog',
+    data: {modalDialogClass: 'modal-lg'},
   },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class DialogRoutingModule {
-}
+export class DialogRoutingModule {}

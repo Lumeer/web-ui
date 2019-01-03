@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {of, Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {OrganizationService, ProjectService} from '../core/rest';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
@@ -33,14 +32,15 @@ import {ProjectConverter} from '../core/store/projects/project.converter';
 import {ProjectModel} from '../core/store/projects/project.model';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects} from '../core/store/projects/projects.state';
+import {isNullOrUndefined} from '../shared/utils/common.utils';
 
 @Injectable()
 export class WorkspaceService {
-
-  constructor(private organizationService: OrganizationService,
-              private projectService: ProjectService,
-              private store: Store<AppState>) {
-  }
+  constructor(
+    private organizationService: OrganizationService,
+    private projectService: ProjectService,
+    private store$: Store<AppState>
+  ) {}
 
   public getOrganizationFromStoreOrApi(code: string): Observable<OrganizationModel> {
     return this.getOrganizationFromStore(code).pipe(
@@ -54,7 +54,8 @@ export class WorkspaceService {
   }
 
   private getOrganizationFromStore(code: string): Observable<OrganizationModel> {
-    return this.store.select(selectAllOrganizations).pipe(
+    return this.store$.pipe(
+      select(selectAllOrganizations),
       map(organizations => organizations.find(org => org.code === code)),
       take(1)
     );
@@ -63,7 +64,7 @@ export class WorkspaceService {
   private getOrganizationFromApi(code: string): Observable<OrganizationModel> {
     return this.organizationService.getOrganization(code).pipe(
       map(organization => OrganizationConverter.fromDto(organization)),
-      tap(organization => this.store.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
+      tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
       catchError(() => {
         return of(undefined);
       })
@@ -82,7 +83,8 @@ export class WorkspaceService {
   }
 
   private getProjectFromStore(code: string): Observable<ProjectModel> {
-    return this.store.select(selectAllProjects).pipe(
+    return this.store$.pipe(
+      select(selectAllProjects),
       map(projects => projects.find(proj => proj.code === code)),
       take(1)
     );
@@ -91,7 +93,7 @@ export class WorkspaceService {
   private getProjectFromApi(orgCode: string, orgId: string, projCode: string): Observable<ProjectModel> {
     return this.projectService.getProject(orgCode, projCode).pipe(
       map(project => ProjectConverter.fromDto(project, orgId)),
-      tap(project => this.store.dispatch(new ProjectsAction.GetOneSuccess({project}))),
+      tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => {
         return of(undefined);
       })

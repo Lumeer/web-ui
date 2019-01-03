@@ -26,33 +26,35 @@ import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {DialogService} from './../../dialog/dialog.service';
 
 @Component({
   selector: 'session-expired',
   templateUrl: './session-expired.component.html',
-  styleUrls: ['./session-expired.component.scss']
+  styleUrls: ['./session-expired.component.scss'],
 })
 export class SessionExpiredComponent implements OnInit {
-
   public readonly sessionTimeout = environment.sessionTimeout;
 
   public redirectUrl$: Observable<string>;
 
-  public constructor(private location: Location,
-                     private route: ActivatedRoute,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(
+    private dialogService: DialogService,
+    private location: Location,
+    private route: ActivatedRoute,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.disableBackButton();
     this.clearStore();
     this.bindRedirectUrl();
-
+    this.closeAllDialogs();
   }
 
   private disableBackButton() {
     history.pushState(null, null, location.href);
-    window.onpopstate = function () {
+    window.onpopstate = function() {
       history.go(1);
     };
   }
@@ -71,4 +73,7 @@ export class SessionExpiredComponent implements OnInit {
     );
   }
 
+  private closeAllDialogs() {
+    this.dialogService.closeDialog();
+  }
 }

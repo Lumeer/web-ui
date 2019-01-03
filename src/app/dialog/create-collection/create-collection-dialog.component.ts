@@ -30,15 +30,13 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {CollectionValidators} from '../../core/validators/collection.validators';
 import {DialogService} from '../dialog.service';
 
 @Component({
   selector: 'create-collection-dialog',
-  templateUrl: './create-collection-dialog.component.html'
+  templateUrl: './create-collection-dialog.component.html',
 })
 export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
-
   public linkedCollection: CollectionModel;
 
   public form: FormGroup;
@@ -50,10 +48,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private collectionValidators: CollectionValidators,
-              private dialogService: DialogService,
-              private route: ActivatedRoute,
-              private store: Store<AppState>) {
+  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store: Store<AppState>) {
     this.createForm();
   }
 
@@ -63,21 +58,21 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
 
     this.form = new FormGroup({
       collection: this.collectionFormGroup,
-      linkType: this.linkTypeFormGroup
+      linkType: this.linkTypeFormGroup,
     });
   }
 
   private createCollectionFormGroup() {
     const validators = [Validators.required, Validators.minLength(3)];
     return new FormGroup({
-      collectionName: new FormControl('', validators, this.collectionValidators.uniqueName())
+      collectionName: new FormControl('', validators),
     });
   }
 
   private createLinkTypeFormGroup() {
     const validators = [Validators.required, Validators.minLength(3)];
     return new FormGroup({
-      linkName: new FormControl('', validators)
+      linkName: new FormControl('', validators),
     });
   }
 
@@ -96,12 +91,14 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToLinkedCollection(): Subscription {
-    return this.route.paramMap.pipe(
-      map(params => params.get('linkedCollectionId')),
-      filter(linkedCollectionId => !!linkedCollectionId),
-      mergeMap(linkedCollectionId => this.store.select(selectCollectionById(linkedCollectionId))),
-      filter(linkedCollection => !!linkedCollection)
-    ).subscribe(linkedCollection => this.linkedCollection = linkedCollection);
+    return this.route.paramMap
+      .pipe(
+        map(params => params.get('linkedCollectionId')),
+        filter(linkedCollectionId => !!linkedCollectionId),
+        mergeMap(linkedCollectionId => this.store.select(selectCollectionById(linkedCollectionId))),
+        filter(linkedCollection => !!linkedCollection)
+      )
+      .subscribe(linkedCollection => (this.linkedCollection = linkedCollection));
   }
 
   public ngOnDestroy() {
@@ -137,7 +134,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
       name: this.collectionNameInput.value,
       color: this.color,
       icon: this.icon,
-      description: ''
+      description: '',
     };
     const callback = this.linkedCollection ? this.createLinkTypeCallback() : this.dialogService.callback;
     return new CollectionsAction.Create({collection, callback});
@@ -146,7 +143,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
   private createLinkTypeCallback(): (collection: CollectionModel) => void {
     const linkType: LinkTypeModel = {
       name: this.linkNameInput.value,
-      collectionIds: [this.linkedCollection.id, null]
+      collectionIds: [this.linkedCollection.id, null],
     };
     const callback = this.dialogService.callback;
     const store = this.store;
@@ -164,5 +161,4 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
       this.linkNameInput.setValue(linkName);
     }
   }
-
 }

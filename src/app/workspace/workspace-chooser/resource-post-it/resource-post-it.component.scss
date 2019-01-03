@@ -1,4 +1,4 @@
-@import "../../../../styles/variables";
+@import '../../../../styles/variables';
 
 $post-it-size: 170px;
 $post-it-margin: 15px;
@@ -11,13 +11,13 @@ $bookmark-border-color: #bdbdbd;
 }
 
 .tab {
-  width: $post-it-size + 2*$post-it-margin;
+  width: $post-it-size + 2 * $post-it-margin;
   height: $bookmark-height;
 
   .bookmark {
     border-width: $bookmark-border-width !important;
     border-color: $bookmark-border-color !important;
-    width: $post-it-size + 2*$post-it-margin;
+    width: $post-it-size + 2 * $post-it-margin;
     height: $bookmark-height;
     background: #ffffff;
     position: absolute;
@@ -156,4 +156,3 @@ $bookmark-border-color: #bdbdbd;
 .uninitialized-dropdown {
   transform: translate3d(0px, 0px, 0px) !important;
 }
-

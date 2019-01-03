@@ -25,27 +25,22 @@ import {ShareViewDialogComponent} from './share-view-dialog.component';
 import {ShareUserComponent} from './share-user/share-user.component';
 import {ShareViewInputComponent} from './share-view-input/share-view-input.component';
 import {ShareViewCopyComponent} from './share-view-copy/share-view-copy.component';
-import {ViewPermissionsChangedPipe} from './view-permissions-changed.pipe';
-import {UserRolesPipe} from './user-roles.pipe';
+import {ViewPermissionsChangedPipe} from './pipes/view-permissions-changed.pipe';
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
+import {UserRolesPipe} from './pipes/user-roles.pipe';
+import {CanRemoveUserPipe} from './pipes/can-remove-user.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    DialogWrapperModule
-  ],
+  imports: [CommonModule, SharedModule, DialogWrapperModule],
   declarations: [
     ShareViewDialogComponent,
     ShareUserComponent,
     ShareViewInputComponent,
     ShareViewCopyComponent,
     ViewPermissionsChangedPipe,
-    UserRolesPipe
+    UserRolesPipe,
+    CanRemoveUserPipe,
   ],
-  entryComponents: [
-    ShareViewDialogComponent,
-  ]
+  entryComponents: [ShareViewDialogComponent],
 })
-export class ShareViewDialogModule {
-}
+export class ShareViewDialogModule {}

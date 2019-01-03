@@ -31,10 +31,9 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   selector: 'table-header-collection',
   templateUrl: './table-header-collection.component.html',
   styleUrls: ['./table-header-collection.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeaderCollectionComponent implements OnChanges {
-
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -49,8 +48,7 @@ export class TableHeaderCollectionComponent implements OnChanges {
 
   public collection$: Observable<CollectionModel>;
 
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.part && this.part) {
@@ -61,5 +59,4 @@ export class TableHeaderCollectionComponent implements OnChanges {
   public onCaptionClick() {
     this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
-
 }

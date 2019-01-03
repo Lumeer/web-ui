@@ -26,7 +26,6 @@ import {GroupModel} from '../../../../core/store/groups/group.model';
   styleUrls: ['./groups-suggestions.component.scss'],
 })
 export class GroupsSuggestionsComponent {
-
   @Input() public groups: GroupModel[];
 
   @Output() public selectGroup = new EventEmitter<GroupModel>();
@@ -34,5 +33,4 @@ export class GroupsSuggestionsComponent {
   public onSelectGroup(group: GroupModel) {
     this.selectGroup.emit(group);
   }
-
 }

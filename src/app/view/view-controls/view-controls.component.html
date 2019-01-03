@@ -1,4 +1,4 @@
-<ng-container *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async):(query$ | async) | async, viewChanged: viewChanged$ | async} as state">
+<ng-container *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
   <form class="view-controls-grid mt-2">
     <div class="perspective d-flex align-items-center justify-content-start">
       <div class="input-group flex-nowrap mr-2 mb-2">
@@ -73,18 +73,8 @@
                 [class.disabled]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
                 type="button"
                 title="Save" i18n-title="@@button.save"
-                (click)="onSave()">
+                (click)="onSave(state.permissions.canClone)">
           <i class="fas fa-save"></i>
-        </button>
-        <button [disabled]="!(view.code && state.permissions.canClone)"
-                class="btn btn-primary"
-                [class.btn-primary]="view.code && state.permissions.canClone"
-                [class.btn-outline-secondary]="!(view.code && state.permissions.canClone)"
-                [class.disabled]="!(view.code && state.permissions.canClone)"
-                type="button"
-                title="Copy" i18n-title="@@button.copy"
-                (click)="onCopy()">
-          <i class="fas fa-copy"></i>
         </button>
         <button [disabled]="!(view.code && state.permissions.canManage)"
                 (click)="onShareClick()"

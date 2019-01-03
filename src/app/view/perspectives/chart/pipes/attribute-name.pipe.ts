@@ -21,13 +21,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 @Pipe({
-  name: 'collectionAttributeName'
+  name: 'collectionAttributeName',
 })
 export class AttributeNamePipe implements PipeTransform {
-
   public transform(collection: CollectionModel, attributeId: string): string {
     const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-    return attribute && attribute.name || '';
+    return (attribute && attribute.name) || '';
   }
-
 }

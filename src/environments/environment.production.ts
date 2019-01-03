@@ -28,5 +28,5 @@ export const environment: Environment = {
   storeDevtools: false,
   name: 'production',
   paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables
+  ...environmentVariables,
 };

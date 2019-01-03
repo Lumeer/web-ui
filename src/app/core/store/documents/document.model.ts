@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DocumentModel {
+import {DataValue} from './../../model/data/data-value';
 
+export interface DocumentModel {
   id?: string;
   collectionId: string;
   data: DocumentData;
-  newData?: { [attributeName: string]: { value: any, correlationId?: string } };
+  newData?: {[attributeName: string]: {value: any; correlationId?: string}};
 
   metaData?: DocumentMetaData;
 
@@ -35,17 +36,12 @@ export interface DocumentModel {
   dataVersion?: number;
 
   correlationId?: string;
-
 }
 
 export type DocumentData = {
-
-  [attributeId: string]: any
-
+  [attributeId: string]: DataValue | any; // TODO remove any
 };
 
 export interface DocumentMetaData {
-
   parentId?: string;
-
 }

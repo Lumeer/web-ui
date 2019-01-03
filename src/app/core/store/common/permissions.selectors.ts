@@ -16,52 +16,115 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
-import {selectAllCollections} from '../collections/collections.state';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {selectCurrentView} from '../views/views.state';
-import {selectCurrentUser} from '../users/users.state';
-import {getCollectionsIdsFromView} from '../collections/collection.util';
-import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
-import {Role} from '../../model/role';
-import {selectAllDocuments} from '../documents/documents.state';
-import {selectQuery} from '../navigation/navigation.state';
-import {filterCollectionsByQuery} from '../collections/collections.filters';
-import {DocumentModel} from '../documents/document.model';
-import {filterDocumentsByQuery} from '../documents/documents.filters';
-import {sortDocumentsByCreationDate} from '../documents/document.utils';
-import {QueryModel} from '../navigation/query.model';
 import {isArraySubset} from '../../../shared/utils/array.utils';
+import {
+  authorHasRoleInView,
+  userHasRoleInResource,
+  userIsManagerInWorkspace,
+} from '../../../shared/utils/resource.utils';
+import {Role} from '../../model/role';
+import {filterCollectionsByQuery} from '../collections/collections.filters';
+import {selectAllCollections} from '../collections/collections.state';
+import {DocumentModel} from '../documents/document.model';
+import {sortDocumentsByCreationDate} from '../documents/document.utils';
+import {filterDocumentsByQuery} from '../documents/documents.filters';
+import {selectAllDocuments} from '../documents/documents.state';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {selectQuery} from '../navigation/navigation.state';
+import {selectCurrentUser} from '../users/users.state';
+import {selectCurrentView} from '../views/views.state';
+import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
+import {selectAllLinkInstances} from '../link-instances/link-instances.state';
+import {Query} from '../navigation/query';
+import {selectWorkspaceModels} from './common.selectors';
 
-export const selectCollectionsByReadPermission = createSelector(selectAllDocuments, selectAllCollections, selectAllLinkTypes,
-  selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
-    const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
-    return collections.filter(collection => userHasRoleInResource(user, collection, Role.Read)
-      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id)
-        && userHasRoleInResource(user, view, Role.Read) && authorHasRoleInView(view, collection.id, Role.Read)));
-  });
-
-export const selectCollectionsByQuery = createSelector(selectCollectionsByReadPermission, selectAllDocuments, selectQuery,
-  (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));
-
-export const selectDocumentsByReadPermission = createSelector(selectAllDocuments, selectCollectionsByReadPermission, (documents, collections) => {
-  const allowedCollectionIds = collections.map(collection => collection.id);
-  return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
-});
-
-export const selectDocumentsByQuery = createSelector(selectDocumentsByReadPermission, selectQuery,
-  (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
+export const selectCurrentUserIsManager = createSelector(
+  selectCurrentUser,
+  selectWorkspaceModels,
+  (user, workspace) => {
+    const {organization, project} = workspace;
+    return userIsManagerInWorkspace(user, organization, project);
+  }
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
-  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
+export const selectCollectionsByReadPermission = createSelector(
+  selectCurrentUserIsManager,
+  selectAllCollections,
+  selectAllLinkTypes,
+  selectCurrentView,
+  selectCurrentUser,
+  (isManager, collections, linkTypes, view, user) => {
+    if (isManager) {
+      return collections;
+    }
+    const collectionIdsFromView = view && getAllCollectionIdsFromQuery(view.query, linkTypes);
+    return collections.filter(
+      collection =>
+        userHasRoleInResource(user, collection, Role.Read) ||
+        (collectionIdsFromView &&
+          collectionIdsFromView.includes(collection.id) &&
+          userHasRoleInResource(user, view, Role.Read) &&
+          authorHasRoleInView(view, collection.id, Role.Read))
+    );
+  }
 );
 
-export const selectLinkTypesByReadPermission = createSelector(selectAllLinkTypes, selectCollectionsByReadPermission, (linkTypes, collections) => {
-  const allowedCollectionIds = collections.map(collection => collection.id);
-  return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
-});
+export const selectCollectionsByQuery = createSelector(
+  selectCollectionsByReadPermission,
+  selectAllDocuments,
+  selectAllLinkTypes,
+  selectQuery,
+  (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
+);
+
+export const selectDocumentsByReadPermission = createSelector(
+  selectAllDocuments,
+  selectCollectionsByReadPermission,
+  (documents, collections) => {
+    const allowedCollectionIds = collections.map(collection => collection.id);
+    return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
+  }
+);
+
+export const selectDocumentsByQuery = createSelector(
+  selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectQuery,
+  selectCurrentUser,
+  (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
+    sortDocumentsByCreationDate(
+      filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser)
+    )
+);
+
+export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
+  createSelector(
+    selectDocumentsByReadPermission,
+    selectCollectionsByReadPermission,
+    selectAllLinkTypes,
+    selectAllLinkInstances,
+    selectCurrentUser,
+    (documents, collections, linkTypes, linkInstances, currentUser) =>
+      sortDocumentsByCreationDate(
+        filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, includeChildren),
+        desc
+      )
+  );
+
+export const selectLinkTypesByReadPermission = createSelector(
+  selectAllLinkTypes,
+  selectCollectionsByReadPermission,
+  (linkTypes, collections) => {
+    const allowedCollectionIds = collections.map(collection => collection.id);
+    return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
+  }
+);
 
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
-  createSelector(selectLinkTypesByReadPermission, linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)));
+  createSelector(
+    selectLinkTypesByReadPermission,
+    linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
+  );

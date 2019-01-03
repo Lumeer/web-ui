@@ -116,7 +116,7 @@ $track-shadow-color: $dark !default;
   }
 }
 
-input[type=range] {
+input[type='range'] {
   outline: none;
   @include input-type-range;
 }

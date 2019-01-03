@@ -19,38 +19,32 @@
 
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourceModel} from '../../model/resource.model';
-import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart.model';
 import {CalendarConfig} from "../calendar/calendar.model";
+import {Query} from '../navigation/query';
 
 export interface ViewModel extends ResourceModel {
-
   perspective: Perspective;
-  query: QueryModel;
+  query: Query;
   config: ViewConfigModel;
-  authorRights?: { [collectionId: string]: string[] };
-
+  authorRights?: {[collectionId: string]: string[]};
 }
 
 export interface ViewCursor {
-
   linkInstanceId?: string;
   collectionId: string;
   documentId: string;
   attributeId?: string;
-
 }
 
 export interface ViewConfigModel {
-
   detail?: DetailConfigModel;
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfig;
   ganttchart?: GanttChartConfigModel;
-  // calendar?: CalendarConfigModel;
   chart?: ChartConfig;
   calendar?: CalendarConfig;
 
@@ -66,10 +60,8 @@ export interface PostItConfigModel {
 }
 
 export interface SearchConfigModel {
-
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
-
 }
 
 export interface GanttChartConfigModel {

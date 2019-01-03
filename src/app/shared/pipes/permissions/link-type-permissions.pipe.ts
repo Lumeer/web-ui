@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
@@ -30,16 +30,13 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'linkTypePermissions',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LinkTypePermissionsPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>,
-                     private collectionsPermissionsPipe: CollectionPermissionsPipe) {
-  }
+  public constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionPermissionsPipe) {}
 
   public transform(linkType: LinkTypeModel): Observable<AllowedPermissions> {
     if (!linkType) {
@@ -52,8 +49,10 @@ export class LinkTypePermissionsPipe implements PipeTransform {
           return of({});
         }
 
-        return observableCombineLatest(this.collectionsPermissionsPipe.transform(collections[0]),
-          this.collectionsPermissionsPipe.transform(collections[1])).pipe(
+        return observableCombineLatest(
+          this.collectionsPermissionsPipe.transform(collections[0]),
+          this.collectionsPermissionsPipe.transform(collections[1])
+        ).pipe(
           map(([ap1, ap2]) => {
             return {
               read: ap1.read && ap2.read,
@@ -61,7 +60,7 @@ export class LinkTypePermissionsPipe implements PipeTransform {
               manage: ap1.manage && ap2.manage,
               readWithView: ap1.readWithView && ap2.readWithView,
               writeWithView: ap1.writeWithView && ap2.writeWithView,
-              manageWithView: ap1.manageWithView && ap2.manageWithView
+              manageWithView: ap1.manageWithView && ap2.manageWithView,
             };
           })
         );
@@ -70,9 +69,9 @@ export class LinkTypePermissionsPipe implements PipeTransform {
   }
 
   private getCollectionsForLinkType(linkType: LinkTypeModel): Observable<CollectionModel[]> {
-    return this.store.select(selectCollectionsByIds(linkType.collectionIds)).pipe(
+    return this.store$.pipe(
+      select(selectCollectionsByIds(linkType.collectionIds)),
       map(collections => collections.filter(collection => !!collection))
     );
   }
-
 }

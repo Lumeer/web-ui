@@ -17,46 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'top-panel-wrapper',
   templateUrl: './top-panel-wrapper.component.html',
   styleUrls: ['./top-panel-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopPanelWrapperComponent implements OnInit, AfterViewChecked {
-
+export class TopPanelWrapperComponent implements OnInit {
   @Input()
   public searchBoxShown: boolean;
 
   public mobile$ = new BehaviorSubject(true);
 
-  constructor(private element: ElementRef) {
-  }
+  constructor(private element: ElementRef) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
   }
 
-  public ngAfterViewChecked() {
-    this.setTopPanelOffsetTop();
-  }
-
   @HostListener('window:resize')
   public onWindowResize() {
     this.detectMobileResolution();
-    this.setTopPanelOffsetTop();
   }
 
   private detectMobileResolution() {
     this.mobile$.next(window.matchMedia('(max-width: 767.98px)').matches);
   }
-
-  private setTopPanelOffsetTop() {
-    const element = this.element.nativeElement as HTMLElement;
-    element.style.setProperty('--top-panel-offset-top', `${element.offsetTop}px`);
-  }
-
 }

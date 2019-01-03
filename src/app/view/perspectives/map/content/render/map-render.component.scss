@@ -1,63 +1,54 @@
 @import '~src/styles/variables';
 
-:host {
-  display: flex;
+.lumeer-attribution {
+  & > a {
+    color: $primary;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
 
-  &::ng-deep .lumeer-attribution {
-    & > a {
-      color: $primary;
-      font-size: 10px;
-      font-weight: bold;
-      text-transform: uppercase;
+    &:hover {
+      color: $primary-hover;
+      text-decoration: none;
+    }
 
-      &:hover {
-        color: $primary-hover;
-        text-decoration: none;
-      }
-
-      & > img {
-        height: 12px;
-        margin-right: 3px;
-        vertical-align: text-bottom;
-      }
+    & > img {
+      height: 12px;
+      margin-right: 3px;
+      vertical-align: text-bottom;
     }
   }
-
-  &::ng-deep .map-marker {
-    & > .map-marker-shape {
-      position: absolute;
-      top: -45px;
-      left: -16px;
-      border: 4px solid #555555;
-      border-radius: 50%;
-
-      &::after {
-        position: absolute;
-        content: '';
-        bottom: -29px;
-        border: 12px solid transparent;
-        border-top-color: inherit;
-        border-top-width: 18px;
-      }
-
-      & > .map-marker-icon {
-        background: #000000;
-        border-radius: 50%;
-        color: #fff;
-        font-size: 14px;
-        height: 24px;
-        width: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1;
-        position: relative;
-      }
-    }
-  }
-
 }
 
-div {
-  flex-grow: 1;
+.map-marker {
+  & > .map-marker-shape {
+    position: absolute;
+    top: -45px;
+    left: -16px;
+    border: 4px solid #555555;
+    border-radius: 50%;
+
+    &::after {
+      position: absolute;
+      content: '';
+      bottom: -29px;
+      border: 12px solid transparent;
+      border-top-color: inherit;
+      border-top-width: 18px;
+    }
+
+    & > .map-marker-icon {
+      background: #000000;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 14px;
+      height: 24px;
+      width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      position: relative;
+    }
+  }
 }

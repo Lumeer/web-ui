@@ -18,7 +18,7 @@
  */
 
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationStart, Router} from '@angular/router';
+import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {DialogService} from './dialog.service';
@@ -27,37 +27,47 @@ declare let $: any;
 
 @Component({
   selector: 'dialog-base',
-  templateUrl: './dialog-base.component.html'
+  templateUrl: './dialog-base.component.html',
 })
 export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
-
   public id = 'dialog';
 
   public open: boolean;
 
+  public modalDialogClass: string = '';
+
   private subscriptions = new Subscription();
 
-  public constructor(private dialogService: DialogService,
-                     private router: Router) {
-  }
+  public constructor(private dialogService: DialogService, private router: Router, private route: ActivatedRoute) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToOpenDialog());
+    this.subscriptions.add(this.subscribeToActivatedRoute());
     this.subscriptions.add(this.subscribeToCloseDialog());
   }
 
   private subscribeToOpenDialog(): Subscription {
-    return this.router.events.pipe(
-      filter(event => !this.open && event instanceof NavigationStart),
-      filter((event: NavigationStart) => event.url.includes('(dialog:'))
-    ).subscribe(event => this.openDialog());
+    return this.router.events
+      .pipe(
+        filter(event => !this.open && event instanceof NavigationStart),
+        filter((event: NavigationStart) => event.url.includes('(dialog:'))
+      )
+      .subscribe(event => this.openDialog());
+  }
+
+  private subscribeToActivatedRoute(): Subscription {
+    return this.route.data.subscribe(data => {
+      this.modalDialogClass = data.modalDialogClass ? data.modalDialogClass : '';
+    });
   }
 
   private subscribeToCloseDialog(): Subscription {
-    return this.router.events.pipe(
-      filter(event => this.open && event instanceof NavigationStart),
-      filter((event: NavigationStart) => !event.url.includes('(dialog:'))
-    ).subscribe(event => this.closeDialog());
+    return this.router.events
+      .pipe(
+        filter(event => this.open && event instanceof NavigationStart),
+        filter((event: NavigationStart) => !event.url.includes('(dialog:'))
+      )
+      .subscribe(event => this.closeDialog());
   }
 
   private openDialog() {
@@ -88,5 +98,4 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   private dialog(): any {
     return $(`#${this.id}`);
   }
-
 }

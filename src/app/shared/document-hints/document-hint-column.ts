@@ -18,8 +18,6 @@
  */
 
 export interface DocumentHintColumn {
-
   attributeId: string;
   width: number;
-
 }

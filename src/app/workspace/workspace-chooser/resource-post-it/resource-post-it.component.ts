@@ -33,10 +33,9 @@ import {animateVisible} from '../../../shared/animations';
   selector: 'resource-post-it',
   templateUrl: './resource-post-it.component.html',
   styleUrls: ['./resource-post-it.component.scss'],
-  animations: [ animateVisible ]
+  animations: [animateVisible],
 })
 export class ResourcePostItComponent {
-
   @ViewChild('icon')
   public icon: ElementRef;
 
@@ -61,8 +60,7 @@ export class ResourcePostItComponent {
   private lastIcon: string;
   private lastColor: string;
 
-  public constructor(private i18n: I18n) {
-  }
+  public constructor(private i18n: I18n) {}
 
   public onSelected() {
     this.select.emit();
@@ -103,14 +101,16 @@ export class ResourcePostItComponent {
   }
 
   public onPickerBlur() {
-    if (!this.isPickerVisible) { return; }
+    if (!this.isPickerVisible) {
+      return;
+    }
 
     if (this.resource.id) {
       if (this.shouldUpdateIcons()) {
         const resourceModel = {
           ...this.resource,
           icon: this.lastIcon || this.resource.icon,
-          color: this.lastColor || this.resource.color
+          color: this.lastColor || this.resource.color,
         };
         this.update.emit(resourceModel);
       }
@@ -122,8 +122,10 @@ export class ResourcePostItComponent {
   }
 
   private shouldUpdateIcons(): boolean {
-    return (this.lastIcon && this.resource.icon !== this.lastIcon) ||
-      (this.lastColor && this.resource.color !== this.lastColor);
+    return (
+      (this.lastIcon && this.resource.icon !== this.lastIcon) ||
+      (this.lastColor && this.resource.color !== this.lastColor)
+    );
   }
 
   public showPicker() {
@@ -156,7 +158,7 @@ export class ResourcePostItComponent {
     this.nameHasFocus = true;
   }
 
-  public onCodeBlur(component: InputBoxComponent, newCode: string,) {
+  public onCodeBlur(component: InputBoxComponent, newCode: string) {
     this.codeHasFocus = false;
 
     const isValid = this.isNewCodeValid(newCode);
@@ -165,13 +167,17 @@ export class ResourcePostItComponent {
     } else {
       component.setWarningBorder();
 
-      const message = this.i18n({
-        id: 'resource.already.exist',
-        value: '{resourceType, select, Project {Project} Organization {Organization}} with code {{resourceCode}} already exist'
-      }, {
-        resourceType: this.resourceType,
-        resourceCode: newCode
-      });
+      const message = this.i18n(
+        {
+          id: 'resource.already.exist',
+          value:
+            '{resourceType, select, Project {Project} Organization {Organization}} with code {{resourceCode}} already exist',
+        },
+        {
+          resourceType: this.resourceType,
+          resourceCode: newCode,
+        }
+      );
       this.warningMessage.emit(message);
       return;
     }
@@ -198,7 +204,6 @@ export class ResourcePostItComponent {
       this.resource.name = newName;
       this.scheduleCheck();
     }
-
   }
 
   private updateName(newName: string) {
@@ -232,24 +237,26 @@ export class ResourcePostItComponent {
   public getCodePlaceholder(): string {
     return this.i18n({
       id: 'resource.postit.code',
-      value: 'Set code'
+      value: 'Set code',
     });
   }
 
   public getNamePlaceholder(): string {
     return this.i18n({
       id: 'resource.postit.name',
-      value: 'Fill in name'
+      value: 'Fill in name',
     });
   }
 
   public serviceLevelTitle(): string {
-    return this.i18n({
-      id: 'resource.chooser.serviceLevel',
-      value: '{serviceLevel, select, FREE {Free} BASIC {Business}}'
-    }, {
-      serviceLevel: this.serviceLevel
-    });
+    return this.i18n(
+      {
+        id: 'resource.chooser.serviceLevel',
+        value: '{serviceLevel, select, FREE {Free} BASIC {Business}}',
+      },
+      {
+        serviceLevel: this.serviceLevel,
+      }
+    );
   }
-
 }

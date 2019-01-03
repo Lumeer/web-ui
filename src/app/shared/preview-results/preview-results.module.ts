@@ -25,17 +25,8 @@ import {PreviewResultsTableComponent} from './preview-results-table/preview-resu
 import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PipesModule
-  ],
-  declarations: [
-    PreviewResultsComponent,
-    PreviewResultsTableComponent,
-    PreviewResultsTabsComponent
-  ],
-  exports: [
-    PreviewResultsComponent
-  ]
+  imports: [CommonModule, PipesModule],
+  declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
+  exports: [PreviewResultsComponent],
 })
-export class PreviewResultsModule { }
+export class PreviewResultsModule {}

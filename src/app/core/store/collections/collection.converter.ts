@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Collection} from '../../dto';
+import {Attribute, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 
 export class CollectionConverter {
-
-  public static fromDto(dto: Collection, correlationId?: string): CollectionModel {
+  public static fromDto(dto: CollectionDto, correlationId?: string): CollectionModel {
     return {
       id: dto.id,
       code: dto.code,
@@ -31,18 +30,21 @@ export class CollectionConverter {
       description: dto.description,
       color: dto.color,
       icon: dto.icon,
-      attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr))
-        .sort((a, b) => (+a.id.substring(1) - +b.id.substring(1))) : [],
+      attributes: dto.attributes
+        ? dto.attributes
+            .map(attr => CollectionConverter.fromAttributeDto(attr))
+            .sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
+        : [],
       defaultAttributeId: dto.defaultAttributeId,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
       correlationId: correlationId,
       favorite: dto.favorite,
-      lastTimeUsed: new Date(dto.lastTimeUsed)
+      lastTimeUsed: new Date(dto.lastTimeUsed),
     };
   }
 
-  public static toDto(model: CollectionModel): Collection {
+  public static toDto(model: CollectionModel): CollectionDto {
     return {
       id: model.id,
       code: model.code,
@@ -51,7 +53,7 @@ export class CollectionConverter {
       color: model.color,
       icon: model.icon,
       attributes: model.attributes ? model.attributes.map(CollectionConverter.toAttributeDto) : [],
-      permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null
+      permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
     };
   }
 
@@ -59,10 +61,8 @@ export class CollectionConverter {
     return {
       id: attributeDto.id,
       name: attributeDto.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeDto.constraints,
       usageCount: attributeDto.usageCount,
-      correlationId: correlationId
+      correlationId: correlationId,
     };
   }
 
@@ -70,10 +70,8 @@ export class CollectionConverter {
     return {
       id: attributeModel.id,
       name: attributeModel.name,
-      // TODO convert 'intermediate' as well
-      constraints: attributeModel.constraints,
-      usageCount: attributeModel.usageCount  // TODO maybe not needed this way
+      constraints: [],
+      usageCount: attributeModel.usageCount, // TODO maybe not needed this way
     };
   }
-
 }

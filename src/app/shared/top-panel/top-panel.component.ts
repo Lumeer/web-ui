@@ -17,9 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {selectOrganizationByWorkspace} from 'src/app/core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from 'src/app/core/store/projects/projects.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
@@ -31,10 +45,9 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
   selector: 'top-panel',
   templateUrl: './top-panel.component.html',
   styleUrls: ['./top-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
-
+export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public mobile: boolean;
 
@@ -52,15 +65,26 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
 
-  constructor(private element: ElementRef,
-              private store$: Store<AppState>) {
-  }
+  private subscriptions = new Subscription();
+
+  constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.workspace$ = this.store$.select(selectWorkspace);
 
     this.store$.dispatch(new OrganizationsAction.Get());
     this.store$.dispatch(new OrganizationsAction.GetCodes());
+
+    this.subscriptions.add(this.subscribeToWorkspaceChanges());
+  }
+
+  private subscribeToWorkspaceChanges(): Subscription {
+    return combineLatest(
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+      this.store$.pipe(select(selectProjectByWorkspace))
+    ).subscribe(() => {
+      setTimeout(() => this.setTopPanelSideWidth()); // TODO use ResizeObserver instead
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -73,8 +97,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
     this.setTopPanelLineHeight();
   }
 
-  public ngAfterViewChecked() {
-    this.setTopPanelSideWidth();
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   @HostListener('window:resize')
@@ -101,5 +125,4 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   public onToggleControls() {
     this.controlsShown$.next(!this.controlsShown$.getValue());
   }
-
 }

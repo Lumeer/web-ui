@@ -21,13 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart.model';
 
 @Pipe({
-  name: 'showAxisSelect'
+  name: 'showAxisSelect',
 })
 export class ShowAxisSelectPipe implements PipeTransform {
-
   public transform(axisType: ChartAxisType, config: ChartConfig): boolean {
     return !(config.type === ChartType.Pie && axisType === ChartAxisType.Y2);
-
   }
-
 }

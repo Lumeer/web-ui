@@ -23,22 +23,19 @@ import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
 import {isNullOrUndefined} from 'util';
 
-export function collectionsReducer(state: CollectionsState = initialCollectionsState, action: CollectionsAction.All): CollectionsState {
+export function collectionsReducer(
+  state: CollectionsState = initialCollectionsState,
+  action: CollectionsAction.All
+): CollectionsState {
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
       return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
-    case CollectionsActionType.GET_NAMES_SUCCESS:
-      return {...state, collectionNames: action.payload.collectionNames};
-    case CollectionsActionType.ADD_NAME:
-      return addCollectionName(state, action.payload.name);
-    case CollectionsActionType.DELETE_NAME:
-      return deleteCollectionName(state, action.payload.name);
     case CollectionsActionType.CREATE_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.IMPORT_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:
-      return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, state);
+      return collectionsAdapter.upsertOne(action.payload.collection, state);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.REMOVE_FAVORITE_SUCCESS:
@@ -70,48 +67,23 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
   }
 }
 
-function addCollectionName(state: CollectionsState, name: string): CollectionsState {
-  const names = state.collectionNames || [];
-  return {...state, collectionNames: [...names, name]};
-}
-
-function deleteCollectionName(state: CollectionsState, name: string): CollectionsState {
-  const names = state.collectionNames || [];
-  const index = names.findIndex(n => n === name);
-  if (index >= 0) {
-    names.splice(index, 1);
-  }
-  return {...state, collectionNames: names};
-}
-
-function updateCollectionNames(state: CollectionsState, addName?: string, removeName?: string): CollectionsState {
-  if (!addName && !removeName) {
-    return state;
-  }
-
-  const collectionNames = state.collectionNames || [];
-  const indexToRemove = collectionNames.findIndex(name => name === removeName);
-  if (indexToRemove >= 0) {
-    collectionNames.splice(indexToRemove, 1);
-  }
-
-  if (addName) {
-    collectionNames.push(addName);
-  }
-
-  return {...state, collectionNames};
-}
-
 function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string): CollectionsState {
   return collectionsAdapter.updateOne({id: collectionId, changes: {defaultAttributeId: attributeId}}, state);
 }
 
-function onCreateAttributesSuccess(state: CollectionsState, collectionId: string, attributes: AttributeModel[]): CollectionsState {
+function onCreateAttributesSuccess(
+  state: CollectionsState,
+  collectionId: string,
+  attributes: AttributeModel[]
+): CollectionsState {
   const newAttributes = state.entities[collectionId].attributes.concat(attributes);
   return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
 }
 
-function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAction.ChangeAttributeSuccess): CollectionsState {
+function onChangeAttributeSuccess(
+  state: CollectionsState,
+  action: CollectionsAction.ChangeAttributeSuccess
+): CollectionsState {
   let attributes = state.entities[action.payload.collectionId].attributes.slice();
   const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
   const oldAttributeCopy = index >= 0 ? {...attributes[index]} : null;
@@ -128,7 +100,11 @@ function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAc
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function renameChildAttributes(attributes: AttributeModel[], oldParentName: string, newParentName: string): AttributeModel[] {
+function renameChildAttributes(
+  attributes: AttributeModel[],
+  oldParentName: string,
+  newParentName: string
+): AttributeModel[] {
   const prefix = oldParentName + '.';
   return attributes.map(attribute => {
     if (attribute.name.startsWith(prefix)) {
@@ -139,18 +115,28 @@ function renameChildAttributes(attributes: AttributeModel[], oldParentName: stri
   });
 }
 
-function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAction.RemoveAttributeSuccess): CollectionsState {
+function onRemoveAttributeSuccess(
+  state: CollectionsState,
+  action: CollectionsAction.RemoveAttributeSuccess
+): CollectionsState {
   const attributeId = action.payload.attributeId;
-  const attributes = state.entities[action.payload.collectionId].attributes
-    .filter(attribute => attribute.id !== attributeId && !attribute.id.startsWith(attributeId + '.'));
+  const attributes = state.entities[action.payload.collectionId].attributes.filter(
+    attribute => attribute.id !== attributeId && !attribute.id.startsWith(attributeId + '.')
+  );
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function onChangePermission(state: CollectionsState,
-                            action: CollectionsAction.ChangePermissionSuccess | CollectionsAction.ChangePermissionFailure): CollectionsState {
+function onChangePermission(
+  state: CollectionsState,
+  action: CollectionsAction.ChangePermissionSuccess | CollectionsAction.ChangePermissionFailure
+): CollectionsState {
   const collection = state.entities[action.payload.collectionId];
-  const permissions = PermissionsHelper.changePermission(collection.permissions, action.payload.type, action.payload.permission);
+  const permissions = PermissionsHelper.changePermission(
+    collection.permissions,
+    action.payload.type,
+    action.payload.permission
+  );
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);
 }

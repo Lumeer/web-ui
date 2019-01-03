@@ -26,10 +26,9 @@ import {FormGroup} from '@angular/forms';
   selector: 'query-item',
   templateUrl: './query-item.component.html',
   styleUrls: ['./query-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueryItemComponent {
-
   @Input()
   public queryItem: QueryItem;
 
@@ -68,5 +67,4 @@ export class QueryItemComponent {
       this.change.emit();
     }
   }
-
 }

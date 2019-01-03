@@ -18,7 +18,6 @@
  */
 
 export interface DocumentDto {
-
   id: string;
   collectionId: string;
   parentId?: string;
@@ -30,8 +29,7 @@ export interface DocumentDto {
   data: DocumentDataDto;
   metaData?: DocumentMetaDataDto;
   favorite?: boolean;
-
 }
 
-export type DocumentDataDto = { [attributeId: string]: any };
-export type DocumentMetaDataDto = { [key: string]: any };
+export type DocumentDataDto = {[attributeId: string]: any};
+export type DocumentMetaDataDto = {[key: string]: any};

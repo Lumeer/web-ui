@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
@@ -25,7 +36,12 @@ import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor'
 import {TableConfigRow, TablePart} from '../../../../../../core/store/tables/table.model';
 import {isTableRowStriped} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectHasNextTableParts, selectTableHierarchyMaxLevel, selectTablePart, selectTableRowWithHierarchyLevel} from '../../../../../../core/store/tables/tables.selector';
+import {
+  selectHasNextTableParts,
+  selectTableHierarchyMaxLevel,
+  selectTablePart,
+  selectTableRowWithHierarchyLevel,
+} from '../../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-primary-row',
@@ -38,7 +54,6 @@ import {selectHasNextTableParts, selectTableHierarchyMaxLevel, selectTablePart, 
   },
 })
 export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDestroy {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -60,9 +75,7 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   public striped: boolean;
   public part$: Observable<TablePart>;
 
-  constructor(private element: ElementRef,
-              private store$: Store<{}>) {
-  }
+  constructor(private element: ElementRef, private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -92,13 +105,10 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   private initIntersectionObserver() {
     const tableBodyElement = document.querySelector(`#table-${this.cursor.tableId} table-body`);
 
-    this.intersectionObserver = new IntersectionObserver(
-      entries => this.detectVisibility(entries),
-      {
-        root: tableBodyElement,
-        rootMargin: '100px'
-      }
-    );
+    this.intersectionObserver = new IntersectionObserver(entries => this.detectVisibility(entries), {
+      root: tableBodyElement,
+      rootMargin: '100px',
+    });
     this.intersectionObserver.observe(this.element.nativeElement);
   }
 
@@ -118,5 +128,4 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   public onHierarchyToggle() {
     this.store$.dispatch(new TablesAction.ToggleChildRows({cursor: this.cursor}));
   }
-
 }

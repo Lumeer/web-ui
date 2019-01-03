@@ -17,41 +17,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
-import {QueryModel} from '../../../../../core/store/navigation/query.model';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
+import {Query} from '../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
   styleUrls: ['./table-rows.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowsComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
 
   @Input()
   public canManageConfig: boolean;
 
   public rows$: Observable<TableConfigRow[]>;
 
-  public constructor(public element: ElementRef,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.query) {
@@ -62,23 +67,23 @@ export class TableRowsComponent implements OnChanges {
     }
   }
 
-  private bindRows(cursor: TableBodyCursor, query: QueryModel) {
+  private bindRows(cursor: TableBodyCursor, query: Query) {
     this.rows$ = combineLatest(
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query)),
+        select(selectDocumentsByCustomQuery(query, false, true)),
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
       )
     ).pipe(
       debounceTime(10), // fixes not shown linked records after linked part is added
       map(([rows, existingDocumentIds]) => {
-        return rows.filter(row => row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId);
+        return rows.filter(row => (row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId));
       }),
       tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query})))
     );
   }
 
-  private retrieveDocuments(query: QueryModel) {
+  private retrieveDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
@@ -96,5 +101,4 @@ export class TableRowsComponent implements OnChanges {
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
-
 }

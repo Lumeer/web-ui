@@ -18,7 +18,6 @@
  */
 
 export interface SmartDocTemplatePartDto {
-
   type: string;
 
   textHtml?: string;
@@ -27,13 +26,10 @@ export interface SmartDocTemplatePartDto {
   linkTypeId?: string;
   perspective?: string;
   templateId?: string;
-
 }
 
 export interface SmartDocTemplateDto {
-
   id?: string;
   collectionCode: string;
   parts: SmartDocTemplatePartDto[];
-
 }

@@ -17,27 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {QueryConverter} from '../../../core/store/navigation/query.converter';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Subject, Subscription} from 'rxjs';
-import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
-import {FormControl} from '@angular/forms';
-import {CollectionValidators} from '../../../core/validators/collection.validators';
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
+import {Query} from '../../../core/store/navigation/query';
+import {isNullOrUndefined} from '../../utils/common.utils';
 
 declare let $: any;
 
 @Component({
   selector: 'post-it-collection',
   templateUrl: './post-it-collection.component.html',
-  styleUrls: ['./post-it-collection.component.scss']
+  styleUrls: ['./post-it-collection.component.scss'],
 })
-export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
-
+export class PostItCollectionComponent implements OnInit, OnDestroy {
   @Input() public collection: CollectionModel;
   @Input() public focused: boolean;
   @Input() public selected: boolean;
@@ -50,24 +47,19 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   @Output() public unselect = new EventEmitter();
   @Output() public delete = new EventEmitter();
   @Output() public togglePanel = new EventEmitter<any>();
-  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
+  @Output() public favoriteChange = new EventEmitter<{favorite: boolean; onlyStore: boolean}>();
 
   @ViewChild(PostItCollectionNameComponent)
   public collectionNameComponent: PostItCollectionNameComponent;
 
   public isPickerVisible: boolean = false;
-  public nameFormControl: FormControl;
   public newDropdownId = 'dropdown-' + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
   private lastSyncedFavorite: boolean;
-  private isValidCopy: boolean;
   private favoriteChange$ = new Subject<boolean>();
   private subscriptions = new Subscription();
   private oldColor: string;
   private oldIcon: string;
   private clickedComponent: any;
-
-  constructor(private collectionValidators: CollectionValidators) {
-  }
 
   @HostListener('document:click', ['$event'])
   public documentClicked($event): void {
@@ -80,13 +72,6 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscribeData();
-    this.initFormControl();
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.updateValidators();
-    }
   }
 
   public ngOnDestroy() {
@@ -107,16 +92,11 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   public onNameSelect() {
     this.select.emit();
-
-    this.isValidCopy = this.nameFormControl.valid;
   }
 
   public onNameUnselect() {
     this.unselect.emit();
-
-    if (this.isValidCopy !== this.nameFormControl.valid) {
-      this.resize.emit();
-    }
+    this.resize.emit();
   }
 
   public onDelete() {
@@ -167,20 +147,8 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public queryForCollectionDocuments(): string {
-    const query: QueryModel = {collectionIds: [this.collection.id]};
-    return QueryConverter.toString(query);
-  }
-
-  public refreshValidators() {
-    this.nameFormControl.updateValueAndValidity();
-  }
-
-  public performPendingUpdateName(): boolean {
-    return this.collectionNameComponent.performPendingUpdateIfNeeded();
-  }
-
-  public getPendingUpdateName(): string {
-    return this.collectionNameComponent.getPendingUpdate();
+    const query: Query = {stems: [{collectionId: this.collection.id}]};
+    return convertQueryModelToString(query);
   }
 
   public revertSelectedColor($event: MouseEvent): void {
@@ -199,27 +167,15 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeData() {
-    const favoriteChangeSubscription = this.favoriteChange$.pipe(
-      debounceTime(1000),
-      filter(favorite => favorite !== this.lastSyncedFavorite)
-    ).subscribe(favorite => {
-      this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false});
-    });
+    const favoriteChangeSubscription = this.favoriteChange$
+      .pipe(
+        debounceTime(1000),
+        filter(favorite => favorite !== this.lastSyncedFavorite)
+      )
+      .subscribe(favorite => {
+        this.lastSyncedFavorite = null;
+        this.favoriteChange.emit({favorite, onlyStore: false});
+      });
     this.subscriptions.add(favoriteChangeSubscription);
-  }
-
-  private initFormControl() {
-    const collectionName = this.collection ? this.collection.name : '';
-    this.nameFormControl = new FormControl(collectionName, null, this.collectionValidators.uniqueName(this.collection.name));
-    this.nameFormControl.setErrors(null);
-  }
-
-  private updateValidators() {
-    if (!this.nameFormControl) {
-      return;
-    }
-    this.nameFormControl.setAsyncValidators(this.collectionValidators.uniqueName(this.collection.name));
-    this.nameFormControl.updateValueAndValidity();
   }
 }

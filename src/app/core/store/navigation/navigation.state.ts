@@ -20,35 +20,52 @@
 import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
-import {QueryModel} from './query.model';
 import {SearchTab} from './search-tab';
 import {Workspace} from './workspace.model';
+import {Query} from './query';
 
 export interface NavigationState {
-
-  query: QueryModel;
+  query: Query;
   workspace: Workspace;
   perspective?: Perspective;
   searchTab?: SearchTab;
   viewName?: string;
   url: string;
   previousUrl?: string;
-
 }
 
 export const initialNavigationState: NavigationState = {
-
   query: {},
   workspace: {},
-  url: '/'
-
+  url: '/',
 };
 
 export const selectNavigation = (state: AppState) => state.navigation;
-export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
-export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
-export const selectSearchTab = createSelector(selectNavigation, (state: NavigationState) => state.searchTab);
-export const selectUrl = createSelector(selectNavigation, state => state.url);
-export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);
-export const selectViewCode = createSelector(selectWorkspace, workspace => workspace && workspace.viewCode);
+export const selectQuery = createSelector(
+  selectNavigation,
+  (state: NavigationState) => state.query
+);
+export const selectPerspective = createSelector(
+  selectNavigation,
+  (state: NavigationState) => state.perspective
+);
+export const selectWorkspace = createSelector(
+  selectNavigation,
+  (state: NavigationState) => state.workspace
+);
+export const selectSearchTab = createSelector(
+  selectNavigation,
+  (state: NavigationState) => state.searchTab
+);
+export const selectUrl = createSelector(
+  selectNavigation,
+  state => state.url
+);
+export const selectPreviousUrl = createSelector(
+  selectNavigation,
+  state => state.previousUrl
+);
+export const selectViewCode = createSelector(
+  selectWorkspace,
+  workspace => workspace && workspace.viewCode
+);

@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'linkedDocumentIds'
+  name: 'linkedDocumentIds',
 })
 export class LinkedDocumentIdsPipe implements PipeTransform {
-
   public transform(row: TableConfigRow): string[] {
     return row && row.linkedRows ? row.linkedRows.map(linkedRow => linkedRow.documentId) : [];
   }
-
 }

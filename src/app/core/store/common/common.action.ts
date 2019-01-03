@@ -20,18 +20,13 @@
 import {Action} from '@ngrx/store';
 
 export enum CommonActionType {
-
-  EXECUTE_CALLBACK = '[Common] Execute Callback'
-
+  EXECUTE_CALLBACK = '[Common] Execute Callback',
 }
 
 export namespace CommonAction {
-
   export class ExecuteCallback implements Action {
     public readonly type = CommonActionType.EXECUTE_CALLBACK;
 
-    public constructor(public payload: { callback: () => void }) {
-    }
+    public constructor(public payload: {callback: () => void}) {}
   }
-
 }

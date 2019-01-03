@@ -23,27 +23,31 @@ import {ContextMenuComponent} from 'ngx-contextmenu';
 import {Observable} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
-import {selectTableRowIndentable, selectTableRowOutdentable} from '../../../../../../../../core/store/tables/tables.selector';
+import {
+  selectTableRowIndentable,
+  selectTableRowOutdentable,
+} from '../../../../../../../../core/store/tables/tables.selector';
+import {isMacOS} from 'src/app/shared/utils/system.utils';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
   templateUrl: './table-hierarchy-cell-menu.component.html',
   styleUrls: ['./table-hierarchy-cell-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHierarchyCellMenuComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
   @ViewChild(ContextMenuComponent)
   public contextMenu: ContextMenuComponent;
 
+  public readonly macOS = isMacOS();
+
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
 
-  constructor(private store$: Store<{}>) {
-  }
+  constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -59,5 +63,4 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   public onOutdent() {
     this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
   }
-
 }

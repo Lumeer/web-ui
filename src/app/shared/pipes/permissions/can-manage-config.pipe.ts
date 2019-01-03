@@ -20,39 +20,44 @@
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {Observable, of} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {map} from 'rxjs/operators';
-import {userHasRoleInResource} from '../../utils/resource.utils';
-import {Role} from '../../../core/model/role';
+import {map, mergeMap} from 'rxjs/operators';
+import {userHasManageRoleInResource} from '../../utils/resource.utils';
+import {selectCurrentUserIsManager} from '../../../core/store/common/permissions.selectors';
 
 @Pipe({
   name: 'canManageConfig',
-  pure: false
+  pure: false,
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CanManageConfigPipe implements PipeTransform {
-
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store$: Store<AppState>) {}
 
   public transform(currentView: ViewModel): Observable<boolean> {
     if (!currentView) {
       return of(true);
     }
 
-    return this.store.select(selectCurrentUserForWorkspace).pipe(
+    return this.store$.pipe(
+      select(selectCurrentUserIsManager),
+      mergeMap(isManager => (isManager && of(true)) || this.checkView(currentView))
+    );
+  }
+
+  private checkView(view: ViewModel): Observable<boolean> {
+    return this.store$.pipe(
+      select(selectCurrentUserForWorkspace),
       map(currentUser => {
         if (!currentUser) {
           return false;
         }
 
-        return userHasRoleInResource(currentUser, currentView, Role.Manage);
+        return userHasManageRoleInResource(currentUser, view);
       })
     );
   }
-
 }

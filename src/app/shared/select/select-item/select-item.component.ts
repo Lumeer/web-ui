@@ -24,10 +24,9 @@ import {SelectItemModel} from './select-item.model';
   selector: 'select-item',
   templateUrl: './select-item.component.html',
   styleUrls: ['./select-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectItemComponent {
-
   @Input()
   public items: SelectItemModel[];
 
@@ -46,11 +45,22 @@ export class SelectItemComponent {
   @Input()
   public disabled: boolean;
 
+  @Input()
+  public removable: boolean = false;
+
   @Output()
   public select = new EventEmitter<any>();
+
+  @Output()
+  public remove = new EventEmitter();
 
   public onSelect(item: SelectItemModel) {
     this.select.emit(item.id);
   }
 
+  public onRemove(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.remove.emit();
+  }
 }

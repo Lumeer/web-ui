@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart} from './table.model';
+import {
+  TableColumn,
+  TableColumnType,
+  TableCompoundColumn,
+  TableConfig,
+  TableConfigColumn,
+  TableConfigPart,
+  TableHiddenColumn,
+  TableModel,
+  TablePart,
+} from './table.model';
 
 export function convertTableToConfig(table: TableModel): TableConfig {
   if (!table) {
@@ -26,7 +36,7 @@ export function convertTableToConfig(table: TableModel): TableConfig {
 
   return {
     parts: convertTablePartsToConfig(table.parts),
-    rows: table.config.rows
+    rows: table.config.rows,
   };
 }
 
@@ -40,7 +50,7 @@ function convertTablePartToConfig(part: TablePart): TableConfigPart {
   return {
     collectionId: part.collectionId,
     linkTypeId: part.linkTypeId,
-    columns
+    columns,
   };
 }
 
@@ -51,14 +61,14 @@ function convertTableColumnToConfig(column: TableColumn): TableConfigColumn {
       type: compoundColumn.type,
       attributeIds: [compoundColumn.parent.attributeId],
       width: compoundColumn.parent.width,
-      children: compoundColumn.children.map(child => convertTableColumnToConfig(child))
+      children: compoundColumn.children.map(child => convertTableColumnToConfig(child)),
     };
   }
 
   if (column.type === TableColumnType.HIDDEN) {
     return {
       type: column.type,
-      attributeIds: (column as TableHiddenColumn).attributeIds
+      attributeIds: (column as TableHiddenColumn).attributeIds,
     };
   }
 

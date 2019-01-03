@@ -29,27 +29,26 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'links-list',
   templateUrl: './links-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListComponent implements OnChanges {
-
   @Input() public document: DocumentModel;
 
   @Input() public collection: CollectionModel;
 
-  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
+  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
 
   public linkTypes$: Observable<LinkTypeModel[]>;
   public activeLinkType: LinkTypeModel;
 
   private lastCollectionId: string;
 
-  public constructor(private store: Store<AppState>) {
-  }
+  public constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     this.renewSubscriptions();
@@ -70,13 +69,19 @@ export class LinksListComponent implements OnChanges {
   private renewSubscriptions() {
     if (this.collection && this.collection.id !== this.lastCollectionId) {
       this.lastCollectionId = this.collection.id;
-      this.linkTypes$ = observableCombineLatest(this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
+      this.linkTypes$ = observableCombineLatest(
+        this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
         this.store.select(selectCollectionsDictionary)
       ).pipe(
-        map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => {
-          const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
-          return {...linkType, collections};
-        })),
+        map(([linkTypes, collectionsMap]) =>
+          linkTypes.map(linkType => {
+            const collections: [CollectionModel, CollectionModel] = [
+              collectionsMap[linkType.collectionIds[0]],
+              collectionsMap[linkType.collectionIds[1]],
+            ];
+            return {...linkType, collections};
+          })
+        ),
         tap(linkTypes => this.initActiveLinkType(linkTypes))
       );
     }
@@ -97,9 +102,8 @@ export class LinksListComponent implements OnChanges {
 
   private readDocuments(linkType: LinkTypeModel) {
     if (linkType) {
-      const query = {linkTypeIds: [linkType.id]}; // TODO maybe we can find efficient way to fetch linked documents
+      const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
       this.store.dispatch(new DocumentsAction.Get({query}));
     }
   }
-
 }

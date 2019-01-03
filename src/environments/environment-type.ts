@@ -20,7 +20,6 @@
 import {EnvironmentVariables} from './environment-variables';
 
 export interface Environment extends EnvironmentVariables {
-
   analytics: boolean;
   auth: boolean;
   mapQuestKey: string;

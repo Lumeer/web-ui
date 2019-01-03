@@ -17,25 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
-import {Role} from '../../../core/model/role';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter} from 'rxjs/operators';
 import {deepArrayEquals} from '../../utils/array.utils';
-import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {isNullOrUndefined} from '../../utils/common.utils';
 
 @Component({
   selector: '[user]',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnInit, OnDestroy {
-
   @Input() public resourceType: ResourceType;
 
   @Input() public editable: boolean;
@@ -44,36 +43,32 @@ export class UserComponent implements OnInit, OnDestroy {
 
   @Input() public user: UserModel;
 
-  @Input() public expanded: boolean;
-
   @Input() public userRoles: string[];
 
   @Input() public groupRoles: string[];
-
-  @Output() public expandedChange = new EventEmitter();
 
   @Output() public userUpdated = new EventEmitter<UserModel>();
 
   @Output() public userDeleted = new EventEmitter<UserModel>();
 
-  @Output() public rolesUpdate = new EventEmitter<{ roles: string[], onlyStore: boolean }>();
+  @Output() public rolesUpdate = new EventEmitter<{roles: string[]; onlyStore: boolean}>();
 
   private lastSyncedUserRoles: string[];
   private rolesChange$ = new Subject<string[]>();
   private rolesChangeSubscription: Subscription;
 
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService) {
-  }
+  constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnInit() {
-    this.rolesChangeSubscription = this.rolesChange$.pipe(
-      debounceTime(2000),
-      filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
-    ).subscribe(newRoles => {
-      this.lastSyncedUserRoles = null;
-      this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
-    });
+    this.rolesChangeSubscription = this.rolesChange$
+      .pipe(
+        debounceTime(2000),
+        filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
+      )
+      .subscribe(newRoles => {
+        this.lastSyncedUserRoles = null;
+        this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
+      });
   }
 
   public ngOnDestroy() {
@@ -91,21 +86,17 @@ export class UserComponent implements OnInit, OnDestroy {
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteUser(), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteUser(), bold: false},
+    ]);
   }
 
   public deleteUser() {
     this.userDeleted.emit(this.user);
   }
 
-  public hasRole(role: Role): boolean {
+  public hasRole(role: string): boolean {
     return this.userRoles.includes(role);
   }
 
@@ -127,5 +118,4 @@ export class UserComponent implements OnInit, OnDestroy {
     this.rolesChange$.next(newRoles);
     this.rolesUpdate.emit({roles: newRoles, onlyStore: true});
   }
-
 }

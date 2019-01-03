@@ -17,20 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Subscription, Observable, BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableConfig} from '../../../core/store/tables/tables.selector';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
@@ -38,7 +48,7 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
-import {ViewModel} from '../../../core/store/views/view.model';
+import {Query} from '../../../core/store/navigation/query';
 
 declare let $: any;
 
@@ -50,43 +60,67 @@ export const EDITABLE_EVENT = 'editableEvent';
   styleUrls: ['./table-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TablePerspectiveComponent implements OnInit, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public config: TableConfig;
 
   @Input()
   public linkInstance: LinkInstanceModel;
 
   @Input()
-  public query: QueryModel;
+  public query: Query;
+
+  @Input()
+  public tableId: string;
 
   @HostBinding('id')
   public elementId: string;
 
   public currentView$: Observable<ViewModel>;
   public table$ = new BehaviorSubject<TableModel>(null);
-  public tableId: string;
 
   private selectedCursor: TableCursor;
 
   private subscriptions = new Subscription();
 
-  public constructor(private element: ElementRef,
-                     private store$: Store<AppState>) {
-  }
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.tableId = this.createTableId();
-    this.elementId = `table-${this.tableId}`;
-
+    this.prepareTableId();
     this.initTable();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
     this.currentView$ = this.store$.select(selectCurrentView);
   }
 
+  private prepareTableId() {
+    if (this.query && !this.tableId) {
+      throw Error('tableId must be set for embedded table!');
+    }
+    this.tableId = this.tableId || DEFAULT_TABLE_ID;
+    this.elementId = `table-${this.tableId}`;
+  }
+
   private subscribeToSelectedCursor() {
-    this.subscriptions.add(
-      this.store$.select(selectTableCursor).subscribe(cursor => this.selectedCursor = cursor)
-    );
+    this.subscriptions.add(this.store$.select(selectTableCursor).subscribe(cursor => (this.selectedCursor = cursor)));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.query && !changes.query.firstChange) {
+      this.refreshEmbeddedTable();
+    }
+  }
+
+  private refreshEmbeddedTable() {
+    this.store$
+      .pipe(
+        select(selectTableById(this.tableId)),
+        first(),
+        filter(table => !!table)
+      )
+      .subscribe(table => {
+        this.refreshTable(this.query, table.config);
+      });
   }
 
   public ngOnDestroy() {
@@ -95,21 +129,23 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initTable() {
-    this.store$.pipe(
-      select(selectPerspectiveViewConfig),
-      first()
-    ).subscribe(config => this.createTableFromQuery(config));
+    this.store$
+      .pipe(
+        select(selectPerspectiveViewConfig),
+        first()
+      )
+      .subscribe(config => this.createTableFromQuery(config));
   }
 
   private createTableFromQuery(config: TableConfig) {
     if (this.query) {
-      this.createTable(this.query); // TODO pass config from parent to embedded table
+      this.createTable(this.query, this.config);
     } else {
       this.subscribeToQuery(config);
     }
   }
 
-  private createTable(query: QueryModel, config?: TableConfig) {
+  private createTable(query: Query, config?: TableConfig) {
     if (!this.tableId) {
       throw new Error('tableId has not been set');
     }
@@ -125,12 +161,13 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToTable() {
     this.subscriptions.add(
-      this.store$.select(selectTableById(this.tableId)).pipe(
-        filter(table => !!table)
-      ).subscribe(table => {
-        this.table$.next(table);
-        this.switchPartsIfFirstEmpty(table);
-      })
+      this.store$
+        .select(selectTableById(this.tableId))
+        .pipe(filter(table => !!table))
+        .subscribe(table => {
+          this.table$.next(table);
+          this.switchPartsIfFirstEmpty(table);
+        })
     );
   }
 
@@ -139,55 +176,56 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const empty = !table.parts[0].columns.find(column =>
-      (column.type === TableColumnType.HIDDEN && column.attributeIds && column.attributeIds.length > 0)
-      || (column.type === TableColumnType.COMPOUND && !!column.parent.attributeId)
+    const empty = !table.parts[0].columns.find(
+      column =>
+        (column.type === TableColumnType.HIDDEN && column.attributeIds && column.attributeIds.length > 0) ||
+        (column.type === TableColumnType.COMPOUND && !!column.parent.attributeId)
     );
 
     if (empty) {
-      this.store$.dispatch(new TablesAction.SwitchParts({
-        cursor: {
-          tableId: table.id,
-          partIndex: 0
-        }
-      }));
+      this.store$.dispatch(
+        new TablesAction.SwitchParts({
+          cursor: {
+            tableId: table.id,
+            partIndex: 0,
+          },
+        })
+      );
     }
   }
 
   private subscribeToQuery(initConfig: TableConfig) {
     this.subscriptions.add(
-      this.store$.pipe(
-        select(selectNavigation),
-        filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
-        withLatestFrom(this.store$.pipe(select(selectTableConfig)))
-      ).subscribe(([{query}, config]) => {
-        if (areQueriesEqual(this.query, query)) {
-          return;
-        }
+      this.store$
+        .pipe(
+          select(selectNavigation),
+          filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
+          withLatestFrom(this.store$.pipe(select(selectTableConfig)))
+        )
+        .subscribe(([{query}, config]) => {
+          if (areQueriesEqual(this.query, query)) {
+            return;
+          }
 
-        if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
-          this.addTablePart(query);
-        } else {
-          this.refreshTable(query, config || initConfig);
-        }
+          if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
+            this.addTablePart(query);
+          } else {
+            this.refreshTable(query, config || initConfig);
+          }
 
-        this.query = query;
-      })
+          this.query = query;
+        })
     );
   }
 
-  private addTablePart(query: QueryModel) {
+  private addTablePart(query: Query) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
+    this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId, last: true}));
   }
 
-  private refreshTable(query: QueryModel, config: TableConfig) {
+  private refreshTable(query: Query, config: TableConfig) {
     this.destroyTable();
     this.createTable(query, config);
-  }
-
-  private createTableId(): string {
-    return this.linkInstance ? this.linkInstance.id : DEFAULT_TABLE_ID;
   }
 
   public onClickOutside(event: MouseEvent) {
@@ -248,5 +286,4 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     const scrollLeft: number = event.target['scrollLeft'];
     $('table-header > div').css('left', -scrollLeft);
   }
-
 }

@@ -29,17 +29,11 @@ import {UsersComponent} from './users.component';
 import {GroupsSuggestionsComponent} from './user-groups/suggestions/groups-suggestions.component';
 import {TagModule} from '../tag/tag.module';
 import {InputModule} from '../input/input.module';
-import {UserFilterPipe} from './user-list/user-filter.pipe';
+import {UserFilterPipe} from './user-list/pipes/user-filter.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    TagModule,
-    InputModule,
-    PipesModule
-  ],
+  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule],
   declarations: [
     UserFilterPipe,
     UserGroupsComponent,
@@ -47,11 +41,8 @@ import {PipesModule} from '../pipes/pipes.module';
     UserListComponent,
     UserComponent,
     NewUserComponent,
-    UsersComponent
+    UsersComponent,
   ],
-  exports: [
-    UsersComponent
-  ]
+  exports: [UsersComponent],
 })
-export class UsersModule {
-}
+export class UsersModule {}

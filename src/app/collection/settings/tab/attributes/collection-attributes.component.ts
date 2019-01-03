@@ -18,26 +18,24 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {filter} from 'rxjs/operators';
-import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {isNullOrUndefined} from 'util';
 import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {AppState} from '../../../../core/store/app.state';
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.component';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
-  styleUrls: ['./collection-attributes.component.scss']
+  styleUrls: ['./collection-attributes.component.scss'],
 })
 export class CollectionAttributesComponent implements OnInit, OnDestroy {
-
   public collection: CollectionModel;
   public attributes: AttributeModel[] = [];
   public searchString: string;
@@ -46,10 +44,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
 
   private collectionSubscription = new Subscription();
 
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService,
-              private store: Store<AppState>) {
-  }
+  constructor(private i18n: I18n, private notificationService: NotificationService, private store: Store<AppState>) {}
 
   public ngOnInit(): void {
     this.subscribeData();
@@ -64,7 +59,9 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     if (this.collection.defaultAttributeId === attribute.id) {
       return;
     }
-    this.store.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
+    this.store.dispatch(
+      new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id})
+    );
   }
 
   public onCreateAttribute() {
@@ -72,8 +69,10 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     if (name === '') {
       return;
     }
-    const attribute = {name, constraints: [], usageCount: 0};
-    this.store.dispatch(new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]}));
+    const attribute = {name, usageCount: 0};
+    this.store.dispatch(
+      new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]})
+    );
 
     this.newAttributeName = '';
   }
@@ -93,10 +92,13 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
       });
     } else {
       const updatedAttribute = {...attribute, name: newName};
-      this.store.dispatch(new CollectionsAction.ChangeAttribute({
-        collectionId: this.collection.id,
-        attributeId: attribute.id, attribute: updatedAttribute
-      }));
+      this.store.dispatch(
+        new CollectionsAction.ChangeAttribute({
+          collectionId: this.collection.id,
+          attributeId: attribute.id,
+          attribute: updatedAttribute,
+        })
+      );
     }
   }
 
@@ -106,24 +108,25 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
 
   public showAttributeDeleteDialog(attribute: AttributeModel, onCancel?: () => void) {
     const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
-    const message = this.i18n({id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'}, {
-      name: attribute.name
-    });
+    const message = this.i18n(
+      {id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'},
+      {
+        name: attribute.name,
+      }
+    );
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText, action: onCancel},
-        {text: yesButtonText, action: () => this.deleteAttribute(attribute), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText, action: onCancel},
+      {text: yesButtonText, action: () => this.deleteAttribute(attribute), bold: false},
+    ]);
   }
 
   public deleteAttribute(attribute: AttributeModel) {
-    this.store.dispatch(new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
+    this.store.dispatch(
+      new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id})
+    );
   }
 
   public trackByAttributeId(index: number, attribute: AttributeModel) {
@@ -131,19 +134,21 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.collectionSubscription.add(this.store.select(selectCollectionByWorkspace)
-      .pipe(filter(collection => !isNullOrUndefined(collection)))
-      .subscribe(collection => {
-        this.collection = collection;
-        this.attributes = this.collection.attributes.slice();
-      })
+    this.collectionSubscription.add(
+      this.store
+        .select(selectCollectionByWorkspace)
+        .pipe(filter(collection => !isNullOrUndefined(collection)))
+        .subscribe(collection => {
+          this.collection = collection;
+          this.attributes = this.collection.attributes.slice();
+        })
     );
   }
 
   private translatePlaceholders() {
     this.attributePlaceholder = this.i18n({
       id: 'collection.tab.attributes.attribute.placeholder',
-      value: 'Enter attribute name.'
+      value: 'Enter attribute name.',
     });
   }
 

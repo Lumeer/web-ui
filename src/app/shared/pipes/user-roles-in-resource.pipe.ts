@@ -17,19 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
 import {UserModel} from '../../core/store/users/user.model';
 import {ResourceModel} from '../../core/model/resource.model';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {ResourceType} from '../../core/model/resource-type';
+import {ResourceRolesPipe} from './resource-roles.pipe';
+import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
 
 @Pipe({
-  name: 'userRolesInResource'
+  name: 'userRolesInResource',
 })
-export class UserRolesInResource implements PipeTransform {
+@Injectable({
+  providedIn: 'root',
+})
+export class UserRolesInResourcePipe implements PipeTransform {
+  constructor(private resourceRolesPipe: ResourceRolesPipe) {}
 
-  public transform(user: UserModel, resource: ResourceModel): string[] {
-    const userPermission = resource && resource.permissions && resource.permissions.users && resource.permissions.users.find(perm => perm.id === user.id);
-    return userPermission ? userPermission.roles : [];
+  public transform(
+    user: UserModel,
+    resource: ResourceModel,
+    resourceType: ResourceType,
+    organization?: OrganizationModel,
+    project?: ProjectModel
+  ): string[] {
+    const userPermission =
+      resource &&
+      resource.permissions &&
+      resource.permissions.users &&
+      resource.permissions.users.find(perm => perm.id === user.id);
+    const roles = userPermission ? userPermission.roles : [];
+
+    if (resourceType === ResourceType.Organization) {
+      return roles;
+    } else if (resourceType === ResourceType.Project) {
+      if (userHasManageRoleInResource(user, organization)) {
+        return this.resourceRolesPipe.transform(resourceType);
+      }
+      return roles;
+    }
+
+    if (userIsManagerInWorkspace(user, organization, project)) {
+      return this.resourceRolesPipe.transform(resourceType);
+    }
+
+    return roles;
   }
-
 }

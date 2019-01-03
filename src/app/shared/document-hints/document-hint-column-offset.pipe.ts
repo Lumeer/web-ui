@@ -21,13 +21,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentHintColumn} from './document-hint-column';
 
 @Pipe({
-  name: 'suggestionColumnOffset'
+  name: 'suggestionColumnOffset',
 })
 export class DocumentHintColumnOffsetPipe implements PipeTransform {
-
   public transform(columns: DocumentHintColumn[], attributeId: string): number {
     const index = columns.findIndex(column => column.attributeId === attributeId);
     return columns.slice(0, index + 1).reduce((offset, column) => column.width + offset, 0);
   }
-
 }

@@ -23,14 +23,12 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Output, Vi
   selector: 'table-collapsed-cell-menu',
   templateUrl: './table-collapsed-cell-menu.component.html',
   styleUrls: ['./table-collapsed-cell-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCollapsedCellMenuComponent {
-
   @Output()
   public expand = new EventEmitter();
 
   @ViewChild('contextMenu')
   public contextMenu: ElementRef;
-
 }

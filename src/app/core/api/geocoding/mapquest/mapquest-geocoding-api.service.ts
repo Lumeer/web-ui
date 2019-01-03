@@ -26,12 +26,10 @@ import {MapQuestResponse} from './mapquest-response.dto';
 const MAPQUEST_API_URL = 'https://www.mapquestapi.com/geocoding/v1/';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MapQuestGeocodingApiService {
-
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   public getBatchGeocode(addresses: string[]): Observable<MapQuestResponse> {
     const keyParams = new HttpParams().append('key', environment.mapQuestKey);
@@ -39,5 +37,4 @@ export class MapQuestGeocodingApiService {
 
     return this.httpClient.get<MapQuestResponse>(`${MAPQUEST_API_URL}batch`, {params});
   }
-
 }

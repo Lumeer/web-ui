@@ -30,16 +30,12 @@ import {DocumentUi} from './document-ui';
 import {NotificationService} from '../notifications/notification.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentUiService {
+  private state: {[key: string]: DocumentUi} = {};
 
-  private state: { [key: string]: DocumentUi } = {};
-
-  constructor(private store: Store<AppState>,
-              private i18n: I18n,
-              private notificationService: NotificationService) {
-  }
+  constructor(private store: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
 
   public init(collection: CollectionModel, document: DocumentModel): void {
     this.destroy(collection, document);
@@ -97,7 +93,12 @@ export class DocumentUiService {
     }
   }
 
-  public onUpdateRow(collection: CollectionModel, document: DocumentModel, idx: number, keyValue: [string, string]): void {
+  public onUpdateRow(
+    collection: CollectionModel,
+    document: DocumentModel,
+    idx: number,
+    keyValue: [string, string]
+  ): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -128,6 +129,6 @@ export class DocumentUiService {
   }
 
   private static getKey(collection: CollectionModel, document: DocumentModel): string {
-    return (collection && document) ? collection.id + ':' + (document.correlationId || document.id) : null;
+    return collection && document ? collection.id + ':' + (document.correlationId || document.id) : null;
   }
 }

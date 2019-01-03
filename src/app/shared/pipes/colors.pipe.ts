@@ -21,13 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ResourceModel} from '../../core/model/resource.model';
 
 @Pipe({
-  name: 'colors'
+  name: 'colors',
 })
 export class ColorsPipe implements PipeTransform {
-
   public transform(entities: ResourceModel[]): string[] {
-    return entities.filter(entity => !!entity)
-      .map(entity => entity.color);
+    return entities.filter(entity => !!entity).map(entity => entity.color);
   }
-
 }

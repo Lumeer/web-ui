@@ -17,20 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import {ChartConfig} from '../../../../core/store/charts/chart.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from '../visualizer/chart-visualizer';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'chart-visualization',
   templateUrl: './chart-visualization.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./chart-visualization.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartVisualizationComponent implements OnChanges {
-
   @Input()
   public collection: CollectionModel;
 
@@ -40,24 +54,72 @@ export class ChartVisualizationComponent implements OnChanges {
   @Input()
   public config: ChartConfig;
 
+  @Input()
+  public allowedPermissions: AllowedPermissions;
+
+  @Output()
+  public patchData = new EventEmitter<DocumentModel>();
+
   @ViewChild('chart')
   private chartElement: ElementRef;
 
   private chartVisualizer: ChartVisualizer;
 
+  constructor(private ngZone: NgZone) {}
+
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.config && this.config) {
+    if ((changes.documents || changes.config) && this.config) {
       this.visualize();
+    }
+    if (changes.allowedPermissions && this.allowedPermissions) {
+      this.refreshChartPermissions();
     }
   }
 
   private visualize() {
-    if (!this.chartVisualizer) {
-      this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    if (this.chartVisualizer) {
+      this.refreshChart();
+    } else {
+      this.createChart();
     }
-
-    this.chartVisualizer.setData([this.collection], this.documents, this.config);
-    this.chartVisualizer.visualize();
   }
 
+  private createChart() {
+    const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
+    const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, writable, onValueChange);
+    this.setChartData();
+    this.ngZone.runOutsideAngular(() => this.chartVisualizer.createChartAndVisualize());
+  }
+
+  private refreshChart() {
+    this.setChartData();
+    this.ngZone.runOutsideAngular(() => this.chartVisualizer.visualize());
+  }
+
+  private setChartData() {
+    this.chartVisualizer.setData([this.collection], this.documents, this.config);
+  }
+
+  private onValueChanged(documentId: string, attributeId: string, value: string) {
+    const changedDocument = this.documents.find(document => document.id === documentId);
+    if (!changedDocument) {
+      return;
+    }
+
+    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
+    this.patchData.emit(patchDocument);
+  }
+
+  private refreshChartPermissions() {
+    if (!this.chartVisualizer) {
+      return;
+    }
+
+    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+      this.chartVisualizer.enableWrite();
+    } else {
+      this.chartVisualizer.disableWrite();
+    }
+  }
 }

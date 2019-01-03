@@ -17,20 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
 import {LayerGroup, Map, Marker} from 'leaflet';
-import {createMapTileLayer} from '../../../../../core/store/maps/map-tiles';
 import {MapConfig, MapModel} from '../../../../../core/store/maps/map.model';
-import {createLeafletMap} from '../../../../../core/store/maps/map.utils';
+import {createMapTileLayer} from './map-tiles';
+import {createLeafletMap} from './map.utils';
 
 @Component({
   selector: 'map-render',
   templateUrl: './map-render.component.html',
-  styleUrls: ['./map-render.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/leaflet/dist/leaflet.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-
   @Input()
   public map: MapModel;
 
@@ -42,8 +53,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   private leafletMap: Map;
   private markersLayer: LayerGroup;
 
-  constructor(private ngZone: NgZone) {
-  }
+  constructor(private ngZone: NgZone) {}
 
   public ngOnInit() {
     this.mapElementId = `map-${this.map.id}`;
@@ -82,5 +92,4 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       this.leafletMap.remove();
     }
   }
-
 }

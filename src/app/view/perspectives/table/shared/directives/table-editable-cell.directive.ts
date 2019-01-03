@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
@@ -38,11 +47,10 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
     '[class.h-100]': 'true',
     '[class.p-1]': 'true',
     '[class.text-nowrap]': 'true',
-    '[class.overflow-hidden]': 'true'
-  }
+    '[class.overflow-hidden]': 'true',
+  },
 })
 export class TableEditableCellDirective implements OnChanges {
-
   @Input()
   public affected: boolean;
 
@@ -75,8 +83,7 @@ export class TableEditableCellDirective implements OnChanges {
 
   public edited: boolean;
 
-  public constructor(private element: ElementRef) {
-  }
+  public constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.selected && this.selected) {
@@ -193,5 +200,4 @@ export class TableEditableCellDirective implements OnChanges {
   private isCharacterDisabled(character: string): boolean {
     return this.disabledCharacters && this.disabledCharacters.includes(character);
   }
-
 }

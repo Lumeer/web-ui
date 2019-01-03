@@ -27,10 +27,9 @@ const LINK_BORDER_COLOR = '#ced4da';
 const DANGER_COLOR = '#dc3545';
 
 @Pipe({
-  name: 'queryItemBorder'
+  name: 'queryItemBorder',
 })
 export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements PipeTransform {
-
   public transform(queryItem: QueryItem, isValid: boolean): string {
     if (!isValid || queryItem.type === QueryItemType.Deleted) {
       return DANGER_COLOR;
@@ -40,5 +39,4 @@ export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements Pipe
     }
     return super.transform(queryItem, isValid);
   }
-
 }

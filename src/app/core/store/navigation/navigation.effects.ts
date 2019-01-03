@@ -27,60 +27,64 @@ import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectNavigation, selectQuery} from './navigation.state';
-import {QueryConverter} from './query.converter';
-import {QueryModel} from './query.model';
+import {convertQueryModelToString} from './query.converter';
 import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {Query, QueryStem} from './query';
 
 @Injectable()
 export class NavigationEffects {
-
   @Effect()
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
-      const linkTypeIds = (query.linkTypeIds || []).concat(action.payload.linkTypeId);
+      const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
+      const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
+      const newStem = {...stem, linkTypeIds};
 
-      return newQueryAction({...query, linkTypeIds});
+      return newQueryAction({...query, stems: [newStem]});
     })
   );
 
   @Effect()
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
-      const collectionIds = (query.collectionIds || []).concat(action.payload.collectionId);
+      const stems = query.stems || [];
+      stems.push({collectionId: action.payload.collectionId});
 
-      return newQueryAction({...query, collectionIds});
+      return newQueryAction({...query, stems});
     })
   );
 
   @Effect()
   public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
-    mergeMap(action => this.store$.select(selectQuery).pipe(
-      skipWhile(query => !query),
-      take(1),
-      map(query => ({action, query}))
-    )),
+    mergeMap(action =>
+      this.store$.select(selectQuery).pipe(
+        skipWhile(query => !query),
+        take(1),
+        map(query => ({action, query}))
+      )
+    ),
     map(({action, query}) => {
-      const collectionIds = query.collectionIds || [];
-      const indexToRemove = collectionIds.findIndex(id => id === action.payload.collectionId);
-      if (indexToRemove) {
-        collectionIds.splice(indexToRemove, 1);
-      }
+      const stems = (query.stems || []).filter(stem => stem.collectionId !== action.payload.collectionId);
 
-      return newQueryAction({...query, collectionIds});
+      return newQueryAction({...query, stems});
     })
   );
 
@@ -93,7 +97,7 @@ export class NavigationEffects {
 
       if (!previousUrl || previousUrl === '/') {
         return new RouterAction.Go({
-          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', (searchTab || SearchTab.All)]
+          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', searchTab || SearchTab.All],
         });
       }
 
@@ -130,26 +134,24 @@ export class NavigationEffects {
         path.push(searchTab);
       }
 
-      const extras: NavigationExtras = action.payload.setQuery ? {queryParams: action.payload.setQuery} : {queryParamsHandling: 'merge'};
+      const extras: NavigationExtras = action.payload.setQuery
+        ? {queryParams: action.payload.setQuery}
+        : {queryParamsHandling: 'merge'};
       return new RouterAction.Go({path, extras});
     })
   );
 
-  constructor(private actions$: Actions,
-              private router: Router,
-              private store$: Store<AppState>) {
-  }
-
+  constructor(private actions$: Actions, private router: Router, private store$: Store<AppState>) {}
 }
 
-function newQueryAction(query: QueryModel): Action {
+function newQueryAction(query: Query): Action {
   return new RouterAction.Go({
     path: [],
     queryParams: {
-      query: QueryConverter.toString(query)
+      query: convertQueryModelToString(query),
     },
     extras: {
-      queryParamsHandling: 'merge'
-    }
+      queryParamsHandling: 'merge',
+    },
   });
 }

@@ -18,22 +18,20 @@
  */
 
 import {Injectable} from '@angular/core';
-import {LatLngLiteral} from 'leaflet';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {MapCoordinates} from '../../store/maps/map.model';
 import {AddressCoordinatesMap} from './address-coordinates-map';
 import {MapQuestWrapperService} from './mapquest/mapquest-wrapper.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GeocodingApiService {
-
   private coordinatesCache: AddressCoordinatesMap = {};
 
   // TODO use other geocoding providers and switch dynamically between them
-  constructor(private mapQuestWrapperService: MapQuestWrapperService) {
-  }
+  constructor(private mapQuestWrapperService: MapQuestWrapperService) {}
 
   public convertAddressesToCoordinates(addresses: string[]): Observable<AddressCoordinatesMap> {
     const newAddresses = addresses.filter(address => this.coordinatesCache[address] === undefined);
@@ -50,9 +48,8 @@ export class GeocodingApiService {
     );
   }
 
-  public convertCoordinatesToAddress(coordinates: LatLngLiteral): Observable<string> {
+  public convertCoordinatesToAddress(coordinates: MapCoordinates): Observable<string> {
     // TODO
     return of('');
   }
-
 }

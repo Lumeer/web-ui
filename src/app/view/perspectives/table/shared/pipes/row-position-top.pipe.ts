@@ -24,10 +24,9 @@ import {countLinkedRows} from '../../../../../core/store/tables/table.utils';
 const TABLE_ROW_HEIGHT = 31;
 
 @Pipe({
-  name: 'rowPositionTop'
+  name: 'rowPositionTop',
 })
 export class RowPositionTopPipe implements PipeTransform {
-
   public transform(rows: TableConfigRow[], rowIndex: number): number {
     if (!rows) {
       return 0;
@@ -35,5 +34,4 @@ export class RowPositionTopPipe implements PipeTransform {
 
     return rows.slice(0, rowIndex).reduce((count, row) => count + countLinkedRows(row), 0) * TABLE_ROW_HEIGHT;
   }
-
 }

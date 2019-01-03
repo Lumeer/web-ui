@@ -24,10 +24,9 @@ const DEFAULT_PLACEHOLDER = 'Filter';
 @Component({
   selector: 'filter-box',
   templateUrl: './filter-box.component.html',
-  styleUrls: ['./filter-box.component.scss']
+  styleUrls: ['./filter-box.component.scss'],
 })
 export class FilterBoxComponent implements OnInit {
-
   @Input() public value: string;
 
   @Input() public placeholder: string;
@@ -43,7 +42,7 @@ export class FilterBoxComponent implements OnInit {
     this.computeProperties();
   }
 
-  public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     this.computeProperties();
   }
 
@@ -60,5 +59,4 @@ export class FilterBoxComponent implements OnInit {
     this.mCurrentValue = value;
     this.textChange.emit(value);
   }
-
 }

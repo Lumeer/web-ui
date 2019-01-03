@@ -1,7 +1,7 @@
 <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
 <empty-state *ngIf="query | emptyQuery"
              [icon]="'far fa-times-square'">
-  <ng-container *ngIf="{write : project | permissions:'write' | async} as projectPermissions">
+  <ng-container *ngIf="{write : project | permissions:projectType:'write' | async} as projectPermissions">
     <h3 i18n="@@search.collections.empty.title">There are no Collections yet!</h3>
     <div i18n="@@search.collections.empty.subtitle.norights"
          *ngIf="!projectPermissions.write">I am sorry but you do not have permissions to add collections.

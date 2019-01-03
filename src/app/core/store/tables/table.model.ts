@@ -23,18 +23,15 @@ export const DEFAULT_COLUMN_WIDTH = 100;
 export const DEFAULT_ROW_NUMBER_WIDTH = 40;
 
 export interface TableModel {
-
   id: string;
   linkInstanceId?: string;
 
   parts: TablePart[];
 
   config?: TableConfig;
-
 }
 
 export interface TablePart {
-
   index: number;
   collectionId?: string;
   linkTypeId?: string;
@@ -43,77 +40,61 @@ export interface TablePart {
   columnDepth: number;
 
   expanded?: boolean;
-
 }
 
 export enum TableColumnType {
-
   COMPOUND = 'compound',
   HIDDEN = 'hidden',
-  SINGLE = 'single'
-
+  SINGLE = 'single',
 }
 
 export class TableSingleColumn {
-
   public readonly type = TableColumnType.SINGLE;
-  public readonly uniqueId = Math.random().toString(36).substr(2, 9);
+  public readonly uniqueId = Math.random()
+    .toString(36)
+    .substr(2, 9);
 
-  public constructor(public attributeId: string,
-                     public attributeName?: string,
-                     public width: number = DEFAULT_COLUMN_WIDTH) {
-  }
-
+  public constructor(
+    public attributeId: string,
+    public attributeName?: string,
+    public width: number = DEFAULT_COLUMN_WIDTH
+  ) {}
 }
 
 export class TableCompoundColumn {
-
   public readonly type = TableColumnType.COMPOUND;
 
-  public constructor(public parent: TableSingleColumn,
-                     public children: TableColumn[]) {
-  }
-
+  public constructor(public parent: TableSingleColumn, public children: TableColumn[]) {}
 }
 
 export class TableHiddenColumn {
-
   public readonly type = TableColumnType.HIDDEN;
 
-  public constructor(public attributeIds: string[]) {
-  }
-
+  public constructor(public attributeIds: string[]) {}
 }
 
 export type TableColumn = TableSingleColumn | TableCompoundColumn | TableHiddenColumn;
 
 export interface TableConfig {
-
   parts: TableConfigPart[];
   rows: TableConfigRow[];
-
 }
 
 export interface TableConfigPart {
-
   collectionId?: string;
   linkTypeId?: string;
   columns: TableConfigColumn[];
   expanded?: boolean;
-
 }
 
 export interface TableConfigColumn {
-
   type: TableColumnType;
   attributeIds: string[];
   width?: number;
   children?: TableConfigColumn[];
-
 }
 
 export interface TableConfigRow {
-
   correlationId?: string;
   documentId?: string;
   linkInstanceId?: string;
@@ -122,5 +103,4 @@ export interface TableConfigRow {
 
   linkedRows: TableConfigRow[];
   expanded?: boolean;
-
 }

@@ -76,7 +76,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
   ],
   exports: [
     CommonModule,
@@ -105,8 +105,6 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
-  ]
+  ],
 })
-export class SharedModule {
-
-}
+export class SharedModule {}

@@ -20,24 +20,24 @@
 import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
+import {AttributeFilter} from '../../../../../core/store/navigation/query';
 
 export class AttributeQueryItem implements QueryItem {
-
   public type = QueryItemType.Attribute;
 
-  public constructor(public collection: CollectionModel,
-                     public attribute: AttributeModel,
-                     public condition: string,
-                     public conditionValue: string) {
-  }
+  public constructor(
+    public collection: CollectionModel,
+    public attribute: AttributeModel,
+    public condition: string,
+    public conditionValue: string
+  ) {}
 
   public get text() {
     return this.attribute.name;
   }
 
   public get value() {
-    return this.getFilter();
+    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
   }
 
   public get icons(): string[] {
@@ -48,15 +48,12 @@ export class AttributeQueryItem implements QueryItem {
     return [this.collection.color];
   }
 
-  public getFilter(): string {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+  public getAttributeFilter(): AttributeFilter {
+    return {
+      collectionId: this.collection.id,
+      attributeId: this.attribute.id,
+      condition: this.condition,
+      value: this.conditionValue,
+    };
   }
-
-  public dependsOn(queryItem: QueryItem): boolean {
-    if (queryItem.type === QueryItemType.Collection) {
-      return (queryItem as CollectionQueryItem).collection.id === this.collection.id;
-    }
-    return false;
-  }
-
 }

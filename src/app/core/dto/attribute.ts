@@ -18,7 +18,6 @@
  */
 
 export interface Attribute {
-
   id?: string;
   name: string;
   constraints: string[];
@@ -26,5 +25,4 @@ export interface Attribute {
 
   intermediate?: boolean;
   depth?: number;
-
 }

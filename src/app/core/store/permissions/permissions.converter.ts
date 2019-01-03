@@ -22,7 +22,6 @@ import {Permissions} from '../../dto/permissions';
 import {PermissionModel, PermissionsModel} from './permissions.model';
 
 export class PermissionsConverter {
-
   public static fromDto(dto: Permissions): PermissionsModel {
     if (!dto) {
       return null;
@@ -30,7 +29,7 @@ export class PermissionsConverter {
 
     return {
       users: dto.users ? dto.users.map(PermissionsConverter.fromPermissionDto) : [],
-      groups: dto.groups ? dto.groups.map(PermissionsConverter.fromPermissionDto) : []
+      groups: dto.groups ? dto.groups.map(PermissionsConverter.fromPermissionDto) : [],
     };
   }
 
@@ -41,22 +40,21 @@ export class PermissionsConverter {
 
     return {
       users: permissions.users ? permissions.users.map(PermissionsConverter.toPermissionDto) : [],
-      groups: permissions.groups ? permissions.groups.map(PermissionsConverter.toPermissionDto) : []
+      groups: permissions.groups ? permissions.groups.map(PermissionsConverter.toPermissionDto) : [],
     };
   }
 
   public static fromPermissionDto(dto: Permission): PermissionModel {
     return {
       id: dto.id,
-      roles: dto.roles
+      roles: dto.roles,
     };
   }
 
   public static toPermissionDto(permission: PermissionModel): Permission {
     return {
       id: permission.id,
-      roles: permission.roles
+      roles: permission.roles,
     };
   }
-
 }

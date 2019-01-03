@@ -20,7 +20,10 @@
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
 
-export function documentsReducer(state: DocumentsState = initialDocumentsState, action: DocumentsAction.All): DocumentsState {
+export function documentsReducer(
+  state: DocumentsState = initialDocumentsState,
+  action: DocumentsAction.All
+): DocumentsState {
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
       const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
@@ -28,7 +31,7 @@ export function documentsReducer(state: DocumentsState = initialDocumentsState, 
     case DocumentsActionType.CREATE_SUCCESS:
       return documentsAdapter.addOne(action.payload.document, state);
     case DocumentsActionType.UPDATE_SUCCESS:
-      return documentsAdapter.updateOne({id: action.payload.document.id, changes: action.payload.document}, state);
+      return documentsAdapter.upsertOne(action.payload.document, state);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:

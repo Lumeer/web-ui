@@ -1,11 +1,11 @@
-@import "../../../styles/variables";
+@import '../../../styles/variables';
 
 .view-controls-grid {
   display: grid;
-  grid-template-areas: "perspective" "view-name";
+  grid-template-areas: 'perspective' 'view-name';
 
   @media (min-width: 576px) {
-    grid-template-areas: "perspective view-name";
+    grid-template-areas: 'perspective view-name';
     grid-template-columns: auto 1fr;
   }
 }
@@ -41,7 +41,9 @@
 .dropdown-item.active {
   color: white;
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     color: white;
     background-color: $primary-hover;
   }

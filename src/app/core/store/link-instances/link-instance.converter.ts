@@ -21,7 +21,6 @@ import {LinkInstance} from '../../dto/link-instance';
 import {LinkInstanceModel} from './link-instance.model';
 
 export class LinkInstanceConverter {
-
   public static fromDto(dto: LinkInstance): LinkInstanceModel {
     return {
       id: dto.id,
@@ -36,8 +35,7 @@ export class LinkInstanceConverter {
       id: model.id,
       linkTypeId: model.linkTypeId,
       documentIds: model.documentIds,
-      data: model.data
+      data: model.data,
     };
   }
-
 }

@@ -22,7 +22,6 @@ import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/stor
 import {Data, Layout} from 'plotly.js';
 
 export class PiePlotMaker extends PlotMaker {
-
   public createData(): Data[] {
     const dataStyle = this.getDataStyle();
 
@@ -67,8 +66,7 @@ export class PiePlotMaker extends PlotMaker {
     return {};
   }
 
-  public getType(): ChartType {
+  public currentType(): ChartType {
     return ChartType.Pie;
   }
-
 }

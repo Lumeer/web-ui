@@ -17,19 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-
-import {Validator} from '../../../core/validators/validator';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {UserModel} from '../../../core/store/users/user.model';
 
 @Component({
   selector: 'new-user',
   templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss']
+  styleUrls: ['./new-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewUserComponent {
-
   @Input()
   public users: UserModel[];
 
@@ -39,12 +37,16 @@ export class NewUserComponent {
   public email: string;
   public isDuplicate: boolean = false;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public onAddUser() {
     this.userCreated.emit(this.email);
     this.clearInputs();
+  }
+
+  public onInputChanged(value: string) {
+    this.email = value;
+    this.checkDuplicates();
   }
 
   public checkDuplicates() {
@@ -58,7 +60,7 @@ export class NewUserComponent {
   public emailPlaceHolder(): string {
     return this.i18n({
       id: 'user.add.placeholder',
-      value: 'Type email to invite another user'
+      value: 'Type email to invite another user',
     });
   }
 }

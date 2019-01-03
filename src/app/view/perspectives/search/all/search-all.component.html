@@ -1,28 +1,32 @@
 <div class="mt-2" *ngIf="dataLoaded$ | async">
 
-  <ng-container *ngIf="hasCollection || hasView || hasDocument; else noData">
+  <ng-container *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasDocument: hasDocument$ | async} as data">
 
-    <ng-container *ngIf="hasCollection">
-      <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
-        Collections
-      </div>
-      <post-it-collections [maxShown]="5"></post-it-collections>
-    </ng-container>
+    <ng-container *ngIf="data.hasCollection || data.hasView || data.hasDocument; else noData">
 
-    <ng-container *ngIf="hasDocument">
-      <hr *ngIf="hasCollection">
-      <div class="h3 ml-3 my-2" i18n="@@search.all.records">
-        Records
-      </div>
-      <search-documents [maxLines]="5"></search-documents>
-    </ng-container>
+      <ng-container *ngIf="data.hasCollection">
+        <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
+          Collections
+        </div>
+        <post-it-collections [maxShown]="5"></post-it-collections>
+      </ng-container>
 
-    <ng-container *ngIf="hasView">
-      <hr *ngIf="hasCollection || hasDocument">
-      <div class="h3 ml-3 my-2" i18n="@@search.all.views">
-        Views
-      </div>
-      <search-views [maxLines]="5"></search-views>
+      <ng-container *ngIf="data.hasDocument">
+        <hr *ngIf="data.hasCollection">
+        <div class="h3 ml-3 my-2" i18n="@@search.all.records">
+          Records
+        </div>
+        <search-documents [maxLines]="5"></search-documents>
+      </ng-container>
+
+      <ng-container *ngIf="data.hasView">
+        <hr *ngIf="data.hasCollection || data.hasDocument">
+        <div class="h3 ml-3 my-2" i18n="@@search.all.views">
+          Views
+        </div>
+        <search-views [maxLines]="5"></search-views>
+      </ng-container>
+
     </ng-container>
 
   </ng-container>
@@ -31,7 +35,8 @@
 
 <ng-template #noData>
   <empty-data
-    [query]="query"
+    [project]="project$ | async"
+    [query]="query$ | async"
     (collectionsTab)="switchToCollectionsTab()">
   </empty-data>
 </ng-template>

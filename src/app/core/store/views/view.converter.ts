@@ -18,36 +18,34 @@
  */
 
 import {perspectivesMap} from '../../../view/perspectives/perspective';
-import {View} from '../../dto/view';
-import {QueryConverter} from '../navigation/query.converter';
+import {ViewDto} from '../../dto/view.dto';
+import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
 import {ViewModel} from './view.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 
 export class ViewConverter {
-
-  public static convertToModel(dto: View): ViewModel {
+  public static convertToModel(dto: ViewDto): ViewModel {
     return {
       id: dto.id,
       code: dto.code,
       name: dto.name,
       description: dto.description,
-      query: QueryConverter.fromDto(dto.query),
+      query: convertQueryDtoToModel(dto.query),
       perspective: perspectivesMap[dto.perspective],
       config: dto.config,
       permissions: PermissionsConverter.fromDto(dto.permissions),
-      authorRights: dto.authorRights
+      authorRights: dto.authorRights,
     };
   }
 
-  public static convertToDto(model: ViewModel): View {
+  public static convertToDto(model: ViewModel): ViewDto {
     return {
       code: model.code,
       name: model.name,
-      query: QueryConverter.toDto(model.query),
+      query: convertQueryModelToDto(model.query),
       perspective: model.perspective,
       config: model.config,
-      description: model.description
+      description: model.description,
     };
   }
-
 }

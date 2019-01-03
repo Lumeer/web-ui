@@ -18,80 +18,89 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {Query} from '../../dto';
-import {AttributeFilter, QueryModel} from './query.model';
-import {conditionFromString} from './query.util';
+import {QueryDto} from '../../dto';
+import {AttributeFilter, Query, QueryStem} from './query';
+import {AttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
 
-export class QueryConverter {
+export function convertQueryDtoToModel(dto: QueryDto): Query {
+  return {
+    stems: dto.stems && dto.stems.map(stem => convertQueryStemDtoToModel(stem)),
+    fulltexts: dto.fulltexts,
+    page: dto.page,
+    pageSize: dto.pageSize,
+  };
+}
 
-  public static fromDto(dto: Query): QueryModel {
-    return {
-      collectionIds: dto.collectionIds,
-      documentIds: dto.documentIds,
-      filters: dto.filters,
-      fulltext: dto.fulltext,
-      linkTypeIds: dto.linkTypeIds,
-      page: dto.page,
-      pageSize: dto.pageSize
-      // TODO convert other fields as well
-    };
-  }
+export function convertQueryModelToDto(model: Query): QueryDto {
+  return {
+    stems: model.stems && model.stems.map(stem => convertQueryStemModelToDto(stem)),
+    fulltexts: model.fulltexts,
+    page: model.page,
+    pageSize: model.pageSize,
+  };
+}
 
-  public static toDto(model: QueryModel): Query {
-    return {
-      collectionIds: model.collectionIds,
-      documentIds: model.documentIds,
-      linkTypeIds: model.linkTypeIds,
-      filters: model.filters,
-      fulltext: model.fulltext,
-      page: model.page,
-      pageSize: model.pageSize,
-      // TODO convert other fields as well
-    };
-  }
+function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
+  return {
+    collectionId: dto.collectionId,
+    documentIds: dto.documentIds,
+    linkTypeIds: dto.linkTypeIds,
+    filters: dto.filters && dto.filters.map(filter => convertAttributeFilterDtoToModel(filter)),
+  };
+}
 
-  public static toString(query: QueryModel): string {
-    return JSON.stringify(query ? query : {}, (key, value) => {
-      if (!value || (value instanceof Array && value.length === 0)) {
-        return undefined;
-      }
-      return value;
-    });
-  }
+function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
+  return {
+    collectionId: model.collectionId,
+    documentIds: model.documentIds,
+    linkTypeIds: model.linkTypeIds,
+    filters: model.filters && model.filters.map(filter => convertAttributeFilterModelToDto(filter)),
+  };
+}
 
-  public static fromString(stringQuery: string): QueryModel {
-    const parsedQuery = stringQuery ? this.parseStringQuery(stringQuery) : {};
-    const query: QueryModel = parsedQuery ? parsedQuery : {};
+function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
+  return {
+    collectionId: dto.collectionId,
+    attributeId: dto.attributeId,
+    condition: dto.operator,
+    value: dto.value,
+  };
+}
 
-    query.collectionIds = query.collectionIds || [];
-    query.documentIds = query.documentIds || [];
-    query.filters = query.filters || [];
-    query.linkTypeIds = query.linkTypeIds || [];
-    query.pageSize = isNullOrUndefined(query.pageSize) ? null : query.pageSize;
-    query.page = isNullOrUndefined(query.page) ? null : query.page;
+function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
+  return {
+    collectionId: model.collectionId,
+    attributeId: model.attributeId,
+    operator: model.condition,
+    value: model.value,
+  };
+}
 
-    return query;
-  }
-
-  private static parseStringQuery(stringQuery: string) {
-    try {
-      return JSON.parse(stringQuery);
-    } catch (e) {
-      return null;
+export function convertQueryModelToString(query: Query): string {
+  return JSON.stringify(query ? query : {}, (key, value) => {
+    if (!value || (value instanceof Array && value.length === 0)) {
+      return undefined;
     }
+    return value;
+  });
+}
+
+export function convertStringToQueryModel(stringQuery: string): Query {
+  const parsedQuery = stringQuery ? parseStringQuery(stringQuery) : {};
+  const query: Query = parsedQuery ? parsedQuery : {};
+
+  query.stems = query.stems || [];
+  query.fulltexts = query.fulltexts || [];
+  query.pageSize = isNullOrUndefined(query.pageSize) ? null : query.pageSize;
+  query.page = isNullOrUndefined(query.page) ? null : query.page;
+
+  return query;
+}
+
+function parseStringQuery(stringQuery: string) {
+  try {
+    return JSON.parse(stringQuery);
+  } catch (e) {
+    return null;
   }
-
-  public static parseFilter(filter: string): AttributeFilter {
-    const [collectionId, attributeId, condition] = filter.split(':', 3);
-
-    const [conditionTypeString, value] = condition.replace(/ +/g, ' ').split(' ', 2);
-
-    const conditionType = conditionFromString(conditionTypeString.trim().toLowerCase());
-    if (conditionType == null) {
-      return null;
-    }
-
-    return {collectionId, conditionType, attributeId, value};
-  }
-
 }

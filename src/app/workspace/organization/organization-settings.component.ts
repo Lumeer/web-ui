@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -30,32 +29,38 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectOrganizationByWorkspace, selectOrganizationCodes} from '../../core/store/organizations/organizations.state';
+import {
+  selectOrganizationByWorkspace,
+  selectOrganizationCodes,
+} from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Router} from '@angular/router';
 
 @Component({
-  templateUrl: './organization-settings.component.html'
+  templateUrl: './organization-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
-
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
   public organizationCodes$: Observable<string[]>;
-  public organization: OrganizationModel;
+  public organization$ = new BehaviorSubject<OrganizationModel>(null);
+
+  public readonly organizationType = ResourceType.Organization;
 
   private firstProject: ProjectModel = null;
   private previousUrl: string;
 
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n,
-              private router: Router,
-              private store$: Store<AppState>,
-              private notificationService: NotificationService) {
-  }
+  constructor(
+    private i18n: I18n,
+    private router: Router,
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -65,48 +70,43 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public getResourceType(): ResourceType {
-    return ResourceType.Organization;
-  }
-
   public onDelete() {
-    const message = this.i18n({id: 'organization.delete.dialog.message', value: 'Do you really want to permanently delete this organization?'});
+    const message = this.i18n({
+      id: 'organization.delete.dialog.message',
+      value: 'Do you really want to permanently delete this organization?',
+    });
     const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(
-      message,
-      title,
-      [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.deleteOrganization(), bold: false}
-      ]
-    );
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.deleteOrganization(), bold: false},
+    ]);
   }
 
   public onNewDescription(newDescription: string) {
-    const organizationCopy = {...this.organization, description: newDescription};
+    const organizationCopy = {...this.organization$.getValue(), description: newDescription};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewName(name: string) {
-    const organizationCopy = {...this.organization, name};
+    const organizationCopy = {...this.organization$.getValue(), name};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewCode(code: string) {
-    const organizationCopy = {...this.organization, code};
+    const organizationCopy = {...this.organization$.getValue(), code};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewIcon(icon: string) {
-    const organizationCopy = {...this.organization, icon};
+    const organizationCopy = {...this.organization$.getValue(), icon};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewColor(color: string) {
-    const organizationCopy = {...this.organization, color};
+    const organizationCopy = {...this.organization$.getValue(), color};
     this.updateOrganization(organizationCopy);
   }
 
@@ -115,50 +115,67 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public goBack() {
-    this.store$.dispatch(new NavigationAction.NavigateToPreviousUrl({
-      previousUrl: this.previousUrl,
-      organizationCode: this.organization.code,
-      projectCode: this.firstProject ? this.firstProject.code : null
-    }));
+    this.store$.dispatch(
+      new NavigationAction.NavigateToPreviousUrl({
+        previousUrl: this.previousUrl,
+        organizationCode: this.organization$.getValue().code,
+        projectCode: this.firstProject ? this.firstProject.code : null,
+      })
+    );
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store$.select(selectAllUsers)
-      .pipe(map(users => users ? users.length : 0));
+    this.userCount$ = this.store$.pipe(
+      select(selectAllUsers),
+      map(users => (users ? users.length : 0))
+    );
 
-    this.projectsCount$ = this.store$.select(selectProjectsForWorkspace)
-      .pipe(tap(projects => {
+    this.projectsCount$ = this.store$.pipe(
+      select(selectProjectsForWorkspace),
+      tap(projects => {
         if (projects && projects.length > 0) {
           this.firstProject = projects[0];
         }
-      }), map(projects => projects ? projects.length : 0));
-
-    this.subscriptions.add(
-      this.store$.select(selectOrganizationByWorkspace)
-        .pipe(filter(organization => !isNullOrUndefined(organization)))
-        .subscribe(organization => this.organization = organization)
+      }),
+      map(projects => (projects ? projects.length : 0))
     );
 
     this.subscriptions.add(
-      this.store$.select(selectPreviousUrl).pipe(take(1))
-        .subscribe(url => this.previousUrl = url)
+      this.store$
+        .pipe(
+          select(selectOrganizationByWorkspace),
+          filter(organization => !!organization)
+        )
+        .subscribe(organization => this.organization$.next(organization))
+    );
+
+    this.subscriptions.add(
+      this.store$
+        .pipe(
+          select(selectPreviousUrl),
+          take(1)
+        )
+        .subscribe(url => (this.previousUrl = url))
     );
 
     this.store$.dispatch(new OrganizationsAction.GetCodes());
-    this.organizationCodes$ = this.store$.pipe(select(selectOrganizationCodes),
+    this.organizationCodes$ = this.store$.pipe(
+      select(selectOrganizationCodes),
       withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
-      map(([codes, organization]) => codes && codes.filter(code => code !== organization.code) || []));
+      map(([codes, organization]) => (codes && codes.filter(code => code !== organization.code)) || [])
+    );
   }
 
   private deleteOrganization() {
-    this.store$.dispatch(new OrganizationsAction.Delete({
-      organizationId: this.organization.id,
-      onSuccess: () => this.router.navigate(['/'])
-    }));
+    this.store$.dispatch(
+      new OrganizationsAction.Delete({
+        organizationId: this.organization$.getValue().id,
+        onSuccess: () => this.router.navigate(['/']),
+      })
+    );
   }
 
   private updateOrganization(organization: OrganizationModel) {
     this.store$.dispatch(new OrganizationsAction.Update({organization}));
   }
-
 }

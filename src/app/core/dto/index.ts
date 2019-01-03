@@ -18,22 +18,22 @@
  */
 
 export {Attribute} from './attribute';
-export {Collection} from './collection';
+export {CollectionDto} from './collection.dto';
 export {Contact} from './contact';
 export {DocumentDto} from './document.dto';
 export {Event} from './event';
 export {Group} from './group';
 export {LinkInstance} from './link-instance';
-export {LinkType} from './link-type';
+export {LinkTypeDto} from './link-type.dto';
 export {LinkedAttribute} from './linked-attribute';
 export {Organization} from './organization';
 export {Permission} from './permission';
 export {Permissions} from './permissions';
 export {Project} from './project';
-export {Query} from './query';
+export {QueryDto} from './query.dto';
 export {Resource} from './resource';
 export {SuggestionType} from './suggestion-type';
-export {Suggestions} from './suggestions';
+export {SuggestionsDto} from './suggestions.dto';
 export {UserSettings} from './user.settings';
 export {UserDto} from './user.dto';
-export {View} from './view';
+export {ViewDto} from './view.dto';

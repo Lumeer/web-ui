@@ -1,16 +1,20 @@
 # Lumeer Web UI
+
 This repository contains Lumeer front-end source code.
 
 ## Prerequisites
+
 The following tools are needed to work with this repository:
-* [Node.js](https://nodejs.org/en/) 8.x (LTS)
-* [NPM](https://www.npmjs.com/) 6.x (latest)
+
+- [Node.js](https://nodejs.org/en/) 10 (LTS)
+- [NPM](https://www.npmjs.com/) 6 (latest)
 
 Read how to install and set up both these tools [here](https://docs.npmjs.com/getting-started/installing-node#install-npm--manage-npm-versions).
 
 ## Dependencies
 
 Before running the application on your machine for the first time, install project dependencies:
+
 ```bash
 $ npm install
 ```
@@ -20,37 +24,51 @@ $ npm install
 You can run the application locally using the following NPM scripts:
 
 1. `npm run start`: uses JIT compiler and default language (English at the moment)
-2. `npm run start:cs`: uses AOT compiler and Czech language
-3. `npm run start:en`: uses AOT compiler and English language
+1. `npm run start:aot`: uses AOT compiler and default language (English at the moment)
+1. `npm run start:cs`: uses AOT compiler and Czech language
+1. `npm run start:en`: uses AOT compiler and English language
 
-The application will run on [http://localhost:7000/ui](http://localhost:7000/ui) by default.
+The application will be run on [http://localhost:7000/ui](http://localhost:7000/ui) by default.
+The third script runs the application on [http://localhost:7000/cs](http://localhost:7000/cs) and the fourth one runs it on [http://localhost:7000/en](http://localhost:7000/en).
 
 You also need to run our [back-end](https://github.com/Lumeer/engine) if you want to be able to work with the application.
 
 ## Deployment
 
 Here is the example command to build the application WAR file with all configuration properties you might need:
+
 ```bash
 $ LUMEER_ENV=production \
 > I18N_LOCALE=en \
+> AUTH_CLIENT_ID=<auth0 client id> \
+> AUTH_DOMAIN=<auth0 app domain> \
 > SENTRY_DSN=https://<key>@sentry.io/<project> \
+> SENTRY_AUTH_TOKEN=<secret token> \
+> PUSHER_CLUSTER=us1 \
+> PUSHER_KEY=<pusher api key> \
+> VIDEO_KEY=<youtube api key> \
 > BUILD_NUMBER=42 \
 > SESSION_TIMEOUT=30 \
 > LUMEER_ENGINE=lumeer-engine \
 > mvn clean package -Dcontext.root=en
 ```
 
- * `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
- * `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
- * `AUTH_CLIENT_ID`: client ID of Auth0 application
- * `AUTH_DOMAIN`: base URL for Auth0 authentication
- * `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
- * `BUILD_NUMBER`: build number to be shown in the application
- * `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
- * `LUMEER_ENGINE`: back-end deployment context root
- * `context.root`: front-end deployment context root
+- `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
+- `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
+- `AUTH_CLIENT_ID`: client ID of Auth0 application
+- `AUTH_DOMAIN`: base URL for Auth0 authentication
+- `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
+- `SENTRY_AUTH_TOKEN`: Sentry authentication token
+- `PUSHER_CLUSTER`: Pusher.com for push notifications - the server cluster to be used
+- `PUSHER_KEY`: Pusher.com for push notifications - the secret API key
+- `VIDEO_KEY`: YouTube Google v3 API key
+- `BUILD_NUMBER`: build number to be shown in the application
+- `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
+- `LUMEER_ENGINE`: back-end deployment context root
+- `context.root`: front-end deployment context root
 
 ## Translations
+
 When you add some text to the application which will be shown to the user, you should always add `i18n` attribute on its element with the translation string unique ID as its value. For example:
 
 ```html
@@ -67,7 +85,6 @@ $ npm run i18n
 
 It will add your new texts into all translation files (`src/i18n/messages.en.xlf` and `src/i18n/messages.cs.xlf`). You then need to open these files and translate the texts by adding the translations between the `<target>...</target>` tags.
 
-
 ## How To Contribute
 
 Everyone is welcome to contribute to this project.
@@ -79,3 +96,7 @@ TSLint is run with every pull-request so make sure your code complies with our l
 $ npm run lint
 ```
 
+### Bundle size
+
+Bundle size limits are automatically checked in every pull-request.
+If the Travis CI build fails because of this and you are sure that you have not introduced anything undesirable, you can change these limits in `package.json` file under `bundlesize` property.

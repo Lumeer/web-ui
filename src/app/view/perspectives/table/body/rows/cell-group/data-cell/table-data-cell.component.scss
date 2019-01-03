@@ -1,5 +1,5 @@
-@import "../../../../../../../../styles/variables";
-@import "../../../../../../../../styles/bootstrap_var";
+@import '../../../../../../../../styles/variables';
+@import '../../../../../../../../styles/bootstrap_var';
 
 :host {
   display: block;
@@ -35,12 +35,16 @@
   cursor: default;
   min-height: 1px;
 
-  &[contenteditable="true"]:empty::before {
+  &[contenteditable='true']:empty::before {
     content: none; // Firefox fix
   }
 
   &:not(.edited) {
     color: transparent;
     text-shadow: 0 0 0 $body-color;
+
+    &.uninitialized-record {
+      text-shadow: 0 0 0 $secondary;
+    }
   }
 }

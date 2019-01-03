@@ -20,7 +20,6 @@
 import {PermissionsModel} from '../store/permissions/permissions.model';
 
 export interface ResourceModel {
-
   id?: string;
   code?: string;
   name: string;
@@ -31,5 +30,4 @@ export interface ResourceModel {
 
   correlationId?: string;
   nonRemovable?: boolean;
-
 }

@@ -11,9 +11,10 @@
      (keydown)="onKeyDown($event)"
      (editKeyDown)="onEditKeyDown($event)"
      (mousedown)="onMouseDown()"
-     class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
+     class="table-border-right table-border-bottom h-100 font-italic"
      [class.uninitialized-column]="!column?.attributeId"
-     [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)">
+     [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)"
+     data-test="table-single-column-input">
 </div>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
@@ -23,8 +24,7 @@
                              [table]="table">
 </table-attribute-suggestions>
 
-<table-column-context-menu #contextMenu
-                           *ngIf="attribute && cursor"
+<table-column-context-menu *ngIf="attribute && cursor"
                            [attribute]="attribute"
                            [cursor]="cursor"
                            [canManageConfig]="canManageConfig"

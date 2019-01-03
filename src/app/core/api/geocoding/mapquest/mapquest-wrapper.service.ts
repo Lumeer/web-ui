@@ -24,24 +24,24 @@ import {AddressCoordinatesMap} from '../address-coordinates-map';
 import {MapQuestGeocodingApiService} from './mapquest-geocoding-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MapQuestWrapperService {
-
-  constructor(private mapQuestGeocodingApiService: MapQuestGeocodingApiService) {
-  }
+  constructor(private mapQuestGeocodingApiService: MapQuestGeocodingApiService) {}
 
   public getCoordinatesFromAddresses(addresses: string[]): Observable<AddressCoordinatesMap> {
     // TODO split requests in case of more than 100 addresses
     return this.mapQuestGeocodingApiService.getBatchGeocode(addresses).pipe(
-      map(response => addresses.reduce((coordinatesMap, address) => {
-        const result = response.results.find(res => res.providedLocation.location === address);
-        if (!result) {
-          return {...coordinatesMap, [address]: null};
-        }
+      map(response =>
+        addresses.reduce((coordinatesMap, address) => {
+          const result = response.results.find(res => res.providedLocation.location === address);
+          if (!result) {
+            return {...coordinatesMap, [address]: null};
+          }
 
-        return {...coordinatesMap, [address]: result.locations && result.locations[0] && result.locations[0].latLng};
-      }, {})),
+          return {...coordinatesMap, [address]: result.locations && result.locations[0] && result.locations[0].latLng};
+        }, {})
+      ),
       catchError(error => of({}))
     );
   }

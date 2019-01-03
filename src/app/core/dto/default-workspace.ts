@@ -18,10 +18,8 @@
  */
 
 export interface DefaultWorkspace {
-
   organizationCode?: string;
   organizationId: string;
   projectCode?: string;
   projectId: string;
-
 }

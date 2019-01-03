@@ -16,29 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, first} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
+import {
+  TableColumn,
+  TableColumnType,
+  TableCompoundColumn,
+  TableConfigRow,
+  TableHiddenColumn,
+  TableModel,
+  TablePart,
+} from '../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {selectTablePart} from '../../../../../../core/store/tables/tables.selector';
-import {selectTableById, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../core/store/tables/tables.state';
+import {
+  selectTableById,
+  selectTableCursor,
+  selectTablePartLeafColumns,
+} from '../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-cell-group',
   templateUrl: './table-cell-group.component.html',
   styleUrls: ['./table-cell-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCellGroupComponent implements OnChanges {
-
   @Input()
   public cursor: TableBodyCursor;
 
@@ -59,8 +69,7 @@ export class TableCellGroupComponent implements OnChanges {
 
   private rowSelected: boolean;
 
-  public constructor(private store$: Store<{}>) {
-  }
+  public constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -73,9 +82,7 @@ export class TableCellGroupComponent implements OnChanges {
   }
 
   private bindColumns() {
-    this.columns$ = this.store$.pipe(
-      select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex))
-    );
+    this.columns$ = this.store$.pipe(select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex)));
   }
 
   private bindSelectedCursor() {
@@ -94,20 +101,22 @@ export class TableCellGroupComponent implements OnChanges {
   }
 
   private bindData() {
-    this.store$.pipe(
-      select(selectTablePart(this.cursor)),
-      filter(part => !!part),
-      first()
-    ).subscribe(part => {
-      if (part.collectionId) {
-        const documentIds = this.rows.map(row => row.documentId);
-        this.bindDocuments(part.collectionId, documentIds);
-      }
-      if (part.linkTypeId) {
-        const linkInstanceIds = this.rows.map(row => row.linkInstanceId);
-        this.bindLinkInstances(part.linkTypeId, linkInstanceIds);
-      }
-    });
+    this.store$
+      .pipe(
+        select(selectTablePart(this.cursor)),
+        filter(part => !!part),
+        first()
+      )
+      .subscribe(part => {
+        if (part.collectionId) {
+          const documentIds = this.rows.map(row => row.documentId);
+          this.bindDocuments(part.collectionId, documentIds);
+        }
+        if (part.linkTypeId) {
+          const linkInstanceIds = this.rows.map(row => row.linkInstanceId);
+          this.bindLinkInstances(part.linkTypeId, linkInstanceIds);
+        }
+      });
   }
 
   private bindPart() {
@@ -115,10 +124,7 @@ export class TableCellGroupComponent implements OnChanges {
   }
 
   private bindDocuments(collectionId: string, documentIds: string[]) {
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByIds(documentIds)),
-      map(documents => documents && documents.length ? documents : [{collectionId, data: {}}])
-    );
+    this.documents$ = this.store$.pipe(select(selectDocumentsByIds(documentIds)));
   }
 
   private bindLinkInstances(linkTypeId: string, linkInstanceIds: string[]) {
@@ -141,5 +147,4 @@ export class TableCellGroupComponent implements OnChanges {
     this.store$.dispatch(new TablesAction.SetCursor({cursor}));
     event.stopPropagation();
   }
-
 }

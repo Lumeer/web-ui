@@ -1,37 +1,15 @@
 {
-  "extends": [
-    "rxjs-tslint-rules"
-  ],
+  "extends": ["rxjs-tslint-rules"],
   "rules": {
     "class-name": true,
-    "curly": true,
-    "eofline": true,
-    "file-header": [
-      true,
-      "Copyright \\(C\\) since 2017 Answer Institute, s\\.r\\.o\\."
-    ],
+    "file-header": [true, "Copyright \\(C\\) since 2017 Answer Institute, s\\.r\\.o\\."],
     "forin": true,
-    "indent": [
-      true,
-      "spaces"
-    ],
     "label-position": true,
-    "max-line-length": [
-      true,
-      {
-        "limit": 160,
-        "ignore-pattern": "^import "
-      }
-    ],
     "member-access": true,
     "no-arg": true,
     "no-bitwise": false,
     "no-consecutive-blank-lines": true,
-    "no-console": [
-      true,
-      "log",
-      "trace"
-    ],
+    "no-console": [true, "log", "trace"],
     "no-construct": true,
     "no-debugger": false,
     "no-duplicate-variable": true,
@@ -46,26 +24,13 @@
     ],
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": true,
     "no-unused-expression": false,
     "no-unused-variable": false,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "one-line": [
-      true,
-      "check-open-brace",
-      "check-whitespace",
-      "check-catch",
-      "check-else"
-    ],
     "prefer-const": true,
-    "quotemark": [
-      true,
-      "single"
-    ],
     "radix": true,
     "rxjs-no-internal": true,
-    "semicolon": true,
     "trailing-comma": [
       false,
       {
@@ -73,28 +38,11 @@
         "singleline": "never"
       }
     ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
-    "typedef-whitespace": [
-      true
-    ],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "allow-leading-underscore"
-    ],
-    "whitespace": [
-      true,
-      "check-decl",
-      "check-operator",
-      "check-type"
-    ]
+    "triple-equals": [true, "allow-null-check"],
+    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
+    "whitespace": [true, "check-decl", "check-operator", "check-type"]
   },
   "linterOptions": {
-    "exclude": [
-      "**/node_modules/**"
-    ]
+    "exclude": ["**/node_modules/**"]
   }
 }

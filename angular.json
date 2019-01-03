@@ -36,25 +36,54 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/browserconfig.xml",
-              "src/manifest.json"
-            ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/leaflet/dist/leaflet.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
+            "styles": ["src/styles.scss"],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
-              "node_modules/muuri/dist/muuri.min.js"
+              "node_modules/muuri/dist/muuri.min.js",
+              "node_modules/pusher-js/dist/web/pusher.min.js"
             ],
             "vendorChunk": false
           },
           "configurations": {
             "production": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "baseline": "3215kb",
+                  "maximumWarning": "10%",
+                  "maximumError": "25%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-detail",
+                  "baseline": "71kb",
+                  "maximumWarning": "10%",
+                  "maximumError": "50%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-chart",
+                  "baseline": "2800kb",
+                  "maximumWarning": "10%",
+                  "maximumError": "25%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-map",
+                  "baseline": "174kb",
+                  "maximumWarning": "10%",
+                  "maximumError": "50%"
+                },
+                {
+                  "type": "bundle",
+                  "name": "perspectives-search",
+                  "baseline": "87kb",
+                  "maximumWarning": "10%",
+                  "maximumError": "50%"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
@@ -93,13 +122,19 @@
               "aot": true,
               "i18nFile": "src/i18n/messages.cs.xlf",
               "i18nFormat": "xlf",
-              "i18nLocale": "cs"
+              "i18nLocale": "cs",
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": false
             },
             "en": {
               "aot": true,
               "i18nFile": "src/i18n/messages.en.xlf",
               "i18nFormat": "xlf",
-              "i18nLocale": "en"
+              "i18nLocale": "en",
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": false
             }
           }
         },
@@ -132,54 +167,17 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
+            "assets": ["src/favicon.ico", "src/assets"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tslintConfig": "tslint.json",
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "lumeer-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "lumeer:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "lumeer:serve:staging"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

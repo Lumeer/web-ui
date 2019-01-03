@@ -20,12 +20,10 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'canActivatePage'
+  name: 'canActivatePage',
 })
 export class CanActivatePagePipe implements PipeTransform {
-
   public transform(page: number, pageSize: number, maxItems: number): boolean {
     return page >= 0 && page < Math.ceil(maxItems / pageSize);
   }
-
 }

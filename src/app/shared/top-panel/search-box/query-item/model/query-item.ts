@@ -20,7 +20,6 @@
 import {QueryItemType} from './query-item-type';
 
 export interface QueryItem {
-
   text: string;
   icons?: string[];
   colors?: string[];
@@ -29,7 +28,4 @@ export interface QueryItem {
 
   value: string;
   type: QueryItemType;
-
-  dependsOn(queryItem: QueryItem): boolean;
-
 }

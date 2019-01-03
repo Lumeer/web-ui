@@ -22,7 +22,6 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {ProjectModel} from './project.model';
 
 export class ProjectConverter {
-
   public static fromDto(dto: Project, organizationId: string, correlationId?: string): ProjectModel {
     return {
       id: dto.id,
@@ -35,7 +34,7 @@ export class ProjectConverter {
       correlationId: correlationId,
       collectionsCount: dto.collectionsCount,
       nonRemovable: dto.nonRemovable,
-      permissions: PermissionsConverter.fromDto(dto.permissions)
+      permissions: PermissionsConverter.fromDto(dto.permissions),
     };
   }
 
@@ -45,8 +44,7 @@ export class ProjectConverter {
       name: project.name,
       icon: project.icon,
       color: project.color,
-      description: project.description
+      description: project.description,
     };
   }
-
 }

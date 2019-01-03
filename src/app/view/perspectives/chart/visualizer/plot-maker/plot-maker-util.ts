@@ -22,14 +22,15 @@ import {PlotMaker} from './plot-maker';
 import {PiePlotMaker} from './pie-plot-maker';
 import {BarPlotMaker} from './bar-plot-maker';
 import {LinePlotMaker} from './line-plot-maker';
+import {ElementRef} from '@angular/core';
 
-export function createPlotMakerByType(type: ChartType): PlotMaker {
+export function createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
   switch (type) {
     case ChartType.Pie:
-      return new PiePlotMaker();
+      return new PiePlotMaker(element);
     case ChartType.Bar:
-      return new BarPlotMaker();
+      return new BarPlotMaker(element);
     case ChartType.Line:
-      return new LinePlotMaker();
+      return new LinePlotMaker(element);
   }
 }

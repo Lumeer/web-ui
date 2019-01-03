@@ -28,10 +28,7 @@ import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
-
-  public constructor(private authService: AuthService,
-                     private router: Router) {
-  }
+  public constructor(private authService: AuthService, private router: Router) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!environment.auth || !isBackendUrl(request.url)) {
@@ -40,9 +37,9 @@ export class AuthHttpInterceptor implements HttpInterceptor {
 
     const authRequest = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.authService.getAccessToken()}`
+        Authorization: `Bearer ${this.authService.getAccessToken()}`,
       },
-      withCredentials: true
+      withCredentials: true,
     });
     return next.handle(authRequest).pipe(
       catchError(error => {
@@ -54,5 +51,4 @@ export class AuthHttpInterceptor implements HttpInterceptor {
       })
     );
   }
-
 }

@@ -32,10 +32,9 @@ import {selectAllCollections} from '../../../../../../core/store/collections/col
 @Component({
   selector: 'resource-status-line',
   templateUrl: './resource-status-line.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceStatusLineComponent implements OnChanges {
-
   @Input() public organization: OrganizationModel;
   @Input() public project: ProjectModel;
 
@@ -45,8 +44,7 @@ export class ResourceStatusLineComponent implements OnChanges {
   public collectionsCount$: Observable<number>;
   public documentsCount$: Observable<number>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.organization) {
@@ -67,9 +65,8 @@ export class ResourceStatusLineComponent implements OnChanges {
       this.documentsCount$ = this.store.select(selectAllCollections).pipe(
         filter(collections => !isNullOrUndefined(collections)),
         map(collections => collections.map(collection => collection.documentsCount)),
-        map(collections => collections.length ? collections.reduce((total = 0, count) => total + count) : 0)
+        map(collections => (collections.length ? collections.reduce((total = 0, count) => total + count) : 0))
       );
     }
   }
-
 }

@@ -31,27 +31,23 @@ const appRoutes: Routes = [
     path: '',
     pathMatch: 'full',
     canActivate: [AuthGuard, CurrentUserGuard],
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: '**',
     canActivate: [AuthGuard, CurrentUserGuard, PageNotFoundGuard],
-    component: HomeComponent
-  }
+    component: HomeComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top'}),
-    StoreRouterConnectingModule
-  ],
+  imports: [RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top'}), StoreRouterConnectingModule],
   exports: [RouterModule],
   providers: [
     {
       provide: RouterStateSerializer,
-      useClass: LumeerRouterStateSerializer
-    }
-  ]
+      useClass: LumeerRouterStateSerializer,
+    },
+  ],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

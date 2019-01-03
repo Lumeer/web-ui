@@ -21,8 +21,6 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
 
 export interface QueryData {
-
   collections: CollectionModel[];
   linkTypes: LinkTypeModel[];
-
 }

@@ -22,31 +22,27 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 export const animateOpacityFromUp = trigger('animateOpacityFromUp', [
   state('in', style({transform: 'translateY(0)', opacity: 1})),
   transition('void => *', [
-    animate(300, keyframes([
-      style({transform: 'translateY(-50px)', opacity: 0, offset: 0}),
-      style({transform: 'translateY(0)', opacity: 1, offset: 1})
-    ]))
+    animate(
+      300,
+      keyframes([
+        style({transform: 'translateY(-50px)', opacity: 0, offset: 0}),
+        style({transform: 'translateY(0)', opacity: 1, offset: 1}),
+      ])
+    ),
   ]),
   transition('* => void', [
-    animate(300, keyframes([
-      style({transform: 'translateY(0)', opacity: 1, offset: 0}),
-      style({transform: 'translateY(-50px)', opacity: 0, offset: 1})
-    ]))
-  ])
+    animate(
+      300,
+      keyframes([
+        style({transform: 'translateY(0)', opacity: 1, offset: 0}),
+        style({transform: 'translateY(-50px)', opacity: 0, offset: 1}),
+      ])
+    ),
+  ]),
 ]);
 
 export const animateVisible = trigger('animateVisible', [
   state('in', style({opacity: 1})),
-  transition('void => *', [
-    animate(500, keyframes([
-      style({opacity: 0}),
-      style({opacity: 1})
-    ]))
-  ]),
-  transition('* => void', [
-    animate(500, keyframes([
-      style({opacity: 1}),
-      style({opacity: 0})
-    ]))
-  ])
+  transition('void => *', [animate(500, keyframes([style({opacity: 0}), style({opacity: 1})]))]),
+  transition('* => void', [animate(500, keyframes([style({opacity: 1}), style({opacity: 0})]))]),
 ]);

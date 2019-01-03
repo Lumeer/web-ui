@@ -36,7 +36,6 @@ import {DataCellDocumentPipe} from './data-cell-document.pipe';
 import {DataPipe} from './data.pipe';
 import {DisplayablePipe} from './displayable.pipe';
 import {DocumentHintColumnsPipe} from './document-hint-columns.pipe';
-import {DragClassPipe} from './drag-class.pipe';
 import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
 import {ExpandablePipe} from './expandable.pipe';
@@ -61,9 +60,7 @@ import {ResizeValidatePipe} from './resize-validate.pipe';
 import {RowPositionTopPipe} from './row-position-top.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     DataPipe,
     EntityCreatedPipe,
@@ -90,7 +87,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
-    DragClassPipe,
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
@@ -105,7 +101,8 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     LinkedDocumentIdsPipe,
     RowPositionTopPipe,
     DataCellDocumentPipe,
-  ], exports: [
+  ],
+  exports: [
     DataPipe,
     EntityCreatedPipe,
     IsFirstPartPipe,
@@ -131,7 +128,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
-    DragClassPipe,
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
@@ -147,10 +143,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     RowPositionTopPipe,
     DataCellDocumentPipe,
   ],
-  providers: [
-    AttributeNameChangedPipe,
-    ColumnBackgroundPipe,
-  ]
+  providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
 })
-export class TablePipesModule {
-}
+export class TablePipesModule {}

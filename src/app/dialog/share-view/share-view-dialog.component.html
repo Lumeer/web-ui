@@ -30,8 +30,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr share-user *ngFor="let user of selectedUsers; trackBy:trackByUser"
-            [canRemove]="currentUser?.id !== user.id"
+        <tr share-user *ngFor="let user of staticUsers.concat(changeableUsers); trackBy:trackByUser"
+            [canRemove]="user | canRemoveUser:currentUser:organization:project"
+            [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
             [roles]="user | userRoles:userRoles"
             [email]="user.email"
             (rolesChange)="onNewRoles(user, $event)"

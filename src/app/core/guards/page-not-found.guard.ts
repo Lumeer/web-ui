@@ -24,14 +24,9 @@ import {NotificationService} from '../notifications/notification.service';
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
+  constructor(private i18n: I18n, private notificationService: NotificationService, private router: Router) {}
 
-  constructor(private i18n: I18n,
-              private notificationService: NotificationService,
-              private router: Router) {
-  }
-
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): boolean {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const [, w, organizationCode, projectCode] = state.url.split('/');
 
     if (w === 'w' && organizationCode && projectCode) {
@@ -47,5 +42,4 @@ export class PageNotFoundGuard implements CanActivate {
 
     return false;
   }
-
 }

@@ -26,7 +26,7 @@ export interface ChartModel {
 
 export interface ChartConfig {
   type: ChartType;
-  axes: { [type: string]: ChartAxisModel };
+  axes: {[type: string]: ChartAxisModel};
 }
 
 export interface ChartAxisModel {
@@ -37,23 +37,23 @@ export interface ChartAxisModel {
 export enum ChartType {
   Line = 'line',
   Bar = 'bar',
-  Pie = 'pie'
+  Pie = 'pie',
 }
 
-export const chartTypesMap: { [id: string]: ChartType } = {
+export const chartTypesMap: {[id: string]: ChartType} = {
   [ChartType.Line]: ChartType.Line,
   [ChartType.Bar]: ChartType.Bar,
-  [ChartType.Pie]: ChartType.Pie
+  [ChartType.Pie]: ChartType.Pie,
 };
 
-export const chartTypesIconsMap: { [id: string]: string } = {
+export const chartTypesIconsMap: {[id: string]: string} = {
   [ChartType.Line]: 'far fa-chart-line',
   [ChartType.Bar]: 'far fa-chart-bar',
-  [ChartType.Pie]: 'far fa-chart-pie'
+  [ChartType.Pie]: 'far fa-chart-pie',
 };
 
 export enum ChartAxisType {
   X = 'x',
   Y1 = 'y1',
-  Y2 = 'y2'
+  Y2 = 'y2',
 }

@@ -24,17 +24,8 @@ import {NgVarDirective} from './ng-var.directive';
 import {TrimValueAccessor} from './trim-value-accessor';
 
 @NgModule({
-  imports: [
-    CommonModule,
-  ],
-  declarations: [
-    NgVarDirective,
-    TrimValueAccessor
-  ],
-  exports: [
-    NgVarDirective,
-    TrimValueAccessor
-  ]
+  imports: [CommonModule],
+  declarations: [NgVarDirective, TrimValueAccessor],
+  exports: [NgVarDirective, TrimValueAccessor],
 })
-export class DirectivesModule {
-}
+export class DirectivesModule {}

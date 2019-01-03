@@ -28,19 +28,23 @@ import {PostItAction} from '../store/postit/postit.action';
 import {ViewsAction} from '../store/views/views.action';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
+  constructor(private store$: Store<AppState>) {}
 
-  constructor(private store$: Store<AppState>) {
-  }
-
-  public canDeactivate(component: ViewComponent,
-                       currentRoute: ActivatedRouteSnapshot,
-                       currentState: RouterStateSnapshot,
-                       nextState?: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(
+    component: ViewComponent,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
     const [, viewCode] = nextState.url.match(/vc=([0-9a-z]*)/) || [null, null];
-    const perspective = currentRoute.firstChild && currentRoute.firstChild.url && currentRoute.firstChild.url[0] && currentRoute.firstChild.url[0].path;
+    const perspective =
+      currentRoute.firstChild &&
+      currentRoute.firstChild.url &&
+      currentRoute.firstChild.url[0] &&
+      currentRoute.firstChild.url[0].path;
     if (perspective && !nextState.url.includes(perspective) && !viewCode) {
       this.clearPerspective(perspectivesMap[perspective]);
     }
@@ -57,5 +61,4 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
         this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
     }
   }
-
 }

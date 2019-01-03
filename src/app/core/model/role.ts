@@ -23,5 +23,5 @@ export const enum Role {
   Write = 'WRITE',
   Share = 'SHARE',
   Clone = 'CLONE',
-  Comment = 'COMMENT'
+  Comment = 'COMMENT',
 }

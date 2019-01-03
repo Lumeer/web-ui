@@ -20,16 +20,15 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../../../core/store/projects/project.model';
-import {Resource} from '../../../../../core/dto/index';
+import {Resource} from '../../../../../core/dto';
 
 @Component({
   selector: 'resource-list',
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceListComponent {
-
   @Input() public currentCode: string;
   @Input() public organizations: OrganizationModel[];
   @Input() public projects: ProjectModel[];
@@ -43,7 +42,7 @@ export class ResourceListComponent {
       icon: model.icon,
       code: model.code,
       name: model.name,
-      description: model.description
+      description: model.description,
     });
   }
 }

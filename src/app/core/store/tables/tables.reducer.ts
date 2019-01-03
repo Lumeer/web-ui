@@ -22,8 +22,16 @@ import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
 import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.utils';
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
-import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
-import {createEmptyTableRow, isValidHierarchicalRowOrder, maxColumnDepth, moveTableColumn, replaceTableColumns, sortTableRowsByHierarchy, splitRowPath} from './table.utils';
+import {TableColumn, TableCompoundColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
+import {
+  createEmptyTableRow,
+  isValidHierarchicalRowOrder,
+  maxColumnDepth,
+  moveTableColumn,
+  replaceTableColumns,
+  sortTableRowsByHierarchy,
+  splitRowPath,
+} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
 
@@ -39,6 +47,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return replaceColumn(state, action);
     case TablesActionType.MOVE_COLUMN:
       return moveColumn(state, action);
+    case TablesActionType.REMOVE_EMPTY_COLUMNS:
+      return removeEmptyColumns(state, action);
     case TablesActionType.ADD_PRIMARY_ROWS:
       return addPrimaryRows(state, action);
     case TablesActionType.ADD_LINKED_ROWS:
@@ -76,8 +86,13 @@ function addPart(state: TablesState, action: TablesAction.AddPart): TablesState 
 }
 
 function replaceColumn(state: TablesState, action: TablesAction.ReplaceColumns): TablesState {
-  const newState = updateColumns(state, action.payload.cursor, (columns) => {
-    return replaceTableColumns(columns, action.payload.cursor.columnPath, action.payload.deleteCount, action.payload.columns);
+  const newState = updateColumns(state, action.payload.cursor, columns => {
+    return replaceTableColumns(
+      columns,
+      action.payload.cursor.columnPath,
+      action.payload.deleteCount,
+      action.payload.columns
+    );
   });
 
   const {tableId} = action.payload.cursor;
@@ -85,7 +100,7 @@ function replaceColumn(state: TablesState, action: TablesAction.ReplaceColumns):
 }
 
 function moveColumn(state: TablesState, action: TablesAction.MoveColumn): TablesState {
-  const newState = updateColumns({...state, cursor: null}, action.payload.cursor, (columns) => {
+  const newState = updateColumns({...state, cursor: null}, action.payload.cursor, columns => {
     const fromPath = action.payload.cursor.columnPath;
     const toPath = fromPath.slice(0, fromPath.length - 1).concat(action.payload.toIndex);
     return moveTableColumn(columns, fromPath, toPath);
@@ -95,15 +110,27 @@ function moveColumn(state: TablesState, action: TablesAction.MoveColumn): Tables
   return savePartsConfig(newState, tableId);
 }
 
+function removeEmptyColumns(state: TablesState, action: TablesAction.RemoveEmptyColumns): TablesState {
+  const {cursor} = action.payload;
+
+  const newState = updateColumns(state, cursor, columns => {
+    return columns.filter(column => !(column instanceof TableCompoundColumn && !column.parent.attributeId));
+  });
+
+  return savePartsConfig(newState, cursor.tableId);
+}
+
 function savePartsConfig(state: TablesState, tableId: string): TablesState {
   const table = state.entities[tableId];
   const config = {...table.config, parts: convertTablePartsToConfig(table.parts)};
   return tablesAdapter.updateOne({id: tableId, changes: {config}}, state);
 }
 
-function updateColumns(state: TablesState,
-                       cursor: TableHeaderCursor,
-                       transformation: (columns: TableColumn[]) => TableColumn[]) {
+function updateColumns(
+  state: TablesState,
+  cursor: TableHeaderCursor,
+  transformation: (columns: TableColumn[]) => TableColumn[]
+) {
   const {table, part} = getTablePart(state, cursor);
 
   const columns = transformation(part.columns);
@@ -117,12 +144,15 @@ function addPrimaryRows(state: TablesState, action: TablesAction.AddPrimaryRows)
   const {cursor, rows, append} = action.payload;
   const {table} = getTablePart(state, cursor);
 
-  return tablesAdapter.updateOne({
-    id: cursor.tableId,
-    changes: {
-      config: append ? appendPrimaryRows(table.config, cursor, rows) : insertPrimaryRows(table.config, cursor, rows)
-    }
-  }, state);
+  return tablesAdapter.updateOne(
+    {
+      id: cursor.tableId,
+      changes: {
+        config: append ? appendPrimaryRows(table.config, cursor, rows) : insertPrimaryRows(table.config, cursor, rows),
+      },
+    },
+    state
+  );
 }
 
 function appendPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: TableConfigRow[]): TableConfig {
@@ -131,7 +161,13 @@ function appendPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: T
   if (!lastRow || lastRow.documentId) {
     return {...config, rows: existingRows.concat(rows)};
   } else {
-    return {...config, rows: existingRows.slice(0, existingRows.length - 1).concat(rows).concat(createEmptyTableRow())};
+    return {
+      ...config,
+      rows: existingRows
+        .slice(0, existingRows.length - 1)
+        .concat(rows)
+        .concat(createEmptyTableRow()),
+    };
   }
 }
 
@@ -151,11 +187,16 @@ function addLinkedRows(state: TablesState, action: TablesAction.AddLinkedRows): 
     config.rows = updateRows(config.rows, cursor.rowPath, rows => rows.concat(linkedRows));
   } else {
     const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
-    config.rows = updateRows(config.rows, parentPath, rows => {
-      const updatedRows = [...rows];
-      updatedRows.splice(rowIndex, 0, ...linkedRows);
-      return updatedRows;
-    }, true);
+    config.rows = updateRows(
+      config.rows,
+      parentPath,
+      rows => {
+        const updatedRows = [...rows];
+        updatedRows.splice(rowIndex, 0, ...linkedRows);
+        return updatedRows;
+      },
+      true
+    );
   }
 
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
@@ -182,7 +223,7 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
         correlationId: null,
         documentId: document.id,
         linkInstanceId: linkInstance && linkInstance.id,
-        parentDocumentId: null
+        parentDocumentId: null,
       };
     });
 
@@ -231,7 +272,7 @@ function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesSt
 function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryRows): TablesState {
   const {cursor, documents} = action.payload;
   const {table} = getTablePart(state, cursor);
-  const documentsMap = documents.reduce((map, document) => document.id ? ({...map, [document.id]: document}) : map, {});
+  const documentsMap = documents.reduce((map, document) => (document.id ? {...map, [document.id]: document} : map), {});
 
   if (isValidHierarchicalRowOrder(table.config.rows, documentsMap)) {
     return state;
@@ -255,10 +296,12 @@ function replaceRows(state: TablesState, action: TablesAction.ReplaceRows): Tabl
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function updateRows(rows: TableConfigRow[],
-                    rowPath: number[],
-                    transformation: (rows: TableConfigRow[]) => TableConfigRow[],
-                    expand?: boolean): TableConfigRow[] {
+function updateRows(
+  rows: TableConfigRow[],
+  rowPath: number[],
+  transformation: (rows: TableConfigRow[]) => TableConfigRow[],
+  expand?: boolean
+): TableConfigRow[] {
   if (rowPath.length === 0) {
     return transformation([...rows]);
   }
@@ -267,7 +310,7 @@ function updateRows(rows: TableConfigRow[],
   const row = {
     ...rows[index],
     linkedRows: updateRows(rows[index].linkedRows, childPath, transformation),
-    expanded: expand || (rows[index] && rows[index].expanded)
+    expanded: expand || (rows[index] && rows[index].expanded),
   };
 
   const updatedRows = [...rows];
@@ -316,14 +359,14 @@ function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedR
   const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
 
   const rows = updateRows(table.config.rows, parentPath, updatedRows => {
-    return updatedRows.map((row, index) => index === rowIndex ? {...row, expanded: !row.expanded} : row);
+    return updatedRows.map((row, index) => (index === rowIndex ? {...row, expanded: !row.expanded} : row));
   });
 
   const config = {...table.config, rows};
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {
+function getTablePart(state: TablesState, cursor: TableHeaderCursor): {table: TableModel; part: TablePart} {
   const table = state.entities[cursor.tableId];
   const part = table.parts[cursor.partIndex];
   return {table, part};

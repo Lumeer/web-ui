@@ -23,9 +23,7 @@ import {AppState} from '../app.state';
 import {GroupModel} from './group.model';
 import {GroupFilters} from './group.filters';
 
-export interface GroupsState extends EntityState<GroupModel> {
-
-}
+export interface GroupsState extends EntityState<GroupModel> {}
 
 export const groupsAdapter = createEntityAdapter<GroupModel>();
 
@@ -33,7 +31,16 @@ export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
 
 export const selectGroupsState = (state: AppState) => state.groups;
 
-const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
-export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));
+const selectAllGroupsRaw = createSelector(
+  selectGroupsState,
+  groupsAdapter.getSelectors().selectAll
+);
+export const selectAllGroups = createSelector(
+  selectAllGroupsRaw,
+  groups => GroupFilters.filterFunctions(groups)
+);
 
-export const selectGroupsDictionary = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectEntities);
+export const selectGroupsDictionary = createSelector(
+  selectGroupsState,
+  groupsAdapter.getSelectors().selectEntities
+);

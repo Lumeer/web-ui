@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
@@ -33,26 +32,26 @@ import {selectChartConfig} from '../../../core/store/charts/charts.state';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'chart-perspective',
   templateUrl: './chart-perspective.component.html',
-  styleUrls: ['./chart-perspective.component.scss']
+  styleUrls: ['./chart-perspective.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
-
   public documents$: Observable<DocumentModel[]>;
   public collection$: Observable<CollectionModel>;
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query: QueryModel;
+  public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initChart();
@@ -61,23 +60,25 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery))
-      .subscribe(query => {
-        this.query = query;
-        this.fetchDocuments();
-      });
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchDocuments(query);
+    });
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments() {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
+  private fetchDocuments(query: Query) {
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private initChart() {
-    const subscription = this.store$.pipe(select(selectCurrentView),
-      take(1))
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        take(1)
+      )
       .subscribe(view => {
-        const config = view && view.config && view.config.chart || this.createDefaultConfig();
+        const config = (view && view.config && view.config.chart) || this.createDefaultConfig();
         const chart = {id: this.chartId, config};
         this.store$.dispatch(new ChartAction.AddChart({chart}));
       });
@@ -90,8 +91,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collection$ = this.store$.pipe(select(selectCollectionsByQuery),
-      map(collections => collections[0]));
+    this.collection$ = this.store$.pipe(
+      select(selectCollectionsByQuery),
+      map(collections => collections[0])
+    );
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
@@ -105,4 +108,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config}));
   }
 
+  public patchDocumentData(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
 }

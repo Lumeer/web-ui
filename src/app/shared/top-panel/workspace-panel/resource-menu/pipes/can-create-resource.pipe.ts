@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {ResourceType} from '../../../../../core/model/resource-type';
@@ -34,13 +34,10 @@ import {PermissionsPipe} from '../../../../pipes/permissions/permissions.pipe';
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
 
 @Pipe({
-  name: 'canCreateResource'
+  name: 'canCreateResource',
 })
 export class CanCreateResourcePipe implements PipeTransform {
-
-  public constructor(private store$: Store<AppState>,
-                     private permissionsPipe: PermissionsPipe) {
-  }
+  public constructor(private store$: Store<AppState>, private permissionsPipe: PermissionsPipe) {}
 
   public transform(resource: ResourceModel, type: ResourceType, projects: ProjectModel[]): Observable<boolean> {
     if (!resource) {
@@ -48,22 +45,24 @@ export class CanCreateResourcePipe implements PipeTransform {
     }
 
     if (type === ResourceType.Organization) {
-      return this.store$.select(selectCurrentUser).pipe(
+      return this.store$.pipe(
+        select(selectCurrentUser),
         map(user => allowedEmails.includes(user.email))
       );
     } else if (type === ResourceType.Project) {
       const project = resource as ProjectModel;
       return combineLatest(
-        this.store$.select(selectOrganizationById(project.organizationId)),
-        this.store$.select(selectServiceLimitsByOrganizationId(project.organizationId))
+        this.store$.pipe(select(selectOrganizationById(project.organizationId))),
+        this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)))
       ).pipe(
         filter(([organization, serviceLimits]) => !!organization && !!serviceLimits),
-        mergeMap(([organization, serviceLimits]) => this.permissionsPipe.transform(organization, Role.Write).pipe(
-          map(allowed => allowed && projects.length < serviceLimits.projects)
-        ))
+        mergeMap(([organization, serviceLimits]) =>
+          this.permissionsPipe
+            .transform(organization, type, Role.Write)
+            .pipe(map(allowed => allowed && projects.length < serviceLimits.projects))
+        )
       );
     }
     return of(true);
   }
-
 }
