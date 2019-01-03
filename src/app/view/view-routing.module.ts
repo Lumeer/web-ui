@@ -32,8 +32,8 @@ import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspec
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
-import {GanttChartComponent} from './perspectives/gantt-chart/gantt-chart.component';
-import {CalendarPerspectiveComponent} from './perspectives/calendar/calendar-perspective.component';
+// import {GanttChartComponent} from './perspectives/gantt-chart/gantt-chart.component';
+// import {CalendarPerspectiveComponent} from './perspectives/calendar/calendar-perspective.component';
 
 const viewRoutes: Routes = [
   {
@@ -64,10 +64,10 @@ const viewRoutes: Routes = [
         path: Perspective.Map,
         loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule',
       },
-      {
-        path: Perspective.GanttChart,
-        loadChildren: './perspectives/gantt-chart/gantt-chart.module#GanttChartModule'
-      },
+      // {
+      //   path: Perspective.GanttChart,
+      //   loadChildren: './perspectives/gantt-chart/gantt-chart.module#GanttChartModule'
+      // },
       {
         path: Perspective.Calendar,
         loadChildren: './perspectives/calendar/calendar-perspective.module#CalendarPerspectiveModule'

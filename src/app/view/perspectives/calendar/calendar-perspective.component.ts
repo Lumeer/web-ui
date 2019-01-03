@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Inject, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../../core/store/navigation/query.model';
-// import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
+import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {map, take} from 'rxjs/operators';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -34,7 +32,7 @@ import {AppState} from '../../../core/store/app.state';
 import {selectCalendarConfig} from '../../../core/store/calendar/calendar.state';
 import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendar/calendar.model';
 import {CalendarAction} from '../../../core/store/calendar/calendar.action';
-
+import {Query} from '../../../core/store/navigation/query';
 
 @Component({
   selector: 'calendar',
@@ -43,16 +41,12 @@ import {CalendarAction} from '../../../core/store/calendar/calendar.action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
-  @Input()
-  public query: QueryModel;
-
-
   public documents$: Observable<DocumentModel[]>;
   public collection$: Observable<CollectionModel>;
   public config$: Observable<CalendarConfig>;
   public currentView$: Observable<ViewModel>;
 
-  public query$ = new BehaviorSubject<QueryModel>(null);
+  public query$ = new BehaviorSubject<Query>(null);
 
   private subscriptions = new Subscription();
   private calendarId = DEFAULT_CALENDAR_ID;
@@ -74,7 +68,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: QueryModel) {
+  private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

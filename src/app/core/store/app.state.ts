@@ -84,8 +84,7 @@ export function initialAppState(): AppState {
     views: initialViewsState,
     postIts: initialPostItState,
     charts: initialChartsState,
-    calendars: initialCalendarsState
-    charts: initialChartsState,
+    calendars: initialCalendarsState,
     videos: initialVideosState,
     userNotifications: initialUserNotificationsState,
   };
