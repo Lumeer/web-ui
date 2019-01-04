@@ -1,17 +1,20 @@
 <div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
 
-  <ng-container *ngIf="{collection: collection$ | async,  config: config$ | async} as data">
-    <calendar-config
-      [collection]="data.collection"
-      [config]="data.config"
-      (configChange)="onConfigChanged($event)">
-    </calendar-config>
+  <ng-container *ngIf="{collections: collections$ | async,  configs: config$ | async} as data">
+    <ng-container *ngFor="let collection of data.collections; index as i">
+      <calendar-config
+        [collection]="collection"
+        [allConfigs]="data.configs"
+        [config]="data.configs[i]"
+        (configChange)="onConfigChanged($event)">
+      </calendar-config>
+    </ng-container>
 
     <calendar-visualization
       class="row align-items-center justify-content-center"
-      [collection]="data.collection"
+      [collections]="data.collections"
       [documents]="documents$ | async"
-      [config]="data.config"
+      [allConfigs]="data.configs"
       (patchData)="patchDocumentData($event)">
     </calendar-visualization>
   </ng-container>

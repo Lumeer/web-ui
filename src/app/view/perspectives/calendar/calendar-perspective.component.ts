@@ -42,8 +42,8 @@ import {Query} from '../../../core/store/navigation/query';
 })
 export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<CollectionModel>;
-  public config$: Observable<CalendarConfig>;
+  public collections$: Observable<CollectionModel[]>;
+  public config$: Observable<CalendarConfig[]>;
   public currentView$: Observable<ViewModel>;
 
   public query$ = new BehaviorSubject<Query>(null);
@@ -58,6 +58,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.initCalendar();
     this.subscribeToQuery();
     this.subscribeData();
+    this.initConfig();
   }
 
   private subscribeToQuery() {
@@ -79,7 +80,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe(view => {
-        const config = (view && view.config && view.config.calendar) || this.createDefaultConfig();
+        const config = [(view && view.config && view.config.calendar) || CalendarPerspectiveComponent.createDefaultConfig()];
         const calendar = {id: this.calendarId, config};
         this.store$.dispatch(new CalendarAction.AddCalendar({calendar}));
       });
@@ -88,19 +89,37 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collection$ = this.store$.pipe(
+    this.collections$ = this.store$.pipe(
       select(selectCollectionsByQuery),
-      map(collections => collections[0])
+      map(
+        collections => collections
+      )
     );
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
 
-  private createDefaultConfig(): CalendarConfig {
-    return {barsProperties: {}};
+  private static createDefaultConfig(): CalendarConfig {
+    return {
+      id: "default",
+      barsProperties: {}
+    };
   }
 
-  public onConfigChanged(config: CalendarConfig) {
+  private initConfig () {
+      const newConfig: CalendarConfig[] = [];
+      this.collections$.subscribe(collect => {
+        collect.forEach(collection => {
+          newConfig.push({
+            id: collection.id,
+            barsProperties: {}
+          })
+        })
+      });
+     this.onConfigChanged(newConfig);
+  }
+
+  public onConfigChanged(config: CalendarConfig[]) {
     this.store$.dispatch(new CalendarAction.SetConfig({calendarId: this.calendarId, config}));
   }
 
@@ -108,7 +127,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new CalendarAction.RemoveCalendar({calendarId: this.calendarId}));
   }
