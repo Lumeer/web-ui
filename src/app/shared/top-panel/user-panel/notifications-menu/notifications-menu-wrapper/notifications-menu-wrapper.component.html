@@ -1,0 +1,105 @@
+<div class="panel-item mx-2 notifications">
+  <div class="dropdown show">
+    <a href="#"
+       role="button"
+       id="notificationsDropdownLink"
+       data-toggle="dropdown"
+       data-offset="0,10"
+       aria-haspopup="true"
+       aria-expanded="false">
+
+      <span class="fa-stack">
+        <i class="fa fa-bell fa-stack-2x"
+           [class.text-primary]="unreadNotifications?.length > 0"
+           [class.text-secondary]="!unreadNotifications || unreadNotifications.length === 0"
+        ></i>
+        <span class="fa-stack-1x" *ngIf="unreadNotifications?.length > 0">
+          <span class="notifications-count">{{unreadNotifications.length}}</span>
+        </span>
+      </span>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right pre-scrollable"
+         aria-labelledby="notificationsDropdownLink">
+
+      <form class="px-2 text-right">
+        <span class="small text-muted mr-1 align-text-top">Show only unread</span>
+        <label class="switch">
+          <input type="checkbox" [checked]="unreadOnly" (click)="toggleUnreadFilter($event)">
+          <span class="slider round" (click)="$event.stopPropagation()"></span>
+        </label>
+      </form>
+
+      <a *ngFor="let notification of (unreadOnly ? unreadNotifications : allNotifications);"
+         class="dropdown-item cursor-default">
+        <span class="notification-title clearfix">
+          <span class="status small text-muted float-left">{{notification.createdAt | date:'shortDate' }}</span>
+          <span class="status float-right"
+                [class.read]="notification.read"
+                [class.unread]="!notification.read">
+            <span class="align-text-top small text-muted">
+              <span *ngIf="!notification.firstReadAt" i18n="@@userNotifications.new">new</span>
+              <span *ngIf="notification.read && notification.firstReadAt" i18n="@@userNotifications.readOn">read on</span>
+              <span *ngIf="!notification.read && notification.firstReadAt" i18n="@@userNotifications.originallyReadOn">originally read on</span>
+              <span *ngIf="notification.firstReadAt">{{' ' + (notification.firstReadAt | date:'shortDate')}}</span>
+            </span>
+            <i *ngIf="notification.read"
+               (click)="setNotificationReadEvent($event, notification, false)"
+               class="fa fa-eye text-success ml-1 cursor-pointer"
+               title="Mark as unread"
+               i18n-title="@@userNotifications.mark.unread"></i>
+            <i *ngIf="!notification.read"
+               (click)="setNotificationReadEvent($event, notification, true)"
+               class="fa fa-eye-slash text-success ml-1 cursor-pointer"
+               title="Mark as read"
+               i18n-title="@@userNotifications.mark.read"></i>
+            <i (click)="deleteNotificationEvent($event, notification)"
+               class="fa fa-trash text-danger ml-1 cursor-pointer"
+               title="Delete notification"
+               i18n-title="@@userNotifications.delete"></i>
+          </span>
+        </span>
+        <span class="notification-content cursor-pointer"
+              (click)="navigateToTarget(notification)"
+              [class.read]="notification.read"
+              [class.text-notice]="notification.read"
+              [class.unread]="!notification.read"
+              [ngSwitch]="notification.type">
+
+            <notification-organization *ngSwitchCase="'ORGANIZATION_SHARED'"
+                                       [organizations]="organizations"
+                                       [notification]="notification">
+            </notification-organization>
+
+            <notification-project *ngSwitchCase="'PROJECT_SHARED'"
+                                  [organizations]="organizations"
+                                  [workspace]="workspace"
+                                  [notification]="notification">
+            </notification-project>
+
+            <notification-collection *ngSwitchCase="'COLLECTION_SHARED'"
+                                     [organizations]="organizations"
+                                     [workspace]="workspace"
+                                     [currentProject]="currentProject"
+                                     [notification]="notification">
+            </notification-collection>
+
+            <notification-view *ngSwitchCase="'VIEW_SHARED'"
+                               [organizations]="organizations"
+                               [workspace]="workspace"
+                               [currentProject]="currentProject"
+                               [notification]="notification">
+            </notification-view>
+
+          <ng-container *ngSwitchDefault></ng-container>
+        </span>
+      </a>
+
+      <a *ngIf="!(unreadOnly ? unreadNotifications : allNotifications) || (unreadOnly ? unreadNotifications : allNotifications).length === 0"
+         class="dropdown-item cursor-default"
+         i18n="@@userNotifications.empty">
+        There are no notifications.
+      </a>
+    </div>
+  </div>
+</div>
