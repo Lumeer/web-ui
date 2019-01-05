@@ -26,10 +26,10 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, map, take} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
-import {selectChartConfig} from '../../../core/store/charts/charts.state';
-import {View} from '../../../core/store/views/view';
+import {selectChartById, selectChartConfig, selectDefaultChart} from '../../../core/store/charts/charts.state';
+import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query';
@@ -75,14 +75,29 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        take(1)
+        filter(view => !!view),
+        withLatestFrom(this.store$.pipe(select(selectChartById(this.chartId))))
       )
-      .subscribe(view => {
-        const config = (view && view.config && view.config.chart) || this.createDefaultConfig();
-        const chart = {id: this.chartId, config};
-        this.store$.dispatch(new ChartAction.AddChart({chart}));
+      .subscribe(([view, chart]) => {
+        if (chart) {
+          this.refreshChart(view.config);
+        } else {
+          this.createChart(view.config);
+        }
       });
     this.subscriptions.add(subscription);
+  }
+
+  private refreshChart(viewConfig: ViewConfig) {
+    if (viewConfig && viewConfig.chart) {
+      this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config: viewConfig.chart}));
+    }
+  }
+
+  private createChart(viewConfig: ViewConfig) {
+    const config = (viewConfig && viewConfig.chart) || this.createDefaultConfig();
+    const chart = {id: this.chartId, config};
+    this.store$.dispatch(new ChartAction.AddChart({chart}));
   }
 
   private createDefaultConfig(): ChartConfig {

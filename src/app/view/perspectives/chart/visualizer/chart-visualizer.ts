@@ -36,6 +36,8 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
+  private revision = 1;
+
   constructor(
     private chartElement: ElementRef,
     private writable: boolean,
@@ -78,8 +80,7 @@ export class ChartVisualizer {
   }
 
   private incRevisionNumber() {
-    const rev = this.layout['datarevision'];
-    this.layout['datarevision'] = rev ? rev + 1 : 1;
+    this.layout['datarevision'] = this.revision++;
   }
 
   private createConfig(): Partial<Config> {
