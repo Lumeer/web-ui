@@ -20,23 +20,15 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
-import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
-import {ProjectsAction} from '../../../core/store/projects/projects.action';
-import {
-  selectProjectByWorkspace,
-  selectProjectsByOrganizationId,
-  selectProjectsLoadedForOrganization,
-} from '../../../core/store/projects/projects.state';
-import {DialogService} from '../../../dialog/dialog.service';
-import {RouterAction} from '../../../core/store/router/router.action';
+import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
+import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
 
 @Component({
   selector: 'workspace-panel',
@@ -55,10 +47,9 @@ export class WorkspacePanelComponent implements OnInit {
   public project$: Observable<Project>;
 
   constructor(
-    private dialogService: DialogService,
     public element: ElementRef,
-    private i18n: I18n,
     private router: Router,
+    private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
   ) {}
 
@@ -68,54 +59,18 @@ export class WorkspacePanelComponent implements OnInit {
   }
 
   public selectOrganization(organization: Organization) {
-    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-    this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: organization.id}));
-
-    this.store$
-      .pipe(
-        select(selectProjectsLoadedForOrganization(organization.id)),
-        filter(loaded => loaded),
-        mergeMap(() => this.store$.pipe(select(selectProjectsByOrganizationId(organization.id)))),
-        take(1),
-        map(projects => (projects.length > 0 ? projects[0] : undefined))
-      )
-      .subscribe(project => {
-        if (project) {
-          this.goToProject(organization as Organization, project);
-        } else {
-          this.createNewProject(organization);
-        }
-      });
-  }
-
-  private goToProject(organization: Organization, project: Project) {
-    if (organization && project) {
-      const nextAction = new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']});
-      this.store$.dispatch(
-        new ProjectsAction.SwitchWorkspace({organizationId: organization.id, projectId: project.id, nextAction})
-      );
-    }
+    this.selectService.selectOrganization(organization);
   }
 
   public selectProject(organization: Organization, project: Project) {
-    this.goToProject(organization, project);
+    this.selectService.selectProject(organization, project);
   }
 
-  public createNewOrganization(): void {
-    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
+  public createNewOrganization() {
+    this.selectService.createNewOrganization();
   }
 
-  public createNewProject(parentOrganization: Organization) {
-    this.dialogService.openCreateProjectDialog(parentOrganization.id, project =>
-      this.onCreateProject(parentOrganization, project)
-    );
-  }
-
-  private onCreateOrganization(organization: Organization) {
-    this.createNewProject(organization);
-  }
-
-  private onCreateProject(organization: Organization, project: Project) {
-    this.goToProject(organization, project);
+  public createNewProject(organization: Organization) {
+    this.selectService.createNewProject(organization);
   }
 }

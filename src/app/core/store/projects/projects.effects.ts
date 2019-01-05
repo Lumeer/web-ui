@@ -35,7 +35,7 @@ import {DocumentsAction} from '../documents/documents.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
@@ -61,6 +61,9 @@ export class ProjectsEffects {
       return force || (!projectsLoaded[organizationId] && !!organizationsEntities[organizationId]);
     }),
     map(([[action, projectsLoaded], organizationsEntities]) => ({action, organizationsEntities})),
+    tap(({action}) =>
+      this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: action.payload.organizationId}))
+    ),
     mergeMap(({action, organizationsEntities}) => {
       const organizationId = action.payload.organizationId;
       const organization = organizationsEntities[organizationId];
@@ -129,7 +132,7 @@ export class ProjectsEffects {
 
           return actions;
         }),
-        catchError(error => of(new ProjectsAction.CreateFailure({error: error})))
+        catchError(error => of(new ProjectsAction.CreateFailure({error, organizationCode: organization.code})))
       );
     })
   );
@@ -150,8 +153,7 @@ export class ProjectsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.pipe(select(selectSelectedOrganization))),
-    map(([action, organization]) => {
+    map(action => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
@@ -163,7 +165,7 @@ export class ProjectsEffects {
           title,
           message,
           action: new RouterAction.Go({
-            path: ['/organization', organization.code, 'detail'],
+            path: ['/organization', action.payload.organizationCode, 'detail'],
             extras: {fragment: 'orderService'},
           }),
           yesFirst: true,

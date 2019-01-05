@@ -35,7 +35,10 @@ import {
 } from '../../../../core/store/user-notifications/user-notifications.state';
 import {UserNotificationsAction} from '../../../../core/store/user-notifications/user-notifications.action';
 import {Organization} from '../../../../core/store/organizations/organization';
-import {selectOrganizationsDictionary} from '../../../../core/store/organizations/organizations.state';
+import {
+  selectOrganizationById,
+  selectOrganizationsDictionary,
+} from '../../../../core/store/organizations/organizations.state';
 import {Dictionary} from '@ngrx/entity';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
@@ -49,6 +52,7 @@ import {selectWorkspaceModels} from '../../../../core/store/common/common.select
 import {RouterAction} from '../../../../core/store/router/router.action';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {Perspective} from '../../../../view/perspectives/perspective';
+import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
 
 @Component({
   selector: 'notifications-menu',
@@ -71,6 +75,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private router: Router,
+    private selectService: WorkspaceSelectService,
     private validNotificationFilter: ValidNotificationFilterPipe
   ) {}
 
@@ -145,7 +150,9 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
 
   private navigateToOrganization(notification: OrganizationSharedUserNotification) {
     if (!this.isCurrentOrganization(notification.organizationId)) {
-      // TODO navigate
+      this.getOrganization(notification.organizationId, organization => {
+        this.selectService.selectOrganization(organization);
+      });
     }
   }
 
@@ -203,11 +210,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   private getOrganization(id: string, action: (Organization) => void) {
     this.store$
       .pipe(
-        select(selectOrganizationsDictionary),
-        map(organizations => organizations[id]),
+        select(selectOrganizationById(id)),
         take(1)
       )
-      .subscribe(oldOrganization => action(oldOrganization));
+      .subscribe(organization => action(organization));
   }
 
   private navigateToView(notification: ViewSharedUserNotification) {

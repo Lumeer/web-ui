@@ -34,6 +34,7 @@ import {selectCurrentUser} from './store/users/users.state';
 import {DialogService} from '../dialog/dialog.service';
 import {NotificationService} from './notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {WorkspaceSelectService} from './service/workspace-select.service';
 
 @Component({
   template: '',
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
     private dialogService: DialogService,
     private i18n: I18n,
     private notificationService: NotificationService,
+    private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
   ) {}
 
@@ -62,9 +64,9 @@ export class HomeComponent implements OnInit {
             this.navigateToAnyProject(organizations, projects);
           }
         } else if (organizations.length === 0) {
-          this.createNewOrganization();
+          this.selectService.createNewOrganization();
         } else {
-          this.createNewProject(organizations[0]);
+          this.selectService.createNewProject(organizations[0]);
         }
       });
   }
@@ -95,10 +97,10 @@ export class HomeComponent implements OnInit {
       if (project) {
         this.navigateToProject(organization, project);
       } else {
-        this.createNewProject(organization);
+        this.selectService.createNewProject(organization);
       }
     } else {
-      this.createNewOrganization();
+      this.selectService.createNewOrganization();
     }
   }
 
@@ -139,36 +141,5 @@ export class HomeComponent implements OnInit {
         this.store$.select(selectAllProjects).pipe(map((projects: Project[]) => ({organizations, projects})))
       )
     );
-  }
-
-  public createNewOrganization(): void {
-    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
-  }
-
-  public createNewProject(parentOrganization: Organization): void {
-    this.dialogService.openCreateProjectDialog(parentOrganization.id, project =>
-      this.onCreateProject(parentOrganization, project)
-    );
-  }
-
-  private onCreateOrganization(organization: Organization) {
-    const successMessage = this.i18n({
-      id: 'organization.create.success',
-      value: 'Organization was successfully created',
-    });
-
-    this.notificationService.success(successMessage);
-    this.createNewProject(organization);
-  }
-
-  private onCreateProject(organization: Organization, project: Project) {
-    const successMessage = this.i18n({
-      id: 'project.create.success',
-      value: 'Project was successfully created',
-    });
-
-    this.notificationService.success(successMessage);
-    this.dialogService.closeDialog();
-    this.navigateToProject(organization, project);
   }
 }
