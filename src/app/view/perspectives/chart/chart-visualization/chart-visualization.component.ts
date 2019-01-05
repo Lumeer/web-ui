@@ -76,14 +76,6 @@ export class ChartVisualizationComponent implements OnChanges {
     }
   }
 
-  private documentsChanged(changes: SimpleChanges): boolean {
-    return (
-      changes.documents &&
-      (!changes.documents.previousValue ||
-        JSON.stringify(changes.documents.previousValue) !== JSON.stringify(changes.documents.currentValue))
-    );
-  }
-
   private visualize() {
     if (this.chartVisualizer) {
       this.refreshChart();
