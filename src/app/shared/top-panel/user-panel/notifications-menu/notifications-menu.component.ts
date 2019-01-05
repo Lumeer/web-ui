@@ -49,8 +49,6 @@ import {Project} from '../../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
-import {RouterAction} from '../../../../core/store/router/router.action';
-import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
 
@@ -164,14 +162,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     if (!this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
       this.getOrganization(notification.organizationId, organization => {
         const path = ['w', organization.code, notification.projectCode, 'view', 'search', 'all'];
-        const nextAction = new RouterAction.Go({path});
-        this.store$.dispatch(
-          new ProjectsAction.SwitchWorkspace({
-            organizationId: organization.id,
-            projectId: notification.projectId,
-            nextAction,
-          })
-        );
+        this.router.navigate(path);
       });
     }
   }
@@ -191,14 +182,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
           this.router.navigate(path, {queryParams: {query}});
         }
       } else {
-        const nextAction = new RouterAction.Go({path, queryParams: {query}});
-        this.store$.dispatch(
-          new ProjectsAction.SwitchWorkspace({
-            organizationId: organization.id,
-            projectId: notification.projectId,
-            nextAction,
-          })
-        );
+        this.router.navigate(path, {queryParams: {query}});
       }
     });
   }
@@ -226,14 +210,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
           this.router.navigate(path);
         }
       } else {
-        const nextAction = new RouterAction.Go({path});
-        this.store$.dispatch(
-          new ProjectsAction.SwitchWorkspace({
-            organizationId: organization.id,
-            projectId: notification.projectId,
-            nextAction,
-          })
-        );
+        this.router.navigate(path);
       }
     });
   }

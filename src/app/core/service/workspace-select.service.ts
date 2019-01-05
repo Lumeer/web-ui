@@ -33,6 +33,7 @@ import {RouterAction} from '../store/router/router.action';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Role} from '../model/role';
 import {NotificationsAction} from '../store/notifications/notifications.action';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +41,12 @@ import {NotificationsAction} from '../store/notifications/notifications.action';
 export class WorkspaceSelectService {
   private currentUser: User;
 
-  constructor(private store$: Store<AppState>, private dialogService: DialogService, private i18n: I18n) {
+  constructor(
+    private store$: Store<AppState>,
+    private dialogService: DialogService,
+    private i18n: I18n,
+    private router: Router
+  ) {
     this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
   }
 
@@ -70,10 +76,7 @@ export class WorkspaceSelectService {
 
   private goToProject(organization: Organization, project: Project) {
     if (organization && project) {
-      const nextAction = new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']});
-      this.store$.dispatch(
-        new ProjectsAction.SwitchWorkspace({organizationId: organization.id, projectId: project.id, nextAction})
-      );
+      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all']);
     }
   }
 
