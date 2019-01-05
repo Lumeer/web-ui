@@ -31,9 +31,7 @@ import {ProjectsAction} from './store/projects/projects.action';
 import {selectAllProjects, selectProjectsLoaded} from './store/projects/projects.state';
 import {DefaultWorkspace} from './store/users/user';
 import {selectCurrentUser} from './store/users/users.state';
-import {DialogService} from '../dialog/dialog.service';
 import {NotificationService} from './notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 
 @Component({
@@ -42,8 +40,6 @@ import {WorkspaceSelectService} from './service/workspace-select.service';
 export class HomeComponent implements OnInit {
   public constructor(
     private router: Router,
-    private dialogService: DialogService,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
