@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {combineLatest as observableCombineLatest, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Role} from '../../core/model/role';
@@ -28,45 +28,67 @@ import {selectCollectionsDictionary} from '../../core/store/collections/collecti
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ViewConfig, View} from '../../core/store/views/view';
-import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
-import {userHasRoleInResource} from '../../shared/utils/resource.utils';
+import {userHasRoleInResource, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query.util';
 import {ResourceType} from '../../core/model/resource-type';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {ResourcePermissionsPipe} from '../../shared/pipes/permissions/resource-permissions.pipe';
 
 @Pipe({
   name: 'viewControlsInfo',
+  pure: false,
 })
 export class ViewControlsInfoPipe implements PipeTransform {
-  constructor(private permissionsPipe: PermissionsPipe, private store$: Store<AppState>) {}
+  constructor(private permissionsPipe: ResourcePermissionsPipe, private store$: Store<AppState>) {}
 
   public transform(
     view: View,
     name: string,
     config: ViewConfig,
     perspective: Perspective
-  ): Observable<{canClone: boolean; canManage: boolean}> {
+  ): Observable<{canClone: boolean; canManage: boolean; canShare: boolean}> {
     if (!view || !view.code) {
-      return of({canClone: false, canManage: true});
+      return this.canWriteInProject().pipe(map(canWrite => ({canClone: false, canManage: canWrite, canShare: false})));
     }
 
     return observableCombineLatest(
       this.hasDirectAccessToView(view),
-      this.permissionsPipe.transform(view, ResourceType.View, Role.Manage)
-    ).pipe(map(([canClone, canManage]) => ({canClone, canManage})));
+      this.canWriteInProject(),
+      this.permissionsPipe.transform(view, ResourceType.View)
+    ).pipe(
+      map(([canClone, canWriteProject, permissions]) => ({
+        canClone: canClone && canWriteProject,
+        canManage: permissions.manage,
+        canShare: permissions.share,
+      }))
+    );
   }
 
-  public hasDirectAccessToView(view: View): Observable<boolean> {
+  private hasDirectAccessToView(view: View): Observable<boolean> {
     return observableCombineLatest(
-      this.store$.select(selectCurrentUser),
-      this.store$.select(selectAllLinkTypes),
-      this.store$.select(selectCollectionsDictionary)
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+      this.store$.pipe(select(selectCollectionsDictionary))
     ).pipe(
       map(([currentUser, linkTypes, collectionsMap]) => {
         return getAllCollectionIdsFromQuery(view.query, linkTypes)
           .map(collectionId => collectionsMap[collectionId])
           .every(collection => collection && userHasRoleInResource(currentUser, collection, Role.Read));
       })
+    );
+  }
+
+  private canWriteInProject(): Observable<boolean> {
+    return observableCombineLatest(
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectWorkspaceModels))
+    ).pipe(
+      map(
+        ([currentUser, models]) =>
+          userIsManagerInWorkspace(currentUser, models.organization, models.project) ||
+          userHasRoleInResource(currentUser, models.project, Role.Write)
+      )
     );
   }
 }

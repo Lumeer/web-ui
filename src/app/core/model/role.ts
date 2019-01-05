@@ -25,3 +25,5 @@ export const enum Role {
   Clone = 'CLONE',
   Comment = 'COMMENT',
 }
+
+export const allRoles = [Role.Read, Role.Manage, Role.Write, Role.Share, Role.Clone, Role.Comment];

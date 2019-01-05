@@ -56,6 +56,8 @@ import {Organization} from '../store/organizations/organization';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {ResourceType} from '../model/resource-type';
 import {NotificationsAction} from '../store/notifications/notifications.action';
+import {UsersAction} from '../store/users/users.action';
+import {convertUserDtoToModel} from '../store/users/user.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -114,6 +116,7 @@ export class PusherService implements OnDestroy {
     this.bindLinkInstanceEvents();
     this.bindOtherEvents();
     this.bindFavoriteEvents();
+    this.bindUserEvents();
   }
 
   private bindOrganizationEvents() {
@@ -374,8 +377,26 @@ export class PusherService implements OnDestroy {
     });
   }
 
+  private bindUserEvents() {
+    this.channel.bind('User:update', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new UsersAction.UpdateSuccess({user: convertUserDtoToModel(data.object)}));
+      }
+    });
+
+    this.channel.bind('User:remove', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new UsersAction.DeleteSuccess({userId: data.id}));
+      }
+    });
+  }
+
   private isCurrentWorkspace(data: any): boolean {
-    return data.organizationId === this.getCurrentOrganizationId() && data.projectId === this.getCurrentProjectId();
+    return this.isCurrentOrganization(data) && data.projectId === this.getCurrentProjectId();
+  }
+
+  private isCurrentOrganization(data: any): boolean {
+    return data.organizationId === this.getCurrentOrganizationId();
   }
 
   private getCurrentOrganizationId(): string {
