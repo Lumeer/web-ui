@@ -20,8 +20,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {Action, Store} from '@ngrx/store';
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {Action, select, Store} from '@ngrx/store';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../app.state';
 import {Router} from '@angular/router';
@@ -29,12 +29,15 @@ import {UserNotificationsAction, UserNotificationsActionType} from './user-notif
 import {UserNotificationsService} from '../../rest/user-notifications.service';
 import {UserNotificationConverter} from './user-notification.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectUserNotificationsLoaded} from './user-notifications.state';
 
 @Injectable()
 export class UserNotificationsEffects {
   @Effect()
   public getUserNotifications$: Observable<Action> = this.actions$.pipe(
     ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
+    withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
+    filter(([action, loaded]) => !loaded),
     mergeMap(action =>
       this.userNotificationsService.getNotifications().pipe(
         map(

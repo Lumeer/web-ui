@@ -113,7 +113,7 @@ export namespace ProjectsAction {
   export class CreateFailure implements Action {
     public readonly type = ProjectsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {organizationCode: string; error: any}) {}
   }
 
   export class Update implements Action {
