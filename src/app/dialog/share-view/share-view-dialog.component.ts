@@ -245,6 +245,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         this.addUserToChangeableIfNotPresented(user);
       }
     }
+    this.checkRemovedUsers();
   }
 
   private addUserToStaticIfNotPresented(user: User) {
@@ -271,6 +272,12 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
       this.changeableUsers.push(user);
       this.initRolesForUser(user);
     }
+  }
+
+  private checkRemovedUsers() {
+    const userIds = this.users.map(user => user.id);
+    this.staticUsers = this.staticUsers.filter(user => userIds.includes(user.id));
+    this.changeableUsers = this.changeableUsers.filter(user => userIds.includes(user.id));
   }
 
   private parseViewShareUrl() {

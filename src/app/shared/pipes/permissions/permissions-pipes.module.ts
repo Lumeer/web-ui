@@ -25,6 +25,7 @@ import {DocumentPermissionsPipe} from './document-permissions.pipe';
 import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
 import {LinkTypePermissionsPipe} from './link-type-permissions.pipe';
 import {PermissionsPipe} from './permissions.pipe';
+import {ResourcePermissionsPipe} from './resource-permissions.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -35,6 +36,7 @@ import {PermissionsPipe} from './permissions.pipe';
     LinkInstancePermissionsPipe,
     LinkTypePermissionsPipe,
     PermissionsPipe,
+    ResourcePermissionsPipe,
   ],
   exports: [
     CanManageConfigPipe,
@@ -43,6 +45,7 @@ import {PermissionsPipe} from './permissions.pipe';
     LinkInstancePermissionsPipe,
     LinkTypePermissionsPipe,
     PermissionsPipe,
+    ResourcePermissionsPipe,
   ],
 })
 export class PermissionsPipesModule {}
