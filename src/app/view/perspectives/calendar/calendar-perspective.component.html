@@ -1,6 +1,6 @@
 <div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
 
-  <ng-container *ngIf="{collections: collections$ | async,  configs: config$ | async} as data">
+  <ng-container *ngIf="{collections: collections$,  configs: config$} as data">
     <ng-container *ngFor="let collection of data.collections; index as i">
       <calendar-config
         [collection]="collection"
@@ -13,7 +13,7 @@
     <calendar-visualization
       class="row align-items-center justify-content-center"
       [collections]="data.collections"
-      [documents]="documents$ | async"
+      [documents]="documents$"
       [allConfigs]="data.configs"
       (patchData)="patchDocumentData($event)">
     </calendar-visualization>

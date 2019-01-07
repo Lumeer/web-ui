@@ -24,7 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {map, take} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {ViewModel} from '../../../core/store/views/view.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -41,9 +41,9 @@ import {Query} from '../../../core/store/navigation/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
-  public documents$: Observable<DocumentModel[]>;
-  public collections$: Observable<CollectionModel[]>;
-  public config$: Observable<CalendarConfig[]>;
+  public documents$: DocumentModel[];
+  public collections$: CollectionModel[];
+  public config$: CalendarConfig[];
   public currentView$: Observable<ViewModel>;
 
   public query$ = new BehaviorSubject<Query>(null);
@@ -88,14 +88,21 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collections$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(
-        collections => collections
-      )
-    );
-    this.config$ = this.store$.pipe(select(selectCalendarConfig));
+    const subscribeDocuments = this.store$
+      .pipe(select(selectDocumentsByQuery))
+      .subscribe(documents => this.documents$ = documents);
+    const subscribeCollections = this.store$
+      .pipe(select(selectCollectionsByQuery))
+      .subscribe(collections => {
+        this.collections$ = collections;
+        this.addConfig()
+      });
+    const subscribeConfigs = this.store$
+      .pipe(select(selectCalendarConfig))
+      .subscribe(configs => this.config$ = configs);
+    this.subscriptions.add(subscribeDocuments);
+    this.subscriptions.add(subscribeCollections);
+    this.subscriptions.add(subscribeConfigs);
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
 
@@ -107,18 +114,28 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initConfig () {
-      const newConfig: CalendarConfig[] = [];
-      this.collections$.subscribe(collect => {
-        collect.forEach(collection => {
-          newConfig.push({
+    const newConfig: CalendarConfig[] = [];
+    this.collections$.forEach(collection => {
+              newConfig.push({
+                id: collection.id,
+                barsProperties: {}
+              });
+    });
+    this.onConfigChanged(newConfig);
+  };
+
+  private addConfig(){
+    this.collections$.forEach(collection => {
+      if(this.config$ !== undefined) {
+        if (this.config$.find(config => config.id === collection.id) === undefined) {
+          this.onConfigChanged([...this.config$, {
             id: collection.id,
             barsProperties: {}
-          })
-        })
-      });
-     this.onConfigChanged(newConfig);
+          }]);
+        }
+      }
+    })
   }
-
   public onConfigChanged(config: CalendarConfig[]) {
     this.store$.dispatch(new CalendarAction.SetConfig({calendarId: this.calendarId, config}));
   }
