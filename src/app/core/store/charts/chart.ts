@@ -27,11 +27,16 @@ export interface Chart {
 export interface ChartConfig {
   type: ChartType;
   axes: {[type: string]: ChartAxis};
+  names?: {[type: string]: ChartAxis};
+  sort?: ChartSort;
+  aggregation?: ChartAggregation;
+  prediction?: boolean;
 }
 
 export interface ChartAxis {
   collectionId: string;
   attributeId: string;
+  collectionIndex?: number;
 }
 
 export enum ChartType {
@@ -56,4 +61,21 @@ export enum ChartAxisType {
   X = 'x',
   Y1 = 'y1',
   Y2 = 'y2',
+}
+
+export enum ChartAggregation {
+  Sum = 'sum',
+  Min = 'min',
+  Max = 'max',
+  Avg = 'avg',
+}
+
+export interface ChartSort {
+  type: ChartSortType;
+  ascending: boolean;
+}
+
+export enum ChartSortType {
+  Ascending = 'asc',
+  Descending = 'desc',
 }

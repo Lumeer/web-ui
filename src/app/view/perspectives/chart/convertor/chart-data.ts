@@ -17,18 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isNullOrUndefined(object: any): object is null | undefined {
-  return object === null || object === undefined;
+import {ChartType} from '../../../../core/store/charts/chart';
+
+export interface ChartData {
+  sets: ChartDataSet[];
+  legend: ChartLegend;
+  type: ChartType;
 }
 
-export function isNotNullOrUndefind(object: any): boolean {
-  return !isNullOrUndefined(object);
+export interface ChartDataSet {
+  id: string;
+  points: ChartPoint[];
+  color: string;
+  isNumeric: boolean;
+  yAxisType: ChartYAxisType;
 }
 
-export function isNumeric(value: any): boolean {
-  return !isNaN(value);
+export interface ChartPoint {
+  id: string;
+  x?: any;
+  y?: any;
+  isPrediction?: boolean;
 }
 
-export function deepObjectsEquals(object1: any, object2: any): boolean {
-  return JSON.stringify(object1) === JSON.stringify(object1);
+export enum ChartYAxisType {
+  Y1 = 'y',
+  Y2 = 'y2',
+}
+
+export interface ChartLegend {
+  entries: ChartLegendEntry[];
+}
+
+export interface ChartLegendEntry {
+  value: string;
+  color?: string;
 }

@@ -84,9 +84,7 @@ export class ChartVisualizer {
   }
 
   private createConfig(): Partial<Config> {
-    const config = {};
-    config['responsive'] = true;
-    return config;
+    return {responsive: true};
   }
 
   public createChartAndVisualize() {
