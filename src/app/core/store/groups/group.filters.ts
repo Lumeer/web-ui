@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GroupModel} from './group.model';
+import {Group} from './group';
 
 export class GroupFilters {
-  public static filterFunctions(groups: GroupModel[]) {
+  public static filterFunctions(groups: Group[]) {
     return groups.filter(group => typeof group === 'object');
   }
 }

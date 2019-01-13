@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 export interface QueryData {
-  collections: CollectionModel[];
-  linkTypes: LinkTypeModel[];
+  collections: Collection[];
+  linkTypes: LinkType[];
 }

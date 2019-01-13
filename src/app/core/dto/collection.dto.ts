@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from './attribute';
-import {Resource} from './resource';
+import {AttributeDto} from './attribute.dto';
+import {ResourceDto} from './resource.dto';
 
-export interface CollectionDto extends Resource {
-  attributes?: Attribute[];
+export interface CollectionDto extends ResourceDto {
+  attributes?: AttributeDto[];
   defaultAttributeId?: string;
   documentsCount?: number;
   favorite?: boolean;

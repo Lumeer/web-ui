@@ -26,7 +26,7 @@ import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {DialogService} from './../../dialog/dialog.service';
+import {DialogService} from '../../dialog/dialog.service';
 
 @Component({
   selector: 'session-expired',

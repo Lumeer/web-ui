@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ViewModel} from './view.model';
+import {View} from './view';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
 import {Query} from '../navigation/query';
 
-export function filterViewsByQuery(views: ViewModel[], query: Query): ViewModel[] {
-  const filteredViews = views.slice();
+export function filterViewsByQuery(views: View[], query: Query): View[] {
+  const filteredViews = (views || []).slice();
 
   if (!query || queryIsEmpty(query)) {
     return filteredViews;
@@ -38,10 +38,10 @@ export function filterViewsByQuery(views: ViewModel[], query: Query): ViewModel[
   return [...viewsByFulltexts, ...viewsBySubset];
 }
 
-function getViewsByFulltexts(views: ViewModel[], fulltexts: string[]): ViewModel[] {
+function getViewsByFulltexts(views: View[], fulltexts: string[]): View[] {
   return views.filter(view => fulltexts.every(fulltext => view.name.toLowerCase().includes(fulltext.toLowerCase())));
 }
 
-export function sortViewsById(views: ViewModel[]): ViewModel[] {
+export function sortViewsById(views: View[]): View[] {
   return [...views].sort((a, b) => b.id.localeCompare(a.id));
 }

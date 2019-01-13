@@ -20,14 +20,14 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {LinkInstanceModel} from './link-instance.model';
+import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query';
 
-export interface LinkInstancesState extends EntityState<LinkInstanceModel> {
+export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];
 }
 
-export const linkInstancesAdapter = createEntityAdapter<LinkInstanceModel>();
+export const linkInstancesAdapter = createEntityAdapter<LinkInstance>();
 
 export const initialLinkInstancesState: LinkInstancesState = linkInstancesAdapter.getInitialState({
   queries: [],

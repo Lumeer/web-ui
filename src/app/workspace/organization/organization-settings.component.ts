@@ -21,19 +21,19 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
   selectOrganizationByWorkspace,
   selectOrganizationCodes,
 } from '../../core/store/organizations/organizations.state';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Router} from '@angular/router';
@@ -46,11 +46,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
   public organizationCodes$: Observable<string[]>;
-  public organization$ = new BehaviorSubject<OrganizationModel>(null);
+  public organization$ = new BehaviorSubject<Organization>(null);
 
   public readonly organizationType = ResourceType.Organization;
 
-  private firstProject: ProjectModel = null;
+  private firstProject: Project = null;
   private previousUrl: string;
 
   private subscriptions = new Subscription();
@@ -161,8 +161,13 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new OrganizationsAction.GetCodes());
     this.organizationCodes$ = this.store$.pipe(
       select(selectOrganizationCodes),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
-      map(([codes, organization]) => (codes && codes.filter(code => code !== organization.code)) || [])
+      mergeMap(codes =>
+        this.store$.pipe(select(selectOrganizationByWorkspace)).pipe(
+          filter(organization => !!organization),
+          map(organization => ({codes, organization}))
+        )
+      ),
+      map(({codes, organization}) => (codes && codes.filter(code => code !== organization.code)) || [])
     );
   }
 
@@ -175,7 +180,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private updateOrganization(organization: OrganizationModel) {
+  private updateOrganization(organization: Organization) {
     this.store$.dispatch(new OrganizationsAction.Update({organization}));
   }
 }

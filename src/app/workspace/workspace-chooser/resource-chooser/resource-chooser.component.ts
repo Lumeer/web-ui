@@ -34,11 +34,11 @@ import {isNullOrUndefined} from 'util';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
 import {ResourceType} from '../../../core/model/resource-type';
-import {ResourceModel} from '../../../core/model/resource.model';
+import {Resource} from '../../../core/model/resource';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
+import {Organization} from '../../../core/store/organizations/organization';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {animateOpacityFromUp} from '../../../shared/animations';
 import {KeyCode} from '../../../shared/key-code';
 
@@ -59,8 +59,8 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceDescription: ElementRef;
 
   @Input() public resourceType: ResourceType;
-  @Input() public resources: ResourceModel[];
-  @Input() public serviceLimits: ServiceLimitsModel[];
+  @Input() public resources: Resource[];
+  @Input() public serviceLimits: ServiceLimits[];
   @Input() public resourcesRoles: {[id: string]: string[]};
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
@@ -68,12 +68,12 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Output() public resourceDelete: EventEmitter<string> = new EventEmitter();
   @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
-  @Output() public resourceNew: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public resourceNew: EventEmitter<Resource> = new EventEmitter();
   @Output() public resourceSettings: EventEmitter<string> = new EventEmitter();
-  @Output() public resourceUpdate: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public resourceUpdate: EventEmitter<Resource> = new EventEmitter();
   @Output() public warningMessage: EventEmitter<string> = new EventEmitter();
 
-  public newResources: ResourceModel[] = [];
+  public newResources: Resource[] = [];
 
   public resourceContentWidth: number = 0;
   public resourceContentLeft: number = arrowSize;
@@ -237,7 +237,7 @@ export class ResourceChooserComponent implements OnChanges {
     this.resourceSettings.emit(id);
   }
 
-  public onResourceDelete(resource: ResourceModel) {
+  public onResourceDelete(resource: Resource) {
     if (resource.id) {
       const message = this.i18n(
         {
@@ -264,7 +264,7 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onResourceCreate(resource: ResourceModel) {
+  public onResourceCreate(resource: Resource) {
     if (this.syncingCorrIds.includes(resource.correlationId)) {
       return;
     }
@@ -273,7 +273,7 @@ export class ResourceChooserComponent implements OnChanges {
     this.resourceNew.emit(resource);
   }
 
-  public onResourceUpdate(resource: ResourceModel) {
+  public onResourceUpdate(resource: Resource) {
     this.resourceUpdate.emit(resource);
   }
 
@@ -283,16 +283,16 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public getRoles(resource: ResourceModel) {
+  public getRoles(resource: Resource) {
     return (this.resourcesRoles && this.resourcesRoles[resource.id]) || [];
   }
 
-  public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
+  public onDescriptionBlur(resource: Resource, newDescription: string) {
     const resourceModel = {...resource, description: newDescription};
     this.resourceUpdate.emit(resourceModel);
   }
 
-  public getResourceIdentificator(resource: ResourceModel): string {
+  public getResourceIdentificator(resource: Resource): string {
     return resource.id || resource.correlationId;
   }
 
@@ -300,20 +300,20 @@ export class ResourceChooserComponent implements OnChanges {
     return this.findResource(id);
   }
 
-  public hasServiceLevel(resource: ResourceModel): boolean {
+  public hasServiceLevel(resource: Resource): boolean {
     return this.resourceType === ResourceType.Organization && !isNullOrUndefined(this.getServiceLevel(resource));
   }
 
-  public getServiceLevel(organization: OrganizationModel): ServiceLevelType {
+  public getServiceLevel(organization: Organization): ServiceLevelType {
     const serviceLimits = this.getServiceLimits(organization);
     return serviceLimits && serviceLimits.serviceLevel;
   }
 
-  private getServiceLimits(organization: OrganizationModel): ServiceLimitsModel {
+  private getServiceLimits(organization: Organization): ServiceLimits {
     return this.serviceLimits && this.serviceLimits.find(limit => limit.organizationId === organization.id);
   }
 
-  private findResource(identificator: string): ResourceModel {
+  private findResource(identificator: string): Resource {
     return (
       this.resources.find(res => res.id === identificator) ||
       this.newResources.find(newRes => newRes.correlationId === identificator)

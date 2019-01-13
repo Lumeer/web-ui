@@ -25,10 +25,10 @@ import {filter, map, mergeMap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {DialogService} from '../dialog.service';
 
@@ -37,7 +37,7 @@ import {DialogService} from '../dialog.service';
   templateUrl: './create-collection-dialog.component.html',
 })
 export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
-  public linkedCollection: CollectionModel;
+  public linkedCollection: Collection;
 
   public form: FormGroup;
   public collectionFormGroup: FormGroup;
@@ -130,7 +130,7 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
   }
 
   private createCollectionAction(): CollectionsAction.Create {
-    const collection: CollectionModel = {
+    const collection: Collection = {
       name: this.collectionNameInput.value,
       color: this.color,
       icon: this.icon,
@@ -140,8 +140,8 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
     return new CollectionsAction.Create({collection, callback});
   }
 
-  private createLinkTypeCallback(): (collection: CollectionModel) => void {
-    const linkType: LinkTypeModel = {
+  private createLinkTypeCallback(): (collection: Collection) => void {
+    const linkType: LinkType = {
       name: this.linkNameInput.value,
       collectionIds: [this.linkedCollection.id, null],
     };

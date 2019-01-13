@@ -23,9 +23,12 @@ import {Query} from './query';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
+  REMOVE_LINK_FROM_QUERY = '[Navigation] Remove Link from Query',
 
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
   REMOVE_COLLECTION_FROM_QUERY = '[Navigation] Remove Collection from Query',
+
+  REMOVE_ATTRIBUTES_FROM_QUERY = '[Navigation] Remove Attributes from Query',
 
   NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
 
@@ -41,6 +44,12 @@ export namespace NavigationAction {
     public constructor(public payload: {linkTypeId: string}) {}
   }
 
+  export class RemoveLinkFromQuery implements Action {
+    public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
+
+    public constructor(public payload: {linkTypeId: string}) {}
+  }
+
   export class AddCollectionToQuery implements Action {
     public readonly type = NavigationActionType.ADD_COLLECTION_TO_QUERY;
 
@@ -51,6 +60,12 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
 
     public constructor(public payload: {collectionId: string}) {}
+  }
+
+  export class RemoveAttributesFromQuery implements Action {
+    public readonly type = NavigationActionType.REMOVE_ATTRIBUTES_FROM_QUERY;
+
+    public constructor(public payload: {collectionId: string; attributeIds: string[]}) {}
   }
 
   export class SetQuery implements Action {

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ViewModel} from '../../../../../core/store/views/view.model';
+import {View} from '../../../../../core/store/views/view';
 import {perspectiveIconsMap} from '../../../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
@@ -29,7 +29,7 @@ export class ViewQueryItem implements QueryItem {
   public icons: string[];
   public colors: string[];
 
-  public constructor(public view: ViewModel) {
+  public constructor(public view: View) {
     this.icons = [perspectiveIconsMap[view.perspective]];
     this.colors = ['#2c3e50'];
   }

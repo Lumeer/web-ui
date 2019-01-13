@@ -10,6 +10,7 @@
          [title]="collection.name"
          [routerLink]="null"
          [queryParams]="null"
+         [attr.data-target]="'#' + newDropdownId"
          [attr.data-toggle]="'dropdown'">
         <i class="fa-3x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event, false);"
            (clickOutside)="onPickerBlur(false)"></i>

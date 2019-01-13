@@ -18,15 +18,14 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {ContactModel} from './contact.model';
+import {Contact} from './contact';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../../app.state';
 import {selectOrganizationByWorkspace} from '../organizations.state';
-import {selectAllPayments} from '../payment/payments.state';
 
-export interface ContactsState extends EntityState<ContactModel> {}
+export interface ContactsState extends EntityState<Contact> {}
 
-export const contactsAdapter = createEntityAdapter<ContactModel>({selectId: contact => contact.organizationId});
+export const contactsAdapter = createEntityAdapter<Contact>({selectId: contact => contact.organizationId});
 
 export const initialContactsState: ContactsState = contactsAdapter.getInitialState({});
 
@@ -35,13 +34,7 @@ export const selectAllContacts = createSelector(
   selectContactsState,
   contactsAdapter.getSelectors().selectAll
 );
-export const selectContactByOrganizationId = organizationId =>
-  createSelector(
-    selectAllContacts,
-    contacts => {
-      return contacts.find(contact => contact.organizationId === organizationId);
-    }
-  );
+
 export const selectContactByWorkspace = createSelector(
   selectAllContacts,
   selectOrganizationByWorkspace,

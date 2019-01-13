@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {UserModel} from '../../../core/store/users/user.model';
+import {User} from '../../../core/store/users/user';
 
 @Component({
   selector: 'new-user',
@@ -29,7 +29,7 @@ import {UserModel} from '../../../core/store/users/user.model';
 })
 export class NewUserComponent {
   @Input()
-  public users: UserModel[];
+  public users: User[];
 
   @Output()
   public userCreated = new EventEmitter<string>();

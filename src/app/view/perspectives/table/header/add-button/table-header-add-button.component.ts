@@ -39,8 +39,8 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../dialog/dialog.service';
-import {CollectionModel} from './../../../../../core/store/collections/collection.model';
-import {LinkTypeModel} from './../../../../../core/store/link-types/link-type.model';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 const ITEMS_LIMIT = 15;
 
@@ -54,8 +54,8 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableBodyCursor;
 
-  public collections$: Observable<CollectionModel[]>;
-  public linkTypes$: Observable<[LinkTypeModel, CollectionModel, CollectionModel][]>;
+  public collections$: Observable<Collection[]>;
+  public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
   constructor(private dialogService: DialogService, private element: ElementRef, private store$: Store<{}>) {}
 
@@ -90,7 +90,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
           .slice(0, ITEMS_LIMIT)
-          .map<[LinkTypeModel, CollectionModel, CollectionModel]>(linkType => {
+          .map<[LinkType, Collection, Collection]>(linkType => {
             return [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
           });
       })
@@ -106,7 +106,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
     tableElement.style.setProperty('--table-add-button-column-width', `${element.clientWidth}px`);
   }
 
-  public onUseCollection(collection: CollectionModel) {
+  public onUseCollection(collection: Collection) {
     this.store$
       .pipe(
         select(selectTableLastCollectionId(this.cursor.tableId)),
@@ -118,7 +118,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
       });
   }
 
-  public onUseLinkType(linkType: LinkTypeModel) {
+  public onUseLinkType(linkType: LinkType) {
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 }

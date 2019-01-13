@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
@@ -47,7 +47,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   public documents: DocumentModel[];
 
   @Input()
-  public linkInstances: LinkInstanceModel[];
+  public linkInstances: LinkInstance[];
 
   @Input()
   public selected: boolean;

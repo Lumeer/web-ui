@@ -27,7 +27,7 @@ import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
 import {DialogService} from '../dialog.service';
 import {ResourceType} from '../../core/model/resource-type';
-import {ResourceModel} from '../../core/model/resource.model';
+import {Resource} from '../../core/model/resource';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {ProjectValidators} from '../../core/validators/project.validators';
@@ -35,7 +35,7 @@ import {OrganizationValidators} from '../../core/validators/organization.validat
 import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
 import {Subscription} from 'rxjs';
 import {DialogPath, dialogPathsMap} from '../dialog-path';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {selectProjectsByOrganizationId} from '../../core/store/projects/projects.state';
 import * as Colors from '../../shared/picker/color-picker/colors';
 import {safeGetRandomIcon} from '../../shared/picker/icon-picker/icons';
@@ -53,7 +53,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   public resourceType: ResourceType;
 
   public parentId: string;
-  public parentOrganization: OrganizationModel;
+  public parentOrganization: Organization;
   public isFirstProject: boolean;
   public subscriptions = new Subscription();
 
@@ -141,7 +141,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  private createResourceObject(): ResourceModel {
+  private createResourceObject(): Resource {
     return {
       name: this.nameInput.value,
       code: this.codeInput.value,

@@ -20,16 +20,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable, Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
-import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {filter, map} from 'rxjs/operators';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
@@ -49,7 +46,7 @@ import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util
 })
 export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public document: DocumentModel;
@@ -65,28 +62,18 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private i18n: I18n,
-    private store: Store<AppState>,
+    private store$: Store<AppState>,
     private notificationService: NotificationService,
     private documentUiService: DocumentUiService,
     private perspective: PerspectiveService
   ) {}
 
   public ngOnInit() {
-    this.fetchUsers();
+    this.subscribeQuery();
   }
 
-  private fetchUsers() {
-    this.subscriptions.add(
-      this.store
-        .select(selectOrganizationByWorkspace)
-        .pipe(
-          filter(org => !isNullOrUndefined(org)),
-          take(1)
-        )
-        .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id})))
-    );
-
-    this.subscriptions.add(this.store.select(selectQuery).subscribe(query => (this.query = query)));
+  private subscribeQuery() {
+    this.subscriptions.add(this.store$.pipe(select(selectQuery)).subscribe(query => (this.query = query)));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -99,12 +86,14 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (this.collection && this.document) {
       this.documentUiService.init(this.collection, this.document);
 
-      this.createdBy$ = this.store.select(selectUserById(this.document.createdBy)).pipe(
-        filter(user => !isNullOrUndefined(user)),
+      this.createdBy$ = this.store$.pipe(
+        select(selectUserById(this.document.createdBy)),
+        filter(user => !!user),
         map(user => user.name || user.email || 'Guest')
       );
-      this.updatedBy$ = this.store.select(selectUserById(this.document.updatedBy)).pipe(
-        filter(user => !isNullOrUndefined(user)),
+      this.updatedBy$ = this.store$.pipe(
+        select(selectUserById(this.document.updatedBy)),
+        filter(user => !!user),
         map(user => user.name || user.email || 'Guest')
       );
 
@@ -132,7 +121,7 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onRemoveDocument() {
-    this.store.dispatch(
+    this.store$.dispatch(
       new DeleteConfirm({
         collectionId: this.document.collectionId,
         documentId: this.document.id,

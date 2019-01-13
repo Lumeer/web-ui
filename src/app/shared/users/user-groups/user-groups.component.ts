@@ -19,9 +19,9 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {UserModel} from '../../../core/store/users/user.model';
-import {GroupModel} from '../../../core/store/groups/group.model';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {User} from '../../../core/store/users/user';
+import {Group} from '../../../core/store/groups/group';
+import {Organization} from '../../../core/store/organizations/organization';
 
 @Component({
   selector: 'user-groups',
@@ -30,16 +30,16 @@ import {OrganizationModel} from '../../../core/store/organizations/organization.
 })
 export class UserGroupsComponent {
   @Input()
-  public user: UserModel;
+  public user: User;
 
   @Input()
-  public groups: GroupModel[];
+  public groups: Group[];
 
   @Input()
-  public organization: OrganizationModel;
+  public organization: Organization;
 
   @Output()
-  public userUpdate = new EventEmitter<UserModel>();
+  public userUpdate = new EventEmitter<User>();
 
   public searchGroupText: string;
   public suggesting: boolean;
@@ -52,19 +52,19 @@ export class UserGroupsComponent {
     this.suggesting = true;
   }
 
-  public onRemoveGroup(group: GroupModel) {
+  public onRemoveGroup(group: Group) {
     const userCopy = {...this.user};
     userCopy.groupsMap[this.organization.id] = userCopy.groupsMap[this.organization.id].filter(id => id !== group.id);
 
     this.userUpdate.emit(userCopy);
   }
 
-  public onSelectedGroup(group: GroupModel) {
+  public onSelectedGroup(group: Group) {
     this.searchGroupText = '';
     this.addGroup(group);
   }
 
-  public getSuggestedGroups(): GroupModel[] {
+  public getSuggestedGroups(): Group[] {
     if (!this.suggesting || !this.searchGroupText) {
       return [];
     }
@@ -72,12 +72,12 @@ export class UserGroupsComponent {
     return this.filterUserGroups().filter(group => group.name.toLowerCase().includes(searchTextLowerCase));
   }
 
-  private filterUserGroups(): GroupModel[] {
+  private filterUserGroups(): Group[] {
     const groupIds = this.user.groupsMap[this.organization.id] || [];
     return this.groups.filter(group => !groupIds.includes(group.id));
   }
 
-  private addGroup(group: GroupModel) {
+  private addGroup(group: Group) {
     const userCopy = {...this.user};
     if (!userCopy.groupsMap[this.organization.id]) {
       userCopy.groupsMap[this.organization.id] = [];

@@ -23,7 +23,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Query} from '../../../core/store/navigation/query';
 

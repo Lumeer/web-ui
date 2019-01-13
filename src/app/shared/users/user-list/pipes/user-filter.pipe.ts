@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {UserModel} from '../../../../core/store/users/user.model';
+import {User} from '../../../../core/store/users/user';
 
 @Pipe({
   name: 'userFilter',
 })
 @Injectable()
 export class UserFilterPipe implements PipeTransform {
-  public transform(users: UserModel[], value: string): UserModel[] {
+  public transform(users: User[], value: string): User[] {
     if (!users || !value) {
       return users;
     }

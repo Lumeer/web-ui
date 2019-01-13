@@ -29,8 +29,8 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
@@ -43,7 +43,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class ProjectSettingsComponent implements OnInit {
   public userCount$: Observable<number>;
   public projectCodes$: Observable<string[]>;
-  public project$ = new BehaviorSubject<ProjectModel>(null);
+  public project$ = new BehaviorSubject<Project>(null);
 
   public readonly projectType = ResourceType.Project;
 
@@ -126,7 +126,10 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store$.select(selectAllUsers).pipe(map(users => (users ? users.length : 0)));
+    this.userCount$ = this.store$.pipe(
+      select(selectAllUsers),
+      map(users => (users ? users.length : 0))
+    );
 
     this.subscriptions.add(
       this.store$
@@ -167,12 +170,11 @@ export class ProjectSettingsComponent implements OnInit {
       new ProjectsAction.Delete({
         organizationId: this.project$.getValue().organizationId,
         projectId: this.project$.getValue().id,
-        onSuccess: () => this.router.navigate(['/']),
       })
     );
   }
 
-  private updateProject(project: ProjectModel) {
+  private updateProject(project: Project) {
     this.store$.dispatch(new ProjectsAction.Update({project}));
   }
 }

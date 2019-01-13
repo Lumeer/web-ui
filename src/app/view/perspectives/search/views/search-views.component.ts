@@ -18,26 +18,27 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {ViewModel} from '../../../../core/store/views/view.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {View} from '../../../../core/store/views/view';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
-import {isNullOrUndefined} from 'util';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Query} from '../../../../core/store/navigation/query';
+import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'search-views',
@@ -47,25 +48,23 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   @Input()
   public maxLines: number = -1;
 
-  public views$: Observable<ViewModel[]>;
-  public queryData: QueryData;
+  public views$: Observable<View[]>;
+  public queryData$: Observable<QueryData>;
+  public query: Query;
 
   private subscriptions = new Subscription();
-
   private viewsLoaded: boolean;
-
   private workspace: Workspace;
-  public query: Query;
 
   constructor(
     private router: Router,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
-    this.views$ = this.store.select(selectViewsByQuery);
+    this.views$ = this.store$.pipe(select(selectViewsByQuery));
     this.subscribeToNavigation();
     this.subscribeToData();
   }
@@ -75,9 +74,11 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const navigationSubscription = this.store
-      .select(selectNavigation)
-      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
+    const navigationSubscription = this.store$
+      .pipe(
+        select(selectNavigation),
+        filter(navigation => !!navigation.workspace && !!navigation.query)
+      )
       .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
@@ -86,17 +87,18 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToData() {
-    const dataSubscription = combineLatest(
-      this.store.select(selectAllCollections),
-      this.store.select(selectAllLinkTypes)
-    ).subscribe(([collections, linkTypes]) => (this.queryData = {collections, linkTypes}));
-    this.subscriptions.add(dataSubscription);
+    this.queryData$ = combineLatest(
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes))
+    ).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
 
-    const loadedSubscription = this.store.select(selectViewsLoaded).subscribe(loaded => (this.viewsLoaded = loaded));
+    const loadedSubscription = this.store$
+      .pipe(select(selectViewsLoaded))
+      .subscribe(loaded => (this.viewsLoaded = loaded));
     this.subscriptions.add(loadedSubscription);
   }
 
-  public onDeleteView(view: ViewModel) {
+  public onDeleteView(view: View) {
     const message = this.i18n({
       id: 'views.delete.message',
       value: 'Do you really want to permanently delete this view?',
@@ -111,19 +113,19 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  public deleteView(view: ViewModel) {
-    this.store.dispatch(new ViewsAction.Delete({viewCode: view.code}));
+  public deleteView(view: View) {
+    this.store$.dispatch(new ViewsAction.Delete({viewCode: view.code}));
   }
 
   public isLoading(): boolean {
     return isNullOrUndefined(this.viewsLoaded) || isNullOrUndefined(this.query);
   }
 
-  public showView(view: ViewModel) {
+  public showView(view: View) {
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
-  public trackByView(index: number, view: ViewModel): string {
+  public trackByView(index: number, view: View): string {
     return view.id;
   }
 

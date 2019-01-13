@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType} from '../../../../core/store/charts/chart.model';
+import {ChartAxisType} from '../../../../core/store/charts/chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({

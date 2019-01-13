@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
@@ -28,7 +28,7 @@ export class LinkQueryItem implements QueryItem {
   public colors: string[];
   public collectionIds: string[];
 
-  public constructor(public linkType: LinkTypeModel) {
+  public constructor(public linkType: LinkType) {
     this.icons = linkType.collections.map(collection => collection.icon);
     this.colors = linkType.collections.map(collection => collection.color);
     this.collectionIds = linkType.collections.map(collection => collection.id);

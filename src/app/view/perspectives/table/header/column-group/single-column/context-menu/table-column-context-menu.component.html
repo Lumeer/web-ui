@@ -22,11 +22,12 @@
     <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.edit">Edit name</span>
   </ng-template>
-  <ng-template *ngIf="false"
-               [enabled]="canManageConfig"
-               contextMenuItem>
+  <ng-template *ngIf="attribute.id"
+               contextMenuItem
+               [enabled]="allowedPermissions?.manageWithView"
+               (execute)="configure.emit()">
     <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.config">Configuration</span>
+    <span i18n="@@table.header.menu.changeType">Change type</span>
   </ng-template>
   <ng-container *ngIf="attribute.id && !defaultAttribute">
     <ng-template contextMenuItem divider="true"></ng-template>

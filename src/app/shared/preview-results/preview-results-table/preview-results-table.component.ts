@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
 
 const PAGE_SIZE = 100;
 
@@ -34,7 +34,7 @@ export class PreviewResultsTableComponent implements OnChanges {
   public documents: DocumentModel[];
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public selectedDocumentId: string;
@@ -75,7 +75,7 @@ export class PreviewResultsTableComponent implements OnChanges {
     this.page = page;
   }
 
-  public trackByAttribute(index: number, attribute: AttributeModel): string {
+  public trackByAttribute(index: number, attribute: Attribute): string {
     return attribute.correlationId || attribute.id;
   }
 

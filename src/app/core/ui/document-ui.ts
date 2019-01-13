@@ -19,7 +19,7 @@
 
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {UiRow} from './ui-row';
-import {AttributeModel, CollectionModel} from '../store/collections/collection.model';
+import {Attribute, Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
@@ -48,7 +48,7 @@ export class DocumentUi {
   private subscriptions = new Subscription();
 
   constructor(
-    private collection: CollectionModel,
+    private collection: Collection,
     private document: DocumentModel,
     private store: Store<AppState>,
     private i18n: I18n,
@@ -212,11 +212,11 @@ export class DocumentUi {
     return this.collection.attributes.findIndex(attr => attr.name === attrName) >= 0;
   }
 
-  private getCollectionAttributeById(id: string): AttributeModel {
+  private getCollectionAttributeById(id: string): Attribute {
     return this.collection.attributes.find(attr => attr.id === id);
   }
 
-  private getCollectionAttributeByName(name: string): AttributeModel {
+  private getCollectionAttributeByName(name: string): Attribute {
     return this.collection.attributes.find(attr => attr.name === name);
   }
 

@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
@@ -83,10 +83,7 @@ export class TableLinkedRowsComponent implements OnChanges {
   }
 }
 
-function filterRowsByExistingLinkInstance(
-  rows: TableConfigRow[],
-  linkInstances: LinkInstanceModel[]
-): TableConfigRow[] {
+function filterRowsByExistingLinkInstance(rows: TableConfigRow[], linkInstances: LinkInstance[]): TableConfigRow[] {
   return rows
     ? rows.reduce((existingRows, linkedRow) => {
         const exists =

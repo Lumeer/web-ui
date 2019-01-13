@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {OrganizationModel} from './organization.model';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {Organization} from './organization';
+import {Permission, PermissionType} from '../permissions/permissions';
 
 export enum OrganizationsActionType {
   GET = '[Organizations] Get',
@@ -59,7 +59,7 @@ export namespace OrganizationsAction {
   export class GetSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {organizations: OrganizationModel[]}) {}
+    public constructor(public payload: {organizations: Organization[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -71,7 +71,7 @@ export namespace OrganizationsAction {
   export class GetOneSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_ONE_SUCCESS;
 
-    public constructor(public payload: {organization: OrganizationModel}) {}
+    public constructor(public payload: {organization: Organization}) {}
   }
 
   export class GetCodes implements Action {
@@ -93,15 +93,13 @@ export namespace OrganizationsAction {
   export class Create implements Action {
     public readonly type = OrganizationsActionType.CREATE;
 
-    public constructor(
-      public payload: {organization: OrganizationModel; callback?: (organization: OrganizationModel) => void}
-    ) {}
+    public constructor(public payload: {organization: Organization; callback?: (organization: Organization) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = OrganizationsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {organization: OrganizationModel}) {}
+    public constructor(public payload: {organization: Organization}) {}
   }
 
   export class CreateFailure implements Action {
@@ -113,13 +111,13 @@ export namespace OrganizationsAction {
   export class Update implements Action {
     public readonly type = OrganizationsActionType.UPDATE;
 
-    public constructor(public payload: {organization: OrganizationModel}) {}
+    public constructor(public payload: {organization: Organization}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = OrganizationsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {organization: OrganizationModel}) {}
+    public constructor(public payload: {organization: Organization; oldCode?: string}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -137,7 +135,7 @@ export namespace OrganizationsAction {
   export class DeleteSuccess implements Action {
     public readonly type = OrganizationsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; organizationCode?: string}) {}
   }
 
   export class DeleteFailure implements Action {
@@ -159,8 +157,8 @@ export namespace OrganizationsAction {
       public payload: {
         organizationId: string;
         type: PermissionType;
-        permission: PermissionModel;
-        currentPermission: PermissionModel;
+        permission: Permission;
+        currentPermission: Permission;
       }
     ) {}
   }
@@ -168,14 +166,14 @@ export namespace OrganizationsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; type: PermissionType; permission: PermissionModel}) {}
+    public constructor(public payload: {organizationId: string; type: PermissionType; permission: Permission}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_FAILURE;
 
     public constructor(
-      public payload: {organizationId: string; type: PermissionType; permission: PermissionModel; error: any}
+      public payload: {organizationId: string; type: PermissionType; permission: Permission; error: any}
     ) {}
   }
 

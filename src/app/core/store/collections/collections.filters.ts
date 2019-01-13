@@ -17,21 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from './collection.model';
+import {Collection} from './collection';
 import {DocumentModel} from '../documents/document.model';
 import {mergeCollections} from './collection.util';
 import {groupDocumentsByCollection} from '../documents/document.utils';
 import {Query} from '../navigation/query';
-import {LinkTypeModel} from '../link-types/link-type.model';
+import {LinkType} from '../link-types/link.type';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {filterDocumentsByFulltexts} from '../documents/documents.filters';
 
 export function filterCollectionsByQuery(
-  collections: CollectionModel[],
+  collections: Collection[],
   documents: DocumentModel[],
-  linkTypes: LinkTypeModel[],
+  linkTypes: LinkType[],
   query: Query
-): CollectionModel[] {
+): Collection[] {
   const filteredCollections = collections.filter(collection => collection && typeof collection === 'object');
   if (!query || queryIsEmptyExceptPagination(query)) {
     return collections;
@@ -46,10 +46,10 @@ export function filterCollectionsByQuery(
 }
 
 function filterCollectionsByFulltexts(
-  collections: CollectionModel[],
+  collections: Collection[],
   documents: DocumentModel[],
   fulltexts: string[]
-): CollectionModel[] {
+): Collection[] {
   if (!fulltexts || fulltexts.length === 0) {
     return [];
   }
@@ -65,7 +65,7 @@ function filterCollectionsByFulltexts(
   });
 }
 
-function collectionMeetFulltexts(collection: CollectionModel, fulltexts: string[]): boolean {
+function collectionMeetFulltexts(collection: Collection, fulltexts: string[]): boolean {
   return (fulltexts || [])
     .map(fulltext => fulltext.toLowerCase())
     .every(fulltext => collection.name.toLowerCase().includes(fulltext));

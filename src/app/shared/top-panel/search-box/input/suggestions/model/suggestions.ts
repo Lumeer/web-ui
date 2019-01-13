@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
-import {ViewModel} from '../../../../../../core/store/views/view.model';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {View} from '../../../../../../core/store/views/view';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 
 export interface Suggestions {
-  attributes: CollectionModel[];
-  collections: CollectionModel[];
-  views: ViewModel[];
-  linkTypes: LinkTypeModel[];
+  attributes: Collection[];
+  collections: Collection[];
+  views: View[];
+  linkTypes: LinkType[];
 }

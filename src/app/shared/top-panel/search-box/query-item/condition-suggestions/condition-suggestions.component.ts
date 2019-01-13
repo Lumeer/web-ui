@@ -20,7 +20,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 
 import {Observable, Subscription} from 'rxjs';
-import {AttributeModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../core/store/collections/collection';
 import {getAllConditions} from '../../../../../core/store/navigation/query.util';
 
 @Component({
@@ -29,7 +29,7 @@ import {getAllConditions} from '../../../../../core/store/navigation/query.util'
 })
 export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public attribute: AttributeModel;
+  public attribute: Attribute;
 
   @Input()
   public text: string;

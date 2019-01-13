@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {ProjectModel} from '../../../../../../core/store/projects/project.model';
-import {OrganizationModel} from '../../../../../../core/store/organizations/organization.model';
+import {Project} from '../../../../../../core/store/projects/project';
+import {Organization} from '../../../../../../core/store/organizations/organization';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -35,8 +35,8 @@ import {selectAllCollections} from '../../../../../../core/store/collections/col
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceStatusLineComponent implements OnChanges {
-  @Input() public organization: OrganizationModel;
-  @Input() public project: ProjectModel;
+  @Input() public organization: Organization;
+  @Input() public project: Project;
 
   public projectsCount$: Observable<number>;
   public usersCount$: Observable<number>;

@@ -1,0 +1,30 @@
+<span class="trail" i18n="@@userNotifications.collectionShared">A new collection has been shared with you.</span>
+<span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+<ng-container *ngIf="organizations[notification.organizationId] as organization;">
+      <span class="d-block py-2">
+        <span class="nowrap mr-1">
+          <i [class]="notification.collectionIcon" class="mr-1" [style.color]="notification.collectionColor"></i>
+          {{notification.collectionName}}
+        </span>
+      </span>
+  <ng-container *ngIf="currentProject?.id !== notification.projectId">
+    <span i18n="@@userNotifications.inProject">in project:</span>
+    <span class="d-block py-2">
+          <span class="nowrap mr-1">
+            <i [class]="notification.projectIcon" class="mr-1" [style.color]="notification.projectColor"></i>
+            [{{notification.projectCode}}]
+          </span>
+      {{notification.projectName}}
+        </span>
+    <ng-container *ngIf="workspace.organizationCode !== organization.code">
+      <span i18n="@@userNotifications.inOrganization">in organization:</span>
+      <span class="d-block pt-2">
+            <span class="nowrap mr-1">
+              <i [class]="organization.icon" class="mr-1" [style.color]="organization.color"></i>
+              [{{organization.code}}]
+            </span>
+        {{organization.name}}
+          </span>
+    </ng-container>
+  </ng-container>
+</ng-container>

@@ -26,9 +26,6 @@ import {Observable, of} from 'rxjs';
 import {catchError, filter, first, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
-import {AttributeModel, CollectionModel} from '../collections/collection.model';
-import {CollectionsAction} from '../collections/collections.action';
-import {selectCollectionById} from '../collections/collections.state';
 import {CommonAction} from '../common/common.action';
 import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
@@ -36,7 +33,6 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {RouterAction} from '../router/router.action';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
-import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentById, selectDocumentsQueries} from './documents.state';
 
@@ -45,7 +41,7 @@ export class DocumentsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
-    withLatestFrom(this.store$.select(selectDocumentsQueries)),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => {
       const queryDto = convertQueryModelToDto(action.payload.query);
@@ -76,19 +72,13 @@ export class DocumentsEffects {
 
       return this.documentService.createDocument(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto, action.payload.document.correlationId)),
-        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
-        tap(([document]) => {
+        tap(document => {
           const callback = action.payload.callback;
           if (callback) {
             callback(document.id);
           }
         }),
-        flatMap(([document, collection]) => {
-          return [
-            createSyncCollectionAction(collection, document, null),
-            new DocumentsAction.CreateSuccess({document}),
-          ];
-        }),
+        map(document => new DocumentsAction.CreateSuccess({document})),
         catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
@@ -98,7 +88,7 @@ export class DocumentsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
@@ -131,14 +121,7 @@ export class DocumentsEffects {
         .patchDocument(action.payload.collectionId, action.payload.documentId, documentDto)
         .pipe(
           map(dto => convertDocumentDtoToModel(dto)),
-          withLatestFrom(
-            this.store$.select(selectCollectionById(documentDto.collectionId)),
-            this.store$.select(selectDocumentById(documentDto.id))
-          ),
-          flatMap(([document, collection, oldDocument]) => [
-            createSyncCollectionAction(collection, document, oldDocument),
-            new DocumentsAction.UpdateSuccess({document}),
-          ]),
+          map(document => new DocumentsAction.UpdateSuccess({document})),
           catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
         );
     })
@@ -220,14 +203,7 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.updateDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
-        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
-        withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
-        flatMap(([[document, collection], oldDocument]) => {
-          return [
-            createSyncCollectionAction(collection, document, oldDocument),
-            new DocumentsAction.UpdateSuccess({document}),
-          ];
-        }),
+        map(document => new DocumentsAction.UpdateSuccess({document})),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     })
@@ -240,14 +216,7 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
-        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
-        withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
-        flatMap(([[document, collection], oldDocument]) => {
-          return [
-            createSyncCollectionAction(collection, document, oldDocument),
-            new DocumentsAction.UpdateSuccess({document}),
-          ];
-        }),
+        map(document => new DocumentsAction.UpdateSuccess({document})),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     })
@@ -298,13 +267,8 @@ export class DocumentsEffects {
     mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
         map(() => action.payload),
-        withLatestFrom(this.store$.select(selectCollectionById(action.payload.collectionId))),
-        withLatestFrom(this.store$.select(selectDocumentById(action.payload.documentId))),
-        flatMap(([[payload, collection], oldDocument]) => {
-          const actions: Action[] = [
-            new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
-            createSyncCollectionAction(collection, null, oldDocument),
-          ];
+        flatMap(payload => {
+          const actions: Action[] = [new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})];
 
           if (payload.nextAction) {
             actions.push(payload.nextAction);
@@ -353,38 +317,4 @@ export class DocumentsEffects {
     private searchService: SearchService,
     private store$: Store<AppState>
   ) {}
-}
-
-function createSyncCollectionAction(
-  collection: CollectionModel,
-  newDocument: DocumentModel,
-  oldDocument: DocumentModel
-): CollectionsAction.UpdateSuccess {
-  const newAttributeIds: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
-  const oldAttributeIds: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
-
-  const attributes = updateAttributes(collection.attributes, newAttributeIds, oldAttributeIds);
-  const documentsCount = collection.documentsCount + (!oldDocument ? 1 : 0) - (!newDocument ? 1 : 0);
-  const updatedCollection: CollectionModel = {...collection, attributes, documentsCount};
-
-  return new CollectionsAction.UpdateSuccess({collection: updatedCollection});
-}
-
-function updateAttributes(
-  attributes: AttributeModel[],
-  newDocumentAttributeIds: string[],
-  oldDocumentAttributeIds: string[]
-): AttributeModel[] {
-  const addedAttributeIds = newDocumentAttributeIds.filter(name => !oldDocumentAttributeIds.includes(name));
-  const removedAttributeIds = oldDocumentAttributeIds.filter(name => !newDocumentAttributeIds.includes(name));
-
-  return attributes.map(attribute => {
-    if (addedAttributeIds.includes(attribute.id)) {
-      return {...attribute, usageCount: attribute.usageCount + 1};
-    }
-    if (removedAttributeIds.includes(attribute.id)) {
-      return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
-    }
-    return attribute;
-  });
 }

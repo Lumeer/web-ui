@@ -24,17 +24,17 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
-import {PermissionType} from '../../core/store/permissions/permissions.model';
-import {UserModel} from '../../core/store/users/user.model';
+import {Organization} from '../../core/store/organizations/organization';
+import {Permission, PermissionType} from '../../core/store/permissions/permissions';
+import {User} from '../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
-import {ViewModel} from '../../core/store/views/view.model';
+import {View} from '../../core/store/views/view';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
 import {KeyCode} from '../../shared/key-code';
 import {ClipboardService} from '../../core/service/clipboard.service';
 import {isNullOrUndefined} from '../../shared/utils/common.utils';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourceType} from '../../core/model/resource-type';
 import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
@@ -46,13 +46,13 @@ import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource
   styleUrls: ['./share-view-dialog.component.scss'],
 })
 export class ShareViewDialogComponent implements OnInit, OnDestroy {
-  public staticUsers: UserModel[] = [];
-  public changeableUsers: UserModel[] = [];
+  public staticUsers: User[] = [];
+  public changeableUsers: User[] = [];
   public userRoles: {[id: string]: string[]} = {};
   public initialUserRoles: {[id: string]: string[]} = {};
-  public currentUser: UserModel;
-  public organization: OrganizationModel;
-  public project: ProjectModel;
+  public currentUser: User;
+  public organization: Organization;
+  public project: Project;
 
   public text$ = new BehaviorSubject<string>('');
   public suggestions$ = new BehaviorSubject<string[]>([]);
@@ -61,8 +61,8 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   public viewResourceType = ResourceType.View;
 
-  private view: ViewModel;
-  private users: UserModel[] = [];
+  private view: View;
+  private users: User[] = [];
   private subscriptions = new Subscription();
 
   public constructor(
@@ -120,7 +120,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addUser(user: UserModel) {
+  private addUser(user: User) {
     this.userRoles = {...this.userRoles, [user.id]: []};
     this.changeableUsers = [...this.changeableUsers, user];
     this.text$.next('');
@@ -142,25 +142,29 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  public deleteUser(user: UserModel) {
+  public deleteUser(user: User) {
     delete this.userRoles[user.id];
     this.userRoles = {...this.userRoles};
     this.changeableUsers = this.changeableUsers.filter(u => u.id !== user.id);
   }
 
-  public onNewRoles(user: UserModel, roles: string[]) {
+  public onNewRoles(user: User, roles: string[]) {
     this.userRoles = {...this.userRoles, [user.id]: roles};
   }
 
   public suggest() {
     const textLowerCase = this.text$.getValue().toLowerCase();
     const newSuggestions = this.users
+      .filter(user => !this.isUserPresented(user))
       .map(user => user.email)
-      .filter(email => email.toLowerCase().includes(textLowerCase))
-      .filter(email => !this.changeableUsers.find(user => user.email === email));
+      .filter(email => email.toLowerCase().includes(textLowerCase));
 
     this.suggestions$.next(newSuggestions);
     this.recomputeSelectedIndex();
+  }
+
+  private isUserPresented(user: User): boolean {
+    return !!this.changeableUsers.find(u => u.id === user.id) || !!this.staticUsers.find(u => u.id === user.id);
   }
 
   private recomputeSelectedIndex() {
@@ -184,12 +188,23 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public share() {
-    const permissions = Object.keys(this.userRoles)
+    const changeablePermissions: Permission[] = Object.keys(this.userRoles)
       .filter(id => this.changeableUsers.find(user => user.id === id))
       .map(id => ({id, roles: this.userRoles[id]}));
+
+    const staticPermissions = this.staticUsers
+      .map(user => this.getUserPermissionsInView(user))
+      .filter(permission => permission && permission.roles && permission.roles.length > 0);
+
+    const permissions = [...changeablePermissions, ...staticPermissions];
+
     this.store$.dispatch(
       new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions})
     );
+  }
+
+  private getUserPermissionsInView(user: User): Permission {
+    return this.view.permissions.users.find(permission => permission.id === user.id);
   }
 
   private subscribeToView() {
@@ -230,16 +245,17 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         this.addUserToChangeableIfNotPresented(user);
       }
     }
+    this.checkRemovedUsers();
   }
 
-  private addUserToStaticIfNotPresented(user: UserModel) {
-    if (!this.staticUsers.find(su => su.id === user.id)) {
+  private addUserToStaticIfNotPresented(user: User) {
+    if (!this.isUserPresented(user)) {
       this.staticUsers.push(user);
       this.initRolesForUser(user);
     }
   }
 
-  private initRolesForUser(user: UserModel) {
+  private initRolesForUser(user: User) {
     const roles = this.userRolesInResourcePipe.transform(
       user,
       this.view,
@@ -251,11 +267,17 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     this.initialUserRoles[user.id] = roles;
   }
 
-  private addUserToChangeableIfNotPresented(user: UserModel) {
-    if (!this.changeableUsers.find(chu => chu.id === user.id)) {
+  private addUserToChangeableIfNotPresented(user: User) {
+    if (!this.isUserPresented(user)) {
       this.changeableUsers.push(user);
       this.initRolesForUser(user);
     }
+  }
+
+  private checkRemovedUsers() {
+    const userIds = this.users.map(user => user.id);
+    this.staticUsers = this.staticUsers.filter(user => userIds.includes(user.id));
+    this.changeableUsers = this.changeableUsers.filter(user => userIds.includes(user.id));
   }
 
   private parseViewShareUrl() {
@@ -266,7 +288,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  public trackByUser(index: number, user: UserModel): string {
+  public trackByUser(index: number, user: User): string {
     return user.id;
   }
 }

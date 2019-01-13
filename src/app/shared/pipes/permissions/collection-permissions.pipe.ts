@@ -25,11 +25,11 @@ import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
-import {UserModel} from '../../../core/store/users/user.model';
+import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {ViewModel} from '../../../core/store/views/view.model';
+import {View} from '../../../core/store/views/view';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {Role} from '../../../core/model/role';
 import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
@@ -46,7 +46,7 @@ import {selectCurrentUserIsManager} from '../../../core/store/common/permissions
 export class CollectionPermissionsPipe implements PipeTransform {
   public constructor(private store$: Store<AppState>) {}
 
-  public transform(collection: CollectionModel): Observable<AllowedPermissions> {
+  public transform(collection: Collection): Observable<AllowedPermissions> {
     return this.store$.pipe(
       select(selectCurrentUserIsManager),
       mergeMap(isManager => {
@@ -65,7 +65,7 @@ export class CollectionPermissionsPipe implements PipeTransform {
     );
   }
 
-  private checkCollectionPermission(collection: CollectionModel): Observable<AllowedPermissions> {
+  private checkCollectionPermission(collection: Collection): Observable<AllowedPermissions> {
     return this.store$.pipe(
       select(selectCurrentUserForWorkspace),
       mergeMap(currentUser => {
@@ -91,7 +91,7 @@ export class CollectionPermissionsPipe implements PipeTransform {
     );
   }
 
-  private userPermissionsInView(user: UserModel, collection: CollectionModel): Observable<AllowedPermissions> {
+  private userPermissionsInView(user: User, collection: Collection): Observable<AllowedPermissions> {
     return this.store$.pipe(
       select(selectCurrentView),
       mergeMap(view => {
@@ -119,11 +119,11 @@ export class CollectionPermissionsPipe implements PipeTransform {
     );
   }
 
-  private viewContainsCollection(view: ViewModel, collection: CollectionModel): Observable<boolean> {
+  private viewContainsCollection(view: View, collection: Collection): Observable<boolean> {
     return this.getViewCollectionIds(view).pipe(map(collectionIds => collectionIds.includes(collection.id)));
   }
 
-  private getViewCollectionIds(view: ViewModel): Observable<string[]> {
+  private getViewCollectionIds(view: View): Observable<string[]> {
     return this.store$.pipe(
       select(selectAllLinkTypes),
       map(linkTypes => getAllCollectionIdsFromQuery(view.query, linkTypes))

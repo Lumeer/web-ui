@@ -18,11 +18,11 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {PostItConfigModel} from '../views/view.model';
+import {PostItConfig} from '../views/view';
 import {AppState} from '../app.state';
 
 export interface PostItState {
-  config: PostItConfigModel;
+  config: PostItConfig;
 }
 
 export const initialPostItState: PostItState = {

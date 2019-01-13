@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 
 import {perspectiveIconsMap} from '../../../perspective';
-import {ViewModel} from '../../../../../core/store/views/view.model';
+import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/query-data';
 import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
@@ -44,7 +44,7 @@ import {ResourceType} from '../../../../../core/model/resource-type';
 })
 export class ViewDetailComponent implements OnInit, OnChanges {
   @Input()
-  public view: ViewModel;
+  public view: View;
 
   @Input()
   public queryData: QueryData;

@@ -29,9 +29,9 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
@@ -39,7 +39,7 @@ import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
 import {map, mergeMap} from 'rxjs/operators';
 import {Observable, Subscription, BehaviorSubject} from 'rxjs';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
-import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
+import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {LinkRowModel} from './link-row.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
@@ -57,20 +57,20 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   @ViewChild(LinksListTableHeaderComponent)
   public headerComponent: LinksListTableHeaderComponent;
 
-  @Input() public linkType: LinkTypeModel;
+  @Input() public linkType: LinkType;
 
   @Input() public document: DocumentModel;
 
-  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
+  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
-  public otherCollection$: Observable<CollectionModel>;
+  public otherCollection$: Observable<Collection>;
   public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);
   public page = 0;
   public readonly pageSize = PAGE_SIZE;
 
-  private lastSelection: {linkType: LinkTypeModel; document: DocumentModel};
+  private lastSelection: {linkType: LinkType; document: DocumentModel};
   private linksSubscription = new Subscription();
 
   public constructor(private store: Store<AppState>) {}
@@ -106,12 +106,12 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private fetchDocumentsForLinkInstances(linkInstances: LinkInstanceModel[]): Observable<DocumentModel[]> {
+  private fetchDocumentsForLinkInstances(linkInstances: LinkInstance[]): Observable<DocumentModel[]> {
     const documentsIds = this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id);
     return this.store.select(selectDocumentsByIds(documentsIds));
   }
 
-  private convertLinkInstancesToDocumentIds(linkInstances: LinkInstanceModel[], documentId: string): string[] {
+  private convertLinkInstancesToDocumentIds(linkInstances: LinkInstance[], documentId: string): string[] {
     return linkInstances.reduce((acc, linkInstance) => {
       const otherDocumentId = getOtherLinkedDocumentId(linkInstance, documentId);
       acc.push(otherDocumentId);
@@ -119,10 +119,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
     }, []);
   }
 
-  private joinLinkInstancesWithDocuments(
-    linkInstances: LinkInstanceModel[],
-    documents: DocumentModel[]
-  ): LinkRowModel[] {
+  private joinLinkInstancesWithDocuments(linkInstances: LinkInstance[], documents: DocumentModel[]): LinkRowModel[] {
     return linkInstances.reduce((rows, linkInstance) => {
       const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
       const document = documents.find(doc => doc.id === otherDocumentId);

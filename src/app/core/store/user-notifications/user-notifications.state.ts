@@ -60,3 +60,8 @@ export const selectUnreadNotificationsByType = (type: UserNotificationType) =>
     selectAllUserNotificationsSorted,
     userNotifications => userNotifications.filter(notification => !notification.read && notification.type === type)
   );
+
+export const selectUserNotificationsLoaded = createSelector(
+  selectUserNotificationsState,
+  state => state.loaded
+);

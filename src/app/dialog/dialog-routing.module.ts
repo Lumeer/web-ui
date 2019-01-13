@@ -26,8 +26,14 @@ import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {PlayVideoComponent} from './play-video/play-video.component';
+import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 
 const routes: Routes = [
+  {
+    path: `${DialogPath.ATTRIBUTE_TYPE}/:collectionId/:attributeId`,
+    component: AttributeTypeDialogComponent,
+    outlet: 'dialog',
+  },
   {
     path: `${DialogPath.CREATE_COLLECTION}/:linkedCollectionId`,
     component: CreateCollectionDialogComponent,

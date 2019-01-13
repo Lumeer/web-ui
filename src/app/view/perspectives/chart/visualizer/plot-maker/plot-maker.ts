@@ -18,13 +18,13 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart.model';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ElementRef} from '@angular/core';
 
 export abstract class PlotMaker {
-  protected collections: CollectionModel[];
+  protected collections: Collection[];
 
   protected documents: DocumentModel[];
 
@@ -36,7 +36,7 @@ export abstract class PlotMaker {
 
   constructor(protected element: ElementRef) {}
 
-  public updateData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+  public updateData(collections: Collection[], documents: DocumentModel[], config: ChartConfig) {
     this.collections = collections;
     this.documents = documents;
     this.config = config;

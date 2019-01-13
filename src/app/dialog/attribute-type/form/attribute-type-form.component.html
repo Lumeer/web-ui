@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <div class="form-group">
+    <label for="attributeType"
+           i18n="@@attribute.type.label">
+      Type
+    </label>
+    <select class="custom-select"
+            formControlName="type"
+            id="attributeType">
+      <option *ngFor="let type of types"
+              [value]="type"
+              i18n="@@attribute.type.value">
+        {type, select, DateTime {Date} Number {Number} Text {Text}}
+      </option>
+    </select>
+  </div>
+
+  <constraint-config-form [config]="attribute.constraint?.type === typeControl.value ? attribute.constraint?.config : null"
+                          [form]="configForm"
+                          [type]="typeControl.value"
+                          class="d-block mt-3">
+  </constraint-config-form>
+</form>

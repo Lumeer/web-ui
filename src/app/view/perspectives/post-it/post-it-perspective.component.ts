@@ -28,8 +28,8 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {select, Store} from '@ngrx/store';
+import {distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -37,20 +37,21 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {UserSettingsService} from '../../../core/service/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
+import {PostItConfig, View} from '../../../core/store/views/view';
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
 import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
 import {Query} from '../../../core/store/navigation/query';
+import {deepArrayEquals} from '../../../shared/utils/array.utils';
 
 @Component({
   selector: 'post-it-perspective',
@@ -80,7 +81,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
-  public collections: CollectionModel[];
+  public collections: Collection[];
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
@@ -99,7 +100,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private creatingCorrelationsIds: string[] = [];
 
   constructor(
-    private store: Store<AppState>,
+    private store$: Store<AppState>,
     private zone: NgZone,
     private canManageConfigPipe: CanManageConfigPipe,
     private changeDetector: ChangeDetectorRef,
@@ -132,7 +133,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private onPostItOrderChanged(orderedIds: string[]) {
-    this.store.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: orderedIds}));
+    this.postItsOrder$.next(orderedIds);
+    this.store$.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: orderedIds}));
   }
 
   private createSelectionHelper() {
@@ -165,63 +167,64 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscribeNavigation();
     this.subscribeToConfig();
     this.subscribeToView();
-    this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
+    this.loaded$ = this.store$.select(selectCurrentQueryDocumentsLoaded);
   }
 
   private initConfig() {
-    const subscription = this.store
-      .select(selectCurrentView)
-      .pipe(
-        filter(view => !!view),
-        take(1)
-      )
-      .subscribe(view => {
-        if (view.config && view.config.postit) {
-          this.dispatchInitConfigActions(view.config.postit);
-        }
-      });
+    const subscription = this.store$.pipe(select(selectCurrentView)).subscribe(view => {
+      if (view && view.config && view.config.postit) {
+        this.changeConfig(view.config.postit);
+      }
+    });
     this.subscriptions.add(subscription);
   }
 
-  private dispatchInitConfigActions(postItConfig: PostItConfigModel) {
-    this.store.dispatch(new PostItAction.ChangeSize({size: postItConfig.size}));
-    this.store.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: postItConfig.documentIdsOrder}));
+  private changeConfig(postItConfig: PostItConfig) {
+    this.store$.dispatch(new PostItAction.ChangeSize({size: postItConfig.size}));
+    this.store$.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: postItConfig.documentIdsOrder}));
   }
 
   private subscribeToConfig() {
     this.subscriptions.add(
-      observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView))
+      observableCombineLatest(this.store$.select(selectPostItsSize), this.store$.select(selectCurrentView))
         .pipe(
           map(([size, view]) => size || this.viewPostItSize(view)),
-          tap(size => (!size ? this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()})) : null)),
+          tap(size => (!size ? this.store$.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()})) : null)),
           filter(size => size && this.size$.getValue() !== size)
         )
         .subscribe(size => {
           this.size$.next(size);
-          if (this.layout) {
-            this.layout.refresh();
-          }
+          this.layout && this.layout.refresh();
         })
     );
 
-    this.subscriptions.add(this.store.select(selectPostItsOrder).subscribe(order => this.postItsOrder$.next(order)));
+    this.subscriptions.add(
+      this.store$
+        .pipe(
+          select(selectPostItsOrder),
+          distinctUntilChanged((x, y) => deepArrayEquals(x, y))
+        )
+        .subscribe(order => this.postItsOrder$.next(order))
+    );
   }
 
-  private viewPostItSize(view: ViewModel): SizeType | null {
+  private viewPostItSize(view: View): SizeType | null {
     return (view && view.config && view.config.postit && view.config.postit.size) || null;
   }
 
   private subscribeCollections() {
-    const collectionsSubscription = this.store
+    const collectionsSubscription = this.store$
       .select(selectCollectionsByQuery)
       .subscribe(collections => (this.collections = collections));
     this.subscriptions.add(collectionsSubscription);
   }
 
   private subscribeNavigation() {
-    const navigationSubscription = this.store
-      .select(selectNavigation)
-      .pipe(filter(navigation => !!navigation.query && !!navigation.workspace))
+    const navigationSubscription = this.store$
+      .pipe(
+        select(selectNavigation),
+        filter(navigation => !!navigation.query && !!navigation.workspace)
+      )
       .subscribe(navigation => {
         this.query = navigation.query;
         this.workspace = navigation.workspace;
@@ -239,9 +242,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToView() {
-    const subscription = this.store
-      .select(selectCurrentView)
-      .pipe(mergeMap(view => this.canManageConfigPipe.transform(view)))
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        mergeMap(view => this.canManageConfigPipe.transform(view))
+      )
       .subscribe(viewHasManageRole => {
         this.canManageConfig = viewHasManageRole;
         if (this.layout) {
@@ -262,7 +267,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments() {
-    this.store.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
+    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
     this.subscribeDocuments();
   }
 
@@ -280,11 +285,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
     const pageSize = this.getPageSize() * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store
-      .select(selectDocumentsByCustomQuery(query, true))
+    this.documentsSubscription = this.store$
       .pipe(
+        select(selectDocumentsByCustomQuery(query, true)),
         filter(documents => !!documents),
-        withLatestFrom(this.store.select(selectCurrentView))
+        withLatestFrom(this.store$.select(selectCurrentView))
       )
       .subscribe(([documents, view]) => {
         if (view && view.config && view.config.postit) {
@@ -299,7 +304,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.mapNewDocumentsWithPriority(documents, []);
   }
 
-  private mapNewDocumentsWithConfig(documents: DocumentModel[], config: PostItConfigModel) {
+  private mapNewDocumentsWithConfig(documents: DocumentModel[], config: PostItConfig) {
     this.mapNewDocumentsWithPriority(documents, config.documentIdsOrder);
   }
 
@@ -319,7 +324,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => corrId !== document.correlationId);
       });
 
-    this.postItsOrder$.getValue().forEach(id => {
+    priorityIds.forEach(id => {
       const doc = documentsMap[id];
       if (doc) {
         newOrderIds.push(id);
@@ -327,7 +332,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       }
     });
 
-    priorityIds.forEach(id => {
+    this.postItsOrder$.getValue().forEach(id => {
       const doc = documentsMap[id];
       if (doc) {
         newOrderIds.push(id);
@@ -339,15 +344,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     this.documents = documents;
     setTimeout(() => {
-      if (this.layout) {
-        this.layout.setOrder(newOrderIds);
-      }
+      this.layout && this.layout.setOrder(newOrderIds);
     });
   }
 
   public createPostIt(documentModel: DocumentModel) {
     this.creatingCorrelationsIds.push(documentModel.correlationId);
-    this.store.dispatch(new DocumentsAction.Create({document: documentModel}));
+    this.store$.dispatch(new DocumentsAction.Create({document: documentModel}));
   }
 
   public onScrollDown(event: any) {
@@ -373,7 +376,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public removePostIt(documentModel: DocumentModel) {
     if (documentModel.id) {
-      this.store.dispatch(
+      this.store$.dispatch(
         new DocumentsAction.DeleteConfirm({
           collectionId: documentModel.collectionId,
           documentId: documentModel.id,
@@ -388,7 +391,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public onSizeChange(newSize: SizeType) {
     this.updateDefaultSize(newSize);
-    this.store.dispatch(new PostItAction.ChangeSize({size: newSize}));
+    this.store$.dispatch(new PostItAction.ChangeSize({size: newSize}));
   }
 
   private updateDefaultSize(newSize: SizeType) {

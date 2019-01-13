@@ -17,15 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionModel, PermissionsModel, PermissionType} from './permissions.model';
+import {Permission, Permissions, PermissionType} from './permissions';
 
 export class PermissionsHelper {
-  public static changePermission(
-    permissions: PermissionsModel,
-    type: PermissionType,
-    permission: PermissionModel
-  ): PermissionsModel {
-    const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
+  public static changePermission(permissions: Permissions, type: PermissionType, permission: Permission): Permissions {
+    const entityPermissions: Permission[] = permissions ? permissions[type].slice() : [];
 
     const index = entityPermissions.findIndex(p => p.id === permission.id);
     if (index !== -1) {
@@ -34,20 +30,20 @@ export class PermissionsHelper {
       entityPermissions.push(permission);
     }
 
-    const permissionsCopy: PermissionsModel = {...permissions};
+    const permissionsCopy: Permissions = {...permissions};
     permissionsCopy[type] = entityPermissions;
     return permissionsCopy;
   }
 
-  public static removePermission(permissions: PermissionsModel, type: PermissionType, name: string): PermissionsModel {
-    const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
+  public static removePermission(permissions: Permissions, type: PermissionType, name: string): Permissions {
+    const entityPermissions: Permission[] = permissions ? permissions[type].slice() : [];
 
     const index = entityPermissions.findIndex(p => p.id === name);
     if (index) {
       entityPermissions.splice(index, 1);
     }
 
-    const permissionsCopy: PermissionsModel = {...permissions};
+    const permissionsCopy: Permissions = {...permissions};
     permissionsCopy[type] = entityPermissions;
     return permissionsCopy;
   }

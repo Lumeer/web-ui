@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
-import {UserModel} from '../../../core/store/users/user.model';
+import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subject, Subscription} from 'rxjs';
@@ -41,15 +41,15 @@ export class UserComponent implements OnInit, OnDestroy {
 
   @Input() public changeRoles: boolean;
 
-  @Input() public user: UserModel;
+  @Input() public user: User;
 
   @Input() public userRoles: string[];
 
   @Input() public groupRoles: string[];
 
-  @Output() public userUpdated = new EventEmitter<UserModel>();
+  @Output() public userUpdated = new EventEmitter<User>();
 
-  @Output() public userDeleted = new EventEmitter<UserModel>();
+  @Output() public userDeleted = new EventEmitter<User>();
 
   @Output() public rolesUpdate = new EventEmitter<{roles: string[]; onlyStore: boolean}>();
 

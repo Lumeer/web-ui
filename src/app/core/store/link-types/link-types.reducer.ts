@@ -19,6 +19,7 @@
 
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-types.state';
+import {LinkType} from './link.type';
 
 export function linkTypesReducer(
   state: LinkTypesState = initialLinkTypesState,
@@ -26,11 +27,11 @@ export function linkTypesReducer(
 ): LinkTypesState {
   switch (action.type) {
     case LinkTypesActionType.GET_SUCCESS:
-      return linkTypesAdapter.addMany(action.payload.linkTypes, {...state, loaded: true});
+      return addLinkTypes(state, action.payload.linkTypes);
     case LinkTypesActionType.CREATE_SUCCESS:
-      return linkTypesAdapter.addOne(action.payload.linkType, state);
+      return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.UPDATE_SUCCESS:
-      return linkTypesAdapter.upsertOne(action.payload.linkType, state);
+      return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
     case LinkTypesActionType.CLEAR:
@@ -38,4 +39,30 @@ export function linkTypesReducer(
     default:
       return state;
   }
+}
+
+function addLinkTypes(state: LinkTypesState, linkTypes: LinkType[]): LinkTypesState {
+  const newState = {...state, loaded: true};
+  const filteredLinkTypes = linkTypes.filter(linkType => {
+    const oldLinkType = state.entities[linkType.id];
+    return !oldLinkType || isLinkTypeNewer(linkType, oldLinkType);
+  });
+
+  return linkTypesAdapter.addMany(filteredLinkTypes, newState);
+}
+
+function isLinkTypeNewer(linkType: LinkType, oldLinkType: LinkType): boolean {
+  return linkType.version && (!oldLinkType.version || linkType.version > oldLinkType.version);
+}
+
+function addOrUpdateLinkType(state: LinkTypesState, linkType: LinkType): LinkTypesState {
+  const oldLinkType = state.entities[linkType.id];
+  if (!oldLinkType) {
+    return linkTypesAdapter.addOne(linkType, state);
+  }
+
+  if (isLinkTypeNewer(linkType, oldLinkType)) {
+    return linkTypesAdapter.upsertOne(linkType, state);
+  }
+  return state;
 }

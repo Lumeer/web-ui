@@ -22,9 +22,9 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
-import {LinkTypeModel} from '../link-types/link-type.model';
+import {LinkType} from '../link-types/link.type';
 import {isArraySubset} from '../../../shared/utils/array.utils';
-import {isNullOrUndefined} from 'util';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -141,14 +141,40 @@ export function isOnlyFulltextsQuery(query: Query): boolean {
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): AttributeFilter[] {
-  const stem = query && query.stems && query.stems.find(st => st.collectionId === collectionId);
-  return (stem && stem.filters && stem.filters.filter(filter => filter.collectionId === collectionId)) || [];
+  return (
+    (query &&
+      query.stems &&
+      query.stems.reduce((filters, stem) => {
+        const newFilters =
+          (stem.filters &&
+            stem.filters.filter(
+              filter =>
+                filter.collectionId === collectionId && !filters.find(f => JSON.stringify(f) === JSON.stringify(filter))
+            )) ||
+          [];
+        return [...filters, ...newFilters];
+      }, [])) ||
+    []
+  );
 }
 
-export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkTypeModel[]): string[] {
-  const basicCollectionIds = query.stems && query.stems.map(stem => stem.collectionId);
-  const allLinkTypeIds = query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], []);
-  const filteredLinkTypes = linkTypes.filter(linkType => allLinkTypeIds.includes(linkType.id));
+export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
+  return (
+    (query &&
+      query.stems &&
+      query.stems.reduce((ids, stem) => {
+        (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
+        return ids;
+      }, [])) ||
+    []
+  );
+}
+
+export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
+  const basicCollectionIds = (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
+  const allLinkTypeIds =
+    (query && query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], [])) || [];
+  const filteredLinkTypes = (linkTypes || []).filter(linkType => allLinkTypeIds.includes(linkType.id));
   const collectionIdsFromLinks = filteredLinkTypes
     .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
     .filter(id => !basicCollectionIds.includes(id));
@@ -190,4 +216,28 @@ function isQueryFiltersSubset(superset: AttributeFilter[], subset: AttributeFilt
 export function queryWithoutLinks(query: Query): Query {
   const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
+}
+
+export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
+  const stemCopy = {...stem};
+  const stemLinkTypes = stem.linkTypeIds.map(id => linkTypes.find(lt => lt.id === id));
+  const removingLinkTypes = stemLinkTypes.slice(linkIndex);
+  stemCopy.linkTypeIds = stem.linkTypeIds.slice(0, linkIndex);
+
+  const removingCollections = removingLinkTypes.reduce((ids, linkType) => {
+    const idsToAdd = linkType.collectionIds.filter(id => !ids.includes(id));
+    return [...ids, ...idsToAdd];
+  }, []);
+  stemCopy.filters = stem.filters && stem.filters.filter(filter => !removingCollections.includes(filter.collectionId));
+
+  // TODO filter documents once implemented
+
+  return stemCopy;
+}
+
+export function filterStemByAttributeIds(stem: QueryStem, collectionId: string, attributeIds: string[]): QueryStem {
+  const filters =
+    stem.filters &&
+    stem.filters.filter(filter => filter.collectionId !== collectionId || !attributeIds.includes(filter.attributeId));
+  return {...stem, filters};
 }

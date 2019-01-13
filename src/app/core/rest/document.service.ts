@@ -28,7 +28,7 @@ import {DocumentDto} from '../dto';
 import {DocumentMetaDataDto} from '../dto/document.dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 
 // TODO send data attribute without '_id'
 @Injectable()

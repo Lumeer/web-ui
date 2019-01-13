@@ -21,7 +21,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {CollectionModel} from '../store/collections/collection.model';
+import {Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
 import {ViewsAction} from '../store/views/views.action';
 import {Router} from '@angular/router';
@@ -37,7 +37,7 @@ export class PerspectiveService {
 
   public switchPerspective(
     perspective: Perspective,
-    collection?: CollectionModel,
+    collection?: Collection,
     document?: DocumentModel,
     queryToSet?: string
   ): void {

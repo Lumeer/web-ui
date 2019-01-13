@@ -18,9 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ImportedCollection} from '../../dto/imported-collection';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
-import {AttributeModel, CollectionModel} from './collection.model';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {Attribute, Collection, ImportedCollection} from './collection';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
@@ -77,12 +76,14 @@ export enum CollectionsActionType {
 export namespace CollectionsAction {
   export class Get implements Action {
     public readonly type = CollectionsActionType.GET;
+
+    public constructor(public payload: {force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = CollectionsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {collections: CollectionModel[]}) {}
+    public constructor(public payload: {collections: Collection[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -94,15 +95,13 @@ export namespace CollectionsAction {
   export class Create implements Action {
     public readonly type = CollectionsActionType.CREATE;
 
-    public constructor(
-      public payload: {collection: CollectionModel; callback?: (collection: CollectionModel) => void}
-    ) {}
+    public constructor(public payload: {collection: Collection; callback?: (collection: Collection) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = CollectionsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {collection: CollectionModel}) {}
+    public constructor(public payload: {collection: Collection}) {}
   }
 
   export class CreateFailure implements Action {
@@ -118,7 +117,7 @@ export namespace CollectionsAction {
       public payload: {
         format: string;
         importedCollection: ImportedCollection;
-        callback?: (collection: CollectionModel) => void;
+        callback?: (collection: Collection) => void;
       }
     ) {}
   }
@@ -126,7 +125,7 @@ export namespace CollectionsAction {
   export class ImportSuccess implements Action {
     public readonly type = CollectionsActionType.IMPORT_SUCCESS;
 
-    public constructor(public payload: {collection: CollectionModel}) {}
+    public constructor(public payload: {collection: Collection}) {}
   }
 
   export class ImportFailure implements Action {
@@ -138,13 +137,13 @@ export namespace CollectionsAction {
   export class Update implements Action {
     public readonly type = CollectionsActionType.UPDATE;
 
-    public constructor(public payload: {collection: CollectionModel; callback?: () => void}) {}
+    public constructor(public payload: {collection: Collection; callback?: () => void}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = CollectionsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {collection: CollectionModel}) {}
+    public constructor(public payload: {collection: Collection}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -231,9 +230,9 @@ export namespace CollectionsAction {
     public constructor(
       public payload: {
         collectionId: string;
-        attributes: AttributeModel[];
+        attributes: Attribute[];
         nextAction?: Action;
-        callback?: (attributes: AttributeModel[]) => void;
+        callback?: (attributes: Attribute[]) => void;
       }
     ) {}
   }
@@ -241,7 +240,7 @@ export namespace CollectionsAction {
   export class CreateAttributesSuccess implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS;
 
-    public constructor(public payload: {collectionId: string; attributes: AttributeModel[]}) {}
+    public constructor(public payload: {collectionId: string; attributes: Attribute[]}) {}
   }
 
   export class CreateAttributesFailure implements Action {
@@ -254,14 +253,21 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE;
 
     public constructor(
-      public payload: {collectionId: string; attributeId: string; attribute: AttributeModel; nextAction?: Action}
+      public payload: {
+        collectionId: string;
+        attributeId: string;
+        attribute: Attribute;
+        nextAction?: Action;
+        onSuccess?: (attribute: Attribute) => void;
+        onFailure?: (error: any) => void;
+      }
     ) {}
   }
 
   export class ChangeAttributeSuccess implements Action {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS;
 
-    public constructor(public payload: {collectionId: string; attributeId: string; attribute: AttributeModel}) {}
+    public constructor(public payload: {collectionId: string; attributeId: string; attribute: Attribute}) {}
   }
 
   export class ChangeAttributeFailure implements Action {
@@ -295,8 +301,8 @@ export namespace CollectionsAction {
       public payload: {
         collectionId: string;
         type: PermissionType;
-        permission: PermissionModel;
-        currentPermission: PermissionModel;
+        permission: Permission;
+        currentPermission: Permission;
       }
     ) {}
   }
@@ -304,14 +310,14 @@ export namespace CollectionsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {collectionId: string; type: PermissionType; permission: PermissionModel}) {}
+    public constructor(public payload: {collectionId: string; type: PermissionType; permission: Permission}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION_FAILURE;
 
     public constructor(
-      public payload: {collectionId: string; type: PermissionType; permission: PermissionModel; error: any}
+      public payload: {collectionId: string; type: PermissionType; permission: Permission; error: any}
     ) {}
   }
 

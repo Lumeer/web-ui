@@ -18,12 +18,12 @@
  */
 
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {ViewConfigModel} from '../../core/store/views/view.model';
+import {ViewConfig} from '../../core/store/views/view';
 import {QueryDto} from '../../core/dto';
 
 export interface PerspectiveComponent {
   query: QueryDto;
-  config: ViewConfigModel;
+  config: ViewConfig;
   embedded: boolean;
   linkedDocument: DocumentModel;
 }

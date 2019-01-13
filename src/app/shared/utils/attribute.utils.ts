@@ -17,25 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeModel} from '../../core/store/collections/collection.model';
+import {Attribute} from '../../core/store/collections/collection';
 
-export function findAttributeById(attributes: AttributeModel[], attributeId: string): AttributeModel {
+export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
   return attributes.find(attribute => attribute.id === attributeId);
 }
 
-export function findAttributeByName(attributes: AttributeModel[], name: string): AttributeModel {
+export function findAttributeByName(attributes: Attribute[], name: string): Attribute {
   return attributes.find(attribute => attribute.name === name);
 }
 
-export function maxAttributeDepth(attributes: AttributeModel[]): number {
+export function maxAttributeDepth(attributes: Attribute[]): number {
   return Math.max(...attributes.map(attribute => getAttributeDepth(attribute)));
 }
 
-export function filterAttributesByDepth(attributes: AttributeModel[], depth: number): AttributeModel[] {
+export function filterAttributesByDepth(attributes: Attribute[], depth: number): Attribute[] {
   return attributes.filter(attribute => getAttributeDepth(attribute) === depth);
 }
 
-export function filterDirectAttributeChildren(attributes: AttributeModel[], parent: AttributeModel): AttributeModel[] {
+export function filterDirectAttributeChildren(attributes: Attribute[], parent: Attribute): Attribute[] {
   if (!parent) {
     return attributes.filter(attribute => getAttributeDepth(attribute) === 1);
   }
@@ -43,17 +43,17 @@ export function filterDirectAttributeChildren(attributes: AttributeModel[], pare
   return attributes.filter(attribute => isDirectAttributeChild(parent, attribute));
 }
 
-export function isDirectAttributeChild(parent: AttributeModel, potentialChild: AttributeModel): boolean {
+export function isDirectAttributeChild(parent: Attribute, potentialChild: Attribute): boolean {
   return (
     potentialChild.name.startsWith(parent.name) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1
   );
 }
 
-export function hasAttributeChildren(attributes: AttributeModel[], parent: AttributeModel): boolean {
+export function hasAttributeChildren(attributes: Attribute[], parent: Attribute): boolean {
   return attributes.some(attribute => isDirectAttributeChild(parent, attribute));
 }
 
-export function getAttributeDepth(attribute: AttributeModel): number {
+export function getAttributeDepth(attribute: Attribute): number {
   return attribute.name.split('.').length;
 }
 
@@ -77,7 +77,7 @@ export function splitAttributeName(name: string): {parentName: string; lastName:
   };
 }
 
-export function generateAttributeName(otherAttributes: AttributeModel[], parentName?: string): string {
+export function generateAttributeName(otherAttributes: Attribute[], parentName?: string): string {
   const existingNames = otherAttributes.map(attr => attr.name);
   const prefix = parentName ? `${parentName}.` : '';
 

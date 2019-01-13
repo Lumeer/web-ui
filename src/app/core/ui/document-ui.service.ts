@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
-import {CollectionModel} from '../store/collections/collection.model';
+import {Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
 import {UiRow} from './ui-row';
 import {BehaviorSubject} from 'rxjs';
@@ -37,7 +37,7 @@ export class DocumentUiService {
 
   constructor(private store: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
 
-  public init(collection: CollectionModel, document: DocumentModel): void {
+  public init(collection: Collection, document: DocumentModel): void {
     this.destroy(collection, document);
 
     const key = DocumentUiService.getKey(collection, document);
@@ -46,12 +46,12 @@ export class DocumentUiService {
     }
   }
 
-  public isInited(collection: CollectionModel, document: DocumentModel): boolean {
+  public isInited(collection: Collection, document: DocumentModel): boolean {
     const key = DocumentUiService.getKey(collection, document);
     return !!this.state[key];
   }
 
-  public destroy(collection: CollectionModel, document: DocumentModel): void {
+  public destroy(collection: Collection, document: DocumentModel): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -63,27 +63,27 @@ export class DocumentUiService {
     }
   }
 
-  public getRows$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<UiRow[]> {
+  public getRows$(collection: Collection, document: DocumentModel): BehaviorSubject<UiRow[]> {
     const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].rows$ : null) : null;
   }
 
-  public getSummary$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<string> {
+  public getSummary$(collection: Collection, document: DocumentModel): BehaviorSubject<string> {
     const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].summary$ : null) : null;
   }
 
-  public getFavorite$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<boolean> {
+  public getFavorite$(collection: Collection, document: DocumentModel): BehaviorSubject<boolean> {
     const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].favorite$ : null) : null;
   }
 
-  public getTrackBy(collection: CollectionModel, document: DocumentModel): (index: number, row: UiRow) => string {
+  public getTrackBy(collection: Collection, document: DocumentModel): (index: number, row: UiRow) => string {
     const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].trackRows : null) : null;
   }
 
-  public onAddRow(collection: CollectionModel, document: DocumentModel): void {
+  public onAddRow(collection: Collection, document: DocumentModel): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -93,12 +93,7 @@ export class DocumentUiService {
     }
   }
 
-  public onUpdateRow(
-    collection: CollectionModel,
-    document: DocumentModel,
-    idx: number,
-    keyValue: [string, string]
-  ): void {
+  public onUpdateRow(collection: Collection, document: DocumentModel, idx: number, keyValue: [string, string]): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -108,7 +103,7 @@ export class DocumentUiService {
     }
   }
 
-  public onRemoveRow(collection: CollectionModel, document: DocumentModel, idx: number): void {
+  public onRemoveRow(collection: Collection, document: DocumentModel, idx: number): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -118,7 +113,7 @@ export class DocumentUiService {
     }
   }
 
-  public onToggleFavorite(collection: CollectionModel, document: DocumentModel): void {
+  public onToggleFavorite(collection: Collection, document: DocumentModel): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {
       const state = this.state[key];
@@ -128,7 +123,7 @@ export class DocumentUiService {
     }
   }
 
-  private static getKey(collection: CollectionModel, document: DocumentModel): string {
+  private static getKey(collection: Collection, document: DocumentModel): string {
     return collection && document ? collection.id + ':' + (document.correlationId || document.id) : null;
   }
 }

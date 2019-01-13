@@ -34,7 +34,7 @@ import {
 
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentUiService} from '../../../../core/ui/document-ui.service';
@@ -51,7 +51,7 @@ import {SelectionHelper} from '../util/selection-helper';
 export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
-  @Input() public collection: CollectionModel;
+  @Input() public collection: Collection;
   @Input() public perspectiveId: string;
   @Input() public selectionHelper: SelectionHelper;
   @Input() public canManageConfig: boolean;
@@ -63,7 +63,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
 
   public rows$: Observable<UiRow[]>;
   public favorite$: Observable<boolean>;
-  public unusedAttributes$: Observable<AttributeModel[]>;
+  public unusedAttributes$: Observable<Attribute[]>;
 
   public initedDocumentKey: string;
   private currentRowsLength: number;

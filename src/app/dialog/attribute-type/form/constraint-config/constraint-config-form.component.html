@@ -1,0 +1,16 @@
+<ng-container [ngSwitch]="type">
+  <datetime-constraint-config-form *ngSwitchCase="'DateTime'"
+                                   [config]="config"
+                                   [form]="form">
+  </datetime-constraint-config-form>
+
+  <number-constraint-config-form *ngSwitchCase="'Number'"
+                                 [config]="config"
+                                 [form]="form">
+  </number-constraint-config-form>
+
+  <text-constraint-config-form *ngSwitchCase="'Text'"
+                               [config]="config"
+                               [form]="form">
+  </text-constraint-config-form>
+</ng-container>

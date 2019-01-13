@@ -18,11 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkRowModel} from '../link-row.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {DocumentHintColumn} from '../../../../document-hints/document-hint-column';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {DocumentHintsComponent} from '../../../../document-hints/document-hints.component';
 import {Direction} from '../../../../direction';
 import {KeyCode} from '../../../../key-code';
@@ -42,7 +42,7 @@ export class LinksListTableBodyComponent {
   public document: DocumentModel;
 
   @Input()
-  public linkType: LinkTypeModel;
+  public linkType: LinkType;
 
   @Input()
   public columns: DocumentHintColumn[];
@@ -51,7 +51,7 @@ export class LinksListTableBodyComponent {
   public usedDocumentIds: string[];
 
   @Input()
-  public otherCollection: CollectionModel;
+  public otherCollection: Collection;
 
   @Input()
   public linkRows: LinkRowModel[];
@@ -59,7 +59,7 @@ export class LinksListTableBodyComponent {
   @Input()
   public readonly: boolean;
 
-  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
+  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
@@ -73,7 +73,7 @@ export class LinksListTableBodyComponent {
 
   public readonly collectionType = ResourceType.Collection;
 
-  public documentSelected(collection: CollectionModel, linkRow: LinkRowModel) {
+  public documentSelected(collection: Collection, linkRow: LinkRowModel) {
     const document = linkRow.document;
     this.select.emit({collection, document});
   }

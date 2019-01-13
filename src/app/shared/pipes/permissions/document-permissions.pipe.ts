@@ -24,7 +24,7 @@ import {mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionPermissionsPipe} from './collection-permissions.pipe';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
@@ -54,7 +54,7 @@ export class DocumentPermissionsPipe implements PipeTransform {
     );
   }
 
-  private getCollectionForDocument(document: DocumentModel): Observable<CollectionModel> {
+  private getCollectionForDocument(document: DocumentModel): Observable<Collection> {
     return this.store$.pipe(select(selectCollectionById(document.collectionId)));
   }
 }

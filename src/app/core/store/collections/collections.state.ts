@@ -22,13 +22,13 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectWorkspace} from '../navigation/navigation.state';
-import {CollectionModel} from './collection.model';
+import {Collection} from './collection';
 
-export interface CollectionsState extends EntityState<CollectionModel> {
+export interface CollectionsState extends EntityState<Collection> {
   loaded: boolean;
 }
 
-export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.id});
+export const collectionsAdapter = createEntityAdapter<Collection>({selectId: collection => collection.id});
 
 export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({
   loaded: false,

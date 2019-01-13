@@ -20,7 +20,7 @@
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkInstanceService, SearchService} from '../../rest';
@@ -37,7 +37,7 @@ export class LinkInstancesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
-    withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
+    withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) =>
       this.searchService.searchLinkInstances(convertQueryModelToDto(action.payload.query)).pipe(

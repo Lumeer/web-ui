@@ -20,13 +20,13 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
-import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {map, tap} from 'rxjs/operators';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Query} from '../../../core/store/navigation/query';
@@ -39,12 +39,12 @@ import {Query} from '../../../core/store/navigation/query';
 export class LinksListComponent implements OnChanges {
   @Input() public document: DocumentModel;
 
-  @Input() public collection: CollectionModel;
+  @Input() public collection: Collection;
 
-  @Output() public select = new EventEmitter<{collection: CollectionModel; document: DocumentModel}>();
+  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
-  public linkTypes$: Observable<LinkTypeModel[]>;
-  public activeLinkType: LinkTypeModel;
+  public linkTypes$: Observable<LinkType[]>;
+  public activeLinkType: LinkType;
 
   private lastCollectionId: string;
 
@@ -54,7 +54,7 @@ export class LinksListComponent implements OnChanges {
     this.renewSubscriptions();
   }
 
-  public onSelectLink(linkType: LinkTypeModel) {
+  public onSelectLink(linkType: LinkType) {
     this.activeLinkType = linkType;
 
     if (linkType) {
@@ -75,7 +75,7 @@ export class LinksListComponent implements OnChanges {
       ).pipe(
         map(([linkTypes, collectionsMap]) =>
           linkTypes.map(linkType => {
-            const collections: [CollectionModel, CollectionModel] = [
+            const collections: [Collection, Collection] = [
               collectionsMap[linkType.collectionIds[0]],
               collectionsMap[linkType.collectionIds[1]],
             ];
@@ -87,8 +87,8 @@ export class LinksListComponent implements OnChanges {
     }
   }
 
-  private initActiveLinkType(linkTypes: LinkTypeModel[]) {
-    let selectLinkType: LinkTypeModel;
+  private initActiveLinkType(linkTypes: LinkType[]) {
+    let selectLinkType: LinkType;
     if (linkTypes.length === 0) {
       selectLinkType = null;
     } else if (this.activeLinkType) {
@@ -100,7 +100,7 @@ export class LinksListComponent implements OnChanges {
     this.onSelectLink(selectLinkType);
   }
 
-  private readDocuments(linkType: LinkTypeModel) {
+  private readDocuments(linkType: LinkType) {
     if (linkType) {
       const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
       this.store.dispatch(new DocumentsAction.Get({query}));
