@@ -210,16 +210,22 @@ export class CalendarVisualizationComponent implements OnChanges {
     return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
   }
 
+  timeToString (date: Date) {
+    return date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+  }
+
   decomposeEvent(event){
     let originalDocument = this.documents.find(document => document.id === event.meta.documentId);
     originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.NAME].attributeId] = event.title;
     originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.START_DATE].attributeId] = this.dateToString(event.start);
     originalDocument.data[this.config.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId] = this.dateToString(event.end);
-    console.log(originalDocument);
+    originalDocument.data[this.config.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId] = this.timeToString(event.start);
+    originalDocument.data[this.config.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId] = this.timeToString(event.end);
+    //console.log(originalDocument);
     this.patchData.emit(originalDocument);
   }
 
-private getColor (allDay: boolean, color: string){
+  private getColor (allDay: boolean, color: string){
 
     if (allDay)
       return {
