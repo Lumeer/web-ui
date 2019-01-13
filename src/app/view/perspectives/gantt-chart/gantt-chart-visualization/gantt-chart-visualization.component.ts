@@ -47,7 +47,8 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   public gantt_chart: frappeGantt;
 
-  constructor() {}
+  constructor() {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.documents || changes.config) && this.config) {
@@ -95,20 +96,21 @@ export class GanttChartVisualizationComponent implements OnChanges {
       if (tasks.length > 0) {
         this.gantt_chart = new frappeGantt.default('#ganttChart', tasks, {
           on_date_change: (task, start, end) => {
+
             let startAttID = this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId;
             let endAttID = this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId;
 
-            let startTimeTask = moment(task.start).format('YYYY-MM-DD');
-            let startTime = moment(start).format('YYYY-MM-DD');
+            let startTimeTask = moment(task.start, "YYYY-MM-DD").local();
+            let startTime = moment(start, 'YYYY-MM-DD').local();
 
-            let endTimeTask = moment(task.end).format('YYYY-MM-DD');
-            let endTime = moment(end).format('YYYY-MM-DD');
+            let endTimeTask = moment(task.end, 'YYYY-MM-DD').local();
+            let endTime = moment(end, 'YYYY-MM-DD').local();
 
             //start time changed
-            if (startTimeTask != startTime) this.onValueChanged(task.document_id, startAttID, startTime);
+            if (startTimeTask != startTime) this.onValueChanged(task.document_id, startAttID, startTime.format('YYYY-MM-DD'));
 
             //end time changed
-            if (endTimeTask != endTime) this.onValueChanged(task.document_id, endAttID, endTime);
+            if (endTimeTask != endTime) this.onValueChanged(task.document_id, endAttID, endTime.format('YYYY-MM-DD'));
           },
 
           on_progress_change: (task, progress) => {
