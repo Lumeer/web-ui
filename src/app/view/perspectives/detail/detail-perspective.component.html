@@ -6,12 +6,12 @@
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
-    <document-detail *ngIf="selected.document"
+    <document-detail *ngIf="selected.collection && selected.document"
                      [collection]="selected.collection"
                      [document]="selected.document">
     </document-detail>
     <links-list
-      *ngIf="selected.document"
+      *ngIf="selected.collection && selected.document"
       [document]="selected.document"
       [collection]="selected.collection"
       (select)="selectCollectionAndDocument($event)">

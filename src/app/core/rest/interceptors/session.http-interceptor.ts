@@ -20,16 +20,14 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {EMPTY, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class SessionHttpInterceptor implements HttpInterceptor {
-  private sessionExpirationTime: Date;
-
-  private redirected: boolean;
+  private timeoutId: number;
 
   public constructor(private router: Router) {}
 
@@ -38,25 +36,15 @@ export class SessionHttpInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    if (new Date() > this.sessionExpirationTime) {
-      this.handleExpiredSession();
-      return EMPTY;
-    }
-
     return next.handle(request).pipe(
       tap(() => {
-        this.sessionExpirationTime = new Date();
-        this.sessionExpirationTime.setMinutes(this.sessionExpirationTime.getMinutes() + environment.sessionTimeout);
-        this.redirected = false;
+        window.clearTimeout(this.timeoutId);
+        this.timeoutId = window.setTimeout(
+          () => this.navigateToSessionExpiredPage(),
+          environment.sessionTimeout * 60 * 1000
+        );
       })
     );
-  }
-
-  private handleExpiredSession() {
-    if (!this.redirected) {
-      this.redirected = true;
-      this.navigateToSessionExpiredPage();
-    }
   }
 
   private navigateToSessionExpiredPage() {

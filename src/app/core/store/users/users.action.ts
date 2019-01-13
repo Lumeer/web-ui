@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspaceModel, UserModel} from './user.model';
+import {DefaultWorkspace, User} from './user';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -61,7 +61,7 @@ export namespace UsersAction {
   export class GetSuccess implements Action {
     public readonly type = UsersActionType.GET_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; users: UserModel[]}) {}
+    public constructor(public payload: {organizationId: string; users: User[]}) {}
   }
 
   export class GetCurrentUser implements Action {
@@ -71,25 +71,25 @@ export namespace UsersAction {
   export class GetCurrentUserSuccess implements Action {
     public readonly type = UsersActionType.GET_CURRENT_USER_SUCCESS;
 
-    public constructor(public payload: {user: UserModel}) {}
+    public constructor(public payload: {user: User}) {}
   }
 
   export class PatchCurrentUser implements Action {
     public readonly type = UsersActionType.PATCH_CURRENT_USER;
 
-    public constructor(public payload: {user: Partial<UserModel>; onSuccess: () => void; onFailure: () => void}) {}
+    public constructor(public payload: {user: Partial<User>; onSuccess: () => void; onFailure: () => void}) {}
   }
 
   export class SaveDefaultWorkspace implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE;
 
-    public constructor(public payload: {defaultWorkspace: DefaultWorkspaceModel}) {}
+    public constructor(public payload: {defaultWorkspace: DefaultWorkspace}) {}
   }
 
   export class SaveDefaultWorkspaceSuccess implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS;
 
-    public constructor(public payload: {user: UserModel; defaultWorkspace: DefaultWorkspaceModel}) {}
+    public constructor(public payload: {user: User; defaultWorkspace: DefaultWorkspace}) {}
   }
 
   export class SaveDefaultWorkspaceFailure implements Action {
@@ -107,13 +107,13 @@ export namespace UsersAction {
   export class Create implements Action {
     public readonly type = UsersActionType.CREATE;
 
-    public constructor(public payload: {organizationId: string; user: UserModel}) {}
+    public constructor(public payload: {organizationId: string; user: User}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = UsersActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {user: UserModel}) {}
+    public constructor(public payload: {user: User}) {}
   }
 
   export class CreateFailure implements Action {
@@ -125,13 +125,13 @@ export namespace UsersAction {
   export class Update implements Action {
     public readonly type = UsersActionType.UPDATE;
 
-    public constructor(public payload: {organizationId: string; user: UserModel}) {}
+    public constructor(public payload: {organizationId: string; user: User}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = UsersActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {user: UserModel}) {}
+    public constructor(public payload: {user: User}) {}
   }
 
   export class UpdateFailure implements Action {

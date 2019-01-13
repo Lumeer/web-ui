@@ -18,21 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {UserModel} from '../../../core/store/users/user.model';
-import {ProjectModel} from '../../../core/store/projects/project.model';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {User} from '../../../core/store/users/user';
+import {Project} from '../../../core/store/projects/project';
+import {Organization} from '../../../core/store/organizations/organization';
 import {userIsManagerInWorkspace} from '../../../shared/utils/resource.utils';
 
 @Pipe({
   name: 'canRemoveUser',
 })
 export class CanRemoveUserPipe implements PipeTransform {
-  public transform(
-    user: UserModel,
-    currentUser: UserModel,
-    organization: OrganizationModel,
-    project: ProjectModel
-  ): boolean {
+  public transform(user: User, currentUser: User, organization: Organization, project: Project): boolean {
     if (user.id === currentUser.id) {
       return false;
     }

@@ -23,9 +23,9 @@ import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
@@ -50,9 +50,9 @@ export class TableHiddenColumnComponent implements OnChanges {
   @ViewChild(ContextMenuComponent)
   public contextMenuComponent: ContextMenuComponent;
 
-  public collection$: Observable<CollectionModel>;
-  public linkType$: Observable<LinkTypeModel>;
-  public hiddenAttributes$: Observable<AttributeModel[]>;
+  public collection$: Observable<Collection>;
+  public linkType$: Observable<LinkType>;
+  public hiddenAttributes$: Observable<Attribute[]>;
 
   public constructor(private contextMenuService: ContextMenuService, private store: Store<AppState>) {}
 
@@ -65,13 +65,13 @@ export class TableHiddenColumnComponent implements OnChanges {
     }
   }
 
-  public getHiddenAttributes(part: TablePart): Observable<AttributeModel[]> {
+  public getHiddenAttributes(part: TablePart): Observable<Attribute[]> {
     return this.getAttributes(part).pipe(
       map(attributes => attributes.filter(attribute => this.column.attributeIds.includes(attribute.id)))
     );
   }
 
-  public getAttributes(part: TablePart): Observable<AttributeModel[]> {
+  public getAttributes(part: TablePart): Observable<Attribute[]> {
     if (part.collectionId) {
       return this.collection$.pipe(map(collection => collection.attributes));
     }
@@ -99,7 +99,7 @@ export class TableHiddenColumnComponent implements OnChanges {
     });
   }
 
-  public onShowSingleColumn(attribute: AttributeModel) {
+  public onShowSingleColumn(attribute: Attribute) {
     this.showColumns(attribute.id);
   }
 

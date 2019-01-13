@@ -17,40 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ContactModel} from '../../../core/store/organizations/contact/contact.model';
-import {ContactFormComponent} from './contact-form/contact-form.component';
-import {Store} from '@ngrx/store';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Contact} from '../../../core/store/organizations/contact/contact';
+import {select, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../core/store/app.state';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ContactsAction} from '../../../core/store/organizations/contact/contacts.action';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {Organization} from '../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
-import {
-  selectContactByOrganizationId,
-  selectContactByWorkspace,
-} from '../../../core/store/organizations/contact/contacts.state';
+import {selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
 
 @Component({
   templateUrl: './organization-detail.component.html',
 })
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
-  @ViewChild('contactForm')
-  private contactForm: ContactFormComponent;
+  public contact$: Observable<Contact>;
+
+  public organization: Organization;
 
   private contactSubscription: Subscription;
-
-  private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
-  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
+  constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
 
-  public updateContact($event: ContactModel) {
-    this.store.dispatch(new ContactsAction.SetContact({organizationCode: this.organization.code, contact: $event}));
+  public updateContact(contact: Contact) {
+    this.store$.dispatch(new ContactsAction.SetContact({organizationCode: this.organization.code, contact}));
   }
 
   public ngOnInit(): void {
@@ -59,15 +53,17 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.organizationSubscription = this.store
-      .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
+    this.organizationSubscription = this.store$
+      .pipe(
+        select(selectOrganizationByWorkspace),
+        filter(organization => !!organization)
+      )
       .subscribe(organization => (this.organization = organization));
 
-    this.contactSubscription = this.store
-      .select(selectContactByWorkspace)
-      .pipe(filter(contact => !isNullOrUndefined(contact)))
-      .subscribe(contact => this.contactForm.setContact(contact));
+    this.contact$ = this.store$.pipe(
+      select(selectContactByWorkspace),
+      filter(contact => !!contact)
+    );
   }
 
   public ngOnDestroy(): void {
@@ -81,6 +77,6 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private requestData() {
-    this.store.dispatch(new ContactsAction.GetContact({organizationCode: this.organization.code}));
+    this.store$.dispatch(new ContactsAction.GetContact({organizationCode: this.organization.code}));
   }
 }

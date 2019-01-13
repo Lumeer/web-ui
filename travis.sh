@@ -31,7 +31,7 @@ error_handler() {
 #PING_LOOP_PID=$!
 
 echo "Starting frontend..."
-npm run start:aot & #>> $BUILD_OUTPUT 2>&1 &
+NODE_OPTIONS=--max_old_space_size=7000 npm run start:aot & #>> $BUILD_OUTPUT 2>&1 &
 while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000/ui"; do
   sleep 3
 done

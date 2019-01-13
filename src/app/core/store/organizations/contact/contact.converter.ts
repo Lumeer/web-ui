@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Contact} from '../../../dto';
-import {ContactModel} from './contact.model';
+import {ContactDto} from '../../../dto';
+import {Contact} from './contact';
 
 export class ContactConverter {
-  public static fromDto(dto: Contact): ContactModel {
+  public static fromDto(dto: ContactDto): Contact {
     return {
       id: dto.id,
       organizationId: dto.organizationId,
@@ -38,10 +38,11 @@ export class ContactConverter {
       phone: dto.phone,
       ic: dto.ic,
       dic: dto.dic,
+      version: dto.version,
     };
   }
 
-  public static toDto(contact: ContactModel): Contact {
+  public static toDto(contact: Contact): ContactDto {
     return {
       id: contact.id,
       organizationId: contact.organizationId,

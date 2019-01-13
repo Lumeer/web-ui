@@ -18,7 +18,8 @@
  */
 
 import {PaymentsAction, PaymentsActionType} from './payments.action';
-import {initialPaymentsState, paymentsAdapter, PaymentsState, selectAllPayments} from './payments.state';
+import {initialPaymentsState, paymentsAdapter, PaymentsState} from './payments.state';
+import {Payment} from './payment';
 
 export function paymentsReducer(
   state: PaymentsState = initialPaymentsState,
@@ -26,12 +27,39 @@ export function paymentsReducer(
 ): PaymentsState {
   switch (action.type) {
     case PaymentsActionType.GET_PAYMENT_SUCCESS:
-      return paymentsAdapter.upsertOne(action.payload.payment, state);
+      return addOrUpdatePayment(state, action.payload.payment);
     case PaymentsActionType.GET_PAYMENTS_SUCCESS:
-      return paymentsAdapter.upsertMany(action.payload.payments, state);
+      return addPayments(state, action.payload.payments);
     case PaymentsActionType.CREATE_PAYMENT_SUCCESS:
-      return paymentsAdapter.upsertOne(action.payload.payment, {...state, lastCreatedPayment: action.payload.payment});
+      return addOrUpdatePayment(state, action.payload.payment, true);
     default:
       return state;
   }
+}
+
+function addOrUpdatePayment(state: PaymentsState, payment: Payment, updateLastCreated?: boolean): PaymentsState {
+  const oldPayment = state.entities[payment.id];
+  if (!oldPayment) {
+    const newState = updateLastCreated ? {...state, lastCreatedPayment: payment} : state;
+    return paymentsAdapter.addOne(payment, newState);
+  }
+
+  if (isPaymentNewer(payment, oldPayment)) {
+    const newState = updateLastCreated ? {...state, lastCreatedPayment: payment} : state;
+    return paymentsAdapter.upsertOne(payment, newState);
+  }
+  return state;
+}
+
+function isPaymentNewer(payment: Payment, oldPayment: Payment): boolean {
+  return payment.version && (!oldPayment.version || payment.version > oldPayment.version);
+}
+
+function addPayments(state: PaymentsState, payments: Payment[]): PaymentsState {
+  const filteredPayments = payments.filter(payment => {
+    const oldPayment = state.entities[payment.id];
+    return !oldPayment || isPaymentNewer(payment, oldPayment);
+  });
+
+  return paymentsAdapter.addMany(filteredPayments, state);
 }

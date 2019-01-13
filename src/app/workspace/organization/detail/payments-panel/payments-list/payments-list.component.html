@@ -23,7 +23,7 @@
           </td>
           <td class="align-middle">
             {{ payment.users }}
-            <button *ngIf="payment.state === 'PAID'" class="btn btn-sm btn-primary" title="Add more users" titile.i18n="@@organizations.tab.detail.payments.addUsers" (click)="addUsers()">
+            <button *ngIf="payment.state === 'PAID'" class="btn btn-sm btn-primary" title="Add more users" i18n-title="@@organizations.tab.detail.payments.addUsers" (click)="addUsers()">
               <i class="fas fa-user-plus"></i>
             </button>
           </td>
@@ -34,12 +34,12 @@
           <td class="align-middle" *ngIf="payment.state !== 'PAID' && payment.state !== 'CANCELED' && payment.state !== 'TIMEOUTED'">
             <span class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
             <button type="button" class="btn btn-sm btn-primary ml-2" (click)="refreshPayment(payment.paymentId)"
-                    title="Refresh payment state" title.i18n="@@organizations.tab.detail.payments.refresh">
+                    title="Refresh payment state" i18n-title="@@organizations.tab.detail.payments.refresh">
               <i class="fas fa-sync-alt"></i>
             </button>
             <button *ngIf="payment.state !== 'AUTHORIZED' " type="button" class="btn btn-sm btn-primary ml-2"
                     (click)="repayEvent(payment.gwUrl)" title="Try to pay again"
-                    title.i18n="@@organizations.tab.detail.payments.repay">
+                    i18n-title="@@organizations.tab.detail.payments.repay">
               <i class="fas fa-credit-card"></i>
             </button>
           </td>

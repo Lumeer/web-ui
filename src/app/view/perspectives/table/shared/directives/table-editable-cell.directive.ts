@@ -200,4 +200,9 @@ export class TableEditableCellDirective implements OnChanges {
   private isCharacterDisabled(character: string): boolean {
     return this.disabledCharacters && this.disabledCharacters.includes(character);
   }
+
+  public setValue(value: string) {
+    const element = this.element.nativeElement as HTMLElement;
+    element.textContent = this.value = value;
+  }
 }

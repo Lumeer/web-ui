@@ -38,7 +38,7 @@ import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
 import {selectDocumentsDictionary} from '../../../../../../../../core/store/documents/documents.state';
-import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
 import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow, TableModel} from '../../../../../../../../core/store/tables/table.model';
@@ -65,7 +65,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public document: DocumentModel;
 
   @Input()
-  public linkInstance: LinkInstanceModel;
+  public linkInstance: LinkInstance;
 
   @Input()
   public table: TableModel; // TODO remove

@@ -31,7 +31,7 @@ import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {RouterAction} from '../router/router.action';
-import {DefaultWorkspaceConverter, UserConverter} from './user.converter';
+import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserModelToDto} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 
@@ -47,7 +47,7 @@ export class UsersEffects {
       this.userService.getUsers(action.payload.organizationId).pipe(
         map(dtos => ({
           organizationId: action.payload.organizationId,
-          users: dtos.map(dto => UserConverter.fromDto(dto)),
+          users: dtos.map(dto => convertUserDtoToModel(dto)),
         })),
         map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
         catchError(error => of(new UsersAction.GetFailure({error: error})))
@@ -71,7 +71,7 @@ export class UsersEffects {
     tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
     mergeMap(() =>
       this.userService.getCurrentUser().pipe(
-        map(user => UserConverter.fromDto(user)),
+        map(user => convertUserDtoToModel(user)),
         mergeMap(user => [new UsersAction.GetCurrentUserSuccess({user}), new UsersAction.SetPending({pending: false})]),
         catchError(() => {
           const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
@@ -85,9 +85,9 @@ export class UsersEffects {
   public patchCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.PatchCurrentUser>(UsersActionType.PATCH_CURRENT_USER),
     mergeMap(action => {
-      const dto = UserConverter.toDto(action.payload.user);
+      const dto = convertUserModelToDto(action.payload.user);
       return this.userService.patchCurrentUser(dto).pipe(
-        map(user => UserConverter.fromDto(user)),
+        map(user => convertUserDtoToModel(user)),
         mergeMap(user => {
           const actions: Action[] = [new UsersAction.GetCurrentUserSuccess({user})];
           if (action.payload.onSuccess) {
@@ -111,10 +111,10 @@ export class UsersEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Create>(UsersActionType.CREATE),
     mergeMap(action => {
-      const userDto = UserConverter.toDto(action.payload.user);
+      const userDto = convertUserModelToDto(action.payload.user);
 
       return this.userService.createUser(action.payload.organizationId, userDto).pipe(
-        map(dto => UserConverter.fromDto(dto)),
+        map(dto => convertUserDtoToModel(dto)),
         map(user => new UsersAction.CreateSuccess({user: user})),
         catchError(error => of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
       );
@@ -154,10 +154,10 @@ export class UsersEffects {
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Update>(UsersActionType.UPDATE),
     mergeMap(action => {
-      const userDto = UserConverter.toDto(action.payload.user);
+      const userDto = convertUserModelToDto(action.payload.user);
 
       return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
-        map(dto => UserConverter.fromDto(dto)),
+        map(dto => convertUserDtoToModel(dto)),
         map(user => new UsersAction.UpdateSuccess({user: user})),
         catchError(error => of(new UsersAction.UpdateFailure({error: error})))
       );
@@ -199,7 +199,7 @@ export class UsersEffects {
   public saveDefaultWorkspace$ = this.actions$.pipe(
     ofType<UsersAction.SaveDefaultWorkspace>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
     concatMap(action => {
-      const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
+      const defaultWorkspaceDto = convertDefaultWorkspaceModelToDto(action.payload.defaultWorkspace);
       return this.userService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
         withLatestFrom(this.store$.select(selectCurrentUser)),
         map(

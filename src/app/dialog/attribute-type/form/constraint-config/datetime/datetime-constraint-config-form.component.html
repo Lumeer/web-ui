@@ -1,0 +1,60 @@
+<div [formGroup]="form">
+  <div class="form-group">
+    <label for="dateTimeFormat"
+           i18n="@@constraint.dateTime.format.label">
+      Format
+    </label>
+    <select class="custom-select"
+            formControlName="selectFormat"
+            id="dateTimeFormat"
+            (change)="onFormatChange($event)">
+      <option *ngFor="let format of predefinedFormats"
+              [value]="format">
+        {{format}}
+      </option>
+      <option value=""
+              i18n="@@constraint.dateTime.format.custom">
+        Custom
+      </option>
+    </select>
+  </div>
+  <div *ngIf="!selectFormatControl?.value"
+       class="form-group">
+    <input class="form-control"
+           formControlName="format"
+           type="text">
+  </div>
+
+  <div *ngIf="form.errors && form.errors['minMaxInvalid']"
+       class="alert alert-danger"
+       i18n="@@form.errors.minMaxInvalid">
+    Minimum must be less or equal than maximum.
+  </div>
+  <div class="d-flex">
+    <div class="form-group">
+      <label for="dateTimeMinValue"
+             i18n="@@constraint.dateTime.minValue.label">
+        Minimum value
+      </label>
+      <input bsDatepicker
+             [bsConfig]="{ dateInputFormat: formatControl.value }"
+             class="form-control"
+             formControlName="minDateTime"
+             id="dateTimeMinValue"
+             type="text">
+    </div>
+
+    <div class="form-group ml-3">
+      <label for="dateTimeMaxValue"
+             i18n="@@constraint.dateTime.maxValue.label">
+        Maximum value
+      </label>
+      <input bsDatepicker
+             [bsConfig]="{ dateInputFormat: formatControl.value }"
+             class="form-control"
+             formControlName="maxDateTime"
+             id="dateTimeMaxValue"
+             type="text">
+    </div>
+  </div>
+</div>

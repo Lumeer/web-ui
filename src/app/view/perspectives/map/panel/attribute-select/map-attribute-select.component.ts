@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'map-attribute-select',
@@ -31,7 +31,7 @@ export class MapAttributeSelectComponent {
   public attributeId: string;
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Output()
   public select = new EventEmitter<string>();

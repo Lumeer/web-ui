@@ -1,0 +1,42 @@
+<div [formGroup]="form">
+  <div *ngIf="form.errors && form.errors['minMaxInvalid']"
+       class="alert alert-danger"
+       i18n="@@form.errors.minMaxInvalid">
+    Minimum must be less or equal than maximum.
+  </div>
+
+  <div class="d-flex">
+    <div class="form-group">
+      <label for="numberMinValue"
+             i18n="@@constraint.number.minValue.label">
+        Minimum value
+      </label>
+      <input class="form-control"
+             formControlName="minValue"
+             id="numberMinValue"
+             type="number">
+    </div>
+
+    <div class="form-group ml-3">
+      <label for="numberMaxValue"
+             i18n="@@constraint.number.maxValue.label">
+        Maximum value
+      </label>
+      <input class="form-control"
+             formControlName="maxValue"
+             id="numberMaxValue"
+             type="number">
+    </div>
+  </div>
+
+  <div class="form-group form-check">
+    <input type="checkbox"
+           class="form-check-input"
+           id="numberDecimal">
+    <label class="form-check-label"
+           for="numberDecimal"
+           i18n="@@constraint.number.decimal.label">
+      Decimal
+    </label>
+  </div>
+</div>

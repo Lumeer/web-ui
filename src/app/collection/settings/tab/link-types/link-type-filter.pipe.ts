@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'linkTypeFilter',
 })
 @Injectable()
 export class LinkTypeFilterPipe implements PipeTransform {
-  public transform(linkTypes: LinkTypeModel[], value: string): any[] {
+  public transform(linkTypes: LinkType[], value: string): any[] {
     if (!linkTypes || !value) {
       return linkTypes;
     }

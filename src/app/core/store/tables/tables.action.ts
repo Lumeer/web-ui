@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {Dictionary} from 'lodash';
 import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
-import {LinkInstanceModel} from '../link-instances/link-instance.model';
+import {LinkInstance} from '../link-instances/link.instance';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
 import {EditedAttribute} from './tables.state';
@@ -270,7 +270,7 @@ export namespace TablesAction {
     public readonly type = TablesActionType.INIT_ROWS;
 
     public constructor(
-      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstanceModel[]}
+      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstance[]}
     ) {}
   }
 
@@ -281,7 +281,7 @@ export namespace TablesAction {
     public readonly type = TablesActionType.CLEAN_ROWS;
 
     public constructor(
-      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstanceModel[]}
+      public payload: {cursor: TableBodyCursor; documents: DocumentModel[]; linkInstances: LinkInstance[]}
     ) {}
   }
 

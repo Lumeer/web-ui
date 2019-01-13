@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../../../../core/store/projects/project.model';
-import {Resource} from '../../../../../core/dto';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
+import {ResourceDto} from '../../../../../core/dto';
 
 @Component({
   selector: 'resource-list',
@@ -30,12 +30,12 @@ import {Resource} from '../../../../../core/dto';
 })
 export class ResourceListComponent {
   @Input() public currentCode: string;
-  @Input() public organizations: OrganizationModel[];
-  @Input() public projects: ProjectModel[];
+  @Input() public organizations: Organization[];
+  @Input() public projects: Project[];
 
-  @Output() public onResourceSelect = new EventEmitter<Resource>();
+  @Output() public onResourceSelect = new EventEmitter<ResourceDto>();
 
-  public selectResource(model: ProjectModel | OrganizationModel) {
+  public selectResource(model: Project | Organization) {
     this.onResourceSelect.emit({
       id: model.id,
       color: model.color,

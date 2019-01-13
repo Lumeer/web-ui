@@ -20,7 +20,7 @@
 import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
-import {ResourceModel} from '../../../core/model/resource.model';
+import {Resource} from '../../../core/model/resource';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare let $: any;
@@ -32,14 +32,13 @@ declare let $: any;
 })
 export class ResourceHeaderComponent implements AfterViewInit {
   @Input() public resourceType: ResourceType;
-  @Input() public resource: ResourceModel;
+  @Input() public resource: Resource;
   @Input() public restrictedValues: string[];
 
   @Output() public codeChange: EventEmitter<string> = new EventEmitter();
   @Output() public nameChange: EventEmitter<string> = new EventEmitter();
   @Output() public descriptionChange: EventEmitter<string> = new EventEmitter();
-  @Output() public iconChange: EventEmitter<string> = new EventEmitter();
-  @Output() public colorChange: EventEmitter<string> = new EventEmitter();
+  @Output() public colorIconChange: EventEmitter<{color: string; icon: string}> = new EventEmitter();
   @Output() public delete = new EventEmitter();
   @Output() public back = new EventEmitter();
 
@@ -54,11 +53,11 @@ export class ResourceHeaderComponent implements AfterViewInit {
   constructor(private i18n: I18n) {}
 
   @HostListener('document:click', ['$event'])
-  public documentClicked($event): void {
-    if (this.colorPickerVisible && this.clickedComponent && $event.target !== this.clickedComponent) {
+  public documentClicked(event): void {
+    if (this.colorPickerVisible && this.clickedComponent && event.target !== this.clickedComponent) {
       this.resource.icon = this.oldIcon || this.resource.icon;
       this.resource.color = this.oldColor || this.resource.color;
-      $event.stopPropagation();
+      event.stopPropagation();
     }
   }
 
@@ -166,18 +165,19 @@ export class ResourceHeaderComponent implements AfterViewInit {
     });
   }
 
-  public saveSelectedColor($event: MouseEvent): void {
-    this.colorChange.emit(this.resource.color);
-    this.iconChange.emit(this.resource.icon);
+  public saveSelectedColor(): void {
+    if (this.resource.color !== this.oldColor || this.resource.icon !== this.oldIcon) {
+      this.colorIconChange.emit({color: this.resource.color, icon: this.resource.icon});
+    }
   }
 
-  public revertSelectedColor($event: MouseEvent): void {
+  public revertSelectedColor(): void {
     this.resource.color = this.oldColor;
     this.resource.icon = this.oldIcon;
   }
 
-  public storeIconAndColor($event: MouseEvent): void {
-    this.clickedComponent = $event.target;
+  public storeIconAndColor(event: MouseEvent): void {
+    this.clickedComponent = event.target;
     this.oldColor = this.resource.color;
     this.oldIcon = this.resource.icon;
   }

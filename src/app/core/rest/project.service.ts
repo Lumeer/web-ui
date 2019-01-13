@@ -21,30 +21,30 @@ import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {Project} from '../dto';
+import {ProjectDto} from '../dto';
 import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class ProjectService extends PermissionService {
-  public getProjects(orgCode: string): Observable<Project[]> {
+  public getProjects(orgCode: string): Observable<ProjectDto[]> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
       throw Error('Organization not set');
     }
 
-    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
+    return this.httpClient.get<ProjectDto[]>(this.apiPrefix(orgCode));
   }
 
   public getProjectCodes(orgCode: string): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.apiPrefix(orgCode)}/info/codes`).pipe();
   }
 
-  public getProject(orgCode: string, projCode: string): Observable<Project> {
+  public getProject(orgCode: string, projCode: string): Observable<ProjectDto> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
       throw Error(`Workspace not set ${orgCode} ${projCode}`);
     }
 
-    return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
+    return this.httpClient.get<ProjectDto>(this.apiPrefix(orgCode, projCode));
   }
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
@@ -55,19 +55,19 @@ export class ProjectService extends PermissionService {
     return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
   }
 
-  public createProject(orgCode: string, project: Project): Observable<Project> {
+  public createProject(orgCode: string, project: ProjectDto): Observable<ProjectDto> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
       throw Error('Organization not set');
     }
 
-    return this.httpClient.post<Project>(this.apiPrefix(orgCode), project);
+    return this.httpClient.post<ProjectDto>(this.apiPrefix(orgCode), project);
   }
 
-  public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
+  public editProject(orgCode: string, projCode: string, project: ProjectDto): Observable<ProjectDto> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
       throw Error(`Workspace not set ${orgCode} ${projCode}`);
     }
-    return this.httpClient.put<Project>(this.apiPrefix(orgCode, projCode), project);
+    return this.httpClient.put<ProjectDto>(this.apiPrefix(orgCode, projCode), project);
   }
 
   private hasOrganizationApiPrefix(orgCode: string): boolean {

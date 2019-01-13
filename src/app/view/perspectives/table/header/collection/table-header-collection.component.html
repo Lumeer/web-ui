@@ -3,8 +3,10 @@
   <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
     <table-caption [collection]="collection"
                    [cursor]="cursor"
+                   [attr.title]="collection?.name || ''"
                    [style.width]="part | partWidth:canManageConfig | pixel"
-                   (click)="onCaptionClick()">
+                   (click)="onCaptionClick()"
+                   class="text-truncate">
     </table-caption>
     <table-column-group [table]="table"
                         [cursor]="cursor"

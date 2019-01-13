@@ -18,8 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
-import {ProjectModel} from './project.model';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {Project} from './project';
+import {Organization} from '../organizations/organization';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -58,13 +59,13 @@ export namespace ProjectsAction {
   export class Get implements Action {
     public readonly type = ProjectsActionType.GET;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = ProjectsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; projects: ProjectModel[]}) {}
+    public constructor(public payload: {organizationId: string; projects: Project[]}) {}
   }
 
   export class GetFailure implements Action {
@@ -76,7 +77,7 @@ export namespace ProjectsAction {
   export class GetOneSuccess implements Action {
     public readonly type = ProjectsActionType.GET_ONE_SUCCESS;
 
-    public constructor(public payload: {project: ProjectModel}) {}
+    public constructor(public payload: {project: Project}) {}
   }
 
   export class GetCodes implements Action {
@@ -100,31 +101,31 @@ export namespace ProjectsAction {
   export class Create implements Action {
     public readonly type = ProjectsActionType.CREATE;
 
-    public constructor(public payload: {project: ProjectModel; callback?: (project: ProjectModel) => void}) {}
+    public constructor(public payload: {project: Project; callback?: (project: Project) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ProjectsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {project: ProjectModel}) {}
+    public constructor(public payload: {project: Project}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = ProjectsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {organizationCode: string; error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = ProjectsActionType.UPDATE;
 
-    public constructor(public payload: {project: ProjectModel}) {}
+    public constructor(public payload: {project: Project}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ProjectsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {project: ProjectModel}) {}
+    public constructor(public payload: {project: Project; oldCode?: string}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -148,7 +149,7 @@ export namespace ProjectsAction {
   export class DeleteSuccess implements Action {
     public readonly type = ProjectsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {projectId: string}) {}
+    public constructor(public payload: {projectId: string; organizationId?: string; projectCode?: string}) {}
   }
 
   export class DeleteFailure implements Action {
@@ -170,8 +171,8 @@ export namespace ProjectsAction {
       public payload: {
         projectId: string;
         type: PermissionType;
-        permission: PermissionModel;
-        currentPermission: PermissionModel;
+        permission: Permission;
+        currentPermission: Permission;
       }
     ) {}
   }
@@ -179,21 +180,19 @@ export namespace ProjectsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {projectId: string; type: PermissionType; permission: PermissionModel}) {}
+    public constructor(public payload: {projectId: string; type: PermissionType; permission: Permission}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_FAILURE;
 
-    public constructor(
-      public payload: {projectId: string; type: PermissionType; permission: PermissionModel; error: any}
-    ) {}
+    public constructor(public payload: {projectId: string; type: PermissionType; permission: Permission; error: any}) {}
   }
 
   export class SwitchWorkspace implements Action {
     public readonly type = ProjectsActionType.SWITCH_WORKSPACE;
 
-    public constructor(public payload: {organizationId: string; projectId: string}) {}
+    public constructor(public payload: {organizationId: string; projectId: string; nextAction?: Action}) {}
   }
 
   export class ClearWorkspaceData implements Action {

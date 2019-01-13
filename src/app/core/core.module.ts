@@ -29,25 +29,28 @@ import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
-import {CollectionService} from './rest/collection.service';
-import {DocumentService} from './rest/document.service';
-import {EventService} from './rest/event.service';
-import {GroupService} from './rest/group.service';
-import {ImportService} from './rest/import.service';
+import {
+  CollectionService,
+  DocumentService,
+  EventService,
+  GroupService,
+  ImportService,
+  LinkInstanceService,
+  LinkTypeService,
+  OrganizationService,
+  ProjectService,
+  SearchService,
+  UserService,
+  ViewService,
+} from './rest';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
-import {LinkInstanceService} from './rest/link-instance.service';
-import {LinkTypeService} from './rest/link-type.service';
-import {OrganizationService} from './rest/organization.service';
-import {ProjectService} from './rest/project.service';
-import {SearchService} from './rest/search.service';
-import {UserService} from './rest/user.service';
-import {ViewService} from './rest/view.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {PusherService} from './pusher/pusher.service';
 import {VideoService} from './api/video/video.service';
 import {UserNotificationsService} from './rest/user-notifications.service';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   imports: [
@@ -61,6 +64,7 @@ import {UserNotificationsService} from './rest/user-notifications.service';
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule,
+    BsDatepickerModule.forRoot(),
   ],
   declarations: [HomeComponent],
   providers: [

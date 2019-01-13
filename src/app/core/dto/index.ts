@@ -17,21 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {Attribute} from './attribute';
+export {AttributeDto} from './attribute.dto';
 export {CollectionDto} from './collection.dto';
-export {Contact} from './contact';
+export {ContactDto} from './contact.dto';
 export {DocumentDto} from './document.dto';
 export {Event} from './event';
-export {Group} from './group';
-export {LinkInstance} from './link-instance';
+export {GroupDto} from './group.dto';
+export {LinkInstanceDto} from './link-instance.dto';
 export {LinkTypeDto} from './link-type.dto';
-export {LinkedAttribute} from './linked-attribute';
-export {Organization} from './organization';
-export {Permission} from './permission';
-export {Permissions} from './permissions';
-export {Project} from './project';
+export {OrganizationDto} from './organization.dto';
+export {PermissionDto} from './permission.dto';
+export {PermissionsDto} from './permissions.dto';
+export {ProjectDto} from './project.dto';
 export {QueryDto} from './query.dto';
-export {Resource} from './resource';
+export {ResourceDto} from './resource.dto';
 export {SuggestionType} from './suggestion-type';
 export {SuggestionsDto} from './suggestions.dto';
 export {UserSettings} from './user.settings';

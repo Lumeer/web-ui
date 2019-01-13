@@ -23,10 +23,10 @@ import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {Group} from '../dto';
+import {GroupDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 import {isNullOrUndefined} from 'util';
 import {filter, map} from 'rxjs/operators';
 
@@ -41,20 +41,20 @@ export class GroupService {
       .subscribe(workspace => (this.workspace = workspace));
   }
 
-  public createGroup(group: Group): Observable<Group> {
-    return this.httpClient.post<Group>(this.apiPrefix(), group);
+  public createGroup(group: GroupDto): Observable<GroupDto> {
+    return this.httpClient.post<GroupDto>(this.apiPrefix(), group);
   }
 
-  public updateGroup(id: string, group: Group): Observable<Group> {
-    return this.httpClient.put<Group>(this.apiPrefix(id), group);
+  public updateGroup(id: string, group: GroupDto): Observable<GroupDto> {
+    return this.httpClient.put<GroupDto>(this.apiPrefix(id), group);
   }
 
   public deleteGroup(id: string): Observable<string> {
     return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'}).pipe(map(() => id));
   }
 
-  public getGroups(): Observable<Group[]> {
-    return this.httpClient.get<Group[]>(this.apiPrefix());
+  public getGroups(): Observable<GroupDto[]> {
+    return this.httpClient.get<GroupDto[]>(this.apiPrefix());
   }
 
   private apiPrefix(groupId?: string): string {

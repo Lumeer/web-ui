@@ -20,7 +20,7 @@
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
@@ -30,14 +30,18 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesLoaded} from './link-types.state';
+import {LinkInstancesActionType} from '../link-instances/link-instances.action';
+import {selectQuery} from '../navigation/navigation.state';
+import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
+import {NavigationAction} from '../navigation/navigation.action';
 
 @Injectable()
 export class LinkTypesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
-    withLatestFrom(this.store$.select(selectLinkTypesLoaded)),
-    filter(([action, loaded]) => !loaded),
+    withLatestFrom(this.store$.pipe(select(selectLinkTypesLoaded))),
+    filter(([action, loaded]) => action.payload.force || !loaded),
     mergeMap(() => {
       return this.linkTypeService.getLinkTypes().pipe(
         map(dtos => dtos.map(dto => LinkTypeConverter.fromDto(dto))),
@@ -123,6 +127,20 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.DeleteFailure({error: error})))
       )
     )
+  );
+
+  @Effect()
+  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    map(([action, query]) => {
+      const linkTypeIdsInQuery = getAllLinkTypeIdsFromQuery(query);
+      if (linkTypeIdsInQuery.includes(action.payload.linkTypeId)) {
+        return new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId});
+      }
+      return null;
+    }),
+    filter(action => !!action)
   );
 
   @Effect()

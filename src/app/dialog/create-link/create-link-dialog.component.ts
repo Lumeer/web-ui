@@ -24,9 +24,9 @@ import {Store} from '@ngrx/store';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from '../../core/store/collections/collection';
 import {selectAllCollections} from '../../core/store/collections/collections.state';
-import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {DialogService} from '../dialog.service';
 
@@ -35,7 +35,7 @@ import {DialogService} from '../dialog.service';
   templateUrl: './create-link-dialog.component.html',
 })
 export class CreateLinkDialogComponent implements OnInit, OnDestroy {
-  private collections: CollectionModel[];
+  private collections: Collection[];
 
   private subscriptions = new Subscription();
 
@@ -111,7 +111,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
   }
 
   private createLinkTypeAction(): LinkTypesAction.Create {
-    const linkType: LinkTypeModel = {
+    const linkType: LinkType = {
       name: this.linkNameInput.value,
       collectionIds: [this.collections[0].id, this.collections[1].id],
     };

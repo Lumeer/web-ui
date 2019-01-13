@@ -17,20 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstance} from '../../dto/link-instance';
-import {LinkInstanceModel} from './link-instance.model';
+import {LinkInstanceDto} from '../../dto/link-instance.dto';
+import {LinkInstance} from './link.instance';
 
 export class LinkInstanceConverter {
-  public static fromDto(dto: LinkInstance): LinkInstanceModel {
+  public static fromDto(dto: LinkInstanceDto): LinkInstance {
     return {
       id: dto.id,
       linkTypeId: dto.linkTypeId,
       documentIds: dto.documentIds,
       data: dto.data,
+      version: dto.version,
     };
   }
 
-  public static toDto(model: LinkInstanceModel): LinkInstance {
+  public static toDto(model: LinkInstance): LinkInstanceDto {
     return {
       id: model.id,
       linkTypeId: model.linkTypeId,

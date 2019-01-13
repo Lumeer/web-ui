@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Dictionary} from 'lodash';
-import {CollectionModel} from '../collections/collection.model';
-import {UserModel} from '../users/user.model';
+import {Collection} from '../collections/collection';
+import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {AttributeFilter, Query, ConditionType} from '../navigation/query';
 import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
@@ -48,9 +48,9 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): {[collec
 }
 
 export function generateDocumentData(
-  collection: CollectionModel,
+  collection: Collection,
   collectionFilters: AttributeFilter[],
-  currentUser?: UserModel
+  currentUser?: User
 ): {[attributeId: string]: any} {
   if (!collection) {
     return {};
@@ -88,9 +88,9 @@ export function generateDocumentData(
   return data;
 }
 
-export function generateDocumentDataByQuery(query: Query, currentUser: UserModel): {[attributeId: string]: any} {
+export function generateDocumentDataByQuery(query: Query, currentUser: User): {[attributeId: string]: any} {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
-  const collection: CollectionModel = {
+  const collection: Collection = {
     id: collectionId,
     name: '',
     attributes: [],

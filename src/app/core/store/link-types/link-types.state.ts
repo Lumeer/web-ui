@@ -20,13 +20,13 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {LinkTypeModel} from './link-type.model';
+import {LinkType} from './link.type';
 
-export interface LinkTypesState extends EntityState<LinkTypeModel> {
+export interface LinkTypesState extends EntityState<LinkType> {
   loaded: boolean;
 }
 
-export const linkTypesAdapter = createEntityAdapter<LinkTypeModel>();
+export const linkTypesAdapter = createEntityAdapter<LinkType>();
 
 export const initialLinkTypesState: LinkTypesState = linkTypesAdapter.getInitialState({
   loaded: false,

@@ -31,8 +31,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {ChartConfig} from '../../../../core/store/charts/chart.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {ChartConfig} from '../../../../core/store/charts/chart';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from '../visualizer/chart-visualizer';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -46,7 +46,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 })
 export class ChartVisualizationComponent implements OnChanges {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public documents: DocumentModel[];

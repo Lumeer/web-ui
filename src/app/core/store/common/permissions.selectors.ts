@@ -33,11 +33,13 @@ import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {selectCurrentUser} from '../users/users.state';
-import {selectCurrentView} from '../views/views.state';
+import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {Query} from '../navigation/query';
 import {selectWorkspaceModels} from './common.selectors';
+import {View} from '../views/view';
+import {filterViewsByQuery, sortViewsById} from '../views/view.filters';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -128,3 +130,16 @@ export const selectLinkTypesByCollectionId = (collectionId: string) =>
     selectLinkTypesByReadPermission,
     linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
   );
+
+export const selectViewsByRead = createSelector(
+  selectAllViews,
+  selectCurrentUser,
+  selectCurrentUserIsManager,
+  (views, user, isManager) => (isManager && views) || views.filter(view => userHasRoleInResource(user, view, Role.Read))
+);
+
+export const selectViewsByQuery = createSelector(
+  selectViewsByRead,
+  selectQuery,
+  (views, query): View[] => sortViewsById(filterViewsByQuery(views, query))
+);

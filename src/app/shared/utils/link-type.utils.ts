@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
+import {LinkType} from '../../core/store/link-types/link.type';
 
-export function getOtherLinkedCollectionId(linkType: LinkTypeModel, collectionId: string): string {
+export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
   return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
 }

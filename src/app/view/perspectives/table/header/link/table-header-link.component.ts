@@ -21,9 +21,9 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {selectCollectionsByLinkType} from '../../../../../core/store/collections/collections.state';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
@@ -48,8 +48,8 @@ export class TableHeaderLinkComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  public collections$: Observable<CollectionModel[]>;
-  public linkType$: Observable<LinkTypeModel>;
+  public collections$: Observable<Collection[]>;
+  public linkType$: Observable<LinkType>;
 
   public constructor(private store: Store<AppState>) {}
 

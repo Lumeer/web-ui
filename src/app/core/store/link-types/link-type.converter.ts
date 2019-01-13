@@ -18,21 +18,22 @@
  */
 
 import {LinkTypeDto} from '../../dto';
-import {CollectionModel} from '../collections/collection.model';
-import {LinkTypeModel} from './link-type.model';
+import {Collection} from '../collections/collection';
+import {LinkType} from './link.type';
 
 export class LinkTypeConverter {
-  public static fromDto(dto: LinkTypeDto, correlationId?: string): LinkTypeModel {
+  public static fromDto(dto: LinkTypeDto, correlationId?: string): LinkType {
     return {
       id: dto.id,
       name: dto.name,
       collectionIds: dto.collectionIds,
       attributes: [], // TODO
       correlationId: correlationId,
+      version: dto.version,
     };
   }
 
-  public static toDto(model: LinkTypeModel): LinkTypeDto {
+  public static toDto(model: LinkType): LinkTypeDto {
     return {
       id: model.id,
       name: model.name,
@@ -41,8 +42,8 @@ export class LinkTypeConverter {
     };
   }
 
-  public static addCollections(linkType: LinkTypeModel, collections: CollectionModel[]): LinkTypeModel {
-    const usedCollections: [CollectionModel, CollectionModel] = [
+  public static addCollections(linkType: LinkType, collections: Collection[]): LinkType {
+    const usedCollections: [Collection, Collection] = [
       collections.find(collection => collection.id === linkType.collectionIds[0]),
       collections.find(collection => collection.id === linkType.collectionIds[1]),
     ];

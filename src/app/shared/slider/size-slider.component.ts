@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {SizeType} from './size-type';
 
 @Component({
@@ -25,7 +35,7 @@ import {SizeType} from './size-type';
   templateUrl: './size-slider.component.html',
   styleUrls: ['./size-slider.component.scss'],
 })
-export class SizeSliderComponent implements OnInit {
+export class SizeSliderComponent implements OnChanges {
   @ViewChild('slider')
   public slider: ElementRef;
 
@@ -44,9 +54,11 @@ export class SizeSliderComponent implements OnInit {
   public circlePosition: number = 0;
   public step = this.componentWidth / this.sizes.length;
 
-  public ngOnInit(): void {
-    const index = this.defaultSize ? this.sizes.indexOf(this.defaultSize) : Math.floor(this.sizes.length / 2);
-    this.circlePosition = this.calculateSliderLeft(index);
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.defaultSize) {
+      const index = this.defaultSize ? this.sizes.indexOf(this.defaultSize) : Math.floor(this.sizes.length / 2);
+      this.circlePosition = this.calculateSliderLeft(index);
+    }
   }
 
   @HostListener('document:mousedown', ['$event'])

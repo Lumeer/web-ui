@@ -27,16 +27,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Actions} from '@ngrx/effects';
+import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableCompoundColumn, TableModel, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
@@ -75,10 +75,10 @@ export class TableSingleColumnComponent implements OnChanges {
   public column: TableSingleColumn;
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
-  public linkType: LinkTypeModel;
+  public linkType: LinkType;
 
   @Input()
   public canManageConfig: boolean;
@@ -101,8 +101,8 @@ export class TableSingleColumnComponent implements OnChanges {
   @HostBinding('style.background')
   public background: string;
 
-  private attributes: AttributeModel[];
-  public attribute: AttributeModel;
+  private attributes: Attribute[];
+  public attribute: Attribute;
 
   public lastName: string;
 
@@ -148,7 +148,7 @@ export class TableSingleColumnComponent implements OnChanges {
     }
   }
 
-  private extractAttributes(): AttributeModel[] {
+  private extractAttributes(): Attribute[] {
     if (this.collection) {
       return this.collection.attributes;
     }
@@ -157,7 +157,7 @@ export class TableSingleColumnComponent implements OnChanges {
     }
   }
 
-  private findAttribute(attributes: AttributeModel[]) {
+  private findAttribute(attributes: Attribute[]) {
     return attributes.find(attribute => attribute.id === this.column.attributeId);
   }
 
@@ -180,13 +180,13 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => this.editableCellDirective.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
       .subscribe(() => {
         this.lastName = '';
         this.editableCellDirective.startEditing(true);
@@ -226,7 +226,7 @@ export class TableSingleColumnComponent implements OnChanges {
     }
   }
 
-  private renameAttribute(oldAttribute: AttributeModel, lastName: string) {
+  private renameAttribute(oldAttribute: Attribute, lastName: string) {
     const parentName = extractAttributeParentName(oldAttribute.name);
     const name = parentName ? `${parentName}.${lastName}` : lastName;
     const attribute = {...oldAttribute, name};
@@ -239,7 +239,7 @@ export class TableSingleColumnComponent implements OnChanges {
     }
   }
 
-  private renameCollectionAttribute(attribute: AttributeModel) {
+  private renameCollectionAttribute(attribute: Attribute) {
     if (attribute.id) {
       this.updateCollectionAttribute(attribute);
     } else {
@@ -247,7 +247,7 @@ export class TableSingleColumnComponent implements OnChanges {
     }
   }
 
-  private createCollectionAttribute(attribute: AttributeModel) {
+  private createCollectionAttribute(attribute: Attribute) {
     const nextAction = new TablesAction.InitColumn({
       cursor: this.cursor,
       attributeId: null,
@@ -262,7 +262,7 @@ export class TableSingleColumnComponent implements OnChanges {
     );
   }
 
-  private updateCollectionAttribute(attribute: AttributeModel) {
+  private updateCollectionAttribute(attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
         collectionId: this.collection.id,
@@ -272,7 +272,7 @@ export class TableSingleColumnComponent implements OnChanges {
     );
   }
 
-  public isUniqueAttributeName(attributes: AttributeModel[], attributeId: string, lastName: string): boolean {
+  public isUniqueAttributeName(attributes: Attribute[], attributeId: string, lastName: string): boolean {
     if (this.cursor.columnPath.length === 1) {
       return filterAttributesByDepth(attributes, 1)
         .filter(attribute => attributeId !== attribute.id)
@@ -294,6 +294,10 @@ export class TableSingleColumnComponent implements OnChanges {
     const columnPath = parentPath.concat(columnIndex + (next ? 1 : 0));
     const cursor = {...this.cursor, columnPath};
     this.store$.dispatch(new TablesAction.AddColumn({cursor}));
+  }
+
+  public onConfigure() {
+    this.dialogService.openAttributeConfigDialog(this.collection.id, this.attribute.id);
   }
 
   public onEdit() {

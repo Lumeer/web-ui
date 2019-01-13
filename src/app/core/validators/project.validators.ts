@@ -21,29 +21,28 @@ import {Injectable} from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {filter, map, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
-import {isNullOrUndefined} from 'util';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectOrganizationCodes} from '../store/organizations/organizations.state';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsCodesForOrganization} from '../store/projects/projects.state';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class ProjectValidators {
   private currentOrganizationId: string;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public setOrganizationId(id: string) {
     this.currentOrganizationId = id;
-    this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+    this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
   }
 
   public uniqueCode(excludeCode?: string): AsyncValidatorFn {
     return (control: AbstractControl) =>
-      this.store.select(selectProjectsCodesForOrganization(this.currentOrganizationId)).pipe(
+      this.store$.pipe(
+        select(selectProjectsCodesForOrganization(this.currentOrganizationId)),
         filter(codes => !isNullOrUndefined(codes)),
         map(codes => {
           const codesLowerCase = codes.map(code => code.toLowerCase());

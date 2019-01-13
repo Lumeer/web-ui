@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {ChartAxisModel, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart.model';
+import {Collection} from '../../../../core/store/collections/collection';
+import {ChartAxis, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
 import {Perspective} from '../../perspective';
 
 @Component({
@@ -29,7 +29,7 @@ import {Perspective} from '../../perspective';
 })
 export class ChartConfigComponent {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public config: ChartConfig;
@@ -49,7 +49,7 @@ export class ChartConfigComponent {
     this.configChange.emit(newConfig);
   }
 
-  public onAxisSelect(type: ChartAxisType, axis: ChartAxisModel) {
+  public onAxisSelect(type: ChartAxisType, axis: ChartAxis) {
     const axes = {...this.config.axes, [type]: axis};
     const newConfig = {...this.config, axes: axes};
     this.configChange.emit(newConfig);

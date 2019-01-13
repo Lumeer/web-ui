@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisModel, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart.model';
+import {ChartAxis, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
@@ -45,7 +45,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return data;
   }
 
-  private createHelperData(xAxis: ChartAxisModel, y1Axis: ChartAxisModel, y2Axis: ChartAxisModel): any[] {
+  private createHelperData(xAxis: ChartAxis, y1Axis: ChartAxis, y2Axis: ChartAxis): any[] {
     const values = this.findAxesNonNullAttributeValues(xAxis.attributeId, y1Axis.attributeId, y2Axis.attributeId);
     if (values.length < 2) {
       return [];
@@ -85,12 +85,12 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return [yValue, y2Value].filter(val => !!val);
   }
 
-  private createAxis1Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+  private createAxis1Data(xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
     const dataStyle = this.getDataStyle(ChartAxisType.Y1);
     return this.createAxesData(dataStyle, ChartAxisType.Y1, xAxis, yAxis);
   }
 
-  private createAxis2Data(xAxis?: ChartAxisModel, yAxis?: ChartAxisModel): Data {
+  private createAxis2Data(xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
     const dataStyle = this.getDataStyle(ChartAxisType.Y2);
     const data = this.createAxesData(dataStyle, ChartAxisType.Y2, xAxis, yAxis);
     return {...data, yaxis: 'y2'};
@@ -114,12 +114,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return collection && collection.color;
   }
 
-  private createAxesData(
-    dataStyle: Data,
-    yAxisType: ChartAxisType,
-    xAxis?: ChartAxisModel,
-    yAxis?: ChartAxisModel
-  ): Data {
+  private createAxesData(dataStyle: Data, yAxisType: ChartAxisType, xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
     const data = {...dataStyle};
 
     const traceX = [];

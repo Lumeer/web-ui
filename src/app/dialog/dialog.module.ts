@@ -34,6 +34,8 @@ import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 import {PlayVideoComponent} from './play-video/play-video.component';
+import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
+import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
 
 @NgModule({
   imports: [
@@ -44,6 +46,7 @@ import {PlayVideoComponent} from './play-video/play-video.component';
     DialogRoutingModule,
     DialogWrapperModule,
     ShareViewDialogModule,
+    AttributeTypeFormModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,
@@ -56,6 +59,7 @@ import {PlayVideoComponent} from './play-video/play-video.component';
     ResourceNameInputComponent,
     FeedbackDialogComponent,
     PlayVideoComponent,
+    AttributeTypeDialogComponent,
   ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],

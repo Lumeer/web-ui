@@ -18,8 +18,8 @@
  */
 
 import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit} from '@angular/core';
-import {PaymentModel} from '../../../../core/store/organizations/payment/payment.model';
-import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {Payment} from '../../../../core/store/organizations/payment/payment';
+import {Organization} from '../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
 import {ActionsSubject, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
@@ -29,7 +29,7 @@ import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {PaymentsAction, PaymentsActionType} from '../../../../core/store/organizations/payment/payments.action';
-import {ServiceLimitsModel} from '../../../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {selectLastCreatedPayment} from '../../../../core/store/organizations/payment/payments.state';
 import {DatePipe, DOCUMENT} from '@angular/common';
@@ -45,15 +45,15 @@ import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
   styleUrls: ['./payments-panel.component.scss'],
 })
 export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit {
-  private organization: OrganizationModel;
+  private organization: Organization;
   private organizationSubscription: Subscription;
 
-  private serviceLimits: ServiceLimitsModel;
+  private serviceLimits: ServiceLimits;
   private serviceLimitsSubscription: Subscription;
 
   private readonly languageCode: string = 'en';
 
-  public lastPayment: PaymentModel;
+  public lastPayment: Payment;
   private paymentCreatedSubscription: Subscription;
   private lastCreatedPayment: Subscription;
 
@@ -123,7 +123,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       999
     );
 
-    const payment: PaymentModel = {
+    const payment: Payment = {
       date: new Date(),
       serviceLevel: 'BASIC',
       amount: $event.amount,

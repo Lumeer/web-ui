@@ -36,11 +36,11 @@ jobs:
       # run AOT build
       - run: npm run build
 
+      # run unit tests
+      - run: npm run test
+
       # check formatting
       - run: npm run format:check
 
       # check lint errors
       - run: npm run lint
-
-      # run unit tests
-      - run: npm run test

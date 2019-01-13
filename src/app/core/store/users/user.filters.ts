@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {OrganizationModel} from '../organizations/organization.model';
+import {Organization} from '../organizations/organization';
 import {isNullOrUndefined} from 'util';
-import {UserModel} from './user.model';
+import {User} from './user';
 
-export function filterUserFunctions(users: UserModel[]) {
+export function filterUserFunctions(users: User[]) {
   return users.filter(user => typeof user === 'object');
 }
 
-export function filterUsersByOrganization(users: UserModel[], organization: OrganizationModel): UserModel[] {
+export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
   if (isNullOrUndefined(organization)) {
     return [];
   }
@@ -33,7 +33,7 @@ export function filterUsersByOrganization(users: UserModel[], organization: Orga
   return users.filter(user => user.groupsMap[organization.id]);
 }
 
-export function filterUsersByFilter(users: UserModel[], filter: string): UserModel[] {
+export function filterUsersByFilter(users: User[], filter: string): User[] {
   const filtered = users.slice();
   if (!filter) {
     return filtered;
