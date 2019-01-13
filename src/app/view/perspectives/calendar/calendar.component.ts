@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -39,7 +39,7 @@ export class CalendarComponent implements OnInit {
   @Input()
   public query: QueryStem;
 
-  public collections$: Observable<CollectionModel[]>;
+  public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
   //public calendar$: Observable<MapModel>;
   //public validQuery$: Observable<boolean>;

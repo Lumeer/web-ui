@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -28,7 +28,7 @@ import {Query} from '../../../core/store/navigation/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {map, take} from 'rxjs/operators';
 
-import {ViewModel} from '../../../core/store/views/view.model';
+import {View} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
@@ -46,9 +46,9 @@ import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.ac
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<CollectionModel>;
+  public collection$: Observable<Collection>;
   public config$: Observable<GanttChartConfig>;
-  public currentView$: Observable<ViewModel>;
+  public currentView$: Observable<View>;
 
   public query$ = new BehaviorSubject<Query>(null);
 

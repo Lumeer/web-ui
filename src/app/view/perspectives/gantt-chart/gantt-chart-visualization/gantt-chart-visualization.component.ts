@@ -10,7 +10,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   GanttChartBarPropertyOptional,
@@ -31,7 +31,7 @@ declare let $: any;
 })
 export class GanttChartVisualizationComponent implements OnChanges {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public documents: DocumentModel[];

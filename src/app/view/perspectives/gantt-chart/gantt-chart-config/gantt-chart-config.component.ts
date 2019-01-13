@@ -1,5 +1,5 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {Perspective} from '../../perspective';
 import {
   GanttChartBarModel,
@@ -16,7 +16,7 @@ import {
 })
 export class GanttChartConfigComponent {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public config: GanttChartConfig;

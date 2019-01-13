@@ -23,7 +23,7 @@ import {
   GanttChartBarPropertyOptional,
   GanttChartConfig,
 } from '../../../../../core/store/gantt-charts/gantt-chart.model';
-import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
@@ -31,7 +31,7 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
 })
 export class BarSelectPropertyOptionalItemsPipe implements PipeTransform {
   public transform(
-    collections: CollectionModel[],
+    collections: Collection[],
     bar: GanttChartBarPropertyOptional,
     config: GanttChartConfig
   ): SelectItemModel[] {
@@ -53,13 +53,13 @@ export class BarSelectPropertyOptionalItemsPipe implements PipeTransform {
       .map(entry => entry[1].attributeId);
   }
 
-  public getItemsForCollection(collection: CollectionModel, restrictedIds: string[]): SelectItemModel[] {
+  public getItemsForCollection(collection: Collection, restrictedIds: string[]): SelectItemModel[] {
     return collection.attributes
       .filter(attribute => !restrictedIds.includes(attribute.id))
       .map(attribute => this.attributeToItem(collection, attribute));
   }
 
-  public attributeToItem(collection: CollectionModel, attribute: AttributeModel): SelectItemModel {
+  public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
     const bar: GanttChartBarModel = {collectionId: collection.id, attributeId: attribute.id};
     return {id: bar, value: attribute.name, icon: collection.icon, iconColor: collection.color};
   }

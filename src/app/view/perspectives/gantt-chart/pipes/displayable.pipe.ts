@@ -18,13 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {isSingleCollectionQuery} from "../../../../core/store/navigation/query.util";
 
 @Pipe({
   name: 'displayable',
 })
 export class DisplayablePipe implements PipeTransform {
-  public transform(query: QueryStem): boolean {
-    return query && query.collectionId && query.collectionId.length === 1;
+  public transform(query: Query): boolean {
+    return isSingleCollectionQuery(query);
   }
 }
