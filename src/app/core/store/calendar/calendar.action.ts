@@ -24,9 +24,7 @@ export enum CalendarActionType {
 
   ADD_CALENDAR = '[Calendar] Add calendar',
   REMOVE_CALENDAR = '[Calendar] Remove calendar',
-
   SET_CONFIG = '[Calendar] Set config',
-
   CLEAR = '[Calendar] Clear'
 
 }
@@ -50,7 +48,7 @@ export namespace CalendarAction {
   export class SetConfig implements Action {
     public readonly type = CalendarActionType.SET_CONFIG;
 
-    public constructor(public payload: { calendarId: string, config: CalendarConfig }) {
+    public constructor(public payload: { calendarId: string, config: CalendarConfig[] }) {
     }
   }
 

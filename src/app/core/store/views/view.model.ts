@@ -46,7 +46,7 @@ export interface ViewConfigModel {
   table?: TableConfig;
   ganttchart?: GanttChartConfigModel;
   chart?: ChartConfig;
-  calendar?: CalendarConfig;
+  calendar?: CalendarConfig[];
 
 }
 
@@ -68,4 +68,3 @@ export interface GanttChartConfigModel {
   //TODO
   whateverConfig?: string;    //not sure
 }
-

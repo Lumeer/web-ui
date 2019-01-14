@@ -21,10 +21,11 @@ export const DEFAULT_CALENDAR_ID = 'default';
 
 export interface CalendarModel {
   id: string;
-  config?: CalendarConfig;
+  config?: CalendarConfig[];
 }
 
 export interface CalendarConfig {
+  id: string,
   barsProperties: { [type: string]: CalendarBarModel };
 }
 
