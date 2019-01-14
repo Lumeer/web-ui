@@ -21,9 +21,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
-import {Permissions, Permission} from '../dto';
+import {PermissionsDto, PermissionDto} from '../dto';
 import {Observable} from 'rxjs';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 
@@ -35,16 +35,16 @@ export abstract class PermissionService {
     this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
-  public getPermissions(): Observable<Permissions> {
-    return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`);
+  public getPermissions(): Observable<PermissionsDto> {
+    return this.httpClient.get<PermissionsDto>(`${this.actualApiPrefix()}/permissions`);
   }
 
-  public updateUserPermission(userPermissions: Permission[], workspace?: Workspace): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/users`, userPermissions);
+  public updateUserPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto> {
+    return this.httpClient.put<PermissionDto>(`${this.actualApiPrefix(workspace)}/permissions/users`, userPermissions);
   }
 
-  public updateGroupPermission(userPermissions: Permission[], workspace?: Workspace): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/groups`, userPermissions);
+  public updateGroupPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto> {
+    return this.httpClient.put<PermissionDto>(`${this.actualApiPrefix(workspace)}/permissions/groups`, userPermissions);
   }
 
   public removeUserPermission(user: string): Observable<HttpResponse<any>> {

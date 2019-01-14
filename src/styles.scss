@@ -2,10 +2,11 @@
 @import 'styles/variables';
 @import '~bootstrap/scss/bootstrap';
 @import 'styles/bootswatch';
+@import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 @import '../node_modules/flag-icon-css/sass/flag-icon';
-@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import '../node_modules/angular-calendar/css/angular-calendar.css';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 *[contenteditable] {

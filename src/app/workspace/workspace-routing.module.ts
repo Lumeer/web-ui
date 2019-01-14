@@ -30,12 +30,16 @@ import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
+import {UsersGuard} from '../core/guards/data/users.guard';
 
 const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
+    resolve: {
+      users: UsersGuard,
+    },
     children: [
       {
         path: 'users',
@@ -52,6 +56,9 @@ const workspaceRoutes: Routes = [
     path: 'organization/:organizationCode',
     component: OrganizationSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
+    resolve: {
+      users: UsersGuard,
+    },
     children: [
       {
         path: 'detail',

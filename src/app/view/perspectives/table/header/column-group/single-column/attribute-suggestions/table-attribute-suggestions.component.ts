@@ -22,7 +22,7 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {filter, first, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {
   selectAllCollections,
@@ -30,7 +30,7 @@ import {
 } from '../../../../../../../core/store/collections/collections.state';
 import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
-import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
@@ -41,9 +41,9 @@ import {Direction} from '../../../../../../../shared/direction';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
-  linkType?: LinkTypeModel;
-  collection: CollectionModel;
-  attribute: AttributeModel;
+  linkType?: LinkType;
+  collection: Collection;
+  attribute: Attribute;
 }
 
 const MAX_SUGGESTIONS_COUNT = 5;
@@ -65,7 +65,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public attributeName: string;
 
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   public lastName: string;
 
@@ -92,7 +92,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public createAttribute() {
-    const attribute: AttributeModel = {
+    const attribute: Attribute = {
       name: this.attributeName,
     };
     this.store$.dispatch(
@@ -104,7 +104,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     );
   }
 
-  private initColumn(attributes: AttributeModel[]) {
+  private initColumn(attributes: Attribute[]) {
     const attribute = attributes.find(attr => attr.name === this.attributeName);
     if (attribute) {
       this.store$.dispatch(
@@ -116,11 +116,11 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     }
   }
 
-  public useLinkType(linkType: LinkTypeModel) {
+  public useLinkType(linkType: LinkType) {
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 
-  public createLinkType(collection: CollectionModel) {
+  public createLinkType(collection: Collection) {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     const linkCollectionIds = [this.collection.id, collection.id].join(',');
     this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
@@ -159,7 +159,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
   public suggestAllAttributes(): Observable<LinkedAttribute[]> {
     return this.store$.select(selectAllCollections).pipe(
-      map((collections: CollectionModel[]) =>
+      map((collections: Collection[]) =>
         collections.reduce<LinkedAttribute[]>((filtered, collection) => {
           if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
             return filtered.slice(0, 5);
@@ -179,7 +179,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     );
   }
 
-  private isMatchingAttribute(collection: CollectionModel, attribute: AttributeModel): boolean {
+  private isMatchingAttribute(collection: Collection, attribute: Attribute): boolean {
     return (
       this.lastName &&
       (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()) ||

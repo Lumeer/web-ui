@@ -27,7 +27,7 @@ import {
   OnChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   CalendarBarPropertyOptional,
@@ -46,7 +46,7 @@ import {Subject} from 'rxjs';
 })
 export class CalendarVisualizationComponent implements OnChanges {
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 
   @Input()
   public documents: DocumentModel[];
@@ -183,7 +183,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       const date = new Date();
       date.setHours(bits[0]);
       date.setMinutes(bits[1]);
-      return date.getHours() === parseInt(bits[0],10) && date.getMinutes() === parseInt(bits[1],10);
+      return date.getHours() === parseInt(bits[0], 10) && date.getMinutes() === parseInt(bits[1], 10);
     } else return false;
   }
 
@@ -193,7 +193,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     const separators = ['\\.', '\\-', '\\/'];
     const bits = dateString.split(new RegExp(separators.join('|'), 'g'));
     const date = new Date(bits[2], bits[1] - 1, bits[0]);
-    return date.getFullYear() === parseInt(bits[2],10) && (date.getMonth() + 1) === parseInt(bits[1],10);
+    return date.getFullYear() === parseInt(bits[2], 10) && date.getMonth() + 1 === parseInt(bits[1], 10);
   }
 
   public dayClicked({date, events}: {date: Date; events: CalendarEvent[]}): void {
@@ -234,10 +234,10 @@ export class CalendarVisualizationComponent implements OnChanges {
     ) {
       originalDocument.data[
         configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId
-        ] = CalendarVisualizationComponent.timeToString(event.start);
+      ] = CalendarVisualizationComponent.timeToString(event.start);
       originalDocument.data[
         configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId
-        ] = CalendarVisualizationComponent.timeToString(event.end);
+      ] = CalendarVisualizationComponent.timeToString(event.end);
     }
     this.patchData.emit(originalDocument);
   }

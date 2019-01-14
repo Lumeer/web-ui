@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {DialogType} from '../../dialog-type';
 
 @Component({
   selector: 'dialog-wrapper',
   templateUrl: './dialog-wrapper.component.html',
+  styleUrls: ['./dialog-wrapper.component.scss'],
 })
 export class DialogWrapperComponent {
   @Input()
@@ -35,6 +36,7 @@ export class DialogWrapperComponent {
   public type: DialogType;
 
   @Input()
+  @HostBinding('style.max-width.px')
   public width: number;
 
   @Output()

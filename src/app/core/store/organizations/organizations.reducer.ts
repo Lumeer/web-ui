@@ -20,6 +20,7 @@
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
+import {Organization} from './organization';
 
 export function organizationsReducer(
   state: OrganizationsState = initialOrganizationsState,
@@ -27,15 +28,15 @@ export function organizationsReducer(
 ): OrganizationsState {
   switch (action.type) {
     case OrganizationsActionType.GET_SUCCESS:
-      return {...organizationsAdapter.addAll(action.payload.organizations, state), loaded: true};
+      return addOrganizations(state, action.payload.organizations);
     case OrganizationsActionType.GET_ONE_SUCCESS:
-      return organizationsAdapter.addOne(action.payload.organization, state);
+      return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.GET_CODES_SUCCESS:
       return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:
-      return organizationsAdapter.addOne(action.payload.organization, state);
+      return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      return organizationsAdapter.upsertOne(action.payload.organization, state);
+      return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.DELETE_SUCCESS:
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
@@ -47,6 +48,32 @@ export function organizationsReducer(
     default:
       return state;
   }
+}
+
+function addOrganizations(state: OrganizationsState, organizations: Organization[]): OrganizationsState {
+  const newState = {...state, loaded: true};
+  const filteredOrganizations = organizations.filter(organization => {
+    const oldOrganization = state.entities[organization.id];
+    return !oldOrganization || isOrganizationNewer(organization, oldOrganization);
+  });
+
+  return organizationsAdapter.addMany(filteredOrganizations, newState);
+}
+
+function addOrUpdateOrganization(state: OrganizationsState, organization: Organization): OrganizationsState {
+  const oldOrganization = state.entities[organization.id];
+  if (!oldOrganization) {
+    return organizationsAdapter.addOne(organization, state);
+  }
+
+  if (isOrganizationNewer(organization, oldOrganization)) {
+    return organizationsAdapter.upsertOne(organization, state);
+  }
+  return state;
+}
+
+function isOrganizationNewer(organization: Organization, oldOrganization: Organization): boolean {
+  return organization.version && (!oldOrganization.version || organization.version > oldOrganization.version);
 }
 
 function onChangePermission(

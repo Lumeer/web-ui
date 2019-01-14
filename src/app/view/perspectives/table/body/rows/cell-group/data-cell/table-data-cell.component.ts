@@ -27,19 +27,21 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Actions} from '@ngrx/effects';
+import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow, TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
@@ -71,7 +73,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public document: DocumentModel;
 
   @Input()
-  public linkInstance: LinkInstanceModel;
+  public linkInstance: LinkInstance;
 
   @Input()
   public canManageConfig: boolean;
@@ -106,6 +108,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public constructor(
     private actions$: Actions,
     private contextMenuService: ContextMenuService,
+    private i18n: I18n,
+    private notificationService: NotificationService,
     private store$: Store<AppState>
   ) {}
 
@@ -153,13 +157,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => this.editableCell.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
-      .ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
       .subscribe(() => this.deleteCellData());
   }
 
@@ -204,7 +208,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.clearEditedAttribute();
 
     if (!isNullOrUndefined(value)) {
-      // TODO maybe null values in the future
       this.useSelectionOrSave(value);
     }
 
@@ -212,11 +215,36 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private useSelectionOrSave(value: string) {
+    if (!this.isPreviousLinkedRowInitialized()) {
+      this.showUninitializedLinkedRowWarningAndResetValue();
+      return;
+    }
+
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
     } else {
       this.saveData(value);
     }
+  }
+
+  private showUninitializedLinkedRowWarningAndResetValue() {
+    this.notificationService.warning(
+      this.i18n({
+        id: 'table.data.cell.linked.row.uninitialized',
+        value: 'You need to enter some value to the linked row in the previous table part first.',
+      })
+    );
+    this.editableCell.setValue('');
+    this.editedValue = '';
+  }
+
+  private isPreviousLinkedRowInitialized(): boolean {
+    if (this.cursor.partIndex === 0) {
+      return true;
+    }
+
+    const previousRow = findTableRow(this.table.config.rows, this.cursor.rowPath.slice(0, -1));
+    return previousRow && !!previousRow.documentId;
   }
 
   private clearEditedAttribute() {
@@ -312,7 +340,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.cursor.partIndex === 0 ? {parentId: row.parentDocumentId} : undefined;
   }
 
-  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {
+  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: Attribute[]) => void {
     const {cursor} = findTableColumnWithCursor(table, this.cursor.partIndex, attributeName);
 
     return attributes => {
@@ -334,7 +362,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
     return documentId => {
-      const linkInstance: LinkInstanceModel = {
+      const linkInstance: LinkInstance = {
         linkTypeId,
         documentIds: [previousRow.documentId, documentId],
       };

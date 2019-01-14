@@ -2,7 +2,7 @@
   <ng-container *ngIf="{collection: collection$ | async, config: config$ | async} as data">
     <chart-config
       [collection]="data.collection"
-      [canManageConfig]="currentView$ | async | canManageConfig"
+      [canManageConfig]="currentView$ | async | canManageConfig | async"
       [config]="data.config"
       (configChange)="onConfigChanged($event)">
     </chart-config>

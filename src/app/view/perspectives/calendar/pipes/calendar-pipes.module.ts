@@ -22,7 +22,8 @@ import {CommonModule} from '@angular/common';
 import {BarSelectPropertyRequiredItemsPipe} from './bar-property-required-pipes/bar-select-property-required-items.pipe';
 import {BarSelectPlaceholderPropertyRequiredPipe} from './bar-property-required-pipes/bar-select-placeholder-property-required.pipe';
 import {BarSelectEmptyValuePropertyRequiredPipe} from './bar-property-required-pipes/bar-select-empty-value-property-required.pipe';
-import {DisplayablePipe} from "./displayable.pipe";
+import {DisplayablePipe} from './displayable.pipe';
+import {FilterConfigsPipe} from './filter.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -31,12 +32,14 @@ import {DisplayablePipe} from "./displayable.pipe";
     BarSelectPropertyRequiredItemsPipe,
     BarSelectPlaceholderPropertyRequiredPipe,
     BarSelectEmptyValuePropertyRequiredPipe,
+    FilterConfigsPipe,
   ],
   exports: [
     DisplayablePipe,
     BarSelectPropertyRequiredItemsPipe,
     BarSelectPlaceholderPropertyRequiredPipe,
-    BarSelectEmptyValuePropertyRequiredPipe
+    BarSelectEmptyValuePropertyRequiredPipe,
+    FilterConfigsPipe,
   ],
 })
 export class CalendarPipesModule {}

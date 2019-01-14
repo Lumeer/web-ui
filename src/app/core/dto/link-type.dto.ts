@@ -20,7 +20,7 @@
 export interface LinkTypeDto {
   id?: string; // TODO make compulsory
   name: string;
-
+  version?: number;
   collectionIds?: [string, string];
 
   attributes?: string[]; // TODO use complex object

@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
+import {View} from './view';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
     case ViewsActionType.GET_SUCCESS:
-      return viewsAdapter.addMany(action.payload.views, {...state, loaded: true});
+      return addViews(state, action.payload.views);
     case ViewsActionType.CREATE_SUCCESS:
-      return viewsAdapter.addOne(action.payload.view, state);
+      return addOrUpdateView(state, action.payload.view);
     case ViewsActionType.UPDATE_SUCCESS:
-      return viewsAdapter.upsertOne(action.payload.view, state);
+      return addOrUpdateView(state, action.payload.view);
     case ViewsActionType.DELETE_SUCCESS:
       return viewsAdapter.removeOne(action.payload.viewCode, state);
     case ViewsActionType.SET_PERMISSIONS_SUCCESS:
@@ -44,6 +45,31 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     default:
       return state;
   }
+}
+
+function addViews(state: ViewsState, views: View[]): ViewsState {
+  const newState = {...state, loaded: true};
+  const filteredViews = views.filter(view => {
+    const oldView = state.entities[view.code];
+    return !oldView || isViewNewer(view, oldView);
+  });
+  return viewsAdapter.addMany(filteredViews, newState);
+}
+
+function addOrUpdateView(state: ViewsState, view: View): ViewsState {
+  const oldView = state.entities[view.code];
+  if (!oldView) {
+    return viewsAdapter.addOne(view, state);
+  }
+
+  if (isViewNewer(view, oldView)) {
+    return viewsAdapter.upsertOne(view, state);
+  }
+  return state;
+}
+
+function isViewNewer(view: View, oldView: View): boolean {
+  return view.version && (!oldView.version || view.version > oldView.version);
 }
 
 function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {

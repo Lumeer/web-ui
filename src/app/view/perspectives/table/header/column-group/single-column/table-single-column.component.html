@@ -32,6 +32,7 @@
                            [defaultAttribute]="attribute | isDefaultAttribute:(collection)"
                            [leaf]="leaf"
                            (add)="onAdd($event)"
+                           (configure)="onConfigure()"
                            (edit)="onEdit()"
                            (hide)="onHide()"
                            (remove)="onRemove()"

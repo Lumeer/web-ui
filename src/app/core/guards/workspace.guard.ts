@@ -25,10 +25,10 @@ import {Observable, of} from 'rxjs';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {NotificationService} from '../notifications/notification.service';
 import {AppState} from '../store/app.state';
-import {OrganizationModel} from '../store/organizations/organization.model';
+import {Organization} from '../store/organizations/organization';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByCode, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
-import {ProjectModel} from '../store/projects/project.model';
+import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {
   selectProjectByOrganizationAndCode,
@@ -67,7 +67,7 @@ export class WorkspaceGuard implements CanActivate {
     );
   }
 
-  private getOrganization(organizationCode: string): Observable<OrganizationModel> {
+  private getOrganization(organizationCode: string): Observable<Organization> {
     return this.store$.select(selectOrganizationsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
@@ -90,7 +90,7 @@ export class WorkspaceGuard implements CanActivate {
     );
   }
 
-  private getProject(organization: OrganizationModel, projectCode: string): Observable<ProjectModel> {
+  private getProject(organization: Organization, projectCode: string): Observable<Project> {
     if (!organization) {
       return of(null);
     }
@@ -119,7 +119,7 @@ export class WorkspaceGuard implements CanActivate {
     );
   }
 
-  private switchWorkspace(organization: OrganizationModel, project: ProjectModel) {
+  private switchWorkspace(organization: Organization, project: Project) {
     this.store$.dispatch(
       new ProjectsAction.SwitchWorkspace({
         organizationId: organization.id,

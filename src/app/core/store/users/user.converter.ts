@@ -18,51 +18,47 @@
  */
 
 import {UserDto} from '../../dto';
-import {DefaultWorkspaceModel, UserModel} from './user.model';
-import {DefaultWorkspace} from '../../dto/default-workspace';
+import {DefaultWorkspace, User} from './user';
+import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 
-export class DefaultWorkspaceConverter {
-  public static fromDto(dto: DefaultWorkspace): DefaultWorkspaceModel {
-    return {
-      organizationId: dto.organizationId,
-      projectId: dto.projectId,
-      organizationCode: dto.organizationCode,
-      projectCode: dto.projectCode,
-    };
-  }
-
-  public static toDto(model: DefaultWorkspaceModel): DefaultWorkspace {
-    return {
-      organizationId: model.organizationId,
-      projectId: model.projectId,
-      organizationCode: model.organizationCode,
-      projectCode: model.projectCode,
-    };
-  }
+export function convertDefaultWorkspaceDtoToModel(dto: DefaultWorkspaceDto): DefaultWorkspace {
+  return {
+    organizationId: dto.organizationId,
+    projectId: dto.projectId,
+    organizationCode: dto.organizationCode,
+    projectCode: dto.projectCode,
+  };
 }
 
-export class UserConverter {
-  public static fromDto(dto: UserDto): UserModel {
-    return {
-      id: dto.id,
-      name: dto.name,
-      email: dto.email,
-      groupsMap: dto.groups,
-      defaultWorkspace: dto.defaultWorkspace ? DefaultWorkspaceConverter.fromDto(dto.defaultWorkspace) : null,
-      agreement: dto.agreement,
-      agreementDate: dto.agreementDate ? new Date(dto.agreementDate) : undefined,
-      newsletter: dto.newsletter,
-    };
-  }
+export function convertDefaultWorkspaceModelToDto(model: DefaultWorkspace): DefaultWorkspaceDto {
+  return {
+    organizationId: model.organizationId,
+    projectId: model.projectId,
+    organizationCode: model.organizationCode,
+    projectCode: model.projectCode,
+  };
+}
 
-  public static toDto(user: Partial<UserModel>): UserDto {
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      groups: user.groupsMap,
-      agreement: user.agreement,
-      newsletter: user.newsletter,
-    };
-  }
+export function convertUserDtoToModel(dto: UserDto): User {
+  return {
+    id: dto.id,
+    name: dto.name,
+    email: dto.email,
+    groupsMap: dto.groups,
+    defaultWorkspace: dto.defaultWorkspace ? convertDefaultWorkspaceDtoToModel(dto.defaultWorkspace) : null,
+    agreement: dto.agreement,
+    agreementDate: dto.agreementDate ? new Date(dto.agreementDate) : undefined,
+    newsletter: dto.newsletter,
+  };
+}
+
+export function convertUserModelToDto(user: Partial<User>): UserDto {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    groups: user.groupsMap,
+    agreement: user.agreement,
+    newsletter: user.newsletter,
+  };
 }

@@ -25,7 +25,7 @@ import {filter} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
@@ -36,8 +36,8 @@ import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.co
   styleUrls: ['./collection-attributes.component.scss'],
 })
 export class CollectionAttributesComponent implements OnInit, OnDestroy {
-  public collection: CollectionModel;
-  public attributes: AttributeModel[] = [];
+  public collection: Collection;
+  public attributes: Attribute[] = [];
   public searchString: string;
   public attributePlaceholder: string;
   public newAttributeName: string;
@@ -55,7 +55,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     this.collectionSubscription.unsubscribe();
   }
 
-  public setDefaultAttribute(attribute: AttributeModel) {
+  public setDefaultAttribute(attribute: Attribute) {
     if (this.collection.defaultAttributeId === attribute.id) {
       return;
     }
@@ -77,7 +77,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     this.newAttributeName = '';
   }
 
-  public isDefaultAttribute(attribute: AttributeModel): boolean {
+  public isDefaultAttribute(attribute: Attribute): boolean {
     return attribute.id === this.getDefaultAttributeId();
   }
 
@@ -85,7 +85,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     return getDefaultAttributeId(this.collection);
   }
 
-  public onNewAttributeName(component: InputBoxComponent, attribute: AttributeModel, newName: string) {
+  public onNewAttributeName(component: InputBoxComponent, attribute: Attribute, newName: string) {
     if (newName === '') {
       this.showAttributeDeleteDialog(attribute, () => {
         component.setValue(attribute.name);
@@ -102,11 +102,11 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onDeleteAttribute(attribute: AttributeModel) {
+  public onDeleteAttribute(attribute: Attribute) {
     this.showAttributeDeleteDialog(attribute);
   }
 
-  public showAttributeDeleteDialog(attribute: AttributeModel, onCancel?: () => void) {
+  public showAttributeDeleteDialog(attribute: Attribute, onCancel?: () => void) {
     const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
     const message = this.i18n(
       {id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'},
@@ -123,13 +123,13 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  public deleteAttribute(attribute: AttributeModel) {
+  public deleteAttribute(attribute: Attribute) {
     this.store.dispatch(
       new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id})
     );
   }
 
-  public trackByAttributeId(index: number, attribute: AttributeModel) {
+  public trackByAttributeId(index: number, attribute: Attribute) {
     return attribute.id;
   }
 

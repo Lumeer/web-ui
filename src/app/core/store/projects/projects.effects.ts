@@ -21,13 +21,12 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {Permission} from '../../dto';
+import {PermissionDto} from '../../dto';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {CollectionsAction} from '../collections/collections.action';
@@ -36,9 +35,9 @@ import {DocumentsAction} from '../documents/documents.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
 import {UsersAction} from '../users/users.action';
 import {selectCurrentUser} from '../users/users.state';
@@ -46,19 +45,25 @@ import {ViewsAction} from '../views/views.action';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {selectNavigation} from '../navigation/navigation.state';
+import {NotificationService} from '../../notifications/notification.service';
 
 @Injectable()
 export class ProjectsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Get>(ProjectsActionType.GET),
-    withLatestFrom(this.store$.select(selectProjectsLoaded)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsLoaded))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     filter(([[action, projectsLoaded], organizationsEntities]) => {
-      const organizationId = action.payload.organizationId;
-      return !projectsLoaded[organizationId] && !isNullOrUndefined(organizationsEntities[organizationId]);
+      const {force, organizationId} = action.payload;
+      return force || (!projectsLoaded[organizationId] && !!organizationsEntities[organizationId]);
     }),
     map(([[action, projectsLoaded], organizationsEntities]) => ({action, organizationsEntities})),
+    tap(({action}) =>
+      this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: action.payload.organizationId}))
+    ),
     mergeMap(({action, organizationsEntities}) => {
       const organizationId = action.payload.organizationId;
       const organization = organizationsEntities[organizationId];
@@ -83,13 +88,11 @@ export class ProjectsEffects {
   @Effect()
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
-    withLatestFrom(this.store$.select(selectProjectsCodes)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     filter(([[action, projectCodes], organizationsEntities]) => {
       const organizationId = action.payload.organizationId;
-      return (
-        isNullOrUndefined(projectCodes[organizationId]) && !isNullOrUndefined(organizationsEntities[organizationId])
-      );
+      return isNullOrUndefined(projectCodes[organizationId]) && !!organizationsEntities[organizationId];
     }),
     map(([[action], organizationsEntities]) => ({action, organizationsEntities})),
     mergeMap(({action, organizationsEntities}) => {
@@ -111,7 +114,7 @@ export class ProjectsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
       const organization = organizationsEntities[action.payload.project.organizationId];
       const correlationId = action.payload.project.correlationId;
@@ -119,13 +122,8 @@ export class ProjectsEffects {
 
       return this.projectService.createProject(organization.code, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId)),
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
-        mergeMap(([project, projectCodes]) => {
-          const codes = [...projectCodes[project.organizationId], project.code];
-          const actions: Action[] = [
-            new ProjectsAction.CreateSuccess({project}),
-            new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}),
-          ];
+        mergeMap(project => {
+          const actions: Action[] = [new ProjectsAction.CreateSuccess({project})];
 
           const {callback} = action.payload;
           if (callback) {
@@ -134,8 +132,20 @@ export class ProjectsEffects {
 
           return actions;
         }),
-        catchError(error => of(new ProjectsAction.CreateFailure({error: error})))
+        catchError(error => of(new ProjectsAction.CreateFailure({error, organizationCode: organization.code})))
       );
+    })
+  );
+
+  @Effect()
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.CreateSuccess>(ProjectsActionType.CREATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+    map(([action, codes]) => {
+      const project = action.payload.project;
+      const codesByOrg = (codes && codes[project.organizationId]) || [];
+      const newCodes = [...codesByOrg, project.code];
+      return new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: newCodes});
     })
   );
 
@@ -143,8 +153,7 @@ export class ProjectsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectSelectedOrganization)),
-    map(([action, organization]) => {
+    map(action => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
@@ -156,7 +165,7 @@ export class ProjectsEffects {
           title,
           message,
           action: new RouterAction.Go({
-            path: ['/organization', organization.code, 'detail'],
+            path: ['/organization', action.payload.organizationCode, 'detail'],
             extras: {fragment: 'orderService'},
           }),
           yesFirst: true,
@@ -177,33 +186,45 @@ export class ProjectsEffects {
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
-        flatMap(([project, projectCodes]) => {
-          const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
-          const codesByOrg = projectCodes && projectCodes[project.organizationId];
-          if (codesByOrg) {
-            const codes = codesByOrg.map(code => (code === oldProject.code ? project.code : code));
-            actions.push(
-              new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})
-            );
-          }
-
-          const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
-          const projCodeInRoute = paramMap.get('projectCode');
-
-          if (projCodeInRoute && projCodeInRoute === oldProject.code && project.code !== oldProject.code) {
-            const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
-            const index = paths.indexOf(oldProject.code, 3);
-            if (index !== -1) {
-              paths[index] = project.code;
-              actions.push(new RouterAction.Go({path: paths}));
-            }
-          }
-
-          return actions;
-        }),
+        map(
+          project => new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}, oldCode: oldProject.code})
+        ),
         catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
       );
+    })
+  );
+
+  @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.UpdateSuccess>(ProjectsActionType.UPDATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+    flatMap(([action, codes]) => {
+      const {project, oldCode} = action.payload;
+      const codesByOrg = (codes && codes[project.organizationId]) || [];
+      let newCodes = [...codesByOrg];
+      if (oldCode) {
+        newCodes = newCodes.map(code => (code === oldCode ? project.code : code));
+      } else {
+        newCodes.push(project.code);
+      }
+
+      const actions: Action[] = [
+        new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: newCodes}),
+      ];
+
+      const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
+      const projCodeInRoute = paramMap.get('projectCode');
+
+      if (projCodeInRoute && oldCode && projCodeInRoute === oldCode && project.code !== oldCode) {
+        const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
+        const index = paths.indexOf(oldCode, 2);
+        if (index !== -1) {
+          paths[index] = project.code;
+          actions.push(new RouterAction.Go({path: paths}));
+        }
+      }
+
+      return actions;
     })
   );
 
@@ -225,16 +246,10 @@ export class ProjectsEffects {
       const organization = state.organizations.entities[action.payload.organizationId];
       const project = state.projects.entities[action.payload.projectId];
       return this.projectService.deleteProject(organization.code, project.code).pipe(
-        withLatestFrom(this.store$.select(selectProjectsCodes)),
-        flatMap(([, projectCodes]) => {
-          const actions: Action[] = [new ProjectsAction.DeleteSuccess(action.payload)];
-          let codes = projectCodes[action.payload.organizationId];
-          if (!isNullOrUndefined(codes)) {
-            codes = codes.filter(code => code !== project.code);
-            actions.push(
-              new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})
-            );
-          }
+        withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+        flatMap(() => {
+          const actions: Action[] = [new ProjectsAction.DeleteSuccess({...action.payload, projectCode: project.code})];
+
           if (action.payload.onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
           }
@@ -242,6 +257,31 @@ export class ProjectsEffects {
         }),
         catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
       );
+    })
+  );
+
+  @Effect()
+  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.DeleteSuccess>(ProjectsActionType.DELETE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
+    flatMap(([[action, codes], navigation]) => {
+      const {organizationId, projectCode} = action.payload;
+      const codesByOrg = (codes && codes[organizationId]) || [];
+      const actions: Action[] = [];
+      let newCodes = [...codesByOrg];
+      if (projectCode) {
+        newCodes = newCodes.filter(code => code !== projectCode);
+        actions.push(
+          new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: newCodes})
+        );
+      }
+
+      if (navigation && navigation.workspace && navigation.workspace.projectCode === projectCode) {
+        actions.push(new RouterAction.Go({path: ['/']}));
+      }
+
+      return actions;
     })
   );
 
@@ -258,13 +298,13 @@ export class ProjectsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
-    withLatestFrom(this.store$.select(selectProjectsDictionary)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     concatMap(([[action, projects], organizations]) => {
       const project = projects[action.payload.projectId];
       const organization = organizations[project.organizationId];
       const workspace = {organizationCode: organization.code, projectCode: project.code};
-      const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
+      const permissionDto: PermissionDto = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
@@ -304,19 +344,26 @@ export class ProjectsEffects {
   @Effect()
   public switchWorkspace$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.SwitchWorkspace>(ProjectsActionType.SWITCH_WORKSPACE),
-    withLatestFrom(this.store$.select(selectCurrentUser)),
+    withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
     mergeMap(([action, user]) => {
-      const {organizationId, projectId} = action.payload;
+      const {organizationId, projectId, nextAction} = action.payload;
       const workspace = user.defaultWorkspace;
       if (workspace && workspace.organizationId === organizationId && workspace.projectId === projectId) {
         return [];
       }
 
-      return [
+      const actions: Action[] = [
         new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}),
         new ProjectsAction.ClearWorkspaceData(),
       ];
-    })
+
+      if (nextAction) {
+        actions.push(nextAction);
+      }
+
+      return actions;
+    }),
+    tap(() => this.notificationService.clear())
   );
 
   @Effect()
@@ -337,6 +384,7 @@ export class ProjectsEffects {
     private actions$: Actions,
     private i18n: I18n,
     private router: Router,
+    private notificationService: NotificationService,
     private projectService: ProjectService,
     private store$: Store<AppState>
   ) {}

@@ -26,10 +26,10 @@ import {filter} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../../core/store/app.state';
-import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
+import {Organization} from '../../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
-import {ServiceLimitsModel} from '../../../../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
@@ -39,10 +39,10 @@ import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
   styleUrls: ['./payments-state.component.scss'],
 })
 export class PaymentsStateComponent implements OnInit, OnDestroy {
-  private organization: OrganizationModel;
+  private organization: Organization;
   private organizationSubscription: Subscription;
 
-  public serviceLimits: ServiceLimitsModel;
+  public serviceLimits: ServiceLimits;
   private serviceLimitsSubscription: Subscription;
 
   constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}

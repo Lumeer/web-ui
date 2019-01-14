@@ -22,6 +22,7 @@ import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserNotificationDto} from '../dto/user-notification.dto';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UserNotificationsService {
@@ -39,6 +40,12 @@ export class UserNotificationsService {
       `${this.notificationsApiPrefix()}/${notificationId}`,
       userNotification
     );
+  }
+
+  public removeNotification(notificationId: string): Observable<string> {
+    return this.httpClient
+      .delete(`${this.notificationsApiPrefix()}/${notificationId}`, {observe: 'response', responseType: 'text'})
+      .pipe(map(() => notificationId));
   }
 
   private notificationsApiPrefix(): string {

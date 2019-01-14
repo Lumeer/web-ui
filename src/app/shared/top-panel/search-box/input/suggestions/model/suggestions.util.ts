@@ -18,7 +18,7 @@
  */
 
 import {QueryItem} from '../../../query-item/model/query-item';
-import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
 import {QueryItemType} from '../../../query-item/model/query-item-type';
 import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item';
 import {shiftArray} from '../../../../../utils/array.utils';
@@ -26,9 +26,9 @@ import {DocumentQueryItem} from '../../../query-item/model/documents.query-item'
 import {CollectionQueryItem} from '../../../query-item/model/collection.query-item';
 import {LinkQueryItem} from '../../../query-item/model/link.query-item';
 import {getOtherLinkedCollectionId} from '../../../../../utils/link-type.utils';
-import {ViewModel} from '../../../../../../core/store/views/view.model';
+import {View} from '../../../../../../core/store/views/view';
 import {ViewQueryItem} from '../../../query-item/model/view.query-item';
-import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Suggestions} from './suggestions';
 
 export function convertSuggestionsToQueryItemsSorted(suggestions: Suggestions, currentItems: QueryItem[]): QueryItem[] {
@@ -115,22 +115,22 @@ function createAllQueryItems(suggestions: Suggestions, withViews?: boolean): Que
   ];
 }
 
-function createCollectionQueryItems(collections: CollectionModel[]): QueryItem[] {
+function createCollectionQueryItems(collections: Collection[]): QueryItem[] {
   return collections.map(collection => new CollectionQueryItem(collection));
 }
 
-function createAttributeQueryItems(collections: CollectionModel[]): QueryItem[] {
+function createAttributeQueryItems(collections: Collection[]): QueryItem[] {
   return collections.reduce(
     (items, collection) => [...items, ...collection.attributes.map(a => new AttributeQueryItem(collection, a, '', ''))],
     []
   );
 }
 
-function createViewQueryItems(views: ViewModel[]): QueryItem[] {
+function createViewQueryItems(views: View[]): QueryItem[] {
   return views.map(view => new ViewQueryItem(view));
 }
 
-function createLinkQueryItems(linkTypes: LinkTypeModel[]): QueryItem[] {
+function createLinkQueryItems(linkTypes: LinkType[]): QueryItem[] {
   return linkTypes.map(linkType => new LinkQueryItem(linkType));
 }
 
@@ -148,20 +148,17 @@ function createItemsByLinksPriority(suggestions: Suggestions, collectionIdsChain
   ];
 }
 
-function splitLinkTypesForCollection(
-  linkTypes: LinkTypeModel[],
-  collectionId: string
-): [LinkTypeModel[], LinkTypeModel[]] {
+function splitLinkTypesForCollection(linkTypes: LinkType[], collectionId: string): [LinkType[], LinkType[]] {
   const linkTypesByCollection = linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId));
   const otherLinkTypes = linkTypes.filter(linkType => !linkTypesByCollection.find(lt => lt.id === linkType.id));
   return [linkTypesByCollection, otherLinkTypes];
 }
 
 function splitAndSortAttributesForCollections(
-  attributes: CollectionModel[],
+  attributes: Collection[],
   collectionIdsOrder: string[]
-): [CollectionModel[], CollectionModel[]] {
-  const attributesByCollections: CollectionModel[] = [];
+): [Collection[], Collection[]] {
+  const attributesByCollections: Collection[] = [];
   for (let i = 0; i < collectionIdsOrder.length; i++) {
     const attributesByCollection = attributes.filter(collection => collection.id === collectionIdsOrder[i]);
     attributesByCollections.push(...attributesByCollection);

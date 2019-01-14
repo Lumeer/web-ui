@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ContactModel} from './contact.model';
+import {Contact} from './contact';
 
 export enum ContactsActionType {
   GET_CONTACT = '[Organizations] Get Contact',
@@ -40,7 +40,7 @@ export namespace ContactsAction {
   export class GetContactSuccess implements Action {
     public readonly type = ContactsActionType.GET_CONTACT_SUCCESS;
 
-    public constructor(public payload: {contact: ContactModel}) {}
+    public constructor(public payload: {contact: Contact}) {}
   }
 
   export class GetContactFailure implements Action {
@@ -52,13 +52,13 @@ export namespace ContactsAction {
   export class SetContact implements Action {
     public readonly type = ContactsActionType.SET_CONTACT;
 
-    public constructor(public payload: {organizationCode: string; contact: ContactModel}) {}
+    public constructor(public payload: {organizationCode: string; contact: Contact}) {}
   }
 
   export class SetContactSuccess implements Action {
     public readonly type = ContactsActionType.SET_CONTACT_SUCCESS;
 
-    public constructor(public payload: {contact: ContactModel}) {}
+    public constructor(public payload: {contact: Contact}) {}
   }
 
   export class SetContactFailure implements Action {

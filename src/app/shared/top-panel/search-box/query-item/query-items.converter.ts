@@ -101,8 +101,11 @@ export class QueryItemsConverter {
       (linkTypeIds &&
         linkTypeIds
           .map(linkTypeId => this.data.linkTypes.find(linkType => linkType.id === linkTypeId))
-          .filter(linkType => !!linkType)
           .map(linkType => {
+            if (!linkType) {
+              return new DeletedQueryItem(QueryItemType.Link);
+            }
+
             const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
             const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
             if (!collection1 || !collection2) {

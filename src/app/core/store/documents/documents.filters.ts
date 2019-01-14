@@ -18,24 +18,24 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {UserModel} from '../users/user.model';
+import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
 import {AttributeFilter, ConditionType, Query, QueryStem} from '../navigation/query';
 import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
-import {CollectionModel} from '../collections/collection.model';
-import {LinkTypeModel} from '../link-types/link-type.model';
-import {LinkInstanceModel} from '../link-instances/link-instance.model';
+import {Collection} from '../collections/collection';
+import {LinkType} from '../link-types/link.type';
+import {LinkInstance} from '../link-instances/link.instance';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 import {arrayIntersection} from '../../../shared/utils/array.utils';
 
 export function filterDocumentsByQuery(
   documents: DocumentModel[],
-  collections: CollectionModel[],
-  linkTypes: LinkTypeModel[],
-  linkInstances: LinkInstanceModel[],
+  collections: Collection[],
+  linkTypes: LinkType[],
+  linkInstances: LinkInstance[],
   query: Query,
-  currentUser: UserModel,
+  currentUser: User,
   includeChildren?: boolean
 ): DocumentModel[] {
   const filteredDocuments = documents.filter(document => document && typeof document === 'object');
@@ -82,7 +82,7 @@ export function filterDocumentsByQuery(
   return paginate(documentsByStems, queryWithFunctions);
 }
 
-function applyFunctionsToFilters(query: Query, currentUser: UserModel): Query {
+function applyFunctionsToFilters(query: Query, currentUser: User): Query {
   const stems =
     query.stems &&
     query.stems.map(stem => {
@@ -97,7 +97,7 @@ function applyFunctionsToFilters(query: Query, currentUser: UserModel): Query {
   return {...query, stems};
 }
 
-function applyFilterFunctions(filter: AttributeFilter, currentUser: UserModel): any {
+function applyFilterFunctions(filter: AttributeFilter, currentUser: User): any {
   switch (filter.value) {
     case 'userEmail()':
       return currentUser && currentUser.email;
@@ -128,9 +128,9 @@ function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocument
 
 function filterDocumentsByStem(
   documentsByCollectionMap: {[collectionId: string]: [DocumentModel]},
-  collections: CollectionModel[],
-  linkTypes: LinkTypeModel[],
-  linkInstances: LinkInstanceModel[],
+  collections: Collection[],
+  linkTypes: LinkType[],
+  linkInstances: LinkInstance[],
   stem: QueryStem,
   fulltexts: string[],
   includeChildren?: boolean
@@ -212,8 +212,8 @@ function getDocumentIdsByCollection(documentsIds: string[], documentsByCollectio
 
 function createStemsPipeline(
   stem: QueryStem,
-  collections: CollectionModel[],
-  linkTypes: LinkTypeModel[],
+  collections: Collection[],
+  linkTypes: LinkType[],
   documentsByCollectionMap: {[collectionId: string]: [DocumentModel]}
 ): QueryStem[] {
   const pipeline: QueryStem[] = [];
@@ -245,7 +245,7 @@ function createStemsPipeline(
 
 function filterDocumentsByAllConditions(
   documents: DocumentModel[],
-  collection: CollectionModel,
+  collection: Collection,
   stem: QueryStem,
   fulltexts: string[]
 ): DocumentModel[] {
@@ -258,7 +258,7 @@ function filterDocumentsByAllConditions(
 
 function filterDocumentsByFiltersAndFulltexts(
   documents: DocumentModel[],
-  collection: CollectionModel,
+  collection: Collection,
   filters: AttributeFilter[],
   fulltexts: string[]
 ): DocumentModel[] {
@@ -279,7 +279,7 @@ function filterDocumentsByFiltersAndFulltexts(
 
 export function filterDocumentsByFulltexts(
   documents: DocumentModel[],
-  collection: CollectionModel,
+  collection: Collection,
   fulltexts: string[]
 ): DocumentModel[] {
   return filterDocumentsByFiltersAndFulltexts(documents, collection, [], fulltexts);

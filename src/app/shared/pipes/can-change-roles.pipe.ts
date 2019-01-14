@@ -19,22 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {UserModel} from '../../core/store/users/user.model';
+import {User} from '../../core/store/users/user';
 import {ResourceType} from '../../core/model/resource-type';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
 
 @Pipe({
   name: 'canChangeRoles',
 })
 export class CanChangeRolesPipe implements PipeTransform {
-  public transform(
-    user: UserModel,
-    resourceType: ResourceType,
-    organization?: OrganizationModel,
-    project?: ProjectModel
-  ): boolean {
+  public transform(user: User, resourceType: ResourceType, organization?: Organization, project?: Project): boolean {
     if (resourceType === ResourceType.Organization) {
       return true;
     } else if (resourceType === ResourceType.Project) {

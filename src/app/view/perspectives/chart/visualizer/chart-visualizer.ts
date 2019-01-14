@@ -20,8 +20,8 @@
 import {ElementRef} from '@angular/core';
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {ChartConfig} from '../../../../core/store/charts/chart.model';
+import {Collection} from '../../../../core/store/collections/collection';
+import {ChartConfig} from '../../../../core/store/charts/chart';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {createPlotMakerByType} from './plot-maker/plot-maker-util';
@@ -36,13 +36,15 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
+  private revision = 1;
+
   constructor(
     private chartElement: ElementRef,
     private writable: boolean,
     private onValueChanged?: (documentId: string, attributeId: string, value: string) => void
   ) {}
 
-  public setData(collections: CollectionModel[], documents: DocumentModel[], config: ChartConfig) {
+  public setData(collections: Collection[], documents: DocumentModel[], config: ChartConfig) {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = createPlotMakerByType(config.type, this.chartElement);
@@ -78,8 +80,7 @@ export class ChartVisualizer {
   }
 
   private incRevisionNumber() {
-    const rev = this.layout['datarevision'];
-    this.layout['datarevision'] = rev ? rev + 1 : 1;
+    this.layout['datarevision'] = this.revision++;
   }
 
   private createConfig(): Partial<Config> {

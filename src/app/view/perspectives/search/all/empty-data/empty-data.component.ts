@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Query} from '../../../../../core/store/navigation/query';
-import {ProjectModel} from '../../../../../core/store/projects/project.model';
+import {Project} from '../../../../../core/store/projects/project';
 import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
@@ -36,7 +36,7 @@ export class EmptyDataComponent {
   public collectionsTab = new EventEmitter();
 
   @Input()
-  public project: ProjectModel;
+  public project: Project;
 
   public readonly projectType = ResourceType.Project;
 

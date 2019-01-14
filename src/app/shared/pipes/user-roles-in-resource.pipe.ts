@@ -19,10 +19,10 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
-import {UserModel} from '../../core/store/users/user.model';
-import {ResourceModel} from '../../core/model/resource.model';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {User} from '../../core/store/users/user';
+import {Resource} from '../../core/model/resource';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 import {ResourceType} from '../../core/model/resource-type';
 import {ResourceRolesPipe} from './resource-roles.pipe';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
@@ -37,11 +37,11 @@ export class UserRolesInResourcePipe implements PipeTransform {
   constructor(private resourceRolesPipe: ResourceRolesPipe) {}
 
   public transform(
-    user: UserModel,
-    resource: ResourceModel,
+    user: User,
+    resource: Resource,
     resourceType: ResourceType,
-    organization?: OrganizationModel,
-    project?: ProjectModel
+    organization?: Organization,
+    project?: Project
   ): string[] {
     const userPermission =
       resource &&

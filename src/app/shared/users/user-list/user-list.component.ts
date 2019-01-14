@@ -19,12 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {UserModel} from '../../../core/store/users/user.model';
+import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {PermissionModel} from '../../../core/store/permissions/permissions.model';
-import {ResourceModel} from '../../../core/model/resource.model';
-import {ProjectModel} from '../../../core/store/projects/project.model';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {Permission} from '../../../core/store/permissions/permissions';
+import {Resource} from '../../../core/model/resource';
+import {Project} from '../../../core/store/projects/project';
+import {Organization} from '../../../core/store/organizations/organization';
 
 @Component({
   selector: 'user-list',
@@ -35,32 +35,32 @@ import {OrganizationModel} from '../../../core/store/organizations/organization.
 export class UserListComponent {
   @Input() public resourceType: ResourceType;
 
-  @Input() public users: UserModel[];
+  @Input() public users: User[];
 
-  @Input() public currentUser: UserModel;
+  @Input() public currentUser: User;
 
-  @Input() public resource: ResourceModel;
+  @Input() public resource: Resource;
 
-  @Input() public organization: OrganizationModel;
+  @Input() public organization: Organization;
 
-  @Input() public project: ProjectModel;
+  @Input() public project: Project;
 
   @Output() public userCreated = new EventEmitter<string>();
 
-  @Output() public userUpdated = new EventEmitter<UserModel>();
+  @Output() public userUpdated = new EventEmitter<User>();
 
-  @Output() public userDeleted = new EventEmitter<UserModel>();
+  @Output() public userDeleted = new EventEmitter<User>();
 
   @Output()
   public userPermissionChange = new EventEmitter<{
-    newPermission: PermissionModel;
-    currentPermission: PermissionModel;
+    newPermission: Permission;
+    currentPermission: Permission;
     onlyStore: boolean;
   }>();
 
   public searchString: string;
 
-  private getUserPermission(userId: string): PermissionModel {
+  private getUserPermission(userId: string): Permission {
     return (
       this.resource &&
       this.resource.permissions &&
@@ -75,7 +75,7 @@ export class UserListComponent {
     this.userPermissionChange.emit({newPermission, currentPermission, onlyStore: data.onlyStore});
   }
 
-  public trackByUserId(index: number, user: UserModel): string {
+  public trackByUserId(index: number, user: User): string {
     return user.id;
   }
 }

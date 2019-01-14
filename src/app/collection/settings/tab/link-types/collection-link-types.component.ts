@@ -24,14 +24,14 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
-import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   selectCollectionByWorkspace,
   selectCollectionsDictionary,
 } from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {isNullOrUndefined} from 'util';
@@ -43,8 +43,8 @@ import {Query} from '../../../../core/store/navigation/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
-  public linkTypes$: Observable<LinkTypeModel[]>;
-  public collection$: Observable<CollectionModel>;
+  public linkTypes$: Observable<LinkType[]>;
+  public collection$: Observable<Collection>;
   public searchString$ = new BehaviorSubject<string>('');
 
   private subscriptions = new Subscription();
@@ -70,14 +70,14 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private selectLinkTypesForCollection(collectionId: string): Observable<LinkTypeModel[]> {
+  private selectLinkTypesForCollection(collectionId: string): Observable<LinkType[]> {
     return observableCombineLatest(
       this.store.select(selectLinkTypesByCollectionId(collectionId)),
       this.store.select(selectCollectionsDictionary)
     ).pipe(
       map(([linkTypes, collectionsMap]) =>
         linkTypes.map(linkType => {
-          const collections: [CollectionModel, CollectionModel] = [
+          const collections: [Collection, Collection] = [
             collectionsMap[linkType.collectionIds[0]],
             collectionsMap[linkType.collectionIds[1]],
           ];
@@ -88,7 +88,7 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     );
   }
 
-  private fetchLinkInstances(linkTypes: LinkTypeModel[], collectionId: string) {
+  private fetchLinkInstances(linkTypes: LinkType[], collectionId: string) {
     const linkTypeIds = linkTypes.map(link => link.id);
     const query: Query = {stems: [{collectionId, linkTypeIds}]};
     this.store.dispatch(new LinkInstancesAction.Get({query}));
@@ -98,7 +98,7 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     this.searchString$.next(newString);
   }
 
-  public onDeleteLinkType(linkType: LinkTypeModel, usageCount: number) {
+  public onDeleteLinkType(linkType: LinkType, usageCount: number) {
     if (usageCount === 0) {
       this.deleteLinkType(linkType);
     } else {
@@ -106,7 +106,7 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private confirmDeletionLinkType(linkType: LinkTypeModel) {
+  private confirmDeletionLinkType(linkType: LinkType) {
     const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete link type?'});
     const message = this.i18n(
       {
@@ -126,11 +126,11 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  private deleteLinkType(linkType: LinkTypeModel) {
+  private deleteLinkType(linkType: LinkType) {
     this.store.dispatch(new LinkTypesAction.Delete({linkTypeId: linkType.id}));
   }
 
-  public trackByLinkType(linkType: LinkTypeModel, index: number): string {
+  public trackByLinkType(linkType: LinkType, index: number): string {
     return linkType.id;
   }
 }

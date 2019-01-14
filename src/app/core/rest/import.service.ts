@@ -24,10 +24,10 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {CollectionDto} from '../dto/collection.dto';
-import {Workspace} from '../store/navigation/workspace.model';
+import {Workspace} from '../store/navigation/workspace';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {ImportedCollection} from '../dto/imported-collection';
+import {ImportedCollectionDto} from '../dto/imported-collection.dto';
 
 @Injectable()
 export class ImportService {
@@ -37,7 +37,7 @@ export class ImportService {
     this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
-  public importFile(format: string, importedCollection: ImportedCollection): Observable<CollectionDto> {
+  public importFile(format: string, importedCollection: ImportedCollectionDto): Observable<CollectionDto> {
     const queryParams = new HttpParams().set('format', format);
 
     return this.http.post<CollectionDto>(this.apiPrefix(), importedCollection, {params: queryParams});

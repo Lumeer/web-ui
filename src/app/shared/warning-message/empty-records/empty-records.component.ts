@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query';
 
 @Component({
@@ -32,5 +32,5 @@ export class EmptyRecordsComponent {
   public query: Query;
 
   @Input()
-  public collections: CollectionModel[];
+  public collections: Collection[];
 }

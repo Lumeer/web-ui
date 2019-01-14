@@ -26,9 +26,8 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, filter, map, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
@@ -87,9 +86,7 @@ export class OrganizationSettingsGuard implements CanActivate {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  private dispatchDataEvents(organization: OrganizationModel) {
+  private dispatchDataEvents(organization: Organization) {
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-    this.store$.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    //this.store$.dispatch(new GroupsAction.Get());
   }
 }

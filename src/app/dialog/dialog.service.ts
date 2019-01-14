@@ -19,10 +19,10 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {CollectionModel} from '../core/store/collections/collection.model';
-import {LinkTypeModel} from '../core/store/link-types/link-type.model';
-import {OrganizationModel} from '../core/store/organizations/organization.model';
-import {ProjectModel} from '../core/store/projects/project.model';
+import {Collection} from '../core/store/collections/collection';
+import {LinkType} from '../core/store/link-types/link.type';
+import {Organization} from '../core/store/organizations/organization';
+import {Project} from '../core/store/projects/project';
 import {DialogPath} from './dialog-path';
 import {environment} from '../../environments/environment';
 import {VideosAction} from '../core/store/videos/videos.action';
@@ -53,27 +53,31 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
-  public openCreateOrganizationDialog(callback?: (organization: OrganizationModel) => void) {
+  public openAttributeConfigDialog(collectionId: string, attributeId: string) {
+    this.navigateToDialog([DialogPath.ATTRIBUTE_TYPE, collectionId, attributeId]);
+  }
+
+  public openCreateOrganizationDialog(callback?: (organization: Organization) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);
   }
 
-  public openCreateProjectDialog(organizationId: string, callback?: (project: ProjectModel) => void) {
+  public openCreateProjectDialog(organizationId: string, callback?: (project: Project) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_PROJECT, organizationId]);
   }
 
-  public openCreateCollectionDialog(callback?: (collection: CollectionModel) => void) {
+  public openCreateCollectionDialog(callback?: (collection: Collection) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_COLLECTION]);
   }
 
-  public openCreateCollectionAndLinkDialog(linkedCollectionId: string, callback?: (linkType: LinkTypeModel) => void) {
+  public openCreateCollectionAndLinkDialog(linkedCollectionId: string, callback?: (linkType: LinkType) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_COLLECTION, linkedCollectionId]);
   }
 
-  public openCreateLinkDialog(linkCollectionIds: string, callback?: (linkType: LinkTypeModel) => void) {
+  public openCreateLinkDialog(linkCollectionIds: string, callback?: (linkType: LinkType) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_LINK, linkCollectionIds]);
   }

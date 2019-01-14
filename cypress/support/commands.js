@@ -155,3 +155,7 @@ Cypress.Commands.add('deleteOrganization', code => {
     },
   });
 });
+
+Cypress.Commands.add('visitSearchCollections', () => {
+  cy.visit(`/ui/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
+});

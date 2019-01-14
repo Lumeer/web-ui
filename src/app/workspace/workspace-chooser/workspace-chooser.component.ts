@@ -28,7 +28,7 @@ import {Role} from '../../core/model/role';
 import {AppState} from '../../core/store/app.state';
 import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
   selectAllOrganizations,
@@ -38,9 +38,9 @@ import {
   selectSelectedOrganizationId,
 } from '../../core/store/organizations/organizations.state';
 import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
-import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
-import {ProjectModel} from '../../core/store/projects/project.model';
+import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {
   selectProjectById,
@@ -50,7 +50,7 @@ import {
   selectSelectedProjectId,
 } from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
-import {UserModel} from '../../core/store/users/user.model';
+import {User} from '../../core/store/users/user';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
 import {UserSettingsService} from '../../core/service/user-settings.service';
 import {animateOpacityFromUp} from '../../shared/animations';
@@ -66,18 +66,18 @@ const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lume
   animations: [animateOpacityFromUp],
 })
 export class WorkspaceChooserComponent implements OnInit, OnDestroy {
-  public organizations$: Observable<OrganizationModel[]>;
+  public organizations$: Observable<Organization[]>;
   public organizationCodes$: Observable<string[]>;
   public organizationsRoles$: Observable<{[organizationId: string]: string[]}>;
   public canCreateOrganizations$: Observable<boolean>;
-  public serviceLimits$: Observable<ServiceLimitsModel[]>;
+  public serviceLimits$: Observable<ServiceLimits[]>;
 
-  public projects$: Observable<ProjectModel[]>;
+  public projects$: Observable<Project[]>;
   public projectCodes$: Observable<string[]>;
   public projectRoles$: Observable<{[projectId: string]: string[]}>;
   public canCreateProjects$: Observable<boolean>;
 
-  public currentUser: UserModel;
+  public currentUser: User;
   public selectedOrganizationId: string;
   public selectedProjectId: string;
 
@@ -107,11 +107,11 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ProjectsAction.Select({projectId: null}));
   }
 
-  public onCreateOrganization(organization: OrganizationModel) {
+  public onCreateOrganization(organization: Organization) {
     this.store.dispatch(new OrganizationsAction.Create({organization}));
   }
 
-  public onUpdateOrganization(resource: OrganizationModel) {
+  public onUpdateOrganization(resource: Organization) {
     this.store.dispatch(new OrganizationsAction.Update({organization: resource}));
   }
 
@@ -137,14 +137,14 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ProjectsAction.Select({projectId: id}));
   }
 
-  public onCreateProject(project: ProjectModel) {
+  public onCreateProject(project: Project) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
       const projectModel = {...project, organizationId: this.selectedOrganizationId};
       this.store.dispatch(new ProjectsAction.Create({project: projectModel}));
     }
   }
 
-  public onUpdateProject(resource: ProjectModel) {
+  public onUpdateProject(resource: Project) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
       this.store.dispatch(new ProjectsAction.Update({project: resource}));
     }
@@ -236,7 +236,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     );
   }
 
-  private selectOrganizationAndCurrentUser(): Observable<{organization: OrganizationModel; user: UserModel}> {
+  private selectOrganizationAndCurrentUser(): Observable<{organization: Organization; user: User}> {
     return this.store.select(selectSelectedOrganization).pipe(
       filter(organization => !isNullOrUndefined(organization)),
       mergeMap(organization =>

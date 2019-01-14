@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'links-list-tabs',
@@ -29,21 +29,21 @@ import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 })
 export class LinksListTabsComponent {
   @Input()
-  public linkTypes: LinkTypeModel[];
+  public linkTypes: LinkType[];
 
   @Input()
-  public selectedLinkType: LinkTypeModel;
+  public selectedLinkType: LinkType;
 
   @Output()
-  public select = new EventEmitter<LinkTypeModel>();
+  public select = new EventEmitter<LinkType>();
 
-  public selectLink(linkType: LinkTypeModel) {
+  public selectLink(linkType: LinkType) {
     if (!this.selectedLinkType || this.selectedLinkType.id !== linkType.id) {
       this.select.emit(linkType);
     }
   }
 
-  public trackByLinkTypes(index: number, linkType: LinkTypeModel): string {
+  public trackByLinkTypes(index: number, linkType: LinkType): string {
     return linkType.id;
   }
 }

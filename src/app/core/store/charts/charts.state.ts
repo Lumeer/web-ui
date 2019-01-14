@@ -19,12 +19,12 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {ChartModel, DEFAULT_CHART_ID} from './chart.model';
+import {Chart, DEFAULT_CHART_ID} from './chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface ChartsState extends EntityState<ChartModel> {}
+export interface ChartsState extends EntityState<Chart> {}
 
-export const chartsAdapter = createEntityAdapter<ChartModel>({selectId: chart => chart.id});
+export const chartsAdapter = createEntityAdapter<Chart>({selectId: chart => chart.id});
 
 export const initialChartsState: ChartsState = chartsAdapter.getInitialState();
 

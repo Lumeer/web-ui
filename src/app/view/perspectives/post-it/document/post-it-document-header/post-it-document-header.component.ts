@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
 @Component({
@@ -29,7 +29,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItDocumentHeaderComponent {
-  @Input() public collection: CollectionModel;
+  @Input() public collection: Collection;
 
   @Input() public initialized: boolean;
 

@@ -28,18 +28,17 @@ import {selectNavigation, selectPerspective, selectQuery} from '../navigation/na
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {filterViewsByQuery, sortViewsById} from './view.filters';
-import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {ViewConfig, ViewCursor, View} from './view';
 import {isViewConfigChanged} from './view.utils';
-import {selectCalendarConfig} from "../calendar/calendar.state";
+import {selectCalendarConfig} from '../calendar/calendar.state';
 
-export interface ViewsState extends EntityState<ViewModel> {
+export interface ViewsState extends EntityState<View> {
   loaded: boolean;
-  config: ViewConfigModel;
+  config: ViewConfig;
   cursor: ViewCursor;
 }
 
-export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => view.code});
+export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.code});
 
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
@@ -86,11 +85,6 @@ export const selectViewSearchConfig = createSelector(
 export const selectViewTableConfig = createSelector(
   selectViewConfig,
   config => config.table
-);
-export const selectViewsByQuery = createSelector(
-  selectAllViews,
-  selectQuery,
-  (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query))
 );
 
 export const selectViewCursor = createSelector(

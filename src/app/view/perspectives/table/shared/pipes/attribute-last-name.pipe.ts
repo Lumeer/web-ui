@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AttributeModel} from '../../../../../core/store/collections/collection.model';
+import {Attribute} from '../../../../../core/store/collections/collection';
 import {extractAttributeLastName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
   name: 'attributeLastName',
 })
 export class AttributeLastNamePipe implements PipeTransform {
-  public transform(attribute: AttributeModel): string {
+  public transform(attribute: Attribute): string {
     return attribute && extractAttributeLastName(attribute.name);
   }
 }

@@ -32,7 +32,7 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
     case UsersActionType.CREATE_SUCCESS:
       return usersAdapter.addOne(action.payload.user, state);
     case UsersActionType.UPDATE_SUCCESS:
-      return usersAdapter.updateOne({id: action.payload.user.id, changes: action.payload.user}, state);
+      return usersAdapter.upsertOne(action.payload.user, state);
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
     case UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS:

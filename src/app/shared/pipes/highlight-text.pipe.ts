@@ -18,22 +18,22 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {isNullOrUndefined} from 'util';
 import {escapeStringForRegex} from '../utils/string.utils';
 
 @Pipe({
   name: 'highlightText',
 })
 export class HighlightTextPipe implements PipeTransform {
-  public transform(text: string, highlightedText: string, prefixOnly?: boolean): string {
-    if (isNullOrUndefined(text)) {
+  public transform(text: string | number, highlightedText: string, prefixOnly?: boolean): string {
+    if (!text) {
       return '';
     }
+    const textString = text.toString();
     const pattern = escapeStringForRegex(highlightedText);
-    const match = text.match(new RegExp(pattern, 'i'));
+    const match = textString.toString().match(new RegExp(pattern, 'i'));
     if (!match || (prefixOnly && match.index > 0)) {
-      return text;
+      return textString;
     }
-    return text.replace(match.toString(), `<span class="text-success">${match}</span>`);
+    return textString.replace(match.toString(), `<span class="text-success">${match}</span>`);
   }
 }

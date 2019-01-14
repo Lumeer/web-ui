@@ -26,9 +26,7 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {UtilsModule} from './utils/module';
 import {ContextMenuModule} from 'ngx-contextmenu';
-
 import {FormsModule} from '@angular/forms';
-import {FlatpickrModule} from 'angularx-flatpickr';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatDialogModule} from '@angular/material';
 import {CalendarConfigComponent} from './calendar-config/calendar-config.component';
@@ -36,7 +34,8 @@ import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 import {CalendarVisualizationComponent} from './calendar-visualization/calendar-visualization.component';
 
 @NgModule({
-  imports: [    //not sure
+  imports: [
+    //not sure
     SharedModule,
     CommonModule,
     FormsModule,
@@ -44,24 +43,18 @@ import {CalendarVisualizationComponent} from './calendar-visualization/calendar-
     NgbModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
-      useFactory: adapterFactory
+      useFactory: adapterFactory,
     }),
     CalendarPerspectiveRoutingModule,
-    FlatpickrModule.forRoot(),
     ContextMenuModule.forRoot({
-      useBootstrap4: true
+      useBootstrap4: true,
     }),
     UtilsModule,
     MatDialogModule,
-    CalendarPipesModule
+    CalendarPipesModule,
   ],
-  declarations: [
-    CalendarPerspectiveComponent,
-    CalendarConfigComponent,
-    CalendarVisualizationComponent
-  ],
+  declarations: [CalendarPerspectiveComponent, CalendarConfigComponent, CalendarVisualizationComponent],
   entryComponents: [CalendarPerspectiveComponent],
   exports: [CalendarPerspectiveComponent],
 })
-export class CalendarPerspectiveModule {
-}
+export class CalendarPerspectiveModule {}

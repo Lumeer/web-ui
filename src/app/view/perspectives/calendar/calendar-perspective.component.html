@@ -5,7 +5,7 @@
       <calendar-config
         [collection]="collection"
         [allConfigs]="data.configs"
-        [configOfCollection]="this.filter(data.configs, collection.id)"
+        [configOfCollection]="data.configs | filterConfigs:collection.id"
         (configChange)="onConfigChanged($event)">
       </calendar-config>
     </ng-container>

@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {LinkInstanceModel} from './link-instance.model';
+import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query';
 
 export enum LinkInstancesActionType {
@@ -52,7 +52,7 @@ export namespace LinkInstancesAction {
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkInstances: LinkInstanceModel[]; query: Query}) {}
+    public constructor(public payload: {linkInstances: LinkInstance[]; query: Query}) {}
   }
 
   export class GetFailure implements Action {
@@ -64,15 +64,13 @@ export namespace LinkInstancesAction {
   export class Create implements Action {
     public readonly type = LinkInstancesActionType.CREATE;
 
-    public constructor(
-      public payload: {linkInstance: LinkInstanceModel; callback?: (linkInstanceId: string) => void}
-    ) {}
+    public constructor(public payload: {linkInstance: LinkInstance; callback?: (linkInstanceId: string) => void}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = LinkInstancesActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
   }
 
   export class CreateFailure implements Action {
@@ -84,13 +82,13 @@ export namespace LinkInstancesAction {
   export class Update implements Action {
     public readonly type = LinkInstancesActionType.UPDATE;
 
-    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {linkInstance: LinkInstanceModel}) {}
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
   }
 
   export class UpdateFailure implements Action {

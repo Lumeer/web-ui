@@ -19,7 +19,7 @@
 
 import * as Coordinates from 'coordinate-parser';
 import {DivIcon, divIcon, LatLngLiteral, Map, MapOptions, marker, Marker} from 'leaflet';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
@@ -56,7 +56,7 @@ export function createMapMarker(properties: MapMarkerProperties): Marker {
   }).bindTooltip(`<b>${defaultAttributeValue}</b>`, {direction: 'bottom'});
 }
 
-function createMapMarkerIcon(collection: CollectionModel): DivIcon {
+function createMapMarkerIcon(collection: Collection): DivIcon {
   return divIcon({
     className: 'map-marker',
     iconSize: null,

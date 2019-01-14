@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
-import {CollectionModel} from "../../../../core/store/collections/collection.model";
-import {CalendarBarModel, CalendarBarPropertyOptional, CalendarBarPropertyRequired, CalendarConfig} from "../../../../core/store/calendar/calendar.model";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Collection} from '../../../../core/store/collections/collection';
+import {
+  CalendarBarModel,
+  CalendarBarPropertyOptional,
+  CalendarBarPropertyRequired,
+  CalendarConfig,
+} from '../../../../core/store/calendar/calendar.model';
 
 @Component({
   selector: 'calendar-config',
@@ -29,7 +34,7 @@ import {CalendarBarModel, CalendarBarPropertyOptional, CalendarBarPropertyRequir
 })
 export class CalendarConfigComponent {
   @Input()
-  public collection: CollectionModel;
+  public collection: Collection;
 
   @Input()
   public allConfigs: CalendarConfig[];
@@ -78,30 +83,27 @@ export class CalendarConfigComponent {
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
-  public removeAllBarPropertiesOptional(){
+  public removeAllBarPropertiesOptional() {
     const bars = {...this.configOfCollection.barsProperties};
     this.calendarBarsPropertiesOptional.forEach(barOptionalProperty => {
-      if (bars[barOptionalProperty])
-        delete bars[barOptionalProperty]
+      if (bars[barOptionalProperty]) delete bars[barOptionalProperty];
     });
     const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
-  public toggleOptionalBar(){
-    if(this.shownOptionalBar){
+  public toggleOptionalBar() {
+    if (this.shownOptionalBar) {
       this.removeAllBarPropertiesOptional();
     }
     this.shownOptionalBar = !this.shownOptionalBar;
   }
 
-  private createConfigsToEmit(newConfig: CalendarConfig){
+  private createConfigsToEmit(newConfig: CalendarConfig) {
     const newConfigs = [];
     this.allConfigs.forEach(config => {
-      if(config.id !== this.configOfCollection.id)
-        newConfigs.push(config);
-      else
-        newConfigs.push(newConfig);
+      if (config.id !== this.configOfCollection.id) newConfigs.push(config);
+      else newConfigs.push(newConfig);
     });
     return newConfigs;
   }

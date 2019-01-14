@@ -19,7 +19,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {UserModel} from 'src/app/core/store/users/user.model';
+import {User} from 'src/app/core/store/users/user';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
@@ -30,7 +30,7 @@ import {ServiceLimitsAction} from '../../../../core/store/organizations/service-
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {map} from 'rxjs/operators';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
 
 @Component({
@@ -46,7 +46,7 @@ export class UserMenuComponent {
   @Input()
   public workspace: Workspace;
 
-  public currentUser$: Observable<UserModel>;
+  public currentUser$: Observable<User>;
   public url$: Observable<string>;
   public freePlan$: Observable<boolean>;
 

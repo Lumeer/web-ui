@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Organization} from '../../dto';
+import {OrganizationDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {OrganizationModel} from './organization.model';
+import {Organization} from './organization';
 
 export class OrganizationConverter {
-  public static fromDto(dto: Organization, correlationId?: string): OrganizationModel {
+  public static fromDto(dto: OrganizationDto, correlationId?: string): Organization {
     return {
       id: dto.id,
       code: dto.code,
@@ -33,10 +33,11 @@ export class OrganizationConverter {
       correlationId: correlationId,
       nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions),
+      version: dto.version,
     };
   }
 
-  public static toDto(organization: OrganizationModel): Organization {
+  public static toDto(organization: Organization): OrganizationDto {
     return {
       code: organization.code,
       name: organization.name,

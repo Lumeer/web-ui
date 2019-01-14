@@ -21,16 +21,20 @@ import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {map, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {RouterAction, RouterActionType} from './router.action';
+import {from} from 'rxjs';
 
 @Injectable()
 export class RouterEffects {
-  @Effect({dispatch: false})
+  @Effect()
   public navigate$ = this.actions$.pipe(
     ofType<RouterAction.Go>(RouterActionType.GO),
     map(action => action.payload),
-    tap(({path, queryParams, extras}) => this.router.navigate(path, {queryParams, ...extras}))
+    mergeMap(({path, queryParams, extras, nextAction}) =>
+      from(this.router.navigate(path, {queryParams, ...extras})).pipe(map(() => nextAction))
+    ),
+    filter(action => !!action)
   );
 
   @Effect({dispatch: false})
