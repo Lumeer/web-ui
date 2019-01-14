@@ -36,18 +36,6 @@ import {
 } from '../../../../core/store/calendar/calendar.model';
 import {CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
 import {Subject} from 'rxjs';
-import {
-  setHours,
-  setMinutes,
-  isSameMonth,
-  isSameDay,
-  startOfDay,
-  endOfDay,
-  addHours,
-  addDays,
-  endOfMonth,
-  subDays,
-} from 'date-fns';
 
 @Component({
   selector: 'calendar-visualization',
@@ -160,10 +148,10 @@ export class CalendarVisualizationComponent implements OnChanges {
       start: start,
       end: end,
       color: CalendarVisualizationComponent.getColor(
-        true,
+        CalendarVisualizationComponent.isAllDay(start, end),
         this.collections.find(collection => collection.id === config.id).color
       ),
-      allDay: false,
+      allDay: CalendarVisualizationComponent.isAllDay(start, end),
       draggable: true,
       resizable: {
         beforeStart: true,
@@ -195,8 +183,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       const date = new Date();
       date.setHours(bits[0]);
       date.setMinutes(bits[1]);
-      const minutesToCompare = date.getMinutes().toString() === '0' ? '00' : date.getMinutes().toString();
-      return date.getHours().toString() === bits[0] && minutesToCompare === bits[1];
+      return date.getHours() === parseInt(bits[0],10) && date.getMinutes() === parseInt(bits[1],10);
     } else return false;
   }
 
@@ -206,7 +193,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     const separators = ['\\.', '\\-', '\\/'];
     const bits = dateString.split(new RegExp(separators.join('|'), 'g'));
     const date = new Date(bits[2], bits[1] - 1, bits[0]);
-    return date.getFullYear().toString() === bits[2] && (date.getMonth() + 1).toString() === bits[1];
+    return date.getFullYear() === parseInt(bits[2],10) && (date.getMonth() + 1) === parseInt(bits[1],10);
   }
 
   public dayClicked({date, events}: {date: Date; events: CalendarEvent[]}): void {
@@ -247,6 +234,10 @@ export class CalendarVisualizationComponent implements OnChanges {
       configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId
     ] = CalendarVisualizationComponent.timeToString(event.end);
     this.patchData.emit(originalDocument);
+  }
+
+  private static isAllDay(start: Date, end: Date) {
+    return start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0;
   }
 
   private static getColor(allDay: boolean, color: string) {
