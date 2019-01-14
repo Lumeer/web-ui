@@ -16,7 +16,7 @@ import {
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartConfig,
-} from '../../../../core/store/gantt-charts/gantt-chart.model';
+} from '../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from 'frappe-gantt';
 import * as moment from 'moment';
 

@@ -19,7 +19,7 @@
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 
-export interface GanttChartModel {
+export interface GanttChart {
   id: string;
   config?: GanttChartConfig;
 }

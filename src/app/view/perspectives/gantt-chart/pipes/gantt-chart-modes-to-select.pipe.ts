@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {GanttChartMode} from "../../../../core/store/gantt-charts/gantt-chart.model";
+import {GanttChartMode} from "../../../../core/store/gantt-charts/gantt-chart";
 
 @Pipe({
   name: 'ganttChartModesToSelect'

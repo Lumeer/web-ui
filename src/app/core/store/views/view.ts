@@ -23,7 +23,7 @@ import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart';
 import {Query} from '../navigation/query';
-import {GanttChartConfig} from '../gantt-charts/gantt-chart.model';
+import {GanttChartConfig} from '../gantt-charts/gantt-chart';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -44,7 +44,6 @@ export interface ViewConfig {
   postit?: PostItConfig;
   search?: SearchConfig;
   table?: TableConfig;
-  // ganttchart?: GanttChartConfigModel;
   calendar?: CalendarConfigModel;
   chart?: ChartConfig;
   ganttChart?: GanttChartConfig;
@@ -62,11 +61,6 @@ export interface PostItConfig {
 export interface SearchConfig {
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
-}
-
-export interface GanttChartConfigModel {
-  //TODO
-  whateverConfig?: string; //not sure
 }
 
 export interface CalendarConfigModel {

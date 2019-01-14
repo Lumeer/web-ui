@@ -26,17 +26,13 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {map, take} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 
-import {View} from '../../../core/store/views/view';
+import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  DEFAULT_GANTT_CHART_ID,
-  GanttChartConfig,
-  GanttChartMode,
-} from '../../../core/store/gantt-charts/gantt-chart.model';
-import {selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
+import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from '../../../core/store/gantt-charts/gantt-chart';
+import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
 
 @Component({
@@ -79,14 +75,30 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        take(1)
+        withLatestFrom(this.store$.pipe(select(selectGanttChartById(this.ganttChartId))))
       )
-      .subscribe(view => {
-        const config = (view && view.config && view.config.ganttChart) || this.createDefaultConfig();
-        const ganttChart = {id: this.ganttChartId, config};
-        this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart}));
+      .subscribe(([view, ganttChart]) => {
+        if (ganttChart) {
+          this.refreshGanttChart(view && view.config);
+        } else {
+          this.createGanttChart(view && view.config);
+        }
       });
     this.subscriptions.add(subscription);
+  }
+
+  private refreshGanttChart(viewConfig: ViewConfig) {
+    if (viewConfig && viewConfig.ganttChart) {
+      this.store$.dispatch(
+        new GanttChartAction.SetConfig({ganttChartId: this.ganttChartId, config: viewConfig.ganttChart})
+      );
+    }
+  }
+
+  private createGanttChart(viewConfig: ViewConfig) {
+    const config = (viewConfig && viewConfig.ganttChart) || this.createDefaultConfig();
+    const ganttChart = {id: this.ganttChartId, config};
+    this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart}));
   }
 
   private createDefaultConfig(): GanttChartConfig {

@@ -19,12 +19,12 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {GanttChartModel, DEFAULT_GANTT_CHART_ID} from './gantt-chart.model';
+import {GanttChart, DEFAULT_GANTT_CHART_ID} from './gantt-chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface GanttChartsState extends EntityState<GanttChartModel> {
+export interface GanttChartsState extends EntityState<GanttChart> {
 }
-export const ganttChartsAdapter = createEntityAdapter<GanttChartModel>({selectId: gantt_chart => gantt_chart.id});
+export const ganttChartsAdapter = createEntityAdapter<GanttChart>({selectId: gantt_chart => gantt_chart.id});
 
 export const initialGanttChartsState: GanttChartsState = ganttChartsAdapter.getInitialState();
 

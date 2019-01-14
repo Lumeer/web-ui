@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarPropertyOptional} from '../../../../../core/store/gantt-charts/gantt-chart.model';
+import {GanttChartBarPropertyOptional} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({

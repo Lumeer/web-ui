@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {GanttChartConfig, GanttChartModel} from './gantt-chart.model';
+import {GanttChartConfig, GanttChart} from './gantt-chart';
 
 export enum GanttChartActionType {
 
@@ -36,7 +36,7 @@ export namespace GanttChartAction {
   export class AddGanttChart implements Action {
     public readonly type = GanttChartActionType.ADD_GANTT_CHART;
 
-    public constructor(public payload: { ganttChart: GanttChartModel }) {
+    public constructor(public payload: { ganttChart: GanttChart }) {
     }
   }
 

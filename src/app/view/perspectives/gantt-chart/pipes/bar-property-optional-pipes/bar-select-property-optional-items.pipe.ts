@@ -22,7 +22,7 @@ import {
   GanttChartBarModel,
   GanttChartBarPropertyOptional,
   GanttChartConfig,
-} from '../../../../../core/store/gantt-charts/gantt-chart.model';
+} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 

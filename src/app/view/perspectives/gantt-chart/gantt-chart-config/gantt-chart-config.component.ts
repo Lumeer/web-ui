@@ -7,7 +7,7 @@ import {
   GanttChartBarPropertyRequired,
   GanttChartConfig,
   GanttChartMode,
-} from '../../../../core/store/gantt-charts/gantt-chart.model';
+} from '../../../../core/store/gantt-charts/gantt-chart';
 
 @Component({
   selector: 'gantt-chart-config',
