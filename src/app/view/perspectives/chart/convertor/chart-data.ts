@@ -34,7 +34,7 @@ export interface ChartDataSet {
 }
 
 export interface ChartPoint {
-  id: string;
+  id?: string;
   x?: any;
   y?: any;
   isPrediction?: boolean;

@@ -19,12 +19,14 @@
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {ChartAxis, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
-import {ChartData, ChartPoint, ChartYAxisType} from './chart-data';
+import {ChartAggregation, ChartAxis, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
+import {ChartData, ChartDataSet, ChartLegendEntry, ChartPoint, ChartYAxisType} from './chart-data';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query';
 import {queryStemCollectionsOrder} from '../../../../core/store/navigation/query.util';
+import {isNotNullOrUndefind} from '../../../../shared/utils/common.utils';
+import {hex2rgba} from '../../../../shared/utils/html-modifier';
 
 interface DocumentWithLinks extends DocumentModel {
   linksTo: DocumentModel[];
@@ -39,9 +41,15 @@ interface CollectionChain {
   asIdOfObject?: boolean;
 }
 
-export class DataConvertor {
-  private documentsMap: Record<string, Record<string, DocumentWithLinks>>;
+type DocumentsMap = Record<string, Record<string, DocumentWithLinks>>;
+/*
+ * Structure of data is:
+ *  {key1: {key2 .... : {keyN: []} ... } where key is used for group data and array for data aggregation
+ *  if dataset name is set N = 2; else N = 1
+ */
+type DocumentsData = Record<string, any>;
 
+export class DataConvertor {
   public convert(
     config: ChartConfig,
     documents: DocumentModel[],
@@ -51,16 +59,110 @@ export class DataConvertor {
     linkInstances: LinkInstance[]
   ): ChartData {
     const collectionIdsOrder = queryStemCollectionsOrder(linkTypes, query.stems && query.stems[0]);
-    this.documentsMap = this.createDocumentsMap(collectionIdsOrder, documents, linkTypes, linkInstances);
+    const baseCollection = collections.find(collection => collection.id === collectionIdsOrder[0]);
+    const documentsMap = this.createDocumentsMap(collectionIdsOrder, documents, linkTypes, linkInstances);
+
+    const xAxis = config.axes[ChartAxisType.X];
+    const y1Axis = config.axes[ChartAxisType.Y1];
+    const y2Axis = config.axes[ChartAxisType.Y2];
+
+    if (y1Axis && y2Axis) {
+      const data1 = this.convertAxis(config, ChartAxisType.Y1, baseCollection, documentsMap, collectionIdsOrder);
+      const data2 = this.convertAxis(config, ChartAxisType.Y2, baseCollection, documentsMap, collectionIdsOrder);
+      return this.mergeData(data1, data2);
+    } else if (!y1Axis && (xAxis || y2Axis)) {
+      return this.convertAxis(config, ChartAxisType.Y2, baseCollection, documentsMap, collectionIdsOrder);
+    } else if (xAxis || y1Axis) {
+      return this.convertAxis(config, ChartAxisType.Y1, baseCollection, documentsMap, collectionIdsOrder);
+    }
 
     return this.createEmptyData(config.type);
+  }
+
+  private createDocumentsMap(
+    collectionIdsOrder: string[],
+    documents: DocumentModel[],
+    linkTypes: LinkType[],
+    linkInstances: LinkInstance[]
+  ): DocumentsMap {
+    const collectionIdsOrderMap = collectionIdsOrder.reduce((idsMap, id, index) => ({...idsMap, [id]: index}), {});
+    const linkTypeIds = new Set(linkTypes.map(lt => lt.id));
+    const allDocumentsMap: Record<string, DocumentModel> = {};
+    const map: DocumentsMap = {};
+
+    for (const document of documents) {
+      allDocumentsMap[document.id] = document;
+
+      if (!map[document.collectionId]) {
+        map[document.collectionId] = {};
+      }
+
+      map[document.collectionId][document.id] = {...document, linksTo: [], linksFrom: []};
+    }
+
+    for (const linkInstance of linkInstances) {
+      const document1 = allDocumentsMap[linkInstance.documentIds[0]];
+      const document2 = allDocumentsMap[linkInstance.documentIds[1]];
+      const document1Map = document1 && map[document1.collectionId];
+      const document2Map = document2 && map[document2.collectionId];
+
+      if (!document1 || !document1Map || !document2 || !document2Map || !linkTypeIds.has(linkInstance.linkTypeId)) {
+        continue;
+      }
+
+      const document1CollectionIndex = collectionIdsOrderMap[document1.collectionId];
+      const document2CollectionIndex = collectionIdsOrderMap[document2.collectionId];
+      if (document1CollectionIndex <= document2CollectionIndex) {
+        document1Map[document1.id].linksTo.push(document2);
+        document2Map[document2.id].linksFrom.push(document1);
+      } else {
+        document2Map[document2.id].linksTo.push(document1);
+        document1Map[document1.id].linksFrom.push(document2);
+      }
+    }
+
+    return map;
+  }
+
+  private convertAxis(
+    config: ChartConfig,
+    yAxisType: ChartAxisType.Y1 | ChartAxisType.Y2,
+    baseCollection: Collection,
+    documentsMap: DocumentsMap,
+    collectionIdsOrder: string[]
+  ): ChartData {
+    const xAxis = config.axes[ChartAxisType.X];
+    const yAxis = config.axes[yAxisType];
+    const yName = config.names[yAxisType];
+
+    const chartYAxisType = yAxisType === ChartAxisType.Y1 ? ChartYAxisType.Y1 : ChartYAxisType.Y2;
+
+    if (this.areChartAxesThroughLink(xAxis, yAxis, yName)) {
+      const chain = this.createCollectionChain(collectionIdsOrder, xAxis, yAxis, yName);
+      const data = this.iterate(chain, documentsMap);
+      return this.convertDocumentsMapData(data, config, baseCollection, chartYAxisType);
+    }
+
+    const documents = Object.values(documentsMap[baseCollection.id] || {});
+    return this.convertSingleAxis(chartYAxisType, config.type, documents, baseCollection, xAxis, yAxis);
+  }
+
+  private areChartAxesThroughLink(xAxis?: ChartAxis, yAxis?: ChartAxis, yName?: ChartAxis): boolean {
+    const y1CollectionIndexes = new Set(
+      [
+        xAxis && xAxis.collectionIndex,
+        yAxis && yAxis.collectionIndex,
+        xAxis && yAxis && yName && yName.collectionIndex,
+      ].filter(index => isNotNullOrUndefind(index))
+    );
+    return y1CollectionIndexes.size > 1;
   }
 
   private createCollectionChain(
     collectionIdsOrder: string[],
     xAxis: ChartAxis,
     yAxis: ChartAxis,
-    axisName?: ChartAxis
+    yName?: ChartAxis
   ): CollectionChain[] {
     let index = 0;
     let collectionIndex = xAxis.collectionIndex;
@@ -69,16 +171,16 @@ export class DataConvertor {
         index: index++,
         collectionId: xAxis.collectionId,
         attributeId: xAxis.attributeId,
-        asIdOfArray: !axisName,
-        asIdOfObject: !!axisName,
+        asIdOfArray: !yName,
+        asIdOfObject: !!yName,
       },
     ];
 
-    if (axisName) {
+    if (yName) {
       const nameSubChain = this.createCollectionChainForRange(
         collectionIdsOrder,
         collectionIndex,
-        axisName.collectionIndex,
+        yName.collectionIndex,
         index
       );
       chain.push(...nameSubChain);
@@ -86,11 +188,11 @@ export class DataConvertor {
 
       chain.push({
         index: index++,
-        collectionId: axisName.collectionId,
-        attributeId: axisName.attributeId,
+        collectionId: yName.collectionId,
+        attributeId: yName.attributeId,
         asIdOfObject: true,
       });
-      collectionIndex = axisName.collectionIndex;
+      collectionIndex = yName.collectionIndex;
     }
 
     const axisSubChain = this.createCollectionChainForRange(
@@ -127,19 +229,20 @@ export class DataConvertor {
     return chain;
   }
 
-  /*
-   * Structure of data is:
-   *  {key1: {key2 .... : {keyN: []} ... } where key is used for group data and array for data aggregation
-   *  if dataset name is set N = 2; else N = 1
-   */
-  private iterate(chain: CollectionChain[]): any {
-    const documents = Object.values(this.documentsMap[chain[0].collectionId] || {});
+  private iterate(chain: CollectionChain[], documentsMap: DocumentsMap): DocumentsData {
+    const documents = Object.values(documentsMap[chain[0].collectionId] || {});
     const data = {};
-    this.iterateRecursive(documents, {}, chain, 0);
+    this.iterateRecursive(documents, {}, chain, 0, documentsMap);
     return data;
   }
 
-  private iterateRecursive(documents: DocumentWithLinks[], data: any, chain: CollectionChain[], index: number) {
+  private iterateRecursive(
+    documents: DocumentWithLinks[],
+    data: DocumentsData,
+    chain: CollectionChain[],
+    index: number,
+    documentsMap: DocumentsMap
+  ) {
     const stage = chain[index];
     const forward = chain[index - 1].index < stage.index;
     if (index === chain.length - 1) {
@@ -149,99 +252,172 @@ export class DataConvertor {
     }
 
     for (const document of documents) {
-      const value = document.data[stage.attributeId];
-      if (!value) {
-        // TODO what if array?
-        continue;
-      }
-
       const nextStage = chain[index + 1];
       const linkedDocuments = forward ? document.linksFrom : document.linksTo;
-      const nextCollectionDocuments = this.documentsMap[nextStage.collectionId] || {};
+      const nextCollectionDocuments = documentsMap[nextStage.collectionId] || {};
       const linkedDocumentsWithLinks = linkedDocuments
         .filter(d => d.collectionId === stage.collectionId)
         .map(d => nextCollectionDocuments[d.id]);
 
-      let nextData: any;
       if (stage.asIdOfArray || stage.asIdOfObject) {
-        const dataValue = document.data[stage.attributeId];
-        if (!data[dataValue]) {
-          data[dataValue] = stage.asIdOfArray ? [] : {};
+        const values = this.getDocumentValues(document, stage.attributeId);
+        if (values.length === 0) {
+          continue;
         }
-        nextData = data[dataValue];
-      } else {
-        nextData = data;
-      }
 
-      this.iterateRecursive(linkedDocumentsWithLinks, nextData, chain, index + 1);
+        for (const value of values) {
+          if (!data[value]) {
+            data[value] = stage.asIdOfArray ? [] : {};
+          }
+          this.iterateRecursive(linkedDocumentsWithLinks, data[value], chain, index + 1, documentsMap);
+        }
+      } else {
+        this.iterateRecursive(linkedDocumentsWithLinks, data, chain, index + 1, documentsMap);
+      }
     }
   }
 
-  private createDocumentsMap(
-    collectionIdsOrder: string[],
-    documents: DocumentModel[],
-    linkTypes: LinkType[],
-    linkInstances: LinkInstance[]
-  ): Record<string, Record<string, DocumentWithLinks>> {
-    const collectionIdsOrderMap = collectionIdsOrder.reduce((idsMap, id, index) => ({...idsMap, [id]: index}), {});
-    const linkTypeIds = new Set(linkTypes.map(lt => lt.id));
-    const allDocumentsMap: Record<string, DocumentModel> = {};
-    const map: Record<string, Record<string, DocumentWithLinks>> = {};
-
-    for (const document of documents) {
-      allDocumentsMap[document.id] = document;
-
-      if (!map[document.collectionId]) {
-        map[document.collectionId] = {};
-      }
-
-      map[document.collectionId][document.id] = {...document, linksTo: [], linksFrom: []};
+  private getDocumentValues(document: DocumentModel, attributeId: string): any[] {
+    const value = document.data[attributeId];
+    if (!value) {
+      return [];
     }
 
-    for (const linkInstance of linkInstances) {
-      const document1 = allDocumentsMap[linkInstance.documentIds[0]];
-      const document2 = allDocumentsMap[linkInstance.documentIds[1]];
-      const document1Map = document1 && map[document1.collectionId];
-      const document2Map = document2 && map[document2.collectionId];
-
-      if (!document1 || !document1Map || !document2 || !document2Map || !linkTypeIds.has(linkInstance.linkTypeId)) {
-        continue;
-      }
-
-      const document1CollectionIndex = collectionIdsOrderMap[document1.collectionId];
-      const document2CollectionIndex = collectionIdsOrderMap[document2.collectionId];
-      if (document1CollectionIndex <= document2CollectionIndex) {
-        document1Map[document1.id].linksTo.push(document2);
-        document2Map[document2.id].linksFrom.push(document1);
-      } else {
-        document2Map[document2.id].linksTo.push(document1);
-        document1Map[document1.id].linksFrom.push(document2);
-      }
-    }
-
-    return map;
+    return Array.isArray(value) ? value : [value];
   }
 
-  public convertSingleCollection(config: ChartConfig, documents: DocumentModel[], collection: Collection): ChartData {
-    if (!collection || !config || !documents) {
+  private convertDocumentsMapData(
+    data: DocumentsData,
+    config: ChartConfig,
+    baseCollection: Collection,
+    yAxisType: ChartYAxisType
+  ): ChartData {
+    const xEntries = Object.keys(data);
+    if (xEntries.length === 0) {
       return this.createEmptyData(config.type);
     }
+    // TODO sort
 
-    const xAxis = config.axes[ChartAxisType.X];
-    const y1Axis = config.axes[ChartAxisType.Y1];
-    const y2Axis = config.axes[ChartAxisType.Y2];
-
-    if (y1Axis && y2Axis) {
-      const data = this.convertSingleAxis(ChartYAxisType.Y1, config.type, documents, collection, xAxis, y1Axis);
-      const data2 = this.convertSingleAxis(ChartYAxisType.Y2, config.type, documents, collection, xAxis, y2Axis);
-      return this.mergeData(data, data2);
-    } else if (!y1Axis && (xAxis || y2Axis)) {
-      return this.convertSingleAxis(ChartYAxisType.Y2, config.type, documents, collection, xAxis, y2Axis);
-    } else if (xAxis || y1Axis) {
-      return this.convertSingleAxis(ChartYAxisType.Y1, config.type, documents, collection, xAxis, y1Axis);
+    if (this.areDataNested(data, xEntries)) {
+      return this.convertDocumentsMapDataNested(data, xEntries, config, baseCollection, yAxisType);
     }
 
-    return this.createEmptyData(config.type);
+    return this.convertDocumentsMapDataSimple(data, xEntries, config, baseCollection, yAxisType);
+  }
+
+  private convertDocumentsMapDataNested(
+    data: DocumentsData,
+    xEntries: string[],
+    config: ChartConfig,
+    baseCollection: Collection,
+    yAxisType: ChartYAxisType
+  ): ChartData {
+    const isNumericMap: Record<string, boolean> = {};
+    const pointsMap: Record<string, ChartPoint[]> = {};
+
+    for (const key of xEntries) {
+      const nestedValue: Record<string, any[]> = data[key];
+      const nestedKeys = Object.keys(nestedValue);
+      for (const nestedKey of nestedKeys) {
+        if (!pointsMap[nestedKey]) {
+          pointsMap[nestedKey] = [];
+          isNumericMap[nestedKey] = true;
+        }
+
+        const values = nestedValue[nestedKey] as any[];
+        const yValue = this.aggregate(config.aggregation, values);
+        if (yValue) {
+          isNumericMap[nestedKey] = isNumericMap[nestedKey] && this.isNumeric(yValue);
+          pointsMap[nestedKey].push({x: key, y: yValue});
+        }
+      }
+    }
+
+    const sets: ChartDataSet[] = [];
+    const legendEntries: ChartLegendEntry[] = [];
+    const legendEntriesNames = Object.keys(pointsMap);
+    let colorAlpha = 100;
+    const colorAlphaStep = 60 / Math.max(1, legendEntriesNames.length - 1); // min alpha is 40
+
+    for (let i = 0; i < legendEntriesNames.length; i++) {
+      const name = legendEntriesNames[i];
+      const color = hex2rgba(baseCollection.color, colorAlpha);
+      legendEntries.push({color, value: name});
+      sets.push({id: baseCollection.id, points: pointsMap[name], color, isNumeric: isNumericMap[name], yAxisType});
+      colorAlpha -= colorAlphaStep;
+    }
+
+    return {sets, legend: {entries: legendEntries}, type: config.type};
+  }
+
+  private convertDocumentsMapDataSimple(
+    data: DocumentsData,
+    xEntries: string[],
+    config: ChartConfig,
+    baseCollection: Collection,
+    yAxisType: ChartYAxisType
+  ): ChartData {
+    let isNumeric = true;
+    const points: ChartPoint[] = [];
+    for (const key of xEntries) {
+      const values = data[key] as any[];
+      const yValue = this.aggregate(config.aggregation, values);
+      if (yValue) {
+        isNumeric = isNumeric && this.isNumeric(yValue);
+        points.push({x: key, y: yValue});
+      }
+    }
+
+    const dataSet = {id: baseCollection.id, points, color: baseCollection.color, isNumeric, yAxisType};
+    return {sets: [dataSet], legend: {entries: []}, type: config.type};
+  }
+
+  private areDataNested(data: DocumentsData, keys: string[]): boolean {
+    const value = data[keys[0]];
+    return !Array.isArray(value);
+  }
+
+  private aggregate(aggregation: ChartAggregation, values: any[]): any {
+    if (values.length === 1) {
+      return values[0];
+    }
+
+    switch (aggregation) {
+      case ChartAggregation.Sum:
+        return this.sumValues(values);
+      case ChartAggregation.Avg:
+        return this.avgValues(values);
+      case ChartAggregation.Min:
+        return this.minInValues(values);
+      case ChartAggregation.Max:
+        return this.maxInValues(values);
+      default:
+        return values[0];
+    }
+  }
+
+  private sumValues(values: any[]): any {
+    const numericValues = values.filter(value => this.isNumeric(value));
+    return numericValues.reduce((sum, value) => sum + value, 0);
+  }
+
+  private avgValues(values: any[]): any {
+    const numericValues = values.filter(value => this.isNumeric(value));
+    if (numericValues.length === 0) {
+      return null;
+    }
+
+    return numericValues.reduce((sum, value) => sum + value, 0) / numericValues.length;
+  }
+
+  private minInValues(values: any[]): any {
+    const sortedValues = values.sort((a, b) => (a > b ? 1 : -1));
+    return sortedValues[0];
+  }
+
+  private maxInValues(values: any[]): any {
+    const sortedValues = values.sort((a, b) => (a > b ? -1 : 1));
+    return sortedValues[0];
   }
 
   private convertSingleAxis(
@@ -278,7 +454,7 @@ export class DataConvertor {
     return !isNaN(value);
   }
 
-  public createEmptyData(type: ChartType): ChartData {
+  private createEmptyData(type: ChartType): ChartData {
     return {sets: [], legend: {entries: []}, type};
   }
 }
