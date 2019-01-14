@@ -26,9 +26,9 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, withLatestFrom} from 'rxjs/operators';
 import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
-import {selectChartById, selectChartConfig, selectDefaultChart} from '../../../core/store/charts/charts.state';
+import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
@@ -75,14 +75,13 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        filter(view => !!view),
         withLatestFrom(this.store$.pipe(select(selectChartById(this.chartId))))
       )
       .subscribe(([view, chart]) => {
         if (chart) {
-          this.refreshChart(view.config);
+          this.refreshChart(view && view.config);
         } else {
-          this.createChart(view.config);
+          this.createChart(view && view.config);
         }
       });
     this.subscriptions.add(subscription);
