@@ -121,13 +121,13 @@ export class GanttChartVisualizationComponent implements OnChanges {
         });
         this.gantt_chart.change_view_mode(this.config.mode);
 
-        let textColor = this.getContrastYIQ(this.collection.color.substring(1, 6));
+        const textColor = GanttChartVisualizationComponent.getContrastYIQ(this.collection.color.substring(1, 6));
         $('.gantt .bar').css('fill', this.collection.color);
         $('.gantt .bar-label').css('fill', textColor);
         if (textColor == 'black') {
-          $('.gantt .bar-progress').css('fill', this.shadeColor2(this.collection.color, 50));
+          $('.gantt .bar-progress').css('fill', GanttChartVisualizationComponent.LightenDarkenColor(this.collection.color, -30));
         } else {
-          $('.gantt .bar-progress').css('fill', this.shadeColor2(this.collection.color, 0.3));
+          $('.gantt .bar-progress').css('fill', GanttChartVisualizationComponent.LightenDarkenColor(this.collection.color, 50));
         }
       }
     }
@@ -143,7 +143,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
     this.patchData.emit(patchDocument);
   }
 
-  private getContrastYIQ(hexcolor) {
+  private static getContrastYIQ(hexcolor) {
     var r = parseInt(hexcolor.substr(0, 2), 16);
     var g = parseInt(hexcolor.substr(2, 2), 16);
     var b = parseInt(hexcolor.substr(4, 2), 16);
@@ -151,23 +151,25 @@ export class GanttChartVisualizationComponent implements OnChanges {
     return yiq >= 128 ? 'black' : 'white';
   }
 
-  private shadeColor2(color, percent) {
-    var f = parseInt(color.slice(1), 16),
-      t = percent < 0 ? 0 : 255,
-      p = percent < 0 ? percent * -1 : percent,
-      R = f >> 16,
-      G = (f >> 8) & 0x00ff,
-      B = f & 0x0000ff;
-    return (
-      '#' +
-      (
-        0x1000000 +
-        (Math.round((t - R) * p) + R) * 0x10000 +
-        (Math.round((t - G) * p) + G) * 0x100 +
-        (Math.round((t - B) * p) + B)
-      )
-        .toString(16)
-        .slice(1)
-    );
+  private static LightenDarkenColor(color: string, amt: number) {
+    let usePound = false;
+    if (color[0] == '#') {
+      color = color.slice(1);
+      usePound = true;
+    }
+    let num = parseInt(color, 16);
+    let r = (num >> 16) + amt;
+
+    if (r > 255) r = 255;
+    else if (r < 0) r = 0;
+
+    let b = ((num >> 8) & 0x00FF) + amt;
+    if (b > 255) b = 255;
+    else if (b < 0) b = 0;
+
+    let g = (num & 0x0000FF) + amt;
+    if (g > 255) g = 255;
+    else if (g < 0) g = 0;
+    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
   }
 }
