@@ -1,5 +1,5 @@
 <br>
-<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
+<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="configOfCollection">
 
   <div class="collection_title">
       <i [style.color]="collection.color"
@@ -12,8 +12,8 @@
   <ng-container *ngFor="let calendarBarPropertyRequired of calendarBarsPropertiesRequired">
     <select-item
       [class.mr-2]="true"
-      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyRequired:config "
-      [selectedId]="config.barsProperties[calendarBarPropertyRequired]"
+      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyRequired:configOfCollection "
+      [selectedId]="configOfCollection.barsProperties[calendarBarPropertyRequired]"
       [placeholderText]="calendarBarPropertyRequired "
       [emptyValue]="calendarBarPropertyRequired"
       (select)="onBarPropertyRequiredSelect(calendarBarPropertyRequired, $event)"
@@ -35,8 +35,8 @@
   <ng-container *ngFor="let calendarBarPropertyOptional of calendarBarsPropertiesOptional; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyOptional:config "
-      [selectedId]="config.barsProperties[calendarBarPropertyOptional]"
+      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyOptional:configOfCollection "
+      [selectedId]="configOfCollection.barsProperties[calendarBarPropertyOptional]"
       [placeholderText]="calendarBarPropertyOptional "
       [emptyValue]="calendarBarPropertyOptional"
       (select)="onBarPropertyOptionalSelect(calendarBarPropertyOptional, $event)"

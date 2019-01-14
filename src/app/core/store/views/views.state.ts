@@ -31,6 +31,7 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {isViewConfigChanged} from './view.utils';
+import {selectCalendarConfig} from "../calendar/calendar.state";
 
 export interface ViewsState extends EntityState<ViewModel> {
   loaded: boolean;
@@ -103,12 +104,14 @@ export const selectPerspectiveConfig = createSelector(
   selectTableConfig,
   selectChartConfig,
   selectMapConfig,
-  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) =>
+  selectCalendarConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig, calendarConfig) =>
     ({
       [Perspective.Map]: mapConfig,
       [Perspective.PostIt]: postItConfig,
       [Perspective.Table]: tableConfig,
       [Perspective.Chart]: chartConfig,
+      [Perspective.Calendar]: calendarConfig,
     }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(

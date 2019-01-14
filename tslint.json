@@ -9,7 +9,7 @@
     "no-arg": true,
     "no-bitwise": false,
     "no-consecutive-blank-lines": true,
-        "no-console": [true, "log", "trace"],
+    "no-console": [true, "log", "trace"],
     "no-construct": true,
     "no-debugger": false,
     "no-duplicate-variable": true,

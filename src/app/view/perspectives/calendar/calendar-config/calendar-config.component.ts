@@ -35,7 +35,7 @@ export class CalendarConfigComponent {
   public allConfigs: CalendarConfig[];
 
   @Input()
-  public config: CalendarConfig;
+  public configOfCollection: CalendarConfig;
 
   @Output()
   public configChange = new EventEmitter<CalendarConfig[]>();
@@ -46,45 +46,45 @@ export class CalendarConfigComponent {
 
   public allRequiredPropertiesSet() {
     return (
-      this.config.barsProperties[CalendarBarPropertyRequired.NAME] &&
-      this.config.barsProperties[CalendarBarPropertyRequired.START_DATE] &&
-      this.config.barsProperties[CalendarBarPropertyRequired.END_DATE]
+      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.NAME] &&
+      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.START_DATE] &&
+      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.END_DATE]
     );
   }
 
   public onBarPropertyRequiredSelect(type: CalendarBarPropertyRequired, bar: CalendarBarModel) {
-    const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig = {...this.config, barsProperties: bars};
+    const bars = {...this.configOfCollection.barsProperties, [type]: bar};
+    const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
   public onBarPropertyRequiredRemoved(type: CalendarBarPropertyRequired) {
-    const bars = {...this.config.barsProperties};
+    const bars = {...this.configOfCollection.barsProperties};
     delete bars[type];
-    const newConfig = {...this.config, barsProperties: bars};
+    const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
   public onBarPropertyOptionalSelect(type: CalendarBarPropertyOptional, bar: CalendarBarModel) {
-    const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig = {...this.config, barsProperties: bars};
+    const bars = {...this.configOfCollection.barsProperties, [type]: bar};
+    const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
   public onBarPropertyOptionalRemoved(type: CalendarBarPropertyOptional) {
-    const bars = {...this.config.barsProperties};
+    const bars = {...this.configOfCollection.barsProperties};
     delete bars[type];
-    const newConfig = {...this.config, barsProperties: bars};
+    const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
   public removeAllBarPropertiesOptional(){
-    const bars = {...this.config.barsProperties};
+    const bars = {...this.configOfCollection.barsProperties};
     this.calendarBarsPropertiesOptional.forEach(barOptionalProperty => {
       if (bars[barOptionalProperty])
         delete bars[barOptionalProperty]
     });
-    const newConfig = {...this.config, barsProperties: bars};
+    const newConfig = {...this.configOfCollection, barsProperties: bars};
     this.configChange.emit(this.createConfigsToEmit(newConfig));
   }
 
@@ -98,7 +98,7 @@ export class CalendarConfigComponent {
   private createConfigsToEmit(newConfig: CalendarConfig){
     const newConfigs = [];
     this.allConfigs.forEach(config => {
-      if(config.id !== this.config.id)
+      if(config.id !== this.configOfCollection.id)
         newConfigs.push(config);
       else
         newConfigs.push(newConfig);
