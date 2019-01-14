@@ -227,12 +227,18 @@ export class CalendarVisualizationComponent implements OnChanges {
     originalDocument.data[
       configOfCollection.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId
     ] = CalendarVisualizationComponent.dateToString(event.end);
-    originalDocument.data[
-      configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId
-    ] = CalendarVisualizationComponent.timeToString(event.start);
-    originalDocument.data[
-      configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId
-    ] = CalendarVisualizationComponent.timeToString(event.end);
+    //optional
+    if (
+      configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME] &&
+      configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME]
+    ) {
+      originalDocument.data[
+        configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId
+        ] = CalendarVisualizationComponent.timeToString(event.start);
+      originalDocument.data[
+        configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId
+        ] = CalendarVisualizationComponent.timeToString(event.end);
+    }
     this.patchData.emit(originalDocument);
   }
 
