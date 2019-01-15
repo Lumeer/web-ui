@@ -17,22 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-//import { CommonModule } from '@angular/common';
-import {SharedModule} from '../../../shared/shared.module';
-import {GanttChartComponent} from './gantt-chart.component';
-//import {RouterModule} from '@angular/router';
-import {GanttChartRoutingModule} from './gantt-chart-routing.module';
+export const DEFAULT_CALENDAR_ID = 'default';
 
-@NgModule({
-  imports: [    //not sure
-    SharedModule,
+export interface CalendarModel {
+  id: string;
+  config?: CalendarConfig[];
+}
 
-    GanttChartRoutingModule
+export interface CalendarConfig {
+  id: string,
+  barsProperties: { [type: string]: CalendarBarModel };
+}
 
-  ],
-  declarations: [
-    GanttChartComponent
-  ]
-})
-export class GanttChartModule { }
+export interface CalendarBarModel {
+  collectionId: string;
+  attributeId: string;
+}
+
+export enum CalendarBarPropertyRequired {
+  NAME = 'name',
+  START_DATE = 'start',
+  END_DATE = 'end',
+}
+
+export enum CalendarBarPropertyOptional {
+  START_TIME = 'startTime',
+  END_TIME = 'endTime',
+}

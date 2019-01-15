@@ -17,23 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {GanttChartComponent} from './gantt-chart.component';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: GanttChartComponent
-  }
-];
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {CalendarModule} from 'angular-calendar';
+import {CalendarHeaderComponent} from './calendar-header.component';
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [CommonModule, FormsModule, CalendarModule],
+  declarations: [CalendarHeaderComponent],
+  exports: [CalendarHeaderComponent],
 })
-export class GanttChartRoutingModule { }
+export class UtilsModule {}

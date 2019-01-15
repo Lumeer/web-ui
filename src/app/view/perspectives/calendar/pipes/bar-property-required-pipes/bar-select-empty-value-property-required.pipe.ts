@@ -17,21 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-//import { CommonModule } from '@angular/common';
-import {SharedModule} from '../../../shared/shared.module';
-import {CalendarComponent} from './calendar.component';
-import {CalendarRoutingModule} from './calendar-routing.module';
+import {Pipe, PipeTransform} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {CalendarBarPropertyRequired} from "../../../../../core/store/calendar/calendar.model";
 
-@NgModule({
-  imports: [    //not sure
-    SharedModule,
-
-    CalendarRoutingModule
-
-  ],
-  declarations: [
-    CalendarComponent
-  ]
+@Pipe({
+  name: 'barSelectEmptyValuePropertyRequired',
 })
-export class CalendarModule { }
+export class BarSelectEmptyValuePropertyRequiredPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(barProperty: CalendarBarPropertyRequired): string {
+    return this.i18n(
+      {
+        id: 'calendar.barRequired.placeholder',
+        value: 'Select {barProperty, select, name {name} start {starting date} end {ending date}}',
+      },
+      {
+        barProperty,
+      }
+    );
+  }
+}
