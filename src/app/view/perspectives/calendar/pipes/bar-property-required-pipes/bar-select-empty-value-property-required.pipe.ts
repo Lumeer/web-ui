@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarPropertyRequired} from "../../../../../core/store/calendar/calendar.model";
+import {CalendarBarPropertyRequired} from '../../../../../core/store/calendar/calendar.model';
 
 @Pipe({
   name: 'barSelectEmptyValuePropertyRequired',

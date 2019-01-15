@@ -18,14 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../../../core/store/navigation/query';
-import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
+import {GanttChartBarPropertyOptional} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'displayable',
+  name: 'barSelectEmptyValuePropertyOptional',
 })
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isAnyCollectionQuery(query);
+export class BarSelectEmptyValuePropertyOptionalPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(barProperty: GanttChartBarPropertyOptional): string {
+    return this.i18n(
+      {
+        id: 'ganttChart.barOptional.placeholder',
+        value: 'Select {barProperty, select, id {id} dependencies {dependencies} progress {progress}}',
+      },
+      {
+        barProperty,
+      }
+    );
   }
 }

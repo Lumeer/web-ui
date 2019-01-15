@@ -17,15 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../../../core/store/navigation/query';
-import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
+export const DEFAULT_GANTT_CHART_ID = 'default';
 
-@Pipe({
-  name: 'displayable',
-})
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isAnyCollectionQuery(query);
-  }
+export interface GanttChart {
+  id: string;
+  config?: GanttChartConfig;
+}
+
+export interface GanttChartConfig {
+  mode: GanttChartMode;
+  barsProperties: {[type: string]: GanttChartBarModel};
+}
+
+export interface GanttChartBarModel {
+  collectionId: string;
+  attributeId: string;
+}
+
+export enum GanttChartMode {
+  Day = 'Day',
+  QuarterDay = 'Quarter Day',
+  HalfDay = 'Half Day',
+  Week = 'Week',
+  Month = 'Month',
+}
+
+export enum GanttChartBarPropertyRequired {
+  NAME = 'name',
+  START = 'start',
+  END = 'end',
+}
+
+export enum GanttChartBarPropertyOptional {
+  ID = 'id',
+  DEPENDENCIES = 'dependencies',
+  PROGRESS = 'progress',
 }

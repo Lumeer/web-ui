@@ -18,14 +18,29 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../../../core/store/navigation/query';
-import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {GanttChartMode} from "../../../../core/store/gantt-charts/gantt-chart";
 
 @Pipe({
-  name: 'displayable',
+  name: 'ganttChartModesToSelect'
 })
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isAnyCollectionQuery(query);
+export class GanttChartModesToSelectPipe implements PipeTransform {
+
+  public constructor(private i18n: I18n) {
   }
+
+  public transform(modes: GanttChartMode[]): SelectItemModel[] {
+    return modes.map(mode => ({id: mode, value: this.getTypeValue(mode)}));
+  }
+
+  private getTypeValue(mode: GanttChartMode): string {
+    return this.i18n({
+      id: 'ganttChart.mode',
+      value: '{ganttChartMode, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month}}'
+    }, {
+      ganttChartMode: mode
+    });
+  }
+
 }

@@ -1,0 +1,27 @@
+<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
+
+    <ng-container *ngIf="{collection: collection$ | async,  config: config$ | async} as data">
+      <gantt-chart-config
+        [collection]="data.collection"
+        [config]="data.config"
+        (configChange)="onConfigChanged($event)">
+      </gantt-chart-config>
+
+      <gantt-chart-visualization
+        class="row align-items-center justify-content-center"
+        [collection]="data.collection"
+        [documents]="documents$ | async"
+        [config]="data.config"
+        (patchData)="patchDocumentData($event)">
+      </gantt-chart-visualization>
+
+    </ng-container>
+
+</div>
+
+<ng-template #notDisplayable>
+  <div class="alert alert-warning m-3"
+       role="alert"
+       i18n="@@ganttChart.query.invalid">Gantt chart perspective cannot show the results of your query. The query needs to have exactly one collection.
+  </div>
+</ng-template>

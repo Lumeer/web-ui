@@ -17,25 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {calendarsAdapter, CalendarsState, initialCalendarsState} from './calendar.state';
-import {CalendarAction, CalendarActionType} from './calendar.action';
+import {ganttChartsAdapter, GanttChartsState, initialGanttChartsState} from './gantt-charts.state';
+import {GanttChartAction, GanttChartActionType} from './gantt-charts.action';
 
-export function calendarsReducer(
-  state: CalendarsState = initialCalendarsState,
-  action: CalendarAction.All
-): CalendarsState {
+export function ganttChartsReducer(state: GanttChartsState = initialGanttChartsState, action: GanttChartAction.All): GanttChartsState {
   switch (action.type) {
-    case CalendarActionType.ADD_CALENDAR:
-      return calendarsAdapter.addOne(action.payload.calendar, state);
-    case CalendarActionType.REMOVE_CALENDAR:
-      return calendarsAdapter.removeOne(action.payload.calendarId, state);
-    case CalendarActionType.SET_CONFIG:
-      return calendarsAdapter.updateOne(
-        {id: action.payload.calendarId, changes: {config: action.payload.config}},
-        state
-      );
-    case CalendarActionType.CLEAR:
-      return initialCalendarsState;
+    case GanttChartActionType.ADD_GANTT_CHART:
+      return ganttChartsAdapter.addOne(action.payload.ganttChart, state);
+    case GanttChartActionType.REMOVE_GANTT_CHART:
+      return ganttChartsAdapter.removeOne(action.payload.ganttChartId, state);
+    case GanttChartActionType.SET_CONFIG:
+      return ganttChartsAdapter.updateOne({id: action.payload.ganttChartId, changes: {config: action.payload.config}}, state);
+    case GanttChartActionType.CLEAR:
+      return initialGanttChartsState;
     default:
       return state;
   }

@@ -19,28 +19,18 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {CalendarModel, DEFAULT_CALENDAR_ID} from './calendar.model';
+import {GanttChart, DEFAULT_GANTT_CHART_ID} from './gantt-chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface CalendarsState extends EntityState<CalendarModel> {}
+export interface GanttChartsState extends EntityState<GanttChart> {
+}
+export const ganttChartsAdapter = createEntityAdapter<GanttChart>({selectId: gantt_chart => gantt_chart.id});
 
-export const calendarsAdapter = createEntityAdapter<CalendarModel>({selectId: calendar => calendar.id});
+export const initialGanttChartsState: GanttChartsState = ganttChartsAdapter.getInitialState();
 
-export const initialCalendarsState: CalendarsState = calendarsAdapter.getInitialState();
+export const selectGanttChartState = (state: AppState) => state.ganttCharts;
+export const selectGanttChartsDictionary = createSelector(selectGanttChartState, ganttChartsAdapter.getSelectors().selectEntities);
+export const selectGanttChartById = (id) => createSelector(selectGanttChartsDictionary, gantt_charts => gantt_charts[id]);
 
-export const selectCalendarState = (state: AppState) => state.calendars;
-export const selectCalendarsDictionary = createSelector(
-  selectCalendarState,
-  calendarsAdapter.getSelectors().selectEntities
-);
-export const selectCalendarById = id =>
-  createSelector(
-    selectCalendarsDictionary,
-    calendars => calendars[id]
-  );
-
-export const selectDefaultCalendar = selectCalendarById(DEFAULT_CALENDAR_ID);
-export const selectCalendarConfig = createSelector(
-  selectDefaultCalendar,
-  calendar => calendar && calendar.config
-);
+export const selectDefaultGanttChart = selectGanttChartById(DEFAULT_GANTT_CHART_ID);
+export const selectGanttChartConfig = createSelector(selectDefaultGanttChart, gantt_chart => gantt_chart && gantt_chart.config);

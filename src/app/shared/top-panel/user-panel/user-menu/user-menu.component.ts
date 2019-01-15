@@ -19,7 +19,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {User} from 'src/app/core/store/users/user';
+import {User} from '../../../../core/store/users/user';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';

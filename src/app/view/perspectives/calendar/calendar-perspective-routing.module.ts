@@ -17,23 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {CalendarPerspectiveComponent} from './calendar-perspective.component';
 
 const calendarRoutes: Routes = [
   {
     path: '',
-    component: CalendarPerspectiveComponent
-  }
+    component: CalendarPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(calendarRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(calendarRoutes)],
+  exports: [RouterModule],
 })
-export class CalendarPerspectiveRoutingModule { }
+export class CalendarPerspectiveRoutingModule {}

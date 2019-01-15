@@ -20,7 +20,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {selectAllCollections} from 'src/app/core/store/collections/collections.state';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../core/store/tables/table.model';

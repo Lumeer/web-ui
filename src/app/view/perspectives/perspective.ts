@@ -24,7 +24,7 @@ export enum Perspective {
   PostIt = 'postit',
   Chart = 'chart',
   Calendar = 'calendar',
-  GanttChart = 'ganttchart',
+  GanttChart = 'ganttChart',
   Map = 'map',
   SmartDoc = 'smartdoc',
 }

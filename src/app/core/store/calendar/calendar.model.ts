@@ -25,8 +25,8 @@ export interface CalendarModel {
 }
 
 export interface CalendarConfig {
-  id: string,
-  barsProperties: { [type: string]: CalendarBarModel };
+  id: string;
+  barsProperties: {[type: string]: CalendarBarModel};
 }
 
 export interface CalendarBarModel {
