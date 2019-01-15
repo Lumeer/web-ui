@@ -17,23 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {CalendarComponent} from './calendar.component';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Query} from '../../../../core/store/navigation/query';
+import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
 
-const calendarRoutes: Routes = [
-  {
-    path: '',
-    component: CalendarComponent
-  }
-];
-
-@NgModule({
-  imports: [
-    RouterModule.forChild(calendarRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+@Pipe({
+  name: 'displayable',
 })
-export class CalendarRoutingModule { }
+export class DisplayablePipe implements PipeTransform {
+  public transform(query: Query): boolean {
+    return isAnyCollectionQuery(query);
+  }
+}

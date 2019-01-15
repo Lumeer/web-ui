@@ -33,8 +33,6 @@ import {TablePerspectiveComponent} from './perspectives/table/table-perspective.
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {UsersGuard} from '../core/guards/data/users.guard';
-import {GanttChartPerspectiveComponent} from './perspectives/gantt-chart/gantt-chart-perspective.component';
-import {CalendarComponent} from './perspectives/calendar/calendar.component';
 
 const viewRoutes: Routes = [
   {
@@ -72,7 +70,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Calendar,
-        loadChildren: './perspectives/calendar/calendar.module#CalendarModule',
+        loadChildren: './perspectives/calendar/calendar-perspective.module#CalendarPerspectiveModule',
       },
       {
         path: Perspective.Search,
