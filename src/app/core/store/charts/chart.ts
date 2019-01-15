@@ -70,9 +70,8 @@ export enum ChartAggregation {
   Avg = 'avg',
 }
 
-export interface ChartSort {
+export interface ChartSort extends ChartAxis {
   type: ChartSortType;
-  ascending: boolean;
 }
 
 export enum ChartSortType {

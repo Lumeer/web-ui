@@ -19,7 +19,15 @@
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {ChartAggregation, ChartAxis, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
+import {
+  ChartAggregation,
+  ChartAxis,
+  ChartAxisType,
+  ChartConfig,
+  ChartSort,
+  ChartSortType,
+  ChartType,
+} from '../../../../core/store/charts/chart';
 import {ChartData, ChartDataSet, ChartLegendEntry, ChartPoint, ChartYAxisType} from './chart-data';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
@@ -57,13 +65,17 @@ export function convertChartData(
   linkTypes?: LinkType[],
   linkInstances?: LinkInstance[]
 ): ChartData {
-  const collectionIdsOrder = queryStemCollectionsOrder(linkTypes, query.stems && query.stems[0]);
-  const baseCollection = collections.find(collection => collection.id === collectionIdsOrder[0]);
-  const documentsMap = createDocumentsMap(collectionIdsOrder, documents, linkTypes, linkInstances);
-
   const xAxis = config.axes[ChartAxisType.X];
   const y1Axis = config.axes[ChartAxisType.Y1];
   const y2Axis = config.axes[ChartAxisType.Y2];
+
+  if (!xAxis && !y1Axis && !y2Axis) {
+    return createEmptyData(config.type);
+  }
+
+  const collectionIdsOrder = queryStemCollectionsOrder(linkTypes || [], query.stems && query.stems[0]);
+  const baseCollection = collections.find(collection => collection.id === collectionIdsOrder[0]);
+  const documentsMap = createDocumentsMap(collectionIdsOrder, documents, linkTypes, linkInstances);
 
   if (y1Axis && y2Axis) {
     const data1 = convertAxis(config, ChartAxisType.Y1, baseCollection, documentsMap, collectionIdsOrder);
@@ -138,7 +150,7 @@ function convertAxis(
 
   if (areChartAxesThroughLink(xAxis, yAxis, yName)) {
     const chain = createCollectionChain(collectionIdsOrder, xAxis, yAxis, yName);
-    const data = iterate(chain, documentsMap);
+    const data = iterate(chain, documentsMap, config.sort);
     return convertDocumentsMapData(data, config, baseCollection, chartYAxisType);
   }
 
@@ -162,11 +174,10 @@ function createCollectionChain(
   yAxis: ChartAxis,
   yName?: ChartAxis
 ): CollectionChain[] {
-  let index = 0;
   let collectionIndex = xAxis.collectionIndex;
   const chain: CollectionChain[] = [
     {
-      index: index++,
+      index: xAxis.collectionIndex,
       collectionId: xAxis.collectionId,
       attributeId: xAxis.attributeId,
       asIdOfArray: !yName,
@@ -177,27 +188,24 @@ function createCollectionChain(
   if (yName) {
     const nameSubChain = createCollectionChainForRange(
       collectionIdsOrder,
-      collectionIndex,
-      yName.collectionIndex,
-      index
+      xAxis.collectionIndex,
+      yName.collectionIndex
     );
     chain.push(...nameSubChain);
-    index += nameSubChain.length;
 
     chain.push({
-      index: index++,
+      index: yName.collectionIndex,
       collectionId: yName.collectionId,
       attributeId: yName.attributeId,
-      asIdOfObject: true,
+      asIdOfArray: true,
     });
     collectionIndex = yName.collectionIndex;
   }
 
-  const axisSubChain = createCollectionChainForRange(collectionIdsOrder, collectionIndex, yAxis.collectionIndex, index);
+  const axisSubChain = createCollectionChainForRange(collectionIdsOrder, collectionIndex, yAxis.collectionIndex);
   chain.push(...axisSubChain);
-  index += axisSubChain.length;
 
-  chain.push({index: index, collectionId: yAxis.collectionId, attributeId: yAxis.attributeId, asIdOfArray: true});
+  chain.push({index: yAxis.collectionIndex, collectionId: yAxis.collectionId, attributeId: yAxis.attributeId});
 
   return chain;
 }
@@ -205,28 +213,56 @@ function createCollectionChain(
 function createCollectionChainForRange(
   collectionIdsOrder: string[],
   startIndex: number,
-  endIndex: number,
-  stageIndex: number
+  endIndex: number
 ): CollectionChain[] {
   const chain: CollectionChain[] = [];
   if (startIndex > endIndex) {
-    for (let i = startIndex; i > endIndex; i--) {
-      chain.push({index: stageIndex++, collectionId: collectionIdsOrder[i]});
+    for (let i = startIndex - 1; i > endIndex; i--) {
+      chain.push({index: i, collectionId: collectionIdsOrder[i]});
     }
   } else {
-    for (let i = startIndex; i < endIndex; i++) {
-      chain.push({index: stageIndex++, collectionId: collectionIdsOrder[i]});
+    for (let i = startIndex + 1; i < endIndex; i++) {
+      chain.push({index: i, collectionId: collectionIdsOrder[i]});
     }
   }
 
   return chain;
 }
 
-function iterate(chain: CollectionChain[], documentsMap: DocumentsMap): DocumentsData {
+function iterate(chain: CollectionChain[], documentsMap: DocumentsMap, sort: ChartSort): DocumentsData {
   const documents = Object.values(documentsMap[chain[0].collectionId] || {});
+  const sortedDocuments = sortDocuments(documents, sort);
   const data = {};
-  iterateRecursive(documents, {}, chain, 0, documentsMap);
+  iterateRecursive(sortedDocuments, data, chain, 0, documentsMap);
   return data;
+}
+
+function sortDocuments(documents: DocumentWithLinks[], sort: ChartSort): DocumentWithLinks[] {
+  if (!document || documents.length === 0 || !sort || documents[0].collectionId !== sort.collectionId) {
+    return documents || [];
+  }
+
+  const asc = sort.type === ChartSortType.Ascending;
+  return documents.sort((a, b) => compareValues(a.data[sort.attributeId], b.data[sort.attributeId], asc));
+}
+
+function compareValues(a: any, b: any, asc: boolean): number {
+  const multiplier = asc ? 1 : -1;
+  if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    return 0;
+  } else if (isNullOrUndefined(b)) {
+    return multiplier;
+  } else if (isNullOrUndefined(a)) {
+    return -1 * multiplier;
+  }
+
+  if (a > b) {
+    return multiplier;
+  } else if (b > a) {
+    return -1 * multiplier;
+  }
+
+  return 0;
 }
 
 function iterateRecursive(
@@ -237,19 +273,19 @@ function iterateRecursive(
   documentsMap: DocumentsMap
 ) {
   const stage = chain[index];
-  const forward = chain[index - 1].index < stage.index;
   if (index === chain.length - 1) {
-    const values = documents.map(d => d.data[stage.attributeId]).filter(value => !!value);
+    const values = documents.map(d => d.data[stage.attributeId]).filter(value => isNotNullOrUndefind(value));
     data.push(...values);
     return;
   }
+  const forward = chain[index + 1].index < stage.index;
 
   for (const document of documents) {
     const nextStage = chain[index + 1];
     const linkedDocuments = forward ? document.linksFrom : document.linksTo;
     const nextCollectionDocuments = documentsMap[nextStage.collectionId] || {};
     const linkedDocumentsWithLinks = linkedDocuments
-      .filter(d => d.collectionId === stage.collectionId)
+      .filter(d => d.collectionId === nextStage.collectionId)
       .map(d => nextCollectionDocuments[d.id]);
 
     if (stage.asIdOfArray || stage.asIdOfObject) {
@@ -289,7 +325,6 @@ function convertDocumentsMapData(
   if (xEntries.length === 0) {
     return createEmptyData(config.type);
   }
-  // TODO sort
 
   if (areDataNested(data, xEntries)) {
     return convertDocumentsMapDataNested(data, xEntries, config, baseCollection, yAxisType);
@@ -428,16 +463,17 @@ function convertSingleAxis(
   yAxis?: ChartAxis
 ): ChartData {
   const documents = Object.values(documentsMap[collection.id] || {});
+  const sortedDocuments = sortDocuments(documents, config.sort);
 
   if (!xAxis || !yAxis) {
-    return convertSingleAxisSimple(yAxisType, config.type, documents, collection, xAxis, yAxis);
+    return convertSingleAxisSimple(yAxisType, config.type, sortedDocuments, collection, xAxis, yAxis);
   }
 
   if (config.aggregation) {
-    return convertSingleAxisWithAggregation(yAxisType, config, documents, collection, xAxis, yAxis);
+    return convertSingleAxisWithAggregation(yAxisType, config, sortedDocuments, collection, xAxis, yAxis);
   }
 
-  return convertSingleAxisWithoutAggregation(yAxisType, config, documents, collection, xAxis, yAxis);
+  return convertSingleAxisWithoutAggregation(yAxisType, config, sortedDocuments, collection, xAxis, yAxis);
 }
 
 function convertSingleAxisWithAggregation(
