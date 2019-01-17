@@ -27,11 +27,11 @@ import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.uti
 import {isNotNullOrUndefind} from '../../../../shared/utils/common.utils';
 
 @Pipe({
-  name: 'axisSelectItems',
+  name: 'dataNameSelectItems',
 })
-export class AxisSelectItemsPipe implements PipeTransform {
+export class DataNameSelectItemsPipe implements PipeTransform {
   public transform(
-    axisType: ChartAxisType,
+    axisType: ChartAxisType.Y1 | ChartAxisType.Y2,
     config: ChartConfig,
     collections: Collection[],
     linkTypes: LinkType[],
@@ -40,22 +40,15 @@ export class AxisSelectItemsPipe implements PipeTransform {
     const items: SelectItemModel[] = [];
 
     const restrictedCollectionIndexes = this.getRestrictedCollectionIndexes(config, axisType);
-    const restrictedAxes = Object.entries(config.axes)
-      .filter(entry => entry[0] !== axisType)
-      .map(entry => entry[1]);
 
     const stem = query.stems[0];
     const baseCollection = collections.find(collection => collection.id === stem.collectionId);
 
     if (!restrictedCollectionIndexes.includes(0)) {
       // it's not base collection
-      const filteredAttributes = this.filterAttributesByRestrictedAxes(
-        baseCollection.attributes,
-        baseCollection,
-        0,
-        restrictedAxes
+      items.push(
+        ...(baseCollection.attributes || []).map(attribute => this.attributeToItem(baseCollection, attribute, 0))
       );
-      items.push(...filteredAttributes.map(attribute => this.attributeToItem(baseCollection, attribute, 0)));
     }
 
     let previousCollection = baseCollection;
@@ -68,14 +61,8 @@ export class AxisSelectItemsPipe implements PipeTransform {
       const otherCollectionId = getOtherLinkedCollectionId(linkType, previousCollection.id);
       const otherCollection = collections.find(collection => collection.id === otherCollectionId);
 
-      const filteredAttributes = this.filterAttributesByRestrictedAxes(
-        otherCollection.attributes,
-        otherCollection,
-        collectionIndex,
-        restrictedAxes
-      );
       items.push(
-        ...filteredAttributes.map(attribute =>
+        ...(otherCollection.attributes || []).map(attribute =>
           this.linkedAttributeToItem(previousCollection, otherCollection, attribute, collectionIndex)
         )
       );
@@ -87,33 +74,10 @@ export class AxisSelectItemsPipe implements PipeTransform {
   }
 
   private getRestrictedCollectionIndexes(config: ChartConfig, axisType: ChartAxisType): number[] {
-    if (axisType === ChartAxisType.X) {
-      const y1Name = config.names && config.names[ChartAxisType.Y1];
-      const y2Name = config.names && config.names[ChartAxisType.Y2];
-      return [y1Name && y1Name.collectionIndex, y2Name && y2Name.collectionIndex].filter(value =>
-        isNotNullOrUndefind(value)
-      );
-    }
+    const xAxis = config.axes[ChartAxisType.X];
+    const yAxis = config.axes[axisType];
 
-    const yName = config.names && config.names[axisType];
-    return (yName && [yName.collectionIndex]) || [];
-  }
-
-  private filterAttributesByRestrictedAxes(
-    attributes: Attribute[],
-    collection: Collection,
-    collectionIndex: number,
-    restrictedAxes: ChartAxis[]
-  ): Attribute[] {
-    return (attributes || []).filter(
-      attribute =>
-        !restrictedAxes.find(
-          axis =>
-            axis.collectionId === collection.id &&
-            axis.attributeId === attribute.id &&
-            axis.collectionIndex === collectionIndex
-        )
-    );
+    return [xAxis && xAxis.collectionIndex, yAxis && yAxis.collectionIndex].filter(value => isNotNullOrUndefind(value));
   }
 
   private attributeToItem(collection: Collection, attribute: Attribute, collectionIndex: number): SelectItemModel {

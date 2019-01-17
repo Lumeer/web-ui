@@ -26,6 +26,9 @@ import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
 import {AxisSelectEmptyValuePipe} from './axis-select-empty-value.pipe';
 import {AxisSelectItemsPipe} from './axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
+import {DataNameSelectItemsPipe} from './data-name-select-items.pipe';
+import {AggregationSelectItemsPipe} from './aggregation-select-items.pipe';
+import {SortSelectItemsPipe} from './sort-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,6 +40,9 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     AxisSelectEmptyValuePipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
+    DataNameSelectItemsPipe,
+    AggregationSelectItemsPipe,
+    SortSelectItemsPipe,
   ],
   exports: [
     DisplayablePipe,
@@ -46,6 +52,9 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
     AxisSelectEmptyValuePipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
+    DataNameSelectItemsPipe,
+    AggregationSelectItemsPipe,
+    SortSelectItemsPipe,
   ],
 })
 export class ChartPipesModule {}

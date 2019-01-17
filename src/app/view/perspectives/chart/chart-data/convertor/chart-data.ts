@@ -17,9 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
+import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+
+export interface ChartData {
+  sets: ChartDataSet[];
+  legend: ChartLegend;
+  type: ChartType;
+}
+
+export interface ChartDataSet {
+  id: string;
+  points: ChartPoint[];
+  color: string;
+  isNumeric: boolean;
+  yAxisType: ChartYAxisType;
+}
+
+export interface ChartPoint {
+  id?: string;
+  x?: any;
+  y?: any;
+  isPrediction?: boolean;
+}
+
+export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
+
+export interface ChartLegend {
+  entries: ChartLegendEntry[];
+}
+
+export interface ChartLegendEntry {
   value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
+  color?: string;
 }

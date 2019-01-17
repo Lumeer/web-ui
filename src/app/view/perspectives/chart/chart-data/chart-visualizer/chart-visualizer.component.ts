@@ -17,39 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartType} from '../../../../core/store/charts/chart';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, Input} from '@angular/core';
+import {ChartData} from '../convertor/chart-data';
 
-export interface ChartData {
-  sets: ChartDataSet[];
-  legend: ChartLegend;
-  type: ChartType;
-}
-
-export interface ChartDataSet {
-  id: string;
-  points: ChartPoint[];
-  color: string;
-  isNumeric: boolean;
-  yAxisType: ChartYAxisType;
-}
-
-export interface ChartPoint {
-  id?: string;
-  x?: any;
-  y?: any;
-  isPrediction?: boolean;
-}
-
-export enum ChartYAxisType {
-  Y1 = 'y',
-  Y2 = 'y2',
-}
-
-export interface ChartLegend {
-  entries: ChartLegendEntry[];
-}
-
-export interface ChartLegendEntry {
-  value: string;
-  color?: string;
+@Component({
+  selector: 'chart-visualizer',
+  templateUrl: './chart-visualizer.component.html',
+  styleUrls: ['./chart-visualizer.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ChartVisualizerComponent {
+  @Input()
+  public data: ChartData;
 }

@@ -19,11 +19,11 @@
 
     <ng-container *ngIf="selectedId | getSelectItem:items as selectedItem">
 
-      <icons-presenter *ngIf="selectedItem.icon && selectedItem.iconColor"
-                       [colors]="[selectedItem.iconColor]"
-                       [icons]="[selectedItem.icon]">
+      <icons-presenter *ngIf="selectedItem.icons && selectedItem.iconColors"
+                       [colors]="selectedItem.iconColors"
+                       [icons]="selectedItem.icons">
       </icons-presenter>
-      <i *ngIf="selectedItem.icon && !selectedItem.iconColor" class="fa-fw {{selectedItem.icon}}"></i>
+      <i *ngIf="selectedItem.icons && !selectedItem.iconColors && selectedItem.icons.length === 1" class="fa-fw {{selectedItem.icons[0]}}"></i>
       <span class="ml-sm-1 text-nowrap">
         {{selectedItem.value}}
       </span>
@@ -37,11 +37,11 @@
        [class.active]="selectedId | areIdsEqual:item.id"
        (click)="onSelect(item)"
        class="dropdown-item">
-      <icons-presenter *ngIf="item.icon && item.iconColor"
-                       [colors]="[item.iconColor]"
-                       [icons]="[item.icon]">
+      <icons-presenter *ngIf="item.icons && item.iconColors"
+                       [colors]="item.iconColors"
+                       [icons]="item.icons">
       </icons-presenter>
-      <i *ngIf="item.icon && !item.iconColor" class="fa-fw {{item.icon}}"></i>
+      <i *ngIf="item.icons && !item.iconColors && item.icons.length === 1" class="fa-fw {{item.icons[0]}}"></i>
       <span class="ml-sm-1 text-nowrap">
         {{item.value}}
       </span>

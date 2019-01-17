@@ -28,9 +28,9 @@ export interface ChartConfig {
   type: ChartType;
   axes: {[type: string]: ChartAxis};
   names?: {[type: string]: ChartAxis};
-  sort?: ChartSort;
-  aggregation?: ChartAggregation;
+  aggregations?: {[type: string]: ChartAggregation};
   prediction?: boolean;
+  sort?: ChartSort;
 }
 
 export interface ChartAxis {

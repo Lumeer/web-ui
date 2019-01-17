@@ -1,26 +1,111 @@
-<div class="d-flex flex-row align-items-center flex-wrap" *ngIf="config">
+<ng-container *ngIf="config">
 
-  <select-item class="mr-2"
-               [disabled]="!canManageConfig"
-               [placeholderIcon]="chartPerspective | perspectiveIcon"
-               [items]="chartTypes | chartTypesToSelect"
-               [selectedId]="config.type"
-               (select)="onTypeSelect($event)">
-  </select-item>
+  <div class="d-flex flex-row align-items-center flex-wrap">
 
-  <ng-container *ngFor="let axis of axes; let isLast = last">
-    <select-item
-      *ngIf="axis | showAxisSelect:config"
-      [class.mr-2]="!isLast"
-      [disabled]="!canManageConfig"
-      [items]="[collection] | axisSelectItems:axis:config"
-      [selectedId]="config.axes[axis]"
-      [placeholderText]="axis.toUpperCase()"
-      [emptyValue]="axis | axisSelectEmptyValue"
-      [removable]="true"
-      (select)="onAxisSelect(axis, $event)"
-      (remove)="onAxisRemoved(axis)">
+    <select-item class="mr-2"
+                 [disabled]="!canManageConfig"
+                 [placeholderIcon]="chartPerspective | perspectiveIcon"
+                 [items]="chartTypes | chartTypesToSelect"
+                 [selectedId]="config.type"
+                 (select)="onTypeSelect($event)">
     </select-item>
-  </ng-container>
 
-</div>
+    <select-item
+      class="mr-2"
+      [disabled]="!canManageConfig"
+      [items]="xAxisType | axisSelectItems:config:collections:linkTypes:query"
+      [selectedId]="config.axes[xAxisType]"
+      [placeholderText]="xAxisType.toString().toUpperCase()"
+      [emptyValue]="xAxisType | axisSelectEmptyValue"
+      [removable]="true"
+      (select)="onAxisSelect(xAxisType, $event)"
+      (remove)="onAxisRemoved(xAxisType)">
+    </select-item>
+
+    <select-item class="mr-2"
+                 [disabled]="!canManageConfig"
+                 [placeholderText]="'Sort'"
+                 [items]="config | sortSelectItems:collections"
+                 [selectedId]="config.sort"
+                 [removable]="true"
+                 (select)="onSortSelect($event)"
+                 (remove)="onSortRemoved()">
+    </select-item>
+
+  </div>
+
+  <div class="d-flex flex-row align-items-center flex-wrap mt-3">
+
+    <select-item
+      class="mr-2"
+      [disabled]="!canManageConfig"
+      [items]="yAxisType | axisSelectItems:config:collections:linkTypes:query"
+      [selectedId]="config.axes[yAxisType]"
+      [placeholderText]="yAxisType.toString().toUpperCase()"
+      [emptyValue]="yAxisType | axisSelectEmptyValue"
+      [removable]="true"
+      (select)="onAxisSelect(yAxisType, $event)"
+      (remove)="onAxisRemoved(yAxisType)">
+    </select-item>
+
+    <select-item
+      class="mr-2"
+      [disabled]="!canManageConfig"
+      [items]="yAxisType | dataNameSelectItems:config:collections:linkTypes:query"
+      [selectedId]="config.names && config.names[yAxisType]"
+      [placeholderText]="'Y data set'"
+      [emptyValue]="'Y data set'"
+      [removable]="true"
+      (select)="onDataNameSelect(yAxisType, $event)"
+      (remove)="onDataNameRemoved(yAxisType)">
+    </select-item>
+
+    <select-item class="mr-2"
+                 [disabled]="!canManageConfig"
+                 [items]="chartAggregations | aggregationSelectItems"
+                 [placeholderText]="'Y aggregation'"
+                 [selectedId]="config.aggregations && config.aggregations[yAxisType]"
+                 (select)="onAggregationSelect(yAxisType, $event)"
+                 (remove)="onAggregationRemoved(yAxisType)">
+    </select-item>
+
+  </div>
+
+  <div class="d-flex flex-row align-items-center flex-wrap mt-3">
+
+    <select-item
+      class="mr-2"
+      [disabled]="!canManageConfig"
+      [items]="y2AxisType | axisSelectItems:config:collections:linkTypes:query"
+      [selectedId]="config.axes[y2AxisType]"
+      [placeholderText]="y2AxisType.toString().toUpperCase()"
+      [emptyValue]="y2AxisType | axisSelectEmptyValue"
+      [removable]="true"
+      (select)="onAxisSelect(y2AxisType, $event)"
+      (remove)="onAxisRemoved(y2AxisType)">
+    </select-item>
+
+    <select-item
+      class="mr-2"
+      [disabled]="!canManageConfig"
+      [items]="y2AxisType | dataNameSelectItems:config:collections:linkTypes:query"
+      [selectedId]="config.names && config.names[y2AxisType]"
+      [placeholderText]="'Y2 data set'"
+      [emptyValue]="'Y2 data set'"
+      [removable]="true"
+      (select)="onDataNameSelect(y2AxisType, $event)"
+      (remove)="onDataNameRemoved(y2AxisType)">
+    </select-item>
+
+    <select-item class="mr-2"
+                 [disabled]="!canManageConfig"
+                 [items]="chartAggregations | aggregationSelectItems"
+                 [placeholderText]="'Y2 aggregation'"
+                 [selectedId]="config.aggregations && config.aggregations[y2AxisType]"
+                 (select)="onAggregationSelect(y2AxisType, $event)"
+                 (remove)="onAggregationRemoved(y2AxisType)">
+    </select-item>
+
+  </div>
+
+</ng-container>

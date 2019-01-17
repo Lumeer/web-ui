@@ -24,15 +24,22 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectDocumentsByQuery,
+  selectLinkInstancesByQuery,
+  selectLinkTypesByQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, filter, map, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
 import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 
 @Component({
   selector: 'chart-perspective',
@@ -42,7 +49,9 @@ import {Query} from '../../../core/store/navigation/query';
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<Collection>;
+  public collections$: Observable<Collection[]>;
+  public linkTypes$: Observable<LinkType[]>;
+  public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
 
@@ -108,10 +117,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       select(selectDocumentsByQuery),
       distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y))
     );
-    this.collection$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(collections => collections[0])
-    );
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
+
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }

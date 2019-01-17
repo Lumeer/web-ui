@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {
   ChartAggregation,
   ChartAxis,
@@ -27,14 +27,14 @@ import {
   ChartSort,
   ChartSortType,
   ChartType,
-} from '../../../../core/store/charts/chart';
+} from '../../../../../core/store/charts/chart';
 import {ChartData, ChartDataSet, ChartLegendEntry, ChartPoint, ChartYAxisType} from './chart-data';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query} from '../../../../core/store/navigation/query';
-import {queryStemCollectionsOrder} from '../../../../core/store/navigation/query.util';
-import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
-import {hex2rgba} from '../../../../shared/utils/html-modifier';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {Query} from '../../../../../core/store/navigation/query';
+import {queryStemCollectionsOrder} from '../../../../../core/store/navigation/query.util';
+import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 
 interface DocumentWithLinks extends DocumentModel {
   linksTo: DocumentModel[];
@@ -137,7 +137,7 @@ function createDocumentsMap(
 
 function convertAxis(
   config: ChartConfig,
-  yAxisType: ChartAxisType.Y1 | ChartAxisType.Y2,
+  yAxisType: ChartYAxisType,
   baseCollection: Collection,
   documentsMap: DocumentsMap,
   collectionIdsOrder: string[]
@@ -146,15 +146,13 @@ function convertAxis(
   const yAxis = config.axes[yAxisType];
   const yName = config.names && config.names[yAxisType];
 
-  const chartYAxisType = yAxisType === ChartAxisType.Y1 ? ChartYAxisType.Y1 : ChartYAxisType.Y2;
-
   if (areChartAxesThroughLink(xAxis, yAxis, yName)) {
     const chain = createCollectionChain(collectionIdsOrder, xAxis, yAxis, yName);
     const data = iterate(chain, documentsMap, config.sort);
-    return convertDocumentsMapData(data, config, baseCollection, chartYAxisType);
+    return convertDocumentsMapData(data, config, baseCollection, yAxisType);
   }
 
-  return convertSingleAxis(chartYAxisType, config, documentsMap, baseCollection, xAxis, yAxis);
+  return convertSingleAxis(yAxisType, config, documentsMap, baseCollection, xAxis, yAxis);
 }
 
 function areChartAxesThroughLink(xAxis?: ChartAxis, yAxis?: ChartAxis, yName?: ChartAxis): boolean {
@@ -353,7 +351,7 @@ function convertDocumentsMapDataNested(
       }
 
       const values = nestedValue[nestedKey] as any[];
-      const yValue = aggregate(config.aggregation, values);
+      const yValue = aggregate(config.aggregations[yAxisType], values);
       if (yValue) {
         isNumericMap[nestedKey] = isNumericMap[nestedKey] && isNumeric(yValue);
         pointsMap[nestedKey].push({x: key, y: yValue});
@@ -391,7 +389,7 @@ function convertDocumentsMapDataSimple(
   for (const key of xEntries) {
     const values = data[key] as any[];
     const id = documentIds && values.length === 1 ? documentIds[key] : undefined;
-    const yValue = aggregate(config.aggregation, values);
+    const yValue = aggregate(config.aggregations[yAxisType], values);
     if (isNotNullOrUndefind(yValue)) {
       isNum = isNum && isNumeric(yValue);
       points.push({id, x: key, y: yValue});
@@ -469,7 +467,7 @@ function convertSingleAxis(
     return convertSingleAxisSimple(yAxisType, config.type, sortedDocuments, collection, xAxis, yAxis);
   }
 
-  if (config.aggregation) {
+  if (config.aggregations && config.aggregations[yAxisType]) {
     return convertSingleAxisWithAggregation(yAxisType, config, sortedDocuments, collection, xAxis, yAxis);
   }
 

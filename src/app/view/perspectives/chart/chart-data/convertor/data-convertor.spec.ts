@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {Query} from '../../../../core/store/navigation/query';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {Query} from '../../../../../core/store/navigation/query';
 import {
   ChartAggregation,
   ChartAxisType,
   ChartConfig,
   ChartSortType,
   ChartType,
-} from '../../../../core/store/charts/chart';
+} from '../../../../../core/store/charts/chart';
 import {convertChartData} from './data-convertor';
 import {ChartYAxisType} from './chart-data';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 
 const documents: DocumentModel[] = [
   {

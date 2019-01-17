@@ -17,9 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChartAggregation} from '../../../../core/store/charts/chart';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+
+@Pipe({
+  name: 'aggregationSelectItems',
+})
+export class AggregationSelectItemsPipe implements PipeTransform {
+  public transform(aggregations: ChartAggregation[]): SelectItemModel[] {
+    return aggregations.map(aggregation => ({id: aggregation, value: aggregation}));
+  }
 }
