@@ -23,7 +23,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ElementRef} from '@angular/core';
 
-export abstract class PlotMaker {
+export abstract class PlotMaker2 {
   protected collections: Collection[];
 
   protected documents: DocumentModel[];

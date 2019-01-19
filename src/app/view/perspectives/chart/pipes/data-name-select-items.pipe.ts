@@ -51,15 +51,21 @@ export class DataNameSelectItemsPipe implements PipeTransform {
       );
     }
 
+    if ((stem.linkTypeIds || []).length === 0) {
+      return items;
+    }
+
     let previousCollection = baseCollection;
     for (let i = 0; i < stem.linkTypeIds.length; i++) {
-      const collectionIndex = i + 1;
-      if (restrictedCollectionIndexes.includes(collectionIndex)) {
-        continue;
-      }
       const linkType = linkTypes.find(lt => lt.id === stem.linkTypeIds[i]);
       const otherCollectionId = getOtherLinkedCollectionId(linkType, previousCollection.id);
       const otherCollection = collections.find(collection => collection.id === otherCollectionId);
+
+      const collectionIndex = i + 1;
+      if (restrictedCollectionIndexes.includes(collectionIndex)) {
+        previousCollection = otherCollection;
+        continue;
+      }
 
       items.push(
         ...(otherCollection.attributes || []).map(attribute =>

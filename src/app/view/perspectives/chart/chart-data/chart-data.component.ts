@@ -25,6 +25,9 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {Query} from '../../../../core/store/navigation/query';
 import {ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ChartData} from './convertor/chart-data';
+import {BehaviorSubject} from 'rxjs';
+import {convertChartData} from './convertor/data-convertor';
 
 @Component({
   selector: 'chart-data',
@@ -42,7 +45,7 @@ export class ChartDataComponent implements OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstance: LinkInstance[];
+  public linkInstances: LinkInstance[];
 
   @Input()
   public allowedPermissions: AllowedPermissions;
@@ -56,7 +59,17 @@ export class ChartDataComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
+  public chartData$ = new BehaviorSubject<ChartData>(null);
+
   public ngOnChanges(changes: SimpleChanges) {
-    // TODO
+    const chartData = convertChartData(
+      this.config,
+      this.documents,
+      this.collections,
+      this.query,
+      this.linkTypes,
+      this.linkInstances
+    );
+    this.chartData$.next(chartData);
   }
 }

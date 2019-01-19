@@ -20,10 +20,10 @@
 import {ChartAxis, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {Data, Layout} from 'plotly.js';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
-import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
+import {AxisDraggablePlotMaker2, PointData} from './axis-draggable-plot-maker2';
 import * as d3 from 'd3';
 
-export class BarPlotMaker extends AxisDraggablePlotMaker {
+export class BarPlotMaker2 extends AxisDraggablePlotMaker2 {
   public createData(): Data[] {
     const data: Data[] = [];
 

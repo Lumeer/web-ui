@@ -34,7 +34,7 @@ import {
 import {ChartConfig} from '../../../../core/store/charts/chart';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {ChartVisualizer} from '../visualizer/chart-visualizer';
+import {ChartVisualizer2} from '../visualizer2/chart-visualizer2';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
@@ -63,7 +63,7 @@ export class ChartVisualizationComponent implements OnChanges {
   @ViewChild('chart')
   private chartElement: ElementRef;
 
-  private chartVisualizer: ChartVisualizer;
+  private chartVisualizer: ChartVisualizer2;
 
   constructor(private ngZone: NgZone) {}
 
@@ -87,7 +87,7 @@ export class ChartVisualizationComponent implements OnChanges {
   private createChart() {
     const onValueChange = (documentId, attributeId, value) => this.onValueChanged(documentId, attributeId, value);
     const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
-    this.chartVisualizer = new ChartVisualizer(this.chartElement, writable, onValueChange);
+    this.chartVisualizer = new ChartVisualizer2(this.chartElement, writable, onValueChange);
     this.setChartData();
     this.ngZone.runOutsideAngular(() => this.chartVisualizer.createChartAndVisualize());
   }

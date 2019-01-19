@@ -19,10 +19,10 @@
 
 import {Layout} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {DraggablePlotMaker} from './draggable-plot-maker';
+import {DraggablePlotMaker2} from './draggable-plot-maker2';
 import * as d3 from 'd3';
 
-export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
+export abstract class AxisDraggablePlotMaker2 extends DraggablePlotMaker2 {
   public abstract getPoints(): any;
 
   public abstract getTraceIndexForPoint(point: any): number;

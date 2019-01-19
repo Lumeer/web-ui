@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
+import {PlotMaker2} from './plot-maker2';
 import {ChartAxis, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {Data, Layout} from 'plotly.js';
 
-export class PiePlotMaker extends PlotMaker {
+export class PiePlotMaker2 extends PlotMaker2 {
   public createData(): Data[] {
     const dataStyle = this.getDataStyle();
 

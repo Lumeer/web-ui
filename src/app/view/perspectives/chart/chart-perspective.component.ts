@@ -40,6 +40,7 @@ import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   selector: 'chart-perspective',
@@ -71,13 +72,14 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToQuery() {
     const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
       this.query$.next(query);
-      this.fetchDocuments(query);
+      this.fetchData(query);
     });
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: Query) {
+  private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private initChart() {

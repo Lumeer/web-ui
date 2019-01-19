@@ -17,20 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartType} from '../../../../../core/store/charts/chart';
-import {PlotMaker} from './plot-maker';
-import {PiePlotMaker} from './pie-plot-maker';
-import {BarPlotMaker} from './bar-plot-maker';
-import {LinePlotMaker} from './line-plot-maker';
 import {ElementRef} from '@angular/core';
 
-export function createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
-  switch (type) {
-    case ChartType.Pie:
-      return new PiePlotMaker(element);
-    case ChartType.Bar:
-      return new BarPlotMaker(element);
-    case ChartType.Line:
-      return new LinePlotMaker(element);
-  }
+import {Data, Layout} from 'plotly.js';
+import {ChartData} from '../chart-data/convertor/chart-data';
+
+export abstract class PlotMaker {
+  protected onValueChanged?: (valueChange: ValueChange) => void;
+
+  protected onDataChanged?: (dataChange: DataChange) => void;
+
+  constructor(protected element: ElementRef) {}
+
+  public abstract createData(chartData: ChartData): Data[];
+
+  public abstract createLayout(chartData: ChartData): Partial<Layout>;
+}
+
+export interface ValueChange {
+  documentId: string;
+  attributeId: string;
+  value: string;
+}
+
+export interface DataChange {
+  trace: number;
+  axis: string;
+  index: number;
+  value: string;
 }

@@ -155,10 +155,15 @@ function filterDocumentsByStem(
 
   let lastStageDocuments = filteredDocuments;
 
-  for (const currentStageStem of stemsPipeline) {
+  for (let i = 0; i < stemsPipeline.length; i++) {
+    const linkTypeId = stem.linkTypeIds[i];
+    const currentStageStem = stemsPipeline[i];
+
     const lastStageDocumentIds = new Set(lastStageDocuments.map(doc => doc.id));
     const stageLinkInstances = linkInstances.filter(
-      li => lastStageDocumentIds.add(li.documentIds[0]) || lastStageDocumentIds.add(li.documentIds[1])
+      li =>
+        li.linkTypeId === linkTypeId &&
+        (lastStageDocumentIds.has(li.documentIds[0]) || lastStageDocumentIds.has(li.documentIds[1]))
     );
     const otherDocumentIds = stageLinkInstances
       .reduce((ids, li) => [...ids, ...li.documentIds], [])

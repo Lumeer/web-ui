@@ -17,8 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, Input} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import {ChartData} from '../convertor/chart-data';
+import {ChartVisualizer} from '../../visualizer/chart-visualizer';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'chart-visualizer',
@@ -27,7 +38,38 @@ import {ChartData} from '../convertor/chart-data';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartVisualizerComponent {
+export class ChartVisualizerComponent implements OnChanges {
   @Input()
-  public data: ChartData;
+  public chartData: ChartData;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
+
+  @ViewChild('chart')
+  private chartElement: ElementRef;
+
+  private chartVisualizer: ChartVisualizer;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.chartData && this.chartData) {
+      this.visualize();
+    }
+  }
+
+  private visualize() {
+    if (this.chartVisualizer) {
+      this.refreshChart();
+    } else {
+      this.createChart();
+    }
+  }
+
+  private refreshChart() {
+    this.chartVisualizer.refreshChart(this.chartData);
+  }
+
+  private createChart() {
+    this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    this.chartVisualizer.createChart(this.chartData);
+  }
 }

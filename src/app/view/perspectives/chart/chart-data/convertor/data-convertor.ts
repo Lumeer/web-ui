@@ -53,7 +53,7 @@ type DocumentsMap = Record<string, Record<string, DocumentWithLinks>>;
 /*
  * Structure of data is:
  *  {key1: {key2 .... : {keyN: []} ... } where key is used for group data and array for data aggregation
- *  if dataset name is set N = 2; else N = 1
+ *  if dataset name is set then N = 2; else N = 1
  */
 type DocumentsData = Record<string, any>;
 
@@ -76,6 +76,8 @@ export function convertChartData(
   const collectionIdsOrder = queryStemCollectionsOrder(linkTypes || [], query.stems && query.stems[0]);
   const baseCollection = collections.find(collection => collection.id === collectionIdsOrder[0]);
   const documentsMap = createDocumentsMap(collectionIdsOrder, documents, linkTypes, linkInstances);
+
+  // console.log(collectionIdsOrder, baseCollection, documentsMap);
 
   if (y1Axis && y2Axis) {
     const data1 = convertAxis(config, ChartAxisType.Y1, baseCollection, documentsMap, collectionIdsOrder);
@@ -351,7 +353,7 @@ function convertDocumentsMapDataNested(
       }
 
       const values = nestedValue[nestedKey] as any[];
-      const yValue = aggregate(config.aggregations[yAxisType], values);
+      const yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
       if (yValue) {
         isNumericMap[nestedKey] = isNumericMap[nestedKey] && isNumeric(yValue);
         pointsMap[nestedKey].push({x: key, y: yValue});
@@ -363,13 +365,13 @@ function convertDocumentsMapDataNested(
   const legendEntries: ChartLegendEntry[] = [];
   const legendEntriesNames = Object.keys(pointsMap);
   let colorAlpha = 100;
-  const colorAlphaStep = 60 / Math.max(1, legendEntriesNames.length - 1); // min alpha is 40
+  const colorAlphaStep = 70 / Math.max(1, legendEntriesNames.length - 1); // min alpha is 30
 
   for (let i = 0; i < legendEntriesNames.length; i++) {
     const name = legendEntriesNames[i];
-    const color = hex2rgba(baseCollection.color, colorAlpha);
+    const color = hex2rgba(baseCollection.color, colorAlpha / 100);
     legendEntries.push({color, value: name});
-    sets.push({id: baseCollection.id, points: pointsMap[name], color, isNumeric: isNumericMap[name], yAxisType});
+    sets.push({id: baseCollection.id, points: pointsMap[name], color, name, isNumeric: isNumericMap[name], yAxisType});
     colorAlpha -= colorAlphaStep;
   }
 
@@ -389,14 +391,17 @@ function convertDocumentsMapDataSimple(
   for (const key of xEntries) {
     const values = data[key] as any[];
     const id = documentIds && values.length === 1 ? documentIds[key] : undefined;
-    const yValue = aggregate(config.aggregations[yAxisType], values);
+    const yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
     if (isNotNullOrUndefind(yValue)) {
       isNum = isNum && isNumeric(yValue);
       points.push({id, x: key, y: yValue});
     }
   }
 
-  const dataSet = {id: baseCollection.id, points, color: baseCollection.color, isNumeric: isNum, yAxisType};
+  const yAxis = config.axes && config.axes[yAxisType];
+  const name = getAttributeNameForAxis(yAxis, baseCollection);
+
+  const dataSet = {id: baseCollection.id, points, color: baseCollection.color, isNumeric: isNum, yAxisType, name};
   return {sets: [dataSet], legend: {entries: []}, type: config.type};
 }
 
@@ -430,7 +435,7 @@ function sumValues(values: any[]): any {
     return null;
   }
 
-  return numericValues.reduce((sum, value) => sum + value, 0);
+  return numericValues.reduce((sum, value) => sum + +value, 0);
 }
 
 function avgValues(values: any[]): any {
@@ -439,7 +444,7 @@ function avgValues(values: any[]): any {
     return null;
   }
 
-  return numericValues.reduce((sum, value) => sum + value, 0) / numericValues.length;
+  return numericValues.reduce((sum, value) => sum + +value, 0) / numericValues.length;
 }
 
 function minInValues(values: any[]): any {
@@ -522,7 +527,9 @@ function convertSingleAxisWithoutAggregation(
     points.push({id: document.id, x: xValue, y: yValue});
   }
 
-  const dataSet = {id: collection.id, points, color: collection.color, isNumeric: isNum, yAxisType};
+  const name = getAttributeNameForAxis(yAxis, collection);
+
+  const dataSet = {id: collection.id, points, color: collection.color, isNumeric: isNum, yAxisType, name};
   return {sets: [dataSet], legend: {entries: []}, type: config.type};
 }
 
@@ -559,8 +566,15 @@ function convertSingleAxisSimple(
     actualValues.add(xValue || yValue);
   }
 
-  const dataSet = {id: collection.id, points, color: collection.color, isNumeric: isNum, yAxisType};
+  const name = getAttributeNameForAxis(yAxis, collection);
+
+  const dataSet = {id: collection.id, points, color: collection.color, isNumeric: isNum, yAxisType, name};
   return {sets: [dataSet], legend: {entries: []}, type};
+}
+
+function getAttributeNameForAxis(axis: ChartAxis, collection: Collection): string {
+  const attribute = axis && (collection.attributes || []).find(attr => attr.id === axis.attributeId);
+  return attribute && attribute.name;
 }
 
 function mergeData(data1: ChartData, data2: ChartData): ChartData {

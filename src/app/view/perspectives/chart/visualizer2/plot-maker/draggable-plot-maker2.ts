@@ -17,37 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {PlotMaker2} from './plot-maker2';
 
-export interface ChartData {
-  sets: ChartDataSet[];
-  legend: ChartLegend;
-  type: ChartType;
-}
+export abstract class DraggablePlotMaker2 extends PlotMaker2 {
+  protected dragEnabled: boolean = false;
 
-export interface ChartDataSet {
-  id: string;
-  points: ChartPoint[];
-  color: string;
-  isNumeric: boolean;
-  yAxisType: ChartYAxisType;
-  name: string;
-}
+  public setDragEnabled(enabled: boolean) {
+    const changed = enabled !== this.dragEnabled;
+    this.dragEnabled = enabled;
+    if (changed) {
+      this.dragEnabledChange();
+    }
+  }
 
-export interface ChartPoint {
-  id?: string;
-  x?: any;
-  y?: any;
-  isPrediction?: boolean;
-}
+  public abstract initDrag();
 
-export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
+  public abstract destroyDrag();
 
-export interface ChartLegend {
-  entries: ChartLegendEntry[];
-}
+  public dragEnabledChange() {
+    this.refreshDrag();
+  }
 
-export interface ChartLegendEntry {
-  value: string;
-  color?: string;
+  public onRelayout() {
+    this.refreshDrag();
+  }
+
+  protected refreshDrag() {
+    if (this.dragEnabled) {
+      this.initDrag();
+    } else {
+      this.destroyDrag();
+    }
+  }
 }
