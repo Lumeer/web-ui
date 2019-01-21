@@ -54,6 +54,9 @@ export class ChartVisualizerComponent implements OnChanges {
     if (changes.chartData && this.chartData) {
       this.visualize();
     }
+    if (changes.allowedPermissions && this.allowedPermissions) {
+      this.refreshChartPermissions();
+    }
   }
 
   private visualize() {
@@ -69,7 +72,16 @@ export class ChartVisualizerComponent implements OnChanges {
   }
 
   private createChart() {
-    this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, writable);
     this.chartVisualizer.createChart(this.chartData);
+  }
+
+  private refreshChartPermissions() {
+    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+      this.chartVisualizer && this.chartVisualizer.enableWrite();
+    } else {
+      this.chartVisualizer && this.chartVisualizer.disableWrite();
+    }
   }
 }

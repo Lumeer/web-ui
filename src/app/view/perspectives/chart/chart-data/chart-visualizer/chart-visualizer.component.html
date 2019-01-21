@@ -1,3 +1,3 @@
 <div #chart class="w-100"
-     [class.draggable]="allowedPermissions?.writeWithView">
+     [class.draggable]="allowedPermissions?.writeWithView && chartData | chartDraggable">
 </div>

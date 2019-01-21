@@ -20,23 +20,37 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {ChartData} from '../chart-data/convertor/chart-data';
+import {ChartData} from '../../chart-data/convertor/chart-data';
 
 export abstract class PlotMaker {
+  protected chartData: ChartData;
+
   protected onValueChanged?: (valueChange: ValueChange) => void;
 
   protected onDataChanged?: (dataChange: DataChange) => void;
 
   constructor(protected element: ElementRef) {}
 
-  public abstract createData(chartData: ChartData): Data[];
+  public updateData(chartData: ChartData) {
+    this.chartData = chartData;
+  }
 
-  public abstract createLayout(chartData: ChartData): Partial<Layout>;
+  public setOnValueChanged(onValueChanged: (valueChange: ValueChange) => void) {
+    this.onValueChanged = onValueChanged;
+  }
+
+  public setOnDataChanged(onDataChanged: (dataChange: DataChange) => void) {
+    this.onDataChanged = onDataChanged;
+  }
+
+  public abstract createData(): Data[];
+
+  public abstract createLayout(): Partial<Layout>;
 }
 
 export interface ValueChange {
-  documentId: string;
-  attributeId: string;
+  setId: string;
+  pointId: string;
   value: string;
 }
 

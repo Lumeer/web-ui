@@ -15,7 +15,7 @@
       [linkTypes]="linkTypes$ | async"
       [linkInstances]="linkInstances$ | async"
       [query]="data.query"
-      [allowedPermissions]="{}"
+      [allowedPermissions]="{writeWithView: true}"
       [config]="data.config"
       (patchData)="patchDocumentData($event)">
     </chart-data>

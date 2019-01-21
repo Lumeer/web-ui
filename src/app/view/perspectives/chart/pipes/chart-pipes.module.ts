@@ -29,6 +29,7 @@ import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
 import {DataNameSelectItemsPipe} from './data-name-select-items.pipe';
 import {AggregationSelectItemsPipe} from './aggregation-select-items.pipe';
 import {SortSelectItemsPipe} from './sort-select-items.pipe';
+import {ChartDraggable} from './chart-draggable';
 
 @NgModule({
   imports: [CommonModule],
@@ -43,6 +44,7 @@ import {SortSelectItemsPipe} from './sort-select-items.pipe';
     DataNameSelectItemsPipe,
     AggregationSelectItemsPipe,
     SortSelectItemsPipe,
+    ChartDraggable,
   ],
   exports: [
     DisplayablePipe,
@@ -55,6 +57,7 @@ import {SortSelectItemsPipe} from './sort-select-items.pipe';
     DataNameSelectItemsPipe,
     AggregationSelectItemsPipe,
     SortSelectItemsPipe,
+    ChartDraggable,
   ],
 })
 export class ChartPipesModule {}

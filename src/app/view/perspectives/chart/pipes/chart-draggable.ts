@@ -17,38 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartData} from '../chart-data/convertor/chart-data';
 
-export interface ChartData {
-  sets: ChartDataSet[];
-  legend: ChartLegend;
-  type: ChartType;
-}
-
-export interface ChartDataSet {
-  id: string;
-  points: ChartPoint[];
-  color: string;
-  isNumeric: boolean;
-  yAxisType: ChartYAxisType;
-  name: string;
-  draggable?: boolean;
-}
-
-export interface ChartPoint {
-  id?: string;
-  x?: any;
-  y?: any;
-  isPrediction?: boolean;
-}
-
-export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
-
-export interface ChartLegend {
-  entries: ChartLegendEntry[];
-}
-
-export interface ChartLegendEntry {
-  value: string;
-  color?: string;
+@Pipe({
+  name: 'chartDraggable',
+})
+export class ChartDraggable implements PipeTransform {
+  public transform(data: ChartData): boolean {
+    return data && data.sets && !!data.sets.find(set => set.draggable);
+  }
 }
