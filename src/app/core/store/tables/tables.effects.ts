@@ -252,21 +252,24 @@ export class TablesEffects {
     mergeMap(action => this.getLatestTable(action)),
     filter(({action, table}) => table.parts.length === 3),
     withLatestFrom(this.store$.select(selectQuery)),
-    map(([{action, table}, query]) => {
+    mergeMap(([{action, table}, query]) => {
       const linkTypeIds = [table.parts[1].linkTypeId];
       const collectionId = table.parts[2].collectionId;
 
       const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds}]};
 
-      return new RouterAction.Go({
-        path: [],
-        queryParams: {
-          query: convertQueryModelToString(newQuery),
-        },
-        extras: {
-          queryParamsHandling: 'merge',
-        },
-      });
+      return [
+        new TablesAction.SetCursor({cursor: null}),
+        new RouterAction.Go({
+          path: [],
+          queryParams: {
+            query: convertQueryModelToString(newQuery),
+          },
+          extras: {
+            queryParamsHandling: 'merge',
+          },
+        }),
+      ];
     })
   );
 

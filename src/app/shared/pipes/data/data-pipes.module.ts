@@ -17,23 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex} from '../utils/string.utils';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TextDataValuePipe} from './text-data.pipe';
+import {DateTimeDataValuePipe} from './datetime-data.pipe';
+import {DataValuePipe} from './data-value.pipe';
 
-@Pipe({
-  name: 'highlightText',
+@NgModule({
+  imports: [CommonModule],
+  declarations: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe],
+  exports: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe],
 })
-export class HighlightTextPipe implements PipeTransform {
-  public transform(text: any, highlightedText: any, prefixOnly?: boolean): string {
-    if (!text) {
-      return '';
-    }
-    const textString = String(text);
-    const pattern = escapeStringForRegex(String(highlightedText));
-    const match = textString.toString().match(new RegExp(pattern, 'i'));
-    if (!match || (prefixOnly && match.index > 0)) {
-      return textString;
-    }
-    return textString.replace(match.toString(), `<span class="text-success">${match}</span>`);
-  }
-}
+export class DataPipesModule {}

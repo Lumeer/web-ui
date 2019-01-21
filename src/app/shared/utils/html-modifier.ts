@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* tslint:disable:max-line-length */
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
     return html && html.innerHTML && html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();

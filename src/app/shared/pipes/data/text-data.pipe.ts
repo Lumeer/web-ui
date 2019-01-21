@@ -18,22 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex} from '../utils/string.utils';
+import {CaseStyle, TextConstraintConfig} from '../../../core/model/data/constraint';
+import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
+import {formatTextDataValue} from '../../utils/data.utils';
 
 @Pipe({
-  name: 'highlightText',
+  name: 'textDataValue',
 })
-export class HighlightTextPipe implements PipeTransform {
-  public transform(text: any, highlightedText: any, prefixOnly?: boolean): string {
-    if (!text) {
-      return '';
-    }
-    const textString = String(text);
-    const pattern = escapeStringForRegex(String(highlightedText));
-    const match = textString.toString().match(new RegExp(pattern, 'i'));
-    if (!match || (prefixOnly && match.index > 0)) {
-      return textString;
-    }
-    return textString.replace(match.toString(), `<span class="text-success">${match}</span>`);
+export class TextDataValuePipe implements PipeTransform {
+  public transform(value: any, config?: TextConstraintConfig): string {
+    return formatTextDataValue(value, config);
   }
 }

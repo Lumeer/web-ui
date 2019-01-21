@@ -102,7 +102,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToSelectedCursor() {
-    this.subscriptions.add(this.store$.select(selectTableCursor).subscribe(cursor => (this.selectedCursor = cursor)));
+    this.subscriptions.add(
+      this.store$.pipe(select(selectTableCursor)).subscribe(cursor => (this.selectedCursor = cursor))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

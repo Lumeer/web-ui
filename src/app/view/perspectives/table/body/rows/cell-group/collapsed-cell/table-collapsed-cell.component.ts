@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -29,6 +29,9 @@ import {TableSingleColumn} from '../../../../../../../core/store/tables/table.mo
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.state';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
+import {Constraint} from '../../../../../../../core/model/data/constraint';
+import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
+import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -56,8 +59,11 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   public menuComponent: TableCollapsedCellMenuComponent;
 
   public affected$: Observable<boolean>;
+  public constraint$: Observable<Constraint>;
 
-  public values = '';
+  public values: any[];
+  public stringValue$: Observable<string>;
+  public booleanValue: string;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -80,15 +86,48 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.column || changes.documents || changes.linkInstances) {
-      this.values = this.getDataValues();
+      this.constraint$ = this.bindConstraint();
+      const values = this.getValues();
+      this.stringValue$ = this.bindStringValue(values, this.constraint$);
+      this.booleanValue = this.createBooleanValue(values);
     }
   }
 
-  public getDataValues(): string {
-    return this.getData()
-      .map(data => data[this.column.attributeId])
-      .filter(data => data)
-      .join(', ');
+  private bindConstraint(): Observable<Constraint> {
+    return this.store$.pipe(
+      select(
+        selectCollectionAttributeConstraint(
+          this.documents && this.documents.length > 0 && this.documents[0].collectionId,
+          this.column.attributeId
+        )
+      )
+    );
+  }
+
+  private bindStringValue(values: any[], constraintObservable$: Observable<Constraint>): Observable<string> {
+    return constraintObservable$.pipe(
+      map(constraint =>
+        values
+          .map(value => formatDataValue(value, constraint))
+          .filter(value => !!value)
+          .join(', ')
+      )
+    );
+  }
+
+  private createBooleanValue(values: any[]): string {
+    if (values.every(value => !!value)) {
+      return 'true';
+    }
+
+    if (values.every(value => !value)) {
+      return 'false';
+    }
+    return 'indeterminate';
+  }
+
+  private getValues(): any[] {
+    return this.getData().map(data => data[this.column.attributeId]);
   }
 
   private getData(): any[] {

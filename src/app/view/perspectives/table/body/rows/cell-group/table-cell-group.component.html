@@ -12,7 +12,8 @@
                          [linkInstance]="data.linkInstances ? data.linkInstances[0] : null"
                          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                          [table]="table$ | async"
-                         [allowedPermissions]="data.linkInstances ? permissions.linkInstance : permissions.document">
+                         [allowedPermissions]="data.linkInstances ? permissions.linkInstance : permissions.document"
+                         (affect)="onAffect()">
         </table-data-cell>
 
         <ng-template #collapsedCell>

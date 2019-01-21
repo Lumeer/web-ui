@@ -18,22 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex} from '../utils/string.utils';
 
 @Pipe({
-  name: 'highlightText',
+  name: 'parseDate',
 })
-export class HighlightTextPipe implements PipeTransform {
-  public transform(text: any, highlightedText: any, prefixOnly?: boolean): string {
-    if (!text) {
-      return '';
+export class ParseDatePipe implements PipeTransform {
+  public transform(value: any): any {
+    if (!value) {
+      return value;
     }
-    const textString = String(text);
-    const pattern = escapeStringForRegex(String(highlightedText));
-    const match = textString.toString().match(new RegExp(pattern, 'i'));
-    if (!match || (prefixOnly && match.index > 0)) {
-      return textString;
+
+    const date = new Date(value);
+    if (date.toString() === 'Invalid Date') {
+      return null;
     }
-    return textString.replace(match.toString(), `<span class="text-success">${match}</span>`);
+
+    return date;
   }
 }
