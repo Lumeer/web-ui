@@ -1,54 +1,48 @@
 <div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
 
   <select-item class="mr-2"
-               [placeholderText]="ganntChartViewMode"
+               [placeholderText]="viewModePlaceholder"
                [items]="ganttChartModes | ganttChartModesToSelect"
                [selectedId]="config.mode"
                (select)="onModeSelect($event)">
-
   </select-item>
 
-  <ng-container *ngFor="let ganttChartBarPropertyRequired of ganttChartBarsPropertiesRequired; let isLast = last">
+  <ng-container *ngFor="let propertyRequired of ganttChartBarsPropertiesRequired; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyRequiredSelectItems:ganttChartBarPropertyRequired:config"
-      [selectedId]="config.barsProperties[ganttChartBarPropertyRequired]"
-      [placeholderText]="ganttChartBarPropertyRequired | barSelectPlaceholderPropertyRequired"
-      [emptyValue]="ganttChartBarPropertyRequired | barSelectEmptyValuePropertyRequired"
+      [items]="[collection] | barPropertyRequiredSelectItems:propertyRequired:config"
+      [selectedId]="config.barsProperties[propertyRequired]"
+      [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
+      [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
       [removable]="true"
-      (select)="onBarPropertyRequiredSelect(ganttChartBarPropertyRequired, $event)"
-      (remove)="onBarPropertyRequiredRemoved(ganttChartBarPropertyRequired)">
+      (select)="onBarPropertySelect(propertyRequired, $event)"
+      (remove)="onBarPropertyRemoved(propertyRequired)">
     </select-item>
   </ng-container>
 </div>
 
-<div *ngIf="allRequiredPropertiesSet()" class="d-flex justify-content-center flex-row align-items-center flex-wrap" style="margin-top: 10px">
-  <ng-container *ngFor="let ganttChartBarPropertyOptional of ganttChartBarsPropertiesOptional; let isLast = last">
+<div *ngIf="config | ganttChartRequiredPropertiesSet" class="d-flex justify-content-center flex-row align-items-center flex-wrap mt-2">
+  <ng-container *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyOptionalSelectItems:ganttChartBarPropertyOptional:config"
-      [selectedId]="config.barsProperties[ganttChartBarPropertyOptional]"
-      [placeholderText]="ganttChartBarPropertyOptional | barSelectPlaceholderPropertyOptional"
-      [emptyValue]="ganttChartBarPropertyOptional | barSelectEmptyValuePropertyOptional"
+      [items]="[collection] | barPropertyOptionalSelectItems:propertyOptional:config"
+      [selectedId]="config.barsProperties[propertyOptional]"
+      [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
+      [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
       [removable]="true"
-      (select)="onBarPropertyOptionalSelect(ganttChartBarPropertyOptional, $event)"
-      (remove)="onBarPropertyOptionalRemoved(ganttChartBarPropertyOptional)">
+      (select)="onBarPropertySelect(propertyOptional, $event)"
+      (remove)="onBarPropertyRemoved(propertyOptional)">
     </select-item>
   </ng-container>
 </div>
 
-<div *ngIf="propertiesNotSetYet" class="flex-grow-1 " >
-  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 20rem;">
+<div *ngIf="!(config | ganttChartRequiredPropertiesSet)" class="flex-grow-1 ">
+  <div class="d-flex flex-column align-items-center justify-content-center">
     <i class="fa-5x far fa-calendar-times"></i>
     <h3> No temporal data found!</h3>
     <div> Make sure you have selected an attribute with date and time.</div>
   </div>
 </div>
-
-<!--<empty-state icon="far fa-map-marker-slash">-->
-  <!--<h3 i18n="@@map.placeholder.title">No places found!</h3>-->
-  <!--<div i18n="@@map.placeholder.description">Make sure you have selected an attribute with addresses or Earth coordinates.</div>-->
-<!--</empty-state>-->
 
 
 

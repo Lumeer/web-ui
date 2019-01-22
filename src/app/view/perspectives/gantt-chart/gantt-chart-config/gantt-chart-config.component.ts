@@ -21,11 +21,13 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {Collection} from '../../../../core/store/collections/collection';
 import {
   GanttChartBarModel,
+  GanttChartBarProperty,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartConfig,
   GanttChartMode,
 } from '../../../../core/store/gantt-charts/gantt-chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -42,22 +44,14 @@ export class GanttChartConfigComponent {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
-  public readonly ganntChartViewMode = 'view mode';
+  public viewModePlaceholder: string;
+
   public readonly ganttChartModes = Object.values(GanttChartMode);
   public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
   public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
 
-  public propertiesNotSetYet: boolean = true;
-
-  public allRequiredPropertiesSet() {
-    //this.propertiesNotSetYet = false;
-    return (
-      this.config.mode &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.NAME] &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.START] &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.END] &&
-      !(this.propertiesNotSetYet = false)
-    );
+  constructor(private i18n: I18n) {
+    this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
   }
 
   public onModeSelect(mode: GanttChartMode) {
@@ -65,26 +59,13 @@ export class GanttChartConfigComponent {
     this.configChange.emit(newConfig);
   }
 
-  public onBarPropertyRequiredSelect(type: GanttChartBarPropertyRequired, bar: GanttChartBarModel) {
+  public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
     const bars = {...this.config.barsProperties, [type]: bar};
     const newConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
-  public onBarPropertyRequiredRemoved(type: GanttChartBarPropertyRequired) {
-    const bars = {...this.config.barsProperties};
-    delete bars[type];
-    const newConfig = {...this.config, barsProperties: bars};
-    this.configChange.emit(newConfig);
-  }
-
-  public onBarPropertyOptionalSelect(type: GanttChartBarPropertyOptional, bar: GanttChartBarModel) {
-    const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig = {...this.config, barsProperties: bars};
-    this.configChange.emit(newConfig);
-  }
-
-  public onBarPropertyOptionalRemoved(type: GanttChartBarPropertyOptional) {
+  public onBarPropertyRemoved(type: GanttChartBarProperty) {
     const bars = {...this.config.barsProperties};
     delete bars[type];
     const newConfig = {...this.config, barsProperties: bars};

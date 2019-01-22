@@ -22,15 +22,24 @@ import {AppState} from '../app.state';
 import {GanttChart, DEFAULT_GANTT_CHART_ID} from './gantt-chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface GanttChartsState extends EntityState<GanttChart> {
-}
-export const ganttChartsAdapter = createEntityAdapter<GanttChart>({selectId: gantt_chart => gantt_chart.id});
+export interface GanttChartsState extends EntityState<GanttChart> {}
+export const ganttChartsAdapter = createEntityAdapter<GanttChart>({selectId: ganttChart => ganttChart.id});
 
 export const initialGanttChartsState: GanttChartsState = ganttChartsAdapter.getInitialState();
 
 export const selectGanttChartState = (state: AppState) => state.ganttCharts;
-export const selectGanttChartsDictionary = createSelector(selectGanttChartState, ganttChartsAdapter.getSelectors().selectEntities);
-export const selectGanttChartById = (id) => createSelector(selectGanttChartsDictionary, gantt_charts => gantt_charts[id]);
+export const selectGanttChartsDictionary = createSelector(
+  selectGanttChartState,
+  ganttChartsAdapter.getSelectors().selectEntities
+);
+export const selectGanttChartById = id =>
+  createSelector(
+    selectGanttChartsDictionary,
+    ganttCharts => ganttCharts[id]
+  );
 
 export const selectDefaultGanttChart = selectGanttChartById(DEFAULT_GANTT_CHART_ID);
-export const selectGanttChartConfig = createSelector(selectDefaultGanttChart, gantt_chart => gantt_chart && gantt_chart.config);
+export const selectGanttChartConfig = createSelector(
+  selectDefaultGanttChart,
+  ganttChart => ganttChart && ganttChart.config
+);

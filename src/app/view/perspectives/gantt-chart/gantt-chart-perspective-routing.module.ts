@@ -17,23 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
 
 const ganttChartRoutes: Routes = [
   {
     path: '',
-    component: GanttChartPerspectiveComponent
-  }
+    component: GanttChartPerspectiveComponent,
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(ganttChartRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(ganttChartRoutes)],
+  exports: [RouterModule],
 })
-export class GanttChartPerspectiveRoutingModule { }
+export class GanttChartPerspectiveRoutingModule {}

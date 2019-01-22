@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
-import {isSingleCollectionQuery} from "../../../../core/store/navigation/query.util";
+import {Query} from '../../../../core/store/navigation/query';
+import {isSingleCollectionQuery} from '../../../../core/store/navigation/query.util';
 
 @Pipe({
   name: 'displayable',

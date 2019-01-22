@@ -25,27 +25,27 @@ import {
   EventEmitter,
   SimpleChanges,
   OnChanges,
-  ViewEncapsulation,
-  ViewChild,
-  ElementRef,
+  Renderer2,
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
+  GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartConfig,
+  GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from 'frappe-gantt';
 import * as moment from 'moment';
+import {isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
 
 declare let $: any;
 
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
-  styleUrls: ['./gantt-chart-visualization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
@@ -61,97 +61,141 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
-  public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
-  public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
+  public ganttChart: frappeGantt;
 
-  public gantt_chart: frappeGantt;
+  constructor(private renderer: Renderer2) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.documents || changes.config) && this.config) {
       this.visualize();
     }
+    if (changes.collection && this.collection) {
+      this.setChartColors();
+    }
+  }
+
+  private setChartColors() {
+    const barColor = shadeColor(this.collection.color, 0.5);
+    const progressColor = shadeColor(this.collection.color, 0.3);
+
+    const barElements = document.querySelectorAll('.gantt .bar');
+    const progressElements = document.querySelectorAll('.gantt .bar-progress');
+
+    for (let i = 0; i < barElements.length; i++) {
+      this.renderer.setStyle(barElements.item(i), 'fill', barColor);
+    }
+
+    for (let i = 0; i < progressElements.length; i++) {
+      this.renderer.setStyle(progressElements.item(i), 'fill', progressColor);
+    }
+  }
+
+  private refreshChart() {
+    const tasks = this.createChartTasks();
+    this.ganttChart.refresh(tasks);
+    this.ganttChart.change_view_mode(this.config.mode);
+    this.setChartColors();
+  }
+
+  private createChart() {
+    const tasks = this.createChartTasks();
+    this.createChartAndInitListeners(tasks);
+    this.setChartColors();
+  }
+
+  private createChartTasks(): GanttChartTask[] {
+    const nameProperty = this.config.barsProperties[GanttChartBarPropertyRequired.NAME];
+    const startProperty = this.config.barsProperties[GanttChartBarPropertyRequired.START];
+    const endProperty = this.config.barsProperties[GanttChartBarPropertyRequired.END];
+    const idProperty = this.config.barsProperties[GanttChartBarPropertyOptional.ID];
+    const dependenciesProperty = this.config.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES];
+    const progressProperty = this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS];
+
+    const tasks = [];
+
+    for (const document of this.documents) {
+      const name = nameProperty && document.data[nameProperty.attributeId];
+      const start = startProperty && document.data[startProperty.attributeId];
+      const end = endProperty && document.data[endProperty.attributeId];
+
+      const id = idProperty && document.data[idProperty.attributeId];
+      const dependencies = dependenciesProperty && document.data[dependenciesProperty.attributeId];
+      const progress = (progressProperty && document.data[progressProperty.attributeId]) || 0;
+
+      const task = {name, start, end, id, dependencies, progress};
+
+      if (this.isTaskValid(task)) {
+        tasks.push({
+          ...task,
+          start: this.cleanDate(task.start),
+          end: this.cleanDate(task.end),
+          progress: Math.max(+task.progress, 0),
+          documentId: document.id,
+        });
+      }
+    }
+
+    return tasks;
+  }
+
+  private isTaskValid(task: GanttChartTask): boolean {
+    return (
+      task.name &&
+      (task.start && this.isDateValid(task.start)) &&
+      (task.end && this.isDateValid(task.end)) &&
+      (isNullOrUndefined(task.progress) || isNumeric(task.progress))
+    );
+  }
+
+  private isDateValid(date: string): boolean {
+    return moment(date, GANTT_DATE_FORMAT).isValid();
+  }
+
+  private cleanDate(date: string): string {
+    return moment(date, GANTT_DATE_FORMAT).format(GANTT_DATE_FORMAT);
+  }
+
+  private createChartAndInitListeners(tasks: GanttChartTask[]) {
+    if (tasks.length === 0) {
+      return;
+    }
+
+    this.ganttChart = new frappeGantt.default('#ganttChart', tasks, {
+      on_date_change: (task, start, end) => {
+        const startAttributeId = this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId;
+        const endAttributeId = this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId;
+
+        const startTimeTask = moment(task.start, GANTT_DATE_FORMAT).local();
+        const startTime = moment(start, GANTT_DATE_FORMAT).local();
+
+        const endTimeTask = moment(task.end, GANTT_DATE_FORMAT).local();
+        const endTime = moment(end, GANTT_DATE_FORMAT).local();
+
+        //start time changed
+        if (!startTimeTask.isSame(startTime)) {
+          this.onValueChanged(task.documentId, startAttributeId, startTime.format(GANTT_DATE_FORMAT));
+        }
+
+        //end time changed
+        if (!endTimeTask.isSame(endTime)) {
+          this.onValueChanged(task.documentId, endAttributeId, endTime.format(GANTT_DATE_FORMAT));
+        }
+      },
+
+      on_progress_change: (task, progress) => {
+        const progressAttributeId = this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId;
+
+        this.onValueChanged(task.documentId, progressAttributeId, progress);
+      },
+    });
+    this.ganttChart.change_view_mode(this.config.mode);
   }
 
   private visualize() {
-    if (
-      this.config.mode &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.NAME] &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.START] &&
-      this.config.barsProperties[GanttChartBarPropertyRequired.END]
-    ) {
-      const tasks = [];
-
-      for (const document of this.documents) {
-        const name = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.NAME].attributeId];
-        const start = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId];
-        const end = document.data[this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId];
-
-        let id = null,
-          dependencies = null,
-          progress = null;
-
-        if (this.config.barsProperties[GanttChartBarPropertyOptional.ID])
-          id = document.data[this.config.barsProperties[GanttChartBarPropertyOptional.ID].attributeId];
-        if (this.config.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES])
-          dependencies =
-            document.data[this.config.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES].attributeId];
-        if (this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS])
-          progress = document.data[this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId];
-
-        tasks.push({
-          name: name,
-          start: start,
-          end: end,
-          id: id,
-          dependencies: dependencies,
-          progress: progress,
-          document_id: document.id,
-        });
-      }
-
-      if (tasks.length > 0) {
-        this.gantt_chart = new frappeGantt.default('#ganttChart', tasks, {
-          on_date_change: (task, start, end) => {
-            const startAttID = this.config.barsProperties[GanttChartBarPropertyRequired.START].attributeId;
-            const endAttID = this.config.barsProperties[GanttChartBarPropertyRequired.END].attributeId;
-
-            const startTimeTask = moment(task.start, 'YYYY-MM-DD').local();
-            const startTime = moment(start, 'YYYY-MM-DD').local();
-
-            const endTimeTask = moment(task.end, 'YYYY-MM-DD').local();
-            const endTime = moment(end, 'YYYY-MM-DD').local();
-
-            //start time changed
-            if (startTimeTask !== startTime)
-              this.onValueChanged(task.document_id, startAttID, startTime.format('YYYY-MM-DD'));
-
-            //end time changed
-            if (endTimeTask !== endTime) this.onValueChanged(task.document_id, endAttID, endTime.format('YYYY-MM-DD'));
-          },
-
-          on_progress_change: (task, progress) => {
-            const progressAttID = this.config.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId;
-
-            this.onValueChanged(task.document_id, progressAttID, progress);
-          },
-        });
-        this.gantt_chart.change_view_mode(this.config.mode);
-
-        const textColor = GanttChartVisualizationComponent.getContrastYIQ(this.collection.color.substring(1, 6));
-        $('.gantt .bar').css('fill', this.collection.color);
-        $('.gantt .bar-label').css('fill', textColor);
-        if (textColor === 'black') {
-          $('.gantt .bar-progress').css(
-            'fill',
-            GanttChartVisualizationComponent.LightenDarkenColor(this.collection.color, -30)
-          );
-        } else {
-          $('.gantt .bar-progress').css(
-            'fill',
-            GanttChartVisualizationComponent.LightenDarkenColor(this.collection.color, 50)
-          );
-        }
-      }
+    if (this.ganttChart) {
+      this.refreshChart();
+    } else {
+      this.createChart();
     }
   }
 
@@ -163,35 +207,5 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
     const patchDocument = {...changedDocument, data: {[attributeId]: value}};
     this.patchData.emit(patchDocument);
-  }
-
-  private static getContrastYIQ(hexcolor) {
-    const r = parseInt(hexcolor.substr(0, 2), 16);
-    const g = parseInt(hexcolor.substr(2, 2), 16);
-    const b = parseInt(hexcolor.substr(4, 2), 16);
-    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? 'black' : 'white';
-  }
-
-  private static LightenDarkenColor(color: string, amt: number) {
-    let usePound = false;
-    if (color[0] === '#') {
-      color = color.slice(1);
-      usePound = true;
-    }
-    const num = parseInt(color, 16);
-    let r = (num >> 16) + amt;
-
-    if (r > 255) r = 255;
-    else if (r < 0) r = 0;
-
-    let b = ((num >> 8) & 0x00ff) + amt;
-    if (b > 255) b = 255;
-    else if (b < 0) b = 0;
-
-    let g = (num & 0x0000ff) + amt;
-    if (g > 255) g = 255;
-    else if (g < 0) g = 0;
-    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
   }
 }

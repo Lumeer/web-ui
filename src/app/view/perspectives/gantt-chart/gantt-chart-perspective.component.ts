@@ -26,7 +26,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {map, withLatestFrom} from 'rxjs/operators';
 
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
@@ -127,90 +127,4 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
-
-  // private showGantt() {
-  //
-  //   // console.log(this.collections$.)
-  //
-  //   const tasks = [
-  //     {
-  //       start: '2018-10-01',
-  //       end: '2018-10-08',
-  //       name: 'Redesign website',
-  //       id: 'Task 0',
-  //       progress: 20
-  //     },
-  //     {
-  //       start: '2018-10-03',
-  //       end: '2018-10-06',
-  //       name: 'Write new content',
-  //       id: 'Task 1',
-  //       progress: 5,
-  //       dependencies: 'Task 0'
-  //     },
-  //     {
-  //       start: '2018-10-04',
-  //       end: '2018-10-08',
-  //       name: 'Apply new styles',
-  //       id: 'Task 2',
-  //       progress: 10,
-  //       dependencies: 'Task 1'
-  //     },
-  //     {
-  //       start: '2018-10-08',
-  //       end: '2018-10-09',
-  //       name: 'Review',
-  //       id: 'Task 3',
-  //       progress: 5,
-  //       dependencies: 'Task 2'
-  //     },
-  //     {
-  //       start: '2018-10-08',
-  //       end: '2018-10-10',
-  //       name: 'Deploy',
-  //       id: 'Task 4',
-  //       progress: 0,
-  //       dependencies: 'Task 2'
-  //     },
-  //     {
-  //       start: '2018-10-11',
-  //       end: '2018-10-11',
-  //       name: 'Go Live!',
-  //       id: 'Task 5',
-  //       progress: 0,
-  //       dependencies: 'Task 4',
-  //       custom_class: 'bar-milestone'
-  //     },
-  //     {
-  //       start: '2014-01-05',
-  //       end: '2019-10-12',
-  //       name: 'Long term task',
-  //       id: 'Task 6',
-  //       progress: 0
-  //     }
-  //   ];
-  //
-  //   //const because of push (let and var are rejected)
-  //   const gantt_chart = new frappeGantt.default('.gantt-target', tasks, {
-  //     // console logs are forbidden for push
-  //     /*on_click: function (task) {
-  //       console.log(task);
-  //     },
-  //     on_date_change: function(task, start, end) {
-  //       console.log(task, start, end);
-  //     },
-  //     on_progress_change: function(task, progress) {
-  //       console.log(task, progress);
-  //     },
-  //     on_view_change: function(mode) {
-  //       console.log(mode);
-  //     },*/
-  //     view_mode: 'Month',
-  //     language: 'en'
-  //   });
-  //  // console.log(gantt_chart);
-  //
-  //
-  //
-  // }
 }

@@ -24,3 +24,7 @@ export function isNullOrUndefined(object: any): object is null | undefined {
 export function isNotNullOrUndefind(object: any): boolean {
   return !isNullOrUndefined(object);
 }
+
+export function isNumeric(value: any): boolean {
+  return !isNaN(value);
+}

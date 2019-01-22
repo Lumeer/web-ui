@@ -18,6 +18,7 @@
  */
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
+export const GANTT_DATE_FORMAT = 'YYYY-MM-DD';
 
 export interface GanttChart {
   id: string;
@@ -34,6 +35,16 @@ export interface GanttChartBarModel {
   attributeId: string;
 }
 
+export interface GanttChartTask {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  progress: number;
+  dependencies: number;
+  documentId?: string;
+}
+
 export enum GanttChartMode {
   Day = 'Day',
   QuarterDay = 'Quarter Day',
@@ -41,6 +52,8 @@ export enum GanttChartMode {
   Week = 'Week',
   Month = 'Month',
 }
+
+export type GanttChartBarProperty = GanttChartBarPropertyRequired | GanttChartBarPropertyOptional;
 
 export enum GanttChartBarPropertyRequired {
   NAME = 'name',
