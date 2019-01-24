@@ -10,7 +10,7 @@
       <option *ngFor="let caseStyle of caseStyles"
               [value]="caseStyle"
               i18n="@@constraint.text.caseStyle.value">
-        {caseStyle, select, None {None} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Title case} SentenceCase {Sentence case}}
+        {caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case}}
       </option>
     </select>
   </div>

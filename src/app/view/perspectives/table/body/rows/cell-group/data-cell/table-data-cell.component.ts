@@ -231,7 +231,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.notificationService.warning(
       this.i18n({
         id: 'table.data.cell.linked.row.uninitialized',
-        value: 'You need to enter some value to the linked row in the previous table part first.',
+        value:
+          'I cannot link the entered value to anything, you must enter a value to the previous part of the table first.',
       })
     );
     this.editableCell.setValue('');
