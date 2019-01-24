@@ -23,6 +23,8 @@ import {Constraint, constraintTypesMap} from '../../model/data/constraint';
 import {ConstraintDto} from '../../dto/attribute.dto';
 import {Attribute, Collection, ImportedCollection} from './collection';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
+import {RuleDto} from '../../dto/collection.dto';
+import {Rule} from '../../model/rule';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
@@ -44,6 +46,7 @@ export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: 
     favorite: dto.favorite,
     lastTimeUsed: new Date(dto.lastTimeUsed),
     version: dto.version,
+    rules: convertRulesFromDto(dto.rules),
   };
 }
 
@@ -57,6 +60,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     icon: model.icon,
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
     permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
+    rules: convertRulesToDto(model.rules),
   };
 }
 
@@ -101,4 +105,13 @@ export function convertImportedCollectionModelToDto(model: ImportedCollection): 
     collection: convertCollectionModelToDto(model.collection),
     data: model.data,
   };
+}
+
+function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
+  //Object.keys(dto).forEach(name -> {})
+  return null;
+}
+
+function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
+  return null;
 }
