@@ -26,8 +26,8 @@
                contextMenuItem
                [enabled]="allowedPermissions?.manageWithView"
                (execute)="configure.emit()">
-    <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.changeType">Change type</span>
+    <i class="fa fa-fw fa-shapes mr-1" aria-hidden="true"></i>&nbsp;
+    <span i18n="@@table.header.menu.changeType">Customize attribute type...</span>
   </ng-template>
   <ng-container *ngIf="attribute.id && !defaultAttribute">
     <ng-template contextMenuItem divider="true"></ng-template>

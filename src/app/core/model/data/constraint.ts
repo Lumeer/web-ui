@@ -20,6 +20,8 @@
 import {ColumnFunction} from './column-function';
 
 export enum ConstraintType {
+  Text = 'Text',
+  Number = 'Number',
   Address = 'Address',
   Boolean = 'Boolean',
   Coordinates = 'Coordinates',
@@ -28,12 +30,10 @@ export enum ConstraintType {
   Function = 'Function',
   Image = 'Image',
   Link = 'Link',
-  Number = 'Number',
   Percentage = 'Percentage',
   Rating = 'Rating',
   Select = 'Select',
   Tag = 'Tag',
-  Text = 'Text',
   User = 'User',
 }
 

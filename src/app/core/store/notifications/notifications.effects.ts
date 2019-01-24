@@ -87,7 +87,8 @@ export class NotificationsEffects {
     tap(() => {
       const message = this.i18n({
         id: 'warning.force.refresh',
-        value: 'We are sorry, but there have been major changes in current project. Please refresh it.',
+        value:
+          'I am sorry, the project has been significantly updated by a different user. Please refresh this page in the browser.',
       });
       const refreshButtonText = this.i18n({id: 'refresh', value: 'Refresh'});
       const button: SnotifyButton = {text: refreshButtonText, bold: true, action: () => (window.location.href = '/')};
