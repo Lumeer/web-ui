@@ -43,7 +43,7 @@ export interface Collection extends Resource {
 
   favorite?: boolean;
 
-  rules: Rule[];
+  rules?: Rule[];
 }
 
 export interface ImportedCollection {

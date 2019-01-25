@@ -24,7 +24,7 @@ import {ConstraintDto} from '../../dto/attribute.dto';
 import {Attribute, Collection, ImportedCollection} from './collection';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {RuleDto} from '../../dto/collection.dto';
-import {Rule} from '../../model/rule';
+import {Rule, RuleTiming, RuleTimingMap, RuleType, RuleTypeMap} from '../../model/rule';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
@@ -108,10 +108,28 @@ export function convertImportedCollectionModelToDto(model: ImportedCollection): 
 }
 
 function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
-  //Object.keys(dto).forEach(name -> {})
-  return null;
+  const rules = Object.keys(dto).map(name => {
+    return {
+      name: name,
+      type: RuleTypeMap[dto[name].type],
+      timing: RuleTimingMap[dto[name].timing],
+      configuration: dto[name].configuration,
+    };
+  }) as Rule[];
+
+  return rules;
 }
 
 function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
-  return null;
+  const result: Record<string, RuleDto> = {};
+
+  model.forEach(rule => {
+    result[rule.name] = {
+      type: RuleType[rule.type],
+      timing: RuleTiming[rule.timing],
+      configuration: rule.configuration,
+    };
+  });
+
+  return result;
 }

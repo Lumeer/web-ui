@@ -21,10 +21,13 @@ import {VideoItem, VideoMetaData, VideoModel} from './video.model';
 
 export class VideoConverter {
   private static fromItem(dto: VideoItem, priority?: number): VideoModel {
+    let descr = dto.snippet.description;
+    descr = descr.substring(0, descr.indexOf('--'));
+
     return {
       id: dto.id,
       summary: dto.snippet.title,
-      description: dto.snippet.description,
+      description: descr,
       priority: priority ? priority : 100,
       thumbnail: dto.snippet.thumbnails.medium.url,
     };
