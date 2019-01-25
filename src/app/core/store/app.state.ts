@@ -36,7 +36,7 @@ import {initialServiceLimitsState, ServiceLimitsState} from './organizations/ser
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
 import {initialPostItState, PostItState} from './postit/postit.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
-import {CalendarsState, initialCalendarsState} from './calendar/calendar.state';
+import {CalendarsState, initialCalendarsState} from './calendars/calendars.state';
 import {initialVideosState, VideosState} from './videos/videos.state';
 import {initialUserNotificationsState, UserNotificationsState} from './user-notifications/user-notifications.state';
 import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';

@@ -41,8 +41,6 @@ import * as moment from 'moment';
 import {isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 
-declare let $: any;
-
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
@@ -148,11 +146,11 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private isDateValid(date: string): boolean {
-    return moment(date, GANTT_DATE_FORMAT).isValid();
+    return moment(date).isValid();
   }
 
   private cleanDate(date: string): string {
-    return moment(date, GANTT_DATE_FORMAT).format(GANTT_DATE_FORMAT);
+    return moment(date).format(GANTT_DATE_FORMAT);
   }
 
   private createChartAndInitListeners(tasks: GanttChartTask[]) {

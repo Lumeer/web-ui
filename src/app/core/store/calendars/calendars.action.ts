@@ -20,34 +20,34 @@
 import {Action} from '@ngrx/store';
 import {CalendarConfig, CalendarModel} from './calendar.model';
 
-export enum CalendarActionType {
+export enum CalendarsActionType {
   ADD_CALENDAR = '[Calendar] Add calendar',
   REMOVE_CALENDAR = '[Calendar] Remove calendar',
   SET_CONFIG = '[Calendar] Set config',
   CLEAR = '[Calendar] Clear',
 }
 
-export namespace CalendarAction {
+export namespace CalendarsAction {
   export class AddCalendar implements Action {
-    public readonly type = CalendarActionType.ADD_CALENDAR;
+    public readonly type = CalendarsActionType.ADD_CALENDAR;
 
     public constructor(public payload: {calendar: CalendarModel}) {}
   }
 
   export class RemoveCalendar implements Action {
-    public readonly type = CalendarActionType.REMOVE_CALENDAR;
+    public readonly type = CalendarsActionType.REMOVE_CALENDAR;
 
     public constructor(public payload: {calendarId: string}) {}
   }
 
   export class SetConfig implements Action {
-    public readonly type = CalendarActionType.SET_CONFIG;
+    public readonly type = CalendarsActionType.SET_CONFIG;
 
-    public constructor(public payload: {calendarId: string; config: CalendarConfig[]}) {}
+    public constructor(public payload: {calendarId: string; config: CalendarConfig}) {}
   }
 
   export class Clear implements Action {
-    public readonly type = CalendarActionType.CLEAR;
+    public readonly type = CalendarsActionType.CLEAR;
   }
 
   export type All = AddCalendar | RemoveCalendar | SetConfig | Clear;

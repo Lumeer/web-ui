@@ -22,7 +22,7 @@ import {Resource} from '../../model/resource';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart';
-import {CalendarConfig} from '../calendar/calendar.model';
+import {CalendarConfig} from '../calendars/calendar.model';
 import {Query} from '../navigation/query';
 import {GanttChartConfig} from '../gantt-charts/gantt-chart';
 
@@ -46,7 +46,7 @@ export interface ViewConfig {
   search?: SearchConfig;
   table?: TableConfig;
   ganttChart?: GanttChartConfig;
-  calendar?: CalendarConfig[];
+  calendar?: CalendarConfig;
   chart?: ChartConfig;
 }
 

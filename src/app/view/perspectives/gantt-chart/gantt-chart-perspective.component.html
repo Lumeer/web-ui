@@ -4,6 +4,7 @@
     <gantt-chart-config
       [collection]="data.collection"
       [config]="data.config"
+      [canManageConfig]="currentView$ | async | canManageConfig | async"
       (configChange)="onConfigChanged($event)">
     </gantt-chart-config>
 

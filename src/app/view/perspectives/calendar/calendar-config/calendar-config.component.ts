@@ -19,92 +19,30 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  CalendarBarModel,
-  CalendarBarPropertyOptional,
-  CalendarBarPropertyRequired,
-  CalendarConfig,
-} from '../../../../core/store/calendar/calendar.model';
+import {CalendarCollectionConfig, CalendarConfig} from '../../../../core/store/calendars/calendar.model';
 
 @Component({
   selector: 'calendar-config',
   templateUrl: './calendar-config.component.html',
-  styleUrls: ['./calendar-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarConfigComponent {
   @Input()
-  public collection: Collection;
+  public collections: Collection[];
 
   @Input()
-  public allConfigs: CalendarConfig[];
-
-  @Input()
-  public configOfCollection: CalendarConfig;
+  public config: CalendarConfig;
 
   @Output()
-  public configChange = new EventEmitter<CalendarConfig[]>();
+  public configChange = new EventEmitter<CalendarConfig>();
 
-  public readonly calendarBarsPropertiesRequired = Object.values(CalendarBarPropertyRequired);
-  public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
-  public shownOptionalBar: boolean = false;
-
-  public allRequiredPropertiesSet() {
-    return (
-      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.NAME] &&
-      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.START_DATE] &&
-      this.configOfCollection.barsProperties[CalendarBarPropertyRequired.END_DATE]
-    );
+  public trackByCollection(index: number, collection: Collection): string {
+    return collection.id;
   }
 
-  public onBarPropertyRequiredSelect(type: CalendarBarPropertyRequired, bar: CalendarBarModel) {
-    const bars = {...this.configOfCollection.barsProperties, [type]: bar};
-    const newConfig = {...this.configOfCollection, barsProperties: bars};
-    this.configChange.emit(this.createConfigsToEmit(newConfig));
-  }
-
-  public onBarPropertyRequiredRemoved(type: CalendarBarPropertyRequired) {
-    const bars = {...this.configOfCollection.barsProperties};
-    delete bars[type];
-    const newConfig = {...this.configOfCollection, barsProperties: bars};
-    this.configChange.emit(this.createConfigsToEmit(newConfig));
-  }
-
-  public onBarPropertyOptionalSelect(type: CalendarBarPropertyOptional, bar: CalendarBarModel) {
-    const bars = {...this.configOfCollection.barsProperties, [type]: bar};
-    const newConfig = {...this.configOfCollection, barsProperties: bars};
-    this.configChange.emit(this.createConfigsToEmit(newConfig));
-  }
-
-  public onBarPropertyOptionalRemoved(type: CalendarBarPropertyOptional) {
-    const bars = {...this.configOfCollection.barsProperties};
-    delete bars[type];
-    const newConfig = {...this.configOfCollection, barsProperties: bars};
-    this.configChange.emit(this.createConfigsToEmit(newConfig));
-  }
-
-  public removeAllBarPropertiesOptional() {
-    const bars = {...this.configOfCollection.barsProperties};
-    this.calendarBarsPropertiesOptional.forEach(barOptionalProperty => {
-      if (bars[barOptionalProperty]) delete bars[barOptionalProperty];
-    });
-    const newConfig = {...this.configOfCollection, barsProperties: bars};
-    this.configChange.emit(this.createConfigsToEmit(newConfig));
-  }
-
-  public toggleOptionalBar() {
-    if (this.shownOptionalBar) {
-      this.removeAllBarPropertiesOptional();
-    }
-    this.shownOptionalBar = !this.shownOptionalBar;
-  }
-
-  private createConfigsToEmit(newConfig: CalendarConfig) {
-    const newConfigs = [];
-    this.allConfigs.forEach(config => {
-      if (config.id !== this.configOfCollection.id) newConfigs.push(config);
-      else newConfigs.push(newConfig);
-    });
-    return newConfigs;
+  public onCollectionConfigChange(collection: Collection, config: CalendarCollectionConfig) {
+    const collectionsConfig = {...(this.config.collections || {})};
+    collectionsConfig[collection.id] = config;
+    return {...this.config, collections: collectionsConfig};
   }
 }

@@ -31,7 +31,7 @@ import {selectTableConfig} from '../tables/tables.selector';
 import {ViewConfig, ViewCursor, View} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
-import {selectCalendarConfig} from '../calendar/calendar.state';
+import {selectCalendarConfig} from '../calendars/calendars.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;

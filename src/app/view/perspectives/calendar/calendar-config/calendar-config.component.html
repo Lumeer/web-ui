@@ -1,46 +1,5 @@
-<br>
-<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="configOfCollection">
-
-  <div class="collection_title">
-      <i [style.color]="collection.color"
-         aria-hidden="true"
-         class="{{collection.icon}} fa-fw">
-      </i>
-      <b>{{collection.name}}</b>
-  </div>
-
-  <ng-container *ngFor="let calendarBarPropertyRequired of calendarBarsPropertiesRequired">
-    <select-item
-      [class.mr-2]="true"
-      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyRequired:configOfCollection "
-      [selectedId]="configOfCollection.barsProperties[calendarBarPropertyRequired]"
-      [placeholderText]="calendarBarPropertyRequired "
-      [emptyValue]="calendarBarPropertyRequired"
-      (select)="onBarPropertyRequiredSelect(calendarBarPropertyRequired, $event)"
-      (remove)="onBarPropertyRequiredRemoved(calendarBarPropertyRequired)">
-    </select-item>
-  </ng-container>
-
-  <button class="show_button"
-    *ngIf="allRequiredPropertiesSet()"
-    (click)="toggleOptionalBar()"
-  >
-    <b>{{shownOptionalBar ? 'Hide' : 'More'}}</b>
-  </button>
-</div>
-
-<br>
-
-<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="shownOptionalBar">
-  <ng-container *ngFor="let calendarBarPropertyOptional of calendarBarsPropertiesOptional; let isLast = last">
-    <select-item
-      [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyRequiredSelectItems:calendarBarPropertyOptional:configOfCollection "
-      [selectedId]="configOfCollection.barsProperties[calendarBarPropertyOptional]"
-      [placeholderText]="calendarBarPropertyOptional "
-      [emptyValue]="calendarBarPropertyOptional"
-      (select)="onBarPropertyOptionalSelect(calendarBarPropertyOptional, $event)"
-      (remove)="onBarPropertyOptionalRemoved(calendarBarPropertyOptional)">
-    </select-item>
-  </ng-container>
-</div>
+<calendar-collection-config *ngFor="let collection of collections; trackBy:trackByCollection"
+                            [config]="config?.collections[collection.id] || {}"
+                            [collection]="collection"
+                            (configChange)="onCollectionConfigChange(collection, $event)">
+</calendar-collection-config>

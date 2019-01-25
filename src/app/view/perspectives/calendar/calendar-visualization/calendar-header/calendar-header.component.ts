@@ -17,25 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarPropertyRequired} from '../../../../../core/store/calendar/calendar.model';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {CalendarView} from 'angular-calendar';
 
-@Pipe({
-  name: 'barSelectPlaceholderPropertyRequired',
+@Component({
+  selector: 'mwl-utils-calendar-header',
+  templateUrl: './calendar-header.component.html',
 })
-export class BarSelectPlaceholderPropertyRequiredPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export class CalendarHeaderComponent {
+  @Input()
+  public view: CalendarView = CalendarView.Month;
 
-  public transform(barProperty: CalendarBarPropertyRequired): string {
-    return this.i18n(
-      {
-        id: 'calendar.barRequired.placeholder',
-        value: '{barProperty, select, name {name} start {start} end {end}}',
-      },
-      {
-        barProperty,
-      }
-    );
-  }
+  @Input()
+  public viewDate: Date;
+
+  @Output()
+  public viewChange: EventEmitter<CalendarView> = new EventEmitter();
+
+  @Output()
+  public viewDateChange: EventEmitter<Date> = new EventEmitter();
+
+  public readonly calendarView = CalendarView;
 }

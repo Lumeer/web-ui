@@ -4,16 +4,18 @@
                [placeholderText]="viewModePlaceholder"
                [items]="ganttChartModes | ganttChartModesToSelect"
                [selectedId]="config.mode"
+               [disabled]="!canManageConfig"
                (select)="onModeSelect($event)">
   </select-item>
 
   <ng-container *ngFor="let propertyRequired of ganttChartBarsPropertiesRequired; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyRequiredSelectItems:propertyRequired:config"
+      [items]="[collection] | ganttChartPropertyItems:propertyRequired:config"
       [selectedId]="config.barsProperties[propertyRequired]"
       [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
       [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
+      [disabled]="!canManageConfig"
       [removable]="true"
       (select)="onBarPropertySelect(propertyRequired, $event)"
       (remove)="onBarPropertyRemoved(propertyRequired)">
@@ -25,9 +27,10 @@
   <ng-container *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional; let isLast = last">
     <select-item
       [class.mr-2]="!isLast"
-      [items]="[collection] | barPropertyOptionalSelectItems:propertyOptional:config"
+      [items]="[collection] | ganttChartPropertyItems:propertyOptional:config"
       [selectedId]="config.barsProperties[propertyOptional]"
       [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
+      [disabled]="!canManageConfig"
       [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
       [removable]="true"
       (select)="onBarPropertySelect(propertyOptional, $event)"

@@ -41,6 +41,9 @@ export class GanttChartConfigComponent {
   @Input()
   public config: GanttChartConfig;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 

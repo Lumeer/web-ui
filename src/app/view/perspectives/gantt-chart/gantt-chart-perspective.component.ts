@@ -21,7 +21,12 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByCustomQuery,
+  selectCollectionsByQuery,
+  selectDocumentsByCustomQuery,
+  selectDocumentsByQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
@@ -34,6 +39,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from '../../../core/store/gantt-charts/gantt-chart';
 import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
+import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -57,18 +63,6 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.initGanttChart();
     this.subscribeToQuery();
     this.subscribeData();
-  }
-
-  private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchDocuments(query);
-    });
-    this.subscriptions.add(subscription);
-  }
-
-  private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private initGanttChart() {
@@ -105,12 +99,29 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     return {mode: GanttChartMode.Day, barsProperties: {}};
   }
 
+  private subscribeToQuery() {
+    const subscription = this.store$
+      .pipe(
+        select(selectQuery),
+        map(query => query && queryWithoutLinks(query))
+      )
+      .subscribe(query => {
+        this.fetchDocuments(query);
+        this.query$.next(query);
+        this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
+        this.collection$ = this.store$.pipe(
+          select(selectCollectionsByCustomQuery(query)),
+          map(collections => collections[0])
+        );
+      });
+    this.subscriptions.add(subscription);
+  }
+
+  private fetchDocuments(query: Query) {
+    this.store$.dispatch(new DocumentsAction.Get({query}));
+  }
+
   private subscribeData() {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.collection$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(collections => collections[0])
-    );
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }

@@ -19,41 +19,39 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {CalendarPerspectiveComponent} from './calendar-perspective.component';
 import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
-import {UtilsModule} from './utils/module';
-import {ContextMenuModule} from 'ngx-contextmenu';
-import {FormsModule} from '@angular/forms';
-import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatDialogModule} from '@angular/material';
 import {CalendarConfigComponent} from './calendar-config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 import {CalendarVisualizationComponent} from './calendar-visualization/calendar-visualization.component';
+import {CalendarHeaderComponent} from './calendar-visualization/calendar-header/calendar-header.component';
+import {PopoverModule} from 'ngx-bootstrap';
+import {CalendarCollectionConfigComponent} from './calendar-config/calendar-collection-config/calendar-collection-config.component';
 
 @NgModule({
   imports: [
-    //not sure
     SharedModule,
     CommonModule,
     FormsModule,
-    NgbModalModule,
-    NgbModule,
+    PopoverModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
     CalendarPerspectiveRoutingModule,
-    ContextMenuModule.forRoot({
-      useBootstrap4: true,
-    }),
-    UtilsModule,
-    MatDialogModule,
     CalendarPipesModule,
   ],
-  declarations: [CalendarPerspectiveComponent, CalendarConfigComponent, CalendarVisualizationComponent],
+  declarations: [
+    CalendarPerspectiveComponent,
+    CalendarConfigComponent,
+    CalendarVisualizationComponent,
+    CalendarHeaderComponent,
+    CalendarCollectionConfigComponent,
+  ],
   entryComponents: [CalendarPerspectiveComponent],
   exports: [CalendarPerspectiveComponent],
 })

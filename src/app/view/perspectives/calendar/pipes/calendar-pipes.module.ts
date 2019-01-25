@@ -19,27 +19,30 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BarSelectPropertyRequiredItemsPipe} from './bar-property-required-pipes/bar-select-property-required-items.pipe';
-import {BarSelectPlaceholderPropertyRequiredPipe} from './bar-property-required-pipes/bar-select-placeholder-property-required.pipe';
-import {BarSelectEmptyValuePropertyRequiredPipe} from './bar-property-required-pipes/bar-select-empty-value-property-required.pipe';
+import {CalendarPropertyItemsPipe} from './calendar-property-items.pipe';
+import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.pipe';
+import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
 import {DisplayablePipe} from './displayable.pipe';
 import {FilterConfigsPipe} from './filter.pipe';
+import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
 
 @NgModule({
   imports: [CommonModule],
   declarations: [
     DisplayablePipe,
-    BarSelectPropertyRequiredItemsPipe,
-    BarSelectPlaceholderPropertyRequiredPipe,
-    BarSelectEmptyValuePropertyRequiredPipe,
+    CalendarPropertyItemsPipe,
+    CalendarPropertyPlaceholderPipe,
+    CalendarValuePropertyPipe,
     FilterConfigsPipe,
+    CalendarRequiredPropertiesSetPipe,
   ],
   exports: [
     DisplayablePipe,
-    BarSelectPropertyRequiredItemsPipe,
-    BarSelectPlaceholderPropertyRequiredPipe,
-    BarSelectEmptyValuePropertyRequiredPipe,
+    CalendarPropertyItemsPipe,
+    CalendarPropertyPlaceholderPipe,
+    CalendarValuePropertyPipe,
     FilterConfigsPipe,
+    CalendarRequiredPropertiesSetPipe,
   ],
 })
 export class CalendarPipesModule {}

@@ -18,24 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarPropertyRequired} from '../../../../../core/store/calendar/calendar.model';
+import {CalendarBarPropertyRequired, CalendarCollectionConfig} from '../../../../core/store/calendars/calendar.model';
 
 @Pipe({
-  name: 'barSelectEmptyValuePropertyRequired',
+  name: 'calendarRequiredPropertiesSet',
 })
-export class BarSelectEmptyValuePropertyRequiredPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(barProperty: CalendarBarPropertyRequired): string {
-    return this.i18n(
-      {
-        id: 'calendar.barRequired.placeholder',
-        value: 'Select {barProperty, select, name {name} start {starting date} end {ending date}}',
-      },
-      {
-        barProperty,
-      }
-    );
+export class CalendarRequiredPropertiesSetPipe implements PipeTransform {
+  public transform(config: CalendarCollectionConfig): boolean {
+    const requiredProperties = Object.values(CalendarBarPropertyRequired);
+    return config && config.barsProperties && requiredProperties.every(property => !!config.barsProperties[property]);
   }
 }

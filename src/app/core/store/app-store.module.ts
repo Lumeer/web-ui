@@ -63,7 +63,7 @@ import {VideosEffects} from './videos/videos.effects';
 import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
-import {calendarsReducer} from './calendar/calendar.reducer';
+import {calendarsReducer} from './calendars/calendars.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,

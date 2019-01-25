@@ -20,36 +20,37 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {
   CalendarBarModel,
+  CalendarBarProperty,
   CalendarBarPropertyRequired,
+  CalendarCollectionConfig,
   CalendarConfig,
-} from '../../../../../core/store/calendar/calendar.model';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+} from '../../../../core/store/calendars/calendar.model';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {GanttChartBarProperty, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 
 @Pipe({
-  name: 'barPropertyRequiredSelectItems',
+  name: 'calendarPropertyItems',
 })
-export class BarSelectPropertyRequiredItemsPipe implements PipeTransform {
+export class CalendarPropertyItemsPipe implements PipeTransform {
   public transform(
-    collections: Collection[],
-    bar: CalendarBarPropertyRequired,
-    config: CalendarConfig
+    collection: Collection,
+    property: CalendarBarProperty,
+    config: CalendarCollectionConfig
   ): SelectItemModel[] {
-    return collections
-      .filter(collection => !!collection)
-      .reduce((items, collection) => {
-        const itemsForCollection = this.getItemsForCollection(collection, []);
-        return [...items, ...itemsForCollection];
-      }, []);
-  }
-
-  public getItemsForCollection(collection: Collection, restrictedIds: string[]): SelectItemModel[] {
+    const restrictedIds = this.getSelectedAttributesIdsInsteadBar(property, config);
     return collection.attributes
       .filter(attribute => !restrictedIds.includes(attribute.id))
-      .map(attribute => BarSelectPropertyRequiredItemsPipe.attributeToItem(collection, attribute));
+      .map(attribute => this.attributeToItem(collection, attribute));
   }
 
-  public static attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
+  public getSelectedAttributesIdsInsteadBar(property: CalendarBarProperty, config: CalendarCollectionConfig): string[] {
+    return Object.entries(config.barsProperties || {})
+      .filter(entry => entry[0] !== property)
+      .map(entry => entry[1].attributeId);
+  }
+
+  public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
     const bar: CalendarBarModel = {collectionId: collection.id, attributeId: attribute.id};
     return {id: bar, value: attribute.name, icon: collection.icon, iconColor: collection.color};
   }

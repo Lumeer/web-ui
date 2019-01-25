@@ -17,17 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
+export const DEFAULT_CALENDAR_ID = 'default';
+
+export interface CalendarModel {
+  id: string;
+  config?: CalendarConfig;
+}
+
+export interface CalendarConfig {
+  collections: Record<string, CalendarCollectionConfig>;
+}
+
+export interface CalendarCollectionConfig {
+  barsProperties?: Record<string, CalendarBarModel>;
+}
+
+export interface CalendarBarModel {
+  collectionId: string;
+  attributeId: string;
+}
+
+export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPropertyOptional;
+
+export enum CalendarBarPropertyRequired {
+  NAME = 'name',
+  START_DATE = 'start',
+  END_DATE = 'end',
+}
+
+export enum CalendarBarPropertyOptional {
+  START_TIME = 'startTime',
+  END_TIME = 'endTime',
+}

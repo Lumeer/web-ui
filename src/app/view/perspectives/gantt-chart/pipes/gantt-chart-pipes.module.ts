@@ -21,10 +21,9 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DisplayablePipe} from './displayable.pipe';
 import {GanttChartModesToSelectPipe} from './gantt-chart-modes-to-select.pipe';
-import {BarSelectPropertyRequiredItemsPipe} from './bar-property-required-pipes/bar-select-property-required-items.pipe';
+import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
 import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
-import {BarSelectPropertyOptionalItemsPipe} from './bar-property-optional-pipes/bar-select-property-optional-items.pipe';
 import {GanttChartRequiredPropertiesSetPipe} from './gantt-chart-required-properties-set.pipe';
 
 @NgModule({
@@ -32,19 +31,17 @@ import {GanttChartRequiredPropertiesSetPipe} from './gantt-chart-required-proper
   declarations: [
     DisplayablePipe,
     GanttChartModesToSelectPipe,
-    BarSelectPropertyRequiredItemsPipe,
+    GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
-    BarSelectPropertyOptionalItemsPipe,
     GanttChartRequiredPropertiesSetPipe,
   ],
   exports: [
     DisplayablePipe,
     GanttChartModesToSelectPipe,
-    BarSelectPropertyRequiredItemsPipe,
+    GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
-    BarSelectPropertyOptionalItemsPipe,
     GanttChartRequiredPropertiesSetPipe,
   ],
 })

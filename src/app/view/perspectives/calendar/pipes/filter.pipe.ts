@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarConfig} from '../../../../core/store/calendar/calendar.model';
+import {CalendarConfig} from '../../../../core/store/calendars/calendar.model';
 
 @Pipe({
   name: 'filterConfigs',

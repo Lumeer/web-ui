@@ -17,24 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {calendarsAdapter, CalendarsState, initialCalendarsState} from './calendar.state';
-import {CalendarAction, CalendarActionType} from './calendar.action';
+import {calendarsAdapter, CalendarsState, initialCalendarsState} from './calendars.state';
+import {CalendarsAction, CalendarsActionType} from './calendars.action';
 
 export function calendarsReducer(
   state: CalendarsState = initialCalendarsState,
-  action: CalendarAction.All
+  action: CalendarsAction.All
 ): CalendarsState {
   switch (action.type) {
-    case CalendarActionType.ADD_CALENDAR:
+    case CalendarsActionType.ADD_CALENDAR:
       return calendarsAdapter.addOne(action.payload.calendar, state);
-    case CalendarActionType.REMOVE_CALENDAR:
+    case CalendarsActionType.REMOVE_CALENDAR:
       return calendarsAdapter.removeOne(action.payload.calendarId, state);
-    case CalendarActionType.SET_CONFIG:
+    case CalendarsActionType.SET_CONFIG:
       return calendarsAdapter.updateOne(
         {id: action.payload.calendarId, changes: {config: action.payload.config}},
         state
       );
-    case CalendarActionType.CLEAR:
+    case CalendarsActionType.CLEAR:
       return initialCalendarsState;
     default:
       return state;
