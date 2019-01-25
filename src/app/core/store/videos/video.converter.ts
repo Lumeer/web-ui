@@ -22,7 +22,8 @@ import {VideoItem, VideoMetaData, VideoModel} from './video.model';
 export class VideoConverter {
   private static fromItem(dto: VideoItem, priority?: number): VideoModel {
     let descr = dto.snippet.description;
-    descr = descr.substring(0, descr.indexOf('--'));
+    const dashes = descr.indexOf('--');
+    descr = dashes > 0 ? descr.substring(0, dashes) : descr;
 
     return {
       id: dto.id,
