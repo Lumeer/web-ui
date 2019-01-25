@@ -1,0 +1,8 @@
+<input #numberInput
+       [readonly]="readonly"
+       [title]="value"
+       [value]="value"
+       (blur)="onBlur()"
+       (input)="onInput($event)"
+       type="number"
+       class="border-0 w-100 h-100 px-1 bg-transparent">

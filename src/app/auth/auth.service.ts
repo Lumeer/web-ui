@@ -38,6 +38,7 @@ const EXPIRES_AT_KEY = 'auth_expires_at';
 })
 export class AuthService {
   private auth0: WebAuth;
+  private loggingIn: boolean;
 
   private refreshSubscription: Subscription;
 
@@ -60,6 +61,11 @@ export class AuthService {
   }
 
   public login(redirectPath: string): void {
+    if (this.loggingIn) {
+      return;
+    }
+
+    this.loggingIn = true;
     this.saveLoginRedirectPath(redirectPath);
     this.auth0.authorize();
   }
@@ -100,6 +106,7 @@ export class AuthService {
 
     this.unscheduleRenewal();
 
+    this.saveLoginRedirectPath(this.router.url);
     window.location.assign(this.getLogoutUrl());
   }
 

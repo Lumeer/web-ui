@@ -91,7 +91,7 @@ export class WorkspaceSelectService {
   private dispatchErrorCreateProjectNotification() {
     const message = this.i18n({
       id: 'projects.notPermissions',
-      value: 'We are sorry, but you are not allowed to view or create any project in this organization.',
+      value: 'I am sorry, you are not allowed to view or create any project in this organization.',
     });
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }

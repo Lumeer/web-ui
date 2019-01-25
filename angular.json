@@ -53,10 +53,46 @@
           "configurations": {
             "production": {
               "aot": true,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
+              "namedChunks": true,
+              "optimization": true,
+              "outputHashing": "all",
+              "showCircularDependencies": false,
+              "sourceMap": true,
+              "vendorChunk": false
+            },
+            "staging": {
+              "aot": true,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ],
+              "namedChunks": true,
+              "optimization": true,
+              "outputHashing": "all",
+              "showCircularDependencies": false,
+              "sourceMap": true,
+              "vendorChunk": false
+            },
+            "testing": {
+              "aot": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "3215kb",
+                  "baseline": "4mb",
                   "maximumWarning": "10%",
                   "maximumError": "25%"
                 },
@@ -95,31 +131,13 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.production.ts"
+                  "with": "src/environments/environment.testing.ts"
                 }
               ],
               "namedChunks": true,
               "optimization": true,
               "outputHashing": "all",
-              "showCircularDependencies": false,
-              "sourceMap": true,
-              "vendorChunk": false
-            },
-            "staging": {
-              "aot": true,
-              "buildOptimizer": true,
-              "extractCss": true,
-              "extractLicenses": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ],
-              "namedChunks": true,
-              "optimization": true,
-              "outputHashing": "all",
-              "showCircularDependencies": false,
+              "showCircularDependencies": true,
               "sourceMap": true,
               "vendorChunk": false
             },

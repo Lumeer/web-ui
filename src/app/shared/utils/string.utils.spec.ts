@@ -18,10 +18,29 @@
  */
 
 import {} from 'jasmine';
-import {escapeStringForRegex} from './string.utils';
+import {escapeStringForRegex, transformTextToSentenceCase, transformTextToTitleCase} from './string.utils';
 
 describe('escapeStringForRegex()', () => {
   it('should escape two plus signs', () => {
     expect(escapeStringForRegex('C++')).toEqual('C\\+\\+');
+  });
+});
+
+describe('transformTextToTitleCase()', () => {
+  it('should change only first letters of words', () => {
+    expect(transformTextToTitleCase('hTC desire sV')).toEqual('HTC Desire SV');
+  });
+  it('should not modify digits', () => {
+    expect(transformTextToTitleCase('nokia 7.1')).toEqual('Nokia 7.1');
+  });
+});
+
+describe('transformTextToSentenceCase()', () => {
+  it('should change only first character of first word', () => {
+    expect(transformTextToSentenceCase('hello world')).toEqual('Hello world');
+  });
+
+  it('should properly format sentences', () => {
+    expect(transformTextToSentenceCase('hello!how are you?')).toEqual('Hello! How are you?');
   });
 });

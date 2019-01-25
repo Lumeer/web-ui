@@ -29,6 +29,15 @@ export class LogoutComponent implements OnInit {
   public constructor(private authService: AuthService, private router: Router) {}
 
   public ngOnInit() {
-    this.router.navigate(['/']);
+    this.navigateToApplication();
+  }
+
+  private navigateToApplication() {
+    const path = this.authService.getLoginRedirectPath();
+    if (!path) {
+      this.router.navigate(['/']);
+    }
+
+    this.router.navigateByUrl(path);
   }
 }

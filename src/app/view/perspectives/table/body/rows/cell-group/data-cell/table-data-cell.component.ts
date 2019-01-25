@@ -20,10 +20,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -32,8 +36,7 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {distinctUntilChanged, first, skip, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -45,16 +48,17 @@ import {LinkInstance} from '../../../../../../../core/store/link-instances/link.
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow, TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
-import {findTableRow} from '../../../../../../../core/store/tables/table.utils';
+import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
 import {selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
 import {selectAffected, selectTableById} from '../../../../../../../core/store/tables/tables.state';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
-import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'table-data-cell',
@@ -79,6 +83,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
+  @HostBinding('class.selected')
   public selected: boolean;
 
   @Input()
@@ -87,21 +92,40 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
+  @Output()
+  public affect = new EventEmitter();
+
   @ViewChild(TableDataCellMenuComponent)
   public menuComponent: TableDataCellMenuComponent;
 
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
-  @ViewChild(TableEditableCellDirective)
-  public editableCell: TableEditableCellDirective;
+  @HostBinding('class.affected')
+  public affected: boolean;
 
-  public affected$: Observable<boolean>;
+  @HostBinding('class.edited')
+  public edited: boolean;
+
+  @HostBinding('style.width.px')
+  public columnWidth: number;
+
+  @HostBinding('class.table-border-right')
+  public tableBorderRight = true;
+
+  @HostBinding('class.table-border-bottom')
+  public tableBorderBottom = true;
+
+  public editing$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
 
-  public editedValue: string;
+  public constraint$: Observable<Constraint>;
+
+  public editedValue: any;
+  public hiddenInputValue$ = new BehaviorSubject<any>('');
 
   private selectedSubscriptions = new Subscription();
+  private subscriptions = new Subscription();
 
   private savingDisabled: boolean;
 
@@ -114,15 +138,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.bindAffected();
+    if (this.cursor.partIndex > 1) {
+      this.subscriptions.add(this.subscribeToAffected());
+    }
+    this.subscriptions.add(this.subscribeToEditing());
   }
 
-  private bindAffected() {
-    if (this.cursor.partIndex < 2) {
-      return;
-    }
-
-    this.affected$ = this.store$
+  private subscribeToAffected(): Subscription {
+    return this.store$
       .select(
         selectAffected({
           attributeId: this.column.attributeId,
@@ -130,20 +153,62 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           linkInstanceId: this.linkInstance && this.linkInstance.id,
         })
       )
-      .pipe(distinctUntilChanged());
+      .pipe(
+        distinctUntilChanged(),
+        withLatestFrom(this.editing$)
+      )
+      .subscribe(([affected, editing]) => {
+        this.affected = affected && !editing;
+        // TODO run change detection in parent component some other way
+        this.affect.emit();
+      });
+  }
+
+  private subscribeToEditing(): Subscription {
+    return this.editing$
+      .pipe(
+        skip(1),
+        distinctUntilChanged()
+      )
+      .subscribe(editing => {
+        this.edited = editing;
+        if (!editing) {
+          this.clearEditedAttribute();
+          this.editedValue = '';
+          this.checkSuggesting();
+          this.hiddenInputValue$.next('');
+
+          if (this.selected) {
+            // sets focus to hidden input
+            this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+          }
+        } else {
+          this.setEditedAttribute();
+        }
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if ((changes.column || changes.document) && this.column && this.document) {
+      this.constraint$ = this.store$.pipe(
+        select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeId))
+      );
+    }
     if (changes.selected) {
       this.selectedSubscriptions.unsubscribe();
       if (this.selected) {
         this.selectedSubscriptions = new Subscription();
         this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
         this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
+      } else {
+        this.editing$.next(false);
       }
     }
     if (changes.document || changes.linkInstace) {
       this.checkSuggesting();
+    }
+    if ((changes.column || changes.canManageConfig) && this.column) {
+      this.columnWidth = getTableColumnWidth(this.column, this.canManageConfig);
     }
   }
 
@@ -157,8 +222,26 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
-      .subscribe(action => this.editableCell.startEditing(action.payload.clear));
+      .pipe(
+        ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
+        withLatestFrom(this.constraint$)
+      )
+      .subscribe(([action, constraint]) => {
+        const {value} = action.payload;
+        if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+          if (constraint && constraint.type === ConstraintType.Boolean) {
+            // switch checkbox only if Enter or Space is pressed
+            if (!value || value === ' ') {
+              const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
+              this.saveData(!data[this.column.attributeId]);
+            }
+          } else {
+            this.editedValue = value;
+            this.hiddenInputValue$.next(value);
+            this.editing$.next(true);
+          }
+        }
+      });
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -189,32 +272,44 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.selectedSubscriptions.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
-  public onEditStart() {
-    if (this.document.id) {
-      this.store$.dispatch(
-        new TablesAction.SetEditedAttribute({
-          editedAttribute: {
-            documentId: this.document.id,
-            attributeId: this.column.attributeId,
-          },
-        })
-      );
+  @HostListener('mousedown', ['$event'])
+  public onMouseDown(event: MouseEvent) {
+    if (!this.edited) {
+      event.preventDefault();
+    }
+    if (!this.selected) {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
 
-  public onEditEnd(value: string) {
-    this.clearEditedAttribute();
-
-    if (!isNullOrUndefined(value)) {
-      this.useSelectionOrSave(value);
+  @HostListener('dblclick', ['$event'])
+  public onDoubleClick(event: MouseEvent) {
+    if (!this.editing$.getValue()) {
+      event.preventDefault();
+      this.editing$.next(true); // TODO maybe set edited attribute?
     }
-
-    this.checkSuggesting();
   }
 
-  private useSelectionOrSave(value: string) {
+  @HostListener('contextmenu', ['$event'])
+  public onContextMenu(event: MouseEvent) {
+    if (!this.edited) {
+      setTimeout(() => this.showContextMenu(event));
+    }
+  }
+
+  private showContextMenu(event: MouseEvent) {
+    this.contextMenuService.show.next({
+      anchorElement: null,
+      contextMenu: this.menuComponent.contextMenu,
+      event,
+      item: null,
+    });
+  }
+
+  private useSelectionOrSave(value: any) {
     if (!this.isPreviousLinkedRowInitialized()) {
       this.showUninitializedLinkedRowWarningAndResetValue();
       return;
@@ -231,10 +326,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.notificationService.warning(
       this.i18n({
         id: 'table.data.cell.linked.row.uninitialized',
-        value: 'You need to enter some value to the linked row in the previous table part first.',
+        value:
+          'I cannot link the entered value to anything, you must enter a value to the previous part of the table first.',
       })
     );
-    this.editableCell.setValue('');
     this.editedValue = '';
   }
 
@@ -247,6 +342,19 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return previousRow && !!previousRow.documentId;
   }
 
+  private setEditedAttribute() {
+    if (this.document.id) {
+      this.store$.dispatch(
+        new TablesAction.SetEditedAttribute({
+          editedAttribute: {
+            documentId: this.document.id,
+            attributeId: this.column.attributeId,
+          },
+        })
+      );
+    }
+  }
+
   private clearEditedAttribute() {
     if (this.document.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
@@ -257,15 +365,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.savingDisabled = true;
   }
 
-  private saveData(value: string) {
-    if (this.savingDisabled || this.getValue() === value || (!value && !this.isEntityInitialized())) {
+  private saveData(value: any) {
+    const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
+    if (this.savingDisabled || previousValue === value || (!value && !this.isEntityInitialized())) {
       return;
     }
 
     this.updateData(value);
   }
 
-  public updateData(value: string) {
+  public updateData(value: any) {
     if (this.document) {
       this.updateDocumentData(this.column.attributeId, this.column.attributeName, value);
     }
@@ -274,7 +383,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private updateDocumentData(attributeId: string, attributeName: string, value: string) {
+  private updateDocumentData(attributeId: string, attributeName: string, value: any) {
     if (this.document.id) {
       this.updateDocument(attributeId, attributeName, value);
     } else {
@@ -282,7 +391,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private createDocument(attributeId: string, attributeName: string, value: string) {
+  private createDocument(attributeId: string, attributeName: string, value: any) {
     combineLatest(
       this.store$.pipe(select(selectTableById(this.cursor.tableId))),
       this.store$.pipe(select(selectTableRow(this.cursor)))
@@ -297,7 +406,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: string) {
+  private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: any) {
     const document: DocumentModel = {
       ...this.document,
       correlationId: row && row.correlationId,
@@ -320,12 +429,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private createDocumentWithExistingAttribute(
-    table: TableModel,
-    row: TableConfigRow,
-    attributeId: string,
-    value: string
-  ) {
+  private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: any) {
     const document: DocumentModel = {
       ...this.document,
       correlationId: row && row.correlationId,
@@ -370,7 +474,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  private updateDocument(attributeId: string, attributeName: string, value: string) {
+  private updateDocument(attributeId: string, attributeName: string, value: any) {
     if (!attributeId) {
       this.updateDocumentWithNewAttribute(attributeName, value);
     } else {
@@ -378,7 +482,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private updateDocumentWithNewAttribute(attributeName: string, value: string) {
+  private updateDocumentWithNewAttribute(attributeName: string, value: any) {
     const document = {
       collectionId: this.document.collectionId,
       id: this.document.id,
@@ -405,7 +509,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private updateDocumentWithExistingAttribute(attributeId: string, value: string) {
+  private updateDocumentWithExistingAttribute(attributeId: string, value: any) {
     // TODO what if user does not have permissions to see all columns?
     if (
       this.cursor.partIndex > 0 &&
@@ -436,22 +540,32 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(removeRowAction);
   }
 
-  private updateLinkInstanceData(key: string, name: string, value: string) {
+  private updateLinkInstanceData(key: string, name: string, value: any) {
     // TODO dispatch patch link instance action
   }
 
   public onEdit() {
-    if (this.editableCell) {
-      this.editableCell.startEditing();
-    }
+    // this.setEditedAttribute();
+    this.store$.dispatch(new TablesAction.EditSelectedCell({}));
   }
 
-  public onValueChange(value: string) {
+  public onValueChange(value: any) {
     this.editedValue = value;
 
     if (!value && this.cursor.partIndex > 1) {
       this.suggesting$.next(true);
     }
+  }
+
+  public onValueSave(value: any) {
+    if (value !== null && value !== undefined) {
+      this.useSelectionOrSave(value);
+    }
+    this.editing$.next(false);
+  }
+
+  public onCancelEditing() {
+    this.editing$.next(false);
   }
 
   public onLinkCreate() {
@@ -484,17 +598,34 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  public onEditKeyDown(event: KeyboardEvent) {
+  @HostListener('keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (this.editing$.getValue()) {
+      this.onKeyDownInEditMode(event);
+    } else {
+      this.onKeyDownInSelectionMode(event);
+    }
+  }
+
+  public onKeyDownInEditMode(event: KeyboardEvent) {
+    event.stopPropagation();
+
     switch (event.code) {
       case KeyCode.ArrowDown:
+        event.preventDefault();
         return this.suggestions && this.suggestions.moveSelection(Direction.Down);
       case KeyCode.ArrowUp:
+        event.preventDefault();
         return this.suggestions && this.suggestions.moveSelection(Direction.Up);
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
-        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+        // needs to be executed after the value is stored
+        setTimeout(() => this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down})));
+        return;
       case KeyCode.Tab:
-        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+        // needs to be executed after the value is stored
+        setTimeout(() => this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right})));
+        return;
     }
 
     if (isKeyPrintable(event) && this.suggestions) {
@@ -502,7 +633,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public onKeyDown(event: KeyboardEvent) {
+  public onKeyDownInSelectionMode(event: KeyboardEvent) {
     const writeWithView = this.allowedPermissions && this.allowedPermissions.writeWithView;
     event[EDITABLE_EVENT] = writeWithView;
 
@@ -525,24 +656,5 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           return;
       }
     }
-  }
-
-  public onMouseDown(event: MouseEvent) {
-    if (!this.selected) {
-      this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
-    }
-  }
-
-  public onContextMenu(event: MouseEvent) {
-    setTimeout(() => this.showContextMenu(event));
-  }
-
-  private showContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      anchorElement: null,
-      contextMenu: this.menuComponent.contextMenu,
-      event,
-      item: null,
-    });
   }
 }

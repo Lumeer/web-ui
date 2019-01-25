@@ -47,9 +47,12 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {IsOrganizationTypePipe} from './is-organization-type.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {CanChangeRolesPipe} from './can-change-roles.pipe';
+import {DataPipesModule} from './data/data-pipes.module';
+import {ParseDatePipe} from './parse-date.pipe';
+import {CollectionAttributePipe} from './collection-attribute.pipe';
 
 @NgModule({
-  imports: [CommonModule, PermissionsPipesModule],
+  imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     PixelPipe,
@@ -78,6 +81,8 @@ import {CanChangeRolesPipe} from './can-change-roles.pipe';
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
+    ParseDatePipe,
+    CollectionAttributePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -108,6 +113,9 @@ import {CanChangeRolesPipe} from './can-change-roles.pipe';
     PermissionsPipesModule,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
+    DataPipesModule,
+    ParseDatePipe,
+    CollectionAttributePipe,
   ],
 })
 export class PipesModule {}

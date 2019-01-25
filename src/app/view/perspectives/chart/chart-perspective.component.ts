@@ -75,14 +75,13 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        filter(view => !!view),
         withLatestFrom(this.store$.pipe(select(selectChartById(this.chartId))))
       )
       .subscribe(([view, chart]) => {
         if (chart) {
-          this.refreshChart(view.config);
+          this.refreshChart(view && view.config);
         } else {
-          this.createChart(view.config);
+          this.createChart(view && view.config);
         }
       });
     this.subscriptions.add(subscription);

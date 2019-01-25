@@ -20,7 +20,7 @@ before_install:
   - 'nvm use v10.15.0'
   - 'npm i -g npm@latest'
 install:
-  - npm ci
+  - LUMEER_ENV=testing NODE_OPTIONS=--max_old_space_size=7000 mvn clean install -Dcontext.root=/
 script:
   - './travis.sh'
 before_cache:

@@ -20,6 +20,8 @@
 import {ColumnFunction} from './column-function';
 
 export enum ConstraintType {
+  Text = 'Text',
+  Number = 'Number',
   Address = 'Address',
   Boolean = 'Boolean',
   Coordinates = 'Coordinates',
@@ -28,12 +30,10 @@ export enum ConstraintType {
   Function = 'Function',
   Image = 'Image',
   Link = 'Link',
-  Number = 'Number',
   Percentage = 'Percentage',
   Rating = 'Rating',
   Select = 'Select',
   Tag = 'Tag',
-  Text = 'Text',
   User = 'User',
 }
 
@@ -55,7 +55,17 @@ export const constraintTypesMap = {
   [ConstraintType.User]: ConstraintType.User,
 };
 
-export const ENABLED_CONSTRAINTS: string[] = [ConstraintType.DateTime, ConstraintType.Number, ConstraintType.Text];
+export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
+  switch (type) {
+    case ConstraintType.Boolean:
+    case ConstraintType.DateTime:
+    case ConstraintType.Number:
+    case ConstraintType.Text:
+      return true;
+    default:
+      return false;
+  }
+}
 
 export interface AddressConstraintConfig {
   fields: {

@@ -24,12 +24,12 @@ import {escapeStringForRegex} from '../utils/string.utils';
   name: 'highlightText',
 })
 export class HighlightTextPipe implements PipeTransform {
-  public transform(text: string | number, highlightedText: string, prefixOnly?: boolean): string {
+  public transform(text: any, highlightedText: any, prefixOnly?: boolean): string {
     if (!text) {
       return '';
     }
-    const textString = text.toString();
-    const pattern = escapeStringForRegex(highlightedText);
+    const textString = String(text);
+    const pattern = escapeStringForRegex(String(highlightedText));
     const match = textString.toString().match(new RegExp(pattern, 'i'));
     if (!match || (prefixOnly && match.index > 0)) {
       return textString;

@@ -1,0 +1,11 @@
+@import '~src/styles/variables';
+
+:host {
+  & > * {
+    height: 100%;
+  }
+
+  &::ng-deep input:focus {
+    outline: none;
+  }
+}

@@ -147,4 +147,8 @@ export class TableCellGroupComponent implements OnChanges {
     this.store$.dispatch(new TablesAction.SetCursor({cursor}));
     event.stopPropagation();
   }
+
+  public onAffect() {
+    // just to run change detection
+  }
 }

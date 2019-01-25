@@ -21,10 +21,14 @@ import {VideoItem, VideoMetaData, VideoModel} from './video.model';
 
 export class VideoConverter {
   private static fromItem(dto: VideoItem, priority?: number): VideoModel {
+    let descr = dto.snippet.description;
+    const dashes = descr.indexOf('--');
+    descr = dashes > 0 ? descr.substring(0, dashes) : descr;
+
     return {
       id: dto.id,
       summary: dto.snippet.title,
-      description: dto.snippet.description,
+      description: descr,
       priority: priority ? priority : 100,
       thumbnail: dto.snippet.thumbnails.medium.url,
     };
