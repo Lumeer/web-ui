@@ -49,6 +49,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
+    this.form.addControl('decimal', new FormControl(this.config && this.config.decimal));
     this.form.addControl('minValue', new FormControl(this.config && this.config.minValue));
     this.form.addControl('maxValue', new FormControl(this.config && this.config.maxValue));
     this.form.setValidators(minMaxValidator('minValue', 'maxValue'));

@@ -77,3 +77,13 @@ export const selectCollectionsByLinkType = (linkTypeId: string) =>
       return (linkType && linkType.collectionIds.map(id => collectionsMap[id])) || [];
     }
   );
+
+export const selectCollectionAttributeConstraint = (collectionId: string, attributeId: string) => {
+  return createSelector(
+    selectCollectionById(collectionId),
+    collection => {
+      const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
+      return attribute && attribute.constraint;
+    }
+  );
+};

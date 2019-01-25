@@ -13,11 +13,11 @@ describe('Table perspective', () => {
       .last()
       .should('contain', 'A');
 
-    cy.get('[data-test="table-data-cell-input"]')
+    cy.get('[data-test="text-data-input"]')
       .first()
       .should('be.empty')
       .dblclick();
-    cy.get('[data-test="table-data-cell-input"]')
+    cy.get('[data-test="text-data-input"]')
       .first()
       .type('first value')
       .blur();
@@ -28,13 +28,13 @@ describe('Table perspective', () => {
     cy.get('[data-test="table-single-column-input"]')
       .last()
       .should('contain', 'B');
-    cy.get('[data-test="table-data-cell-input"]').should('have.length', 4);
+    cy.get('[data-test="text-data-input"]').should('have.length', 4);
 
-    cy.get('[data-test="table-data-cell-input"]')
+    cy.get('[data-test="text-data-input"]')
       .eq(2)
       .type('second value')
       .blur();
-    cy.get('[data-test="table-data-cell-input"]').should('have.length', 6);
+    cy.get('[data-test="text-data-input"]').should('have.length', 6);
 
     cy.get('[data-test="table-header-add-button"]').click();
 
@@ -56,7 +56,7 @@ describe('Table perspective', () => {
       .should('have.length', 2)
       .should('contain', 'A');
 
-    cy.get('[data-test="table-data-cell-input"]')
+    cy.get('[data-test="text-data-input"]')
       .eq(1)
       .type('linked value')
       .blur();
@@ -65,9 +65,9 @@ describe('Table perspective', () => {
       .should('have.length', 3)
       .last()
       .should('contain', 'B');
-    cy.get('[data-test="table-data-cell-input"]').should('have.length', 9);
+    cy.get('[data-test="text-data-input"]').should('have.length', 9);
 
-    cy.get('[data-test="table-data-cell-input"]')
+    cy.get('[data-test="text-data-input"]')
       .eq(4)
       .type('l');
 
@@ -75,8 +75,6 @@ describe('Table perspective', () => {
     cy.get('[data-test="document-hint"]').click();
     cy.get('[data-test="document-hints"]').should('not.exist');
 
-    cy.get('[data-test="table-data-cell-input"]')
-      .eq(4)
-      .should('contain', 'linked value');
+    cy.get('[data-test="text-data-input"][title="linked value"]').should('have.length', 2);
   });
 });

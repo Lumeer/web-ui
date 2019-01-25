@@ -24,7 +24,7 @@ import {
   ConstraintConfig,
   ConstraintType,
   constraintTypesMap,
-  ENABLED_CONSTRAINTS,
+  isConstraintTypeEnabled,
 } from '../../../core/model/data/constraint';
 import {Attribute} from '../../../core/store/collections/collection';
 
@@ -41,7 +41,7 @@ export class AttributeTypeFormComponent implements OnChanges {
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
 
-  public readonly types = Object.keys(ConstraintType).filter(type => ENABLED_CONSTRAINTS.includes(type));
+  public readonly types = ['None'].concat(Object.keys(ConstraintType).filter(type => isConstraintTypeEnabled(type)));
 
   public form = new FormGroup({
     type: new FormControl(),
@@ -50,8 +50,8 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {
-      const type = (this.attribute.constraint && this.attribute.constraint.type) || ConstraintType.Text;
-      this.typeControl.setValue(type);
+      const type = this.attribute.constraint && this.attribute.constraint.type;
+      this.typeControl.setValue(type || 'None');
     }
   }
 
@@ -66,7 +66,7 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   private createModifiedAttribute(): Attribute {
     const type = constraintTypesMap[this.typeControl.value];
-    const constraint: Constraint = {type, config: this.createConstraintConfig(type)};
+    const constraint: Constraint = type ? {type, config: this.createConstraintConfig(type)} : null;
     return {...this.attribute, constraint};
   }
 

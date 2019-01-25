@@ -1,13 +1,22 @@
 <table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
 
-<div #collapsedCell
-     [contextMenu]="menuComponent?.contextMenu"
-     [class.affected]="affected$ | async"
-     [class.selected]="selected"
-     [style.cursor]="'default'"
-     [title]="values"
-     (mousedown)="onMouseDown()"
-     class="h-100 p-1 text-nowrap overflow-hidden"
-     tabindex="0">
-  {{values}}
-</div>
+<ng-container *ngIf="(constraint$ | async)?.type !== 'Boolean'; else checkbox">
+  <div *ngIf="{values: stringValue$ | async} as data"
+       [contextMenu]="menuComponent?.contextMenu"
+       [class.affected]="affected$ | async"
+       [class.selected]="selected"
+       [style.cursor]="'default'"
+       [title]="data.values"
+       (mousedown)="onMouseDown()"
+       class="h-100 p-1 text-nowrap overflow-hidden"
+       tabindex="0">
+    {{ data.values }}
+  </div>
+</ng-container>
+
+<ng-template #checkbox>
+  <boolean-data-input [indeterminate]="booleanValue === 'indeterminate'"
+                      [value]="booleanValue === 'true'"
+                      class="h-100">
+  </boolean-data-input>
+</ng-template>

@@ -2,20 +2,24 @@
      [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
   <div *ngIf="documents.length"
        class="dropdown">
-    <div class="dropdown-menu show"
+    <div *ngIf="collection$ | async as collection"
+         class="dropdown-menu show"
          data-test="document-hints">
       <div *ngFor="let doc of documents; index as documentIndex"
            [class.selected]="(selectedIndex$ | async) === documentIndex"
            (mousedown)="onCreateLink(doc)"
            class="dropdown-item p-0 d-flex">
-        <div *ngFor="let column of columns"
-             [class.font-weight-bold]="column.attributeId === attributeId"
-             [style.width.px]="column.width"
-             [innerHtml]="column.attributeId === attributeId ? (doc.data[column.attributeId] | highlightText: value) : doc.data[column.attributeId]"
-             [title]="doc.data[column.attributeId] || ''"
-             class="text-truncate cursor-default p-1"
-             data-test="document-hint">
-        </div>
+        <ng-container *ngFor="let column of columns">
+          <div
+            *ngIf="{value: doc.data[column.attributeId] | dataValue : (collection | collectionAttribute : column.attributeId)?.constraint} as data"
+            [class.font-weight-bold]="column.attributeId === attributeId"
+            [style.width.px]="column.width"
+            [innerHtml]="column.attributeId === attributeId ? (data.value | highlightText: value) : data.value"
+            [title]="doc.data[column.attributeId] || ''"
+            class="text-truncate cursor-default p-1"
+            data-test="document-hint">
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

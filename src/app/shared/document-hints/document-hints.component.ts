@@ -27,7 +27,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
@@ -37,6 +37,8 @@ import {LinkInstancesAction} from '../../core/store/link-instances/link-instance
 import {Direction} from '../direction';
 import {DocumentHintColumn} from './document-hint-column';
 import {Query} from '../../core/store/navigation/query';
+import {Collection} from '../../core/store/collections/collection';
+import {selectCollectionById} from '../../core/store/collections/collections.state';
 
 @Component({
   selector: 'document-hints',
@@ -78,6 +80,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   @Output()
   public linkCreate = new EventEmitter();
 
+  public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
   public selectedIndex$ = new BehaviorSubject<number>(-1);
   private filter$ = new BehaviorSubject<string>('');
@@ -93,6 +96,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value) {
       this.filter$.next(this.value);
+    }
+    if (changes.collectionId && this.collectionId) {
+      this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
     }
   }
 
@@ -113,10 +119,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
                 const value = document.data[this.attributeId];
                 return (
                   value &&
-                  value
-                    .toString()
+                  String(value)
                     .toLowerCase()
-                    .includes(typedValue.toLowerCase())
+                    .includes(String(typedValue).toLowerCase())
                 );
               })
               .slice(0, this.limit)

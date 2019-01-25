@@ -58,6 +58,8 @@ import {TableHeaderComponent} from './header/table-header.component';
 import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
+import {DataInputModule} from '../../../shared/data-input/data-input.module';
+import {TableHiddenInputComponent} from './header/hidden-input/table-hidden-input.component';
 
 @NgModule({
   imports: [
@@ -70,6 +72,7 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     InfiniteScrollModule,
     TablePipesModule,
     DragDropModule,
+    DataInputModule,
   ],
   declarations: [
     TablePerspectiveComponent,
@@ -103,6 +106,7 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     TableHierarchyColumnComponent,
     TableHierarchyCellMenuComponent,
     TableHeaderAddButtonComponent,
+    TableHiddenInputComponent,
   ],
   entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],

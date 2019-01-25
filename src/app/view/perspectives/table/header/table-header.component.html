@@ -1,7 +1,7 @@
 <div class="d-flex position-fixed pl-3">
-  <div (click)="unsetCursor()"
-       class="row-number-header">
-  </div>
+  <table-hidden-input (click)="unsetCursor()"
+                      class="d-block row-number-header">
+  </table-hidden-input>
 
   <table-hierarchy-column [cursor]="cursor"
                           (click)="unsetCursor()"
