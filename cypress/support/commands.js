@@ -5,7 +5,7 @@ Cypress.Commands.add('login', () => {
     audience: Cypress.env('engineServer'),
     domain: Cypress.env('auth0Domain'),
     clientID: Cypress.env('auth0ClientId'),
-    redirectUri: Cypress.config('baseUrl') + '/ui/auth',
+    redirectUri: Cypress.config('baseUrl') + '/auth',
     responseType: 'token id_token',
     scope: 'openid email profile name username groups roles',
   });
@@ -157,5 +157,5 @@ Cypress.Commands.add('deleteOrganization', code => {
 });
 
 Cypress.Commands.add('visitSearchCollections', () => {
-  cy.visit(`/ui/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
+  cy.visit(`/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
 });

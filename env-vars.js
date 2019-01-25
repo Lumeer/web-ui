@@ -3,7 +3,7 @@ const {writeFileSync} = require('fs');
 const env = process.env;
 const config = {};
 
-config.PUBLIC_PATH = env.PUBLIC_PATH || '/ui/';
+config.PUBLIC_PATH = (env.PUBLIC_PATH && env.PUBLIC_PATH.replace(/\/+/, '/')) || '/ui/';
 config.LUMEER_ENV = env.LUMEER_ENV;
 config.I18N_FORMAT = env.I18N_FORMAT || 'xlf';
 config.I18N_LOCALE = env.I18N_LOCALE || 'en';

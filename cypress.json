@@ -1,5 +1,5 @@
 {
   "projectId": "m4juuy",
   "chromeWebSecurity": false,
-  "baseUrl": "http://localhost:7000/"
+  "baseUrl": "http://localhost:7000/ui"
 }
