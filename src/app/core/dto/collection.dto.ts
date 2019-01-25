@@ -26,4 +26,11 @@ export interface CollectionDto extends ResourceDto {
   documentsCount?: number;
   favorite?: boolean;
   lastTimeUsed?: number;
+  rules?: Record<string, RuleDto>;
 }
+
+export type RuleDto = {
+  type: string;
+  timing: string;
+  configuration: Record<string, any>;
+};
