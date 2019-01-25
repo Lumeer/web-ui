@@ -18,6 +18,8 @@
  */
 
 export const DEFAULT_CALENDAR_ID = 'default';
+export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD';
+export const CALENDAR_TIME_FORMAT = 'HH:mm';
 
 export interface CalendarModel {
   id: string;

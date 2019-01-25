@@ -43,6 +43,6 @@ export class CalendarConfigComponent {
   public onCollectionConfigChange(collection: Collection, config: CalendarCollectionConfig) {
     const collectionsConfig = {...(this.config.collections || {})};
     collectionsConfig[collection.id] = config;
-    return {...this.config, collections: collectionsConfig};
+    this.configChange.emit({...this.config, collections: collectionsConfig});
   }
 }

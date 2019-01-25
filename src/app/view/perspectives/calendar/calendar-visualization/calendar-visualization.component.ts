@@ -21,6 +21,8 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleC
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
+  CALENDAR_DATE_FORMAT,
+  CALENDAR_TIME_FORMAT,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarConfig,
@@ -107,13 +109,11 @@ export class CalendarVisualizationComponent implements OnChanges {
       const endTimeChunks = this.parseTime(endTimeString);
 
       if (startTimeChunks) {
-        start.hours(startTimeChunks[0]);
-        start.minutes(startTimeChunks[1]);
+        start = start.hour(startTimeChunks[0]).minute(startTimeChunks[1]);
       }
 
       if (endTimeChunks) {
-        end.hours(endTimeChunks[0]);
-        end.minutes(endTimeChunks[1]);
+        end = end.hour(endTimeChunks[0]).minute(endTimeChunks[1]);
       }
 
       const allDay = this.isAllDayEvent(start.toDate(), end.toDate());
@@ -148,13 +148,12 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   //expected input hh:mm or hh.mm
   private parseTime(time: string): [number, number] {
-    const separators = ['\\:', '\\.'];
-    const chunks = (time || '').split(new RegExp(separators.join('|'), 'g'), 2);
+    const chunks = (time || '').split(/[:.]/g, 2);
     if (chunks.length !== 2) {
       return null;
     }
 
-    const timeChunks = [+chunks[1], +chunks[2]].filter(num => isNumeric(num));
+    const timeChunks = [+chunks[0], +chunks[1]].filter(num => isNumeric(num));
     if (timeChunks.length !== 2) {
       return null;
     }
@@ -187,41 +186,40 @@ export class CalendarVisualizationComponent implements OnChanges {
   public eventTimesChanged({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
     event.end = newEnd;
-    this.decomposeEvent(event);
     this.refresh.next();
+
+    this.onDocumentTimesChange(event);
   }
 
-  public decomposeEvent(event) {
-    // const originalDocument = this.documents.find(document => document.id === event.meta.documentId);
-    // const configOfCollection = this.allConfigs.find(config => config.id === event.meta.collectionId);
-    // originalDocument.data[configOfCollection.barsProperties[CalendarBarPropertyRequired.NAME].attributeId] =
-    //   event.title;
-    // originalDocument.data[
-    //   configOfCollection.barsProperties[CalendarBarPropertyRequired.START_DATE].attributeId
-    //   ] = CalendarVisualizationComponent.dateToString(event.start);
-    // originalDocument.data[
-    //   configOfCollection.barsProperties[CalendarBarPropertyRequired.END_DATE].attributeId
-    //   ] = CalendarVisualizationComponent.dateToString(event.end);
-    // //optional
-    // if (
-    //   configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME] &&
-    //   configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME]
-    // ) {
-    //   originalDocument.data[
-    //     configOfCollection.barsProperties[CalendarBarPropertyOptional.START_TIME].attributeId
-    //     ] = CalendarVisualizationComponent.timeToString(event.start);
-    //   originalDocument.data[
-    //     configOfCollection.barsProperties[CalendarBarPropertyOptional.END_TIME].attributeId
-    //     ] = CalendarVisualizationComponent.timeToString(event.end);
-    // }
-    // this.patchData.emit(originalDocument);
+  private onDocumentTimesChange(event: CalendarEvent) {
+    const originalDocument = this.documents.find(document => document.id === event.meta.documentId);
+    if (!originalDocument) {
+      return;
+    }
+
+    const patchDocument = {...originalDocument};
+
+    const collectionConfig = this.config.collections[originalDocument.collectionId] || {};
+    const properties = collectionConfig.barsProperties || {};
+
+    const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
+    const endProperty = properties[CalendarBarPropertyRequired.END_DATE];
+    const startTimeProperty = properties[CalendarBarPropertyOptional.START_TIME];
+    const endTimeProperty = properties[CalendarBarPropertyOptional.END_TIME];
+
+    startProperty && (patchDocument.data[startProperty.attributeId] = this.dateToString(event.start));
+    endProperty && (patchDocument.data[endProperty.attributeId] = this.dateToString(event.end));
+    startTimeProperty && (patchDocument.data[startTimeProperty.attributeId] = this.timeToString(event.start));
+    endTimeProperty && (patchDocument.data[endTimeProperty.attributeId] = this.timeToString(event.end));
+
+    this.patchData.emit(patchDocument);
   }
 
-  public static dateToString(date: Date) {
-    return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+  private dateToString(date: Date) {
+    return moment(date).format(CALENDAR_DATE_FORMAT);
   }
 
-  public static timeToString(date: Date) {
-    return date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  private timeToString(date: Date) {
+    return moment(date).format(CALENDAR_TIME_FORMAT);
   }
 }

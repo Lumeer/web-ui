@@ -23,7 +23,6 @@ import {CalendarPropertyItemsPipe} from './calendar-property-items.pipe';
 import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.pipe';
 import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
 import {DisplayablePipe} from './displayable.pipe';
-import {FilterConfigsPipe} from './filter.pipe';
 import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
 
 @NgModule({
@@ -33,7 +32,6 @@ import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-
     CalendarPropertyItemsPipe,
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
-    FilterConfigsPipe,
     CalendarRequiredPropertiesSetPipe,
   ],
   exports: [
@@ -41,7 +39,6 @@ import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-
     CalendarPropertyItemsPipe,
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
-    FilterConfigsPipe,
     CalendarRequiredPropertiesSetPipe,
   ],
 })

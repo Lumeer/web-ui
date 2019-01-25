@@ -32,7 +32,7 @@ export class CalendarValuePropertyPipe implements PipeTransform {
       {
         id: 'calendar.property.placeholder',
         value:
-          'Select {barProperty, select, name {name} start {starting date} end {ending date} startTime {start time} endTime {end time}}',
+          'Select {barProperty, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time}}',
       },
       {
         barProperty,
