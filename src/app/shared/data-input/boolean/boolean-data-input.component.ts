@@ -21,15 +21,16 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnChanges,
   Output,
+  Renderer2,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-
-declare let $: any;
 
 @Component({
   selector: 'boolean-data-input',
@@ -50,11 +51,16 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   @Output()
   public save = new EventEmitter<boolean>();
 
+  @ViewChild('booleanInput')
+  public booleanInput: ElementRef<HTMLInputElement>;
+
   public inputId =
     'boolean-data-input-' +
     Math.random()
       .toString(36)
       .substr(2);
+
+  constructor(private renderer: Renderer2) {}
 
   public ngAfterViewInit() {
     this.setIntermediate();
@@ -67,7 +73,7 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   }
 
   private setIntermediate() {
-    $(`#${this.inputId}`).prop('indeterminate', this.indeterminate);
+    this.renderer.setProperty(this.booleanInput.nativeElement, 'indeterminate', this.indeterminate);
   }
 
   @HostListener('click', ['$event'])

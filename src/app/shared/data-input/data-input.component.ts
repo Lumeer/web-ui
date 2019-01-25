@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {Constraint} from '../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../core/model/data/constraint';
 import {KeyCode} from '../key-code';
 
 @Component({
@@ -48,6 +48,8 @@ export class DataInputComponent {
 
   @Output()
   public cancel = new EventEmitter();
+
+  public readonly constraintType = ConstraintType;
 
   public onValueChange(value: any) {
     this.valueChange.emit(value);

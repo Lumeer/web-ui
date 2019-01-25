@@ -1,6 +1,7 @@
 <div class="custom-control custom-checkbox"
      (click)="onDivClick($event)">
-  <input [id]="inputId"
+  <input #booleanInput
+         [id]="inputId"
          [attr.checked]="value || null"
          (click)="onInputClick($event)"
          type="checkbox"

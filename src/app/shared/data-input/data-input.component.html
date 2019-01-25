@@ -1,12 +1,12 @@
 <ng-container *ngIf="constraint; else textDataInput"
               [ngSwitch]="constraint.type">
-  <boolean-data-input *ngSwitchCase="'Boolean'"
+  <boolean-data-input *ngSwitchCase="constraintType.Boolean"
                       [value]="value"
                       (valueChange)="onValueChange($event)"
                       (save)="save.emit($event)">
   </boolean-data-input>
 
-  <datetime-data-input *ngSwitchCase="'DateTime'"
+  <datetime-data-input *ngSwitchCase="constraintType.DateTime"
                        [constraintConfig]="constraint.config"
                        [focus]="focus"
                        [readonly]="readonly"
@@ -16,7 +16,7 @@
                        (cancel)="cancel.emit()">
   </datetime-data-input>
 
-  <number-data-input *ngSwitchCase="'Number'"
+  <number-data-input *ngSwitchCase="constraintType.Number"
                      [focus]="focus"
                      [readonly]="readonly"
                      [constraintConfig]="constraint.config"

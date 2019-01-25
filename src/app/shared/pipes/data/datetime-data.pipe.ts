@@ -18,7 +18,6 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import * as moment from 'moment';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {formatDateTimeDataValue} from '../../utils/data.utils';
 

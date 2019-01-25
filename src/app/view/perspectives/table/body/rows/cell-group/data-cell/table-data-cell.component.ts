@@ -19,7 +19,6 @@
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -132,7 +131,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public constructor(
     private actions$: Actions,
-    private changeDetector: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
     private i18n: I18n,
     private notificationService: NotificationService,

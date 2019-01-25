@@ -8,25 +8,6 @@
                       (edit)="onEdit()">
 </table-data-cell-menu>
 
-<!--<div tableEditableCell-->
-<!--[affected]="affected$ | async"-->
-<!--[selected]="selected"-->
-<!--[readonly]="!allowedPermissions?.writeWithView"-->
-<!--[value]="(document | extractValue:column) || (linkInstance | extractValue:column) || ''"-->
-<!--(valueChange)="onValueChange($event)"-->
-<!--(editKeyDown)="onEditKeyDown($event)"-->
-<!--(editStart)="onEditStart()"-->
-<!--(editEnd)="onEditEnd($event)"-->
-<!--(contextmenu)="onContextMenu($event)"-->
-<!--(mousedown)="onMouseDown($event)"-->
-<!--(keydown)="onKeyDown($event)"-->
-<!--[class.uninitialized-column]="!column?.attributeId"-->
-<!--[class.uninitialized-record]="!document?.id && !linkInstance?.id"-->
-<!--[style.width]="column | columnWidth:canManageConfig | pixel"-->
-<!--class="table-border-right table-border-bottom data-input"-->
-<!--data-test="table-data-cell-input">-->
-<!--</div>-->
-
 <data-input [constraint]="constraint$ | async"
             [focus]="true"
             [readonly]="!(editing$ | async)"

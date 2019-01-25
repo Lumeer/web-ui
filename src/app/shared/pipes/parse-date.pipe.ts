@@ -18,6 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import * as moment from 'moment';
 
 @Pipe({
   name: 'parseDate',
@@ -28,11 +29,9 @@ export class ParseDatePipe implements PipeTransform {
       return value;
     }
 
-    const date = new Date(value);
-    if (date.toString() === 'Invalid Date') {
+    if (!moment(value).isValid()) {
       return null;
     }
-
-    return date;
+    return moment(value).toDate();
   }
 }
