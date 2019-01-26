@@ -24,13 +24,13 @@ import {SharedModule} from '../../../shared/shared.module';
 import {CalendarPerspectiveComponent} from './calendar-perspective.component';
 import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
-import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {CalendarConfigComponent} from './calendar-config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 import {CalendarVisualizationComponent} from './calendar-visualization/calendar-visualization.component';
 import {CalendarHeaderComponent} from './calendar-visualization/calendar-header/calendar-header.component';
 import {PopoverModule} from 'ngx-bootstrap';
 import {CalendarCollectionConfigComponent} from './calendar-config/calendar-collection-config/calendar-collection-config.component';
+import {adapterFactory} from 'angular-calendar/date-adapters/moment';
 
 @NgModule({
   imports: [
