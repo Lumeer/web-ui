@@ -34,7 +34,7 @@ export class CollapsibleSidebarComponent implements OnChanges {
   public collapsible = true;
 
   @Input()
-  public width = 300;
+  public width = 280;
 
   public collapsed$ = new BehaviorSubject(false);
 
