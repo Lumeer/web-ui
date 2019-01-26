@@ -45,6 +45,7 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
+import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
     ResourceHeaderComponent,
+    LoadingIndicatorComponent,
   ],
   exports: [
     CommonModule,
@@ -105,6 +107,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
+    LoadingIndicatorComponent,
   ],
 })
 export class SharedModule {}
