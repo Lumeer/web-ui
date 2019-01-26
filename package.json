@@ -63,6 +63,7 @@
     "bootstrap": "^4.2.1",
     "coordinate-parser": "^1.0.2",
     "core-js": "^2.6.3",
+    "date-fns": "^1.29.0",
     "flag-icon-css": "^3.2.1",
     "frappe-gantt": "^0.3.0",
     "hammerjs": "^2.0.8",
