@@ -80,6 +80,14 @@ export const selectCollectionsByQuery = createSelector(
   (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
 );
 
+export const selectCollectionsByCustomQuery = (query: Query) =>
+  createSelector(
+    selectCollectionsByReadPermission,
+    selectAllDocuments,
+    selectAllLinkTypes,
+    (collections, documents, linkTypes) => filterCollectionsByQuery(collections, documents, linkTypes, query)
+  );
+
 export const selectDocumentsByReadPermission = createSelector(
   selectAllDocuments,
   selectCollectionsByReadPermission,

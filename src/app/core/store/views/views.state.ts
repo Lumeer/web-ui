@@ -30,6 +30,8 @@ import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {ViewConfig, ViewCursor, View} from './view';
 import {isViewConfigChanged} from './view.utils';
+import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
+import {selectCalendarConfig} from '../calendars/calendars.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -97,12 +99,16 @@ export const selectPerspectiveConfig = createSelector(
   selectTableConfig,
   selectChartConfig,
   selectMapConfig,
-  (perspective, postItConfig, tableConfig, chartConfig, mapConfig) =>
+  selectGanttChartConfig,
+  selectCalendarConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig) =>
     ({
       [Perspective.Map]: mapConfig,
       [Perspective.PostIt]: postItConfig,
       [Perspective.Table]: tableConfig,
       [Perspective.Chart]: chartConfig,
+      [Perspective.GanttChart]: ganttChartConfig,
+      [Perspective.Calendar]: calendarConfig,
     }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(

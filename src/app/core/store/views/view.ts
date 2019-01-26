@@ -22,7 +22,9 @@ import {Resource} from '../../model/resource';
 import {TableConfig} from '../tables/table.model';
 import {SizeType} from '../../../shared/slider/size-type';
 import {ChartConfig} from '../charts/chart';
+import {CalendarConfig} from '../calendars/calendar.model';
 import {Query} from '../navigation/query';
+import {GanttChartConfig} from '../gantt-charts/gantt-chart';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -43,6 +45,8 @@ export interface ViewConfig {
   postit?: PostItConfig;
   search?: SearchConfig;
   table?: TableConfig;
+  ganttChart?: GanttChartConfig;
+  calendar?: CalendarConfig;
   chart?: ChartConfig;
 }
 

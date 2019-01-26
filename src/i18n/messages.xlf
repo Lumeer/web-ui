@@ -1062,14 +1062,14 @@
         </context-group>
       </trans-unit><trans-unit id="attribute.type.value" datatype="html">
         <source>
-        <x id="ICU" equiv-text="{type, select, DateTime {...} Number {...} Text {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Boolean {...} DateTime {...} None {...} Number {...} Text {...}}"/>
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-      </trans-unit><trans-unit id="ff08b22723b99aedea5a8432072f9adb62f03117" datatype="html">
-        <source>{VAR_SELECT, select, DateTime {Date} Number {Number} Text {Text} }</source>
+      </trans-unit><trans-unit id="9edf41f5514af80c194717fdac2a95cc12e06c6d" datatype="html">
+        <source>{VAR_SELECT, select, Boolean {Checkbox} DateTime {Date} None {None} Number {Number} Text {Text} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">13</context>
@@ -1466,7 +1466,7 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} chart {Chart} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
+        <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} chart {Chart} ganttChart {Gantt chart} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2284,12 +2284,74 @@
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
+      </trans-unit><trans-unit id="calendar.query.invalid" datatype="html">
+        <source>Calendar perspective cannot show the results of your query. The query needs to have at least one collection.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-perspective.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="previous" datatype="html">
+        <source>
+        Previous
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="today" datatype="html">
+        <source>
+        Today
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="next" datatype="html">
+        <source>
+        Next
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="month" datatype="html">
+        <source>
+        Month
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="week" datatype="html">
+        <source>
+        Week
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="day" datatype="html">
+        <source>
+        Day
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
       </trans-unit><trans-unit id="chart.query.invalid" datatype="html">
         <source>Chart perspective cannot show the results of your query. The query needs to have exactly one collection.
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.html</context>
           <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="ganttChart.query.invalid" datatype="html">
+        <source>Gantt chart perspective cannot show the results of your query. The query needs to have exactly one collection.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/gantt-chart-perspective.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="map.attribute-select.placeholder" datatype="html">
         <source>Choose...
@@ -3331,6 +3393,27 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="calendar.property.placeholder" datatype="html">
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="calendar.value.placeholder" datatype="html">
+        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ced13f0415249c52d64de1dbbe8815405e3acd09" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="chart.axis.placeholder.empty" datatype="html">
         <source>Select <x id="ICU" equiv-text="{axisType, select, x {...} y1 {...} y2 {...}}"/> axis</source>
         <context-group purpose="location">
@@ -3349,6 +3432,41 @@
         <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
+        <source>View mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-config/gantt-chart-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.empty.placeholder" datatype="html">
+        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d86cea561fb49cd03a07c9266b7a2ad797108a07" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} id {task identifier} dependencies {depending tasks} progress {progress} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.bar.placeholder" datatype="html">
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} id {Task identifier} dependencies {Depending tasks} progress {Progress} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.mode" datatype="html">
+        <source>{VAR_SELECT, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-modes-to-select.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
