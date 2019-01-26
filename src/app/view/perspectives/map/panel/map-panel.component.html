@@ -1,3 +1,12 @@
+<h6 class="font-weight-bold mt-2"
+    i18n="@@perspective.map.config.sidebar.header">
+  Map settings
+</h6>
+
+<p i18n="@@perspective.map.config.sidebar.description">
+  Select attributes with addresses or Earth coordinates to position records on the map.
+</p>
+
 <map-attribute-group *ngFor="let collection of collections"
                      [collection]="collection"
                      [attributeIds]="map.config | mapAttributeIds : collection.id"

@@ -2,14 +2,13 @@
   <collapsible-sidebar-toggle *ngIf="collapsible"
                               [collapsed]="state.collapsed"
                               (toggle)="onToggle()"
-                              class="position-absolute"
-                              [style.left.px]="state.collapsed ? 0 : width"
-                              [style.top.px]="20">
+                              class="position-absolute mt-3"
+                              [style.left.px]="state.collapsed ? 0 : width">
   </collapsible-sidebar-toggle>
 
   <div [attr.hidden]="state.collapsed || null"
        [style.width.px]="width"
-       class="h-100 overflow-auto">
+       class="h-100 overflow-auto border-right bg-white position-absolute-mobile">
     <ng-content></ng-content>
   </div>
 </ng-container>
