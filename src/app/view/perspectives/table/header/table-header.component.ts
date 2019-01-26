@@ -16,7 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -39,10 +50,13 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @ViewChild('content')
+  public contentElement: ElementRef<HTMLDivElement>;
+
   public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private renderer: Renderer2, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindSingleCollection();
@@ -75,6 +89,10 @@ export class TableHeaderComponent implements OnInit, OnChanges {
 
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
+
+  public scroll(left: number) {
+    this.renderer.setStyle(this.contentElement.nativeElement, 'left', `${left}px`);
   }
 }
 

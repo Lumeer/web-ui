@@ -20,13 +20,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostBinding,
   HostListener,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Renderer2,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
@@ -46,11 +49,10 @@ import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
+import {Query} from '../../../core/store/navigation/query';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
-import {Query} from '../../../core/store/navigation/query';
-
-declare let $: any;
+import {TableHeaderComponent} from './header/table-header.component';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -75,6 +77,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostBinding('id')
   public elementId: string;
+
+  @ViewChild(TableHeaderComponent)
+  public tableHeader: TableHeaderComponent;
 
   public currentView$: Observable<View>;
   public table$ = new BehaviorSubject<TableModel>(null);
@@ -230,7 +235,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.createTable(query, config);
   }
 
-  public onClickOutside(event: MouseEvent) {
+  public onClickOutside(event: Event) {
     if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
@@ -285,7 +290,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onBodyScroll(event: Event) {
-    const scrollLeft: number = event.target['scrollLeft'];
-    $('table-header > div').css('left', -scrollLeft);
+    if (this.tableHeader) {
+      const scrollLeft: number = event.target['scrollLeft'];
+      this.tableHeader.scroll(-scrollLeft);
+    }
   }
 }
