@@ -30,7 +30,7 @@ export class CalendarValuePropertyPipe implements PipeTransform {
   public transform(barProperty: CalendarBarProperty): string {
     return this.i18n(
       {
-        id: 'calendar.property.placeholder',
+        id: 'calendar.value.placeholder',
         value:
           'Select {barProperty, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time}}',
       },

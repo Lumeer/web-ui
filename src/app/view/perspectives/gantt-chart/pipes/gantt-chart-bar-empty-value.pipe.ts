@@ -32,7 +32,7 @@ export class GanttChartBarEmptyValuePipe implements PipeTransform {
       {
         id: 'ganttChart.bar.placeholder',
         value:
-          'Select {barProperty, select, name {name} start {starting date} end {ending date} id {id} dependencies {dependencies} progress {progress}}',
+          'Select {barProperty, select, name {name} start {starting date} end {ending date} id {task #} dependencies {depending task #s} progress {progress}}',
       },
       {
         barProperty,
