@@ -17,9 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
+
+@Component({
+  selector: 'blockly-form',
+  templateUrl: './blockly-form.component.html',
+  styleUrls: ['./blockly-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class BlocklyFormComponent {
+  @Input()
+  public config: BlocklyRuleConfiguration;
+
+  @Input()
+  public form: FormGroup;
 }

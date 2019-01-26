@@ -17,9 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-}
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+
+@Component({
+  selector: '[add-rule]',
+  templateUrl: './add-rule.component.html',
+  styleUrls: ['./add-rule.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AddRuleComponent {}

@@ -1,0 +1,27 @@
+<div [formGroup]="form">
+  <div class="d-flex flex-wrap align-items-center justify-content-start">
+    <select-item
+      class="mt-2"
+      emptyValue="Select a link type"
+      placeholderIcon="fas fa-eye"
+      [items]="selectItems"
+      selectedId="">
+    </select-item>
+  <!--/div>
+  <div class="d-flex align-items-center justify-content-start text-nowrap mt-2"-->
+    <select-item
+      class="ml-3 mt-2"
+      emptyValue="Kolekce 1"
+      placeholderIcon="fas fa-eye"
+      [items]="attributes1"
+      selectedId="">
+    </select-item>
+    <select-item
+      class="ml-3 mt-2"
+      emptyValue="Kolekce 2"
+      placeholderIcon="fas fa-plus"
+      [items]="attributes1"
+      selectedId="">
+    </select-item>
+  </div>
+</div>

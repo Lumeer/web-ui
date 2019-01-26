@@ -1,0 +1,61 @@
+<div class="d-flex w-100 justify-content-start">
+  <div class="d-flex align-items-center mr-3">
+    <i class="fas fa-plus-circle text-success"></i>
+  </div>
+  <div class="flex-grow-1">
+    <form [formGroup]="form" class="">
+      <div class="form-group d-flex align-items-center justify-content-between flex-wrap mb-2">
+        <div class="text-nowrap">
+          On record
+        </div>
+        <div class="form-check ml-3">
+          <input class="form-check-input" type="checkbox" formControlName="timingCreate" id="timingCreate">
+          <label class="form-check-label" for="timingCreate" i18n="@@rule.timing.create">
+            Create
+          </label>
+        </div>
+        <div class="form-check ml-3">
+          <input class="form-check-input" type="checkbox" formControlName="timingUpdate" id="timingUpdate">
+          <label class="form-check-label" for="timingUpdate" i18n="@@rule.timing.update">
+            Update
+          </label>
+        </div>
+        <div class="form-check ml-3">
+          <input class="form-check-input" type="checkbox" formControlName="timingDelete" id="timingDelete">
+          <label class="form-check-label" for="timingDelete" i18n="@@rule.timing.delete">
+            Delete
+          </label>
+        </div>
+        <div class="text-nowrap ml-3">
+          Perform
+        </div>
+        <select class="custom-select ml-3"
+                style="width: initial;"
+                formControlName="type"
+                id="ruleType">
+          <option *ngFor="let type of types"
+                  [value]="type"
+                  i18n="@@rule.type.value">
+            {type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" [ngSwitch]="typeControl.value">
+        <auto-link-form *ngSwitchCase="'AUTO_LINK'" [form]="configForm" [config]="ruleConfiguration"></auto-link-form>
+        <blockly-form *ngSwitchCase="'BLOCKLY'" [form]="configForm" [config]="ruleConfiguration"></blockly-form>
+      </div>
+
+      <div class="d-flex justify-content-end align-items-center flex-wrap">
+        <button type="button"
+                class="btn btn-sm btn-primary">
+          <i class="fas fa-plus"></i>&nbsp;
+          <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add rule</span>
+        </button>
+
+      </div>
+
+    </form>
+  </div>
+</div>
+

@@ -50,6 +50,6 @@ export class AxisSelectItemsPipe implements PipeTransform {
 
   public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
     const axis: ChartAxis = {collectionId: collection.id, attributeId: attribute.id};
-    return {id: axis, value: attribute.name, icon: collection.icon, iconColor: collection.color};
+    return {id: axis, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }
