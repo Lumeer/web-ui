@@ -7,7 +7,7 @@
     "build": "NODE_OPTIONS=${NODE_OPTIONS:=--max_old_space_size=4096} ng build --progress=true $(node ./env-vars.js)",
     "bundlesize": "bundlesize",
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json -d ../web-ui-docs -n 'Lumeer Web UI documentation'",
-    "format:check": "prettier --list-different '**/*.{ts,js,json,scss,md}'",
+    "format:check": "prettier --check '**/*.{ts,js,json,scss,md}'",
     "format:fix": "prettier --write",
     "http-server": "angular-http-server --path ./dist/lumeer -p 7000",
     "i18n": "npm run i18n-html && npm run i18n-ts && npm run i18n-merge",

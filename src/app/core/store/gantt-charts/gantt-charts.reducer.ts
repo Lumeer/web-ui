@@ -20,14 +20,20 @@
 import {ganttChartsAdapter, GanttChartsState, initialGanttChartsState} from './gantt-charts.state';
 import {GanttChartAction, GanttChartActionType} from './gantt-charts.action';
 
-export function ganttChartsReducer(state: GanttChartsState = initialGanttChartsState, action: GanttChartAction.All): GanttChartsState {
+export function ganttChartsReducer(
+  state: GanttChartsState = initialGanttChartsState,
+  action: GanttChartAction.All
+): GanttChartsState {
   switch (action.type) {
     case GanttChartActionType.ADD_GANTT_CHART:
       return ganttChartsAdapter.addOne(action.payload.ganttChart, state);
     case GanttChartActionType.REMOVE_GANTT_CHART:
       return ganttChartsAdapter.removeOne(action.payload.ganttChartId, state);
     case GanttChartActionType.SET_CONFIG:
-      return ganttChartsAdapter.updateOne({id: action.payload.ganttChartId, changes: {config: action.payload.config}}, state);
+      return ganttChartsAdapter.updateOne(
+        {id: action.payload.ganttChartId, changes: {config: action.payload.config}},
+        state
+      );
     case GanttChartActionType.CLEAR:
       return initialGanttChartsState;
     default:

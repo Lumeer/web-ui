@@ -21,37 +21,31 @@ import {Action} from '@ngrx/store';
 import {GanttChartConfig, GanttChart} from './gantt-chart';
 
 export enum GanttChartActionType {
-
   ADD_GANTT_CHART = '[Gantt Chart] Add gantt chart',
   REMOVE_GANTT_CHART = '[Gantt Chart] Remove gantt chart',
 
   SET_CONFIG = '[Gantt Chart] Set config',
 
-  CLEAR = '[Gantt Chart] Clear'
-
+  CLEAR = '[Gantt Chart] Clear',
 }
 
 export namespace GanttChartAction {
-
   export class AddGanttChart implements Action {
     public readonly type = GanttChartActionType.ADD_GANTT_CHART;
 
-    public constructor(public payload: { ganttChart: GanttChart }) {
-    }
+    public constructor(public payload: {ganttChart: GanttChart}) {}
   }
 
   export class RemoveGanttChart implements Action {
     public readonly type = GanttChartActionType.REMOVE_GANTT_CHART;
 
-    public constructor(public payload: { ganttChartId: string }) {
-    }
+    public constructor(public payload: {ganttChartId: string}) {}
   }
 
   export class SetConfig implements Action {
     public readonly type = GanttChartActionType.SET_CONFIG;
 
-    public constructor(public payload: { ganttChartId: string, config: GanttChartConfig }) {
-    }
+    public constructor(public payload: {ganttChartId: string; config: GanttChartConfig}) {}
   }
 
   export class Clear implements Action {
@@ -59,5 +53,4 @@ export namespace GanttChartAction {
   }
 
   export type All = AddGanttChart | RemoveGanttChart | SetConfig | Clear;
-
 }

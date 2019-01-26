@@ -2,9 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "*": [
-        "types/*"
-      ]
+      "*": ["types/*"]
     },
     "outDir": "./dist/out-tsc",
     "baseUrl": "./",
