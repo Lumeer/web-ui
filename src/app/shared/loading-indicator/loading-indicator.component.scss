@@ -1,0 +1,10 @@
+:host {
+  background-color: rgba(#ffffff, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  z-index: 10000;
+}
