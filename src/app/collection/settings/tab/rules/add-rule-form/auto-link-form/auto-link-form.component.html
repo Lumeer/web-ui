@@ -1,23 +1,32 @@
 <div [formGroup]="form">
-  <div class="d-flex flex-wrap align-items-center justify-content-start">
+  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
+    <div class="text-nowrap">
+      Link record via
+    </div>
     <select-item
-      class="mt-2"
+      class="ml-3"
       emptyValue="Select a link type"
-      placeholderIcon="fas fa-eye"
+      placeholderIcon="fas fa-link"
       [items]="selectItems"
       selectedId="">
     </select-item>
-  <!--/div>
-  <div class="d-flex align-items-center justify-content-start text-nowrap mt-2"-->
+  </div>
+  <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
+    <div class="text-nowrap">
+      Where
+    </div>
     <select-item
-      class="ml-3 mt-2"
+      class="ml-3"
       emptyValue="Kolekce 1"
       placeholderIcon="fas fa-eye"
       [items]="attributes1"
       selectedId="">
     </select-item>
+    <div class="text-nowrap ml-3">
+      equals
+    </div>
     <select-item
-      class="ml-3 mt-2"
+      class="ml-3"
       emptyValue="Kolekce 2"
       placeholderIcon="fas fa-plus"
       [items]="attributes1"

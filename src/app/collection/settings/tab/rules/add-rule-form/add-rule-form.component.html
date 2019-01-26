@@ -4,7 +4,7 @@
   </div>
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
-      <div class="form-group d-flex align-items-center justify-content-between flex-wrap mb-2">
+      <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
         <div class="text-nowrap">
           On record
         </div>
@@ -26,8 +26,10 @@
             Delete
           </label>
         </div>
-        <div class="text-nowrap ml-3">
-          Perform
+      </div>
+      <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
+        <div class="text-nowrap">
+          Fire rule
         </div>
         <select class="custom-select ml-3"
                 style="width: initial;"
@@ -48,11 +50,15 @@
 
       <div class="d-flex justify-content-end align-items-center flex-wrap">
         <button type="button"
-                class="btn btn-sm btn-primary">
-          <i class="fas fa-plus"></i>&nbsp;
-          <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add rule</span>
+                class="btn btn-sm btn-outline-secondary">
+          <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
         </button>
-
+        <button type="button"
+                [disabled]="!(form.get('timingCreate').value || form.get('timingUpdate').value || form.get('timingDelete').value)"
+                class="btn btn-sm btn-primary ml-2">
+          <i class="fas fa-plus"></i>&nbsp;
+          <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add Rule</span>
+        </button>
       </div>
 
     </form>
