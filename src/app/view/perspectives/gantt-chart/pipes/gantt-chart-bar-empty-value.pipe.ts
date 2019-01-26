@@ -27,15 +27,15 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class GanttChartBarEmptyValuePipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
-  public transform(barProperty: GanttChartBarProperty): string {
+  public transform(emptyProperty: GanttChartBarProperty): string {
     return this.i18n(
       {
-        id: 'ganttChart.bar.placeholder',
+        id: 'ganttChart.empty.placeholder',
         value:
-          'Select {barProperty, select, name {name} start {starting date} end {ending date} id {task #} dependencies {depending task #s} progress {progress}}',
+          'Select {emptyProperty, select, name {name} start {starting date} end {ending date} id {task identifier} dependencies {depending tasks} progress {progress}}',
       },
       {
-        barProperty,
+        emptyProperty,
       }
     );
   }
