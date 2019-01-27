@@ -4,6 +4,11 @@
   </div>
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
+      <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
+        <label for="name" class="mb-0">New rule name</label>
+        <input type="text" class="form-control ml-3 w-auto" autocomplete="off" id="name" formControlName="name" aria-errormessage="ruleNameError" required="">
+        <small *ngIf="(name.dirty || name.touched) && name.invalid && name.errors?.usedRuleName" id="ruleNameError" class="text-danger ml-2">Rule name already used.</small>
+      </div>
       <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
         <div class="text-nowrap">
           On record
@@ -44,17 +49,27 @@
       </div>
 
       <div class="form-group" [ngSwitch]="typeControl.value">
-        <auto-link-form *ngSwitchCase="'AUTO_LINK'" [form]="configForm" [config]="ruleConfiguration"></auto-link-form>
-        <blockly-form *ngSwitchCase="'BLOCKLY'" [form]="configForm" [config]="ruleConfiguration"></blockly-form>
+        <auto-link-form
+          *ngSwitchCase="'AUTO_LINK'"
+          [form]="configForm"
+          [collection]="collection"
+          [config]="ruleConfiguration">
+        </auto-link-form>
+        <blockly-form
+          *ngSwitchCase="'BLOCKLY'"
+          [form]="configForm"
+          [config]="ruleConfiguration">
+        </blockly-form>
       </div>
 
       <div class="d-flex justify-content-end align-items-center flex-wrap">
         <button type="button"
+                (click)="fireCancelNewRule()"
                 class="btn btn-sm btn-outline-secondary">
           <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
         </button>
         <button type="button"
-                [disabled]="!(form.get('timingCreate').value || form.get('timingUpdate').value || form.get('timingDelete').value)"
+                [disabled]="!this.form.valid || !(form.get('timingCreate').value || form.get('timingUpdate').value || form.get('timingDelete').value)"
                 class="btn btn-sm btn-primary ml-2">
           <i class="fas fa-plus"></i>&nbsp;
           <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add Rule</span>

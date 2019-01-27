@@ -1,12 +1,26 @@
 <div class="row my-4">
   <div class="col">
-    <ul class="list-group">
-      <li single-rule class="list-group-item flex-column align-items-center"></li>
-      <li single-rule class="list-group-item flex-column align-items-center"></li>
-      <li single-rule class="list-group-item flex-column align-items-center"></li>
+    <ul class="list-group" *ngIf="collection$ | async as collection">
+      <li
+        *ngFor="let rule of rules"
+        single-rule
+        [rule]="rule"
+        class="list-group-item flex-column align-items-center"></li>
 
-      <li add-rule-form class="list-group-item flex-column align-items-center">
-      <li add-rule class="list-group-item list-group-item-action flex-column align-items-center">
+      <li
+        *ngFor="let newRule of addingRules; let idx = index;"
+        add-rule-form
+        [collection]="collection"
+        [rule]="newRule"
+        [ruleIndex]="idx"
+        [ruleNames]="ruleNames"
+        (onCancelNewRule)="onCancelNewRule($event)"
+        class="list-group-item flex-column align-items-center">
+
+      <li
+        add-rule
+        (click)="onNewRule()"
+        class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
     </ul>
   </div>
 </div>

@@ -17,7 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
+import {Collection} from '../../../../core/store/collections/collection';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
+import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'collection-rules',
@@ -25,4 +31,48 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
   styleUrls: ['./collection-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionRulesComponent {}
+export class CollectionRulesComponent implements OnInit {
+  public collection$: Observable<Collection>;
+
+  public rules: Rule[] = [
+    {
+      name: 'create link',
+      type: RuleType.AutoLink,
+      timing: RuleTiming.CreateUpdate,
+      configuration: {attribute1: 'a0', attribute2: 'a1', linkType: '12234', collection1: 'c1', collection2: 'c2'},
+    },
+  ];
+
+  public ruleNames = this.rules.map(r => r.name);
+
+  public addingRules: Rule[] = [];
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit(): void {
+    this.collection$ = this.store$.select(selectCollectionByWorkspace);
+  }
+
+  public onNewRule(): void {
+    this.addingRules.push(this.getEmptyRule());
+  }
+
+  private getEmptyRule(): AutoLinkRule {
+    return {
+      name: 'New Rule Name',
+      type: RuleType.AutoLink,
+      timing: RuleTiming.All,
+      configuration: {
+        attribute1: '',
+        attribute2: '',
+        collection1: '',
+        collection2: '',
+        linkType: '',
+      },
+    };
+  }
+
+  public onCancelNewRule(index: number): void {
+    this.addingRules.splice(index, 1);
+  }
+}

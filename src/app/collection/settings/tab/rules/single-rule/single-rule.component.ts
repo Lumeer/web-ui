@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Rule} from '../../../../../core/model/rule';
 
 @Component({
   selector: '[single-rule]',
@@ -25,4 +26,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
   styleUrls: ['./single-rule.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SingleRuleComponent {}
+export class SingleRuleComponent {
+  @Input()
+  public rule: Rule;
+}

@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AbstractControl, FormBuilder, ValidatorFn} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
+import {Subscription} from 'rxjs';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: '[add-rule-form]',
@@ -27,32 +29,82 @@ import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../
   styleUrls: ['./add-rule-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddRuleFormComponent implements OnInit {
+export class AddRuleFormComponent implements OnInit, OnDestroy {
+  @Input()
+  public collection: Collection;
+
+  @Input()
   public rule: Rule;
+
+  @Input()
+  public ruleIndex: number;
+
+  @Input()
+  public ruleNames: string[] = [];
+
+  @Output()
+  public onCancelNewRule = new EventEmitter<number>();
 
   public readonly types = Object.values(RuleTypeMap);
 
-  public form = this.fb.group({
-    timingCreate: false,
-    timingUpdate: false,
-    timingDelete: false,
-    type: RuleType.AutoLink,
-    config: this.fb.group({}),
-  });
+  public form;
+
+  private formSubscription: Subscription;
 
   constructor(private fb: FormBuilder) {}
 
   public ngOnInit() {
-    this.rule = {
-      name: '',
-      timing: RuleTiming.All,
+    this.form = this.fb.group({
+      name: [this.rule.name, this.usedNameValidator()],
+      timingCreate: this.hasCreate(this.rule.timing),
+      timingUpdate: this.hasUpdate(this.rule.timing),
+      timingDelete: [
+        {
+          value: this.rule.type === RuleType.AutoLink || this.hasDelete(this.rule.timing),
+          disabled: this.rule.type === RuleType.AutoLink,
+        },
+      ],
       type: RuleType.AutoLink,
-      configuration: {attribute1: '', attribute2: '', collection1: '', collection2: '', linkType: ''},
-    };
+      config: this.fb.group({}),
+    });
+
+    this.formSubscription = this.form.get('type').statusChanges.subscribe(status => {
+      const type = this.form.get('type').value;
+      if (type === RuleType.AutoLink) {
+        const timingDelete = this.form.get('timingDelete');
+        timingDelete.setValue(this.hasDelete(this.rule.timing));
+        timingDelete.disable();
+      } else {
+        const timingDelete = this.form.get('timingDelete');
+        timingDelete.enable();
+      }
+    });
+  }
+
+  public ngOnDestroy(): void {
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
+  }
+
+  private hasCreate(timing: RuleTiming): boolean {
+    return [RuleTiming.All, RuleTiming.Create, RuleTiming.CreateUpdate, RuleTiming.CreateDelete].indexOf(timing) >= 0;
+  }
+
+  private hasUpdate(timing: RuleTiming): boolean {
+    return [RuleTiming.All, RuleTiming.Update, RuleTiming.CreateUpdate, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
+  }
+
+  private hasDelete(timing: RuleTiming): boolean {
+    return [RuleTiming.All, RuleTiming.Delete, RuleTiming.CreateDelete, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
   }
 
   public get typeControl(): AbstractControl {
     return this.form.get('type');
+  }
+
+  public get name(): AbstractControl {
+    return this.form.get('name');
   }
 
   public get configForm(): AbstractControl {
@@ -63,11 +115,11 @@ export class AddRuleFormComponent implements OnInit {
     switch (this.rule.type) {
       case RuleType.AutoLink:
         return {
-          attribute1: '', //this.configForm.get('attribute1').value,
-          attribute2: '', //this.configForm.get('attribute2').value,
-          linkType: '', //this.configForm.get('linkType').value,
-          collection1: '', //this.configForm.get('collection1').value,
-          collection2: '', //this.configForm.get('collection2').value
+          attribute1: this.rule.configuration.attribute1, //this.configForm.get('attribute1').value,
+          attribute2: this.rule.configuration.attribute2, //this.configForm.get('attribute2').value,
+          linkType: this.rule.configuration.linkType, //this.configForm.get('linkType').value,
+          collection1: this.rule.configuration.collection1, //this.configForm.get('collection1').value,
+          collection2: this.rule.configuration.collection2, //this.configForm.get('collection2').value
         };
       case RuleType.Blockly:
         return {
@@ -79,5 +131,16 @@ export class AddRuleFormComponent implements OnInit {
           blocklyResultTimestamp: this.configForm.get('blocklyResultTimestamp').value,
         };
     }
+  }
+
+  public fireCancelNewRule(): void {
+    this.onCancelNewRule.emit(this.ruleIndex);
+  }
+
+  public usedNameValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      const used = this.ruleNames.indexOf(control.value) >= 0;
+      return used ? {usedRuleName: {value: control.value}} : null;
+    };
   }
 }

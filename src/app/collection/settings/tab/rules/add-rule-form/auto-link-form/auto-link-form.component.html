@@ -8,7 +8,8 @@
       emptyValue="Select a link type"
       placeholderIcon="fas fa-link"
       [items]="selectItems"
-      selectedId="">
+      [selectedId]="selectedLinkType?.id"
+      (select)="onSelectLinkType($event)">
     </select-item>
   </div>
   <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
@@ -17,20 +18,22 @@
     </div>
     <select-item
       class="ml-3"
-      emptyValue="Kolekce 1"
-      placeholderIcon="fas fa-eye"
+      (select)="onSelectAttribute1($event)"
+      [emptyValue]="'Select from ' + collection.name"
+      [placeholderIcon]="collection.icon"
       [items]="attributes1"
-      selectedId="">
+      [selectedId]="selectedAttribute1">
     </select-item>
     <div class="text-nowrap ml-3">
       equals
     </div>
     <select-item
       class="ml-3"
-      emptyValue="Kolekce 2"
-      placeholderIcon="fas fa-plus"
-      [items]="attributes1"
-      selectedId="">
+      (select)="onSelectAttribute2($event)"
+      [emptyValue]="linkedCollection ? 'Select from ' + linkedCollection.name : 'Select link type first'"
+      [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
+      [items]="attributes2"
+      [selectedId]="selectedAttribute2">
     </select-item>
   </div>
 </div>
