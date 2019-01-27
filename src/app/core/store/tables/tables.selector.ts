@@ -19,10 +19,16 @@
 
 import {createSelector} from '@ngrx/store';
 import {selectDocumentsDictionary} from '../documents/documents.state';
-import {TableBodyCursor, TableCursor} from './table-cursor';
+import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
 import {DEFAULT_TABLE_ID} from './table.model';
-import {calculateRowHierarchyLevel, findTableRow} from './table.utils';
-import {selectTableById} from './tables.state';
+import {calculateRowHierarchyLevel, filterLeafColumns, findTableRow} from './table.utils';
+import {EditedAttribute, selectTablesDictionary, selectTablesState} from './tables.state';
+
+export const selectTableById = (tableId: string) =>
+  createSelector(
+    selectTablesDictionary,
+    tablesDictionary => tablesDictionary[tableId]
+  );
 
 export const selectDefaultTable = selectTableById(DEFAULT_TABLE_ID);
 
@@ -36,7 +42,7 @@ export const selectHasNextTableParts = (cursor: TableCursor) =>
   createSelector(
     selectTableById(cursor.tableId),
     table => {
-      return table && table.parts && cursor.partIndex < table.parts.length - 1;
+      return table && table.config && table.config.parts && cursor.partIndex < table.config.parts.length - 1;
     }
   );
 
@@ -44,8 +50,14 @@ export const selectTablePart = (cursor: TableCursor) =>
   createSelector(
     selectTableById(cursor.tableId),
     table => {
-      return table && table.parts && table.parts[cursor.partIndex];
+      return table && table.config && table.config.parts && table.config.parts[cursor.partIndex];
     }
+  );
+
+export const selectTablePartLeafColumns = (cursor: TableCursor) =>
+  createSelector(
+    selectTablePart(cursor),
+    part => (part ? filterLeafColumns(part.columns) : [])
   );
 
 export const selectTableRows = (tableId: string) =>
@@ -131,5 +143,55 @@ export const selectTableRowOutdentable = (cursor: TableBodyCursor) =>
 export const selectTableLastCollectionId = (tableId: string) =>
   createSelector(
     selectTableById(tableId),
-    table => table && table.parts && table.parts[table.parts.length - 1].collectionId
+    table => {
+      const parts = table && table.config && table.config.parts;
+      return parts && parts[parts.length - 1].collectionId;
+    }
   );
+
+export const selectTableCursor = createSelector(
+  selectTablesState,
+  state => state.cursor
+);
+export const selectTableCursorSelected = (cursor: TableCursor) =>
+  createSelector(
+    selectTableCursor,
+    selectedCursor => {
+      if (cursor.columnPath) {
+        return areTableHeaderCursorsEqual(selectedCursor, cursor);
+      } else {
+        return areTableBodyCursorsEqual(selectedCursor, cursor);
+      }
+    }
+  );
+
+export const selectTableBySelectedCursor = createSelector(
+  selectTablesDictionary,
+  selectTableCursor,
+  (tablesMap, cursor) => {
+    return cursor ? tablesMap[cursor.tableId] : null;
+  }
+);
+
+export const selectEditedAttribute = createSelector(
+  selectTablesState,
+  state => state.editedAttribute
+);
+export const selectAffected = (attribute: EditedAttribute) =>
+  createSelector(
+    selectEditedAttribute,
+    editedAttribute => {
+      return (
+        attribute &&
+        editedAttribute &&
+        attribute.attributeId === editedAttribute.attributeId &&
+        (attribute.documentId === editedAttribute.documentId ||
+          attribute.linkInstanceId === editedAttribute.linkInstanceId)
+      );
+    }
+  );
+
+export const selectMoveTableCursorDown = createSelector(
+  selectTablesState,
+  state => state.moveCursorDown
+);

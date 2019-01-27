@@ -23,7 +23,7 @@ import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstance} from '../link-instances/link.instance';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
-import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
+import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {EditedAttribute} from './tables.state';
 import {Query} from '../navigation/query';
 
@@ -132,7 +132,7 @@ export namespace TablesAction {
   export class AddPart implements Action {
     public readonly type = TablesActionType.ADD_PART;
 
-    public constructor(public payload: {tableId: string; parts: TablePart[]}) {}
+    public constructor(public payload: {tableId: string; parts: TableConfigPart[]}) {}
   }
 
   export class SwitchParts implements TableCursorAction {
@@ -162,7 +162,9 @@ export namespace TablesAction {
   export class ReplaceColumns implements Action {
     public readonly type = TablesActionType.REPLACE_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor; deleteCount: number; columns?: TableColumn[]}) {}
+    public constructor(
+      public payload: {cursor: TableHeaderCursor; deleteCount: number; columns?: TableConfigColumn[]}
+    ) {}
   }
 
   export class ShowColumns implements TableCursorAction {

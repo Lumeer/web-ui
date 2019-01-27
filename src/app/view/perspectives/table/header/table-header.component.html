@@ -9,15 +9,15 @@
                           class="table-border-bottom">
   </table-hierarchy-column>
 
-  <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndexAndEntityId">
+  <ng-container *ngFor="let part of table.config.parts; trackBy: trackByPartIndexAndEntityId; index as partIndex">
     <table-header-collection *ngIf="part.collectionId"
-                             [cursor]="cursor | partCursor:part.index"
+                             [cursor]="cursor | partCursor:partIndex"
                              [table]="table"
                              [canManageConfig]="canManageConfig"
                              [part]="part">
     </table-header-collection>
     <table-header-link *ngIf="part.linkTypeId"
-                       [cursor]="cursor | partCursor:part.index"
+                       [cursor]="cursor | partCursor:partIndex"
                        [table]="table"
                        [canManageConfig]="canManageConfig"
                        [part]="part">

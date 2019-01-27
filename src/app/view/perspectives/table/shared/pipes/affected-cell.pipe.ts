@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {TableSingleColumn} from '../../../../../core/store/tables/table.model';
 import {EditedAttribute} from '../../../../../core/store/tables/tables.state';
+import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'affectedCell',
@@ -30,13 +30,13 @@ export class AffectedCellPipe implements PipeTransform {
   public transform(
     editedAttribute: EditedAttribute,
     entities: (DocumentModel | LinkInstance)[],
-    column: TableSingleColumn
+    column: TableConfigColumn
   ): boolean {
     return (
       editedAttribute &&
       entities &&
       column &&
-      editedAttribute.attributeId === column.attributeId &&
+      editedAttribute.attributeId === column.attributeIds[0] &&
       entities.some(
         entity =>
           entity.id && (editedAttribute.documentId === entity.id || editedAttribute.linkInstanceId === entity.id)

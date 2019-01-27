@@ -34,7 +34,7 @@ import {map} from 'rxjs/operators';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
-import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
+import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 
 @Component({
@@ -83,8 +83,8 @@ export class TableHeaderComponent implements OnInit, OnChanges {
     };
   }
 
-  public trackByPartIndexAndEntityId(index: number, part: TablePart): string {
-    return part.index + ':' + (part.collectionId || part.linkTypeId);
+  public trackByPartIndexAndEntityId(index: number, part: TableConfigPart): string {
+    return index + ':' + (part.collectionId || part.linkTypeId);
   }
 
   public unsetCursor() {

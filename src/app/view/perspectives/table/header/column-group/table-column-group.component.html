@@ -21,7 +21,7 @@
            class="d-flex flex-column">
         <table-single-column [table]="table"
                              [cursor]="columnCursor"
-                             [column]="column.parent"
+                             [column]="column"
                              [allowedPermissions]="allowedPermissions"
                              [collection]="collection"
                              [canManageConfig]="canManageConfig"
@@ -43,7 +43,7 @@
         </table-column-group>
         <div mwlResizeHandle
              [resizeEdges]="canManageConfig ? (column | resizeEdges:table:cursor) : {}"
-             [style.width.px]="column?.parent?.attributeId ? 5 : 0"
+             [style.width.px]="column?.attributeIds[0] ? 5 : 0"
              class="resize-handle h-100">
         </div>
       </div>

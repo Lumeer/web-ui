@@ -25,12 +25,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {
-  TableColumn,
-  TableColumnType,
-  TableCompoundColumn,
-  TableModel,
-} from '../../../../../core/store/tables/table.model';
+import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
@@ -48,7 +43,7 @@ export class TableColumnGroupComponent implements AfterViewChecked {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public columns: TableColumn[];
+  public columns: TableConfigColumn[];
 
   @Input()
   public collection: Collection;
@@ -74,11 +69,10 @@ export class TableColumnGroupComponent implements AfterViewChecked {
     tableElement.style.setProperty('--column-group-height', `${height}px`);
   }
 
-  public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
+  public trackByCollectionAndAttribute(index: number, column: TableConfigColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
       const part = getTablePart(this.table, this.cursor);
-      const {parent} = column as TableCompoundColumn;
-      return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
+      return part.collectionId + ':' + (column.attributeIds[0] || column.uniqueId);
     }
   }
 

@@ -19,9 +19,9 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ResizeEvent} from 'angular-resizable-element';
-import {TableCompoundColumn} from '../../../../../core/store/tables/table.model';
 import {getTableColumnWidth, hasTableColumnChildren} from '../../../../../core/store/tables/table.utils';
 import {getLastFromArray} from '../../../../../shared/utils/array.utils';
+import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 const MIN_COLUMN_WIDTH = 30;
 
@@ -29,7 +29,7 @@ const MIN_COLUMN_WIDTH = 30;
   name: 'resizeValidate',
 })
 export class ResizeValidatePipe implements PipeTransform {
-  public transform(column: TableCompoundColumn, showHiddenColumns: boolean = false): (event: ResizeEvent) => boolean {
+  public transform(column: TableConfigColumn, showHiddenColumns: boolean = false): (event: ResizeEvent) => boolean {
     return (event: ResizeEvent) => {
       if (!hasTableColumnChildren(column)) {
         return event.rectangle.width >= MIN_COLUMN_WIDTH;

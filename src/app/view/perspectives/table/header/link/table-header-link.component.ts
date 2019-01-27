@@ -26,7 +26,7 @@ import {selectCollectionsByLinkType} from '../../../../../core/store/collections
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
 @Component({
@@ -43,7 +43,7 @@ export class TableHeaderLinkComponent implements OnChanges {
   public table: TableModel;
 
   @Input()
-  public part: TablePart;
+  public part: TableConfigPart;
 
   @Input()
   public canManageConfig: boolean;

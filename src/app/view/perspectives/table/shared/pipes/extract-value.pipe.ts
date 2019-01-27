@@ -20,15 +20,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {TableSingleColumn} from '../../../../../core/store/tables/table.model';
+import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'extractValue',
 })
 export class ExtractValuePipe implements PipeTransform {
-  public transform(entity: DocumentModel | LinkInstance, column: TableSingleColumn): string {
+  public transform(entity: DocumentModel | LinkInstance, column: TableConfigColumn): string {
     if (entity && entity.data) {
-      return entity.data[column.attributeId];
+      return entity.data[column.attributeIds[0]];
     }
     return '';
   }

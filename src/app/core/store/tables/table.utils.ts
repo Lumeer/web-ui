@@ -24,52 +24,51 @@ import {
   splitAttributeName,
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
-import {Collection} from '../collections/collection';
+import {Attribute, Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkType} from '../link-types/link.type';
-import {Attribute} from '../collections/collection';
 import {TableCursor} from './table-cursor';
 import {
-  TableColumn,
+  DEFAULT_COLUMN_WIDTH,
   TableColumnType,
-  TableCompoundColumn,
   TableConfig,
   TableConfigColumn,
   TableConfigPart,
   TableConfigRow,
-  TableHiddenColumn,
   TableModel,
-  TablePart,
-  TableSingleColumn,
 } from './table.model';
 
-export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
+export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   const index = getColumnIndex(path);
+  const column = columns[index];
 
   if (path.length === 1) {
-    return columns[index];
+    return column;
   }
 
-  const column = columns[index] as TableCompoundColumn;
   return findTableColumn(column.children, path.slice(1));
 }
 
-export function findTableColumnByIndex(columns: TableColumn[], columnIndex: number): TableColumn {
+export function findTableColumnByIndex(columns: TableConfigColumn[], columnIndex: number): TableConfigColumn {
   return filterLeafColumns(columns)[columnIndex];
 }
 
-export function getTableColumns(columns: TableColumn[], path: number[]): TableColumn[] {
+export function getTableColumns(columns: TableConfigColumn[], path: number[]): TableConfigColumn[] {
   if (path.length === 0 || columns.length === 0) {
     return columns;
   }
   const [parentIndex, ...childPath] = path;
-  const parent = columns[parentIndex] as TableCompoundColumn;
+  const parent = columns[parentIndex];
   return getTableColumns(parent.children, childPath);
 }
 
-export function addTableColumn(columns: TableColumn[], path: number[], column: TableColumn): TableColumn[] {
+export function addTableColumn(
+  columns: TableConfigColumn[],
+  path: number[],
+  column: TableConfigColumn
+): TableConfigColumn[] {
   // TODO implement by replaceColumn or get rid of it altogether
   const index = getColumnIndex(path);
 
@@ -77,17 +76,17 @@ export function addTableColumn(columns: TableColumn[], path: number[], column: T
     return copyAndSpliceArray(columns, index, 0, column);
   }
 
-  const oldColumn = columns[index] as TableCompoundColumn;
+  const oldColumn = columns[index];
   const newColumn = {...oldColumn, children: addTableColumn(oldColumn.children, path.slice(1), column)};
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
 
 export function replaceTableColumns(
-  columns: TableColumn[],
+  columns: TableConfigColumn[],
   path: number[],
   deleteCount: number,
-  addedColumns: TableColumn[] = []
-): TableColumn[] {
+  addedColumns: TableConfigColumn[] = []
+): TableConfigColumn[] {
   const index = getColumnIndex(path);
 
   if (path.length === 1) {
@@ -98,7 +97,7 @@ export function replaceTableColumns(
     }
   }
 
-  const oldColumn = columns[index] as TableCompoundColumn;
+  const oldColumn = columns[index];
   const newColumn = {
     ...oldColumn,
     children: replaceTableColumns(oldColumn.children, path.slice(1), deleteCount, addedColumns),
@@ -106,7 +105,11 @@ export function replaceTableColumns(
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
 
-export function moveTableColumn(columns: TableColumn[], fromPath: number[], toPath: number[]): TableColumn[] {
+export function moveTableColumn(
+  columns: TableConfigColumn[],
+  fromPath: number[],
+  toPath: number[]
+): TableConfigColumn[] {
   const column = findTableColumn(columns, fromPath);
   const columnsWithout = replaceTableColumns(columns, fromPath, 1, null);
   return addTableColumn(columnsWithout, toPath, column);
@@ -123,7 +126,7 @@ function getColumnIndex(path: number[]): number {
 export function createTableColumnsBySiblingAttributeIds(
   allAttributes: Attribute[],
   attributeIds: string[]
-): TableColumn[] {
+): TableConfigColumn[] {
   if (!attributeIds || attributeIds.length === 0) {
     return [];
   }
@@ -149,7 +152,7 @@ export function createTableColumnsFromAttributes(
   allAttributes: Attribute[],
   parentAttribute?: Attribute,
   columnsConfig: TableConfigColumn[] = []
-): TableColumn[] {
+): TableConfigColumn[] {
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
   attributes.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
 
@@ -157,21 +160,21 @@ export function createTableColumnsFromAttributes(
     return createColumnsFromConfig(columnsConfig, allAttributes, attributes);
   }
 
-  return attributes.map(attribute => {
-    const parent = new TableSingleColumn(attribute.id);
-    const children = createTableColumnsFromAttributes(allAttributes, attribute);
-    return new TableCompoundColumn(parent, children);
-  });
+  return attributes.map(attribute => ({
+    type: TableColumnType.COMPOUND,
+    attributeIds: [attribute.id],
+    children: createTableColumnsFromAttributes(allAttributes, attribute),
+  }));
 }
 
 function createColumnsFromConfig(
   columnsConfig: TableConfigColumn[],
   allAttributes: Attribute[],
   attributes: Attribute[]
-): TableColumn[] {
+): TableConfigColumn[] {
   const attributeIds = attributes.map(attribute => attribute.id);
 
-  const columns = columnsConfig.reduce<TableColumn[]>((preparedColumns, column) => {
+  const columns = columnsConfig.reduce<TableConfigColumn[]>((preparedColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       const attributeId = column.attributeIds[0];
       const attribute = attributes.find(attr => attr.id === attributeId);
@@ -179,15 +182,24 @@ function createColumnsFromConfig(
         return preparedColumns;
       }
 
-      const parent = new TableSingleColumn(attributeId, null, column.width);
       // TODO should children not in config really appear instead of just parent?
-      const children = createTableColumnsFromAttributes(allAttributes, attribute, column.children);
-      return preparedColumns.concat(new TableCompoundColumn(parent, children));
+      return preparedColumns.concat({
+        type: TableColumnType.COMPOUND,
+        attributeIds: [attributeId],
+        width: column.width,
+        children: createTableColumnsFromAttributes(allAttributes, attribute, column.children),
+      });
     }
 
     if (column.type === TableColumnType.HIDDEN) {
       const ids = column.attributeIds.filter(id => attributeIds.includes(id));
-      return ids.length ? preparedColumns.concat(new TableHiddenColumn(ids)) : preparedColumns;
+      if (ids.length === 0) {
+        return preparedColumns;
+      }
+      return preparedColumns.concat({
+        type: TableColumnType.HIDDEN,
+        attributeIds: ids,
+      });
     }
 
     return preparedColumns;
@@ -197,24 +209,31 @@ function createColumnsFromConfig(
     return columnConfig.attributeIds ? ids.concat(columnConfig.attributeIds) : ids;
   }, []);
   const remainingAttributeIds = attributeIds.filter(id => !usedAttributeIds.includes(id));
-  return remainingAttributeIds.length ? columns.concat(new TableHiddenColumn(remainingAttributeIds)) : columns;
+
+  if (remainingAttributeIds.length === 0) {
+    return columns;
+  }
+
+  return columns.concat({
+    type: TableColumnType.HIDDEN,
+    attributeIds: remainingAttributeIds,
+  });
 }
 
-export function getAttributeIdFromColumn(column: TableColumn) {
+export function getAttributeIdFromColumn(column: TableConfigColumn) {
   switch (column.type) {
     case TableColumnType.COMPOUND:
-      return (column as TableCompoundColumn).parent.attributeId;
+      return column.attributeIds[0];
     default:
       throw Error(`Cannot get attributeId from column: ${column}`);
   }
 }
 
-export function maxColumnDepth(columns: TableColumn[]): number {
+export function maxColumnDepth(columns: TableConfigColumn[]): number {
   return Math.max(
     ...columns.map(column => {
       if (column.type === TableColumnType.COMPOUND) {
-        const children = (column as TableCompoundColumn).children;
-        return children.length ? maxColumnDepth(children) + 1 : 1;
+        return column.children.length ? maxColumnDepth(column.children) + 1 : 1;
       }
       return 1;
     })
@@ -243,16 +262,28 @@ export function splitRowPath(rowPath: number[]): {parentPath: number[]; rowIndex
   };
 }
 
-export function mergeHiddenColumns(column1: TableHiddenColumn, column2: TableHiddenColumn): TableHiddenColumn {
+export function mergeHiddenColumns(column1: TableConfigColumn, column2: TableConfigColumn): TableConfigColumn {
+  if (![column1.type, column2.type].every(type => type === TableColumnType.HIDDEN)) {
+    throw Error('Cannot merge two columns which are not hidden');
+  }
   const attributeIds = column1.attributeIds.concat(column2.attributeIds);
-  return new TableHiddenColumn(attributeIds);
+  return {
+    type: TableColumnType.HIDDEN,
+    attributeIds,
+  };
 }
 
-export function extendHiddenColumn(column: TableHiddenColumn, attributeId: string): TableHiddenColumn {
-  return new TableHiddenColumn(column.attributeIds.concat(attributeId));
+export function extendHiddenColumn(column: TableConfigColumn, attributeId: string): TableConfigColumn {
+  if (column.type !== TableColumnType.HIDDEN) {
+    throw Error('Cannot extend not hidden column');
+  }
+  return {
+    type: TableColumnType.HIDDEN,
+    attributeIds: column.attributeIds.concat(attributeId),
+  };
 }
 
-export function containCompoundColumn(columns: TableColumn[]): boolean {
+export function containCompoundColumn(columns: TableConfigColumn[]): boolean {
   return columns && columns.some(column => column.type === TableColumnType.COMPOUND);
 }
 
@@ -261,42 +292,41 @@ export function createCollectionPart(
   index: number,
   last?: boolean,
   config?: TableConfig
-): TablePart {
+): TableConfigPart {
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.collectionId === collection.id ? configPart.columns : null;
 
   const columns = createTableColumnsFromAttributes(collection.attributes, null, columnsConfig);
-  const columnDepth = maxColumnDepth(columns);
 
   if (last) {
     columns.push(createEmptyColumn(collection.attributes));
   }
 
   return {
-    index,
     collectionId: collection.id,
     columns,
-    columnDepth,
   };
 }
 
-export function createEmptyColumn(attributes: Attribute[]): TableCompoundColumn {
+export function createEmptyColumn(attributes: Attribute[]): TableConfigColumn {
   const attributeName = generateAttributeName(attributes);
-  return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+  return {
+    type: TableColumnType.COMPOUND,
+    attributeIds: [],
+    attributeName,
+    children: [],
+  };
 }
 
-export function createLinkPart(linkType: LinkType, index: number, config?: TableConfig): TablePart {
+export function createLinkPart(linkType: LinkType, index: number, config?: TableConfig): TableConfigPart {
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.linkTypeId === linkType.id ? configPart.columns : null;
 
   const columns = createTableColumnsFromAttributes(linkType.attributes, null, columnsConfig);
-  const columnDepth = maxColumnDepth(columns);
 
   return {
-    index,
     linkTypeId: linkType.id,
     columns,
-    columnDepth,
   };
 }
 
@@ -304,99 +334,93 @@ function getConfigPart(config: TableConfig, index: number): TableConfigPart {
   return config && config.parts && config.parts.length > index ? config.parts[index] : null;
 }
 
-export function maxTableColumnDepth(parts: TablePart[]): number {
-  return Math.max(...parts.map(part => part.columnDepth));
+export function maxTableColumnDepth(parts: TableConfigPart[]): number {
+  return Math.max(...parts.map(part => maxColumnDepth(part.columns)));
 }
 
 export function calculateColumnRowspan(table: TableModel, partIndex: number, columnPath: number[]): number {
   const level = columnPath.length;
-  const part = table.parts[partIndex];
+  const part = table.config.parts[partIndex];
 
-  const tableColumnDepth = maxTableColumnDepth(table.parts);
-  const depthDifference = tableColumnDepth - part.columnDepth;
-  return part.columnDepth - level + depthDifference;
+  const tableColumnDepth = maxTableColumnDepth(table.config.parts);
+  const maxPartDepth = maxColumnDepth(part.columns);
+  const depthDifference = tableColumnDepth - maxPartDepth;
+  return maxPartDepth - level + depthDifference;
 }
 
-export function resizeLastColumnChild(column: TableCompoundColumn, delta: number): TableCompoundColumn {
-  const width = column.parent.width + (column.children.length ? 0 : delta);
-  const parent = new TableSingleColumn(column.parent.attributeId, null, width);
+export function resizeLastColumnChild(column: TableConfigColumn, delta: number): TableConfigColumn {
+  if (column.type !== TableColumnType.COMPOUND) {
+    return column;
+  }
 
   const children = column.children.map((child, index) => {
-    // TODO what if the last child is hidden column?
     if (index === column.children.length - 1 && child.type === TableColumnType.COMPOUND) {
-      return resizeLastColumnChild(child as TableCompoundColumn, delta);
+      return resizeLastColumnChild(child, delta);
     }
     return child;
   });
 
-  return new TableCompoundColumn(parent, children);
+  return {...column, children};
 }
 
 export const HIDDEN_COLUMN_WIDTH = 10;
 
-export function getTableColumnWidth(column: TableColumn, showHiddenColumns: boolean): number {
+export function getTableColumnWidth(column: TableConfigColumn, showHiddenColumns: boolean): number {
   switch (column.type) {
     case TableColumnType.COMPOUND:
-      return getCompoundColumnWidth(column as TableCompoundColumn, showHiddenColumns);
+      return getCompoundColumnWidth(column, showHiddenColumns);
     case TableColumnType.HIDDEN:
       return showHiddenColumns ? HIDDEN_COLUMN_WIDTH : 0;
     case TableColumnType.SINGLE:
-      return (column as TableSingleColumn).width;
+      return column.width; // TODO can probably be removed
   }
 }
 
-function getCompoundColumnWidth(column: TableCompoundColumn, showHiddenColumns: boolean): number {
+function getCompoundColumnWidth(column: TableConfigColumn, showHiddenColumns: boolean): number {
   if (column.children.length === 0) {
-    return column.parent.width;
+    return column.width || DEFAULT_COLUMN_WIDTH;
   }
 
   return column.children.reduce((sum, child) => sum + getTableColumnWidth(child, showHiddenColumns), 0);
 }
 
-export function hasTableColumnChildren(column: TableCompoundColumn): boolean {
+export function hasTableColumnChildren(column: TableConfigColumn): boolean {
   return column.children.length > 0;
 }
 
-export function isLastTableColumnChild(columns: TableColumn[], path: number[]): boolean {
+export function isLastTableColumnChild(columns: TableConfigColumn[], path: number[]): boolean {
   if (path.length < 2) {
     return false;
   }
 
   const {parentPath, columnIndex} = splitColumnPath(path);
-  const parent = findTableColumn(columns, parentPath) as TableCompoundColumn;
+  const parent = findTableColumn(columns, parentPath);
   return columnIndex === parent.children.length - 1;
 }
 
-export function hasLastTableColumnChildHidden(column: TableCompoundColumn): boolean {
+export function hasLastTableColumnChildHidden(column: TableConfigColumn): boolean {
   if (!hasTableColumnChildren(column)) {
     return false;
   }
 
   const lastColumn = getLastFromArray(column.children);
   if (lastColumn.type === TableColumnType.COMPOUND) {
-    return hasLastTableColumnChildHidden(lastColumn as TableCompoundColumn);
+    return hasLastTableColumnChildHidden(lastColumn);
   }
 
   return lastColumn.type === TableColumnType.HIDDEN;
 }
 
-export function filterLeafColumns(columns: TableColumn[]): TableColumn[] {
-  return columns.reduce<TableColumn[]>((leafColumns, column) => {
-    if (column.type === TableColumnType.HIDDEN) {
-      return leafColumns.concat(column);
+export function filterLeafColumns(columns: TableConfigColumn[]): TableConfigColumn[] {
+  return columns.reduce<TableConfigColumn[]>((leafColumns, column) => {
+    if (column.type === TableColumnType.COMPOUND && column.children.length) {
+      return leafColumns.concat(filterLeafColumns(column.children));
     }
-    if (column.type === TableColumnType.COMPOUND) {
-      const compoundColumn = column as TableCompoundColumn;
-      if (compoundColumn.children.length) {
-        return filterLeafColumns(compoundColumn.children);
-      }
-      return leafColumns.concat(compoundColumn.parent);
-    }
-    return leafColumns;
+    return leafColumns.concat(column);
   }, []);
 }
 
-export function calculateColumnsWidth(columns: TableColumn[], showHiddenColumns: boolean): number {
+export function calculateColumnsWidth(columns: TableConfigColumn[], showHiddenColumns: boolean): number {
   return columns.reduce((width, column) => width + getTableColumnWidth(column, showHiddenColumns), 0);
 }
 
@@ -432,15 +456,15 @@ export function isTableRowStriped(rowPath: number[]): boolean {
   return isTableRowStriped(parentPath) ? rowIndex % 2 === 0 : rowIndex % 2 === 1;
 }
 
-export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean {
+export function isLastTableColumn(cursor: TableCursor, part: TableConfigPart): boolean {
   return (
     (cursor.columnPath && cursor.columnPath.length === 1 && cursor.columnPath[0] === part.columns.length - 1) ||
     (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1)
   );
 }
 
-export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
-  return table.parts[cursor.partIndex];
+export function getTablePart(table: TableModel, cursor: TableCursor): TableConfigPart {
+  return table.config.parts[cursor.partIndex];
 }
 
 export function getTableElement(tableId: string): HTMLElement {
