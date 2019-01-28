@@ -69,7 +69,7 @@
           <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
         </button>
         <button type="button"
-                [disabled]="!this.form.valid || !(form.get('timingCreate').value || form.get('timingUpdate').value || form.get('timingDelete').value)"
+                [disabled]="!this.form.valid || !(form.get('timingCreate').value || form.get('timingUpdate').value || (typeControl.value !== 'AUTO_LINK' && form.get('timingDelete').value))"
                 class="btn btn-sm btn-primary ml-2">
           <i class="fas fa-plus"></i>&nbsp;
           <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add Rule</span>

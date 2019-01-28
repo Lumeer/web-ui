@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
 import {AutoLinkRuleConfiguration} from '../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
@@ -56,28 +56,20 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public linkedCollection: Collection;
 
-  public selectedAttribute1 = '';
-  public selectedAttribute2 = '';
-
   private linkTypes: LinkType[];
 
   private subscriptions = new Subscription();
 
-  public selectItems: SelectItemModel[] = [
-    {id: 1, value: 'super truper link', icons: ['fas fa-eye', 'fas fa-plus'], iconColors: ['#ff7700', '#0077FF']},
-    {id: 2, value: 'úplně jiný link', icons: ['fas fa-trash', 'fas fa-cog'], iconColors: ['#ff7700', '#0077FF']},
-  ];
-
-  public attributes1: SelectItemModel[] = [
-    {id: 'a1', value: 'Attr1', icons: ['fas fa-cog'], iconColors: ['#DD00DD']},
-    {id: 'a2', value: 'Attr2', icons: ['fas fa-plus'], iconColors: ['#FFDD00']},
-  ];
-
+  public selectItems: SelectItemModel[] = [];
+  public attributes1: SelectItemModel[] = [];
   public attributes2: SelectItemModel[] = [];
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
+    this.resetForm();
+    this.createForm();
+
     this.linkTypes$ = this.selectLinkTypesForCollection(this.collection.id);
     this.subscriptions.add(
       this.linkTypes$.pipe().subscribe(linkTypes => {
@@ -125,10 +117,10 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.config) {
+    /* if (changes.config) {
       this.resetForm();
       this.createForm();
-    }
+    }*/
   }
 
   public ngOnDestroy(): void {
@@ -141,28 +133,54 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createForm() {
-    this.form.addControl('attribute1', new FormControl(this.config && this.config.attribute1));
-    this.form.addControl('attribute2', new FormControl(this.config && this.config.attribute2));
-    this.form.addControl('linkType', new FormControl(this.config && this.config.linkType));
+    this.form.addControl('collection1', new FormControl(this.config && this.config.collection1));
+    this.form.addControl('collection2', new FormControl(this.config && this.config.collection2));
+    this.form.addControl('attribute1', new FormControl(this.config && this.config.attribute1, Validators.required));
+    this.form.addControl('attribute2', new FormControl(this.config && this.config.attribute2, Validators.required));
+    this.form.addControl('linkType', new FormControl(this.config && this.config.linkType, Validators.required));
+  }
+
+  private createConfiguration(): AutoLinkRuleConfiguration {
+    return {
+      attribute1: this.form.get('attribute1').value,
+      attribute2: this.form.get('attribute2').value,
+      collection1: this.form.get('collection1').value,
+      collection2: this.form.get('collection2').value,
+      linkType: this.form.get('linkType').value,
+    };
+  }
+
+  public get attribute1Id(): string {
+    return this.form.get('attribute1').value;
+  }
+
+  public get attribute2Id(): string {
+    return this.form.get('attribute2').value;
+  }
+
+  public get linkTypeId(): string {
+    return this.form.get('linkType').value;
   }
 
   public onSelectLinkType(linkTypeId: string) {
     this.selectedLinkType = this.linkTypes.find(linkType => linkType.id === linkTypeId);
-    this.config.linkType = this.selectedLinkType.id;
+    this.form.get('linkType').setValue(linkTypeId);
+    this.form.get('collection1').setValue(this.collection.id);
     this.linkedCollection =
       this.selectedLinkType.collections[0].id === this.collection.id
         ? this.selectedLinkType.collections[1]
         : this.selectedLinkType.collections[0];
+    this.form.get('collection2').setValue(this.linkedCollection.id);
     this.attributes2 = this.collectionAttributesToSelectItems(this.linkedCollection);
   }
 
   public onSelectAttribute1(attribute1: string) {
-    this.config.attribute1 = attribute1;
-    this.selectedAttribute1 = attribute1;
+    this.form.get('attribute1').setValue(attribute1);
+    //this.config.attribute1 = attribute1;
   }
 
   public onSelectAttribute2(attribute2: string) {
-    this.config.attribute2 = attribute2;
-    this.selectedAttribute2 = attribute2;
+    this.form.get('attribute2').setValue(attribute2);
+    //this.config.attribute2 = attribute2;
   }
 }
