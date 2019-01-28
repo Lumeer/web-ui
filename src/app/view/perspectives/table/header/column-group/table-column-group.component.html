@@ -7,7 +7,7 @@
        cdkDrag
        cdkDragLockAxis="x">
     <div *ngIf="cursor | columnChildCursor:columnIndex as columnCursor"
-         class="position-relative">
+         class="position-relative h-100">
       <div *ngIf="column | isCompoundColumn"
            mwlResizable
            [enableGhostResize]="true"

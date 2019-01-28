@@ -30,6 +30,7 @@ import {
   map,
   mergeMap,
   switchMap,
+  take,
   withLatestFrom,
 } from 'rxjs/operators';
 import {Direction} from '../../../shared/direction';
@@ -52,7 +53,7 @@ import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
-import {selectQuery} from '../navigation/navigation.state';
+import {selectQuery, selectViewCode} from '../navigation/navigation.state';
 import {Query} from '../navigation/query';
 import {convertQueryModelToString} from '../navigation/query.converter';
 import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
@@ -69,12 +70,15 @@ import {
   TableModel,
 } from './table.model';
 import {
+  addMissingTableColumns,
+  areTableColumnsListsEqual,
   createCollectionPart,
   createEmptyTableRow,
   createLinkPart,
   createTableColumnsBySiblingAttributeIds,
   createTableRow,
   extendHiddenColumn,
+  filterTableColumnsByAttributes,
   findTableColumn,
   findTableRow,
   getAttributeIdFromColumn,
@@ -569,6 +573,37 @@ export class TablesEffects {
 
       return actions;
     })
+  );
+
+  @Effect()
+  public syncColumns$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SyncColumns>(TablesActionType.SYNC_COLUMNS),
+    mergeMap(action =>
+      this.store$.pipe(
+        select(selectTablePart(action.payload.cursor)),
+        filter(part => !!part),
+        take(1),
+        mergeMap((part: TableConfigPart) =>
+          this.store$.pipe(
+            select(part.collectionId ? selectCollectionById(part.collectionId) : selectLinkTypeById(part.linkTypeId)),
+            filter(entity => !!entity),
+            take(1),
+            withLatestFrom(this.store$.pipe(select(selectViewCode))),
+            mergeMap(([entity, viewCode]) => {
+              const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
+              const columns = addMissingTableColumns(filteredColumns, entity.attributes, !!viewCode);
+
+              if (areTableColumnsListsEqual(part.columns, columns)) {
+                return [];
+              }
+
+              // TODO double check if deletion works as expected
+              return [new TablesAction.UpdateColumns({cursor: action.payload.cursor, columns})];
+            })
+          )
+        )
+      )
+    )
   );
 
   @Effect()

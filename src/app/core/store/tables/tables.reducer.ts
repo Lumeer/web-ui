@@ -54,6 +54,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return moveColumn(state, action);
     case TablesActionType.REMOVE_EMPTY_COLUMNS:
       return removeEmptyColumns(state, action);
+    case TablesActionType.UPDATE_COLUMNS:
+      return updateColumns(state, action.payload.cursor, () => action.payload.columns);
     case TablesActionType.ADD_PRIMARY_ROWS:
       return addPrimaryRows(state, action);
     case TablesActionType.ADD_LINKED_ROWS:

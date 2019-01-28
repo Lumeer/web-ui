@@ -48,6 +48,8 @@ export enum TablesActionType {
   REMOVE_COLUMN = '[Tables] Remove Column',
   INIT_COLUMN = '[Tables] Initialize Column',
   REMOVE_EMPTY_COLUMNS = '[Tables] Remove Empty Columns',
+  SYNC_COLUMNS = '[Tables] Sync Columns',
+  UPDATE_COLUMNS = '[Tables] Update Columns',
 
   GROUP_BY_COLUMN = '[Tables] Group By Column',
   SORT_BY_COLUMN = '[Tables] Sort By Column',
@@ -208,6 +210,24 @@ export namespace TablesAction {
    */
   export class RemoveEmptyColumns implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_EMPTY_COLUMNS;
+
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
+  }
+
+  /**
+   * Replaces all columns in a given table part by new columns.
+   */
+  export class UpdateColumns implements TableCursorAction {
+    public readonly type = TablesActionType.UPDATE_COLUMNS;
+
+    public constructor(public payload: {cursor: TableHeaderCursor; columns: TableConfigColumn[]}) {}
+  }
+
+  /**
+   * Synchronizes columns in a given table part with its collection or link type
+   */
+  export class SyncColumns implements Action {
+    public readonly type = TablesActionType.SYNC_COLUMNS;
 
     public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
@@ -389,6 +409,8 @@ export namespace TablesAction {
     | ReplaceColumns
     | RemoveColumn
     | RemoveEmptyColumns
+    | SyncColumns
+    | UpdateColumns
     | HideColumn
     | ShowColumns
     | MoveColumn

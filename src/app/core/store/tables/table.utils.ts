@@ -39,6 +39,7 @@ import {
   TableConfigRow,
   TableModel,
 } from './table.model';
+import {createAttributesMap} from '../collections/collection.util';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   const index = getColumnIndex(path);
@@ -614,4 +615,113 @@ export function isTableConfigChanged(
   const perspectiveRows = perspectiveConfig.rows && perspectiveConfig.rows.slice(0, viewRows.length);
 
   return JSON.stringify(viewRows) !== JSON.stringify(perspectiveRows);
+}
+
+export function filterTableColumnsByAttributes(
+  columns: TableConfigColumn[],
+  attributes: Attribute[]
+): TableConfigColumn[] {
+  const attributesMap = createAttributesMap(attributes);
+  return filterTableColumnsByAttributesMap(columns, attributesMap);
+}
+
+export function filterTableColumnsByAttributesMap(
+  columns: TableConfigColumn[],
+  attributesMap: Record<string, Attribute>
+): TableConfigColumn[] {
+  return columns.reduce((filteredColumns, column) => {
+    if (column.type === TableColumnType.COMPOUND) {
+      if (column.attributeIds.length === 0 && column.attributeName) {
+        return filteredColumns.concat(column);
+      }
+      if (attributesMap[column.attributeIds[0]]) {
+        return filteredColumns.concat({
+          ...column,
+          children: filterTableColumnsByAttributesMap(column.children, attributesMap),
+        });
+      }
+    }
+    if (column.type === TableColumnType.HIDDEN) {
+      const attributeIds = column.attributeIds.filter(id => !!attributesMap[id]);
+      if (attributeIds.length > 0) {
+        return filteredColumns.concat({...column, attributeIds});
+      }
+    }
+    return filteredColumns;
+  }, []);
+}
+
+/**
+ * Adds new table columns based on missing attributes. If `hidden` parameter is true, they are added as a new hidden
+ * column or merged with the last hidden column. Otherwise, new compound column is created for each missing attribute.
+ * The columns are added after the last initialized column and before the group of uninitialized columns at the end.
+ */
+export function addMissingTableColumns(
+  columns: TableConfigColumn[],
+  attributes: Attribute[],
+  hidden?: boolean
+): TableConfigColumn[] {
+  const usedAttributeIds = extractAttributeIdsFromTableColumns(columns);
+  const missingAttributeIds = attributes.map(attribute => attribute.id).filter(id => !usedAttributeIds.includes(id));
+
+  if (missingAttributeIds.length === 0) {
+    return columns;
+  }
+
+  const index = columns.map(column => column.attributeIds.length > 0).lastIndexOf(true) + 1;
+  const prefixColumns = index ? columns.slice(0, index) : columns;
+  const suffixColumns = index ? columns.slice(index) : [];
+
+  if (hidden) {
+    const hiddenColumn: TableConfigColumn = {
+      type: TableColumnType.HIDDEN,
+      attributeIds: missingAttributeIds,
+      children: [],
+    };
+    const previousColumn = prefixColumns[prefixColumns.length - 1];
+    if (previousColumn && previousColumn.type === TableColumnType.HIDDEN) {
+      return prefixColumns
+        .slice(0, -1)
+        .concat(mergeHiddenColumns(previousColumn, hiddenColumn))
+        .concat(suffixColumns);
+    }
+    return prefixColumns.concat(hiddenColumn).concat(suffixColumns);
+  }
+
+  // TODO add support for nested attributes
+  return prefixColumns
+    .concat(
+      missingAttributeIds.map(attributeId => ({
+        type: TableColumnType.COMPOUND,
+        attributeIds: [attributeId],
+        children: [],
+      }))
+    )
+    .concat(suffixColumns);
+}
+
+function extractAttributeIdsFromTableColumns(columns: TableConfigColumn[]): string[] {
+  return columns.reduce((attributeIds, column) => {
+    return attributeIds.concat(column.attributeIds).concat(extractAttributeIdsFromTableColumns(column.children || []));
+  }, []);
+}
+
+export function areTableColumnsListsEqual(columns: TableConfigColumn[], otherColumns: TableConfigColumn[]): boolean {
+  if (columns.length !== otherColumns.length) {
+    return false;
+  }
+
+  return columns.every((column, index) => {
+    const otherColumn = otherColumns[index];
+    if (column.type !== otherColumn.type) {
+      return false;
+    }
+    if (column.type === TableColumnType.COMPOUND && !areTableColumnsListsEqual(column.children, otherColumn.children)) {
+      return false;
+    }
+    return (
+      column.attributeIds.length === otherColumn.attributeIds.length &&
+      column.attributeIds.every(id => otherColumn.attributeIds.includes(id))
+    );
+  });
 }

@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
@@ -35,7 +43,7 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableColumnGroupComponent implements AfterViewChecked {
+export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public table: TableModel;
 
@@ -60,6 +68,12 @@ export class TableColumnGroupComponent implements AfterViewChecked {
   public resizedColumnIndex: number;
 
   public constructor(private element: ElementRef, private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection || changes.linkType) {
+      this.store$.dispatch(new TablesAction.SyncColumns({cursor: this.cursor}));
+    }
+  }
 
   public ngAfterViewChecked() {
     const element = this.element.nativeElement as HTMLElement;
