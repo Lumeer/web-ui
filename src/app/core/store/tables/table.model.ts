@@ -30,7 +30,6 @@ export interface TableModel {
 export enum TableColumnType {
   COMPOUND = 'compound',
   HIDDEN = 'hidden',
-  SINGLE = 'single', // not needed anymore
 }
 
 export interface TableConfig {

@@ -372,8 +372,6 @@ export function getTableColumnWidth(column: TableConfigColumn, showHiddenColumns
       return getCompoundColumnWidth(column, showHiddenColumns);
     case TableColumnType.HIDDEN:
       return showHiddenColumns ? HIDDEN_COLUMN_WIDTH : 0;
-    case TableColumnType.SINGLE:
-      return column.width; // TODO can probably be removed
   }
 }
 
