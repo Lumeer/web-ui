@@ -24,20 +24,13 @@ import {ChartPerspectiveRoutingModule} from './chart-perspective-routing.module'
 import {ChartPerspectiveComponent} from './chart-perspective.component';
 import {ChartConfigComponent} from './chart-config/chart-config.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
-import {ChartVisualizationComponent} from './chart-visualization/chart-visualization.component';
 import {ChartPipesModule} from './pipes/chart-pipes.module';
 import {ChartDataComponent} from './chart-data/chart-data.component';
 import {ChartVisualizerComponent} from './chart-data/chart-visualizer/chart-visualizer.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, ChartPerspectiveRoutingModule, ChartPipesModule],
-  declarations: [
-    ChartPerspectiveComponent,
-    ChartVisualizationComponent,
-    ChartConfigComponent,
-    ChartDataComponent,
-    ChartVisualizerComponent,
-  ],
+  declarations: [ChartPerspectiveComponent, ChartConfigComponent, ChartDataComponent, ChartVisualizerComponent],
   entryComponents: [ChartPerspectiveComponent],
   exports: [ChartPerspectiveComponent],
 })
