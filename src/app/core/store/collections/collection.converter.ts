@@ -117,7 +117,7 @@ function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
     };
   }) as Rule[];
 
-  return rules;
+  return rules.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {

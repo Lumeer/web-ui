@@ -18,7 +18,7 @@
           [ruleNames]="ruleNames"
           [originalRuleName]="rule.name"
           (onCancelNewRule)="onCancelRuleEdit($event)"
-          (onSaveRule)="onSaveRule(collection, idx, $event)">
+          (onSaveRule)="onSaveRule(collection, idx, $event, rule.name)">
         </add-rule-form>
         <single-rule
           *ngIf="!editingRules[rule.name]"

@@ -82,8 +82,8 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
     this.addingRules.splice(index, 1);
   }
 
-  public onSaveRule(collection: Collection, idx: number, rule: Rule) {
-    const index = collection.rules.findIndex(r => r.name === rule.name);
+  public onSaveRule(collection: Collection, idx: number, rule: Rule, originalRuleName?: string) {
+    const index = collection.rules.findIndex(r => r.name === (originalRuleName ? originalRuleName : rule.name));
 
     if (index >= 0) {
       collection.rules.splice(index, 1, rule);
