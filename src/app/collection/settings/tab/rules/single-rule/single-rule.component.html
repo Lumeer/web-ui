@@ -1,10 +1,40 @@
 <div class="d-flex w-100 justify-content-start">
   <div class="mr-3">
-    <a href="#">
-      <i class="fas fa-trash text-danger"></i>
-    </a>
+    <i class="fas fa-ruler-triangle text-success"></i>
   </div>
   <div>
-    Rule form
+    <strong>{{rule.name}}</strong>
+    <span class="mx-2" i18n="@@collection.config.tab.rules.ofType">of type</span>
+    <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}</em>
+    <span class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
+
+    <span
+      *ngIf="[ruleTiming.Create, ruleTiming.CreateUpdate, ruleTiming.CreateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      class="ml-2">
+      <i class="fas fa-check-circle text-success"></i>
+      <span class="ml-1" i18n="@@collection.config.tab.rules.timing.create">Create</span>
+    </span>
+
+    <span
+      *ngIf="[ruleTiming.Update, ruleTiming.CreateUpdate, ruleTiming.UpdateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      class="ml-2">
+      <i class="fas fa-check-circle text-success"></i>
+      <span class="ml-1" i18n="@@collection.config.tab.rules.timing.update">Update</span>
+    </span>
+
+    <span
+      *ngIf="[ruleTiming.Delete, ruleTiming.CreateDelete, ruleTiming.UpdateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      class="ml-2">
+      <i class="fas fa-check-circle text-success"></i>
+      <span class="ml-1" i18n="@@collection.config.tab.rules.timing.delete">Delete</span>
+    </span>
+  </div>
+  <div class="flex-grow-1 text-right">
+    <a (click)="fireEdit(rule.name)">
+      <i class="fas fa-pencil text-success cursor-pointer"></i>
+    </a>
+    <a class="ml-3" (click)="fireDelete(rule.name)">
+      <i class="fas fa-trash text-danger cursor-pointer"></i>
+    </a>
   </div>
 </div>

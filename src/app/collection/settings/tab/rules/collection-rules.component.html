@@ -2,25 +2,50 @@
   <div class="col">
     <ul class="list-group" *ngIf="collection$ | async as collection">
       <li
-        *ngFor="let rule of rules"
-        single-rule
-        [rule]="rule"
-        class="list-group-item flex-column align-items-center"></li>
+        *ngIf="!(collection.rules)"
+        no-rules
+        class="list-group-item flex-column align-items-center">
+      </li>
+
+      <li
+        *ngFor="let rule of collection.rules; let idx = index"
+        class="list-group-item flex-column align-items-center">
+        <add-rule-form
+          *ngIf="editingRules[rule.name]"
+          [collection]="collection"
+          [rule]="rule"
+          [ruleIndex]="idx"
+          [ruleNames]="ruleNames"
+          [originalRuleName]="rule.name"
+          (onCancelNewRule)="onCancelRuleEdit($event)"
+          (onSaveRule)="onSaveRule(collection, idx, $event)">
+        </add-rule-form>
+        <single-rule
+          *ngIf="!editingRules[rule.name]"
+          (onEdit)="editingRules[rule.name] = true"
+          (onDelete)="deleteRule(collection, rule)"
+          [rule]="rule">
+        </single-rule>
+      </li>
 
       <li
         *ngFor="let newRule of addingRules; let idx = index;"
-        add-rule-form
-        [collection]="collection"
-        [rule]="newRule"
-        [ruleIndex]="idx"
-        [ruleNames]="ruleNames"
-        (onCancelNewRule)="onCancelNewRule($event)"
         class="list-group-item flex-column align-items-center">
+        <add-rule-form
+          [collection]="collection"
+          [rule]="newRule"
+          [ruleIndex]="idx"
+          [ruleNames]="ruleNames"
+          (onCancelNewRule)="onCancelNewRule($event)"
+          (onSaveRule)="onSaveRule(collection, idx, $event)">
+        </add-rule-form>
+      </li>
 
       <li
         add-rule
         (click)="onNewRule()"
         class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
+      </li>
     </ul>
   </div>
 </div>

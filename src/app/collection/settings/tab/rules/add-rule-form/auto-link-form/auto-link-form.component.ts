@@ -17,22 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
-import {AutoLinkRuleConfiguration} from '../../../../../../core/model/rule';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
-import {
-  selectCollectionByWorkspace,
-  selectCollectionsDictionary,
-} from '../../../../../../core/store/collections/collections.state';
+import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
 import {combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../../../../../core/store/common/permissions.selectors';
-import {map, mergeMap, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'auto-link-form',
@@ -40,12 +35,9 @@ import {map, mergeMap, tap} from 'rxjs/operators';
   styleUrls: ['./auto-link-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
+export class AutoLinkFormComponent implements OnInit, OnDestroy {
   @Input()
   public collection: Collection;
-
-  @Input()
-  public config: AutoLinkRuleConfiguration;
 
   @Input()
   public form: FormGroup;
@@ -67,9 +59,6 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
-    this.resetForm();
-    this.createForm();
-
     this.linkTypes$ = this.selectLinkTypesForCollection(this.collection.id);
     this.subscriptions.add(
       this.linkTypes$.pipe().subscribe(linkTypes => {
@@ -82,10 +71,14 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
             iconColors: [linkType.collections[0].color, linkType.collections[1].color],
           } as SelectItemModel;
         });
+
+        const linkTypeId = this.form.get('linkType').value;
+        if (linkTypeId) {
+          this.onSelectLinkType(linkTypeId);
+        }
       })
     );
     this.attributes1 = this.collectionAttributesToSelectItems(this.collection);
-    // this.collection$ = this.store$.select(selectCollectionByWorkspace);
   }
 
   private collectionAttributesToSelectItems(collection: Collection): SelectItemModel[] {
@@ -116,38 +109,8 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    /* if (changes.config) {
-      this.resetForm();
-      this.createForm();
-    }*/
-  }
-
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  private resetForm() {
-    this.form.clearValidators();
-    removeAllFormControls(this.form);
-  }
-
-  private createForm() {
-    this.form.addControl('collection1', new FormControl(this.config && this.config.collection1));
-    this.form.addControl('collection2', new FormControl(this.config && this.config.collection2));
-    this.form.addControl('attribute1', new FormControl(this.config && this.config.attribute1, Validators.required));
-    this.form.addControl('attribute2', new FormControl(this.config && this.config.attribute2, Validators.required));
-    this.form.addControl('linkType', new FormControl(this.config && this.config.linkType, Validators.required));
-  }
-
-  private createConfiguration(): AutoLinkRuleConfiguration {
-    return {
-      attribute1: this.form.get('attribute1').value,
-      attribute2: this.form.get('attribute2').value,
-      collection1: this.form.get('collection1').value,
-      collection2: this.form.get('collection2').value,
-      linkType: this.form.get('linkType').value,
-    };
   }
 
   public get attribute1Id(): string {
@@ -176,11 +139,9 @@ export class AutoLinkFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public onSelectAttribute1(attribute1: string) {
     this.form.get('attribute1').setValue(attribute1);
-    //this.config.attribute1 = attribute1;
   }
 
   public onSelectAttribute2(attribute2: string) {
     this.form.get('attribute2').setValue(attribute2);
-    //this.config.attribute2 = attribute2;
   }
 }

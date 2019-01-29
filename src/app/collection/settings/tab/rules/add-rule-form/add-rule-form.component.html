@@ -1,6 +1,10 @@
 <div class="d-flex w-100 justify-content-start">
   <div class="d-flex align-items-center mr-3">
-    <i class="fas fa-plus-circle text-success"></i>
+    <i
+      [class.fa-plus-circle]="!originalRuleName"
+      [class.fa-pencil]="originalRuleName"
+      class="fas text-success">
+    </i>
   </div>
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
@@ -15,19 +19,19 @@
         </div>
         <div class="form-check ml-3">
           <input class="form-check-input" type="checkbox" formControlName="timingCreate" id="timingCreate">
-          <label class="form-check-label" for="timingCreate" i18n="@@rule.timing.create">
+          <label class="form-check-label" for="timingCreate" i18n="@@collection.config.tab.rules.timing.create">
             Create
           </label>
         </div>
         <div class="form-check ml-3">
           <input class="form-check-input" type="checkbox" formControlName="timingUpdate" id="timingUpdate">
-          <label class="form-check-label" for="timingUpdate" i18n="@@rule.timing.update">
+          <label class="form-check-label" for="timingUpdate" i18n="@@collection.config.tab.rules.timing.update">
             Update
           </label>
         </div>
         <div class="form-check ml-3">
           <input class="form-check-input" type="checkbox" formControlName="timingDelete" id="timingDelete">
-          <label class="form-check-label" for="timingDelete" i18n="@@rule.timing.delete">
+          <label class="form-check-label" for="timingDelete" i18n="@@collection.config.tab.rules.timing.delete">
             Delete
           </label>
         </div>
@@ -42,7 +46,7 @@
                 id="ruleType">
           <option *ngFor="let type of types"
                   [value]="type"
-                  i18n="@@rule.type.value">
+                  i18n="@@collection.config.tab.rules.type">
             {type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}
           </option>
         </select>
@@ -50,15 +54,13 @@
 
       <div class="form-group" [ngSwitch]="typeControl.value">
         <auto-link-form
-          *ngSwitchCase="'AUTO_LINK'"
-          [form]="configForm"
-          [collection]="collection"
-          [config]="ruleConfiguration">
+          *ngSwitchCase="ruleType.AutoLink"
+          [form]="configAutoLink"
+          [collection]="collection">
         </auto-link-form>
         <blockly-form
-          *ngSwitchCase="'BLOCKLY'"
-          [form]="configForm"
-          [config]="ruleConfiguration">
+          *ngSwitchCase="ruleType.Blockly"
+          [form]="configBlockly">
         </blockly-form>
       </div>
 
@@ -69,10 +71,17 @@
           <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
         </button>
         <button type="button"
-                [disabled]="!this.form.valid || !(form.get('timingCreate').value || form.get('timingUpdate').value || (typeControl.value !== 'AUTO_LINK' && form.get('timingDelete').value))"
+                [disabled]="!this.form.valid"
+                (click)="submitRule()"
                 class="btn btn-sm btn-primary ml-2">
-          <i class="fas fa-plus"></i>&nbsp;
-          <span class="font-weight-bold" i18n="@@collection.tab.rules.rule.add">Add Rule</span>
+          <ng-container *ngIf="originalRuleName">
+            <i class="fas fa-pencil"></i>&nbsp;
+            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.rule.update">Save Changes</span>
+          </ng-container>
+          <ng-container *ngIf="!originalRuleName">
+            <i class="fas fa-plus"></i>&nbsp;
+            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.rule.add">Add Rule</span>
+          </ng-container>
         </button>
       </div>
 

@@ -17,32 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Rule, RuleTiming} from '../../../../../core/model/rule';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
-  selector: 'single-rule',
-  templateUrl: './single-rule.component.html',
-  styleUrls: ['./single-rule.component.scss'],
+  selector: '[no-rules]',
+  templateUrl: './no-rules.component.html',
+  styleUrls: ['./no-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SingleRuleComponent {
-  @Input()
-  public rule: Rule;
-
-  @Output()
-  public onEdit = new EventEmitter<string>();
-
-  @Output()
-  public onDelete = new EventEmitter<string>();
-
-  public readonly ruleTiming = RuleTiming;
-
-  public fireEdit(name: string): void {
-    this.onEdit.emit(name);
-  }
-
-  public fireDelete(name: string): void {
-    this.onDelete.emit(name);
-  }
-}
+export class NoRulesComponent {}

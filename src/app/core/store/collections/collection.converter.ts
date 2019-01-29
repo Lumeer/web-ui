@@ -125,8 +125,8 @@ function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
 
   model.forEach(rule => {
     result[rule.name] = {
-      type: RuleType[rule.type],
-      timing: RuleTiming[rule.timing],
+      type: rule.type,
+      timing: rule.timing,
       configuration: rule.configuration,
     };
   });

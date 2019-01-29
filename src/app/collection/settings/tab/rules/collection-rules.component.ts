@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {Observable, Subscription} from 'rxjs';
+import {Action, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'collection-rules',
@@ -31,26 +34,29 @@ import {selectCollectionByWorkspace} from '../../../../core/store/collections/co
   styleUrls: ['./collection-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionRulesComponent implements OnInit {
+export class CollectionRulesComponent implements OnInit, OnDestroy {
   public collection$: Observable<Collection>;
 
-  public rules: Rule[] = [
-    {
-      name: 'create link',
-      type: RuleType.AutoLink,
-      timing: RuleTiming.CreateUpdate,
-      configuration: {attribute1: 'a0', attribute2: 'a1', linkType: '12234', collection1: 'c1', collection2: 'c2'},
-    },
-  ];
-
-  public ruleNames = this.rules.map(r => r.name);
+  public ruleNames = [];
 
   public addingRules: Rule[] = [];
+  public editingRules: Record<string, boolean> = {};
 
-  constructor(private store$: Store<AppState>) {}
+  public subscriptions = new Subscription();
+
+  constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit(): void {
     this.collection$ = this.store$.select(selectCollectionByWorkspace);
+    this.subscriptions.add(
+      this.collection$.pipe().subscribe(collection => {
+        this.ruleNames = collection.rules.map(r => r.name);
+      })
+    );
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   public onNewRule(): void {
@@ -74,5 +80,55 @@ export class CollectionRulesComponent implements OnInit {
 
   public onCancelNewRule(index: number): void {
     this.addingRules.splice(index, 1);
+  }
+
+  public onSaveRule(collection: Collection, idx: number, rule: Rule) {
+    const index = collection.rules.findIndex(r => r.name === rule.name);
+
+    if (index >= 0) {
+      collection.rules.splice(index, 1, rule);
+    } else {
+      collection.rules.push(rule);
+    }
+
+    this.store$.dispatch(new CollectionsAction.Update({collection}));
+
+    if (index >= 0) {
+      this.onCancelRuleEdit(idx);
+    } else {
+      this.onCancelNewRule(idx);
+    }
+  }
+
+  public onCancelRuleEdit(idx: number) {
+    this.editingRules[this.ruleNames[idx]] = false;
+  }
+
+  private showRemoveConfirm(collection: Collection) {
+    const updateAction = new CollectionsAction.Update({collection});
+    const confirmAction = this.createConfirmAction(updateAction);
+    this.store$.dispatch(confirmAction);
+  }
+
+  private createConfirmAction(action: Action): NotificationsAction.Confirm {
+    const title = this.i18n({id: 'collection.config.tab.rules.remove.title', value: 'Delete this rule?'});
+    const message = this.i18n({
+      id: 'collection.config.tab.rules.remove.message',
+      value: 'Do you really want to delete this rule?',
+    });
+
+    return new NotificationsAction.Confirm({title, message, action});
+  }
+
+  public deleteRule(collection: Collection, rule: Rule) {
+    const updatedRules = collection.rules.slice();
+    const index = updatedRules.findIndex(r => r.name === rule.name);
+
+    if (index >= 0) {
+      updatedRules.splice(index, 1);
+      const updatedCollection = {...collection, rules: updatedRules};
+
+      this.showRemoveConfirm(updatedCollection);
+    }
   }
 }

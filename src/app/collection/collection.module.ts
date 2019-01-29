@@ -37,6 +37,7 @@ import {SingleRuleComponent} from './settings/tab/rules/single-rule/single-rule.
 import {AddRuleFormComponent} from './settings/tab/rules/add-rule-form/add-rule-form.component';
 import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component';
 import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
+import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, PickerModule],
@@ -54,6 +55,7 @@ import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-f
     AddRuleFormComponent,
     AutoLinkFormComponent,
     BlocklyFormComponent,
+    NoRulesComponent,
   ],
   providers: [CollectionSettingsGuard],
 })

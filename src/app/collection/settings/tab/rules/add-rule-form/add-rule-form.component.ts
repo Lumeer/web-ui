@@ -18,18 +18,21 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
-  selector: '[add-rule-form]',
+  selector: 'add-rule-form',
   templateUrl: './add-rule-form.component.html',
   styleUrls: ['./add-rule-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddRuleFormComponent implements OnInit, OnDestroy {
+  @Input()
+  public originalRuleName: string;
+
   @Input()
   public collection: Collection;
 
@@ -45,11 +48,16 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   @Output()
   public onCancelNewRule = new EventEmitter<number>();
 
+  @Output()
+  public onSaveRule = new EventEmitter<Rule>();
+
   public readonly types = Object.values(RuleTypeMap);
 
   public form;
 
   private formSubscription: Subscription;
+
+  public readonly ruleType = RuleType;
 
   constructor(private fb: FormBuilder) {}
 
@@ -65,8 +73,31 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
         },
       ],
       type: RuleType.AutoLink,
-      config: this.fb.group({}),
+      configAutoLink: this.fb.group({
+        collection1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection1 : ''],
+        collection2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection2 : ''],
+        attribute1: [
+          this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute1 : '',
+          Validators.required,
+        ],
+        attribute2: [
+          this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : '',
+          Validators.required,
+        ],
+        linkType: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : '', Validators.required],
+      }),
+      configBlockly: this.fb.group({
+        blocklyXml: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyXml : ''],
+        blocklyJs: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyJs : ''],
+        blocklyDryRun: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyDryRun : ''],
+        blocklyDryRunResult: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyDryRunResult : ''],
+        blocklyError: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyError : ''],
+        blocklyResultTimestamp: [
+          this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyResultTimestamp : '',
+        ],
+      }),
     });
+    this.form.setValidators(this.timingValidator());
 
     this.formSubscription = this.form.get('type').statusChanges.subscribe(status => {
       const type = this.form.get('type').value;
@@ -99,6 +130,29 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
     return [RuleTiming.All, RuleTiming.Delete, RuleTiming.CreateDelete, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
   }
 
+  private toTiming(hasCreate: boolean, hasUpdate: boolean, hasDelete: boolean): RuleTiming {
+    if (hasCreate) {
+      if (hasUpdate) {
+        if (hasDelete) {
+          return RuleTiming.All;
+        }
+        return RuleTiming.CreateUpdate;
+      }
+      if (hasDelete) {
+        return RuleTiming.CreateDelete;
+      }
+      return RuleTiming.Create;
+    } else {
+      if (hasUpdate) {
+        if (hasDelete) {
+          return RuleTiming.UpdateDelete;
+        }
+        return RuleTiming.Update;
+      }
+    }
+    return null;
+  }
+
   public get typeControl(): AbstractControl {
     return this.form.get('type');
   }
@@ -107,30 +161,38 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
     return this.form.get('name');
   }
 
-  public get configForm(): AbstractControl {
-    return this.form.get('config');
+  public get configAutoLink(): AbstractControl {
+    return this.form.get('configAutoLink');
   }
 
-  public get ruleConfiguration(): RuleConfiguration {
-    switch (this.rule.type) {
+  public get configBlockly(): AbstractControl {
+    return this.form.get('configBlockly');
+  }
+
+  public getRuleConfiguration(ruleType: RuleType): RuleConfiguration {
+    switch (ruleType) {
       case RuleType.AutoLink:
         return {
-          attribute1: this.rule.configuration.attribute1, //this.configForm.get('attribute1').value,
-          attribute2: this.rule.configuration.attribute2, //this.configForm.get('attribute2').value,
-          linkType: this.rule.configuration.linkType, //this.configForm.get('linkType').value,
-          collection1: this.rule.configuration.collection1, //this.configForm.get('collection1').value,
-          collection2: this.rule.configuration.collection2, //this.configForm.get('collection2').value
+          ...this.configAutoLink.value,
         };
       case RuleType.Blockly:
         return {
-          blocklyXml: this.configForm.get('blocklyXml').value,
-          blocklyJs: this.configForm.get('blocklyJs').value,
-          blocklyDryRun: this.configForm.get('blocklyDryRun').value,
-          blocklyDryRunResult: this.configForm.get('blocklyDryRunResult').value,
-          blocklyError: this.configForm.get('blocklyError').value,
-          blocklyResultTimestamp: this.configForm.get('blocklyResultTimestamp').value,
+          ...this.configBlockly.value,
         };
     }
+  }
+
+  public getRuleFromForm(): Rule {
+    return {
+      type: this.form.get('type').value,
+      name: this.form.get('name').value,
+      timing: this.toTiming(
+        this.form.get('timingCreate').value,
+        this.form.get('timingUpdate').value,
+        this.form.get('timingDelete').value
+      ),
+      configuration: this.getRuleConfiguration(this.form.get('type').value),
+    } as Rule;
   }
 
   public fireCancelNewRule(): void {
@@ -139,8 +201,29 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public usedNameValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
+      if (this.originalRuleName && this.originalRuleName === control.value) {
+        return null;
+      }
       const used = this.ruleNames.indexOf(control.value) >= 0;
       return used ? {usedRuleName: {value: control.value}} : null;
     };
+  }
+
+  public timingValidator(): ValidatorFn {
+    return (form: FormGroup): ValidationErrors | null => {
+      if (
+        form.get('timingCreate').value ||
+        form.get('timingUpdate').value ||
+        (form.get('type').value !== RuleType.AutoLink && form.get('timingDelete').value)
+      ) {
+        return null;
+      } else {
+        return {invalidTiming: 'At least one value must be set'};
+      }
+    };
+  }
+
+  public submitRule(): void {
+    this.onSaveRule.emit(this.getRuleFromForm());
   }
 }
