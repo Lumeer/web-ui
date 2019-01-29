@@ -19,22 +19,11 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentView} from '../../../core/store/views/views.state';
-import {View} from '../../../core/store/views/view';
-import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {map} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {Role} from '../../../core/model/role';
-import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
-import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
-import {selectCurrentUserIsManager} from '../../../core/store/common/permissions.selectors';
+import {CollectionsPermissionsPipe} from './collections-permissions.pipe';
+import {Observable, of} from 'rxjs';
 
 @Pipe({
   name: 'collectionPermissions',
@@ -44,89 +33,12 @@ import {selectCurrentUserIsManager} from '../../../core/store/common/permissions
   providedIn: 'root',
 })
 export class CollectionPermissionsPipe implements PipeTransform {
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public transform(collection: Collection): Observable<AllowedPermissions> {
-    return this.store$.pipe(
-      select(selectCurrentUserIsManager),
-      mergeMap(isManager => {
-        if (isManager) {
-          return of({
-            read: true,
-            write: true,
-            manage: true,
-            readWithView: true,
-            writeWithView: true,
-            manageWithView: true,
-          });
-        }
-        return this.checkCollectionPermission(collection);
-      })
-    );
-  }
-
-  private checkCollectionPermission(collection: Collection): Observable<AllowedPermissions> {
-    return this.store$.pipe(
-      select(selectCurrentUserForWorkspace),
-      mergeMap(currentUser => {
-        if (!currentUser || !collection) {
-          return of({});
-        }
-
-        const userRoles = userRolesInResource(currentUser, collection);
-        const read = userRoles.includes(Role.Read);
-        const write = userRoles.includes(Role.Write);
-        const manage = userRoles.includes(Role.Manage);
-
-        return this.userPermissionsInView(currentUser, collection).pipe(
-          map(viewAllowedPermissions => {
-            const readWithView = viewAllowedPermissions.readWithView || read;
-            const writeWithView = viewAllowedPermissions.writeWithView || write;
-            const manageWithView = viewAllowedPermissions.manageWithView || manage;
-
-            return {read, write, manage, readWithView, writeWithView, manageWithView};
-          })
-        );
-      })
-    );
-  }
-
-  private userPermissionsInView(user: User, collection: Collection): Observable<AllowedPermissions> {
-    return this.store$.pipe(
-      select(selectCurrentView),
-      mergeMap(view => {
-        if (!view) {
-          return of({});
-        }
-
-        return this.viewContainsCollection(view, collection).pipe(
-          map(contains => {
-            if (!contains) {
-              return {};
-            }
-
-            const userRoles = userRolesInResource(user, view);
-            const authorRoles = authorRolesInView(view, collection.id);
-
-            const readWithView = userRoles.includes(Role.Read) && authorRoles.includes(Role.Read);
-            const writeWithView = userRoles.includes(Role.Write) && authorRoles.includes(Role.Write);
-            const manageWithView = userRoles.includes(Role.Manage) && authorRoles.includes(Role.Manage);
-
-            return {readWithView, writeWithView, manageWithView};
-          })
-        );
-      })
-    );
-  }
-
-  private viewContainsCollection(view: View, collection: Collection): Observable<boolean> {
-    return this.getViewCollectionIds(view).pipe(map(collectionIds => collectionIds.includes(collection.id)));
-  }
-
-  private getViewCollectionIds(view: View): Observable<string[]> {
-    return this.store$.pipe(
-      select(selectAllLinkTypes),
-      map(linkTypes => getAllCollectionIdsFromQuery(view.query, linkTypes))
-    );
+    if (!collection) {
+      return of({});
+    }
+    return this.collectionsPermissionsPipe.transform([collection]).pipe(map(permissions => permissions[collection.id]));
   }
 }

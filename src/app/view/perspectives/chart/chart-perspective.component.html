@@ -1,31 +1,33 @@
-<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
+<ng-container *ngIf="query$ | async | displayable; else notDisplayable">
   <ng-container *ngIf="{collections: collections$ | async, config: config$ | async, query: query$ | async, linkTypes: linkTypes$ | async} as data">
-    <chart-config
-      [collections]="data.collections"
-      [linkTypes]="data.linkTypes"
-      [canManageConfig]="currentView$ | async | canManageConfig | async"
-      [config]="data.config"
-      [query]="data.query"
-      (configChange)="onConfigChanged($event)">
-    </chart-config>
+    <collapsible-sidebar *ngIf="currentView$ | async | canManageConfig | async">
+      <chart-config
+        class="d-block m-3"
+        [collections]="data.collections"
+        [linkTypes]="data.linkTypes"
+        [config]="data.config"
+        [query]="data.query"
+        (configChange)="onConfigChanged($event)">
+      </chart-config>
+    </collapsible-sidebar>
 
     <chart-data
+      class="flex-grow-1"
       [collections]="data.collections"
       [documents]="documents$ | async"
       [linkTypes]="linkTypes$ | async"
       [linkInstances]="linkInstances$ | async"
       [query]="data.query"
-      [allowedPermissions]="{writeWithView: true}"
+      [permissions]="data.collections | collectionsPermissions"
       [config]="data.config"
       (patchData)="patchDocumentData($event)">
     </chart-data>
 
   </ng-container>
-</div>
+</ng-container>
 
 <ng-template #notDisplayable>
-  <div class="alert alert-warning m-3"
-       role="alert"
-       i18n="@@chart.query.invalid">Chart perspective cannot show the results of your query. The query needs to have exactly one collection.
-  </div>
+  <invalid-query [minCollections]="1"
+                 [maxCollections]="1">
+  </invalid-query>
 </ng-template>

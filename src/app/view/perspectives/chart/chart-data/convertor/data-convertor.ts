@@ -238,12 +238,18 @@ function iterate(chain: CollectionChain[], documentsMap: DocumentsMap, sort: Cha
 }
 
 function sortDocuments(documents: DocumentWithLinks[], sort: ChartSort): DocumentWithLinks[] {
-  if (!document || documents.length === 0 || !sort || documents[0].collectionId !== sort.collectionId) {
+  if (
+    !document ||
+    documents.length === 0 ||
+    !sort ||
+    !sort.axis ||
+    documents[0].collectionId !== sort.axis.collectionId
+  ) {
     return documents || [];
   }
 
   const asc = sort.type === ChartSortType.Ascending;
-  return documents.sort((a, b) => compareValues(a.data[sort.attributeId], b.data[sort.attributeId], asc));
+  return documents.sort((a, b) => compareValues(a.data[sort.axis.attributeId], b.data[sort.axis.attributeId], asc));
 }
 
 function compareValues(a: any, b: any, asc: boolean): number {

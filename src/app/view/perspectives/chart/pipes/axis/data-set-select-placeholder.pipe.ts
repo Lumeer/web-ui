@@ -18,14 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'collectionAttributeName',
+  name: 'dataSetSelectPlaceholder',
 })
-export class AttributeNamePipe implements PipeTransform {
-  public transform(collection: Collection, attributeId: string): string {
-    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-    return (attribute && attribute.name) || '';
+export class DataSetSelectPlaceholderPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(axisType: ChartAxisType): string {
+    return this.i18n(
+      {
+        id: 'perspective.chart.config.dataSet.placeholder',
+        value: '{axisType, select, y1 {Y1 Data set} y2 {Y2 Data set}}',
+      },
+      {
+        axisType,
+      }
+    );
   }
 }

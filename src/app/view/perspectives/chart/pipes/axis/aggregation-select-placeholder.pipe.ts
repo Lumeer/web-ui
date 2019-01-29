@@ -18,20 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType} from '../../../../core/store/charts/chart';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'axisSelectEmptyValue',
+  name: 'aggregationSelectPlaceholder',
 })
-export class AxisSelectEmptyValuePipe implements PipeTransform {
+export class AggregationSelectPlaceholderPipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
   public transform(axisType: ChartAxisType): string {
     return this.i18n(
       {
-        id: 'chart.axis.placeholder.empty',
-        value: 'Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis',
+        id: 'perspective.chart.config.aggregation.placeholder',
+        value: '{axisType, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation}}',
       },
       {
         axisType,

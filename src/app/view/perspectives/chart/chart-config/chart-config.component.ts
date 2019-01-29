@@ -24,12 +24,13 @@ import {
   ChartAxis,
   ChartAxisType,
   ChartConfig,
-  ChartSort,
+  ChartSortType,
   ChartType,
 } from '../../../../core/store/charts/chart';
 import {Perspective} from '../../perspective';
 import {Query} from '../../../../core/store/navigation/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'chart-config',
@@ -47,9 +48,6 @@ export class ChartConfigComponent {
   public config: ChartConfig;
 
   @Input()
-  public canManageConfig: boolean;
-
-  @Input()
   public query: Query;
 
   @Output()
@@ -58,17 +56,36 @@ export class ChartConfigComponent {
   public readonly chartTypes = Object.values(ChartType);
   public readonly chartPerspective = Perspective.Chart;
   public readonly chartAggregations = Object.values(ChartAggregation);
+  public readonly chartSortTypes = Object.values(ChartSortType);
 
   public readonly xAxisType = ChartAxisType.X;
-  public readonly yAxisType = ChartAxisType.Y1;
-  public readonly y2AxisType = ChartAxisType.Y2;
+  public readonly yAxisTypes = [ChartAxisType.Y1, ChartAxisType.Y2];
+
+  public readonly buttonClasses = 'flex-grow-1';
+
+  public sortPlaceholder: string;
+  public sortTypePlaceholder: string;
+  public axisEmptyValue: string;
+
+  constructor(private i18n: I18n) {
+    this.sortPlaceholder = i18n({id: 'perspective.chart.config.sort.placeholder', value: 'Sort'});
+    this.sortTypePlaceholder = i18n({id: 'perspective.chart.config.sortType.placeholder', value: 'Sort order'});
+    this.axisEmptyValue = i18n({id: 'perspective.chart.config.axis.empty', value: 'Select axis'});
+  }
 
   public onTypeSelect(type: ChartType) {
     const newConfig = {...this.config, type};
     this.configChange.emit(newConfig);
   }
 
-  public onSortSelect(sort: ChartSort) {
+  public onSortSelect(axis: ChartAxis) {
+    const sort = {...(this.config.sort || {type: ChartSortType.Ascending}), axis};
+    const newConfig = {...this.config, sort};
+    this.configChange.emit(newConfig);
+  }
+
+  public onSortTypeSelect(type: ChartSortType) {
+    const sort = {...(this.config.sort || {type}), type};
     const newConfig = {...this.config, sort};
     this.configChange.emit(newConfig);
   }
@@ -79,13 +96,6 @@ export class ChartConfigComponent {
 
   public onAggregationSelect(type: ChartAxisType, aggregation: ChartAggregation) {
     const aggregations = {...(this.config.aggregations || {}), [type]: aggregation};
-    const newConfig = {...this.config, aggregations};
-    this.configChange.emit(newConfig);
-  }
-
-  public onAggregationRemoved(type: ChartAxisType) {
-    const aggregations = {...this.config.aggregations};
-    delete aggregations[type];
     const newConfig = {...this.config, aggregations};
     this.configChange.emit(newConfig);
   }

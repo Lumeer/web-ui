@@ -32,7 +32,14 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
-import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
+import {
+  ChartAggregation,
+  ChartAxisType,
+  ChartConfig,
+  ChartSortType,
+  ChartType,
+  DEFAULT_CHART_ID,
+} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -111,7 +118,12 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): ChartConfig {
-    return {type: ChartType.Line, axes: {}};
+    return {
+      type: ChartType.Line,
+      axes: {},
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum, [ChartAxisType.Y2]: ChartAggregation.Sum},
+      sort: {type: ChartSortType.Ascending},
+    };
   }
 
   private subscribeData() {

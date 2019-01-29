@@ -48,6 +48,9 @@ export class SelectItemComponent {
   @Input()
   public removable: boolean = false;
 
+  @Input()
+  public buttonClasses: string;
+
   @Output()
   public select = new EventEmitter<any>();
 

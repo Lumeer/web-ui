@@ -18,9 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType, ChartConfig, ChartSort, ChartSortType} from '../../../../core/store/charts/chart';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {ChartAxis, ChartAxisType, ChartConfig, ChartSort, ChartSortType} from '../../../../../core/store/charts/chart';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'sortSelectItems',
@@ -37,7 +37,7 @@ export class SortSelectItemsPipe implements PipeTransform {
   }
 
   private attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const axis: ChartSort = {collectionId: collection.id, attributeId: attribute.id, type: ChartSortType.Ascending};
+    const axis: ChartAxis = {collectionId: collection.id, attributeId: attribute.id};
     return {id: axis, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }

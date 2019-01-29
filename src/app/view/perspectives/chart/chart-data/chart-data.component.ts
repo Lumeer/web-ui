@@ -48,7 +48,7 @@ export class ChartDataComponent implements OnChanges {
   public linkInstances: LinkInstance[];
 
   @Input()
-  public allowedPermissions: AllowedPermissions;
+  public permissions: Record<string, AllowedPermissions>;
 
   @Input()
   public query: Query;

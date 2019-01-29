@@ -18,20 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {Query} from '../../../../core/store/navigation/query';
-import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
-import {isNotNullOrUndefind} from '../../../../shared/utils/common.utils';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query';
+import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
+import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
 
 @Pipe({
-  name: 'dataNameSelectItems',
+  name: 'axisSelectItems',
 })
-export class DataNameSelectItemsPipe implements PipeTransform {
+export class AxisSelectItemsPipe implements PipeTransform {
   public transform(
-    axisType: ChartAxisType.Y1 | ChartAxisType.Y2,
+    axisType: ChartAxisType,
     config: ChartConfig,
     collections: Collection[],
     linkTypes: LinkType[],
@@ -40,15 +40,22 @@ export class DataNameSelectItemsPipe implements PipeTransform {
     const items: SelectItemModel[] = [];
 
     const restrictedCollectionIndexes = this.getRestrictedCollectionIndexes(config, axisType);
+    const restrictedAxes = Object.entries(config.axes)
+      .filter(entry => entry[0] !== axisType)
+      .map(entry => entry[1]);
 
     const stem = query.stems[0];
     const baseCollection = collections.find(collection => collection.id === stem.collectionId);
 
     if (!restrictedCollectionIndexes.includes(0)) {
       // it's not base collection
-      items.push(
-        ...(baseCollection.attributes || []).map(attribute => this.attributeToItem(baseCollection, attribute, 0))
+      const filteredAttributes = this.filterAttributesByRestrictedAxes(
+        baseCollection.attributes,
+        baseCollection,
+        0,
+        restrictedAxes
       );
+      items.push(...filteredAttributes.map(attribute => this.attributeToItem(baseCollection, attribute, 0)));
     }
 
     if ((stem.linkTypeIds || []).length === 0) {
@@ -67,8 +74,14 @@ export class DataNameSelectItemsPipe implements PipeTransform {
         continue;
       }
 
+      const filteredAttributes = this.filterAttributesByRestrictedAxes(
+        otherCollection.attributes,
+        otherCollection,
+        collectionIndex,
+        restrictedAxes
+      );
       items.push(
-        ...(otherCollection.attributes || []).map(attribute =>
+        ...filteredAttributes.map(attribute =>
           this.linkedAttributeToItem(previousCollection, otherCollection, attribute, collectionIndex)
         )
       );
@@ -80,10 +93,33 @@ export class DataNameSelectItemsPipe implements PipeTransform {
   }
 
   private getRestrictedCollectionIndexes(config: ChartConfig, axisType: ChartAxisType): number[] {
-    const xAxis = config.axes[ChartAxisType.X];
-    const yAxis = config.axes[axisType];
+    if (axisType === ChartAxisType.X) {
+      const y1Name = config.names && config.names[ChartAxisType.Y1];
+      const y2Name = config.names && config.names[ChartAxisType.Y2];
+      return [y1Name && y1Name.collectionIndex, y2Name && y2Name.collectionIndex].filter(value =>
+        isNotNullOrUndefind(value)
+      );
+    }
 
-    return [xAxis && xAxis.collectionIndex, yAxis && yAxis.collectionIndex].filter(value => isNotNullOrUndefind(value));
+    const yName = config.names && config.names[axisType];
+    return (yName && [yName.collectionIndex]) || [];
+  }
+
+  private filterAttributesByRestrictedAxes(
+    attributes: Attribute[],
+    collection: Collection,
+    collectionIndex: number,
+    restrictedAxes: ChartAxis[]
+  ): Attribute[] {
+    return (attributes || []).filter(
+      attribute =>
+        !restrictedAxes.find(
+          axis =>
+            axis.collectionId === collection.id &&
+            axis.attributeId === attribute.id &&
+            axis.collectionIndex === collectionIndex
+        )
+    );
   }
 
   private attributeToItem(collection: Collection, attribute: Attribute, collectionIndex: number): SelectItemModel {

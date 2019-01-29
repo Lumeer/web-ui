@@ -1,1 +1,4 @@
-@import '../../../../styles/variables';
+:host {
+  display: flex;
+  flex-grow: 1;
+}

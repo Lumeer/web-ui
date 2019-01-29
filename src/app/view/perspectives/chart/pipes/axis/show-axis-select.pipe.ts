@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAggregation} from '../../../../core/store/charts/chart';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'showAxisSelect',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: ChartAggregation[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: aggregation}));
+export class ShowAxisSelectPipe implements PipeTransform {
+  public transform(axisType: ChartAxisType, config: ChartConfig): boolean {
+    return !(config.type === ChartType.Pie && axisType === ChartAxisType.Y2);
   }
 }

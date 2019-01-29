@@ -20,44 +20,47 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DisplayablePipe} from './displayable.pipe';
-import {AttributeNamePipe} from './attribute-name.pipe';
-import {ShowAxisSelectPipe} from './show-axis-select.pipe';
+import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
-import {AxisSelectEmptyValuePipe} from './axis-select-empty-value.pipe';
-import {AxisSelectItemsPipe} from './axis-select-items.pipe';
-import {ConfigAxisByTypePipe} from './config-axis-by-type.pipe';
-import {DataNameSelectItemsPipe} from './data-name-select-items.pipe';
-import {AggregationSelectItemsPipe} from './aggregation-select-items.pipe';
-import {SortSelectItemsPipe} from './sort-select-items.pipe';
+import {DataSetSelectPlaceholderPipe} from './axis/data-set-select-placeholder.pipe';
+import {AxisSelectItemsPipe} from './axis/axis-select-items.pipe';
+import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
+import {DataSetSelectItemsPipe} from './axis/data-set-select-items.pipe';
+import {AggregationSelectItemsPipe} from './axis/aggregation-select-items.pipe';
+import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
 import {ChartDraggable} from './chart-draggable';
+import {SortTypeSelectItemsPipe} from './sort/sort-type-select-items.pipe';
+import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeholder.pipe';
 
 @NgModule({
   imports: [CommonModule],
   declarations: [
     DisplayablePipe,
-    AttributeNamePipe,
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    AxisSelectEmptyValuePipe,
+    DataSetSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
-    DataNameSelectItemsPipe,
+    DataSetSelectItemsPipe,
     AggregationSelectItemsPipe,
     SortSelectItemsPipe,
     ChartDraggable,
+    SortTypeSelectItemsPipe,
+    AggregationSelectPlaceholderPipe,
   ],
   exports: [
     DisplayablePipe,
-    AttributeNamePipe,
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    AxisSelectEmptyValuePipe,
+    DataSetSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
-    DataNameSelectItemsPipe,
+    DataSetSelectItemsPipe,
     AggregationSelectItemsPipe,
     SortSelectItemsPipe,
     ChartDraggable,
+    SortTypeSelectItemsPipe,
+    AggregationSelectPlaceholderPipe,
   ],
 })
 export class ChartPipesModule {}
