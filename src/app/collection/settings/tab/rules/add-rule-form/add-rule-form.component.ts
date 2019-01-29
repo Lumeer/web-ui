@@ -76,15 +76,9 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
       configAutoLink: this.fb.group({
         collection1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection1 : ''],
         collection2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection2 : ''],
-        attribute1: [
-          this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute1 : '',
-          Validators.required,
-        ],
-        attribute2: [
-          this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : '',
-          Validators.required,
-        ],
-        linkType: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : '', Validators.required],
+        attribute1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute1 : ''],
+        attribute2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : ''],
+        linkType: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : ''],
       }),
       configBlockly: this.fb.group({
         blocklyXml: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyXml : ''],
@@ -97,7 +91,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
         ],
       }),
     });
-    this.form.setValidators(this.timingValidator());
+    this.form.setValidators(this.formValidator());
 
     this.formSubscription = this.form.get('type').statusChanges.subscribe(status => {
       const type = this.form.get('type').value;
@@ -209,8 +203,15 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
     };
   }
 
-  public timingValidator(): ValidatorFn {
+  public formValidator(): ValidatorFn {
     return (form: FormGroup): ValidationErrors | null => {
+      if (form.get('type').value === RuleType.AutoLink) {
+        const config = form.get('configAutoLink');
+        if (!(config.get('attribute1').value && config.get('attribute2').value && config.get('linkType').value)) {
+          return {required: ['attribute1', 'attribute2', 'linkType']};
+        }
+      }
+
       if (
         form.get('timingCreate').value ||
         form.get('timingUpdate').value ||

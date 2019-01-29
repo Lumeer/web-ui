@@ -1,3 +1,74 @@
-<p>
-  blockly-form works!
-</p>
+<div [formGroup]="form">
+  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
+    <div>
+      <span class="text-nowrap" i18n="@@collection.config.tab.rules.blockly.edit.message">Edit rule code</span>
+      <button type="button"
+              class="btn btn-sm btn-primary ml-3">
+        <i class="fas fa-pen-fancy"></i>&nbsp;
+        <span class="font-weight-bold" i18n="@@collection.config.tab.rules.blockly.edit.button">Edit Blocks...</span>
+      </button>
+      <div class="form-check ml-3 d-inline-block">
+        <input class="form-check-input" type="checkbox" formControlName="blocklyDryRun" id="blocklyDryRun">
+        <label class="form-check-label" for="blocklyDryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
+          Dry Run
+        </label>
+      </div>
+    </div>
+    <div class="flex-grow-1 text-right">
+      <a class="ml-3" (click)="display('error')">
+        <i class="fas fa-bug text-danger cursor-pointer"></i>
+      </a>
+      <a class="ml-3" (click)="display('js')">
+        <i class="fab fa-js-square text-secondary cursor-pointer"></i>
+      </a>
+      <a class="ml-3" (click)="display('log')">
+        <i class="fas fa-poll-h text-secondary cursor-pointer"></i>
+      </a>
+    </div>
+  </div>
+  <div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3">
+    <div *ngIf="displayDebug === 'js'">
+      <h5>Blockly Source Code</h5>
+      <small class="text-muted">
+        <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
+      </small>
+      <p class="text-monospace" *ngIf="blocklyJs">
+        {{blocklyJs}}
+      </p>
+      <p *ngIf="!blocklyJs" i18n="@@collection.config.tab.rules.blockly.noCode">No code generated yet.</p>
+    </div>
+    <div *ngIf="displayDebug === 'log'">
+      <h5>Dry Run Results</h5>
+      <small class="text-muted">
+        <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
+        <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
+        {{blocklyResultTimestamp}}
+      </small>
+      <p class="text-monospace" *ngIf="blocklyDryRunResult">
+        {{blocklyDryRunResult}}
+      </p>
+      <p *ngIf="!blocklyDryRunResult" i18n="@@collection.config.tab.rules.blockly.noResults">No dry run results yet.</p>
+    </div>
+    <div *ngIf="displayDebug === 'error'">
+      <h5>Error Report</h5>
+      <small class="text-muted">
+        <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
+        <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
+        {{blocklyResultTimestamp}}
+      </small>
+      <p class="text-monospace" *ngIf="blocklyError">
+        {{blocklyError}}
+      </p>
+      <p *ngIf="!blocklyError" i18n="@@collection.config.tab.rules.blockly.noError">No error recorded.</p>
+    </div>
+  </div>
+  <div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-end border-bottom pb-3">
+    <button
+      type="button"
+      class="btn btn-sm btn-primary"
+      (click)="display('')">
+      <i class="fas fa-times"></i>&nbsp;
+      <span class="font-weight-bold" i18n="@@collection.config.tab.rules.blockly.close.button">Close</span>
+    </button>
+  </div>
+</div>

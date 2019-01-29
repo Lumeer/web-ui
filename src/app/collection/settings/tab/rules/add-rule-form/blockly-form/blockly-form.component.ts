@@ -33,4 +33,30 @@ export class BlocklyFormComponent {
 
   @Input()
   public form: FormGroup;
+
+  public displayDebug = '';
+
+  public get blocklyJs(): string {
+    return this.form.get('blocklyJs').value;
+  }
+
+  public get blocklyDryRunResult(): string {
+    return this.form.get('blocklyDryRunResult').value;
+  }
+
+  public get blocklyError(): string {
+    return this.form.get('blocklyError').value;
+  }
+
+  public get blocklyResultTimestamp(): string {
+    return this.form.get('blocklyResultTimestamp').value;
+  }
+
+  public display(part: string): void {
+    if (this.displayDebug === part) {
+      this.displayDebug = '';
+    } else {
+      this.displayDebug = part;
+    }
+  }
 }
