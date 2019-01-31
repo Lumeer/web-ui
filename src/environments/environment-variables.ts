@@ -36,6 +36,7 @@ export interface EnvironmentVariables {
   pusherCluster: string;
   pusherKey: string;
   videoKey: string;
+  blocklyCdn: string;
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
@@ -49,6 +50,7 @@ const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
 const videoKey = env['VIDEO_KEY'] || '';
+const blocklyCdn = env['BLOCKLY_CDN'] || 'https://s3.eu-central-1.amazonaws.com/lumeer-cdn.fra/blockly.js';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
@@ -62,4 +64,5 @@ export const environmentVariables: EnvironmentVariables = {
   pusherCluster,
   pusherKey,
   videoKey,
+  blocklyCdn,
 };

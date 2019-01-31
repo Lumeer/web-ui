@@ -7,3 +7,20 @@
     top: 5vh;
   }
 }
+
+div.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  img {
+    height: 100px;
+  }
+
+  .loading-text {
+    font-size: x-large;
+    font-weight: bolder;
+    margin-top: 10px;
+  }
+}
