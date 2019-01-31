@@ -18,10 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {DialogService} from '../../../../../dialog/dialog.service';
 
 @Component({
   selector: 'add-rule-form',
@@ -59,7 +60,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private dialogService: DialogService) {}
 
   public ngOnInit() {
     this.form = this.fb.group({
@@ -226,5 +227,13 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public submitRule(): void {
     this.onSaveRule.emit(this.getRuleFromForm());
+  }
+
+  public fireOpenBlockly(name: string) {
+    this.dialogService.openBlocklyEditor(name, this.saveBlockly);
+  }
+
+  public saveBlockly(js: string, xml: string) {
+    console.log('saving ' + js + ' and ' + xml);
   }
 }

@@ -36,6 +36,7 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
+import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form
     FeedbackDialogComponent,
     PlayVideoComponent,
     AttributeTypeDialogComponent,
+    BlocklyEditorComponent,
   ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],

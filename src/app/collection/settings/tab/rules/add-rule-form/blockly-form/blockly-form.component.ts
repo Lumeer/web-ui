@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
 
@@ -33,6 +33,9 @@ export class BlocklyFormComponent {
 
   @Input()
   public form: FormGroup;
+
+  @Output()
+  public onOpenDialog = new EventEmitter();
 
   public displayDebug = '';
 
@@ -58,5 +61,9 @@ export class BlocklyFormComponent {
     } else {
       this.displayDebug = part;
     }
+  }
+
+  public openEditor() {
+    this.onOpenDialog.emit();
   }
 }

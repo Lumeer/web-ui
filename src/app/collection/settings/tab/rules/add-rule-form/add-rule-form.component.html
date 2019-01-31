@@ -60,7 +60,8 @@
         </auto-link-form>
         <blockly-form
           *ngSwitchCase="ruleType.Blockly"
-          [form]="configBlockly">
+          [form]="configBlockly"
+          (onOpenDialog)="fireOpenBlockly(rule.name)">
         </blockly-form>
       </div>
 

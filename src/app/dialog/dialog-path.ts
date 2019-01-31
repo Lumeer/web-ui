@@ -26,6 +26,7 @@ export enum DialogPath {
   CREATE_ORGANIZATION = 'create-organization',
   CREATE_PROJECT = 'create-project',
   PLAY_VIDEO = 'video',
+  BLOCKLY_EDITOR = 'blockly',
 }
 
 export const dialogPathsMap: {[id: string]: DialogPath} = {
@@ -37,4 +38,5 @@ export const dialogPathsMap: {[id: string]: DialogPath} = {
   [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
   [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT,
   [DialogPath.PLAY_VIDEO]: DialogPath.PLAY_VIDEO,
+  [DialogPath.BLOCKLY_EDITOR]: DialogPath.BLOCKLY_EDITOR,
 };
