@@ -302,7 +302,7 @@ function updateRows(
   const [index, ...childPath] = rowPath;
   const row = {
     ...rows[index],
-    linkedRows: updateRows(rows[index].linkedRows, childPath, transformation),
+    linkedRows: updateRows(rows[index].linkedRows, childPath, transformation, expand),
     expanded: expand || (rows[index] && rows[index].expanded),
   };
 
