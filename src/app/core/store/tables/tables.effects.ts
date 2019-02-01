@@ -612,13 +612,15 @@ export class TablesEffects {
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action =>
       combineLatest(
-        this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
+        this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
         this.store$.pipe(select(selectDocumentsByCustomQuery(queryWithoutLinks(action.payload.query), false, true))),
         this.store$.pipe(select(selectMoveTableCursorDown))
       ).pipe(
         first(),
-        mergeMap(([rows, documents, moveCursorDown]) => {
+        filter(([table]) => !!table),
+        mergeMap(([table, documents, moveCursorDown]) => {
           const {cursor} = action.payload;
+          const {rows} = table.config;
 
           const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
           const unknownDocuments = filterUnknownDocuments(rows, documents);
