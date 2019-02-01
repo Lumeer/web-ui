@@ -495,7 +495,7 @@ export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): b
   const row = rows[index];
 
   if (childPath.length === 0) {
-    return row.linkedRows.length === 0 || row.expanded;
+    return row.expanded || row.linkedRows.length < 2;
   }
 
   return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
