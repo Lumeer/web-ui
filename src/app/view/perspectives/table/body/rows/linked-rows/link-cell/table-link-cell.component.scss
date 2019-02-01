@@ -2,7 +2,8 @@
 
 .link-cell {
   color: $light;
-  width: var(--link-info-column-width);
+  min-width: var(--link-info-column-width);
+  max-width: var(--link-info-column-width);
 
   &.striped {
     color: $white;

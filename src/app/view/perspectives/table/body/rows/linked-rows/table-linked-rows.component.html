@@ -9,15 +9,13 @@
         <table-linked-row *ngFor="let linkedRow of table.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
                           [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
                           [rows]="[linkedRow]"
-                          [canManageConfig]="canManageConfig"
-                          class="h-100">
+                          [canManageConfig]="canManageConfig">
         </table-linked-row>
       </ng-container>
       <ng-template #collapsedRows>
         <table-linked-row [cursor]="cursor | nextPartCursor | nextRowCursor:0"
                           [rows]="table.linkedRows"
-                          [canManageConfig]="canManageConfig"
-                          class="h-100">
+                          [canManageConfig]="canManageConfig">
         </table-linked-row>
       </ng-template>
     </ng-container>
@@ -25,8 +23,7 @@
       <table-linked-row *ngIf="!table.linkedRows || table.linkedRows.length === 0"
                         [cursor]="cursor | nextPartCursor | nextRowCursor:0"
                         [rows]="[emptyLinkedRow]"
-                        [canManageConfig]="canManageConfig"
-                        class="h-100">
+                        [canManageConfig]="canManageConfig">
       </table-linked-row>
     </ng-template>
   </div>

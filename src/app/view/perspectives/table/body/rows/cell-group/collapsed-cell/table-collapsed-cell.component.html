@@ -10,7 +10,7 @@
        (mousedown)="onMouseDown()"
        class="h-100 p-1 text-nowrap overflow-hidden"
        tabindex="0">
-    {{ data.values }}
+    {{ data.values || '&nbsp;' }}
   </div>
 </ng-container>
 

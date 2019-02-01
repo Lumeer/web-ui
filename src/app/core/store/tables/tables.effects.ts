@@ -79,6 +79,7 @@ import {
   createTableRow,
   extendHiddenColumn,
   filterTableColumnsByAttributes,
+  filterTableRowsByDepth,
   findTableColumn,
   findTableRow,
   getAttributeIdFromColumn,
@@ -157,13 +158,14 @@ export class TablesEffects {
         );
       });
 
+      const rows = filterTableRowsByDepth(
+        (config && config.rows) || [createEmptyTableRow()],
+        Math.round(parts.length / 2)
+      );
       const addTableAction: Action = new TablesAction.AddTable({
         table: {
           id: action.payload.tableId,
-          config: {
-            parts,
-            rows: (config && config.rows) || [createEmptyTableRow()],
-          },
+          config: {parts, rows},
         },
       });
       return [addTableAction].concat(loadDataActions);

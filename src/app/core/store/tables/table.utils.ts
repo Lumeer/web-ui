@@ -495,7 +495,7 @@ export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): b
   const row = rows[index];
 
   if (childPath.length === 0) {
-    return row.linkedRows.length === 0 || row.expanded;
+    return row.expanded || row.linkedRows.length < 2;
   }
 
   return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
@@ -721,5 +721,19 @@ export function areTableColumnsListsEqual(columns: TableConfigColumn[], otherCol
       column.attributeIds.length === otherColumn.attributeIds.length &&
       column.attributeIds.every(id => otherColumn.attributeIds.includes(id))
     );
+  });
+}
+
+export function filterTableRowsByDepth(rows: TableConfigRow[], depth: number): TableConfigRow[] {
+  if (depth === 0) {
+    return [];
+  }
+
+  return rows.map(row => {
+    if (!row.linkedRows || row.linkedRows.length === 0) {
+      return row;
+    }
+
+    return {...row, linkedRows: filterTableRowsByDepth(row.linkedRows, depth - 1)};
   });
 }

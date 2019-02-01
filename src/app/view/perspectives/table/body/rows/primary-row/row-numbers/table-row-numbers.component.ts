@@ -24,6 +24,8 @@ import {
   ElementRef,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -32,13 +34,15 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 
+declare let ResizeObserver: ResizeObserver;
+
 @Component({
   selector: 'table-row-numbers',
   templateUrl: './table-row-numbers.component.html',
   styleUrls: ['./table-row-numbers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
+export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -50,6 +54,16 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
 
   public rowIndexes: number[] = [];
 
+  private resizeObserver: ResizeObserver;
+
+  constructor(private element: ElementRef) {}
+
+  public ngOnInit() {
+    if (window['ResizeObserver']) {
+      this.resizeObserver = new ResizeObserver(entries => this.onElementResize(entries));
+    }
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.row && this.row) {
       this.rowIndexes = createRowIndexes(this.row);
@@ -57,13 +71,26 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    this.setRowNumberColumnWidth();
+    if (window['ResizeObserver']) {
+      this.resizeObserver.observe(this.element.nativeElement);
+    } else {
+      this.detectAndSetRowNumberColumnWidth();
+    }
   }
 
-  private setRowNumberColumnWidth() {
+  private onElementResize(entries: ResizeObserverEntry[]) {
+    const {width} = entries[0].contentRect;
+    this.setRowNumberColumnWidth(width);
+  }
+
+  private detectAndSetRowNumberColumnWidth() {
     const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
     const width = Math.max(...widths);
 
+    this.setRowNumberColumnWidth(width);
+  }
+
+  private setRowNumberColumnWidth(width: number) {
     const tableElement = getTableElement(this.cursor.tableId);
     const rowNumberColumnWidth = Number(
       (tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2)
@@ -71,6 +98,12 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
 
     if (width > rowNumberColumnWidth) {
       tableElement.style.setProperty('--row-number-column-width', `${width}px`);
+    }
+  }
+
+  public ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
     }
   }
 
