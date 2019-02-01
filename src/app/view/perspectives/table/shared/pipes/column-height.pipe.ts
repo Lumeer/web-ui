@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
+import {TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {calculateColumnRowspan} from '../../../../../core/store/tables/table.utils';
 
 export const TABLE_ROW_HEIGHT = 35;
@@ -28,7 +28,7 @@ export const TABLE_ROW_HEIGHT = 35;
   name: 'columnHeight',
 })
 export class ColumnHeightPipe implements PipeTransform {
-  public transform(column: TableCompoundColumn, table: TableModel, cursor: TableHeaderCursor): number {
+  public transform(column: TableConfigColumn, table: TableModel, cursor: TableHeaderCursor): number {
     if (column.children.length) {
       return TABLE_ROW_HEIGHT;
     }

@@ -21,13 +21,13 @@
 
 <document-hints
   *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"
-  [attributeId]="column.attributeId"
+  [attributeId]="column.attributeIds[0]"
   [collectionId]="(table | part:cursor)?.collectionId"
   [columns]="table | documentHintColumns:cursor:canManageConfig"
   [createLinkCallback]="createLinkCallback.bind(this)"
   [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
   [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-  [linkTypeId]="table.parts[cursor.partIndex - 1].linkTypeId"
+  [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
   [value]="editedValue"
   (linkCreate)="onLinkCreate()">
 </document-hints>

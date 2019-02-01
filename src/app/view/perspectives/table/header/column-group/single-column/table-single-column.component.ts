@@ -39,10 +39,9 @@ import {CollectionsAction} from '../../../../../../core/store/collections/collec
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableCompoundColumn, TableModel, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
+import {TableConfigColumn, TableModel} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
-import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
@@ -57,6 +56,7 @@ import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe
 import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
+import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-single-column',
@@ -72,7 +72,7 @@ export class TableSingleColumnComponent implements OnChanges {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public column: TableSingleColumn;
+  public column: TableConfigColumn;
 
   @Input()
   public collection: Collection;
@@ -158,7 +158,7 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   private findAttribute(attributes: Attribute[]) {
-    return attributes.find(attribute => attribute.id === this.column.attributeId);
+    return attributes.find(attribute => attribute.id === this.column.attributeIds[0]);
   }
 
   private bindToSelected() {
@@ -280,8 +280,8 @@ export class TableSingleColumnComponent implements OnChanges {
     }
 
     const part = getTablePart(this.table, this.cursor);
-    const parentColumn = findTableColumn(part.columns, this.cursor.columnPath.slice(0, -1)) as TableCompoundColumn;
-    const parentAttribute = attributes.find(attribute => attribute.id === parentColumn.parent.attributeId);
+    const parentColumn = findTableColumn(part.columns, this.cursor.columnPath.slice(0, -1));
+    const parentAttribute = attributes.find(attribute => attribute.id === parentColumn.attributeIds[0]);
     const prefix = `${parentAttribute.name}.`;
     return attributes
       .filter(attribute => attribute.name.startsWith(prefix))
@@ -356,7 +356,7 @@ export class TableSingleColumnComponent implements OnChanges {
     this.store$.dispatch(
       new CollectionsAction.SetDefaultAttribute({
         collectionId: this.collection.id,
-        attributeId: this.column.attributeId,
+        attributeId: this.column.attributeIds[0],
       })
     );
   }

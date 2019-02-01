@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
@@ -25,12 +33,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {
-  TableColumn,
-  TableColumnType,
-  TableCompoundColumn,
-  TableModel,
-} from '../../../../../core/store/tables/table.model';
+import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
@@ -40,7 +43,7 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableColumnGroupComponent implements AfterViewChecked {
+export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public table: TableModel;
 
@@ -48,7 +51,7 @@ export class TableColumnGroupComponent implements AfterViewChecked {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public columns: TableColumn[];
+  public columns: TableConfigColumn[];
 
   @Input()
   public collection: Collection;
@@ -66,6 +69,12 @@ export class TableColumnGroupComponent implements AfterViewChecked {
 
   public constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection || changes.linkType) {
+      this.store$.dispatch(new TablesAction.SyncColumns({cursor: this.cursor}));
+    }
+  }
+
   public ngAfterViewChecked() {
     const element = this.element.nativeElement as HTMLElement;
     const height = element.offsetHeight;
@@ -74,11 +83,10 @@ export class TableColumnGroupComponent implements AfterViewChecked {
     tableElement.style.setProperty('--column-group-height', `${height}px`);
   }
 
-  public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
+  public trackByCollectionAndAttribute(index: number, column: TableConfigColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
       const part = getTablePart(this.table, this.cursor);
-      const {parent} = column as TableCompoundColumn;
-      return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
+      return part.collectionId + ':' + (column.attributeIds[0] || column.uniqueId);
     }
   }
 

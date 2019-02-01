@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TablePart} from '../../../../../core/store/tables/table.model';
 import {calculateColumnsWidth, filterLeafColumns} from '../../../../../core/store/tables/table.utils';
+import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'partWidth',
 })
 export class PartWidthPipe implements PipeTransform {
-  public transform(part: TablePart, showHiddenColumns: boolean = false): number {
+  public transform(part: TableConfigPart, showHiddenColumns: boolean = false): number {
     return part ? calculateColumnsWidth(filterLeafColumns(part.columns), showHiddenColumns) : 0;
   }
 }

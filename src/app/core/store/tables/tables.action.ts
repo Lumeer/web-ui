@@ -23,7 +23,7 @@ import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstance} from '../link-instances/link.instance';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
-import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
+import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {EditedAttribute} from './tables.state';
 import {Query} from '../navigation/query';
 
@@ -48,6 +48,8 @@ export enum TablesActionType {
   REMOVE_COLUMN = '[Tables] Remove Column',
   INIT_COLUMN = '[Tables] Initialize Column',
   REMOVE_EMPTY_COLUMNS = '[Tables] Remove Empty Columns',
+  SYNC_COLUMNS = '[Tables] Sync Columns',
+  UPDATE_COLUMNS = '[Tables] Update Columns',
 
   GROUP_BY_COLUMN = '[Tables] Group By Column',
   SORT_BY_COLUMN = '[Tables] Sort By Column',
@@ -132,7 +134,7 @@ export namespace TablesAction {
   export class AddPart implements Action {
     public readonly type = TablesActionType.ADD_PART;
 
-    public constructor(public payload: {tableId: string; parts: TablePart[]}) {}
+    public constructor(public payload: {tableId: string; parts: TableConfigPart[]}) {}
   }
 
   export class SwitchParts implements TableCursorAction {
@@ -162,7 +164,9 @@ export namespace TablesAction {
   export class ReplaceColumns implements Action {
     public readonly type = TablesActionType.REPLACE_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor; deleteCount: number; columns?: TableColumn[]}) {}
+    public constructor(
+      public payload: {cursor: TableHeaderCursor; deleteCount: number; columns?: TableConfigColumn[]}
+    ) {}
   }
 
   export class ShowColumns implements TableCursorAction {
@@ -206,6 +210,24 @@ export namespace TablesAction {
    */
   export class RemoveEmptyColumns implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_EMPTY_COLUMNS;
+
+    public constructor(public payload: {cursor: TableHeaderCursor}) {}
+  }
+
+  /**
+   * Replaces all columns in a given table part by new columns.
+   */
+  export class UpdateColumns implements TableCursorAction {
+    public readonly type = TablesActionType.UPDATE_COLUMNS;
+
+    public constructor(public payload: {cursor: TableHeaderCursor; columns: TableConfigColumn[]}) {}
+  }
+
+  /**
+   * Synchronizes columns in a given table part with its collection or link type
+   */
+  export class SyncColumns implements Action {
+    public readonly type = TablesActionType.SYNC_COLUMNS;
 
     public constructor(public payload: {cursor: TableHeaderCursor}) {}
   }
@@ -387,6 +409,8 @@ export namespace TablesAction {
     | ReplaceColumns
     | RemoveColumn
     | RemoveEmptyColumns
+    | SyncColumns
+    | UpdateColumns
     | HideColumn
     | ShowColumns
     | MoveColumn

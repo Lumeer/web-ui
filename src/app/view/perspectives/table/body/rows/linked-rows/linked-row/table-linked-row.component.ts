@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableConfigRow, TablePart} from '../../../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {isTableRowStriped} from '../../../../../../../core/store/tables/table.utils';
 import {selectHasNextTableParts, selectTablePart} from '../../../../../../../core/store/tables/tables.selector';
 
@@ -45,8 +45,8 @@ export class TableLinkedRowComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  public linkInstancePart$: Observable<TablePart>;
-  public documentPart$: Observable<TablePart>;
+  public linkInstancePart$: Observable<TableConfigPart>;
+  public documentPart$: Observable<TableConfigPart>;
 
   public hasNextParts$: Observable<boolean>;
 

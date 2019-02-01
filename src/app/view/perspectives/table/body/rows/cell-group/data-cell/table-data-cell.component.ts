@@ -47,11 +47,10 @@ import {DocumentsAction} from '../../../../../../../core/store/documents/documen
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableConfigRow, TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
+import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
-import {selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
-import {selectAffected, selectTableById} from '../../../../../../../core/store/tables/tables.state';
+import {selectAffected, selectTableById, selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
@@ -71,7 +70,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public cursor: TableBodyCursor;
 
   @Input()
-  public column: TableSingleColumn;
+  public column: TableConfigColumn;
 
   @Input()
   public document: DocumentModel;
@@ -148,7 +147,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.store$
       .select(
         selectAffected({
-          attributeId: this.column.attributeId,
+          attributeId: this.column.attributeIds[0],
           documentId: this.document && this.document.id,
           linkInstanceId: this.linkInstance && this.linkInstance.id,
         })
@@ -191,7 +190,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.column || changes.document) && this.column && this.document) {
       this.constraint$ = this.store$.pipe(
-        select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeId))
+        select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeIds[0]))
       );
     }
     if (changes.selected) {
@@ -233,7 +232,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             // switch checkbox only if Enter or Space is pressed
             if (!value || value === ' ') {
               const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
-              this.saveData(!data[this.column.attributeId]);
+              this.saveData(!data[this.column.attributeIds[0]]);
             }
           } else {
             this.editedValue = value;
@@ -258,10 +257,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private getValue(): any {
     if (this.document && this.document.data) {
-      return this.document.data[this.column.attributeId];
+      return this.document.data[this.column.attributeIds[0]];
     }
     if (this.linkInstance && this.linkInstance.data) {
-      return this.linkInstance.data[this.column.attributeId];
+      return this.linkInstance.data[this.column.attributeIds[0]];
     }
     return '';
   }
@@ -348,7 +347,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         new TablesAction.SetEditedAttribute({
           editedAttribute: {
             documentId: this.document.id,
-            attributeId: this.column.attributeId,
+            attributeId: this.column.attributeIds[0],
           },
         })
       );
@@ -376,10 +375,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public updateData(value: any) {
     if (this.document) {
-      this.updateDocumentData(this.column.attributeId, this.column.attributeName, value);
+      this.updateDocumentData(this.column.attributeIds[0], this.column.attributeName, value);
     }
     if (this.linkInstance) {
-      this.updateLinkInstanceData(this.column.attributeId, this.column.attributeName, value);
+      this.updateLinkInstanceData(this.column.attributeIds[0], this.column.attributeName, value);
     }
   }
 
@@ -462,7 +461,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
     // TODO what if table is embedded?
 
-    const {linkTypeId} = table.parts[this.cursor.partIndex - 1];
+    const {linkTypeId} = table.config.parts[this.cursor.partIndex - 1];
     const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
     return documentId => {

@@ -20,60 +20,17 @@
 export const DEFAULT_TABLE_ID = 'default';
 
 export const DEFAULT_COLUMN_WIDTH = 100;
-export const DEFAULT_ROW_NUMBER_WIDTH = 40;
 
 export interface TableModel {
   id: string;
   linkInstanceId?: string;
-
-  parts: TablePart[];
-
   config?: TableConfig;
-}
-
-export interface TablePart {
-  index: number;
-  collectionId?: string;
-  linkTypeId?: string;
-
-  columns: TableColumn[];
-  columnDepth: number;
-
-  expanded?: boolean;
 }
 
 export enum TableColumnType {
   COMPOUND = 'compound',
   HIDDEN = 'hidden',
-  SINGLE = 'single',
 }
-
-export class TableSingleColumn {
-  public readonly type = TableColumnType.SINGLE;
-  public readonly uniqueId = Math.random()
-    .toString(36)
-    .substr(2, 9);
-
-  public constructor(
-    public attributeId: string,
-    public attributeName?: string,
-    public width: number = DEFAULT_COLUMN_WIDTH
-  ) {}
-}
-
-export class TableCompoundColumn {
-  public readonly type = TableColumnType.COMPOUND;
-
-  public constructor(public parent: TableSingleColumn, public children: TableColumn[]) {}
-}
-
-export class TableHiddenColumn {
-  public readonly type = TableColumnType.HIDDEN;
-
-  public constructor(public attributeIds: string[]) {}
-}
-
-export type TableColumn = TableSingleColumn | TableCompoundColumn | TableHiddenColumn;
 
 export interface TableConfig {
   parts: TableConfigPart[];
@@ -90,8 +47,10 @@ export interface TableConfigPart {
 export interface TableConfigColumn {
   type: TableColumnType;
   attributeIds: string[];
+  attributeName?: string;
   width?: number;
   children?: TableConfigColumn[];
+  uniqueId?: string; // TODO maybe not needed
 }
 
 export interface TableConfigRow {

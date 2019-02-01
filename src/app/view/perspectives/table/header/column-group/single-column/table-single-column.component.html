@@ -12,7 +12,7 @@
      (editKeyDown)="onEditKeyDown($event)"
      (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100 font-italic"
-     [class.uninitialized-column]="!column?.attributeId"
+     [class.uninitialized-column]="!column?.attributeIds[0]"
      [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)"
      data-test="table-single-column-input">
 </div>

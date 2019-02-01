@@ -26,6 +26,6 @@ import {TableModel} from '../../../../../core/store/tables/table.model';
 })
 export class IsLastPartPipe implements PipeTransform {
   public transform(cursor: TableCursor, table: TableModel): boolean {
-    return cursor && table && cursor.partIndex + 2 > table.parts.length - 1;
+    return cursor && table && table.config && cursor.partIndex + 2 > table.config.parts.length - 1;
   }
 }
