@@ -31,7 +31,7 @@ import {select, Store} from '@ngrx/store';
 import {Dictionary} from 'lodash';
 import {ContextMenuComponent} from 'ngx-contextmenu';
 import {combineLatest, Observable} from 'rxjs';
-import {first} from 'rxjs/operators';
+import {first, map, take} from 'rxjs/operators';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
@@ -41,8 +41,8 @@ import {selectDocumentsDictionary} from '../../../../../../../../core/store/docu
 import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
 import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableConfigRow, TableModel} from '../../../../../../../../core/store/tables/table.model';
-import {createEmptyTableRow, findTableRow} from '../../../../../../../../core/store/tables/table.utils';
+import {TableConfigRow} from '../../../../../../../../core/store/tables/table.model';
+import {createEmptyTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
   selectTableRow,
@@ -68,9 +68,6 @@ export class TableDataCellMenuComponent implements OnChanges {
   public linkInstance: LinkInstance;
 
   @Input()
-  public table: TableModel; // TODO remove
-
-  @Input()
   public canManageConfig: boolean;
 
   @Input()
@@ -88,6 +85,7 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
+  public tableRow$: Observable<TableConfigRow>;
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -101,6 +99,7 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (changes.cursor && this.cursor) {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
+      this.tableRow$ = this.store$.pipe(select(selectTableRow(this.cursor)));
     }
   }
 
@@ -184,9 +183,16 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   public onUnlinkRow() {
-    const linkInstanceId = findTableRow(this.table.config.rows, this.cursor.rowPath).linkInstanceId;
-    const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+    this.store$
+      .pipe(
+        select(selectTableRow(this.cursor)),
+        take(1),
+        map(row => row.linkInstanceId)
+      )
+      .subscribe(linkInstanceId => {
+        const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+      });
   }
 
   public onMoveUp() {
