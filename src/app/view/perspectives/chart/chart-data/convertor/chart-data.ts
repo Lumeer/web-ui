@@ -21,7 +21,6 @@ import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 
 export interface ChartData {
   sets: ChartDataSet[];
-  legend: ChartLegend;
   type: ChartType;
 }
 
@@ -32,7 +31,7 @@ export interface ChartDataSet {
   isNumeric: boolean;
   yAxisType: ChartYAxisType;
   name: string;
-  draggable?: boolean;
+  draggable: boolean;
 }
 
 export interface ChartPoint {
@@ -43,12 +42,3 @@ export interface ChartPoint {
 }
 
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
-
-export interface ChartLegend {
-  entries: ChartLegendEntry[];
-}
-
-export interface ChartLegendEntry {
-  value: string;
-  color?: string;
-}

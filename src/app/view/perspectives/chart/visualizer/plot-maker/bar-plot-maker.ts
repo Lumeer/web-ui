@@ -20,9 +20,8 @@
 import {Data, Layout} from 'plotly.js';
 import {ChartDataSet, ChartYAxisType} from '../../chart-data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
+import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
-import {PointData} from '../../visualizer2/plot-maker/axis-draggable-plot-maker2';
 import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {

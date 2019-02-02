@@ -42,9 +42,6 @@ export class ChartVisualizerComponent implements OnChanges {
   @Input()
   public chartData: ChartData;
 
-  @Input()
-  public allowedPermissions: AllowedPermissions;
-
   @ViewChild('chart')
   private chartElement: ElementRef;
 
@@ -53,9 +50,6 @@ export class ChartVisualizerComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.chartData && this.chartData) {
       this.visualize();
-    }
-    if (changes.allowedPermissions && this.allowedPermissions) {
-      this.refreshChartPermissions();
     }
   }
 
@@ -68,20 +62,17 @@ export class ChartVisualizerComponent implements OnChanges {
   }
 
   private refreshChart() {
+    this.chartVisualizer.setWriteEnabled(this.isWritable());
     this.chartVisualizer.refreshChart(this.chartData);
   }
 
   private createChart() {
-    const writable = this.allowedPermissions && this.allowedPermissions.writeWithView;
-    this.chartVisualizer = new ChartVisualizer(this.chartElement, writable);
+    this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    this.chartVisualizer.setWriteEnabled(this.isWritable());
     this.chartVisualizer.createChart(this.chartData);
   }
 
-  private refreshChartPermissions() {
-    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
-      this.chartVisualizer && this.chartVisualizer.enableWrite();
-    } else {
-      this.chartVisualizer && this.chartVisualizer.disableWrite();
-    }
+  private isWritable(): boolean {
+    return this.chartData ? this.chartData.sets.some(set => set.draggable) : false;
   }
 }

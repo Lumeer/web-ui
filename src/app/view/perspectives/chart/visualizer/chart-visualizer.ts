@@ -22,11 +22,10 @@ import {ElementRef} from '@angular/core';
 import {Config, Data, Layout, newPlot, react} from 'plotly.js';
 import {ChartData} from '../chart-data/convertor/chart-data';
 import {ChartType} from '../../../../core/store/charts/chart';
-import {PlotMaker} from './plot-maker/plot-maker';
+import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
 import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {DataChange} from '../visualizer2/plot-maker/plot-maker2';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 
 export class ChartVisualizer {
@@ -42,7 +41,9 @@ export class ChartVisualizer {
 
   private plotMaker: PlotMaker;
 
-  constructor(private chartElement: ElementRef, private writable: boolean) {}
+  private writable: boolean;
+
+  constructor(private chartElement: ElementRef) {}
 
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
@@ -98,26 +99,22 @@ export class ChartVisualizer {
     }
   }
 
-  public enableWrite() {
-    this.setWriteEnabled(true);
-  }
-
-  public disableWrite() {
-    this.setWriteEnabled(false);
-  }
-
-  private setWriteEnabled(enabled: boolean) {
+  public setWriteEnabled(enabled: boolean) {
     this.writable = enabled;
-    this.plotMaker &&
-      this.plotMaker instanceof DraggablePlotMaker &&
-      (this.plotMaker as DraggablePlotMaker).setDragEnabled(enabled);
   }
 
   private refreshDrag() {
+    if (!(this.plotMaker instanceof DraggablePlotMaker)) {
+      return;
+    }
+
+    const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
+    draggablePlotMaker.setDragEnabled(this.writable);
+
     if (this.writable) {
-      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).initDrag();
+      draggablePlotMaker.initDrag();
     } else {
-      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).destroyDrag();
+      draggablePlotMaker.destroyDrag();
     }
   }
 

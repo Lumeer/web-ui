@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {} from 'jasmine';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query';
@@ -27,10 +28,11 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {convertChartData} from './data-convertor';
-import {ChartYAxisType} from './chart-data';
+import {ChartDataSet} from './chart-data';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {ChartDataConverter} from './chart-data-converter';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 const documents: DocumentModel[] = [
   {
@@ -65,50 +67,51 @@ const collections: Collection[] = [
     id: 'C1',
     name: 'collection',
     color: '#ffffff',
+    attributes: [{id: 'a1', name: 'Lala'}, {id: 'a2', name: 'Kala'}, {id: 'a3', name: 'Sala'}],
   },
 ];
 
+const permissions: Record<string, AllowedPermissions> = {C1: {writeWithView: true}};
+
 const query: Query = {stems: [{collectionId: 'C1'}]};
 
-fdescribe('Chart data converter single collection', () => {
+describe('Chart data converter single collection', () => {
   it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
-    expect(convertChartData(config, documents, collections, query)).toEqual({
-      sets: [],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    const converter = new ChartDataConverter();
+    converter.updateData(collections, documents, permissions, query);
+    expect(converter.convert(config)).toEqual({sets: [], type: ChartType.Line});
   });
 
-  fit('should return data by x', () => {
+  it('should return data by x', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {[ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0}},
     };
-    const set = {
+    const set: ChartDataSet = {
       id: 'C1',
       points: [
-        {id: 'D1', x: 'Sport', y: undefined},
-        {id: 'D2', x: 'Dance', y: undefined},
-        {id: 'D3', x: 'Glass', y: undefined},
+        {id: null, x: 'Sport', y: undefined},
+        {id: null, x: 'Dance', y: undefined},
+        {id: null, x: 'Glass', y: undefined},
       ],
       color: '#ffffff',
       isNumeric: false,
-      yAxisType: ChartYAxisType.Y1,
+      draggable: false,
+      name: undefined,
+      yAxisType: ChartAxisType.Y1,
     };
-    expect(convertChartData(config, documents, collections, query)).toEqual({
-      sets: [set],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    const converter = new ChartDataConverter();
+    converter.updateData(collections, documents, permissions, query);
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
   });
 
-  fit('should return data by y', () => {
+  it('should return data by y', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {[ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0}},
     };
-    const set = {
+    const set: ChartDataSet = {
       id: 'C1',
       points: [
         {id: 'D1', x: undefined, y: 3},
@@ -118,67 +121,60 @@ fdescribe('Chart data converter single collection', () => {
       ],
       color: '#ffffff',
       isNumeric: true,
-      yAxisType: ChartYAxisType.Y1,
+      name: 'Kala',
+      draggable: true,
+      yAxisType: ChartAxisType.Y1,
     };
-    expect(convertChartData(config, documents, collections, query)).toEqual({
-      sets: [set],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    const converter = new ChartDataConverter();
+    converter.updateData(collections, documents, permissions, query);
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
   });
 
-  fit('should return data aggregated simple', () => {
+  it('should return data aggregated simple', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0},
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {
+        [ChartAxisType.Y1]: ChartAggregation.Sum,
+      },
     };
-    const set = {
+    const set: ChartDataSet = {
       id: 'C1',
-      points: [{id: undefined, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: undefined, x: 'Glass', y: 51}],
+      points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
       color: '#ffffff',
       isNumeric: true,
-      yAxisType: ChartYAxisType.Y1,
+      name: 'Kala',
+      draggable: true,
+      yAxisType: ChartAxisType.Y1,
     };
-    expect(convertChartData(config, documents, collections, query)).toEqual({
-      sets: [set],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    const converter = new ChartDataConverter();
+    converter.updateData(collections, documents, permissions, query);
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
 
-    const config2 = {...config, aggregation: ChartAggregation.Min};
+    const config2 = {
+      ...config,
+      aggregations: {
+        [ChartAxisType.Y1]: ChartAggregation.Min,
+      },
+    };
     const set2 = {
       ...set,
-      points: [{id: undefined, x: 'Sport', y: 0}, {id: 'D2', x: 'Dance', y: 7}, {id: undefined, x: 'Glass', y: 7}],
+      points: [{id: null, x: 'Sport', y: 0}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 7}],
     };
-    expect(convertChartData(config2, documents, collections, query)).toEqual({
-      sets: [set2],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line});
 
-    const config3 = {...config, aggregation: undefined};
+    const config3 = {...config, aggregations: null};
     const set3 = {
       ...set,
-      points: [
-        {id: 'D1', x: 'Sport', y: 3},
-        {id: 'D2', x: 'Dance', y: 7},
-        {id: 'D3', x: 'Glass', y: 44},
-        {id: 'D4', x: 'Sport', y: 0},
-        {id: 'D5', x: 'Glass', y: 7},
-      ],
+      points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
     };
-    expect(convertChartData(config3, documents, collections, query)).toEqual({
-      sets: [set3],
-      legend: {entries: []},
-      type: ChartType.Line,
-    });
+    expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line});
   });
 
-  fit('should return data by Y1 and Y2', () => {
+  it('should return data by Y1 and Y2', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
@@ -186,36 +182,24 @@ fdescribe('Chart data converter single collection', () => {
         [ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0},
         [ChartAxisType.Y2]: {collectionId: 'C1', attributeId: 'a3', collectionIndex: 0},
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {
+        [ChartAxisType.Y1]: ChartAggregation.Sum,
+      },
     };
-    const points1 = [
-      {id: undefined, x: 'Sport', y: 3},
-      {id: 'D2', x: 'Dance', y: 7},
-      {id: undefined, x: 'Glass', y: 51},
-    ];
+    const points1 = [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}];
     const points2 = [{id: 'D2', x: 'Dance', y: 'Salt'}, {id: 'D5', x: 'Glass', y: 'Vibes'}];
 
-    const chartData1 = convertChartData(config, documents, collections, query);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections, documents, permissions, query);
+    const chartData1 = converter.convert(config);
     expect(chartData1.sets.length).toEqual(2);
     expect(chartData1.sets[0].points).toEqual(points1);
     expect(chartData1.sets[1].points).toEqual(points2);
 
-    const config2 = {...config, aggregation: undefined};
-    const chartData2 = convertChartData(config2, documents, collections, query);
-    const points3 = [
-      {id: 'D1', x: 'Sport', y: 3},
-      {id: 'D2', x: 'Dance', y: 7},
-      {id: 'D3', x: 'Glass', y: 44},
-      {id: 'D4', x: 'Sport', y: 0},
-      {id: 'D5', x: 'Glass', y: 7},
-    ];
-    const points4 = [
-      {id: 'D1', x: 'Sport', y: 'Mama'},
-      {id: 'D2', x: 'Dance', y: 'Salt'},
-      {id: 'D3', x: 'Glass', y: undefined},
-      {id: 'D4', x: 'Sport', y: 'Dendo'},
-      {id: 'D5', x: 'Glass', y: 'Vibes'},
-    ];
+    const config2 = {...config, aggregations: null};
+    const chartData2 = converter.convert(config2);
+    const points3 = [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}];
+    const points4 = [{id: 'D2', x: 'Dance', y: 'Salt'}, {id: 'D5', x: 'Glass', y: 'Vibes'}];
     expect(chartData2.sets.length).toEqual(2);
     expect(chartData2.sets[0].points).toEqual(points3);
     expect(chartData2.sets[1].points).toEqual(points4);
@@ -339,6 +323,13 @@ const collections2 = [
     color: '#123456',
   },
 ];
+
+const permissions2 = {
+  ...permissions,
+  C2: {writeWithView: true},
+  C3: {writeWithView: true},
+  C4: {writeWithView: true},
+};
 
 const linkTypes2: LinkType[] = [
   {
@@ -503,37 +494,42 @@ const linkInstances2: LinkInstance[] = [
 
 const query2: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
-fdescribe('Chart data converter linked collections', () => {
-  fit('should return empty data', () => {
+describe('Chart data converter linked collections', () => {
+  it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
-    expect(convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2)).toEqual({
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    expect(converter.convert(config)).toEqual({
       sets: [],
-      legend: {entries: []},
       type: ChartType.Line,
     });
   });
 
-  fit('should return linked data without linked name sum aggregation', () => {
+  it('should return linked data without linked name sum aggregation', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {
+        [ChartAxisType.Y1]: ChartAggregation.Sum,
+      },
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: undefined, x: 'Sport', y: 1808},
-      {id: undefined, x: 'Dance', y: 428},
-      {id: undefined, x: 'Glass', y: 1420},
-      {id: undefined, x: 'Lmr', y: 680},
+      {id: null, x: 'Sport', y: 1808},
+      {id: null, x: 'Dance', y: 428},
+      {id: null, x: 'Glass', y: 1420},
+      {id: null, x: 'Lmr', y: 680},
     ]);
   });
 
-  fit('should return linked data without linked name sum aggregation sorted desc', () => {
+  it('should return linked data without linked name sum aggregation sorted desc', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
@@ -542,98 +538,110 @@ fdescribe('Chart data converter linked collections', () => {
       },
       sort: {
         type: ChartSortType.Descending,
-        collectionId: 'C1',
-        attributeId: 'a2',
+        axis: {
+          collectionId: 'C1',
+          attributeId: 'a2',
+        },
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: undefined, x: 'Lmr', y: 680},
-      {id: undefined, x: 'Glass', y: 1420},
-      {id: undefined, x: 'Dance', y: 428},
-      {id: undefined, x: 'Sport', y: 1808},
+      {id: null, x: 'Lmr', y: 680},
+      {id: null, x: 'Glass', y: 1420},
+      {id: null, x: 'Dance', y: 428},
+      {id: null, x: 'Sport', y: 1808},
     ]);
   });
 
-  fit('should return linked data without linked name sum aggregation non numeric', () => {
+  it('should return linked data without linked name sum aggregation non numeric', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a1', collectionIndex: 3},
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([]);
   });
 
-  fit('should return linked data without linked name min aggregation', () => {
+  it('should return linked data without linked name min aggregation', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
       },
-      aggregation: ChartAggregation.Min,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: undefined, x: 'Sport', y: 1},
-      {id: undefined, x: 'Dance', y: 8},
-      {id: undefined, x: 'Glass', y: 1},
-      {id: undefined, x: 'Lmr', y: 1},
+      {id: null, x: 'Sport', y: 1},
+      {id: null, x: 'Dance', y: 8},
+      {id: null, x: 'Glass', y: 1},
+      {id: null, x: 'Lmr', y: 1},
     ]);
   });
 
-  fit('should return linked data without linked name max aggregation', () => {
+  it('should return linked data without linked name max aggregation', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
       },
-      aggregation: ChartAggregation.Max,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: undefined, x: 'Sport', y: 333},
-      {id: undefined, x: 'Dance', y: 312},
-      {id: undefined, x: 'Glass', y: 333},
-      {id: undefined, x: 'Lmr', y: 333},
+      {id: null, x: 'Sport', y: 333},
+      {id: null, x: 'Dance', y: 312},
+      {id: null, x: 'Glass', y: 333},
+      {id: null, x: 'Lmr', y: 333},
     ]);
   });
 
-  fit('should return linked data without linked name avg aggregation', () => {
+  it('should return linked data without linked name avg aggregation', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
         [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
       },
-      aggregation: ChartAggregation.Avg,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Avg},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: undefined, x: 'Sport', y: 1808 / 21},
-      {id: undefined, x: 'Dance', y: 428 / 4},
-      {id: undefined, x: 'Glass', y: 1420 / 14},
-      {id: undefined, x: 'Lmr', y: 680 / 9},
+      {id: null, x: 'Sport', y: 1808 / 21},
+      {id: null, x: 'Dance', y: 428 / 4},
+      {id: null, x: 'Glass', y: 1420 / 14},
+      {id: null, x: 'Lmr', y: 680 / 9},
     ]);
   });
 
-  fit('should return linked data with linked name', () => {
+  it('should return linked data with linked name', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
@@ -643,17 +651,19 @@ fdescribe('Chart data converter linked collections', () => {
       names: {
         [ChartAxisType.Y1]: {collectionId: 'C3', attributeId: 'a1', collectionIndex: 2},
       },
-      aggregation: ChartAggregation.Sum,
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
 
-    const chartData = convertChartData(config, documents2, collections2, query2, linkTypes2, linkInstances2);
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(6);
-    expect(chartData.legend.entries.map(entry => entry.value)).toEqual(['Ask', 'Ant', 'Abc', 'And', 'Ara', 'As']);
-    expect(chartData.sets[0].points).toContain({x: 'Sport', y: 126});
-    expect(chartData.sets[1].points).toContain({x: 'Sport', y: 62});
-    expect(chartData.sets[2].points).toContain({x: 'Sport', y: 1002});
-    expect(chartData.sets[3].points).toContain({x: 'Sport', y: 1002});
-    expect(chartData.sets[4].points).toContain({x: 'Sport', y: 320});
-    expect(chartData.sets[5].points).toContain({x: 'Sport', y: 8});
+    expect(chartData.sets.map(set => set.name)).toEqual(['Ask', 'Ant', 'Abc', 'And', 'Ara', 'As']);
+    expect(chartData.sets[0].points).toContain({id: null, x: 'Sport', y: 126});
+    expect(chartData.sets[1].points).toContain({id: null, x: 'Sport', y: 62});
+    expect(chartData.sets[2].points).toContain({id: null, x: 'Sport', y: 1002});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 1002});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 320});
+    expect(chartData.sets[5].points).toContain({id: 'D23', x: 'Sport', y: 8});
   });
 });
