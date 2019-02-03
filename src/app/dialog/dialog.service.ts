@@ -94,11 +94,6 @@ export class DialogService {
     this.navigateToDialog([DialogPath.PLAY_VIDEO, videoId]);
   }
 
-  public openBlocklyEditor(ruleName: string, callback?: (js: string, xml: string) => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.BLOCKLY_EDITOR, ruleName]);
-  }
-
   public isDialogOpen(): boolean {
     return this.open;
   }

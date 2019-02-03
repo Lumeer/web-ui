@@ -27,7 +27,6 @@ import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
-import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 
 const routes: Routes = [
   {
@@ -75,11 +74,6 @@ const routes: Routes = [
     component: PlayVideoComponent,
     outlet: 'dialog',
     data: {modalDialogClass: 'modal-lg'},
-  },
-  {
-    path: `${DialogPath.BLOCKLY_EDITOR}/:ruleName`,
-    component: BlocklyEditorComponent,
-    outlet: 'dialog',
   },
 ];
 

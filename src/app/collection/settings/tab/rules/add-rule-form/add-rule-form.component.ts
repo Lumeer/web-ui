@@ -22,7 +22,6 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} 
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {DialogService} from '../../../../../dialog/dialog.service';
 
 @Component({
   selector: 'add-rule-form',
@@ -60,7 +59,8 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder, private dialogService: DialogService) {}
+  constructor(private fb: FormBuilder) {
+  }
 
   public ngOnInit() {
     this.form = this.fb.group({
@@ -195,7 +195,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   }
 
   public usedNameValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       if (this.originalRuleName && this.originalRuleName === control.value) {
         return null;
       }
@@ -227,10 +227,6 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public submitRule(): void {
     this.onSaveRule.emit(this.getRuleFromForm());
-  }
-
-  public fireOpenBlockly(name: string) {
-    this.dialogService.openBlocklyEditor(name, this.saveBlockly);
   }
 
   public saveBlockly(js: string, xml: string) {

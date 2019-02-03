@@ -50,7 +50,7 @@ const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
 const videoKey = env['VIDEO_KEY'] || '';
-const blocklyCdn = env['BLOCKLY_CDN'] || 'https://s3.eu-central-1.amazonaws.com/lumeer-cdn.fra/blockly.js';
+const blocklyCdn = env['BLOCKLY_CDN'] || 'https://s3.eu-central-1.amazonaws.com/lumeer-cdn.fra/blockly.min.js';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
