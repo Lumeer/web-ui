@@ -11,96 +11,100 @@
     </div>
   </ng-template>
 
-  <ng-container *ngIf="allowedPermissions?.writeWithView && canManageConfig">
-  <ng-template contextMenuItem
-               divider="true">
-  </ng-template>
-  <ng-template (execute)="onMoveUp()"
-               contextMenuItem>
-    <div class="d-flex align-items-baseline">
-      <i class="fa fa-fw fa-arrow-alt-up mr-1"
-         aria-hidden="true"></i>
-      <span class="flex-grow-1"
-            i18n="@@table.body.row.move-up">Move up</span>
-      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ↑' : 'Shift + Alt + ↑'}}</small>
-    </div>
-  </ng-template>
-  <ng-template (execute)="onMoveDown()"
-               contextMenuItem>
-    <div class="d-flex align-items-baseline">
-      <i class="fa fa-fw fa-arrow-alt-down mr-1"
-         aria-hidden="true"></i>
-      <span class="flex-grow-1"
-            i18n="@@table.body.row.move-down">Move down</span>
-      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ↓' : 'Shift + Alt + ↓'}}</small>
-    </div>
-  </ng-template>
-</ng-container>
+  <ng-container *ngIf="tableRow$ | async">
+    <ng-container *ngIf="allowedPermissions?.writeWithView && canManageConfig">
+      <ng-template contextMenuItem
+                   divider="true">
+      </ng-template>
+      <ng-template (execute)="onMoveUp()"
+                   contextMenuItem>
+        <div class="d-flex align-items-baseline">
+          <i class="fa fa-fw fa-arrow-alt-up mr-1"
+             aria-hidden="true"></i>
+          <span class="flex-grow-1"
+                i18n="@@table.body.row.move-up">Move up</span>
+          <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ↑' : 'Shift + Alt + ↑'}}</small>
+        </div>
+      </ng-template>
+      <ng-template (execute)="onMoveDown()"
+                   contextMenuItem>
+        <div class="d-flex align-items-baseline">
+          <i class="fa fa-fw fa-arrow-alt-down mr-1"
+             aria-hidden="true"></i>
+          <span class="flex-grow-1"
+                i18n="@@table.body.row.move-down">Move down</span>
+          <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ↓' : 'Shift + Alt + ↓'}}</small>
+        </div>
+      </ng-template>
+    </ng-container>
 
-  <ng-container *ngIf="cursor.partIndex === 0 && allowedPermissions?.writeWithView && canManageConfig">
-    <ng-template *ngIf="(indentable$ | async) || (outdentable$ | async)"
-                 contextMenuItem
+    <ng-container *ngIf="cursor.partIndex === 0 && allowedPermissions?.writeWithView && canManageConfig">
+      <ng-template *ngIf="(indentable$ | async) || (outdentable$ | async)"
+                   contextMenuItem
+                   divider="true">
+      </ng-template>
+      <ng-template *ngIf="indentable$ | async"
+                   (execute)="onIndent()"
+                   contextMenuItem>
+        <div class="d-flex align-items-baseline">
+          <i class="fa fa-fw fa-indent mr-1"
+             aria-hidden="true"></i>
+          <span class="flex-grow-1"
+                i18n="@@table.body.row.indent">Indent</span>
+          <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
+        </div>
+      </ng-template>
+      <ng-template *ngIf="outdentable$ | async"
+                   (execute)="onOutdent()"
+                   contextMenuItem>
+        <div class="d-flex align-items-baseline">
+          <i class="fa fa-fw fa-outdent mr-1"
+             aria-hidden="true"></i>
+          <span class="flex-grow-1"
+                i18n="@@table.body.row.outdent">Outdent</span>
+          <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="created">
+      <ng-template contextMenuItem
+                   divider="true">
+      </ng-template>
+      <ng-template (execute)="onAddRow(0)"
+                   [enabled]="allowedPermissions?.writeWithView"
+                   contextMenuItem>
+        <i class="fa fa-fw fa-arrow-to-top mr-1"
+           aria-hidden="true"></i>
+        <span i18n="@@table.body.row.add.above">Add row above</span>
+      </ng-template>
+      <ng-template (execute)="onAddRow(1)"
+                   [enabled]="allowedPermissions?.writeWithView"
+                   contextMenuItem>
+        <i class="fa fa-fw fa-arrow-to-bottom mr-1"
+           aria-hidden="true"></i>
+        <span i18n="@@table.body.row.add.below">Add row below</span>
+      </ng-template>
+    </ng-container>
+
+    <ng-template contextMenuItem
                  divider="true">
     </ng-template>
-    <ng-template *ngIf="indentable$ | async"
-                 (execute)="onIndent()"
+    <ng-template *ngIf="created && cursor.partIndex > 0"
+                 (execute)="onUnlinkRow()"
+                 [enabled]="allowedPermissions?.writeWithView"
                  contextMenuItem>
-      <div class="d-flex align-items-baseline">
-        <i class="fa fa-fw fa-indent mr-1"
-           aria-hidden="true"></i>
-        <span class="flex-grow-1"
-              i18n="@@table.body.row.indent">Indent</span>
-        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
-      </div>
+      <i class="fa fa-fw fa-unlink text-warning mr-1"
+         aria-hidden="true"></i>
+      <span i18n="@@table.body.row.unlink">Unlink row</span>
     </ng-template>
-    <ng-template *ngIf="outdentable$ | async"
-                 (execute)="onOutdent()"
+    <ng-template *ngIf="!created || cursor.partIndex === 0"
+                 (execute)="onRemoveRow()"
+                 [enabled]="allowedPermissions?.writeWithView"
                  contextMenuItem>
-      <div class="d-flex align-items-baseline">
-        <i class="fa fa-fw fa-outdent mr-1"
-           aria-hidden="true"></i>
-        <span class="flex-grow-1"
-              i18n="@@table.body.row.outdent">Outdent</span>
-        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
-      </div>
+      <i class="fas fa-fw fa-trash text-danger mr-1"
+         aria-hidden="true"></i>
+      <span i18n="@@remove.row">Remove row</span>
     </ng-template>
   </ng-container>
-
-  <ng-template contextMenuItem
-               divider="true">
-  </ng-template>
-  <ng-template (execute)="onAddRow(0)"
-               [enabled]="allowedPermissions?.writeWithView"
-               contextMenuItem>
-    <i class="fa fa-fw fa-arrow-to-top mr-1"
-       aria-hidden="true"></i>
-    <span i18n="@@table.body.row.add.above">Add row above</span>
-  </ng-template>
-  <ng-template (execute)="onAddRow(1)"
-               [enabled]="allowedPermissions?.writeWithView"
-               contextMenuItem>
-    <i class="fa fa-fw fa-arrow-to-bottom mr-1"
-       aria-hidden="true"></i>
-    <span i18n="@@table.body.row.add.below">Add row below</span>
-  </ng-template>
-
-  <ng-template contextMenuItem
-               divider="true">
-  </ng-template>
-  <ng-template *ngIf="created && cursor.partIndex > 0"
-               (execute)="onUnlinkRow()"
-               [enabled]="allowedPermissions?.writeWithView"
-               contextMenuItem>
-    <i class="fa fa-fw fa-unlink text-warning mr-1"
-       aria-hidden="true"></i>
-    <span i18n="@@table.body.row.unlink">Unlink row</span>
-  </ng-template>
-  <ng-template *ngIf="!created || cursor.partIndex === 0"
-               (execute)="onRemoveRow()"
-               [enabled]="allowedPermissions?.writeWithView"
-               contextMenuItem>
-    <i class="fas fa-fw fa-trash text-danger mr-1"
-       aria-hidden="true"></i>
-    <span i18n="@@remove.row">Remove row</span>
-  </ng-template>
 </context-menu>

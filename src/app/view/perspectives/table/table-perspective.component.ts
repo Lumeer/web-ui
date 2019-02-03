@@ -27,6 +27,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
@@ -38,19 +39,17 @@ import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../..
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
-import {selectTableConfig} from '../../../core/store/tables/tables.selector';
-import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {selectTableById, selectTableConfig, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
+import {Query} from '../../../core/store/navigation/query';
+import {TableHeaderComponent} from './header/table-header.component';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
-import {Query} from '../../../core/store/navigation/query';
-
-declare let $: any;
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -75,6 +74,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostBinding('id')
   public elementId: string;
+
+  @ViewChild(TableHeaderComponent)
+  public tableHeader: TableHeaderComponent;
 
   public currentView$: Observable<View>;
   public table$ = new BehaviorSubject<TableModel>(null);
@@ -174,14 +176,15 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private switchPartsIfFirstEmpty(table: TableModel) {
-    if (table.parts.length !== 3) {
+    if (!table.config || table.config.parts.length !== 3) {
       return;
     }
 
-    const empty = !table.parts[0].columns.find(
+    const empty = !table.config.parts[0].columns.find(
       column =>
-        (column.type === TableColumnType.HIDDEN && column.attributeIds && column.attributeIds.length > 0) ||
-        (column.type === TableColumnType.COMPOUND && !!column.parent.attributeId)
+        [TableColumnType.COMPOUND, TableColumnType.HIDDEN].includes(column.type) &&
+        column.attributeIds &&
+        column.attributeIds.length > 0
     );
 
     if (empty) {
@@ -230,7 +233,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.createTable(query, config);
   }
 
-  public onClickOutside(event: MouseEvent) {
+  public onClickOutside(event: Event) {
     if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
@@ -285,7 +288,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onBodyScroll(event: Event) {
-    const scrollLeft: number = event.target['scrollLeft'];
-    $('table-header > div').css('left', -scrollLeft);
+    if (this.tableHeader) {
+      const scrollLeft: number = event.target['scrollLeft'];
+      this.tableHeader.scroll(-scrollLeft);
+    }
   }
 }

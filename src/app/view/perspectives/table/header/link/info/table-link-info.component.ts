@@ -75,8 +75,14 @@ export class TableLinkInfoComponent implements AfterViewInit {
 
   private setTableLinkInfoWidthCssVariable() {
     const tableElement = getTableElement(this.cursor.tableId);
-    const width = this.linkMenu.nativeElement.clientWidth;
-    tableElement.style.setProperty('--link-info-column-width', `${width}px`);
+    const width = this.linkMenu.nativeElement.clientWidth + 1;
+
+    const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
+    const configuredWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+
+    if (width > configuredWidth) {
+      tableElement.style.setProperty('--link-info-column-width', `${width}px`);
+    }
   }
 
   public onClick(event: MouseEvent) {

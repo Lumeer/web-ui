@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from 'src/app/view/perspectives/perspective';
+import {Perspective} from '../../../view/perspectives/perspective';
 import {DocumentModel} from '../documents/document.model';
 import {isTableConfigChanged} from '../tables/table.utils';
 

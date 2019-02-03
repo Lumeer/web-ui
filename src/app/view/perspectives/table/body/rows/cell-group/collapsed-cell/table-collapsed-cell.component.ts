@@ -25,13 +25,13 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.state';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 import {Constraint} from '../../../../../../../core/model/data/constraint';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
+import {TableConfigColumn} from '../../../../../../../core/store/tables/table.model';
+import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -41,7 +41,7 @@ import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
 })
 export class TableCollapsedCellComponent implements OnInit, OnChanges {
   @Input()
-  public column: TableSingleColumn;
+  public column: TableConfigColumn;
 
   @Input()
   public cursor: TableBodyCursor;
@@ -76,7 +76,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
       map(
         edited =>
           edited &&
-          edited.attributeId === this.column.attributeId &&
+          edited.attributeId === this.column.attributeIds[0] &&
           (!!(this.documents && this.documents.find(doc => doc.id === edited.documentId)) ||
             !!(this.linkInstances && this.linkInstances.find(link => link.id === edited.linkInstanceId)))
       ),
@@ -98,7 +98,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
       select(
         selectCollectionAttributeConstraint(
           this.documents && this.documents.length > 0 && this.documents[0].collectionId,
-          this.column.attributeId
+          this.column.attributeIds[0]
         )
       )
     );
@@ -127,7 +127,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   }
 
   private getValues(): any[] {
-    return this.getData().map(data => data[this.column.attributeId]);
+    return this.getData().map(data => data[this.column.attributeIds[0]]);
   }
 
   private getData(): any[] {

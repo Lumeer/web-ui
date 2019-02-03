@@ -32,8 +32,8 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {selectOrganizationByWorkspace} from 'src/app/core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from 'src/app/core/store/projects/projects.state';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';

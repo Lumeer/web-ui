@@ -20,15 +20,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Edges} from 'angular-resizable-element';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
+import {TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {hasLastTableColumnChildHidden, isLastTableColumnChild} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({
   name: 'resizeEdges',
 })
 export class ResizeEdgesPipe implements PipeTransform {
-  public transform(column: TableCompoundColumn, table: TableModel, cursor: TableHeaderCursor): Edges {
-    const part = table.parts[cursor.partIndex];
+  public transform(column: TableConfigColumn, table: TableModel, cursor: TableHeaderCursor): Edges {
+    const part = table.config.parts[cursor.partIndex];
     const isLastChild = isLastTableColumnChild(part.columns, cursor.columnPath);
     const hasLastChildHidden = hasLastTableColumnChildHidden(column);
     return isLastChild || hasLastChildHidden ? {} : {right: true};

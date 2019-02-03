@@ -24,7 +24,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
 @Component({
@@ -38,7 +38,7 @@ export class TableHeaderCollectionComponent implements OnChanges {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public part: TablePart;
+  public part: TableConfigPart;
 
   @Input()
   public table: TableModel;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from './collection';
+import {Attribute, Collection} from './collection';
 
 export function getDefaultAttributeId(collection: Collection): string {
   if (collection.defaultAttributeId) {
@@ -48,4 +48,13 @@ export function mergeCollections(collectionsA: Collection[], collectionsB: Colle
   const collectionsAIds = collectionsA.map(collection => collection.id);
   const collectionsBToAdd = collectionsB.filter(collection => !collectionsAIds.includes(collection.id));
   return collectionsA.concat(collectionsBToAdd);
+}
+
+export function createAttributesMap(attributes: Attribute[]): Record<string, Attribute> {
+  return attributes.reduce((attributesMap, attribute) => {
+    if (attribute.id) {
+      attributesMap[attribute.id] = attribute;
+    }
+    return attributesMap;
+  }, {});
 }

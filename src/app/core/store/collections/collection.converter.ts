@@ -108,28 +108,30 @@ export function convertImportedCollectionModelToDto(model: ImportedCollection): 
 }
 
 function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
-  const rules = Object.keys(dto).map(name => {
-    return {
-      name: name,
-      type: RuleTypeMap[dto[name].type],
-      timing: RuleTimingMap[dto[name].timing],
-      configuration: dto[name].configuration,
-    };
-  }) as Rule[];
-
-  return rules.sort((a, b) => a.name.localeCompare(b.name));
+  return Object.keys(dto || {})
+    .map<Rule>(
+      name =>
+        ({
+          name: name,
+          type: RuleTypeMap[dto[name].type],
+          timing: RuleTimingMap[dto[name].timing],
+          configuration: dto[name].configuration,
+        } as Rule) // TODO avoid type casting
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
-  const result: Record<string, RuleDto> = {};
+  if (!model) {
+    return {};
+  }
 
-  model.forEach(rule => {
+  return model.reduce((result, rule) => {
     result[rule.name] = {
       type: rule.type,
       timing: rule.timing,
       configuration: rule.configuration,
     };
-  });
-
-  return result;
+    return result;
+  }, {});
 }

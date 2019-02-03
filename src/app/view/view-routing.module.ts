@@ -65,6 +65,14 @@ const viewRoutes: Routes = [
         loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule',
       },
       {
+        path: Perspective.GanttChart,
+        loadChildren: './perspectives/gantt-chart/gantt-chart-perspective.module#GanttChartPerspectiveModule',
+      },
+      {
+        path: Perspective.Calendar,
+        loadChildren: './perspectives/calendar/calendar-perspective.module#CalendarPerspectiveModule',
+      },
+      {
         path: Perspective.Search,
         loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule', // TODO sync
       },

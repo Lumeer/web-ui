@@ -1,7 +1,7 @@
 <div #linkMenu
      [contextMenu]="contextMenu"
      (click)="onClick($event)"
-     class="h-100">
+     class="d-flex justify-content-center h-100 p-1">
   <icons-presenter [colors]="collections | colors"
                    [icons]="collections | icons"
                    [title]="linkType.name">
@@ -9,7 +9,8 @@
 </div>
 
 <context-menu #contextMenu>
-  <ng-template (execute)="switchParts.emit()"
+  <ng-template *ngIf="switchingEnabled"
+               (execute)="switchParts.emit()"
                [enabled]="canManageView"
                contextMenuItem>
     <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;

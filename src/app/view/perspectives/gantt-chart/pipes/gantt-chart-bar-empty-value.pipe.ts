@@ -1,0 +1,42 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {Pipe, PipeTransform} from '@angular/core';
+import {GanttChartBarProperty} from '../../../../core/store/gantt-charts/gantt-chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+
+@Pipe({
+  name: 'ganttChartBarEmptyValue',
+})
+export class GanttChartBarEmptyValuePipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(emptyProperty: GanttChartBarProperty): string {
+    return this.i18n(
+      {
+        id: 'ganttChart.empty.placeholder',
+        value:
+          'Select {emptyProperty, select, name {name} start {starting date} end {ending date} id {task identifier} dependencies {depending tasks} progress {progress}}',
+      },
+      {
+        emptyProperty,
+      }
+    );
+  }
+}

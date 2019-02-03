@@ -16,14 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {selectAllCollections} from 'src/app/core/store/collections/collections.state';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
-import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
+import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 
 @Component({
@@ -39,10 +50,13 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @ViewChild('content')
+  public contentElement: ElementRef<HTMLDivElement>;
+
   public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private renderer: Renderer2, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindSingleCollection();
@@ -69,12 +83,16 @@ export class TableHeaderComponent implements OnInit, OnChanges {
     };
   }
 
-  public trackByPartIndexAndEntityId(index: number, part: TablePart): string {
-    return part.index + ':' + (part.collectionId || part.linkTypeId);
+  public trackByPartIndexAndEntityId(index: number, part: TableConfigPart): string {
+    return index + ':' + (part.collectionId || part.linkTypeId);
   }
 
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
+
+  public scroll(left: number) {
+    this.renderer.setStyle(this.contentElement.nativeElement, 'left', `${left}px`);
   }
 }
 

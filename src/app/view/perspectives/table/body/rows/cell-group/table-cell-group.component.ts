@@ -26,21 +26,19 @@ import {LinkInstance} from '../../../../../../core/store/link-instances/link.ins
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
-  TableColumn,
   TableColumnType,
-  TableCompoundColumn,
+  TableConfigColumn,
+  TableConfigPart,
   TableConfigRow,
-  TableHiddenColumn,
   TableModel,
-  TablePart,
 } from '../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTablePart} from '../../../../../../core/store/tables/tables.selector';
 import {
   selectTableById,
   selectTableCursor,
+  selectTablePart,
   selectTablePartLeafColumns,
-} from '../../../../../../core/store/tables/tables.state';
+} from '../../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-cell-group',
@@ -61,8 +59,8 @@ export class TableCellGroupComponent implements OnChanges {
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstance[]>;
 
-  public columns$: Observable<TableColumn[]>;
-  public part$: Observable<TablePart>;
+  public columns$: Observable<TableConfigColumn[]>;
+  public part$: Observable<TableConfigPart>;
   public selectedCursor$: Observable<TableCursor>;
 
   public table$: Observable<TableModel>;
@@ -82,7 +80,7 @@ export class TableCellGroupComponent implements OnChanges {
   }
 
   private bindColumns() {
-    this.columns$ = this.store$.pipe(select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex)));
+    this.columns$ = this.store$.pipe(select(selectTablePartLeafColumns(this.cursor)));
   }
 
   private bindSelectedCursor() {
@@ -132,13 +130,12 @@ export class TableCellGroupComponent implements OnChanges {
     this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));
   }
 
-  public trackByAttributeIds(index: number, column: TableColumn): string {
+  public trackByAttributeIds(index: number, column: TableConfigColumn): string {
     if (column.type === TableColumnType.COMPOUND) {
-      const {parent} = column as TableCompoundColumn;
-      return parent.attributeId || parent.attributeName;
+      return column.attributeIds[0] || column.attributeName; // TODO use correlationId in attributeId
     }
     if (column.type === TableColumnType.HIDDEN) {
-      return (column as TableHiddenColumn).attributeIds.join('-');
+      return column.attributeIds.join('-');
     }
   }
 

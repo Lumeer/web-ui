@@ -46,7 +46,6 @@ import {IsFirstPartPipe} from './is-first-part.pipe';
 import {IsFirstRowPipe} from './is-first-row.pipe';
 import {IsHiddenColumnPipe} from './is-hidden-column.pipe';
 import {IsLastPartPipe} from './is-last-part.pipe';
-import {IsSingleColumnPipe} from './is-single-column.pipe';
 import {LinkedDocumentIdsPipe} from './linked-document-ids.pipe';
 import {MaxPartsPipe} from './max-parts.pipe';
 import {NextPartCursorPipe} from './next-part-cursor.pipe';
@@ -81,7 +80,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     AttributeLastNamePipe,
     ColumnWidthPipe,
     ColumnCursorPipe,
-    IsSingleColumnPipe,
     ColumnHeightPipe,
     ResizeEdgesPipe,
     ColumnBackgroundPipe,
@@ -122,7 +120,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
     AttributeLastNamePipe,
     ColumnWidthPipe,
     ColumnCursorPipe,
-    IsSingleColumnPipe,
     ColumnHeightPipe,
     ResizeEdgesPipe,
     ColumnBackgroundPipe,

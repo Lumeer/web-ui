@@ -33,7 +33,7 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableConfigRow, TablePart} from '../../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {isTableRowStriped} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {
@@ -73,7 +73,7 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   public hierarchyLevel$: Observable<number>;
   public hierarchyMaxLevel$: Observable<number>;
   public striped: boolean;
-  public part$: Observable<TablePart>;
+  public part$: Observable<TableConfigPart>;
 
   constructor(private element: ElementRef, private store$: Store<{}>) {}
 

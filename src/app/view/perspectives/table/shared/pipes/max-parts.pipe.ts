@@ -25,6 +25,6 @@ import {TableModel} from '../../../../../core/store/tables/table.model';
 })
 export class MaxPartsPipe implements PipeTransform {
   public transform(table: TableModel, maxNumber: number): boolean {
-    return table.parts.length <= maxNumber;
+    return table.config.parts.length <= maxNumber;
   }
 }

@@ -51,6 +51,7 @@ import {PusherService} from './pusher/pusher.service';
 import {VideoService} from './api/video/video.service';
 import {UserNotificationsService} from './rest/user-notifications.service';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {PopoverModule} from 'ngx-bootstrap';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     BrowserAnimationsModule,
     NotificationsModule,
     BsDatepickerModule.forRoot(),
+    PopoverModule.forRoot(),
   ],
   declarations: [HomeComponent],
   providers: [

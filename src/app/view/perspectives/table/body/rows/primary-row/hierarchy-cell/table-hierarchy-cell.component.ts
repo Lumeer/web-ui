@@ -28,7 +28,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {isNullOrUndefined} from 'util';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
 
@@ -61,7 +60,11 @@ export class TableHierarchyCellComponent implements OnChanges {
   public spacesAfter: any[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.level || changes.maxLevel) && !isNullOrUndefined(this.level) && !isNullOrUndefined(this.maxLevel)) {
+    if (
+      (changes.level || changes.maxLevel) &&
+      (this.level || this.level === 0) &&
+      (this.maxLevel || this.maxLevel === 0)
+    ) {
       this.spacesBefore = new Array(this.level);
       this.spacesAfter = new Array(this.maxLevel - this.level);
     }

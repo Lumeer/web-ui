@@ -18,13 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumn, TableColumnType} from '../../../../../core/store/tables/table.model';
+import {Query} from '../../../../core/store/navigation/query';
+import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
 
 @Pipe({
-  name: 'isSingleColumn',
+  name: 'displayable',
 })
-export class IsSingleColumnPipe implements PipeTransform {
-  public transform(column: TableColumn): boolean {
-    return column.type === TableColumnType.SINGLE;
+export class DisplayablePipe implements PipeTransform {
+  public transform(query: Query): boolean {
+    return isAnyCollectionQuery(query);
   }
 }

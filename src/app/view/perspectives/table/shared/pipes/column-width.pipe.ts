@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumn} from '../../../../../core/store/tables/table.model';
 import {getTableColumnWidth} from '../../../../../core/store/tables/table.utils';
+import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'columnWidth',
 })
 export class ColumnWidthPipe implements PipeTransform {
-  public transform(column: TableColumn, showHiddenColumns: boolean = false): number {
+  public transform(column: TableConfigColumn, showHiddenColumns: boolean = false): number {
     return getTableColumnWidth(column, showHiddenColumns);
   }
 }

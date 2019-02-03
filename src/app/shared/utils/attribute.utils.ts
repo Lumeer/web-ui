@@ -58,11 +58,11 @@ export function getAttributeDepth(attribute: Attribute): number {
 }
 
 export function extractAttributeLastName(name: string): string {
-  return splitAttributeName(name).lastName;
+  return name && splitAttributeName(name).lastName;
 }
 
 export function extractAttributeParentName(name: string): string {
-  return splitAttributeName(name).parentName;
+  return name && splitAttributeName(name).parentName;
 }
 
 export function splitAttributeName(name: string): {parentName: string; lastName: string} {

@@ -62,6 +62,8 @@ import {videosReducer} from './videos/videos.reducer';
 import {VideosEffects} from './videos/videos.effects';
 import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
+import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
+import {calendarsReducer} from './calendars/calendars.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -82,8 +84,10 @@ const reducers: ActionReducerMap<AppState> = {
   views: viewsReducer,
   postIts: postItReducer,
   charts: chartsReducer,
+  calendars: calendarsReducer,
   videos: videosReducer,
   userNotifications: userNotificationsReducer,
+  ganttCharts: ganttChartsReducer,
 };
 
 const effects = [

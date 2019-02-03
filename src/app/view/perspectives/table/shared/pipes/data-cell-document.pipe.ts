@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {generateDocumentDataByQuery} from 'src/app/core/store/documents/document.utils';
-import {selectQuery} from 'src/app/core/store/navigation/navigation.state';
-import {selectCurrentUser} from 'src/app/core/store/users/users.state';
+import {generateDocumentDataByQuery} from '../../../../../core/store/documents/document.utils';
+import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
+import {selectCurrentUser} from '../../../../../core/store/users/users.state';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {TableConfigRow, TablePart} from '../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'dataCellDocument',
@@ -32,7 +33,12 @@ import {TableConfigRow, TablePart} from '../../../../../core/store/tables/table.
 export class DataCellDocumentPipe implements PipeTransform {
   constructor(private store$: Store<{}>) {}
 
-  public transform(documents: DocumentModel[], part: TablePart, row: TableConfigRow): Observable<DocumentModel> {
+  public transform(
+    documents: DocumentModel[],
+    part: TableConfigPart,
+    partIndex: number,
+    row: TableConfigRow
+  ): Observable<DocumentModel> {
     return combineLatest(this.store$.pipe(select(selectQuery)), this.store$.pipe(select(selectCurrentUser))).pipe(
       map(([query, currentUser]) => {
         if (documents && documents[0]) {
@@ -42,7 +48,7 @@ export class DataCellDocumentPipe implements PipeTransform {
         return {
           collectionId: part.collectionId,
           correlationId: row.correlationId,
-          data: part.index === 0 ? generateDocumentDataByQuery(query, currentUser) : {},
+          data: partIndex === 0 ? generateDocumentDataByQuery(query, currentUser) : {},
         };
       })
     );

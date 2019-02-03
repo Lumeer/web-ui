@@ -27,7 +27,7 @@ import {
   selectTableRowIndentable,
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
-import {isMacOS} from 'src/app/shared/utils/system.utils';
+import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',

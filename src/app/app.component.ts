@@ -27,9 +27,10 @@ import {SnotifyService} from 'ng-snotify';
 import {filter, first} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
-import {PusherService} from './core/pusher/pusher.service';
 import {AppState} from './core/store/app.state';
 import {selectCurrentUser} from './core/store/users/users.state';
+import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 declare let $: any;
 
@@ -43,14 +44,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public isChrome = true;
 
+  public lazyLoading$ = new BehaviorSubject(false);
+
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
     private changeDetector: ChangeDetectorRef,
+    private router: Router,
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
-    private title: Title,
-    private pusherService: PusherService
+    private title: Title
   ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
@@ -109,11 +112,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public ngOnInit() {
     this.setNotificationStyle();
-    try {
-      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
-    } catch (e) {
-      this.isChrome = false;
-    }
+    this.showBrowserWarningOutsideChrome();
   }
 
   public setNotificationStyle(): void {
@@ -129,7 +128,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private showBrowserWarningOutsideChrome() {
+    try {
+      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
+    } catch (e) {
+      this.isChrome = false;
+    }
+  }
+
   public ngAfterViewInit() {
+    this.bindBrowserWarningCloseCallback();
+    this.subscribeToRouterEvents();
+  }
+
+  private bindBrowserWarningCloseCallback() {
     if (!this.browserWarning || !this.browserWarning.nativeElement) {
       return;
     }
@@ -138,6 +150,21 @@ export class AppComponent implements OnInit, AfterViewInit {
       // the rest of the page needs to adapt its height
       this.changeDetector.detectChanges();
     });
+  }
+
+  private subscribeToRouterEvents(): Subscription {
+    return this.router.events.subscribe(event => {
+      if (event instanceof RouteConfigLoadStart) {
+        this.lazyLoading$.next(true);
+      }
+      if (event instanceof RouteConfigLoadEnd) {
+        this.lazyLoading$.next(false);
+      }
+    });
+  }
+
+  public onHideLoadingIndicator() {
+    this.lazyLoading$.next(false);
   }
 }
 

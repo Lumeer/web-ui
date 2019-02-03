@@ -28,7 +28,7 @@ import {selectCollectionById} from '../../../../../../core/store/collections/col
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
+import {TableConfigColumn, TableConfigPart, TableModel} from '../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 
 @Component({
@@ -45,7 +45,7 @@ export class TableHiddenColumnComponent implements OnChanges {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public column: TableHiddenColumn;
+  public column: TableConfigColumn;
 
   @ViewChild(ContextMenuComponent)
   public contextMenuComponent: ContextMenuComponent;
@@ -57,7 +57,7 @@ export class TableHiddenColumnComponent implements OnChanges {
   public constructor(private contextMenuService: ContextMenuService, private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    const part = this.table.parts[this.cursor.partIndex];
+    const part = this.table.config.parts[this.cursor.partIndex];
     if (part) {
       this.collection$ = this.store.select(selectCollectionById(part.collectionId));
       this.linkType$ = this.store.select(selectLinkTypeById(part.linkTypeId));
@@ -65,13 +65,13 @@ export class TableHiddenColumnComponent implements OnChanges {
     }
   }
 
-  public getHiddenAttributes(part: TablePart): Observable<Attribute[]> {
+  public getHiddenAttributes(part: TableConfigPart): Observable<Attribute[]> {
     return this.getAttributes(part).pipe(
       map(attributes => attributes.filter(attribute => this.column.attributeIds.includes(attribute.id)))
     );
   }
 
-  public getAttributes(part: TablePart): Observable<Attribute[]> {
+  public getAttributes(part: TableConfigPart): Observable<Attribute[]> {
     if (part.collectionId) {
       return this.collection$.pipe(map(collection => collection.attributes));
     }

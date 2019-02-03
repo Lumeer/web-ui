@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableSingleColumn} from '../../../../../core/store/tables/table.model';
+import {TableModel} from '../../../../../core/store/tables/table.model';
 import {filterLeafColumns, getTableColumnWidth} from '../../../../../core/store/tables/table.utils';
 import {DocumentHintColumn} from '../../../../../shared/document-hints/document-hint-column';
 
@@ -32,10 +32,10 @@ export class DocumentHintColumnsPipe implements PipeTransform {
     cursor: TableBodyCursor,
     showHiddenColumns: boolean = false
   ): DocumentHintColumn[] {
-    return filterLeafColumns(table.parts[cursor.partIndex].columns)
-      .filter(column => !(column instanceof TableSingleColumn && !column.attributeId))
+    return filterLeafColumns(table.config.parts[cursor.partIndex].columns)
+      .filter(column => column.children.length === 0 && column.attributeIds[0])
       .map(column => ({
-        attributeId: (column as TableSingleColumn).attributeId,
+        attributeId: column.attributeIds[0],
         width: getTableColumnWidth(column, showHiddenColumns),
       }));
   }
