@@ -27,6 +27,7 @@ import {selectCollectionByWorkspace} from '../../../../core/store/collections/co
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-rules',
@@ -49,7 +50,7 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.collection$ = this.store$.select(selectCollectionByWorkspace);
     this.subscriptions.add(
-      this.collection$.pipe().subscribe(collection => {
+      this.collection$.pipe(filter(collection => !!collection && !!collection.rules)).subscribe(collection => {
         this.ruleNames = collection.rules.map(r => r.name);
       })
     );
