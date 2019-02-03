@@ -69,10 +69,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
+  public resize$ = new Subject<void>();
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
-  private resize$ = new Subject<void>();
 
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
