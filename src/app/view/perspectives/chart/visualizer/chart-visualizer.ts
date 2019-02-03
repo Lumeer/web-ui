@@ -19,17 +19,17 @@
 
 import {ElementRef} from '@angular/core';
 
-import {Config, Data, Layout, newPlot, react} from 'plotly.js';
+import {Config, Data, Layout, newPlot, Plots, purge, react, redraw, relayout} from 'plotly.js';
 import {ChartData} from '../chart-data/convertor/chart-data';
 import {ChartType} from '../../../../core/store/charts/chart';
-import {DataChange, PlotMaker} from './plot-maker/plot-maker';
+import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
 import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 
 export class ChartVisualizer {
-  private currentData: ChartData;
+  private currentType: ChartType;
 
   private data: Data[] = [];
 
@@ -43,11 +43,11 @@ export class ChartVisualizer {
 
   private writable: boolean;
 
-  constructor(private chartElement: ElementRef) {}
+  constructor(private chartElement: ElementRef, private onValueChanged: (valueChange: ValueChange) => void) {}
 
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
-    this.currentData = data;
+    this.currentType = data.type;
     react(this.chartElement.nativeElement, this.data, this.layout);
     this.refreshDrag();
     this.chartElement.nativeElement.on(
@@ -58,9 +58,13 @@ export class ChartVisualizer {
 
   public refreshChart(data: ChartData) {
     this.createOrRefreshData(data);
-    this.currentData = data;
+    this.currentType = data.type;
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
     this.refreshDrag();
+  }
+
+  public destroyChart() {
+    purge(this.chartElement.nativeElement);
   }
 
   private createOrRefreshData(data: ChartData) {
@@ -68,6 +72,7 @@ export class ChartVisualizer {
     if (shouldRefreshPlotMaker) {
       this.plotMaker = this.createPlotMakerByType(data.type, this.chartElement);
       this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
+      this.plotMaker.setOnValueChanged(this.onValueChanged);
     }
 
     this.plotMaker.updateData(data);
@@ -78,7 +83,7 @@ export class ChartVisualizer {
   }
 
   private shouldRefreshPlotMaker(data: ChartData): boolean {
-    return !this.currentData || this.currentData.type !== data.type;
+    return !this.currentType || this.currentType !== data.type;
   }
 
   public onDataChanged(change: DataChange) {
@@ -124,5 +129,9 @@ export class ChartVisualizer {
 
   private createConfig(): Partial<Config> {
     return {responsive: true};
+  }
+
+  public resize() {
+    Plots.resize(this.chartElement.nativeElement);
   }
 }

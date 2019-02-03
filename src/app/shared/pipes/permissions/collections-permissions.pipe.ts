@@ -81,30 +81,28 @@ export class CollectionsPermissionsPipe implements PipeTransform {
         }
 
         return this.getViewCollectionIds(currentView).pipe(
-          map(
-            collectionIdsInView =>
-              collections.reduce((obj, collection) => {
-                if (!collection) {
-                  return obj;
-                }
+          map(collectionIdsInView =>
+            collections.reduce((obj, collection) => {
+              if (!collection) {
+                return obj;
+              }
 
-                const userRoles = userRolesInResource(currentUser, collection);
-                const read = userRoles.includes(Role.Read);
-                const write = userRoles.includes(Role.Write);
-                const manage = userRoles.includes(Role.Manage);
+              const userRoles = userRolesInResource(currentUser, collection);
+              const read = userRoles.includes(Role.Read);
+              const write = userRoles.includes(Role.Write);
+              const manage = userRoles.includes(Role.Manage);
 
-                const viewAllowedPermissions = collectionIdsInView.includes(collection.id)
-                  ? this.userPermissionsInView(currentUser, currentView, collection)
-                  : {};
+              const viewAllowedPermissions = collectionIdsInView.includes(collection.id)
+                ? this.userPermissionsInView(currentUser, currentView, collection)
+                : {};
 
-                const readWithView = viewAllowedPermissions.readWithView || read;
-                const writeWithView = viewAllowedPermissions.writeWithView || write;
-                const manageWithView = viewAllowedPermissions.manageWithView || manage;
+              const readWithView = viewAllowedPermissions.readWithView || read;
+              const writeWithView = viewAllowedPermissions.writeWithView || write;
+              const manageWithView = viewAllowedPermissions.manageWithView || manage;
 
-                const collectionPermissions = {read, write, manage, readWithView, writeWithView, manageWithView};
-                return {...obj, [collection.id]: collectionPermissions};
-              }),
-            {}
+              const collectionPermissions = {read, write, manage, readWithView, writeWithView, manageWithView};
+              return {...obj, [collection.id]: collectionPermissions};
+            }, {})
           )
         );
       })

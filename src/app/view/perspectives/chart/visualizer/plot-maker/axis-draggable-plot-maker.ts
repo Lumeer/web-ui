@@ -28,6 +28,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
   public abstract getTraceIndexForPoint(point: any): number;
 
+  public abstract getSetIndexForTraceIndex(traceIx: number): number;
+
   public abstract getPointPosition(point: any, datum: any): {x: number; y: number};
 
   public abstract getPointNewY(point: any, datum: any, event: any): number;
@@ -45,8 +47,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   }
 
   protected yAxis2Layout(): Partial<Layout> {
-    const containsY2Data = !!this.chartData.sets.find(data => data.yAxisType === ChartAxisType.Y2);
-    if (containsY2Data) {
+    if (this.isY2AxisPresented()) {
       if (this.isAxisCategory(ChartAxisType.Y2)) {
         return {
           yaxis2: {
@@ -92,8 +93,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     }, []);
   }
 
-  protected createYScale(traceIndex: number): (val: number) => any {
-    const yAxisElement = this.getYAxisElementForTrace(traceIndex);
+  protected createYScale(setIx: number): (val: number) => any {
+    const yAxisElement = this.getYAxisElementForTrace(setIx);
     if (yAxisElement.type === 'category') {
       return this.createYScaleCategories(yAxisElement);
     }
@@ -137,11 +138,12 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return element.height - element.margin.t - element.margin.b;
   }
 
-  protected getYAxisElementForTrace(index: number): any {
-    if (index > 0 || !this.isY1AxisPresented()) {
-      return this.getLayoutElement().yaxis2;
+  protected getYAxisElementForTrace(setIx: number): any {
+    const set = this.chartData.sets[setIx];
+    if (set.yAxisType === ChartAxisType.Y1) {
+      return this.getLayoutElement().yaxis;
     }
-    return this.getLayoutElement().yaxis;
+    return this.getLayoutElement().yaxis2;
   }
 
   protected isY1AxisPresented(): boolean {
@@ -178,12 +180,13 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .drag()
       .origin(function(datum: any) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
-        const yScale = plotMaker.createYScale(traceIx);
-        const initialValue = plotMaker.getInitialValue(traceIx, datum.i);
+        const setIx = plotMaker.getSetIndexForTraceIndex(traceIx);
+        const yScale = plotMaker.createYScale(setIx);
+        const initialValue = plotMaker.getInitialValue(setIx, datum.i);
         const lastValue = initialValue;
-        const isCategory = plotMaker.isTraceCategory(traceIx);
+        const isCategory = plotMaker.isTraceCategory(setIx);
 
-        let pointData: PointData = {traceIx, yScale, initialValue, lastValue, isCategory};
+        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, isCategory};
 
         if (datum.ct) {
           const initialY = datum.ct[1];
@@ -205,7 +208,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const index = datum.i;
         this.newValue = plotMaker.getNewValue(this, datum, d3.event);
 
-        const set = plotMaker.chartData.sets[pointData.traceIx];
+        const set = plotMaker.chartData.sets[pointData.setIx];
         const setId = set.id;
         const pointId = set && set.points[datum.i].id;
 
@@ -220,7 +223,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .on('dragend', function(datum: any) {
         const pointData: PointData = this.pointData;
 
-        const set = plotMaker.chartData.sets[pointData.traceIx];
+        const set = plotMaker.chartData.sets[pointData.setIx];
         const setId = set.id;
         const pointId = set && set.points[datum.i].id;
         const value = this.newValue;
@@ -229,15 +232,12 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       });
   }
 
-  private getInitialValue(traceIx: number, index: number): string | number {
-    return this.chartData.sets[traceIx].points[index].y;
+  private getInitialValue(setIx: number, index: number): string | number {
+    return this.chartData.sets[setIx].points[index].y;
   }
 
-  private isTraceCategory(index: number): boolean {
-    if (index > 0 || !this.isY1AxisPresented()) {
-      return this.isAxisCategory(ChartAxisType.Y2);
-    }
-    return this.isAxisCategory(ChartAxisType.Y1);
+  private isTraceCategory(setIx: number): boolean {
+    return !this.chartData.sets[setIx].isNumeric;
   }
 
   private getElementOffset(element: Element) {
@@ -279,6 +279,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
 export interface PointData {
   traceIx: number;
+  setIx: number;
   yScale: (val: number) => string | number;
   initialValue: string | number;
   lastValue: string | number;

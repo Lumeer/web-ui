@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -36,6 +36,9 @@ export class CollapsibleSidebarComponent implements OnChanges {
   @Input()
   public width = 280;
 
+  @Output()
+  public toggle = new EventEmitter();
+
   public collapsed$ = new BehaviorSubject(false);
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -46,5 +49,6 @@ export class CollapsibleSidebarComponent implements OnChanges {
 
   public onToggle() {
     this.collapsed$.next(!this.collapsed$.getValue());
+    this.toggle.next();
   }
 }

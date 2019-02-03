@@ -36,7 +36,6 @@ import {queryStemCollectionsOrder} from '../../../../../core/store/navigation/qu
 import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {Injectable} from '@angular/core';
-import {ChartPerspectiveModule} from '../../chart-perspective.module';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 interface DocumentWithLinks extends DocumentModel {
@@ -60,9 +59,7 @@ type DocumentsMap = Record<string, Record<string, DocumentWithLinks>>;
  */
 type DocumentsData = Record<string, any>;
 
-@Injectable({
-  providedIn: ChartPerspectiveModule,
-})
+@Injectable()
 export class ChartDataConverter {
   private collections: Collection[];
   private documents: DocumentModel[];
@@ -383,7 +380,7 @@ export class ChartDataConverter {
       const name = legendEntriesNames[i];
       const color = hex2rgba(baseCollection.color, colorAlpha / 100);
       sets.push({
-        id: baseCollection.id,
+        id: this.yAxisCollectionId(config, yAxisType),
         points: pointsMap[name],
         color,
         name,
@@ -401,6 +398,11 @@ export class ChartDataConverter {
     const yAxis = config.axes[yAxisType];
     const permission = this.permissions && yAxis && this.permissions[yAxis.collectionId];
     return (permission && permission.writeWithView) || false;
+  }
+
+  private yAxisCollectionId(config: ChartConfig, yAxisType: ChartYAxisType): string {
+    const yAxis = config.axes[yAxisType];
+    return (yAxis && yAxis.attributeId) || null;
   }
 
   private convertDocumentsMapDataSimple(
@@ -431,7 +433,7 @@ export class ChartDataConverter {
     const name = this.getAttributeNameForAxis(yAxis, baseCollection);
 
     const dataSet = {
-      id: baseCollection.id,
+      id: this.yAxisCollectionId(config, yAxisType),
       points,
       color: baseCollection.color,
       isNumeric: isNum,
@@ -520,7 +522,7 @@ export class ChartDataConverter {
     const name = this.getAttributeNameForAxis(yAxis, collection);
 
     const dataSet: ChartDataSet = {
-      id: collection.id,
+      id: (yAxis && yAxis.attributeId) || null,
       points,
       color: collection.color,
       isNumeric: isNum,
@@ -536,12 +538,12 @@ export class ChartDataConverter {
     return attribute && attribute.name;
   }
 
-  public convertAxisType(config: ChartConfig, type: ChartAxisType): ChartData {
+  public convertAxisType(config: ChartConfig, type: ChartYAxisType): ChartData {
     const collectionIdsOrder = queryStemCollectionsOrder(this.linkTypes || [], this.query.stems && this.query.stems[0]);
     const baseCollection = this.collections.find(collection => collection.id === collectionIdsOrder[0]);
     const documentsMap = this.createDocumentsMap(collectionIdsOrder);
 
-    const sets = this.convertAxis(config, ChartAxisType.Y1, baseCollection, documentsMap, collectionIdsOrder);
+    const sets = this.convertAxis(config, type, baseCollection, documentsMap, collectionIdsOrder);
     if (type === ChartAxisType.Y1) {
       this.y1Sets = sets;
     } else {

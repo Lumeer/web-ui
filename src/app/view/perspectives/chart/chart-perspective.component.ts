@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -31,7 +31,7 @@ import {
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {
   ChartAggregation,
   ChartAxisType,
@@ -48,6 +48,10 @@ import {Query} from '../../../core/store/navigation/query';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
 
 @Component({
   selector: 'chart-perspective',
@@ -62,18 +66,21 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
+  private resize$ = new Subject<void>();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initChart();
     this.subscribeToQuery();
     this.subscribeData();
+    this.subscribeValidConfig();
   }
 
   private subscribeToQuery() {
@@ -134,6 +141,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
     this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
 
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
@@ -150,5 +161,28 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  private subscribeValidConfig() {
+    const subscription = this.store$
+      .pipe(select(selectCollectionsByQuery))
+      .pipe(withLatestFrom(this.store$.pipe(select(selectChartConfig))))
+      .subscribe(([collections, config]) => {
+        const collectionIdsFromConfig = chartConfigCollectionIds(config);
+        const collectionMissing = collectionIdsFromConfig.some(
+          id => !collections.find(collection => collection.id === id)
+        );
+        collectionMissing && this.setDefaultConfig();
+      });
+    this.subscriptions.add(subscription);
+  }
+
+  private setDefaultConfig() {
+    const defaultConfig = this.createDefaultConfig();
+    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config: defaultConfig}));
+  }
+
+  public onSidebarToggle() {
+    this.resize$.next();
   }
 }

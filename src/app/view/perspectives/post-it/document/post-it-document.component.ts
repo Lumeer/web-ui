@@ -18,10 +18,8 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -29,7 +27,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 
 import {Observable} from 'rxjs';
@@ -48,7 +45,7 @@ import {SelectionHelper} from '../util/selection-helper';
   styleUrls: ['./post-it-document.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
+export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
   @Input() public collection: Collection;
@@ -58,8 +55,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
 
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
-
-  @ViewChild('content') public content: ElementRef;
 
   public rows$: Observable<UiRow[]>;
   public favorite$: Observable<boolean>;
@@ -85,10 +80,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
     if (changed) {
       this.sizeChange.emit();
     }
-  }
-
-  public ngAfterViewInit() {
-    this.disableScrollOnNavigation();
   }
 
   public onRemove() {
@@ -128,19 +119,11 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, Af
     }
   }
 
-  private disableScrollOnNavigation(): void {
-    const capture = false;
+  public onParentKeyDown(event: KeyboardEvent) {
     const scrollKeys: string[] = [KeyCode.ArrowUp, KeyCode.ArrowDown];
-
-    this.content.nativeElement.addEventListener(
-      'keydown',
-      (event: KeyboardEvent) => {
-        if (scrollKeys.includes(event.code)) {
-          event.preventDefault();
-        }
-      },
-      capture
-    );
+    if (scrollKeys.includes(event.code)) {
+      event.preventDefault();
+    }
   }
 
   public suggestionListId(): string {

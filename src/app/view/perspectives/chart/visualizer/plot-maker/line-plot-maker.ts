@@ -120,9 +120,14 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     return d3.selectAll('.scatterlayer .trace .points path');
   }
 
+  public getSetIndexForTraceIndex(traceIx: number): number {
+    return traceIx;
+  }
+
   public getTraceIndexForPoint(point: any): number {
-    const traceIds = this.getLayoutElement()._traceUids;
-    const traceClasses = (traceIds && traceIds.map(id => 'trace' + id)) || [];
+    const layoutElement = this.getLayoutElement();
+    const traceIds = layoutElement._traceUids;
+    const traceClasses = (traceIds && traceIds.map(id => layoutElement._traceWord + id)) || [];
     let node = d3.select(point).node() as Element;
     while (node) {
       const classList = node.classList;

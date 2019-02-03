@@ -26,10 +26,15 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {ChartData} from '../convertor/chart-data';
 import {ChartVisualizer} from '../../visualizer/chart-visualizer';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ValueChange} from '../../visualizer/plot-maker/plot-maker';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'chart-visualizer',
@@ -38,14 +43,27 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartVisualizerComponent implements OnChanges {
+export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public chartData: ChartData;
+
+  @Input()
+  public resize: Subject<void>;
+
+  @Output()
+  public change = new EventEmitter<ValueChange>();
 
   @ViewChild('chart')
   private chartElement: ElementRef;
 
+  private subscriptions = new Subscription();
   private chartVisualizer: ChartVisualizer;
+
+  public ngOnInit() {
+    if (this.resize) {
+      this.subscriptions.add(this.resize.subscribe(() => this.chartVisualizer && this.chartVisualizer.resize()));
+    }
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.chartData && this.chartData) {
@@ -67,12 +85,18 @@ export class ChartVisualizerComponent implements OnChanges {
   }
 
   private createChart() {
-    this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    const onValueChange = valueChange => this.change.next(valueChange);
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
     this.chartVisualizer.setWriteEnabled(this.isWritable());
     this.chartVisualizer.createChart(this.chartData);
   }
 
   private isWritable(): boolean {
     return this.chartData ? this.chartData.sets.some(set => set.draggable) : false;
+  }
+
+  public ngOnDestroy() {
+    this.chartVisualizer.destroyChart();
+    this.subscriptions.unsubscribe();
   }
 }

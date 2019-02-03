@@ -26,9 +26,10 @@ import {Query} from '../../../../core/store/navigation/query';
 import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ChartData} from './convertor/chart-data';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
+import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 
 @Component({
   selector: 'chart-data',
@@ -58,6 +59,9 @@ export class ChartDataComponent implements OnChanges {
   @Input()
   public config: ChartConfig;
 
+  @Input()
+  public resize: Subject<void>;
+
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
@@ -76,19 +80,14 @@ export class ChartDataComponent implements OnChanges {
     );
     let chartData: ChartData;
     if (this.onlyTypeChanged(changes)) {
-      console.log('onlyType');
       chartData = this.chartDataConverter.convertType(this.config.type);
     } else if (this.shouldRefreshBothAxis(changes)) {
-      console.log('both 1');
       chartData = this.chartDataConverter.convert(this.config);
     } else if (this.shouldRefreshY1Axis(changes)) {
-      console.log('just y1');
       chartData = this.chartDataConverter.convertAxisType(this.config, ChartAxisType.Y1);
     } else if (this.shouldRefreshY2Axis(changes)) {
-      console.log('just y2');
       chartData = this.chartDataConverter.convertAxisType(this.config, ChartAxisType.Y2);
     } else {
-      console.log('both 2');
       chartData = this.chartDataConverter.convert(this.config);
     }
     this.chartData$.next(chartData);
@@ -120,27 +119,14 @@ export class ChartDataComponent implements OnChanges {
       return true;
     }
 
-    if (this.xAxisChanged(changes) || this.sortChanged(changes)) {
+    if (this.xAxisOrSortChanged(changes)) {
       return true;
     }
 
     return this.shouldRefreshY1Axis(changes) && this.shouldRefreshY2Axis(changes);
   }
 
-  private xAxisChanged(changes: SimpleChanges): boolean {
-    if (!changes.config || !changes.config.previousValue) {
-      return false;
-    }
-    const previousConfig = changes.config.previousValue as ChartConfig;
-    const currentConfig = changes.config.currentValue as ChartConfig;
-
-    const xAxisPrevious = previousConfig.axes && previousConfig.axes[ChartAxisType.X];
-    const xAxisCurrent = currentConfig.axes && currentConfig.axes[ChartAxisType.X];
-
-    return !deepObjectsEquals(xAxisPrevious, xAxisCurrent);
-  }
-
-  private sortChanged(changes: SimpleChanges): boolean {
+  private xAxisOrSortChanged(changes: SimpleChanges): boolean {
     if (!changes.config || !changes.config.previousValue) {
       return false;
     }
@@ -150,7 +136,10 @@ export class ChartDataComponent implements OnChanges {
     const sortPrevious = previousConfig.sort;
     const sortCurrent = currentConfig.sort;
 
-    return !deepObjectsEquals(sortPrevious, sortCurrent);
+    const xAxisPrevious = previousConfig.axes && previousConfig.axes[ChartAxisType.X];
+    const xAxisCurrent = currentConfig.axes && currentConfig.axes[ChartAxisType.X];
+
+    return !deepObjectsEquals(xAxisPrevious, xAxisCurrent) || !deepObjectsEquals(sortPrevious, sortCurrent);
   }
 
   private shouldRefreshY1Axis(changes: SimpleChanges): boolean {
@@ -183,5 +172,19 @@ export class ChartDataComponent implements OnChanges {
       !deepObjectsEquals(yDataSetPrevious, yDataSetCurrent) ||
       !deepObjectsEquals(yAggregationPrevious, yAggregationCurrent)
     );
+  }
+
+  public onValueChange(valueChange: ValueChange) {
+    const attributeId = valueChange.setId;
+    const documentId = valueChange.pointId;
+    const value = valueChange.value;
+
+    const changedDocument = this.documents.find(document => document.id === documentId);
+    if (!changedDocument) {
+      return;
+    }
+
+    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
+    this.patchData.emit(patchDocument);
   }
 }

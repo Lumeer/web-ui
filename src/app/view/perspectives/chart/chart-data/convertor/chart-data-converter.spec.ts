@@ -89,7 +89,7 @@ describe('Chart data converter single collection', () => {
       axes: {[ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0}},
     };
     const set: ChartDataSet = {
-      id: 'C1',
+      id: null,
       points: [
         {id: null, x: 'Sport', y: undefined},
         {id: null, x: 'Dance', y: undefined},
@@ -112,7 +112,7 @@ describe('Chart data converter single collection', () => {
       axes: {[ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0}},
     };
     const set: ChartDataSet = {
-      id: 'C1',
+      id: 'a2',
       points: [
         {id: 'D1', x: undefined, y: 3},
         {id: 'D2', x: undefined, y: 7},
@@ -142,7 +142,7 @@ describe('Chart data converter single collection', () => {
       },
     };
     const set: ChartDataSet = {
-      id: 'C1',
+      id: 'a2',
       points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
       color: '#ffffff',
       isNumeric: true,

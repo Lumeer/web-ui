@@ -112,6 +112,9 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   private firstNonNullValue(sets: ChartDataSet[]): {x: any; y: any} {
     for (const set of sets) {
+      if (set.isNumeric) {
+        return {x: 0, y: 0};
+      }
       const point = set.points.find(p => isNotNullOrUndefind(p.x) && isNotNullOrUndefind(p.y));
       if (point) {
         return {x: point.x, y: point.y};
@@ -145,6 +148,10 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   public getPointPosition(point: any, datum: any): {x: number; y: number} {
     return {x: datum.x, y: point.clickedY};
+  }
+
+  public getSetIndexForTraceIndex(traceIx: number): number {
+    return traceIx % this.chartData.sets.length;
   }
 
   public getTraceIndexForPoint(point: any): number {
