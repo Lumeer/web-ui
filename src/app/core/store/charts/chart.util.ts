@@ -19,11 +19,12 @@
 
 import {ChartConfig} from './chart';
 import {isNotNullOrUndefind} from '../../../shared/utils/common.utils';
+import {uniqueValues} from '../../../shared/utils/array.utils';
 
 export function chartConfigCollectionIds(config: ChartConfig): string[] {
   const sortId = config.sort && config.sort.axis && config.sort.axis.collectionId;
   const axesIds = Object.values(config.axes || {}).map(axis => axis.collectionId);
   const axesNamesIds = Object.values(config.names || {}).map(axis => axis.collectionId);
 
-  return [...axesIds, ...axesNamesIds, sortId].filter(id => isNotNullOrUndefind(id));
+  return uniqueValues<string>([...axesIds, ...axesNamesIds, sortId].filter(id => isNotNullOrUndefind(id)));
 }

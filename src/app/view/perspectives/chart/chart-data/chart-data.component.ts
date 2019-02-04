@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -26,10 +36,30 @@ import {Query} from '../../../../core/store/navigation/query';
 import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ChartData} from './convertor/chart-data';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
 import {ValueChange} from '../visualizer/plot-maker/plot-maker';
+import {ChartVisualizerComponent} from './chart-visualizer/chart-visualizer.component';
+import {buffer, debounceTime, map} from 'rxjs/operators';
+
+interface Data {
+  collections: Collection[];
+  documents: DocumentModel[];
+  linkTypes: LinkType[];
+  linkInstances: LinkInstance[];
+  permissions: Record<string, AllowedPermissions>;
+  query: Query;
+  config: ChartConfig;
+  updateType: UpdateType;
+}
+
+enum UpdateType {
+  Type = 'type',
+  Y1 = 'y1',
+  Y2 = 'y2',
+  Whole = 'whole',
+}
 
 @Component({
   selector: 'chart-data',
@@ -37,7 +67,7 @@ import {ValueChange} from '../visualizer/plot-maker/plot-maker';
   providers: [ChartDataConverter],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartDataComponent implements OnChanges {
+export class ChartDataComponent implements OnInit, OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -59,38 +89,78 @@ export class ChartDataComponent implements OnChanges {
   @Input()
   public config: ChartConfig;
 
-  @Input()
-  public resize: Subject<void>;
-
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
-  public chartData$ = new BehaviorSubject<ChartData>(null);
+  @ViewChild(ChartVisualizerComponent)
+  public chartVisualizerComponent: ChartVisualizerComponent;
+
+  public chartData$: Observable<ChartData>;
+  public dataSubject = new Subject<Data>();
 
   constructor(private chartDataConverter: ChartDataConverter) {}
 
-  public ngOnChanges(changes: SimpleChanges) {
-    this.chartDataConverter.updateData(
-      this.collections,
-      this.documents,
-      this.permissions,
-      this.query,
-      this.linkTypes,
-      this.linkInstances
+  public ngOnInit() {
+    const closingNotifier = this.dataSubject.pipe(debounceTime(100));
+    this.chartData$ = this.dataSubject.pipe(
+      buffer(closingNotifier),
+      map(data => this.handleData(data))
     );
-    let chartData: ChartData;
-    if (this.onlyTypeChanged(changes)) {
-      chartData = this.chartDataConverter.convertType(this.config.type);
-    } else if (this.shouldRefreshBothAxis(changes)) {
-      chartData = this.chartDataConverter.convert(this.config);
-    } else if (this.shouldRefreshY1Axis(changes)) {
-      chartData = this.chartDataConverter.convertAxisType(this.config, ChartAxisType.Y1);
-    } else if (this.shouldRefreshY2Axis(changes)) {
-      chartData = this.chartDataConverter.convertAxisType(this.config, ChartAxisType.Y2);
+  }
+
+  private handleData(data: Data[]): ChartData {
+    const latestData = data[data.length - 1];
+    this.updateDataForConverter(latestData);
+
+    const updates = data.map(d => d.updateType);
+    if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
+      return this.chartDataConverter.convert(latestData.config);
+    } else if (updates.includes(UpdateType.Y1)) {
+      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y1);
+    } else if (updates.includes(UpdateType.Y2)) {
+      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y2);
+    } else if (updates.includes(UpdateType.Type)) {
+      return this.chartDataConverter.convertType(latestData.config.type);
     } else {
-      chartData = this.chartDataConverter.convert(this.config);
+      return this.chartDataConverter.convert(latestData.config);
     }
-    this.chartData$.next(chartData);
+  }
+
+  private updateDataForConverter(latestData: Data) {
+    this.chartDataConverter.updateData(
+      latestData.collections,
+      latestData.documents,
+      latestData.permissions,
+      latestData.query,
+      latestData.linkTypes,
+      latestData.linkInstances
+    );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    let updateType: UpdateType;
+    if (this.onlyTypeChanged(changes)) {
+      updateType = UpdateType.Type;
+    } else if (this.shouldRefreshBothAxis(changes)) {
+      updateType = UpdateType.Whole;
+    } else if (this.shouldRefreshY1Axis(changes)) {
+      updateType = UpdateType.Y1;
+    } else if (this.shouldRefreshY2Axis(changes)) {
+      updateType = UpdateType.Y2;
+    } else {
+      updateType = UpdateType.Whole;
+    }
+
+    this.dataSubject.next({
+      documents: this.documents,
+      config: this.config,
+      collections: this.collections,
+      linkTypes: this.linkTypes,
+      linkInstances: this.linkInstances,
+      permissions: this.permissions,
+      query: this.query,
+      updateType,
+    });
   }
 
   private onlyTypeChanged(changes: SimpleChanges): boolean {
@@ -186,5 +256,9 @@ export class ChartDataComponent implements OnChanges {
 
     const patchDocument = {...changedDocument, data: {[attributeId]: value}};
     this.patchData.emit(patchDocument);
+  }
+
+  public resize() {
+    this.chartVisualizerComponent && this.chartVisualizerComponent.resize();
   }
 }

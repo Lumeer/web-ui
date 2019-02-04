@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -52,6 +52,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
+import {ChartDataComponent} from './chart-data/chart-data.component';
 
 @Component({
   selector: 'chart-perspective',
@@ -60,6 +61,9 @@ import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
+  @ViewChild(ChartDataComponent)
+  public chartDataComponent: ChartDataComponent;
+
   public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
@@ -69,7 +73,6 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
-  public resize$ = new Subject<void>();
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
@@ -183,6 +186,6 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onSidebarToggle() {
-    this.resize$.next();
+    this.chartDataComponent && this.chartDataComponent.resize();
   }
 }

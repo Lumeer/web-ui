@@ -15,7 +15,7 @@
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
           type="button">
 
-    <span class="flex-grow-1 text-left text-light" *ngIf="!(selectedId | getSelectItem:items)">{{emptyValue}}</span>
+    <span class="flex-grow-1 text-left empty-text" *ngIf="!(selectedId | getSelectItem:items)">{{emptyValue}}</span>
 
     <ng-container *ngIf="selectedId | getSelectItem:items as selectedItem">
 

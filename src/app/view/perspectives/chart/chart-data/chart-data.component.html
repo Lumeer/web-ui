@@ -1,6 +1,3 @@
-<ng-container *ngIf="chartData$ | async as chartData">
-  <chart-visualizer [chartData]="chartData"
-                    [resize]="resize"
-                    (change)="onValueChange($event)">
-  </chart-visualizer>
-</ng-container>
+<chart-visualizer [chartData]="chartData$ | async"
+                  (change)="onValueChange($event)">
+</chart-visualizer>

@@ -29,12 +29,10 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  OnInit,
 } from '@angular/core';
 import {ChartData} from '../convertor/chart-data';
 import {ChartVisualizer} from '../../visualizer/chart-visualizer';
 import {ValueChange} from '../../visualizer/plot-maker/plot-maker';
-import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'chart-visualizer',
@@ -43,12 +41,9 @@ import {Subject, Subscription} from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
+export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   @Input()
   public chartData: ChartData;
-
-  @Input()
-  public resize: Subject<void>;
 
   @Output()
   public change = new EventEmitter<ValueChange>();
@@ -56,14 +51,7 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('chart')
   private chartElement: ElementRef;
 
-  private subscriptions = new Subscription();
   private chartVisualizer: ChartVisualizer;
-
-  public ngOnInit() {
-    if (this.resize) {
-      this.subscriptions.add(this.resize.subscribe(() => this.chartVisualizer && this.chartVisualizer.resize()));
-    }
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.chartData && this.chartData) {
@@ -97,6 +85,9 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.chartVisualizer.destroyChart();
-    this.subscriptions.unsubscribe();
+  }
+
+  public resize() {
+    this.chartVisualizer && this.chartVisualizer.resize();
   }
 }
