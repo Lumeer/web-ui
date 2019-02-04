@@ -61,7 +61,7 @@
         <blockly-form
           *ngSwitchCase="ruleType.Blockly"
           [form]="configBlockly"
-          (onOpenDialog)="fireOpenBlockly(rule.name)">
+          [collection]="collection">
         </blockly-form>
       </div>
 

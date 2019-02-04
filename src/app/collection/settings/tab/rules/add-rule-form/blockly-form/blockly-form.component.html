@@ -67,6 +67,10 @@
     </button>
   </div>
 
-  <blockly-editor></blockly-editor>
+  <blockly-editor
+    [collections]="collections$ | async"
+    [linkTypes]="linkTypes$ | async"
+    [variables]="variables">
+  </blockly-editor>
 
 </div>

@@ -50,13 +50,13 @@ declare var Blockly: any;
 })
 export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   @Input('collections')
-  public collections: Collection[];
+  public collections: Collection[] = [];
 
   @Input('linkTypes')
-  public linkTypes: LinkType[];
+  public linkTypes: LinkType[] = [];
 
   @Input('variables')
-  public variables: Variable[];
+  public variables: Variable[] = [];
 
   @ViewChild('loading')
   private loadingElement: ElementRef;
@@ -123,7 +123,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     //this.workspace = Blockly.inject('blockly', {toolbox: toolbox.BLOCKLY_TOOLBOX});
 
-    Blockly.Blocks[BlocklyEditorComponent.STATEMENT_CONTAINER] = {
+    (window as any).Blockly.Blocks[BlocklyEditorComponent.STATEMENT_CONTAINER] = {
       init: function() {
         this.jsonInit({
           type: BlocklyEditorComponent.STATEMENT_CONTAINER,

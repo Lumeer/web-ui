@@ -17,9 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
+import {Observable} from 'rxjs';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../../core/store/app.state';
+import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Variable} from '../../variable-type';
 
 @Component({
   selector: 'blockly-form',
@@ -27,17 +35,26 @@ import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
   styleUrls: ['./blockly-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyFormComponent {
+export class BlocklyFormComponent implements OnInit {
+
   @Input()
   public config: BlocklyRuleConfiguration;
 
   @Input()
+  public collection: Collection;
+
+  @Input()
   public form: FormGroup;
 
-  @Output()
-  public onOpenDialog = new EventEmitter();
-
   public displayDebug = '';
+
+  public collections$: Observable<Collection[]>;
+
+  public linkTypes$: Observable<LinkType[]>;
+
+  public variables: Variable[];
+
+  public constructor(private store$: Store<AppState>) {}
 
   public get blocklyJs(): string {
     return this.form.get('blocklyJs').value;
@@ -63,7 +80,12 @@ export class BlocklyFormComponent {
     }
   }
 
-  public openEditor() {
-    this.onOpenDialog.emit();
+  public ngOnInit(): void {
+    this.collections$ = this.store$.select(selectAllCollections);
+    this.linkTypes$ = this.store$.select(selectAllLinkTypes);
+    this.variables = [
+      { name: 'oldDocument', collectionId: this.collection.id },
+      { name: 'newDocument', collectionId: this.collection.id },
+    ];
   }
 }
