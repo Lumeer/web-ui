@@ -59,8 +59,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder) {
-  }
+  constructor(private fb: FormBuilder) {}
 
   public ngOnInit() {
     this.form = this.fb.group({
@@ -195,7 +194,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   }
 
   public usedNameValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (control: AbstractControl): {[key: string]: any} | null => {
       if (this.originalRuleName && this.originalRuleName === control.value) {
         return null;
       }
@@ -227,9 +226,5 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public submitRule(): void {
     this.onSaveRule.emit(this.getRuleFromForm());
-  }
-
-  public saveBlockly(js: string, xml: string) {
-    console.log('saving ' + js + ' and ' + xml);
   }
 }

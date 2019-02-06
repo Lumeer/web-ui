@@ -22,10 +22,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Inject,
   Input,
   OnDestroy,
-  OnInit,
+  Output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -60,6 +61,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('loading')
   private loadingElement: ElementRef;
+
+  @Output()
+  public onJsUpdate = new EventEmitter<string>();
+
+  @Output()
+  public onXmlUpdate = new EventEmitter<string>();
 
   public blocklyId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
@@ -437,7 +444,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
-    this_.code = Blockly.JavaScript.workspaceToCode(workspace);
+    this_.generateXml();
+    this_.generateJs();
   }
 
   private ensureEmptyTypes(block): void {
@@ -524,7 +532,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   private ensureVariableTypeBlock(this_: BlocklyEditorComponent, type: string): void {
-    if (!Blockly.Blocks[type]) {
+    if (!Blockly.Blocks[BlocklyEditorComponent.VARIABLES_GET_PREFIX + type]) {
       const collection = this_.getCollection(type.replace(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX, ''));
 
       Blockly.Blocks[BlocklyEditorComponent.VARIABLES_GET_PREFIX + type] = {
@@ -644,10 +652,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     return shadeColor(color, percent);
   }
 
-  public generateXml(): void {
-    const xml = Blockly.Xml.workspaceToDom(this.workspace);
-    const xml_text = Blockly.Xml.domToPrettyText(xml);
+  private generateXml(): void {
+    this.onXmlUpdate.emit(Blockly.Xml.workspaceToDom(this.workspace));
+  }
 
-    console.log(xml_text);
+  private generateJs(): void {
+    this.onJsUpdate.emit(Blockly.JavaScript.workspaceToCode(this.workspace));
   }
 }

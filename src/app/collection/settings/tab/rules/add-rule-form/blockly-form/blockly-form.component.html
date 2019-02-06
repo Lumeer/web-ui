@@ -68,6 +68,8 @@
   </div>
 
   <blockly-editor
+    (onJsUpdate)="onJsUpdate($event)"
+    (onXmlUpdate)="onXmlUpdate($event)"
     [collections]="collections$ | async"
     [linkTypes]="linkTypes$ | async"
     [variables]="variables">

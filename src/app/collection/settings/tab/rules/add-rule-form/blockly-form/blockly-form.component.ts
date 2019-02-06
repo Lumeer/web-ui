@@ -36,7 +36,6 @@ import {Variable} from '../../variable-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlocklyFormComponent implements OnInit {
-
   @Input()
   public config: BlocklyRuleConfiguration;
 
@@ -84,8 +83,16 @@ export class BlocklyFormComponent implements OnInit {
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
     this.variables = [
-      { name: 'oldDocument', collectionId: this.collection.id },
-      { name: 'newDocument', collectionId: this.collection.id },
+      {name: 'oldDocument', collectionId: this.collection.id},
+      {name: 'newDocument', collectionId: this.collection.id},
     ];
+  }
+
+  public onJsUpdate(jsCode: string) {
+    this.form.get('blocklyJs').setValue(jsCode);
+  }
+
+  public onXmlUpdate(xmlCode: string) {
+    this.form.get('blocklyXml').setValue(xmlCode);
   }
 }
