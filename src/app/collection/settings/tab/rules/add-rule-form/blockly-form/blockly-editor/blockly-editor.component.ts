@@ -40,6 +40,8 @@ import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {Variable} from '../../../variable-type';
 import {shadeColor} from '../../../../../../../shared/utils/html-modifier';
+import {COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
+import {ContrastColorPipe} from '../../../../../../../shared/pipes/contrast-color.pipe';
 
 declare var Blockly: any;
 
@@ -86,16 +88,13 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private static readonly UNKNOWN = 'unknown';
   private static readonly STATEMENT_CONTAINER = 'statement_container';
 
-  private static readonly $red = '#e74c3c';
-  private static readonly $green = '#00b388';
-  private static readonly $gray200 = '#ecf0f1';
-
   constructor(
     private store$: Store<AppState>,
     private route: ActivatedRoute,
     private dialogService: DialogService,
     private renderer2: Renderer2,
-    @Inject(DOCUMENT) private document
+    @Inject(DOCUMENT) private document,
+    private contrastColorPipe: ContrastColorPipe
   ) {}
 
   public ngAfterViewInit(): void {
@@ -124,13 +123,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     );
     const collectionTypes = this.collections.map(c => c.id + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX);
     const collection = this.getCollection(this.variables[0].collectionId);
-    const color = this.shadeColor(collection.color, 0.7);
+    const color = this.shadeColor(collection.color, -0.5);
 
-    //Blockly.HSV_VALUE = 0.85;
-
-    //this.workspace = Blockly.inject('blockly', {toolbox: toolbox.BLOCKLY_TOOLBOX});
-
-    (window as any).Blockly.Blocks[BlocklyEditorComponent.STATEMENT_CONTAINER] = {
+    Blockly.Blocks[BlocklyEditorComponent.STATEMENT_CONTAINER] = {
       init: function() {
         this.jsonInit({
           type: BlocklyEditorComponent.STATEMENT_CONTAINER,
@@ -191,7 +186,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           ],
           previousStatement: null,
           nextStatement: null,
-          colour: BlocklyEditorComponent.$red,
+          colour: COLOR_RED,
         });
       },
     };
@@ -214,7 +209,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             },
           ],
           output: '',
-          colour: BlocklyEditorComponent.$green,
+          colour: COLOR_GREEN,
           tooltip: '',
           helpUrl: '',
         });
@@ -257,7 +252,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           ],
           previousStatement: null,
           nextStatement: null,
-          colour: BlocklyEditorComponent.$green,
+          colour: COLOR_GREEN,
         });
       },
     };
@@ -549,6 +544,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               {
                 type: 'field_label',
                 text: collection.name,
+                class: this_.contrastColor(collection.color, 'text-primary', 'text-light'),
               },
               {
                 type: 'field_variable',
@@ -625,7 +621,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               },
             ],
             output: BlocklyEditorComponent.UNKNOWN,
-            colour: BlocklyEditorComponent.$gray200,
+            colour: COLOR_GRAY200,
             tooltip: '',
             helpUrl: '',
           });
@@ -650,6 +646,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   // bridge for functions running outside of ng zone
   private shadeColor(color: string, percent: number): string {
     return shadeColor(color, percent);
+  }
+
+  private contrastColor(color?: string, dark?: string, light?: string): string {
+    return color ? this.contrastColorPipe.transform(color, {dark, light}) : dark ? dark : COLOR_PRIMARY;
   }
 
   private generateXml(): void {

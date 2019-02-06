@@ -8,9 +8,13 @@
 }
 
 ::ng-deep {
-
   .black-text {
     color: black;
+  }
+
+  .blocklyTreeRow {
+    line-height: 1.8rem;
+    height: 2rem;
   }
 
   .blocklyTreeLabel {
@@ -23,6 +27,11 @@
     &.text-primary {
       fill: $primary;
       color: $primary;
+    }
+
+    &.text-light {
+      fill: $light;
+      color: $light;
     }
 
     &.blocklyFontAwesome {
