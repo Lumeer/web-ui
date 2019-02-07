@@ -55,6 +55,10 @@ export class BlocklyFormComponent implements OnInit {
 
   public constructor(private store$: Store<AppState>) {}
 
+  public get blocklyXml(): string {
+    return this.form.get('blocklyXml').value;
+  }
+
   public get blocklyJs(): string {
     return this.form.get('blocklyJs').value;
   }

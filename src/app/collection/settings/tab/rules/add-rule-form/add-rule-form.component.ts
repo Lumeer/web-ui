@@ -72,7 +72,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
           disabled: this.rule.type === RuleType.AutoLink,
         },
       ],
-      type: RuleType.AutoLink,
+      type: this.rule.type,
       configAutoLink: this.fb.group({
         collection1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection1 : ''],
         collection2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection2 : ''],
@@ -83,7 +83,9 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
       configBlockly: this.fb.group({
         blocklyXml: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyXml : ''],
         blocklyJs: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyJs : ''],
-        blocklyDryRun: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyDryRun : ''],
+        blocklyDryRun: [
+          this.rule.type === RuleType.Blockly ? (this.rule.configuration.blocklyDryRun ? true : false) : false,
+        ],
         blocklyDryRunResult: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyDryRunResult : ''],
         blocklyError: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyError : ''],
         blocklyResultTimestamp: [

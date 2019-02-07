@@ -40,7 +40,7 @@ import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {Variable} from '../../../variable-type';
 import {shadeColor} from '../../../../../../../shared/utils/html-modifier';
-import {COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
+import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
 import {ContrastColorPipe} from '../../../../../../../shared/pipes/contrast-color.pipe';
 
 declare var Blockly: any;
@@ -60,6 +60,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input('variables')
   public variables: Variable[] = [];
+
+  @Input('xml')
+  public xml: string = '';
 
   @ViewChild('loading')
   private loadingElement: ElementRef;
@@ -123,7 +126,6 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     );
     const collectionTypes = this.collections.map(c => c.id + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX);
     const collection = this.getCollection(this.variables[0].collectionId);
-    const color = this.shadeColor(collection.color, -0.5);
 
     Blockly.Blocks[BlocklyEditorComponent.STATEMENT_CONTAINER] = {
       init: function() {
@@ -148,7 +150,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               name: 'COMMANDS',
             },
           ],
-          colour: color,
+          colour: COLOR_DARK,
         });
       },
     };
@@ -277,18 +279,30 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables);
     this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks);
 
-    this.variables.forEach(variable =>
-      this.workspace.createVariable(
-        variable.name,
-        variable.collectionId + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX,
-        null
-      )
-    );
+    if (this.xml) {
+      const dom: Element = Blockly.Xml.textToDom(this.xml);
+      const vars = dom.getElementsByTagName('variable');
+      for (let i = 0; i < vars.length; i++) {
+        const varType = vars.item(i).attributes.getNamedItem('type').value;
+        if (varType.endsWith(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX)) {
+          this.ensureVariableTypeBlock(this, varType);
+        }
+      }
+      Blockly.Xml.domToWorkspace(dom, this.workspace);
+    } else {
+      this.variables.forEach(variable =>
+        this.workspace.createVariable(
+          variable.name,
+          variable.collectionId + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX,
+          null
+        )
+      );
 
-    const containerBlock = this.workspace.newBlock(BlocklyEditorComponent.STATEMENT_CONTAINER);
-    containerBlock.setDeletable(false);
-    containerBlock.initSvg();
-    containerBlock.render();
+      const containerBlock = this.workspace.newBlock(BlocklyEditorComponent.STATEMENT_CONTAINER);
+      containerBlock.setDeletable(false);
+      containerBlock.initSvg();
+      containerBlock.render();
+    }
   }
 
   public ngOnDestroy(): void {
@@ -653,7 +667,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   private generateXml(): void {
-    this.onXmlUpdate.emit(Blockly.Xml.workspaceToDom(this.workspace));
+    this.onXmlUpdate.emit(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace)));
   }
 
   private generateJs(): void {
