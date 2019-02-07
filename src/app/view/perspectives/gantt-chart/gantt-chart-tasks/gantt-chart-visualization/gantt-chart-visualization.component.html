@@ -1,0 +1,13 @@
+<div class="w-100" id="ganttChart" [style.margin-top.rem]="canManageConfig && ganttChart ? 5 : 0">
+</div>
+<empty-state
+  class="w-100"
+  *ngIf="!ganttChart"
+  [icon]="'fal fa-folder-times'">
+
+  <h3 i18n="@@perspective.gantt.empty.title"> We can not find any task!</h3>
+  <div i18n="@@perspective.gantt.empty.subtitle" *ngIf="canManageConfig">
+    Select correct attributes from side menu
+  </div>
+
+</empty-state>

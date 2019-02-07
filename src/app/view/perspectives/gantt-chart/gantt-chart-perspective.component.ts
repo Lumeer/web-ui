@@ -23,9 +23,7 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByCustomQuery,
-  selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
-  selectDocumentsByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -44,11 +42,12 @@ import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 @Component({
   selector: 'gantt-chart-perspective',
   templateUrl: './gantt-chart-perspective.component.html',
+  styleUrls: ['./gantt-chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<Collection>;
+  public collections$: Observable<Collection[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
 
@@ -96,7 +95,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): GanttChartConfig {
-    return {mode: GanttChartMode.Day, barsProperties: {}};
+    return {mode: GanttChartMode.Day, collections: {}};
   }
 
   private subscribeToQuery() {
@@ -109,10 +108,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
         this.fetchDocuments(query);
         this.query$.next(query);
         this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-        this.collection$ = this.store$.pipe(
-          select(selectCollectionsByCustomQuery(query)),
-          map(collections => collections[0])
-        );
+        this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
       });
     this.subscriptions.add(subscription);
   }

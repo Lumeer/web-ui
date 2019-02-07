@@ -27,7 +27,11 @@ export interface GanttChart {
 
 export interface GanttChartConfig {
   mode: GanttChartMode;
-  barsProperties: {[type: string]: GanttChartBarModel};
+  collections: Record<string, GanttChartCollectionConfig>;
+}
+
+export interface GanttChartCollectionConfig {
+  barsProperties: Record<string, GanttChartBarModel>;
 }
 
 export interface GanttChartBarModel {
@@ -36,13 +40,15 @@ export interface GanttChartBarModel {
 }
 
 export interface GanttChartTask {
-  id: string;
+  id?: string;
   name: string;
   start: string;
   end: string;
   progress: number;
-  dependencies: number;
+  dependencies: string;
   documentId?: string;
+  collectionId?: string;
+  color?: string;
 }
 
 export enum GanttChartMode {

@@ -18,53 +18,44 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {
   GanttChartBarModel,
   GanttChartBarProperty,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
-  GanttChartConfig,
-  GanttChartMode,
-} from '../../../../core/store/gantt-charts/gantt-chart';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+} from '../../../../../core/store/gantt-charts/gantt-chart';
 
 @Component({
-  selector: 'gantt-chart-config',
-  templateUrl: './gantt-chart-config.component.html',
+  selector: 'gantt-chart-collection-config',
+  templateUrl: './gantt-chart-collection-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartConfigComponent {
+export class GanttChartCollectionConfigComponent {
   @Input()
-  public collections: Collection[];
+  public collection: Collection;
 
   @Input()
-  public config: GanttChartConfig;
+  public config: GanttChartCollectionConfig;
 
   @Output()
-  public configChange = new EventEmitter<GanttChartConfig>();
+  public configChange = new EventEmitter<GanttChartCollectionConfig>();
 
-  public readonly viewModePlaceholder: string;
+  public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
+  public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly ganttChartModes = Object.values(GanttChartMode);
 
-  constructor(private i18n: I18n) {
-    this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
-  }
-
-  public onModeSelect(mode: GanttChartMode) {
-    const newConfig = {...this.config, mode: mode};
+  public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
+    const bars = {...(this.config.barsProperties || {}), [type]: bar};
+    const newConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
-  public onCollectionConfigChange(collection: Collection, collectionConfig: GanttChartCollectionConfig) {
-    const collectionsConfig = {...(this.config.collections || {})};
-    collectionsConfig[collection.id] = collectionConfig;
-    this.configChange.emit({...this.config, collections: collectionsConfig});
-  }
-
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+  public onBarPropertyRemoved(type: GanttChartBarProperty) {
+    const bars = {...(this.config.barsProperties || {})};
+    delete bars[type];
+    const newConfig = {...this.config, barsProperties: bars};
+    this.configChange.emit(newConfig);
   }
 }

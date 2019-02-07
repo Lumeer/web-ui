@@ -1,51 +1,25 @@
-<div class="d-flex justify-content-center flex-row align-items-center flex-wrap" *ngIf="config">
+<ng-container *ngIf="config">
 
-  <select-item class="mr-2"
+  <h6 class="font-weight-bold" i18n="@@perspective.chart.config.main.header">
+    Main settings
+  </h6>
+
+  <select-item class="d-block w-100 mt-2"
                [placeholderText]="viewModePlaceholder"
                [items]="ganttChartModes | ganttChartModesToSelect"
                [selectedId]="config.mode"
-               [disabled]="!canManageConfig"
+               [buttonClasses]="buttonClasses"
                (select)="onModeSelect($event)">
   </select-item>
 
-  <ng-container *ngFor="let propertyRequired of ganttChartBarsPropertiesRequired; let isLast = last">
-    <select-item
-      [class.mr-2]="!isLast"
-      [items]="[collection] | ganttChartPropertyItems:propertyRequired:config"
-      [selectedId]="config.barsProperties[propertyRequired]"
-      [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
-      [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
-      [disabled]="!canManageConfig"
-      [removable]="true"
-      (select)="onBarPropertySelect(propertyRequired, $event)"
-      (remove)="onBarPropertyRemoved(propertyRequired)">
-    </select-item>
-  </ng-container>
-</div>
+  <gantt-chart-collection-config *ngFor="let collection of collections; trackBy:trackByCollection"
+                                 class="d-block mt-4"
+                                 [config]="config?.collections[collection.id] || {}"
+                                 [collection]="collection"
+                                 (configChange)="onCollectionConfigChange(collection, $event)">
+  </gantt-chart-collection-config>
 
-<div *ngIf="config | ganttChartRequiredPropertiesSet" class="d-flex justify-content-center flex-row align-items-center flex-wrap mt-2">
-  <ng-container *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional; let isLast = last">
-    <select-item
-      [class.mr-2]="!isLast"
-      [items]="[collection] | ganttChartPropertyItems:propertyOptional:config"
-      [selectedId]="config.barsProperties[propertyOptional]"
-      [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
-      [disabled]="!canManageConfig"
-      [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
-      [removable]="true"
-      (select)="onBarPropertySelect(propertyOptional, $event)"
-      (remove)="onBarPropertyRemoved(propertyOptional)">
-    </select-item>
-  </ng-container>
-</div>
-
-<div *ngIf="!(config | ganttChartRequiredPropertiesSet)" class="flex-grow-1 ">
-  <div class="d-flex flex-column align-items-center justify-content-center">
-    <i class="fa-5x far fa-calendar-times"></i>
-    <h3> No temporal data found!</h3>
-    <div> Make sure you have selected an attribute with date and time.</div>
-  </div>
-</div>
+</ng-container>
 
 
 

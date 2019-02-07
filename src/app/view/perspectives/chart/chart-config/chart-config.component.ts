@@ -61,11 +61,11 @@ export class ChartConfigComponent {
   public readonly xAxisType = ChartAxisType.X;
   public readonly yAxisTypes = [ChartAxisType.Y1, ChartAxisType.Y2];
 
-  public readonly buttonClasses = 'flex-grow-1';
+  public readonly buttonClasses = 'flex-grow-1  text-truncate';
 
-  public sortPlaceholder: string;
-  public sortTypePlaceholder: string;
-  public axisEmptyValue: string;
+  public readonly sortPlaceholder: string;
+  public readonly sortTypePlaceholder: string;
+  public readonly axisEmptyValue: string;
 
   constructor(private i18n: I18n) {
     this.sortPlaceholder = i18n({id: 'perspective.chart.config.sort.placeholder', value: 'Sort'});

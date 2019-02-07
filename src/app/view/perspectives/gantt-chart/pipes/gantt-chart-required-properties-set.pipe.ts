@@ -18,14 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarPropertyRequired, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {
+  GanttChartBarPropertyRequired,
+  GanttChartCollectionConfig,
+} from '../../../../core/store/gantt-charts/gantt-chart';
 
 @Pipe({
   name: 'ganttChartRequiredPropertiesSet',
 })
 export class GanttChartRequiredPropertiesSetPipe implements PipeTransform {
-  public transform(config: GanttChartConfig): boolean {
+  public transform(config: GanttChartCollectionConfig): boolean {
     const requiredProperties = Object.values(GanttChartBarPropertyRequired);
-    return config.mode && requiredProperties.every(property => !!config.barsProperties[property]);
+    return requiredProperties.every(property => config.barsProperties && !!config.barsProperties[property]);
   }
 }

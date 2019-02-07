@@ -23,12 +23,20 @@ import {GanttChartPerspectiveRoutingModule} from './gantt-chart-perspective-rout
 import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
 import {GanttChartConfigComponent} from './gantt-chart-config/gantt-chart-config.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
-import {GanttChartVisualizationComponent} from './gantt-chart-visualization/gantt-chart-visualization.component';
+import {GanttChartVisualizationComponent} from './gantt-chart-tasks/gantt-chart-visualization/gantt-chart-visualization.component';
 import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
+import {GanttChartCollectionConfigComponent} from './gantt-chart-config/gantt-chart-collection-config/gantt-chart-collection-config.component';
+import {GanttChartTasksComponent} from './gantt-chart-tasks/gantt-chart-tasks.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
-  declarations: [GanttChartPerspectiveComponent, GanttChartVisualizationComponent, GanttChartConfigComponent],
+  declarations: [
+    GanttChartPerspectiveComponent,
+    GanttChartVisualizationComponent,
+    GanttChartConfigComponent,
+    GanttChartCollectionConfigComponent,
+    GanttChartTasksComponent,
+  ],
   entryComponents: [GanttChartPerspectiveComponent],
   exports: [GanttChartPerspectiveComponent],
 })
