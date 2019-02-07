@@ -50,6 +50,7 @@ import {CanChangeRolesPipe} from './can-change-roles.pipe';
 import {DataPipesModule} from './data/data-pipes.module';
 import {ParseDatePipe} from './parse-date.pipe';
 import {CollectionAttributePipe} from './collection-attribute.pipe';
+import {ContrastColorPipe} from './contrast-color.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -83,6 +84,7 @@ import {CollectionAttributePipe} from './collection-attribute.pipe';
     CanChangeRolesPipe,
     ParseDatePipe,
     CollectionAttributePipe,
+    ContrastColorPipe,
   ],
   exports: [
     LightenColorPipe,

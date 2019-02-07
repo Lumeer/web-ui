@@ -108,15 +108,17 @@ export function convertImportedCollectionModelToDto(model: ImportedCollection): 
 }
 
 function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
-  return Object.keys(dto || {}).map<Rule>(
-    name =>
-      ({
-        name: name,
-        type: RuleTypeMap[dto[name].type],
-        timing: RuleTimingMap[dto[name].timing],
-        configuration: dto[name].configuration,
-      } as Rule) // TODO avoid type casting
-  );
+  return Object.keys(dto || {})
+    .map<Rule>(
+      name =>
+        ({
+          name: name,
+          type: RuleTypeMap[dto[name].type],
+          timing: RuleTimingMap[dto[name].timing],
+          configuration: dto[name].configuration,
+        } as Rule) // TODO avoid type casting
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
@@ -126,8 +128,8 @@ function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
 
   return model.reduce((result, rule) => {
     result[rule.name] = {
-      type: RuleType[rule.type],
-      timing: RuleTiming[rule.timing],
+      type: rule.type,
+      timing: rule.timing,
       configuration: rule.configuration,
     };
     return result;

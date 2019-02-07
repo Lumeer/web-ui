@@ -31,6 +31,14 @@ import {UsersModule} from '../shared/users/users.module';
 import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
 import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
+import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
+import {AddRuleComponent} from './settings/tab/rules/add-rule/add-rule.component';
+import {SingleRuleComponent} from './settings/tab/rules/single-rule/single-rule.component';
+import {AddRuleFormComponent} from './settings/tab/rules/add-rule-form/add-rule-form.component';
+import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component';
+import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
+import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
+import {BlocklyEditorComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-editor/blockly-editor.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, PickerModule],
@@ -42,6 +50,14 @@ import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pip
     CollectionAttributesComponent,
     CollectionLinkTypesComponent,
     LinkTypeComponent,
+    CollectionRulesComponent,
+    AddRuleComponent,
+    SingleRuleComponent,
+    AddRuleFormComponent,
+    AutoLinkFormComponent,
+    BlocklyFormComponent,
+    NoRulesComponent,
+    BlocklyEditorComponent,
   ],
   providers: [CollectionSettingsGuard],
 })

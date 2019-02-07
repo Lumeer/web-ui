@@ -22,6 +22,7 @@ import {perspectiveIconsMap} from '../../../../../view/perspectives/perspective'
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
+import {COLOR_PRIMARY} from '../../../../../core/constants';
 
 export class ViewQueryItem implements QueryItem {
   public type = QueryItemType.View;
@@ -31,7 +32,7 @@ export class ViewQueryItem implements QueryItem {
 
   public constructor(public view: View) {
     this.icons = [perspectiveIconsMap[view.perspective]];
-    this.colors = ['#2c3e50'];
+    this.colors = [COLOR_PRIMARY];
   }
 
   public get text(): string {

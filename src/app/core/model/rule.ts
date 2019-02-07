@@ -54,10 +54,12 @@ interface BasicRule {
 }
 
 export interface AutoLinkRule extends BasicRule {
+  type: RuleType.AutoLink;
   configuration: AutoLinkRuleConfiguration;
 }
 
 export interface BlocklyRule extends BasicRule {
+  type: RuleType.Blockly;
   configuration: BlocklyRuleConfiguration;
 }
 
@@ -79,3 +81,4 @@ export type BlocklyRuleConfiguration = {
 };
 
 export type Rule = AutoLinkRule | BlocklyRule;
+export type RuleConfiguration = AutoLinkRuleConfiguration | BlocklyRuleConfiguration;

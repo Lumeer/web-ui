@@ -1,0 +1,39 @@
+<div [formGroup]="form">
+  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
+    <div class="text-nowrap">
+      Link record via
+    </div>
+    <select-item
+      class="ml-3"
+      emptyValue="Select a link type"
+      placeholderIcon="fas fa-link"
+      [items]="selectItems"
+      [selectedId]="linkTypeId"
+      (select)="onSelectLinkType($event)">
+    </select-item>
+  </div>
+  <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
+    <div class="text-nowrap">
+      Where
+    </div>
+    <select-item
+      class="ml-3"
+      (select)="onSelectAttribute1($event)"
+      [emptyValue]="'Select from ' + collection.name"
+      [placeholderIcon]="collection.icon"
+      [items]="attributes1"
+      [selectedId]="attribute1Id">
+    </select-item>
+    <div class="text-nowrap ml-3">
+      equals
+    </div>
+    <select-item
+      class="ml-3"
+      (select)="onSelectAttribute2($event)"
+      [emptyValue]="linkedCollection ? 'Select from ' + linkedCollection.name : 'Select link type first'"
+      [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
+      [items]="attributes2"
+      [selectedId]="attribute2Id">
+    </select-item>
+  </div>
+</div>

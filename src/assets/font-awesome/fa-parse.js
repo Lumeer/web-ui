@@ -98,4 +98,18 @@ vocab.forEach(function(value, key) {
 
 fs.writeFile('./meta', meta, function(err) {});
 
+var unicodeIcons = '';
+
+Object.keys(loadJsonFile).forEach(function(key) {
+  var icon = loadJsonFile[key];
+
+  if (icon.styles.includes('brands')) {
+    unicodeIcons += "['fab fa-" + key + "', '\\u" + icon.unicode + "'],\n";
+  } else {
+    unicodeIcons += "['fas fa-" + key + "', '\\u" + icon.unicode + "'],\n";
+  }
+});
+
+fs.writeFile('./unicode', unicodeIcons, function(err) {});
+
 console.log('Successfully parsed!\n');
