@@ -17,20 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartType} from '../../../../../core/store/charts/chart';
-import {PlotMaker} from './plot-maker';
-import {PiePlotMaker} from './pie-plot-maker';
-import {BarPlotMaker} from './bar-plot-maker';
-import {LinePlotMaker} from './line-plot-maker';
-import {ElementRef} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
-export function createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
-  switch (type) {
-    case ChartType.Pie:
-      return new PiePlotMaker(element);
-    case ChartType.Bar:
-      return new BarPlotMaker(element);
-    case ChartType.Line:
-      return new LinePlotMaker(element);
+@Pipe({
+  name: 'aggregationSelectPlaceholder',
+})
+export class AggregationSelectPlaceholderPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(axisType: ChartAxisType): string {
+    return this.i18n(
+      {
+        id: 'perspective.chart.config.aggregation.placeholder',
+        value: '{axisType, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation}}',
+      },
+      {
+        axisType,
+      }
+    );
   }
 }

@@ -17,16 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
-import {ChartAxis, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {Data, Layout} from 'plotly.js';
+import {ChartDataSet} from '../../chart-data/convertor/chart-data';
+import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
+import {PlotMaker} from './plot-maker';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+
+const MAX_COLUMNS = 3;
 
 export class PiePlotMaker extends PlotMaker {
   public createData(): Data[] {
     const dataStyle = this.getDataStyle();
 
-    const data = this.createAxesData(dataStyle, this.config.axes[ChartAxisType.X], this.config.axes[ChartAxisType.Y1]);
-    return [data];
+    const sets = this.getSets();
+    const columns = Math.min(sets.length, MAX_COLUMNS);
+
+    return sets.map((set, index) => {
+      const row = sets.length > 1 ? Math.floor(index / MAX_COLUMNS) : null;
+      const column = sets.length > 1 ? index % columns : null;
+      return this.createAxesData(dataStyle, set, row, column);
+    });
+  }
+
+  private getSets(): ChartDataSet[] {
+    return this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1 && set.isNumeric);
   }
 
   private getDataStyle(): Data {
@@ -36,37 +50,37 @@ export class PiePlotMaker extends PlotMaker {
     return trace;
   }
 
-  private createAxesData(dataStyle: Data, xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
+  private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
     const data = {...dataStyle};
 
     const traceX = [];
     const traceY = [];
 
-    for (const document of this.documents) {
-      if (xAxis) {
-        traceX.push(document.data[xAxis.attributeId]);
-      }
-      if (yAxis) {
-        traceY.push(document.data[yAxis.attributeId]);
-      }
-    }
+    set.points.forEach(point => {
+      traceX.push(point.x);
+      traceY.push(point.y);
+    });
 
-    if (xAxis) {
-      data['labels'] = traceX;
-    }
+    set.name && (data['name'] = set.name);
+    data['labels'] = traceX;
+    data['values'] = traceY;
 
-    if (yAxis) {
-      data['values'] = traceY;
+    if (isNotNullOrUndefind(row) && isNotNullOrUndefind(column)) {
+      data['domain'] = {row, column};
     }
 
     return data;
   }
 
   public createLayout(): Partial<Layout> {
+    const sets = this.getSets();
+    if (sets.length > 1) {
+      const rows = Math.floor((sets.length - 1) / MAX_COLUMNS) + 1;
+      const columns = Math.min(sets.length, MAX_COLUMNS);
+      const layout = {};
+      layout['grid'] = {rows, columns};
+      return layout;
+    }
     return {};
-  }
-
-  public currentType(): ChartType {
-    return ChartType.Pie;
   }
 }

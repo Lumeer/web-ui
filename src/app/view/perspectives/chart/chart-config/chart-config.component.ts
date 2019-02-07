@@ -19,8 +19,18 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {ChartAxis, ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
+import {
+  ChartAggregation,
+  ChartAxis,
+  ChartAxisType,
+  ChartConfig,
+  ChartSortType,
+  ChartType,
+} from '../../../../core/store/charts/chart';
 import {Perspective} from '../../perspective';
+import {Query} from '../../../../core/store/navigation/query';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'chart-config',
@@ -29,36 +39,90 @@ import {Perspective} from '../../perspective';
 })
 export class ChartConfigComponent {
   @Input()
-  public collection: Collection;
+  public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
 
   @Input()
   public config: ChartConfig;
 
   @Input()
-  public canManageConfig: boolean;
+  public query: Query;
 
   @Output()
   public configChange = new EventEmitter<ChartConfig>();
 
   public readonly chartTypes = Object.values(ChartType);
   public readonly chartPerspective = Perspective.Chart;
-  public readonly axes = Object.values(ChartAxisType);
+  public readonly chartAggregations = Object.values(ChartAggregation);
+  public readonly chartSortTypes = Object.values(ChartSortType);
+
+  public readonly xAxisType = ChartAxisType.X;
+  public readonly yAxisTypes = [ChartAxisType.Y1, ChartAxisType.Y2];
+
+  public readonly buttonClasses = 'flex-grow-1';
+
+  public sortPlaceholder: string;
+  public sortTypePlaceholder: string;
+  public axisEmptyValue: string;
+
+  constructor(private i18n: I18n) {
+    this.sortPlaceholder = i18n({id: 'perspective.chart.config.sort.placeholder', value: 'Sort'});
+    this.sortTypePlaceholder = i18n({id: 'perspective.chart.config.sortType.placeholder', value: 'Sort order'});
+    this.axisEmptyValue = i18n({id: 'perspective.chart.config.axis.empty', value: 'Select axis'});
+  }
 
   public onTypeSelect(type: ChartType) {
     const newConfig = {...this.config, type};
     this.configChange.emit(newConfig);
   }
 
+  public onSortSelect(axis: ChartAxis) {
+    const sort = {...(this.config.sort || {type: ChartSortType.Ascending}), axis};
+    const newConfig = {...this.config, sort};
+    this.configChange.emit(newConfig);
+  }
+
+  public onSortTypeSelect(type: ChartSortType) {
+    const sort = {...(this.config.sort || {type}), type};
+    const newConfig = {...this.config, sort};
+    this.configChange.emit(newConfig);
+  }
+
+  public onSortRemoved() {
+    this.onSortSelect(null);
+  }
+
+  public onAggregationSelect(type: ChartAxisType, aggregation: ChartAggregation) {
+    const aggregations = {...(this.config.aggregations || {}), [type]: aggregation};
+    const newConfig = {...this.config, aggregations};
+    this.configChange.emit(newConfig);
+  }
+
   public onAxisSelect(type: ChartAxisType, axis: ChartAxis) {
     const axes = {...this.config.axes, [type]: axis};
-    const newConfig = {...this.config, axes: axes};
+    const newConfig = {...this.config, axes};
+    this.configChange.emit(newConfig);
+  }
+
+  public onDataNameSelect(type: ChartAxisType, axis: ChartAxis) {
+    const names = {...(this.config.names || {}), [type]: axis};
+    const newConfig = {...this.config, names};
     this.configChange.emit(newConfig);
   }
 
   public onAxisRemoved(type: ChartAxisType) {
     const axes = {...this.config.axes};
     delete axes[type];
-    const newConfig = {...this.config, axes: axes};
+    const newConfig = {...this.config, axes};
+    this.configChange.emit(newConfig);
+  }
+
+  public onDataNameRemoved(type: ChartAxisType) {
+    const names = {...(this.config.names || {})};
+    delete names[type];
+    const newConfig = {...this.config, names};
     this.configChange.emit(newConfig);
   }
 }

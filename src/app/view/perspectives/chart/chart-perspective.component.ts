@@ -17,22 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectDocumentsByQuery,
+  selectLinkInstancesByQuery,
+  selectLinkTypesByQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, filter, map, withLatestFrom} from 'rxjs/operators';
-import {ChartConfig, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
+import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {
+  ChartAggregation,
+  ChartAxisType,
+  ChartConfig,
+  ChartSortType,
+  ChartType,
+  DEFAULT_CHART_ID,
+} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
+import {ChartDataComponent} from './chart-data/chart-data.component';
 
 @Component({
   selector: 'chart-perspective',
@@ -41,34 +61,42 @@ import {Query} from '../../../core/store/navigation/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
+  @ViewChild(ChartDataComponent)
+  public chartDataComponent: ChartDataComponent;
+
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<Collection>;
+  public collections$: Observable<Collection[]>;
+  public linkTypes$: Observable<LinkType[]>;
+  public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initChart();
     this.subscribeToQuery();
     this.subscribeData();
+    this.subscribeValidConfig();
   }
 
   private subscribeToQuery() {
     const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
       this.query$.next(query);
-      this.fetchDocuments(query);
+      this.fetchData(query);
     });
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: Query) {
+  private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private initChart() {
@@ -100,7 +128,12 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): ChartConfig {
-    return {type: ChartType.Line, axes: {}};
+    return {
+      type: ChartType.Line,
+      axes: {},
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum, [ChartAxisType.Y2]: ChartAggregation.Sum},
+      sort: {type: ChartSortType.Ascending},
+    };
   }
 
   private subscribeData() {
@@ -108,10 +141,14 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       select(selectDocumentsByQuery),
       distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y))
     );
-    this.collection$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(collections => collections[0])
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
+
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
   }
@@ -127,5 +164,28 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  private subscribeValidConfig() {
+    const subscription = this.store$
+      .pipe(select(selectCollectionsByQuery))
+      .pipe(withLatestFrom(this.store$.pipe(select(selectChartConfig))))
+      .subscribe(([collections, config]) => {
+        const collectionIdsFromConfig = chartConfigCollectionIds(config);
+        const collectionMissing = collectionIdsFromConfig.some(
+          id => !collections.find(collection => collection.id === id)
+        );
+        collectionMissing && this.setDefaultConfig();
+      });
+    this.subscriptions.add(subscription);
+  }
+
+  private setDefaultConfig() {
+    const defaultConfig = this.createDefaultConfig();
+    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config: defaultConfig}));
+  }
+
+  public onSidebarToggle() {
+    this.chartDataComponent && this.chartDataComponent.resize();
   }
 }

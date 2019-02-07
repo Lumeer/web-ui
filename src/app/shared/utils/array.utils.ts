@@ -64,3 +64,7 @@ export function shiftArray<T>(array: T[], fromItem: T): T[] {
   }
   return [...array.slice(index), ...array.slice(0, index)];
 }
+
+export function uniqueValues<T>(array: T[]): T[] {
+  return Array.from(new Set(array));
+}

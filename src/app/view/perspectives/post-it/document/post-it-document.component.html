@@ -13,7 +13,8 @@
   </post-it-document-header>
 
   <div class="card-body p-2">
-    <ul class="m-0 p-0" #content>
+    <ul class="m-0 p-0"
+        (keydown)="onParentKeyDown($event)">
       <ng-container *ngFor="let row of rows$ | async; trackBy:getTrackBy(); let idx = index">
 
         <li class="w-100" *ngIf="!row.remove">

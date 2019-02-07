@@ -1,5 +1,5 @@
 .draggable {
-  .scatterlayer .trace:last-child .points path {
+  .scatterlayer .trace .points path {
     pointer-events: all;
     cursor: ns-resize;
   }

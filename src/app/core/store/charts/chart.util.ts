@@ -17,25 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType} from '../../../../core/store/charts/chart';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ChartConfig} from './chart';
+import {isNotNullOrUndefind} from '../../../shared/utils/common.utils';
+import {uniqueValues} from '../../../shared/utils/array.utils';
 
-@Pipe({
-  name: 'axisSelectEmptyValue',
-})
-export class AxisSelectEmptyValuePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export function chartConfigCollectionIds(config: ChartConfig): string[] {
+  const sortId = config.sort && config.sort.axis && config.sort.axis.collectionId;
+  const axesIds = Object.values(config.axes || {}).map(axis => axis.collectionId);
+  const axesNamesIds = Object.values(config.names || {}).map(axis => axis.collectionId);
 
-  public transform(axisType: ChartAxisType): string {
-    return this.i18n(
-      {
-        id: 'chart.axis.placeholder.empty',
-        value: 'Select {axisType, select, x {X} y1 {Y1} y2 {Y2}} axis',
-      },
-      {
-        axisType,
-      }
-    );
-  }
+  return uniqueValues<string>([...axesIds, ...axesNamesIds, sortId].filter(id => isNotNullOrUndefind(id)));
 }

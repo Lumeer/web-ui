@@ -17,18 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout} from 'plotly.js';
-import {ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ElementRef} from '@angular/core';
 
+import {Data, Layout} from 'plotly.js';
+import {ChartData} from '../../chart-data/convertor/chart-data';
+
 export abstract class PlotMaker {
-  protected collections: Collection[];
-
-  protected documents: DocumentModel[];
-
-  protected config: ChartConfig;
+  protected chartData: ChartData;
 
   protected onValueChanged?: (valueChange: ValueChange) => void;
 
@@ -36,10 +31,8 @@ export abstract class PlotMaker {
 
   constructor(protected element: ElementRef) {}
 
-  public updateData(collections: Collection[], documents: DocumentModel[], config: ChartConfig) {
-    this.collections = collections;
-    this.documents = documents;
-    this.config = config;
+  public updateData(chartData: ChartData) {
+    this.chartData = chartData;
   }
 
   public setOnValueChanged(onValueChanged: (valueChange: ValueChange) => void) {
@@ -50,20 +43,14 @@ export abstract class PlotMaker {
     this.onDataChanged = onDataChanged;
   }
 
-  public currentConfig(): ChartConfig {
-    return this.config ? {...this.config} : null;
-  }
-
   public abstract createData(): Data[];
 
   public abstract createLayout(): Partial<Layout>;
-
-  public abstract currentType(): ChartType;
 }
 
 export interface ValueChange {
-  documentId: string;
-  attributeId: string;
+  setId: string;
+  pointId: string;
   value: string;
 }
 

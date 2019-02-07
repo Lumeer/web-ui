@@ -1,26 +1,91 @@
-<div class="d-flex flex-row align-items-center flex-wrap" *ngIf="config">
+<ng-container *ngIf="config">
 
-  <select-item class="mr-2"
-               [disabled]="!canManageConfig"
+  <h6 class="font-weight-bold" i18n="@@perspective.chart.config.main.header">
+    Main settings
+  </h6>
+
+  <select-item class="d-block w-100 mt-2"
                [placeholderIcon]="chartPerspective | perspectiveIcon"
+               [buttonClasses]="buttonClasses"
                [items]="chartTypes | chartTypesToSelect"
                [selectedId]="config.type"
                (select)="onTypeSelect($event)">
   </select-item>
 
-  <ng-container *ngFor="let axis of axes; let isLast = last">
-    <select-item
-      *ngIf="axis | showAxisSelect:config"
-      [class.mr-2]="!isLast"
-      [disabled]="!canManageConfig"
-      [items]="[collection] | axisSelectItems:axis:config"
-      [selectedId]="config.axes[axis]"
-      [placeholderText]="axis.toUpperCase()"
-      [emptyValue]="axis | axisSelectEmptyValue"
-      [removable]="true"
-      (select)="onAxisSelect(axis, $event)"
-      (remove)="onAxisRemoved(axis)">
-    </select-item>
+  <select-item class="d-block w-100 mt-2"
+               [items]="xAxisType | axisSelectItems:config:collections:linkTypes:query"
+               [selectedId]="config.axes[xAxisType]"
+               [placeholderText]="xAxisType.toString().toUpperCase()"
+               [emptyValue]="axisEmptyValue"
+               [buttonClasses]="buttonClasses"
+               [removable]="true"
+               (select)="onAxisSelect(xAxisType, $event)"
+               (remove)="onAxisRemoved(xAxisType)">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [placeholderText]="sortPlaceholder"
+               [emptyValue]="axisEmptyValue"
+               [items]="config | sortSelectItems:collections"
+               [selectedId]="config.sort && config.sort.axis"
+               [buttonClasses]="buttonClasses"
+               [removable]="true"
+               (select)="onSortSelect($event)"
+               (remove)="onSortRemoved()">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="chartSortTypes | sortTypeSelectItems"
+               [placeholderText]="sortTypePlaceholder"
+               [buttonClasses]="buttonClasses"
+               [removable]="false"
+               [selectedId]="config.sort && config.sort.type"
+               (select)="onSortTypeSelect($event)">
+  </select-item>
+
+  <ng-container *ngFor="let yAxisType of yAxisTypes">
+
+    <ng-container *ngIf="yAxisType | showAxisSelect:config">
+
+      <h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.axis.header">
+        {yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}
+      </h6>
+
+      <select-item class="d-block w-100 mt-2"
+                   [items]="yAxisType | axisSelectItems:config:collections:linkTypes:query"
+                   [selectedId]="config.axes[yAxisType]"
+                   [placeholderText]="yAxisType.toString().toUpperCase()"
+                   [emptyValue]="axisEmptyValue"
+                   [buttonClasses]="buttonClasses"
+                   [removable]="true"
+                   (select)="onAxisSelect(yAxisType, $event)"
+                   (remove)="onAxisRemoved(yAxisType)">
+      </select-item>
+
+      <select-item class="d-block w-100 mt-2"
+                   *ngIf="collections.length > 1"
+                   [items]="yAxisType | dataSetSelectItems:config:collections:linkTypes:query"
+                   [selectedId]="config.names && config.names[yAxisType]"
+                   [placeholderText]="yAxisType | dataSetSelectPlaceholder"
+                   [emptyValue]="axisEmptyValue"
+                   [removable]="true"
+                   [buttonClasses]="buttonClasses"
+                   (select)="onDataNameSelect(yAxisType, $event)"
+                   (remove)="onDataNameRemoved(yAxisType)">
+      </select-item>
+
+      <select-item class="d-block w-100 mt-2"
+                   [items]="chartAggregations | aggregationSelectItems"
+                   [placeholderText]="yAxisType | aggregationSelectPlaceholder"
+                   [buttonClasses]="buttonClasses"
+                   [removable]="false"
+                   [selectedId]="config.aggregations && config.aggregations[yAxisType]"
+                   (select)="onAggregationSelect(yAxisType, $event)">
+      </select-item>
+
+    </ng-container>
+
   </ng-container>
 
-</div>
+
+</ng-container>

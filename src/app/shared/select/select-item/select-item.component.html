@@ -8,23 +8,23 @@
 
   <button aria-expanded="false"
           aria-haspopup="true"
-          class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+          class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle d-flex align-items-center {{buttonClasses}}"
           data-toggle="dropdown"
           id="selectItemDropdown"
           [disabled]="disabled"
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
           type="button">
 
-    <span *ngIf="!(selectedId | getSelectItem:items)">{{emptyValue}}</span>
+    <span class="flex-grow-1 text-left empty-text" *ngIf="!(selectedId | getSelectItem:items)">{{emptyValue}}</span>
 
     <ng-container *ngIf="selectedId | getSelectItem:items as selectedItem">
 
-      <icons-presenter *ngIf="selectedItem.icon && selectedItem.iconColor"
-                       [colors]="[selectedItem.iconColor]"
-                       [icons]="[selectedItem.icon]">
+      <icons-presenter *ngIf="selectedItem.icons && selectedItem.iconColors"
+                       [colors]="selectedItem.iconColors"
+                       [icons]="selectedItem.icons">
       </icons-presenter>
-      <i *ngIf="selectedItem.icon && !selectedItem.iconColor" class="fa-fw {{selectedItem.icon}}"></i>
-      <span class="ml-sm-1 text-nowrap">
+      <i *ngIf="selectedItem.icons && !selectedItem.iconColors && selectedItem.icons.length === 1" class="fa-fw {{selectedItem.icons[0]}}"></i>
+      <span class="ml-sm-1 text-nowrap flex-grow-1 text-left">
         {{selectedItem.value}}
       </span>
       <i *ngIf="removable && !disabled" class="fa-fw fal fa-times mx-1 clear" (click)="onRemove($event)"></i>
@@ -37,11 +37,11 @@
        [class.active]="selectedId | areIdsEqual:item.id"
        (click)="onSelect(item)"
        class="dropdown-item">
-      <icons-presenter *ngIf="item.icon && item.iconColor"
-                       [colors]="[item.iconColor]"
-                       [icons]="[item.icon]">
+      <icons-presenter *ngIf="item.icons && item.iconColors"
+                       [colors]="item.iconColors"
+                       [icons]="item.icons">
       </icons-presenter>
-      <i *ngIf="item.icon && !item.iconColor" class="fa-fw {{item.icon}}"></i>
+      <i *ngIf="item.icons && !item.iconColors && item.icons.length === 1" class="fa-fw {{item.icons[0]}}"></i>
       <span class="ml-sm-1 text-nowrap">
         {{item.value}}
       </span>

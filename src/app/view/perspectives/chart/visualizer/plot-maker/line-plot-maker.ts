@@ -17,41 +17,63 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {Data, Layout} from 'plotly.js';
+import {ChartDataSet} from '../../chart-data/convertor/chart-data';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
-    const data: Data[] = [];
+    return this.chartData.sets.map(set => this.createAxisData(set));
+  }
 
-    const xAxis = this.config.axes[ChartAxisType.X];
-    const y1Axis = this.config.axes[ChartAxisType.Y1];
-    const y2Axis = this.config.axes[ChartAxisType.Y2];
-
-    if (y1Axis && y2Axis) {
-      data.push(this.createAxis1Data(xAxis, y1Axis));
-      data.push(this.createAxis2Data(xAxis, y2Axis));
-    } else if (!y1Axis && (xAxis || y2Axis)) {
-      data.push(this.createAxis2Data(xAxis, y2Axis));
-    } else if (xAxis || y1Axis) {
-      data.push(this.createAxis1Data(xAxis, y1Axis));
+  private createAxisData(set: ChartDataSet): Data {
+    let data: Data = {};
+    if (set.yAxisType === ChartAxisType.Y1) {
+      data = this.axis1DataStyle(set);
+    } else {
+      data = this.axis2DataStyle(set);
     }
+
+    const traceX = [];
+    const traceY = [];
+
+    const isYCategory = this.isAxisCategory(set.yAxisType);
+    const additionalYValues = [];
+    const addedYValues = new Set();
+
+    set.points.forEach(point => {
+      traceX.push(point.x);
+      traceY.push(point.y);
+
+      // we need to add first and last category value to the values in order to keep them on y axis while drag
+      if (point.y && isYCategory && !addedYValues.has(point.y)) {
+        const insertIndex = additionalYValues.length === 0 ? 0 : 1;
+        additionalYValues[insertIndex] = point.y;
+        addedYValues.add(point.y);
+      }
+    });
+
+    for (let i = 0; i < additionalYValues.length; i++) {
+      traceX.push(null);
+      traceY.push(additionalYValues[i]);
+    }
+
+    set.name && (data['name'] = set.name);
+    data['x'] = traceX;
+    data['y'] = traceY;
 
     return data;
   }
 
-  private createAxis1Data(xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
-    const dataStyle = this.getDataStyle();
-    return this.createAxesData(dataStyle, ChartAxisType.Y1, xAxis, yAxis);
+  private axis1DataStyle(set: ChartDataSet): Data {
+    return this.getDefaultDataStyle(set);
   }
 
-  private createAxis2Data(xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
-    const dataStyle = this.getDataStyle();
-    const data = this.createAxesData(dataStyle, ChartAxisType.Y2, xAxis, yAxis);
+  private axis2DataStyle(set: ChartDataSet): Data {
     return {
-      ...data,
+      ...this.getDefaultDataStyle(set),
       yaxis: 'y2',
       line: {
         dash: 'dot',
@@ -60,79 +82,15 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     };
   }
 
-  private getDataStyle(): Data {
-    const trace = {};
+  private getDefaultDataStyle(set: ChartDataSet): Data {
+    const trace = {
+      marker: {color: set.color, size: 10},
+      line: {color: set.color},
+    };
     trace['mode'] = 'lines+markers';
     trace['type'] = 'scatter';
 
-    if (this.documents && this.documents[0]) {
-      const color = this.getCollectionColor(this.documents[0].collectionId);
-      trace['marker'] = {color, size: 10};
-      trace['line'] = {color};
-    } else {
-      trace['marker'] = {size: 10};
-    }
-
     return trace;
-  }
-
-  private getCollectionColor(id: string): string {
-    const collection = this.collections.find(coll => coll.id === id);
-    return collection && collection.color;
-  }
-
-  private createAxesData(dataStyle: Data, yAxisType: ChartAxisType, xAxis?: ChartAxis, yAxis?: ChartAxis): Data {
-    const data = {...dataStyle};
-
-    const traceX = [];
-    const traceY = [];
-
-    const isYCategory = this.isAxisCategory(yAxisType);
-    const additionalYValues = [];
-    const addedYValues = new Set();
-
-    for (const document of this.documents) {
-      if (xAxis) {
-        traceX.push(document.data[xAxis.attributeId]);
-      }
-      if (yAxis) {
-        const yValue = document.data[yAxis.attributeId];
-        traceY.push(yValue);
-        // we need to add first and last category value to the values in order to keep them on y axis while drag
-        if (yValue && isYCategory && !addedYValues.has(yValue)) {
-          const insertIndex = additionalYValues.length === 0 ? 0 : 1;
-          additionalYValues[insertIndex] = yValue;
-          addedYValues.add(yValue);
-        }
-      }
-    }
-
-    for (let i = 0; i < additionalYValues.length; i++) {
-      traceX.push(null);
-      traceY.push(additionalYValues[i]);
-    }
-
-    const name = yAxis && this.getAttributeName(yAxis.attributeId);
-    if (name) {
-      data['name'] = name;
-    }
-
-    if (xAxis) {
-      data['x'] = traceX;
-    }
-
-    if (yAxis) {
-      data['y'] = traceY;
-    }
-
-    return data;
-  }
-
-  private getAttributeName(attributeId: string): string {
-    const collectionId = this.documents && this.documents[0] && this.documents[0].collectionId;
-    const collection = collectionId && this.collections.find(coll => coll.id === collectionId);
-    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-    return attribute && attribute.name;
   }
 
   public createLayout(): Partial<Layout> {
@@ -148,21 +106,28 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     };
   }
 
-  public currentType(): ChartType {
-    return ChartType.Line;
-  }
-
   public getPointNewY(point: any, datum: any, event: any): number {
     return event.y;
   }
 
-  public getPoints(): d3.Selection<any> {
-    return d3.selectAll('.scatterlayer .trace:last-of-type .points path');
+  public getPointPosition(point: any, datum: any): {x: number; y: number} {
+    const transform = d3.select(point).attr('transform');
+    const translate = transform.substring(10, transform.length - 1).split(/[, ]/);
+    return {x: +translate[0], y: +translate[1]};
+  }
+
+  public getPoints(): any {
+    return d3.selectAll('.scatterlayer .trace .points path');
+  }
+
+  public getSetIndexForTraceIndex(traceIx: number): number {
+    return traceIx;
   }
 
   public getTraceIndexForPoint(point: any): number {
-    const traceIds = this.getLayoutElement()._traceUids;
-    const traceClasses = (traceIds && traceIds.map(id => 'trace' + id)) || [];
+    const layoutElement = this.getLayoutElement();
+    const traceIds = layoutElement._traceUids;
+    const traceClasses = (traceIds && traceIds.map(id => layoutElement._traceWord + id)) || [];
     let node = d3.select(point).node() as Element;
     while (node) {
       const classList = node.classList;
@@ -175,11 +140,5 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     }
 
     return 0;
-  }
-
-  public getPointPosition(point: any, datum: any): {x: number; y: number} {
-    const transform = d3.select(point).attr('transform');
-    const translate = transform.substring(10, transform.length - 1).split(/[, ]/);
-    return {x: +translate[0], y: +translate[1]};
   }
 }

@@ -19,78 +19,36 @@
 
 import {ElementRef} from '@angular/core';
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {ChartConfig} from '../../../../core/store/charts/chart';
-import {Config, Data, Layout, newPlot, react} from 'plotly.js';
-import {DataChange, PlotMaker} from './plot-maker/plot-maker';
-import {createPlotMakerByType} from './plot-maker/plot-maker-util';
+import {Config, Data, Layout, newPlot, Plots, purge, react, redraw, relayout} from 'plotly.js';
+import {ChartData} from '../chart-data/convertor/chart-data';
+import {ChartType} from '../../../../core/store/charts/chart';
+import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
+import {LinePlotMaker} from './plot-maker/line-plot-maker';
+import {BarPlotMaker} from './plot-maker/bar-plot-maker';
+import {PiePlotMaker} from './plot-maker/pie-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 
 export class ChartVisualizer {
+  private currentType: ChartType;
+
   private data: Data[] = [];
 
   private layout: Partial<Layout>;
 
   private config: Partial<Config> = this.createConfig();
 
-  private plotMaker: PlotMaker;
-
   private revision = 1;
 
-  constructor(
-    private chartElement: ElementRef,
-    private writable: boolean,
-    private onValueChanged?: (documentId: string, attributeId: string, value: string) => void
-  ) {}
+  private plotMaker: PlotMaker;
 
-  public setData(collections: Collection[], documents: DocumentModel[], config: ChartConfig) {
-    const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(config);
-    if (shouldRefreshPlotMaker) {
-      this.plotMaker = createPlotMakerByType(config.type, this.chartElement);
-      this.plotMaker.setOnValueChanged(
-        change => this.onValueChanged && this.onValueChanged(change.documentId, change.attributeId, change.value)
-      );
-      this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
-    }
+  private writable: boolean;
 
-    const currentConfig = this.plotMaker.currentConfig();
+  constructor(private chartElement: ElementRef, private onValueChanged: (valueChange: ValueChange) => void) {}
 
-    this.plotMaker.updateData(collections, documents, config);
-    this.data = this.plotMaker.createData();
-
-    if (shouldRefreshPlotMaker || this.shouldRefreshLayout(config, currentConfig)) {
-      this.layout = this.plotMaker.createLayout();
-    }
-    this.incRevisionNumber();
-  }
-
-  private shouldRefreshPlotMaker(config: ChartConfig) {
-    return !this.plotMaker || this.plotMaker.currentType() !== config.type;
-  }
-
-  private shouldRefreshLayout(newConfig: ChartConfig, currentConfig: ChartConfig) {
-    return !this.plotMaker || !currentConfig || JSON.stringify(newConfig) !== JSON.stringify(currentConfig);
-  }
-
-  public onDataChanged(change: DataChange) {
-    this.data[change.trace][change.axis][change.index] = change.value;
-    this.incRevisionNumber();
-    this.refreshChart();
-  }
-
-  private incRevisionNumber() {
-    this.layout['datarevision'] = this.revision++;
-  }
-
-  private createConfig(): Partial<Config> {
-    const config = {};
-    config['responsive'] = true;
-    return config;
-  }
-
-  public createChartAndVisualize() {
-    this.createNewChart();
+  public createChart(data: ChartData) {
+    this.createOrRefreshData(data);
+    this.currentType = data.type;
+    react(this.chartElement.nativeElement, this.data, this.layout);
     this.refreshDrag();
     this.chartElement.nativeElement.on(
       'plotly_relayout',
@@ -98,38 +56,82 @@ export class ChartVisualizer {
     );
   }
 
-  public visualize() {
-    this.refreshChart();
+  public refreshChart(data: ChartData) {
+    this.createOrRefreshData(data);
+    this.currentType = data.type;
+    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
     this.refreshDrag();
   }
 
-  private createNewChart() {
-    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
+  public destroyChart() {
+    purge(this.chartElement.nativeElement);
   }
 
-  private refreshChart() {
+  private createOrRefreshData(data: ChartData) {
+    const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(data);
+    if (shouldRefreshPlotMaker) {
+      this.plotMaker = this.createPlotMakerByType(data.type, this.chartElement);
+      this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
+      this.plotMaker.setOnValueChanged(this.onValueChanged);
+    }
+
+    this.plotMaker.updateData(data);
+    this.layout = this.plotMaker.createLayout();
+    this.data = this.plotMaker.createData();
+
+    this.incRevisionNumber();
+  }
+
+  private shouldRefreshPlotMaker(data: ChartData): boolean {
+    return !this.currentType || this.currentType !== data.type;
+  }
+
+  public onDataChanged(change: DataChange) {
+    this.data[change.trace][change.axis][change.index] = change.value;
+    this.incRevisionNumber();
     react(this.chartElement.nativeElement, this.data, this.layout);
+    this.refreshDrag();
   }
 
-  private refreshDrag() {
-    if (this.writable) {
-      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).initDrag();
-    } else {
-      this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).destroyDrag();
+  private createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
+    switch (type) {
+      case ChartType.Line:
+        return new LinePlotMaker(element);
+      case ChartType.Bar:
+        return new BarPlotMaker(element);
+      case ChartType.Pie:
+        return new PiePlotMaker(element);
     }
   }
 
-  public enableWrite() {
-    this.writable = true;
-    this.plotMaker &&
-      this.plotMaker instanceof DraggablePlotMaker &&
-      (this.plotMaker as DraggablePlotMaker).setDragEnabled(true);
+  public setWriteEnabled(enabled: boolean) {
+    this.writable = enabled;
   }
 
-  public disableWrite() {
-    this.writable = false;
-    this.plotMaker &&
-      this.plotMaker instanceof DraggablePlotMaker &&
-      (this.plotMaker as DraggablePlotMaker).setDragEnabled(false);
+  private refreshDrag() {
+    if (!(this.plotMaker instanceof DraggablePlotMaker)) {
+      return;
+    }
+
+    const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
+    draggablePlotMaker.setDragEnabled(this.writable);
+
+    if (this.writable) {
+      draggablePlotMaker.initDrag();
+    } else {
+      draggablePlotMaker.destroyDrag();
+    }
+  }
+
+  private incRevisionNumber() {
+    this.layout['datarevision'] = this.revision++;
+  }
+
+  private createConfig(): Partial<Config> {
+    return {responsive: true};
+  }
+
+  public resize() {
+    Plots.resize(this.chartElement.nativeElement);
   }
 }

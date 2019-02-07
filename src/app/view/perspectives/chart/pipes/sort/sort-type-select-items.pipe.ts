@@ -18,14 +18,27 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
+import {ChartAggregation, ChartSort, ChartSortType} from '../../../../../core/store/charts/chart';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'collectionAttributeName',
+  name: 'sortTypeSelectItems',
 })
-export class AttributeNamePipe implements PipeTransform {
-  public transform(collection: Collection, attributeId: string): string {
-    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-    return (attribute && attribute.name) || '';
+export class SortTypeSelectItemsPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(types: ChartSortType[]): SelectItemModel[] {
+    return types.map(type => ({id: type, value: this.chartSortTypeName(type)}));
+  }
+
+  private chartSortTypeName(type: ChartSortType): string {
+    return this.i18n(
+      {
+        id: 'perspective.chart.config.sortType.name',
+        value: '{type, select, asc {Ascending} desc {Descending}}',
+      },
+      {type}
+    );
   }
 }

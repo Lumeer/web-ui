@@ -98,6 +98,10 @@ body {
 
 // Typography ==================================================================
 
+.text-light {
+  color: $light;
+}
+
 .text-attribute {
   font-style: italic;
   color: $primary-hover;

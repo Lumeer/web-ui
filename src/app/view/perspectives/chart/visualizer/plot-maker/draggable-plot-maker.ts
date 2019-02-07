@@ -23,20 +23,12 @@ export abstract class DraggablePlotMaker extends PlotMaker {
   protected dragEnabled: boolean = false;
 
   public setDragEnabled(enabled: boolean) {
-    const changed = enabled !== this.dragEnabled;
     this.dragEnabled = enabled;
-    if (changed) {
-      this.dragEnabledChange();
-    }
   }
 
   public abstract initDrag();
 
   public abstract destroyDrag();
-
-  public dragEnabledChange() {
-    this.refreshDrag();
-  }
 
   public onRelayout() {
     this.refreshDrag();

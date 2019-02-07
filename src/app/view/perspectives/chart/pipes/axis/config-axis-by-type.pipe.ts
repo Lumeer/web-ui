@@ -17,18 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isNullOrUndefined(object: any): object is null | undefined {
-  return object === null || object === undefined;
-}
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 
-export function isNotNullOrUndefind(object: any): boolean {
-  return !isNullOrUndefined(object);
-}
-
-export function isNumeric(value: any): boolean {
-  return !isNaN(value);
-}
-
-export function deepObjectsEquals(object1: any, object2: any): boolean {
-  return JSON.stringify(object1) === JSON.stringify(object2);
+@Pipe({
+  name: 'configAxisByType',
+})
+export class ConfigAxisByTypePipe implements PipeTransform {
+  public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {
+    return config.axes[type];
+  }
 }

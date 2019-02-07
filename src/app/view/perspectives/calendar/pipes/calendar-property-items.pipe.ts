@@ -52,6 +52,6 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
 
   public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
     const bar: CalendarBarModel = {collectionId: collection.id, attributeId: attribute.id};
-    return {id: bar, value: attribute.name, icon: collection.icon, iconColor: collection.color};
+    return {id: bar, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }

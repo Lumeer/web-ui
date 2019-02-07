@@ -18,13 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'configAxisByType',
+  name: 'dataSetSelectPlaceholder',
 })
-export class ConfigAxisByTypePipe implements PipeTransform {
-  public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {
-    return config.axes[type];
+export class DataSetSelectPlaceholderPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
+
+  public transform(axisType: ChartAxisType): string {
+    return this.i18n(
+      {
+        id: 'perspective.chart.config.dataSet.placeholder',
+        value: '{axisType, select, y1 {Y1 Data set} y2 {Y2 Data set}}',
+      },
+      {
+        axisType,
+      }
+    );
   }
 }

@@ -34,8 +34,8 @@ import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {selectCurrentUser} from '../users/users.state';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
-import {getAllCollectionIdsFromQuery} from '../navigation/query.util';
-import {selectAllLinkInstances} from '../link-instances/link-instances.state';
+import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
+import {linkInstancesAdapter, selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {Query} from '../navigation/query';
 import {selectWorkspaceModels} from './common.selectors';
 import {View} from '../views/view';
@@ -133,6 +133,15 @@ export const selectLinkTypesByReadPermission = createSelector(
   }
 );
 
+export const selectLinkTypesByQuery = createSelector(
+  selectLinkTypesByReadPermission,
+  selectQuery,
+  (linkTypes, query) => {
+    const linkTypesIdsInQuery = getAllLinkTypeIdsFromQuery(query);
+    return linkTypes.filter(linkType => linkTypesIdsInQuery.includes(linkType.id));
+  }
+);
+
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
   createSelector(
     selectLinkTypesByReadPermission,
@@ -150,4 +159,13 @@ export const selectViewsByQuery = createSelector(
   selectViewsByRead,
   selectQuery,
   (views, query): View[] => sortViewsById(filterViewsByQuery(views, query))
+);
+
+export const selectLinkInstancesByQuery = createSelector(
+  selectLinkTypesByQuery,
+  selectAllLinkInstances,
+  (linkTypes, linkInstances) => {
+    const linkTypeIds = linkTypes.map(linkType => linkType.id);
+    return linkInstances.filter(linkInstance => linkTypeIds.includes(linkInstance.linkTypeId));
+  }
 );
