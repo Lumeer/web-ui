@@ -354,6 +354,10 @@ export function resizeLastColumnChild(column: TableConfigColumn, delta: number):
     return column;
   }
 
+  if (column.children.length === 0) {
+    return {...column, width: (column.width || DEFAULT_COLUMN_WIDTH) + delta};
+  }
+
   const children = column.children.map((child, index) => {
     if (index === column.children.length - 1 && child.type === TableColumnType.COMPOUND) {
       return resizeLastColumnChild(child, delta);
