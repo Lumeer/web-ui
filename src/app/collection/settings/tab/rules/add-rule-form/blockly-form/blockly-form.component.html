@@ -27,9 +27,9 @@
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
       </small>
-      <p class="text-monospace" *ngIf="blocklyJs">
+      <pre class="text-monospace limit-width" *ngIf="blocklyJs">
         {{blocklyJs}}
-      </p>
+      </pre>
       <p *ngIf="!blocklyJs" i18n="@@collection.config.tab.rules.blockly.noCode">No code generated yet.</p>
     </div>
     <div *ngIf="displayDebug === 'log'">
@@ -39,7 +39,7 @@
         <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
         {{blocklyResultTimestamp}}
       </small>
-      <p class="text-monospace" *ngIf="blocklyDryRunResult">
+      <p class="text-monospace limit-width" *ngIf="blocklyDryRunResult">
         {{blocklyDryRunResult}}
       </p>
       <p *ngIf="!blocklyDryRunResult" i18n="@@collection.config.tab.rules.blockly.noResults">No dry run results yet.</p>
@@ -51,9 +51,9 @@
         <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
         {{blocklyResultTimestamp}}
       </small>
-      <p class="text-monospace" *ngIf="blocklyError">
+      <pre class="text-monospace limit-width" *ngIf="blocklyError">
         {{blocklyError}}
-      </p>
+      </pre>
       <p *ngIf="!blocklyError" i18n="@@collection.config.tab.rules.blockly.noError">No error recorded.</p>
     </div>
   </div>

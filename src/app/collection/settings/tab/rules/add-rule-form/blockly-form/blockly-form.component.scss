@@ -12,3 +12,8 @@ div.rollout {
     transform: translateY(0);
   }
 }
+
+.limit-width {
+  max-width: 85vw;
+  overflow: scroll;
+}

@@ -140,6 +140,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           this.ensureVariableTypeBlock(this, varType);
         }
       }
+      for (let i = 0; i < this.linkTypes.length; i++) {
+        this.ensureLinkTypeBlock(this, this.linkTypes[i]);
+      }
       Blockly.Xml.domToWorkspace(dom, this.workspace);
       this.ensureTypeChecks();
     } else {
@@ -354,7 +357,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             childOutputType.endsWith(BlocklyEditorComponent.DOCUMENT_ARRAY_TYPE_SUFFIX)
           ) {
             const value = block.getField('ATTR').getValue();
-            this.setterAndGetterOutputType(this, block, child);
+            this.setterAndGetterOutputType(this, block, child, true);
             block.getField('ATTR').setValue(value);
           }
         }
@@ -391,7 +394,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private setterAndGetterOutputType(this_: BlocklyEditorComponent, parentBlock: any, block: any) {
+  private setterAndGetterOutputType(
+    this_: BlocklyEditorComponent,
+    parentBlock: any,
+    block: any,
+    skipDisconnect = false
+  ) {
     const options = parentBlock.getField('ATTR').getOptions();
     const originalLength = options.length;
     const blockOutputType =
@@ -418,7 +426,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     if (parentBlock.type === BlocklyEditorComponent.GET_ATTRIBUTE) {
       const newType = block.type.endsWith('_link') ? ['Array'] : [''];
-      if (parentBlock.outputConnection.check_[0] !== newType[0]) {
+      const parentBlockOutputType =
+        parentBlock.outputConnection && parentBlock.outputConnection.check_ && parentBlock.outputConnection.check_[0]
+          ? parentBlock.outputConnection.check_[0]
+          : '';
+      if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
         this_.tryDisconnect(parentBlock, parentBlock.outputConnection);
       }
       parentBlock.outputConnection.check_ = newType;
@@ -731,8 +743,14 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           });
         },
       };
-      const lumeerVar = this_.lumeerVar;
       Blockly.JavaScript[type] = function(block) {
+        const lumeerVar = this_.lumeerVar
+          ? this_.lumeerVar
+          : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        if (!this_.lumeerVar) {
+          this_.lumeerVar = lumeerVar;
+        }
+
         const argument0 =
           Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
