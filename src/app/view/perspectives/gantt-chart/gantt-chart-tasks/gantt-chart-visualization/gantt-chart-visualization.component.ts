@@ -18,19 +18,19 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
   EventEmitter,
-  SimpleChanges,
+  Input,
   OnChanges,
+  Output,
   Renderer2,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
-  GanttChartBarPropertyRequired,
   GanttChartConfig,
   GanttChartTask,
 } from '../../../../../core/store/gantt-charts/gantt-chart';
@@ -42,6 +42,8 @@ import {ganttTasksChanged} from '../../util/gantt-chart-util';
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
+  styleUrls: ['./gantt-chart-visualization.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
@@ -68,7 +70,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
       }
     } else if (changes.config && this.config && this.ganttChart && !this.ganttChart.view_is(this.config.mode)) {
       this.ganttChart.change_view_mode(this.config.mode);
-      this.setChartColors();
+      this.setChartColorsAndListeners();
     }
   }
 
@@ -84,7 +86,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
     if (this.tasks.length) {
       this.ganttChart.refresh(this.tasks);
       this.ganttChart.change_view_mode(this.config.mode);
-      this.setChartColors();
+      this.setChartColorsAndListeners();
     } else {
       this.ganttChart.clear();
       this.ganttChart = null;
@@ -94,13 +96,14 @@ export class GanttChartVisualizationComponent implements OnChanges {
   private createChart() {
     if (this.tasks.length) {
       this.createChartAndInitListeners(this.tasks);
-      this.setChartColors();
+      this.setChartColorsAndListeners();
     }
   }
 
-  private setChartColors() {
+  private setChartColorsAndListeners() {
     const tasksMap = this.ganttChart.tasks.reduce((map, task) => ({...map, [task.id]: task}), {});
 
+    const disabledTaskIds = new Set();
     const barWrappers = document.querySelectorAll('.gantt .bar-wrapper');
     barWrappers.forEach(element => {
       const taskId = element.getAttribute('data-id');
@@ -117,17 +120,37 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
       const progressElement = element.querySelector('.bar-progress');
       progressElement && this.renderer.setStyle(progressElement, 'fill', progressColor);
+
+      if (task.disabled) {
+        this.removeListeners(element);
+        disabledTaskIds.add(taskId);
+      }
     });
+
+    const arrows = document.querySelector('.gantt .arrow');
+    for (let i = 0; i < arrows.children.length; i++) {
+      const arrow = arrows.children.item(i);
+      const idFrom = arrow.getAttribute('data-from');
+      const idTo = arrow.getAttribute('data-to');
+      if (disabledTaskIds.has(idFrom) || disabledTaskIds.has(idTo)) {
+        this.removeListeners(arrow);
+      }
+    }
+  }
+
+  private removeListeners(element: Element) {
+    element && element.parentNode.replaceChild(element.cloneNode(true), element);
   }
 
   private createChartAndInitListeners(tasks: GanttChartTask[]) {
     this.ganttChart = new frappeGantt.default('#ganttChart', tasks, {
       on_date_change: (task, start, end) => {
-        const collectionId = task.collectionId;
-        const collectionConfig = this.config.collections[collectionId];
+        if (task.disabled) {
+          return;
+        }
 
-        const startAttributeId = collectionConfig.barsProperties[GanttChartBarPropertyRequired.START].attributeId;
-        const endAttributeId = collectionConfig.barsProperties[GanttChartBarPropertyRequired.END].attributeId;
+        const startAttributeId = task.startAttributeId;
+        const endAttributeId = task.endAttributeId;
 
         const startTimeTask = moment(task.start, GANTT_DATE_FORMAT).local();
         const startTime = moment(start, GANTT_DATE_FORMAT).local();
@@ -139,25 +162,29 @@ export class GanttChartVisualizationComponent implements OnChanges {
         if (!startTimeTask.isSame(startTime)) {
           const startFormatted = startTime.format(GANTT_DATE_FORMAT);
           task.start = startFormatted;
-          this.onValueChanged(task.documentId, startAttributeId, startFormatted);
+          this.onValueChanged(task.id, startAttributeId, startFormatted);
         }
 
         //end time changed
         if (!endTimeTask.isSame(endTime)) {
           const endFormatted = endTime.format(GANTT_DATE_FORMAT);
           task.end = endFormatted;
-          this.onValueChanged(task.documentId, endAttributeId, endFormatted);
+          this.onValueChanged(task.id, endAttributeId, endFormatted);
         }
       },
 
       on_progress_change: (task, progress) => {
+        if (task.disabled) {
+          return;
+        }
+
         const collectionId = task.collectionId;
         const collectionConfig = this.config.collections[collectionId];
 
         const progressAttributeId = collectionConfig.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId;
         if (task.progress !== progress) {
           task.progress = progress;
-          this.onValueChanged(task.documentId, progressAttributeId, progress);
+          this.onValueChanged(task.id, progressAttributeId, progress);
         }
       },
     });

@@ -30,16 +30,23 @@ import {isArray, isNullOrUndefined, isNumeric} from '../../../../shared/utils/co
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import * as moment from 'moment';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 export function createGanttChartTasks(
   config: GanttChartConfig,
   collections: Collection[],
-  documents: DocumentModel[]
+  documents: DocumentModel[],
+  permissions: Record<string, AllowedPermissions>
 ): GanttChartTask[] {
   return collections.reduce(
     (tasks, collection) => [
       ...tasks,
-      ...createGanttChartTasksForCollection(config, collection, documentsByCollection(documents, collection)),
+      ...createGanttChartTasksForCollection(
+        config,
+        collection,
+        documentsByCollection(documents, collection),
+        permissions[collection.id] || {}
+      ),
     ],
     []
   );
@@ -52,7 +59,8 @@ function documentsByCollection(documents: DocumentModel[], collection: Collectio
 function createGanttChartTasksForCollection(
   config: GanttChartConfig,
   collection: Collection,
-  documents: DocumentModel[]
+  documents: DocumentModel[],
+  permissions: AllowedPermissions
 ): GanttChartTask[] {
   const collectionConfig: GanttChartCollectionConfig = config.collections && config.collections[collection.id];
 
@@ -66,6 +74,22 @@ function createGanttChartTasksForCollection(
   const idProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.ID];
   const dependenciesProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES];
   const progressProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.PROGRESS];
+  const disabled = !permissions.writeWithView;
+  const customClass = disabled ? 'gantt-bar-disabled' : null;
+
+  let idDependenciesMap: Record<string, string> = {};
+  if (idProperty && dependenciesProperty) {
+    idDependenciesMap = documents.reduce((map, document) => {
+      const name = nameProperty && document.data[nameProperty.attributeId];
+      const start = startProperty && document.data[startProperty.attributeId];
+      const end = endProperty && document.data[endProperty.attributeId];
+      const id = document.data[idProperty.attributeId];
+      if (!map[id] && isTaskValid(name, start, end)) {
+        map[id] = document.id;
+      }
+      return map;
+    }, {});
+  }
 
   const tasks = [];
 
@@ -74,21 +98,24 @@ function createGanttChartTasksForCollection(
     const start = startProperty && document.data[startProperty.attributeId];
     const end = endProperty && document.data[endProperty.attributeId];
 
-    const id = idProperty && document.data[idProperty.attributeId];
     const dependencies = dependenciesProperty && document.data[dependenciesProperty.attributeId];
     const progress = progressProperty && (document.data[progressProperty.attributeId] || 0);
 
-    const task = {name, start, end, id, dependencies, progress};
-
-    if (isTaskValid(task)) {
+    if (isTaskValid(name, start, end)) {
+      const interval = createInterval(start, startProperty.attributeId, end, endProperty.attributeId);
       tasks.push({
-        ...task,
-        start: cleanDate(task.start),
-        end: cleanDate(task.end),
-        progress: Math.max(+task.progress, 0),
-        documentId: document.id,
+        id: document.id,
+        name,
+        dependencies: createDependencies(dependencies, idDependenciesMap),
+        start: interval[0].value,
+        startAttributeId: interval[0].attrId,
+        end: interval[1].value,
+        endAttributeId: interval[1].attrId,
+        progress: createProgress(progress),
         collectionId: collection.id,
         color: collection.color,
+        custom_class: customClass,
+        disabled,
       });
     }
   }
@@ -96,21 +123,52 @@ function createGanttChartTasksForCollection(
   return tasks;
 }
 
-function isTaskValid(task: GanttChartTask): boolean {
-  return (
-    task.name &&
-    (task.start && isDateValid(task.start)) &&
-    (task.end && isDateValid(task.end)) &&
-    (isNullOrUndefined(task.progress) || isNumeric(task.progress))
-  );
+function createDependencies(dependencies: any, idDependenciesMap: Record<string, string>): string {
+  if (isNullOrUndefined(dependencies)) {
+    return '';
+  }
+
+  return dependencies
+    .toString()
+    .split(',')
+    .map(part => idDependenciesMap[part.trim()])
+    .filter(value => !!value)
+    .join(',');
+}
+
+function isTaskValid(name: string, start: string, end: string): boolean {
+  return name && (start && isDateValid(start)) && (end && isDateValid(end));
 }
 
 function isDateValid(date: string): boolean {
   return moment(date).isValid();
 }
 
-function cleanDate(date: string): string {
-  return moment(date).format(GANTT_DATE_FORMAT);
+function createProgress(progress: any): number {
+  if (isNullOrUndefined(progress)) {
+    return 0;
+  }
+  if (isNumeric(progress)) {
+    return Math.max(+progress, 0);
+  }
+  return 0;
+}
+
+function createInterval(
+  start: string,
+  startAttributeId,
+  end: string,
+  endAttributeId: string
+): [{value: string; attrId: string}, {value: string; attrId: string}] {
+  const startDate = moment(start);
+  const endDate = moment(end);
+  const startDateObj = {value: startDate.format(GANTT_DATE_FORMAT), attrId: startAttributeId};
+  const endDateObj = {value: endDate.format(GANTT_DATE_FORMAT), attrId: endAttributeId};
+
+  if (endDate.isAfter(startDate)) {
+    return [startDateObj, endDateObj];
+  }
+  return [endDateObj, startDateObj];
 }
 
 export function ganttTasksChanged(newTasks: GanttChartTask[], currentTasks: any[]): boolean {
@@ -121,14 +179,17 @@ export function ganttTasksChanged(newTasks: GanttChartTask[], currentTasks: any[
 
 function cleanGanttTask(task: GanttChartTask | any): GanttChartTask {
   return {
+    id: task.id,
     name: task.name,
     progress: task.progress,
     start: task.start,
+    startAttributeId: task.startAttributeId,
     end: task.end,
+    endAttributeId: task.endAttributeId,
     collectionId: task.collectionId,
     color: task.color,
     dependencies: cleanGanttTaskDependencies(task.dependencies),
-    documentId: task.documentId,
+    disabled: task.disabled,
   };
 }
 

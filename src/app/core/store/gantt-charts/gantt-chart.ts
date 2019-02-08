@@ -43,12 +43,14 @@ export interface GanttChartTask {
   id?: string;
   name: string;
   start: string;
+  startAttributeId: string;
   end: string;
+  endAttributeId: string;
   progress: number;
   dependencies: string;
-  documentId?: string;
   collectionId?: string;
   color?: string;
+  disabled?: boolean;
 }
 
 export enum GanttChartMode {

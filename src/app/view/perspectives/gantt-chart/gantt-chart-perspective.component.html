@@ -18,6 +18,7 @@
       [style.width.px]="1"
       [canManageConfig]="data.canManageConfig"
       [collections]="data.collections"
+      [permissions]="permissions$ | async"
       [documents]="documents$ | async"
       [config]="data.config"
       (patchData)="patchDocumentData($event)">

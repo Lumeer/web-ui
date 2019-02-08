@@ -30,14 +30,16 @@ import {
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {GanttChartConfig, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
-import {BehaviorSubject, concat, Observable, Subject} from 'rxjs';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 interface Data {
   collections: Collection[];
   documents: DocumentModel[];
   config: GanttChartConfig;
+  permissions: Record<string, AllowedPermissions>;
 }
 
 @Component({
@@ -56,6 +58,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public config: GanttChartConfig;
 
   @Input()
+  public permissions: Record<string, AllowedPermissions>;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Output()
@@ -72,13 +77,18 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data => createGanttChartTasks(data.config, data.collections, data.documents))
+      map(data => createGanttChartTasks(data.config, data.collections, data.documents, data.permissions || {}))
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.documents || changes.config || changes.collections) && this.config) {
-      this.dataSubject.next({documents: this.documents, collections: this.collections, config: this.config});
+    if ((changes.documents || changes.config || changes.collections || changes.permissions) && this.config) {
+      this.dataSubject.next({
+        documents: this.documents,
+        collections: this.collections,
+        permissions: this.permissions,
+        config: this.config,
+      });
     }
   }
 
