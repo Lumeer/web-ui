@@ -1,6 +1,7 @@
 <div #content
      class="d-flex position-fixed pl-3">
-  <table-hidden-input (click)="unsetCursor()"
+  <table-hidden-input [canManageConfig]="canManageConfig"
+                      (click)="unsetCursor()"
                       class="d-block row-number-header">
   </table-hidden-input>
 

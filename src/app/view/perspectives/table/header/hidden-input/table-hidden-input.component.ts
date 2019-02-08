@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {Subscription} from 'rxjs';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {KeyCode} from '../../../../../shared/key-code';
+import {EDITABLE_EVENT} from '../../table-perspective.component';
+import {Direction} from '../../../../../shared/direction';
+import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
+import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
+import {filter, map, switchMap, take} from 'rxjs/operators';
+import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Component({
   selector: 'table-hidden-input',
@@ -31,12 +37,19 @@ import {KeyCode} from '../../../../../shared/key-code';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHiddenInputComponent implements OnInit, OnDestroy {
+  @Input()
+  public canManageConfig: boolean;
+
   @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
 
   private subscriptions = new Subscription();
 
-  constructor(private actions$: Actions, private store$: Store<{}>) {}
+  constructor(
+    private actions$: Actions,
+    private collectionPermissions: CollectionPermissionsPipe,
+    private store$: Store<{}>
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
@@ -74,6 +87,49 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         this.store$.dispatch(new TablesAction.RemoveSelectedCell());
         return;
     }
+
+    this.onShortcutKeyDown(event);
+  }
+
+  private onShortcutKeyDown(event: KeyboardEvent) {
+    this.store$
+      .pipe(
+        select(selectTableCursor),
+        take(1),
+        switchMap(cursor =>
+          this.store$.pipe(
+            select(selectTablePart(cursor)),
+            take(1),
+            switchMap(part => this.collectionPermissions.transform({id: part.collectionId, name: null})),
+            take(1),
+            filter(() => !!cursor.rowPath),
+            map(permissions => [cursor, permissions && permissions.writeWithView])
+          )
+        )
+      )
+      .subscribe(([cursor, writeWithView]: [TableBodyCursor, boolean]) => {
+        event[EDITABLE_EVENT] = writeWithView;
+
+        if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
+          event.stopPropagation();
+          switch (event.code) {
+            case KeyCode.ArrowRight:
+              this.store$.dispatch(new TablesAction.IndentRow({cursor}));
+              return;
+            case KeyCode.ArrowLeft:
+              this.store$.dispatch(new TablesAction.OutdentRow({cursor}));
+              return;
+            case KeyCode.ArrowUp:
+              this.store$.dispatch(new TablesAction.MoveRowUp({cursor}));
+              this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+              return;
+            case KeyCode.ArrowDown:
+              this.store$.dispatch(new TablesAction.MoveRowDown({cursor}));
+              this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+              return;
+          }
+        }
+      });
   }
 
   public onInput(event: KeyboardEvent) {
