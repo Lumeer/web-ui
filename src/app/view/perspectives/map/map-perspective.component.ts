@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {first, map} from 'rxjs/operators';
@@ -31,6 +31,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query';
+import {MapContentComponent} from './content/map-content.component';
 
 @Component({
   selector: 'map-perspective',
@@ -41,6 +42,9 @@ import {Query} from '../../../core/store/navigation/query';
 export class MapPerspectiveComponent implements OnInit, OnDestroy {
   @Input()
   public query: Query;
+
+  @ViewChild(MapContentComponent)
+  public mapContentComponent: MapContentComponent;
 
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
@@ -92,5 +96,11 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new MapsAction.DestroyMap({mapId: this.mapId}));
+  }
+
+  public onSidebarToggle() {
+    if (this.mapContentComponent) {
+      setTimeout(() => this.mapContentComponent.refreshMapSize());
+    }
   }
 }
