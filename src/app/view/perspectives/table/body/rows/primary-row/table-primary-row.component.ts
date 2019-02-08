@@ -83,6 +83,11 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
       this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(this.cursor)));
       this.part$ = this.store$.pipe(select(selectTablePart(this.cursor)));
       this.bindHierarchy(this.cursor);
+
+      if (!changes.cursor.firstChange) {
+        this.destroyIntersectionObserver();
+        this.initIntersectionObserver();
+      }
     }
   }
 
@@ -119,10 +124,14 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
     }
   }
 
-  public ngOnDestroy() {
+  private destroyIntersectionObserver() {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
     }
+  }
+
+  public ngOnDestroy() {
+    this.destroyIntersectionObserver();
   }
 
   public onHierarchyToggle() {
