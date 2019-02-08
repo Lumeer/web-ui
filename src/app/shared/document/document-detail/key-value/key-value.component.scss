@@ -14,3 +14,19 @@
     }
   }
 }
+
+.data-input {
+  &::ng-deep > * {
+    &:hover:not(boolean-data-input) {
+      border: 1px solid $gray-400;
+      border-radius: 0.25rem;
+    }
+    &:focus-within {
+      border: 1px solid $gray-400;
+      border-radius: 0.25rem;
+    }
+  }
+  &::ng-deep > boolean-data-input {
+    justify-content: flex-start;
+  }
+}

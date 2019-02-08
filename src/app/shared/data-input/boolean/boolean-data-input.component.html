@@ -3,10 +3,13 @@
   <input #booleanInput
          [id]="inputId"
          [attr.checked]="value || null"
+         [readonly]="readonly || null"
+         [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"
          type="checkbox"
          class="custom-control-input">
   <label [for]="inputId"
+         [style.cursor]="readonly ? 'unset' : null"
          class="custom-control-label">
   </label>
 </div>
