@@ -121,6 +121,48 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   public initBlockly() {
+    this.registerCustomBlocks();
+
+    BlocklyEditorComponent.THESE.set(this.workspace.id, this); // TODO: is there a better way?
+
+    this.workspace.addChangeListener(changeEvent => this.onWorkspaceChange(changeEvent));
+
+    this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables);
+    this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks);
+
+    if (this.xml) {
+      // initiate from previously stored XML
+      const dom: Element = Blockly.Xml.textToDom(this.xml);
+      const vars = dom.getElementsByTagName('variable');
+      for (let i = 0; i < vars.length; i++) {
+        const varType = vars.item(i).attributes.getNamedItem('type').value;
+        if (varType.endsWith(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX)) {
+          this.ensureVariableTypeBlock(this, varType);
+        }
+      }
+      Blockly.Xml.domToWorkspace(dom, this.workspace);
+      this.ensureTypeChecks();
+    } else {
+      // initiate empty state
+      const containerBlock = this.workspace.newBlock(BlocklyEditorComponent.STATEMENT_CONTAINER);
+      containerBlock.setDeletable(false);
+      containerBlock.initSvg();
+      containerBlock.render();
+    }
+
+    // make sure we have all variables created (no matter how the workspace was initiated - either from XML or empty)
+    this.variables.forEach(variable => {
+      if (this.workspace.getVariable(variable.name) == null) {
+        this.workspace.createVariable(
+          variable.name,
+          variable.collectionId + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX,
+          null
+        );
+      }
+    });
+  }
+
+  private registerCustomBlocks(): void {
     const coreVarTypes = this.variables.map(
       variable => variable.collectionId + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX
     );
@@ -271,42 +313,116 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       return code;
     };
+  }
 
-    BlocklyEditorComponent.THESE.set(this.workspace.id, this); // TODO: is there a better way?
+  private ensureTypeChecks(): void {
+    // first fix variables and links
+    this.workspace.getAllBlocks(false).forEach(block => {
+      this.preventDeletionOfInitialVariables(this, block);
 
-    this.workspace.addChangeListener(changeEvent => this.onWorkspaceChange(changeEvent));
-
-    this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables);
-    this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks);
-
-    if (this.xml) {
-      const dom: Element = Blockly.Xml.textToDom(this.xml);
-      const vars = dom.getElementsByTagName('variable');
-      for (let i = 0; i < vars.length; i++) {
-        const varType = vars.item(i).attributes.getNamedItem('type').value;
-        if (varType.endsWith(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX)) {
-          this.ensureVariableTypeBlock(this, varType);
+      // set output type of all links
+      if (block.type.endsWith(BlocklyEditorComponent.LINK_TYPE_SUFFIX)) {
+        const children = block.getChildren(false);
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childType = child.type;
+          const linkParts = block.type.split('_');
+          const counterpart =
+            linkParts[0] === childType.replace(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX, '')
+              ? linkParts[1]
+              : linkParts[0];
+          block.setOutput(true, counterpart + BlocklyEditorComponent.DOCUMENT_ARRAY_TYPE_SUFFIX);
         }
       }
-      Blockly.Xml.domToWorkspace(dom, this.workspace);
-    } else {
-      this.variables.forEach(variable =>
-        this.workspace.createVariable(
-          variable.name,
-          variable.collectionId + BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX,
-          null
-        )
-      );
+    });
 
-      const containerBlock = this.workspace.newBlock(BlocklyEditorComponent.STATEMENT_CONTAINER);
-      containerBlock.setDeletable(false);
-      containerBlock.initSvg();
-      containerBlock.render();
-    }
+    // second fix getters and setters
+    this.workspace.getAllBlocks(false).forEach(block => {
+      const children = block.getChildren(false);
+
+      // document getters and setters
+      if (block.type === BlocklyEditorComponent.GET_ATTRIBUTE || block.type === BlocklyEditorComponent.SET_ATTRIBUTE) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType =
+            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
+              ? child.outputConnection.check_[0]
+              : '';
+
+          if (
+            childOutputType.endsWith(BlocklyEditorComponent.DOCUMENT_TYPE_SUFFIX) ||
+            childOutputType.endsWith(BlocklyEditorComponent.DOCUMENT_ARRAY_TYPE_SUFFIX)
+          ) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(this, block, child);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
+      // foreach cycle
+      if (block.type === BlocklyEditorComponent.FOREACH_DOCUMENT_ARRAY) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType =
+            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
+              ? child.outputConnection.check_[0]
+              : '';
+
+          if (childOutputType.endsWith(BlocklyEditorComponent.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
+            const newType = childOutputType.replace(BlocklyEditorComponent.ARRAY_TYPE_SUFFIX, '');
+            this.updateVariableType(this.workspace, block.getField('VAR').getVariable(), newType);
+            block.getField('VAR').setTypes_([newType], newType);
+          }
+        }
+      }
+    });
   }
 
   public ngOnDestroy(): void {
     BlocklyEditorComponent.THESE.delete(this.workspace.id);
+  }
+
+  private preventDeletionOfInitialVariables(this_: BlocklyEditorComponent, block: any): void {
+    if (block.type.startsWith(BlocklyEditorComponent.VARIABLES_GET_PREFIX)) {
+      if (this_.variables.map(v => v.name).indexOf(block.getField('VAR').getVariable().name) >= 0) {
+        block.setEditable(false);
+      }
+    }
+  }
+
+  private setterAndGetterOutputType(this_: BlocklyEditorComponent, parentBlock: any, block: any) {
+    const options = parentBlock.getField('ATTR').getOptions();
+    const originalLength = options.length;
+    const blockOutputType =
+      block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
+        ? block.outputConnection.check_[0]
+        : '';
+    const collection = this_.getCollection(blockOutputType.split('_')[0]);
+
+    let defaultValue = '';
+    collection.attributes.forEach(attribute => {
+      options.push([attribute.name, attribute.id]);
+
+      if (attribute.id === collection.defaultAttributeId) {
+        defaultValue = attribute.id;
+      }
+    });
+
+    if (!defaultValue) {
+      defaultValue = collection.attributes[0].id;
+    }
+
+    parentBlock.getField('ATTR').setValue(defaultValue);
+    options.splice(0, originalLength);
+
+    if (parentBlock.type === BlocklyEditorComponent.GET_ATTRIBUTE) {
+      const newType = block.type.endsWith('_link') ? ['Array'] : [''];
+      if (parentBlock.outputConnection.check_[0] !== newType[0]) {
+        this_.tryDisconnect(parentBlock, parentBlock.outputConnection);
+      }
+      parentBlock.outputConnection.check_ = newType;
+    }
   }
 
   private onWorkspaceChange(changeEvent): void {
@@ -320,11 +436,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       this_.ensureEmptyTypes(block);
 
       // prevent deletion of the initial variables
-      if (block.type.startsWith(BlocklyEditorComponent.VARIABLES_GET_PREFIX)) {
-        if (this_.variables.map(v => v.name).indexOf(block.getField('VAR').getVariable().name) >= 0) {
-          block.setEditable(false);
-        }
-      }
+      this_.preventDeletionOfInitialVariables(this_, block);
 
       if (block.type === BlocklyEditorComponent.GET_ATTRIBUTE) {
         block.outputConnection.check_ = [BlocklyEditorComponent.UNKNOWN];
@@ -360,6 +472,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           if (!blockOutputType.endsWith(BlocklyEditorComponent.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
+            // otherwise set a correct type of the cycle variable
             const newType = blockOutputType.replace(BlocklyEditorComponent.ARRAY_TYPE_SUFFIX, '');
             this_.updateVariableType(workspace, parentBlock.getField('VAR').getVariable(), newType);
             parentBlock.getField('VAR').setTypes_([newType], newType);
@@ -374,33 +487,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         (parentBlock.type === BlocklyEditorComponent.GET_ATTRIBUTE ||
           parentBlock.type === BlocklyEditorComponent.SET_ATTRIBUTE)
       ) {
-        const options = parentBlock.getField('ATTR').getOptions();
-        const originalLength = options.length;
-        const collection = this_.getCollection(blockOutputType.split('_')[0]);
-
-        let defaultValue = '';
-        collection.attributes.forEach(attribute => {
-          options.push([attribute.name, attribute.id]);
-
-          if (attribute.id === collection.defaultAttributeId) {
-            defaultValue = attribute.id;
-          }
-        });
-
-        if (!defaultValue) {
-          defaultValue = collection.attributes[0].id;
-        }
-
-        parentBlock.getField('ATTR').setValue(defaultValue);
-        options.splice(0, originalLength);
-
-        if (parentBlock.type === BlocklyEditorComponent.GET_ATTRIBUTE) {
-          const newType = block.type.endsWith('_link') ? ['Array'] : [''];
-          if (parentBlock.outputConnection.check_[0] !== newType[0]) {
-            this_.tryDisconnect(parentBlock, parentBlock.outputConnection);
-          }
-          parentBlock.outputConnection.check_ = newType;
-        }
+        this_.setterAndGetterOutputType(this_, parentBlock, block);
       }
     } else if (changeEvent.oldParentId) {
       // reset output type and disconnect when linked document is removed
@@ -441,6 +528,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           options.splice(0, originalLength);
         }
 
+        // reset list of attributes upon disconnection
         if (
           parentBlock.type === BlocklyEditorComponent.SET_ATTRIBUTE &&
           parentBlock.getInput('DOCUMENT').connection.targetConnection === null
@@ -453,6 +541,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+
+    // render new state
     this_.generateXml();
     this_.generateJs();
   }
@@ -662,6 +752,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     return shadeColor(color, percent);
   }
 
+  // bridge for functions running outside of ng zone
   private contrastColor(color?: string, dark?: string, light?: string): string {
     return color ? this.contrastColorPipe.transform(color, {dark, light}) : dark ? dark : COLOR_PRIMARY;
   }
