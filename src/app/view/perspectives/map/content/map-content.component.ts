@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Marker} from 'leaflet';
 import {combineLatest, Observable} from 'rxjs';
@@ -30,6 +30,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
 import {createMapMarker, parseCoordinates} from './render/map.utils';
+import {MapRenderComponent} from './render/map-render.component';
 
 @Component({
   selector: 'map-content',
@@ -46,6 +47,9 @@ export class MapContentComponent implements OnInit {
 
   @Input()
   public map: MapModel;
+
+  @ViewChild(MapRenderComponent)
+  public mapRenderComponent: MapRenderComponent;
 
   public markers$: Observable<Marker[]>;
 
@@ -97,6 +101,12 @@ export class MapContentComponent implements OnInit {
         }, [])
       )
     );
+  }
+
+  public refreshMapSize() {
+    if (this.mapRenderComponent) {
+      this.mapRenderComponent.refreshMapSize();
+    }
   }
 }
 
