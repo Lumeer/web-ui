@@ -1,4 +1,6 @@
-<div class="w-100" id="ganttChart" [style.margin-top.rem]="canManageConfig && ganttChart ? 5 : 0">
+<div class="w-100" id="ganttChart"
+     [class.top-space]="canManageConfig && ganttChart"
+     [class.zero-height]="!ganttChart">
 </div>
 <empty-state
   class="w-100"
