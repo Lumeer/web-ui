@@ -178,17 +178,16 @@ function createColumnsFromConfig(
   const columns = columnsConfig.reduce<TableConfigColumn[]>((preparedColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       const attributeId = column.attributeIds[0];
+      const attributeName = column.attributeName;
       const attribute = attributes.find(attr => attr.id === attributeId);
-      if (!attribute) {
+      if (!attribute && !attributeName) {
         return preparedColumns;
       }
 
       // TODO should children not in config really appear instead of just parent?
       return preparedColumns.concat({
-        type: TableColumnType.COMPOUND,
-        attributeIds: [attributeId],
-        width: column.width,
-        children: createTableColumnsFromAttributes(allAttributes, attribute, column.children),
+        ...column,
+        children: attribute ? createTableColumnsFromAttributes(allAttributes, attribute, column.children) : [],
       });
     }
 
@@ -604,7 +603,7 @@ export function isTableConfigChanged(
   documentsMap: {[id: string]: DocumentModel}
 ): boolean {
   if (JSON.stringify(viewConfig.parts) !== JSON.stringify(perspectiveConfig.parts)) {
-    return false;
+    return true;
   }
 
   const viewRows =
