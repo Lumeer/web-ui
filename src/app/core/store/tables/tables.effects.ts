@@ -336,7 +336,11 @@ export class TablesEffects {
         const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
         const parentName = parentAttribute ? parentAttribute.name : null;
 
-        const attributeName = generateAttributeName(attributes, parentName);
+        const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
+          return column.attributeName ? attributeNames.concat(column.attributeName) : attributeNames;
+        }, []);
+
+        const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
         return {
           type: TableColumnType.COMPOUND,
           attributeIds: [],
