@@ -1,16 +1,18 @@
-<div class="text-center text-muted px-0" i18n="@@icon-picker.select.icon">2. Choose icon</div>
+<div class="text-center text-muted px-0"
+     i18n="@@icon-picker.select.icon">2. Choose icon
+</div>
 <div class="d-flex mx-3 my-1">
-  <input
-    class="form-control form-control-sm flex-fill"
-    (input)="filterInput($event)"
-    [(value)]="filter"
-    placeholder="Search for icon..."
-    i18n-placeholder="@@icon-picker.select.icon.search"
-  />
+  <input class="form-control form-control-sm flex-fill"
+         (input)="filterInput($event)"
+         [(value)]="filter"
+         placeholder="Search for icon..."
+         i18n-placeholder="@@icon-picker.select.icon.search"
+         data-test="icon-picker-search-input">
 </div>
 <div class="tab-content-container">
   <div class="tab-content align-self-start justify-content-center">
-    <i *ngFor="let iconOption of filteredIcons" class="fa-fw {{ iconOption }} text-center rounded icon"
+    <i *ngFor="let iconOption of filteredIcons"
+       class="fa-fw {{ iconOption }} text-center rounded icon"
        [class.selected]="iconOption === selected"
        [class.active]="iconOption === icon"
        (mouseenter)="preview(iconOption)"
@@ -18,7 +20,7 @@
        (click)="select(iconOption)"
        id="{{iconOption | iconId:dropdownId }}"
        aria-hidden="true"
-    >
+       data-test="icon-picker-option">
     </i>
   </div>
 </div>
