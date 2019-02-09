@@ -1,6 +1,7 @@
 <ng-container *ngIf="constraint; else textDataInput"
               [ngSwitch]="constraint.type">
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
+                      [readonly]="readonly"
                       [value]="value"
                       (valueChange)="onValueChange($event)"
                       (save)="save.emit($event)">
@@ -13,7 +14,8 @@
                        [value]="value"
                        (valueChange)="onValueChange($event)"
                        (save)="save.emit($event)"
-                       (cancel)="cancel.emit()">
+                       (cancel)="cancel.emit()"
+                       class="d-block">
   </datetime-data-input>
 
   <number-data-input *ngSwitchCase="constraintType.Number"
@@ -23,7 +25,8 @@
                      [value]="value"
                      (valueChange)="onValueChange($event)"
                      (save)="save.emit($event)"
-                     (cancel)="cancel.emit()">
+                     (cancel)="cancel.emit()"
+                     class="d-block">
   </number-data-input>
 
   <text-data-input *ngSwitchDefault
@@ -33,7 +36,8 @@
                    [value]="value"
                    (valueChange)="onValueChange($event)"
                    (save)="save.emit($event)"
-                   (cancel)="cancel.emit()">
+                   (cancel)="cancel.emit()"
+                   class="d-block">
   </text-data-input>
 </ng-container>
 
@@ -44,6 +48,7 @@
                    [value]="value"
                    (valueChange)="onValueChange($event)"
                    (save)="save.emit($event)"
-                   (cancel)="cancel.emit()">
+                   (cancel)="cancel.emit()"
+                   class="d-block">
   </text-data-input>
 </ng-template>

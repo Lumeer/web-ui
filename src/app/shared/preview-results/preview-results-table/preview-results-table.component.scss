@@ -15,6 +15,7 @@ tbody {
   position: sticky;
   top: -1px;
   background: white;
+  z-index: 1; // otherwise checkboxes in the body are shown over the header when scrolling down
 }
 
 th,

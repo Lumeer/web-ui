@@ -43,6 +43,9 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   public indeterminate: boolean;
 
   @Input()
+  public readonly: boolean;
+
+  @Input()
   public value: boolean;
 
   @Output()
