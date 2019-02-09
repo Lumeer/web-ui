@@ -291,9 +291,12 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public onAdd(next: boolean) {
     const {parentPath, columnIndex} = splitColumnPath(this.cursor.columnPath);
-    const columnPath = parentPath.concat(columnIndex + (next ? 1 : 0));
-    const cursor = {...this.cursor, columnPath};
-    this.store$.dispatch(new TablesAction.AddColumn({cursor}));
+    const columnPath = parentPath.concat(columnIndex + 1);
+    const nextCursor = {...this.cursor, columnPath};
+    this.store$.dispatch(new TablesAction.AddColumn({cursor: next ? nextCursor : this.cursor}));
+    if (!next) {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: nextCursor}));
+    }
   }
 
   public onConfigure() {
