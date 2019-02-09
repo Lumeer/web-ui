@@ -3,13 +3,15 @@
        class="font-weight-bold name form-control"
        [attr.contenteditable]="editable"
        [class.border-0]="!editable"
-       placeholder="Click to set name" i18n-placeholder="@@collection.name.placeholder"
+       placeholder="Click to set name"
+       i18n-placeholder="@@collection.name.placeholder"
        [textContent]="collectionName"
        title="{{collectionName}}"
        (blur)="onNameBlurred(collectionNameInput.textContent)"
        (focus)="onNameSelected()"
        [attr.spellcheck]="false"
        (keydown.enter)="collectionNameInput.blur()"
-       (keydown.Escape)="collectionNameInput.blur()">
+       (keydown.Escape)="collectionNameInput.blur()"
+       data-test="collection-card-name-input">
   </div>
 </div>

@@ -159,3 +159,14 @@ Cypress.Commands.add('deleteOrganization', code => {
 Cypress.Commands.add('visitSearchCollections', () => {
   cy.visit(`/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
 });
+
+Cypress.Commands.add('saveDefaultWorkspace', defaultWorkspace => {
+  cy.request({
+    method: 'PUT',
+    url: `${Cypress.env('engineUrl')}rest/users/workspace`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: defaultWorkspace,
+  });
+});

@@ -23,4 +23,9 @@ beforeEach(() => {
     .substr(2);
   Cypress.env('projectCode', projectCode);
   cy.createProject(projectCode, 'Test project');
+
+  cy.saveDefaultWorkspace({
+    organizationCode: Cypress.env('organizationCode'),
+    projectCode,
+  });
 });
