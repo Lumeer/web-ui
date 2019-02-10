@@ -36,12 +36,12 @@ import {Query} from '../../../../core/store/navigation/query';
 import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ChartData} from './convertor/chart-data';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
 import {ValueChange} from '../visualizer/plot-maker/plot-maker';
-import {ChartVisualizerComponent} from './chart-visualizer/chart-visualizer.component';
-import {buffer, debounceTime, map} from 'rxjs/operators';
+import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
+import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 
 interface Data {
   collections: Collection[];
@@ -96,13 +96,14 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public chartVisualizerComponent: ChartVisualizerComponent;
 
   public chartData$: Observable<ChartData>;
-  public dataSubject = new Subject<Data>();
+  public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(private chartDataConverter: ChartDataConverter) {}
 
   public ngOnInit() {
     const closingNotifier = this.dataSubject.pipe(debounceTime(100));
     this.chartData$ = this.dataSubject.pipe(
+      filter(data => !!data),
       buffer(closingNotifier),
       map(data => this.handleData(data))
     );

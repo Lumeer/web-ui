@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
-import {ChartData} from '../chart-data/convertor/chart-data';
+import {ChartData} from '../data/convertor/chart-data';
 
 @Pipe({
   name: 'chartDraggable',

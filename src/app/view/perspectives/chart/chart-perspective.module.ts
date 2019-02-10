@@ -22,11 +22,11 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared/shared.module';
 import {ChartPerspectiveRoutingModule} from './chart-perspective-routing.module';
 import {ChartPerspectiveComponent} from './chart-perspective.component';
-import {ChartConfigComponent} from './chart-config/chart-config.component';
+import {ChartConfigComponent} from './config/chart-config.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {ChartPipesModule} from './pipes/chart-pipes.module';
-import {ChartDataComponent} from './chart-data/chart-data.component';
-import {ChartVisualizerComponent} from './chart-data/chart-visualizer/chart-visualizer.component';
+import {ChartDataComponent} from './data/chart-data.component';
+import {ChartVisualizerComponent} from './data/visualizer/chart-visualizer.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, ChartPerspectiveRoutingModule, ChartPipesModule],

@@ -52,7 +52,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
-import {ChartDataComponent} from './chart-data/chart-data.component';
+import {ChartDataComponent} from './data/chart-data.component';
 
 @Component({
   selector: 'chart-perspective',
