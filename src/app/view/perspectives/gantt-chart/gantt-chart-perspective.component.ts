@@ -56,8 +56,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
+  public ganttChartId = DEFAULT_GANTT_CHART_ID;
 
-  private ganttChartId = DEFAULT_GANTT_CHART_ID;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
