@@ -34,5 +34,5 @@ export function deepObjectsEquals(object1: any, object2: any): boolean {
 }
 
 export function isArray<T>(input?: any): input is T[] {
-  return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
+  return Array.isArray(input);
 }

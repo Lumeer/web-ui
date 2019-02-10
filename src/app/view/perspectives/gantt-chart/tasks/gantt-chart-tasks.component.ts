@@ -63,6 +63,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public ganttChartId: string;
+
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 

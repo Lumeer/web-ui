@@ -47,13 +47,13 @@ export class GanttChartCollectionConfigComponent {
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
   public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
-    const bars = {...(this.config.barsProperties || {}), [type]: bar};
+    const bars = {...this.config.barsProperties, [type]: bar};
     const newConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
   public onBarPropertyRemoved(type: GanttChartBarProperty) {
-    const bars = {...(this.config.barsProperties || {})};
+    const bars = {...this.config.barsProperties};
     delete bars[type];
     const newConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);

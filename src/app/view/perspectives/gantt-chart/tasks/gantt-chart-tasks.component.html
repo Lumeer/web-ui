@@ -1,5 +1,6 @@
 <gantt-chart-visualization
   [canManageConfig]="canManageConfig"
+  [ganttChartId]="ganttChartId"
   [config]="config"
   [tasks]="tasks$ | async"
   (patchData)="onValueChanged($event)">

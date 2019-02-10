@@ -56,6 +56,9 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public ganttChartId: string;
+
   @Output()
   public patchData = new EventEmitter<{documentId: string; attributeId: string; value: any}>();
 
@@ -143,7 +146,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private createChartAndInitListeners(tasks: GanttChartTask[]) {
-    this.ganttChart = new frappeGantt.default('#ganttChart', tasks, {
+    this.ganttChart = new frappeGantt.default(`#ganttChart-${this.ganttChartId}`, tasks, {
       on_date_change: (task, start, end) => {
         if (task.disabled) {
           return;

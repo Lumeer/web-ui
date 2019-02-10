@@ -21,12 +21,12 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared/shared.module';
 import {GanttChartPerspectiveRoutingModule} from './gantt-chart-perspective-routing.module';
 import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
-import {GanttChartConfigComponent} from './gantt-chart-config/gantt-chart-config.component';
+import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
-import {GanttChartVisualizationComponent} from './gantt-chart-tasks/gantt-chart-visualization/gantt-chart-visualization.component';
+import {GanttChartVisualizationComponent} from './tasks/visualization/gantt-chart-visualization.component';
 import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
-import {GanttChartCollectionConfigComponent} from './gantt-chart-config/gantt-chart-collection-config/gantt-chart-collection-config.component';
-import {GanttChartTasksComponent} from './gantt-chart-tasks/gantt-chart-tasks.component';
+import {GanttChartCollectionConfigComponent} from './config/collection-config/gantt-chart-collection-config.component';
+import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
