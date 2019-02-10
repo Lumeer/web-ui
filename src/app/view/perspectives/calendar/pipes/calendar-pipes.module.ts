@@ -24,6 +24,7 @@ import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.p
 import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
 import {DisplayablePipe} from './displayable.pipe';
 import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
+import {CalendarModesToSelectPipe} from './calendar-modes-to-select.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -33,6 +34,7 @@ import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
     CalendarRequiredPropertiesSetPipe,
+    CalendarModesToSelectPipe,
   ],
   exports: [
     DisplayablePipe,
@@ -40,6 +42,7 @@ import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
     CalendarRequiredPropertiesSetPipe,
+    CalendarModesToSelectPipe,
   ],
 })
 export class CalendarPipesModule {}

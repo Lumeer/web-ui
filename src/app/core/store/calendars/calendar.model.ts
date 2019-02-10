@@ -27,7 +27,15 @@ export interface CalendarModel {
 }
 
 export interface CalendarConfig {
+  date: Date;
+  mode: CalendarMode;
   collections: Record<string, CalendarCollectionConfig>;
+}
+
+export enum CalendarMode {
+  Month = 'month',
+  Week = 'week',
+  Day = 'day',
 }
 
 export interface CalendarCollectionConfig {

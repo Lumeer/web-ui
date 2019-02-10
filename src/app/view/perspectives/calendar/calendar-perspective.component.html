@@ -1,25 +1,30 @@
-<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
+<ng-container *ngIf="query$ | async | displayable; else notDisplayable">
 
-  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async} as data">
-    <calendar-config
-      [collections]="data.collections"
-      [config]="data.config"
-      (configChange)="onConfigChanged($event)">
-    </calendar-config>
+  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
+                canManageConfig: currentView$ | async | canManageConfig | async} as data">
+    <collapsible-sidebar *ngIf="data.canManageConfig">
+      <calendar-config
+        class="d-block m-3"
+        [collections]="data.collections"
+        [config]="data.config"
+        (configChange)="onConfigChanged($event)">
+      </calendar-config>
+    </collapsible-sidebar>
 
     <calendar-visualization
-      class="d-block mb-4"
+      class="flex-grow-1 mx-3 mb-3"
       [collections]="data.collections"
       [documents]="documents$ | async"
+      [canManageConfig]="data.canManageConfig"
       [config]="data.config"
-      (patchData)="patchDocumentData($event)">
+      (patchData)="patchDocumentData($event)"
+      (configChange)="onConfigChanged($event)">
     </calendar-visualization>
   </ng-container>
-</div>
+
+</ng-container>
 
 <ng-template #notDisplayable>
-  <div class="alert alert-warning m-3"
-       role="alert"
-       i18n="@@calendar.query.invalid">Calendar perspective cannot show the results of your query. The query needs to have at least one collection.
-  </div>
+  <invalid-query [minCollections]="1">
+  </invalid-query>
 </ng-template>

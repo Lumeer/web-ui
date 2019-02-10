@@ -33,7 +33,7 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
-import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar.model';
+import {CalendarConfig, CalendarMode, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar.model';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query';
 import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
@@ -41,6 +41,7 @@ import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 @Component({
   selector: 'calendar',
   templateUrl: './calendar-perspective.component.html',
+  styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
@@ -91,7 +92,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): CalendarConfig {
-    return {collections: {}};
+    return {collections: {}, date: new Date(), mode: CalendarMode.Month};
   }
 
   private subscribeToQuery() {

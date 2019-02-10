@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
@@ -26,9 +26,10 @@ import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarConfig,
+  CalendarMode,
 } from '../../../../core/store/calendars/calendar.model';
-import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
-import {Subject} from 'rxjs';
+import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {BehaviorSubject, Subject} from 'rxjs';
 import * as moment from 'moment';
 import {isNumeric} from '../../../../shared/utils/common.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
@@ -49,14 +50,19 @@ export class CalendarVisualizationComponent implements OnChanges {
   @Input()
   public config: CalendarConfig;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
-  public readonly calendarView = CalendarView;
+  @Output()
+  public configChange = new EventEmitter<CalendarConfig>();
 
-  public view: CalendarView = CalendarView.Month;
+  public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
+  public currentDate$ = new BehaviorSubject<Date>(new Date());
 
-  public viewDate: Date = new Date();
+  public readonly calendarMode = CalendarMode;
 
   public refresh: Subject<any> = new Subject();
 
@@ -66,6 +72,10 @@ export class CalendarVisualizationComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.documents || changes.config || changes.collections) && this.config) {
       this.visualize();
+    }
+    if (changes.config && this.config) {
+      this.currentMode$.next(this.config.mode);
+      this.currentDate$.next(this.config.date);
     }
   }
 
@@ -180,7 +190,7 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   public dayClicked({date, events}: {date: Date; events: CalendarEvent[]}): void {
     this.shownEvents = events;
-    this.viewDate = date;
+    this.onViewDateChange(date);
   }
 
   public eventTimesChanged({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
@@ -221,5 +231,23 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private timeToString(date: Date) {
     return moment(date).format(CALENDAR_TIME_FORMAT);
+  }
+
+  public onModeChange(mode: CalendarMode) {
+    if (this.canManageConfig) {
+      const config = {...this.config, mode};
+      this.configChange.next(config);
+    } else {
+      this.currentMode$.next(mode);
+    }
+  }
+
+  public onViewDateChange(date: Date) {
+    if (this.canManageConfig) {
+      const config = {...this.config, date};
+      this.configChange.next(config);
+    } else {
+      this.currentDate$.next(date);
+    }
   }
 }

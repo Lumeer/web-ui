@@ -44,15 +44,16 @@ export class CalendarCollectionConfigComponent {
 
   public readonly calendarBarsPropertiesRequired = Object.values(CalendarBarPropertyRequired);
   public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
+  public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
   public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBarModel) {
-    const bars = {...(this.config.barsProperties || {}), [type]: bar};
+    const bars = {...this.config.barsProperties, [type]: bar};
     const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
   public onBarPropertyRemoved(type: CalendarBarProperty) {
-    const bars = {...(this.config.barsProperties || {})};
+    const bars = {...this.config.barsProperties};
     delete bars[type];
     const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);

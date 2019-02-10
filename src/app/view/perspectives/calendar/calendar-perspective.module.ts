@@ -23,14 +23,25 @@ import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {CalendarPerspectiveComponent} from './calendar-perspective.component';
 import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
-import {CalendarModule, DateAdapter} from 'angular-calendar';
-import {CalendarConfigComponent} from './calendar-config/calendar-config.component';
+import {
+  CalendarDateFormatter,
+  CalendarModule,
+  CalendarMomentDateFormatter,
+  DateAdapter,
+  MOMENT,
+} from 'angular-calendar';
+import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
-import {CalendarVisualizationComponent} from './calendar-visualization/calendar-visualization.component';
-import {CalendarHeaderComponent} from './calendar-visualization/calendar-header/calendar-header.component';
+import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
+import {CalendarHeaderComponent} from './visualization/header/calendar-header.component';
 import {PopoverModule} from 'ngx-bootstrap';
-import {CalendarCollectionConfigComponent} from './calendar-config/calendar-collection-config/calendar-collection-config.component';
+import {CalendarCollectionConfigComponent} from './config/collection-config/calendar-collection-config.component';
 import {adapterFactory} from 'angular-calendar/date-adapters/moment';
+import * as moment from 'moment';
+
+export function momentAdapterFactory() {
+  return adapterFactory(moment);
+}
 
 @NgModule({
   imports: [
@@ -38,10 +49,18 @@ import {adapterFactory} from 'angular-calendar/date-adapters/moment';
     CommonModule,
     FormsModule,
     PopoverModule,
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
+    CalendarModule.forRoot(
+      {
+        provide: DateAdapter,
+        useFactory: momentAdapterFactory,
+      },
+      {
+        dateFormatter: {
+          provide: CalendarDateFormatter,
+          useClass: CalendarMomentDateFormatter,
+        },
+      }
+    ),
     CalendarPerspectiveRoutingModule,
     CalendarPipesModule,
   ],
@@ -54,5 +73,11 @@ import {adapterFactory} from 'angular-calendar/date-adapters/moment';
   ],
   entryComponents: [CalendarPerspectiveComponent],
   exports: [CalendarPerspectiveComponent],
+  providers: [
+    {
+      provide: MOMENT,
+      useValue: moment,
+    },
+  ],
 })
 export class CalendarPerspectiveModule {}

@@ -1,14 +1,16 @@
-<div>
-  <mwl-utils-calendar-header
+<div *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
+  <calendar-header
     class="d-block mb-3"
-    [(view)]="view"
-    [(viewDate)]="viewDate">
-  </mwl-utils-calendar-header>
+    [mode]="data.mode"
+    [viewDate]="data.date"
+  (modeChange)="onModeChange($event)"
+  (viewDateChange)="onViewDateChange($event)">
+  </calendar-header>
 
-  <div [ngSwitch]="view">
+  <div [ngSwitch]="data.mode">
     <mwl-calendar-month-view
-      *ngSwitchCase="calendarView.Month"
-      [viewDate]="viewDate"
+      *ngSwitchCase="calendarMode.Month"
+      [viewDate]="data.date"
       [events]="events"
       [refresh]="refresh"
       [weekStartsOn]="1"
@@ -17,8 +19,8 @@
       (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
-      *ngSwitchCase="calendarView.Week"
-      [viewDate]="viewDate"
+      *ngSwitchCase="calendarMode.Week"
+      [viewDate]="data.date"
       [events]="events"
       [refresh]="refresh"
       [weekStartsOn]="1"
@@ -26,8 +28,8 @@
       (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-week-view>
     <mwl-calendar-day-view
-      *ngSwitchCase="calendarView.Day"
-      [viewDate]="viewDate"
+      *ngSwitchCase="calendarMode.Day"
+      [viewDate]="data.date"
       [events]="events"
       [refresh]="refresh"
       (dayClicked)="dayClicked($event.day)"
@@ -60,6 +62,7 @@
 
   <div class="fill-height"
        [popoverTitle]="viewDate | date"
+       [outsideClick]="true"
        [popover]="popContent">
     <div class="cal-cell-top">
       <span class="cal-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>

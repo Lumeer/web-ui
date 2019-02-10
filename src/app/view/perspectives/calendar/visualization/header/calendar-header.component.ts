@@ -17,25 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {CalendarView} from 'angular-calendar';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {CalendarMode} from '../../../../../core/store/calendars/calendar.model';
 
 @Component({
-  selector: 'mwl-utils-calendar-header',
+  selector: 'calendar-header',
   templateUrl: './calendar-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarHeaderComponent {
   @Input()
-  public view: CalendarView = CalendarView.Month;
+  public mode: CalendarMode;
 
   @Input()
   public viewDate: Date;
 
   @Output()
-  public viewChange: EventEmitter<CalendarView> = new EventEmitter();
+  public modeChange = new EventEmitter<CalendarMode>();
 
   @Output()
-  public viewDateChange: EventEmitter<Date> = new EventEmitter();
+  public viewDateChange = new EventEmitter<Date>();
 
-  public readonly calendarView = CalendarView;
+  public readonly calendarMode = CalendarMode;
+
+  public onViewDateChange(viewDate: Date) {
+    this.viewDateChange.next(viewDate);
+  }
+
+  public onModeChange(mode: CalendarMode) {
+    this.modeChange.next(mode);
+  }
 }
