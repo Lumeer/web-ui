@@ -32,6 +32,9 @@ export class CalendarHeaderComponent {
   @Input()
   public viewDate: Date;
 
+  @Input()
+  public locale: string;
+
   @Output()
   public modeChange = new EventEmitter<CalendarMode>();
 

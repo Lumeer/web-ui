@@ -3,8 +3,9 @@
     class="d-block mb-3"
     [mode]="data.mode"
     [viewDate]="data.date"
-  (modeChange)="onModeChange($event)"
-  (viewDateChange)="onViewDateChange($event)">
+    [locale]="locale"
+    (modeChange)="onModeChange($event)"
+    (viewDateChange)="onViewDateChange($event)">
   </calendar-header>
 
   <div [ngSwitch]="data.mode">
