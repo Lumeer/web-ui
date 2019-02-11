@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
 import {Observable} from 'rxjs';
@@ -55,6 +55,9 @@ export class BlocklyFormComponent implements OnInit {
 
   public constructor(private store$: Store<AppState>) {}
 
+  @ViewChild('parentFormDiv')
+  private parentFormDiv: ElementRef;
+
   public get blocklyXml(): string {
     return this.form.get('blocklyXml').value;
   }
@@ -84,6 +87,7 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.onWindowResize();
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
     this.variables = [
@@ -98,5 +102,16 @@ export class BlocklyFormComponent implements OnInit {
 
   public onXmlUpdate(xmlCode: string) {
     this.form.get('blocklyXml').setValue(xmlCode);
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    let element = this.parentFormDiv.nativeElement as HTMLElement;
+    while (element.tagName.toLowerCase() !== 'li') {
+      element = element.parentElement;
+    }
+    const formWidth = element.clientWidth - 40;
+    console.log("setting " + formWidth);
+    document.body.style.setProperty('--blockly-log-width', `${formWidth}px`);
   }
 }

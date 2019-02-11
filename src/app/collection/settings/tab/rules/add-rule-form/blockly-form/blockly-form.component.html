@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div [formGroup]="form" #parentFormDiv>
   <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
     <div>
       <span class="text-nowrap font-weight-bold" i18n="@@collection.config.tab.rules.blockly.edit.message">Edit Rule Code:</span>
@@ -36,8 +36,8 @@
       <h5>Dry Run Results</h5>
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
-        <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
-        {{blocklyResultTimestamp}}
+        <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
+        {{blocklyResultTimestamp | date : 'full'}}
       </small>
       <p class="text-monospace limit-width" *ngIf="blocklyDryRunResult">
         {{blocklyDryRunResult}}
@@ -48,8 +48,8 @@
       <h5>Error Report</h5>
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
-        <span *ngIf="blocklyResultTimestamp" class="mr-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
-        {{blocklyResultTimestamp}}
+        <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
+        {{blocklyResultTimestamp | date : 'full'}}
       </small>
       <pre class="text-monospace limit-width" *ngIf="blocklyError">
         {{blocklyError}}

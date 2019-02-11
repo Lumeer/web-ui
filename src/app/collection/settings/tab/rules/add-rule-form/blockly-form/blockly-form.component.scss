@@ -14,6 +14,7 @@ div.rollout {
 }
 
 .limit-width {
-  max-width: 85vw;
+  max-width: var(--blockly-log-width);
+  padding-right: 3rem;
   overflow: scroll;
 }

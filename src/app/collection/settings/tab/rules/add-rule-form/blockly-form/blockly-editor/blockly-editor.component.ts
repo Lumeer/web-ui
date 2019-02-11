@@ -176,7 +176,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       init: function() {
         this.jsonInit({
           type: BlocklyEditorComponent.STATEMENT_CONTAINER,
-          message0: 'On document update in %1 %2 %3 do %4',
+          message0: 'On document event in %1 %2 %3 do %4',
           args0: [
             {
               type: 'field_fa',
@@ -394,12 +394,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private setterAndGetterOutputType(
-    this_: BlocklyEditorComponent,
-    parentBlock: any,
-    block: any,
-    skipDisconnect = false
-  ) {
+  private setterAndGetterOutputType(this_: BlocklyEditorComponent, parentBlock: any, block: any, skipDisconnect = false) {
     const options = parentBlock.getField('ATTR').getOptions();
     const originalLength = options.length;
     const blockOutputType =
@@ -408,20 +403,25 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         : '';
     const collection = this_.getCollection(blockOutputType.split('_')[0]);
 
-    let defaultValue = '';
+    let defaultValue = '', defaultText = '';
     collection.attributes.forEach(attribute => {
       options.push([attribute.name, attribute.id]);
-
       if (attribute.id === collection.defaultAttributeId) {
         defaultValue = attribute.id;
+        defaultText = attribute.name;
       }
     });
 
-    if (!defaultValue) {
+    if (!defaultValue && collection.attributes) {
       defaultValue = collection.attributes[0].id;
+      defaultText = collection.attributes[0].name
     }
 
     parentBlock.getField('ATTR').setValue(defaultValue);
+
+    // force attribute name render when the same value was already selected
+    parentBlock.getField('ATTR').text_ = defaultText;
+    parentBlock.getField('ATTR').forceRerender();
     options.splice(0, originalLength);
 
     if (parentBlock.type === BlocklyEditorComponent.GET_ATTRIBUTE) {
