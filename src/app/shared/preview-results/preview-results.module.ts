@@ -23,9 +23,10 @@ import {PipesModule} from '../pipes/pipes.module';
 import {PreviewResultsComponent} from './preview-results.component';
 import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
 import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
+import {DataInputModule} from '../data-input/data-input.module';
 
 @NgModule({
-  imports: [CommonModule, PipesModule],
+  imports: [CommonModule, DataInputModule, PipesModule],
   declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
   exports: [PreviewResultsComponent],
 })

@@ -20,7 +20,7 @@
 import {Layout} from 'plotly.js';
 import * as d3 from 'd3';
 import {DraggablePlotMaker} from './draggable-plot-maker';
-import {ChartDataSet, ChartYAxisType} from '../../chart-data/convertor/chart-data';
+import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {

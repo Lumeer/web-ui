@@ -62,7 +62,7 @@ export class CollectionsPermissionsPipe implements PipeTransform {
   }
 
   private managePermissions(): AllowedPermissions {
-    return {read: true, write: true, manage: true, readWithView: true, writeWithView: true};
+    return {read: true, write: true, manage: true, readWithView: true, writeWithView: true, manageWithView: true};
   }
 
   private checkCollectionsPermissionWithView(

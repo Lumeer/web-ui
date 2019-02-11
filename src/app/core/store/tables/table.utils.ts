@@ -178,17 +178,16 @@ function createColumnsFromConfig(
   const columns = columnsConfig.reduce<TableConfigColumn[]>((preparedColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       const attributeId = column.attributeIds[0];
+      const attributeName = column.attributeName;
       const attribute = attributes.find(attr => attr.id === attributeId);
-      if (!attribute) {
+      if (!attribute && !attributeName) {
         return preparedColumns;
       }
 
       // TODO should children not in config really appear instead of just parent?
       return preparedColumns.concat({
-        type: TableColumnType.COMPOUND,
-        attributeIds: [attributeId],
-        width: column.width,
-        children: createTableColumnsFromAttributes(allAttributes, attribute, column.children),
+        ...column,
+        children: attribute ? createTableColumnsFromAttributes(allAttributes, attribute, column.children) : [],
       });
     }
 
@@ -354,6 +353,10 @@ export function resizeLastColumnChild(column: TableConfigColumn, delta: number):
     return column;
   }
 
+  if (column.children.length === 0) {
+    return {...column, width: (column.width || DEFAULT_COLUMN_WIDTH) + delta};
+  }
+
   const children = column.children.map((child, index) => {
     if (index === column.children.length - 1 && child.type === TableColumnType.COMPOUND) {
       return resizeLastColumnChild(child, delta);
@@ -446,13 +449,18 @@ export function countLinkedRows(row: TableConfigRow): number {
   return row.linkedRows.reduce((count, linkedRow) => count + countLinkedRows(linkedRow), 0);
 }
 
-export function isTableRowStriped(rowPath: number[]): boolean {
-  const {parentPath, rowIndex} = splitRowPath(rowPath);
-  if (parentPath.length === 0) {
-    return rowIndex % 2 === 1;
+export function isTableRowStriped(rows: TableConfigRow[], rowPath: number[]): boolean {
+  if (rowPath.length === 1) {
+    return rowPath[0] % 2 === 1;
   }
 
-  return isTableRowStriped(parentPath) ? rowIndex % 2 === 0 : rowIndex % 2 === 1;
+  const {parentPath, rowIndex} = splitRowPath(rowPath);
+  const parentRow = findTableRow(rows, parentPath);
+  const last = parentRow ? rowIndex === parentRow.linkedRows.length - 1 : true;
+
+  const parentStriped = isTableRowStriped(rows, parentPath);
+
+  return last ? parentStriped : rowIndex % 2 === Number(!parentStriped);
 }
 
 export function isLastTableColumn(cursor: TableCursor, part: TableConfigPart): boolean {
@@ -597,22 +605,57 @@ export function getRowParentDocumentId(
 export function isTableConfigChanged(
   viewConfig: TableConfig,
   perspectiveConfig: TableConfig,
-  documentsMap: {[id: string]: DocumentModel}
+  documentsMap: Record<string, DocumentModel>
 ): boolean {
-  if (JSON.stringify(viewConfig.parts) !== JSON.stringify(perspectiveConfig.parts)) {
+  if (areTableConfigPartsChanged(viewConfig.parts, perspectiveConfig.parts)) {
+    return true;
+  }
+
+  return areTableConfigRowsChanged(viewConfig.rows, perspectiveConfig.rows, documentsMap);
+}
+
+export function areTableConfigPartsChanged(savedParts: TableConfigPart[], shownParts: TableConfigPart[]): boolean {
+  return JSON.stringify(savedParts) !== JSON.stringify(shownParts);
+}
+
+export function areTableConfigRowsChanged(
+  savedRows: TableConfigRow[],
+  shownRows: TableConfigRow[],
+  documentsMap: Record<string, DocumentModel>
+): boolean {
+  const validSavedRows = filterValidSavedRows(savedRows, documentsMap);
+  return !areAllSavedRowsPresent(validSavedRows, shownRows);
+}
+
+export function filterValidSavedRows(
+  rows: TableConfigRow[],
+  documentsMap: Record<string, DocumentModel>
+): TableConfigRow[] {
+  return (
+    rows &&
+    rows.filter((row, index) => {
+      // filter out rows with deleted documents and last empty row
+      return !(row.documentId && !documentsMap[row.documentId]) && !(!row.documentId && index === rows.length - 1);
+    })
+  );
+}
+
+export function areAllSavedRowsPresent(savedRows: TableConfigRow[], shownRows: TableConfigRow[]): boolean {
+  if (savedRows.length > shownRows.length) {
     return false;
   }
 
-  const viewRows =
-    viewConfig.rows &&
-    viewConfig.rows.filter((row, index, rows) => {
-      // filter out rows with deleted documents and last empty row
-      return !(row.documentId && !documentsMap[row.documentId]) && !(!row.documentId && index === rows.length - 1);
-    });
-
-  const perspectiveRows = perspectiveConfig.rows && perspectiveConfig.rows.slice(0, viewRows.length);
-
-  return JSON.stringify(viewRows) !== JSON.stringify(perspectiveRows);
+  return savedRows.reduce((present, savedRow, index) => {
+    const shownRow = shownRows[index];
+    return (
+      present &&
+      savedRow.documentId === shownRow.documentId &&
+      savedRow.linkInstanceId === shownRow.linkInstanceId &&
+      savedRow.parentDocumentId === shownRow.parentDocumentId &&
+      (savedRow.linkedRows.length < 2 || Boolean(savedRow.expanded) === Boolean(shownRow.expanded)) &&
+      areAllSavedRowsPresent(savedRow.linkedRows, shownRow.linkedRows)
+    );
+  }, true);
 }
 
 export function filterTableColumnsByAttributes(

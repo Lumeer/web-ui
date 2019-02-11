@@ -13,6 +13,7 @@
   position: absolute;
   right: 0;
   cursor: col-resize;
+  z-index: 200; // otherwise not shown in selected cell
 }
 
 .resize-ghost-element {

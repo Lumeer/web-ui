@@ -84,7 +84,7 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.chartVisualizer.destroyChart();
+    this.chartVisualizer && this.chartVisualizer.destroyChart();
   }
 
   public resize() {

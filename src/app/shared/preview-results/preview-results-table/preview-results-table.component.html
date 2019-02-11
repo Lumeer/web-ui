@@ -29,7 +29,12 @@
           <tr class="clickable-row"
               [class.active]="document.id === selectedDocumentId"
               (click)="activate(document)">
-            <td *ngFor="let attr of collection.attributes" title="{{document.data[attr.id]}}">{{document.data[attr.id]}}</td>
+            <td *ngFor="let attr of collection.attributes">
+              <data-input [constraint]="attr.constraint"
+                          [value]="document.data[attr.id]"
+                          [readonly]="true">
+              </data-input>
+            </td>
           </tr>
         </ng-container>
       </tbody>

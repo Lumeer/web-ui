@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableConfigRow} from '../../../../../../../core/store/tables/table.model';
-import {isTableRowStriped} from '../../../../../../../core/store/tables/table.utils';
-import {selectHasNextTableParts, selectTablePart} from '../../../../../../../core/store/tables/tables.selector';
+import {
+  selectHasNextTableParts,
+  selectTablePart,
+  selectTableRowStriped,
+} from '../../../../../../../core/store/tables/tables.selector';
+import {filter, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'table-linked-row',
@@ -35,7 +39,7 @@ import {selectHasNextTableParts, selectTablePart} from '../../../../../../../cor
     '[class.bg-white]': '!striped',
   },
 })
-export class TableLinkedRowComponent implements OnChanges {
+export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -52,12 +56,27 @@ export class TableLinkedRowComponent implements OnChanges {
 
   public striped: boolean;
 
+  private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
+
+  private subscriptions = new Subscription();
+
   constructor(private store$: Store<{}>) {}
+
+  public ngOnInit() {
+    this.subscriptions.add(
+      this.cursor$
+        .pipe(
+          filter(cursor => !!cursor),
+          switchMap(cursor => this.store$.pipe(select(selectTableRowStriped(cursor))))
+        )
+        .subscribe(striped => (this.striped = striped)) // change made just before change detector updates view
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
       this.bindTableParts(this.cursor);
-      this.striped = isTableRowStriped(this.cursor.rowPath);
+      this.cursor$.next(this.cursor);
     }
   }
 
@@ -68,5 +87,9 @@ export class TableLinkedRowComponent implements OnChanges {
     this.documentPart$ = this.store$.pipe(select(selectTablePart(documentPartCursor)));
 
     this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(documentPartCursor)));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -181,10 +181,10 @@ export class ViewComponent implements OnInit, OnDestroy {
     const title = null;
     const message = this.i18n({
       id: 'view.dialog.clone.message',
-      value: 'Do you want to create a copy of the view or just rename?',
+      value: 'Do you want to create a copy of the view or just update the existing one?',
     });
     const cloneButtonText = this.i18n({id: 'view.dialog.clone.clone', value: 'Create a copy'});
-    const renameButtonText = this.i18n({id: 'view.dialog.clone.rename', value: 'Rename'});
+    const renameButtonText = this.i18n({id: 'view.dialog.clone.update', value: 'Update'});
 
     this.notificationService.confirm(message, title, [
       {text: cloneButtonText, action: () => this.createView({...view, code: null}), bold: false},

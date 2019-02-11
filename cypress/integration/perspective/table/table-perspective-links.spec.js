@@ -1,4 +1,13 @@
-describe('Table perspective', () => {
+describe('Table perspective :: Links', () => {
+  beforeEach(() => {
+    cy.server();
+
+    const collectionUrl = `${Cypress.env('projectRestUrl')}/collections/**`;
+    cy.route('POST', `${collectionUrl}/attributes`).as('createAttribute');
+    cy.route('POST', `${collectionUrl}/documents`).as('createDocument');
+    cy.route('POST', `${Cypress.env('projectRestUrl')}/link-instances`).as('createLinkInstance');
+  });
+
   it('adds linked table part', () => {
     cy.createCollection('first', 'fas fa-unicorn', '#ff66dd');
     cy.createCollection('second', 'fas fa-acorn', '#994400');
@@ -22,6 +31,13 @@ describe('Table perspective', () => {
       .type('first value')
       .blur();
 
+    cy.wait('@createAttribute')
+      .its('status')
+      .should('eq', 200);
+    cy.wait('@createDocument')
+      .its('status')
+      .should('eq', 200);
+
     cy.get('[data-test="table-single-column-input"].text-default-attribute')
       .first()
       .should('contain', 'A');
@@ -34,6 +50,9 @@ describe('Table perspective', () => {
       .eq(2)
       .type('second value')
       .blur();
+    cy.wait('@createDocument')
+      .its('status')
+      .should('eq', 200);
     cy.get('[data-test="text-data-input"]').should('have.length', 6);
 
     cy.get('[data-test="table-header-add-button"]').click();
@@ -61,6 +80,16 @@ describe('Table perspective', () => {
       .type('linked value')
       .blur();
 
+    cy.wait('@createAttribute')
+      .its('status')
+      .should('eq', 200);
+    cy.wait('@createDocument')
+      .its('status')
+      .should('eq', 200);
+    cy.wait('@createLinkInstance')
+      .its('status')
+      .should('eq', 200);
+
     cy.get('[data-test="table-single-column-input"]')
       .should('have.length', 3)
       .last()
@@ -72,8 +101,14 @@ describe('Table perspective', () => {
       .type('l');
 
     cy.get('[data-test="document-hints"]').should('be.visible');
-    cy.get('[data-test="document-hint"]').click();
+    cy.get('[data-test="document-hint"]')
+      .contains('linked value')
+      .click();
     cy.get('[data-test="document-hints"]').should('not.exist');
+
+    cy.wait('@createLinkInstance')
+      .its('status')
+      .should('eq', 200);
 
     cy.get('[data-test="text-data-input"][title="linked value"]').should('have.length', 2);
   });

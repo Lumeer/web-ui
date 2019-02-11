@@ -92,4 +92,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       this.leafletMap.remove();
     }
   }
+
+  public refreshMapSize() {
+    this.leafletMap.invalidateSize();
+  }
 }

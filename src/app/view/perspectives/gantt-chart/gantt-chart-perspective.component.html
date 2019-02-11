@@ -1,28 +1,36 @@
-<div *ngIf="query$ | async | displayable; else notDisplayable" class="px-3">
+<ng-container *ngIf="query$ | async | displayable; else notDisplayable">
 
-  <ng-container *ngIf="{collection: collection$ | async,  config: config$ | async} as data">
-    <gantt-chart-config
-      [collection]="data.collection"
-      [config]="data.config"
-      [canManageConfig]="currentView$ | async | canManageConfig | async"
-      (configChange)="onConfigChanged($event)">
-    </gantt-chart-config>
+  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
+  canManageConfig: currentView$ | async | canManageConfig | async} as data">
 
-    <gantt-chart-visualization
-      class="d-block mt-2"
-      [collection]="data.collection"
+    <collapsible-sidebar *ngIf="data.canManageConfig">
+      <gantt-chart-config
+        class="d-block m-3"
+        [collections]="data.collections"
+        [config]="data.config"
+        (configChange)="onConfigChanged($event)">
+      </gantt-chart-config>
+
+    </collapsible-sidebar>
+
+    <gantt-chart-tasks
+      class="flex-grow-1 mx-3"
+      [style.width.px]="1"
+      [canManageConfig]="data.canManageConfig"
+      [collections]="data.collections"
+      [ganttChartId]="ganttChartId"
+      [permissions]="permissions$ | async"
       [documents]="documents$ | async"
       [config]="data.config"
-      (patchData)="patchDocumentData($event)">
-    </gantt-chart-visualization>
+      (patchData)="patchDocumentData($event)"
+      (configChange)="onConfigChanged($event)">
+    </gantt-chart-tasks>
 
   </ng-container>
 
-</div>
+</ng-container>
 
 <ng-template #notDisplayable>
-  <div class="alert alert-warning m-3"
-       role="alert"
-       i18n="@@ganttChart.query.invalid">Gantt chart perspective cannot show the results of your query. The query needs to have exactly one collection.
-  </div>
+  <invalid-query [minCollections]="1">
+  </invalid-query>
 </ng-template>

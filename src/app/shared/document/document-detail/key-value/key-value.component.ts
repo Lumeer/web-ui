@@ -19,6 +19,7 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../../../core/model/data/constraint';
 
 @Component({
   selector: 'key-value',
@@ -30,16 +31,19 @@ export class KeyValueComponent {
   public key: string;
 
   @Input()
-  public value: string;
+  public value: any;
+
+  @Input()
+  public constraint: Constraint;
 
   @Output()
   public keyChange = new EventEmitter<string>();
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<any>();
 
   @Output()
-  public change = new EventEmitter<string[]>();
+  public change = new EventEmitter<[string, any]>();
 
   @Output()
   public remove = new EventEmitter();
@@ -61,10 +65,10 @@ export class KeyValueComponent {
     this.change.emit([$event, this.value]);
   }
 
-  public onNewRowValue($event: string) {
-    this.value = $event;
-    this.valueChange.emit($event);
-    this.change.emit([this.key, $event]);
+  public onNewRowValue(value: any) {
+    this.value = value;
+    this.valueChange.emit(value);
+    this.change.emit([this.key, value]);
   }
 
   public invokeRemove() {

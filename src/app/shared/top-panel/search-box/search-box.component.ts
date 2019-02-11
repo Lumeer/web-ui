@@ -407,7 +407,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     if (stemIndex !== -1) {
       currentQuery.stems[stemIndex] = filterStemByLinkIndex(
         currentQuery.stems[stemIndex],
-        index,
+        linkIndex - (index + 1),
         this.queryData.linkTypes
       );
       this.setNewQueryItemsByQuery(currentQuery);

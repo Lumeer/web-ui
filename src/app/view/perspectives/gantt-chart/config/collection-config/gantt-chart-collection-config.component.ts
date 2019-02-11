@@ -18,49 +18,33 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {
   GanttChartBarModel,
   GanttChartBarProperty,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
-  GanttChartConfig,
-  GanttChartMode,
-} from '../../../../core/store/gantt-charts/gantt-chart';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+  GanttChartCollectionConfig,
+} from '../../../../../core/store/gantt-charts/gantt-chart';
 
 @Component({
-  selector: 'gantt-chart-config',
-  templateUrl: './gantt-chart-config.component.html',
+  selector: 'gantt-chart-collection-config',
+  templateUrl: './gantt-chart-collection-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartConfigComponent {
+export class GanttChartCollectionConfigComponent {
   @Input()
   public collection: Collection;
 
   @Input()
-  public config: GanttChartConfig;
-
-  @Input()
-  public canManageConfig: boolean;
+  public config: GanttChartCollectionConfig;
 
   @Output()
-  public configChange = new EventEmitter<GanttChartConfig>();
+  public configChange = new EventEmitter<GanttChartCollectionConfig>();
 
-  public viewModePlaceholder: string;
-
-  public readonly ganttChartModes = Object.values(GanttChartMode);
   public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
   public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
-
-  constructor(private i18n: I18n) {
-    this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
-  }
-
-  public onModeSelect(mode: GanttChartMode) {
-    const newConfig = {...this.config, mode: mode};
-    this.configChange.emit(newConfig);
-  }
+  public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
   public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
     const bars = {...this.config.barsProperties, [type]: bar};

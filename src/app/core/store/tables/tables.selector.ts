@@ -21,7 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
 import {DEFAULT_TABLE_ID} from './table.model';
-import {calculateRowHierarchyLevel, filterLeafColumns, findTableRow} from './table.utils';
+import {calculateRowHierarchyLevel, filterLeafColumns, findTableRow, isTableRowStriped} from './table.utils';
 import {EditedAttribute, selectTablesDictionary, selectTablesState} from './tables.state';
 
 export const selectTableById = (tableId: string) =>
@@ -195,3 +195,9 @@ export const selectMoveTableCursorDown = createSelector(
   selectTablesState,
   state => state.moveCursorDown
 );
+
+export const selectTableRowStriped = (cursor: TableBodyCursor) =>
+  createSelector(
+    selectTableRows(cursor.tableId),
+    rows => isTableRowStriped(rows, cursor.rowPath)
+  );

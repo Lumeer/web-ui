@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {
   GanttChartBarModel,
   GanttChartBarProperty,
-  GanttChartConfig,
+  GanttChartCollectionConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
@@ -30,7 +30,11 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
   name: 'ganttChartPropertyItems',
 })
 export class GanttChartPropertyItemsPipe implements PipeTransform {
-  public transform(collections: Collection[], bar: GanttChartBarProperty, config: GanttChartConfig): SelectItemModel[] {
+  public transform(
+    collections: Collection[],
+    bar: GanttChartBarProperty,
+    config: GanttChartCollectionConfig
+  ): SelectItemModel[] {
     const selectedAttributesIdsInsteadBar = this.getSelectedAttributesIdsInsteadBar(bar, config);
     return collections
       .filter(collection => !!collection)
@@ -40,8 +44,11 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
       }, []);
   }
 
-  public getSelectedAttributesIdsInsteadBar(barProperty: GanttChartBarProperty, config: GanttChartConfig): string[] {
-    return Object.entries(config.barsProperties)
+  public getSelectedAttributesIdsInsteadBar(
+    barProperty: GanttChartBarProperty,
+    config: GanttChartCollectionConfig
+  ): string[] {
+    return Object.entries(config.barsProperties || {})
       .filter(entry => entry[0] !== barProperty)
       .map(entry => entry[1].attributeId);
   }

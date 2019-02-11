@@ -23,4 +23,13 @@ beforeEach(() => {
     .substr(2);
   Cypress.env('projectCode', projectCode);
   cy.createProject(projectCode, 'Test project');
+
+  cy.saveDefaultWorkspace({
+    organizationCode: Cypress.env('organizationCode'),
+    projectCode,
+  });
+
+  const organizationRestUrl = `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}`;
+  Cypress.env('organizationRestUrl', organizationRestUrl);
+  Cypress.env('projectRestUrl', `${organizationRestUrl}/projects/${projectCode}`);
 });

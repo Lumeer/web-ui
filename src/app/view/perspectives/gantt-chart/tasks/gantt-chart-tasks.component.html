@@ -1,0 +1,14 @@
+<ng-container *ngIf="{mode: currentMode$ | async, tasks: tasks$ | async} as data">
+  <gantt-chart-header class="d-flex justify-content-end"
+                      [currentMode]="data.mode" *ngIf="data.tasks?.length"
+                      (modeChange)="onModeChanged($event)">
+  </gantt-chart-header>
+  <gantt-chart-visualization
+    [canManageConfig]="canManageConfig"
+    [ganttChartId]="ganttChartId"
+    [config]="config"
+    [currentMode]="data.mode"
+    [tasks]="data.tasks"
+    (patchData)="onValueChanged($event)">
+  </gantt-chart-visualization>
+</ng-container>

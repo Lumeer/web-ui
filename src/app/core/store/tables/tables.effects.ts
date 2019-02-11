@@ -118,9 +118,10 @@ export class TablesEffects {
         select(selectLinkTypesLoaded),
         filter(loaded => loaded),
         mergeMap(() => this.store$.select(selectLinkTypesDictionary))
-      )
+      ),
+      this.store$.pipe(select(selectViewCode))
     ),
-    mergeMap(([action, collectionsMap, linkTypesMap]) => {
+    mergeMap(([action, collectionsMap, linkTypesMap, viewCode]) => {
       const {config, query} = action.payload;
 
       const queryStem = query.stems[0];
@@ -128,7 +129,9 @@ export class TablesEffects {
       const linkTypeIds = queryStem.linkTypeIds || [];
 
       let lastCollectionId = queryStem.collectionId;
-      const parts: TableConfigPart[] = [createCollectionPart(primaryCollection, 0, linkTypeIds.length === 0, config)];
+      const parts: TableConfigPart[] = [
+        createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config),
+      ];
       const loadDataActions: Action[] = [];
 
       linkTypeIds.forEach((linkTypeId, index) => {
@@ -140,7 +143,7 @@ export class TablesEffects {
         const collectionPart = createCollectionPart(
           collection,
           index * 2 + 2,
-          index === linkTypeIds.length - 1,
+          !viewCode && index === linkTypeIds.length - 1,
           config
         );
 
@@ -333,7 +336,11 @@ export class TablesEffects {
         const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
         const parentName = parentAttribute ? parentAttribute.name : null;
 
-        const attributeName = generateAttributeName(attributes, parentName);
+        const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
+          return column.attributeName ? attributeNames.concat(column.attributeName) : attributeNames;
+        }, []);
+
+        const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
         return {
           type: TableColumnType.COMPOUND,
           attributeIds: [],

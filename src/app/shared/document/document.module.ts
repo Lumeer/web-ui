@@ -23,9 +23,10 @@ import {DocumentDetailComponent} from './document-detail/document-detail.compone
 import {KeyValueComponent} from './document-detail/key-value/key-value.component';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
+import {DataInputModule} from '../data-input/data-input.module';
 
 @NgModule({
-  imports: [CommonModule, InputModule, PipesModule],
+  imports: [CommonModule, DataInputModule, InputModule, PipesModule],
   declarations: [DocumentDetailComponent, KeyValueComponent],
   exports: [DocumentDetailComponent],
 })
