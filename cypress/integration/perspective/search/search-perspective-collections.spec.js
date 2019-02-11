@@ -11,6 +11,7 @@ describe('Search Perspective :: Collections', () => {
     cy.visit('/');
     cy.url().should('contain', '/view/search/all');
 
+    cy.get('[data-test="empty-project-header"]').should('be.visible');
     cy.get('[data-test="empty-data-create-collection"]').click();
     cy.url().should('contain', '/view/search/collections');
 
