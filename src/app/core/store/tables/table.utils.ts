@@ -449,13 +449,18 @@ export function countLinkedRows(row: TableConfigRow): number {
   return row.linkedRows.reduce((count, linkedRow) => count + countLinkedRows(linkedRow), 0);
 }
 
-export function isTableRowStriped(rowPath: number[]): boolean {
-  const {parentPath, rowIndex} = splitRowPath(rowPath);
-  if (parentPath.length === 0) {
-    return rowIndex % 2 === 1;
+export function isTableRowStriped(rows: TableConfigRow[], rowPath: number[]): boolean {
+  if (rowPath.length === 1) {
+    return rowPath[0] % 2 === 1;
   }
 
-  return isTableRowStriped(parentPath) ? rowIndex % 2 === 0 : rowIndex % 2 === 1;
+  const {parentPath, rowIndex} = splitRowPath(rowPath);
+  const parentRow = findTableRow(rows, parentPath);
+  const last = parentRow ? rowIndex === parentRow.linkedRows.length - 1 : true;
+
+  const parentStriped = isTableRowStriped(rows, parentPath);
+
+  return last ? parentStriped : rowIndex % 2 === Number(!parentStriped);
 }
 
 export function isLastTableColumn(cursor: TableCursor, part: TableConfigPart): boolean {
