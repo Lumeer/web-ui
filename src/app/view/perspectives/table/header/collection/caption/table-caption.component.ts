@@ -41,7 +41,9 @@ export class TableCaptionComponent implements AfterViewChecked {
     const element = this.element.nativeElement as HTMLElement;
     const height = element.offsetHeight;
 
-    const tableElement = getTableElement(this.cursor.tableId);
-    tableElement.style.setProperty('--caption-height', `${height}px`);
+    if (height) {
+      const tableElement = getTableElement(this.cursor.tableId);
+      tableElement.style.setProperty('--caption-height', `${height}px`);
+    }
   }
 }
