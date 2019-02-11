@@ -20,7 +20,7 @@
 import {ElementRef} from '@angular/core';
 
 import {Config, Data, Layout, newPlot, Plots, purge, react, redraw, relayout} from 'plotly.js';
-import {ChartData} from '../chart-data/convertor/chart-data';
+import {ChartData} from '../data/convertor/chart-data';
 import {ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';

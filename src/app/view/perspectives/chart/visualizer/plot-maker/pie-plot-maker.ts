@@ -18,7 +18,7 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartDataSet} from '../../chart-data/convertor/chart-data';
+import {ChartDataSet} from '../../data/convertor/chart-data';
 import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';

@@ -20,7 +20,7 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {ChartData} from '../../chart-data/convertor/chart-data';
+import {ChartData} from '../../data/convertor/chart-data';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
