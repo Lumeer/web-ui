@@ -25,6 +25,7 @@ import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
 const MAP_OPTIONS: MapOptions = {
   attributionControl: false,
+  minZoom: 3,
 };
 
 export function parseCoordinates(value: string): LatLngLiteral {
