@@ -143,7 +143,7 @@ export class TablesEffects {
         const collectionPart = createCollectionPart(
           collection,
           index * 2 + 2,
-          index === linkTypeIds.length - 1,
+          !viewCode && index === linkTypeIds.length - 1,
           config
         );
 
