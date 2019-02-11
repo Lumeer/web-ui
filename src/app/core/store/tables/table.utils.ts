@@ -600,22 +600,57 @@ export function getRowParentDocumentId(
 export function isTableConfigChanged(
   viewConfig: TableConfig,
   perspectiveConfig: TableConfig,
-  documentsMap: {[id: string]: DocumentModel}
+  documentsMap: Record<string, DocumentModel>
 ): boolean {
-  if (JSON.stringify(viewConfig.parts) !== JSON.stringify(perspectiveConfig.parts)) {
+  if (areTableConfigPartsChanged(viewConfig.parts, perspectiveConfig.parts)) {
     return true;
   }
 
-  const viewRows =
-    viewConfig.rows &&
-    viewConfig.rows.filter((row, index, rows) => {
+  return areTableConfigRowsChanged(viewConfig.rows, perspectiveConfig.rows, documentsMap);
+}
+
+export function areTableConfigPartsChanged(savedParts: TableConfigPart[], shownParts: TableConfigPart[]): boolean {
+  return JSON.stringify(savedParts) !== JSON.stringify(shownParts);
+}
+
+export function areTableConfigRowsChanged(
+  savedRows: TableConfigRow[],
+  shownRows: TableConfigRow[],
+  documentsMap: Record<string, DocumentModel>
+): boolean {
+  const validSavedRows = filterValidSavedRows(savedRows, documentsMap);
+  return !areAllSavedRowsPresent(validSavedRows, shownRows);
+}
+
+export function filterValidSavedRows(
+  rows: TableConfigRow[],
+  documentsMap: Record<string, DocumentModel>
+): TableConfigRow[] {
+  return (
+    rows &&
+    rows.filter((row, index) => {
       // filter out rows with deleted documents and last empty row
       return !(row.documentId && !documentsMap[row.documentId]) && !(!row.documentId && index === rows.length - 1);
-    });
+    })
+  );
+}
 
-  const perspectiveRows = perspectiveConfig.rows && perspectiveConfig.rows.slice(0, viewRows.length);
+export function areAllSavedRowsPresent(savedRows: TableConfigRow[], shownRows: TableConfigRow[]): boolean {
+  if (savedRows.length > shownRows.length) {
+    return false;
+  }
 
-  return JSON.stringify(viewRows) !== JSON.stringify(perspectiveRows);
+  return savedRows.reduce((present, savedRow, index) => {
+    const shownRow = shownRows[index];
+    return (
+      present &&
+      savedRow.documentId === shownRow.documentId &&
+      savedRow.linkInstanceId === shownRow.linkInstanceId &&
+      savedRow.parentDocumentId === shownRow.parentDocumentId &&
+      (savedRow.linkedRows.length < 2 || Boolean(savedRow.expanded) === Boolean(shownRow.expanded)) &&
+      areAllSavedRowsPresent(savedRow.linkedRows, shownRow.linkedRows)
+    );
+  }, true);
 }
 
 export function filterTableColumnsByAttributes(
