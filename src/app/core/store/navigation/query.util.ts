@@ -23,7 +23,7 @@ import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/q
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
 import {LinkType} from '../link-types/link.type';
-import {isArraySubset} from '../../../shared/utils/array.utils';
+import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 
@@ -172,18 +172,15 @@ export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
-  const basicCollectionIds = (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
-  const allLinkTypeIds =
-    (query && query.stems && query.stems.reduce((ids, stem) => [...ids, ...stem.linkTypeIds], [])) || [];
+  const basicCollectionIds = getBaseCollectionIdsFromQuery(query);
+  const allLinkTypeIds = getAllLinkTypeIdsFromQuery(query);
   const filteredLinkTypes = (linkTypes || []).filter(linkType => allLinkTypeIds.includes(linkType.id));
-  const collectionIdsFromLinks = filteredLinkTypes
-    .reduce((ids, linkType) => [...ids, ...linkType.collectionIds], [])
-    .filter(id => !basicCollectionIds.includes(id));
-  return [...basicCollectionIds, ...collectionIdsFromLinks];
+  const collectionIdsFromLinks = filteredLinkTypes.reduce((ids, linkType) => [...ids, ...linkType.collectionIds], []);
+  return uniqueValues<string>([...basicCollectionIds, ...collectionIdsFromLinks]);
 }
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {
-  return query.stems && query.stems.map(stem => stem.collectionId);
+  return (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
 }
 
 export function isQuerySubset(superset: Query, subset: Query): boolean {
