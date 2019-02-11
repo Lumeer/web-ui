@@ -38,7 +38,9 @@ export function filterCollectionsByQuery(
   }
 
   const collectionIds = getAllCollectionIdsFromQuery(query, linkTypes);
-  const collectionsByIds = filteredCollections.filter(collection => collectionIds.includes(collection.id));
+  const collectionsByIds = collectionIds
+    .map(id => filteredCollections.find(coll => coll.id === id))
+    .filter(collection => !!collection);
 
   const collectionsByFullTexts = filterCollectionsByFulltexts(filteredCollections, documents, query.fulltexts);
 

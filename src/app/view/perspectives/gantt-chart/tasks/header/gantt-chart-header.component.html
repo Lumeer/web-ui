@@ -1,0 +1,7 @@
+<div class="btn-group mt-3">
+  <button class="btn btn-primary" *ngFor="let mode of ganttChartModes"
+          [class.active]="mode === currentMode"
+          (click)="onModeSelect(mode)">
+    {{mode | ganttChartModeText}}
+  </button>
+</div>

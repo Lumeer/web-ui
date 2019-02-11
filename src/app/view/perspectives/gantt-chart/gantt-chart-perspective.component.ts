@@ -23,15 +23,13 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByCustomQuery,
-  selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
-  selectDocumentsByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
@@ -40,24 +38,29 @@ import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from '../../..
 import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
 import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 
 @Component({
   selector: 'gantt-chart-perspective',
   templateUrl: './gantt-chart-perspective.component.html',
+  styleUrls: ['./gantt-chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
-  public collection$: Observable<Collection>;
+  public collections$: Observable<Collection[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
+  public ganttChartId = DEFAULT_GANTT_CHART_ID;
 
-  private ganttChartId = DEFAULT_GANTT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -96,7 +99,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): GanttChartConfig {
-    return {mode: GanttChartMode.Day, barsProperties: {}};
+    return {mode: GanttChartMode.Day, collections: {}};
   }
 
   private subscribeToQuery() {
@@ -109,10 +112,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
         this.fetchDocuments(query);
         this.query$.next(query);
         this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-        this.collection$ = this.store$.pipe(
-          select(selectCollectionsByCustomQuery(query)),
-          map(collections => collections[0])
-        );
+        this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
       });
     this.subscriptions.add(subscription);
   }
@@ -124,6 +124,10 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
   }
 
   public ngOnDestroy() {

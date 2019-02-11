@@ -32,3 +32,7 @@ export function isNumeric(value: any): boolean {
 export function deepObjectsEquals(object1: any, object2: any): boolean {
   return JSON.stringify(object1) === JSON.stringify(object2);
 }
+
+export function isArray<T>(input?: any): input is T[] {
+  return Array.isArray(input);
+}

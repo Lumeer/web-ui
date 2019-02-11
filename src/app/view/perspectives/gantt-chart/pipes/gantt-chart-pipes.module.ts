@@ -20,7 +20,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DisplayablePipe} from './displayable.pipe';
-import {GanttChartModesToSelectPipe} from './gantt-chart-modes-to-select.pipe';
+import {GanttChartModeTextPipe} from './gantt-chart-mode-text.pipe';
 import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
 import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
@@ -30,7 +30,7 @@ import {GanttChartRequiredPropertiesSetPipe} from './gantt-chart-required-proper
   imports: [CommonModule],
   declarations: [
     DisplayablePipe,
-    GanttChartModesToSelectPipe,
+    GanttChartModeTextPipe,
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
@@ -38,7 +38,7 @@ import {GanttChartRequiredPropertiesSetPipe} from './gantt-chart-required-proper
   ],
   exports: [
     DisplayablePipe,
-    GanttChartModesToSelectPipe,
+    GanttChartModeTextPipe,
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,

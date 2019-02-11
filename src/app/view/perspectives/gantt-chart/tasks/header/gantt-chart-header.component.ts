@@ -17,15 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../../../core/store/navigation/query';
-import {isAnyCollectionQuery} from '../../../../core/store/navigation/query.util';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {GanttChartMode} from '../../../../../core/store/gantt-charts/gantt-chart';
 
-@Pipe({
-  name: 'displayable',
+@Component({
+  selector: 'gantt-chart-header',
+  templateUrl: './gantt-chart-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isAnyCollectionQuery(query);
+export class GanttChartHeaderComponent {
+  @Input()
+  public currentMode: GanttChartMode;
+
+  @Output()
+  public modeChange = new EventEmitter<GanttChartMode>();
+
+  public readonly ganttChartModes = Object.values(GanttChartMode);
+
+  public onModeSelect(mode: GanttChartMode) {
+    this.modeChange.next(mode);
   }
 }
