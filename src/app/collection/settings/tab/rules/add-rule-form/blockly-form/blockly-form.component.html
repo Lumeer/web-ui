@@ -23,7 +23,7 @@
   </div>
   <div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3">
     <div *ngIf="displayDebug === 'js'">
-      <h5>Blockly Source Code</h5>
+      <h5 i18n="@@collection.config.tab.rules.blockly.source">Blockly Source Code</h5>
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
       </small>
@@ -33,7 +33,7 @@
       <p *ngIf="!blocklyJs" i18n="@@collection.config.tab.rules.blockly.noCode">No code generated yet.</p>
     </div>
     <div *ngIf="displayDebug === 'log'">
-      <h5>Dry Run Results</h5>
+      <h5 i18n="@@collection.config.tab.rules.blockly.dryRun">Dry Run Results</h5>
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
         <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>
@@ -45,7 +45,7 @@
       <p *ngIf="!blocklyDryRunResult" i18n="@@collection.config.tab.rules.blockly.noResults">No dry run results yet.</p>
     </div>
     <div *ngIf="displayDebug === 'error'">
-      <h5>Error Report</h5>
+      <h5 i18n="@@collection.config.tab.rules.blockly.error">Error Report</h5>
       <small class="text-muted">
         <span i18n="@@collection.config.tab.rules.blockly.debug">For debugging purposes by advanced users only.</span>
         <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@collection.config.tab.rules.blockly.timestamp">Timestamp:</span>

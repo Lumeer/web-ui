@@ -28,6 +28,7 @@ import {combineLatest as observableCombineLatest, Observable, Subscription} from
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../../../../../core/store/common/permissions.selectors';
 import {map} from 'rxjs/operators';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'auto-link-form',
@@ -56,7 +57,7 @@ export class AutoLinkFormComponent implements OnInit, OnDestroy {
   public attributes1: SelectItemModel[] = [];
   public attributes2: SelectItemModel[] = [];
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, public i18n: I18n) {}
 
   public ngOnInit(): void {
     this.linkTypes$ = this.selectLinkTypesForCollection(this.collection.id);

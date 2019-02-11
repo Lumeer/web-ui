@@ -9,12 +9,18 @@
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
       <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
-        <label for="name" class="mb-0">New rule name</label>
+        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.name.new">New rule name</label>
         <input type="text" class="form-control ml-3 w-auto" autocomplete="off" id="name" formControlName="name" aria-errormessage="ruleNameError" required="">
-        <small *ngIf="name.invalid && name.errors?.usedRuleName" id="ruleNameError" class="text-danger ml-2">Rule name already used.</small>
+        <small
+          *ngIf="name.invalid && name.errors?.usedRuleName"
+          id="ruleNameError"
+          class="text-danger ml-2"
+          i18n="@@collection.config.tab.rules.name.exists">
+          Rule name already used.
+        </small>
       </div>
       <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
-        <div class="text-nowrap">
+        <div class="text-nowrap" i18n="@@collection.config.tab.rules.onRecord">
           On record
         </div>
         <div class="form-check ml-3">

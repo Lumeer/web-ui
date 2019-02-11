@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -394,7 +395,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private setterAndGetterOutputType(this_: BlocklyEditorComponent, parentBlock: any, block: any, skipDisconnect = false) {
+  private setterAndGetterOutputType(
+    this_: BlocklyEditorComponent,
+    parentBlock: any,
+    block: any,
+    skipDisconnect = false
+  ) {
     const options = parentBlock.getField('ATTR').getOptions();
     const originalLength = options.length;
     const blockOutputType =
@@ -403,7 +409,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         : '';
     const collection = this_.getCollection(blockOutputType.split('_')[0]);
 
-    let defaultValue = '', defaultText = '';
+    let defaultValue = '',
+      defaultText = '';
     collection.attributes.forEach(attribute => {
       options.push([attribute.name, attribute.id]);
       if (attribute.id === collection.defaultAttributeId) {
@@ -414,7 +421,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     if (!defaultValue && collection.attributes) {
       defaultValue = collection.attributes[0].id;
-      defaultText = collection.attributes[0].name
+      defaultText = collection.attributes[0].name;
     }
 
     parentBlock.getField('ATTR').setValue(defaultValue);
