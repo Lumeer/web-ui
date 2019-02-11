@@ -22,7 +22,8 @@
       [permissions]="permissions$ | async"
       [documents]="documents$ | async"
       [config]="data.config"
-      (patchData)="patchDocumentData($event)">
+      (patchData)="patchDocumentData($event)"
+      (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>
 
   </ng-container>

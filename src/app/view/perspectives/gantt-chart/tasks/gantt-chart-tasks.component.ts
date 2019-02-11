@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttChartConfig, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartConfig, GanttChartMode, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
@@ -69,6 +69,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
+  @Output()
+  public configChange = new EventEmitter<GanttChartConfig>();
+
+  public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Day);
   public tasks$: Observable<GanttChartTask[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
@@ -92,6 +96,18 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         permissions: this.permissions,
         config: this.config,
       });
+    }
+    if (changes.config && this.config) {
+      this.currentMode$.next(this.config.mode);
+    }
+  }
+
+  public onModeChanged(mode: GanttChartMode) {
+    if (this.canManageConfig) {
+      const config = {...this.config, mode};
+      this.configChange.next(config);
+    } else {
+      this.currentMode$.next(mode);
     }
   }
 

@@ -27,6 +27,7 @@ import {GanttChartVisualizationComponent} from './tasks/visualization/gantt-char
 import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
 import {GanttChartCollectionConfigComponent} from './config/collection-config/gantt-chart-collection-config.component';
 import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
+import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
@@ -36,6 +37,7 @@ import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
     GanttChartConfigComponent,
     GanttChartCollectionConfigComponent,
     GanttChartTasksComponent,
+    GanttChartHeaderComponent,
   ],
   entryComponents: [GanttChartPerspectiveComponent],
   exports: [GanttChartPerspectiveComponent],

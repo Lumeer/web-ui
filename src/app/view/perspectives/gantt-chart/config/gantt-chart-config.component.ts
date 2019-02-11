@@ -46,16 +46,9 @@ export class GanttChartConfigComponent {
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public readonly viewModePlaceholder: string;
-  public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly ganttChartModes = Object.values(GanttChartMode);
 
   constructor(private i18n: I18n) {
     this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
-  }
-
-  public onModeSelect(mode: GanttChartMode) {
-    const newConfig = {...this.config, mode: mode};
-    this.configChange.emit(newConfig);
   }
 
   public onCollectionConfigChange(collection: Collection, collectionConfig: GanttChartCollectionConfig) {

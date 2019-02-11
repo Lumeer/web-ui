@@ -32,6 +32,7 @@ import {
   GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
   GanttChartConfig,
+  GanttChartMode,
   GanttChartTask,
 } from '../../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from 'frappe-gantt';
@@ -59,6 +60,9 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Input()
   public ganttChartId: string;
 
+  @Input()
+  public currentMode: GanttChartMode;
+
   @Output()
   public patchData = new EventEmitter<{documentId: string; attributeId: string; value: any}>();
 
@@ -71,9 +75,8 @@ export class GanttChartVisualizationComponent implements OnChanges {
       if (ganttTasksChanged(this.tasks, this.ganttChart && this.ganttChart.tasks)) {
         this.visualize();
       }
-    } else if (changes.config && this.config && this.ganttChart && !this.ganttChart.view_is(this.config.mode)) {
-      this.ganttChart.change_view_mode(this.config.mode);
-      this.setChartColorsAndListeners();
+    } else if (this.modeChanged(changes)) {
+      this.refreshMode(this.currentMode);
     }
   }
 
@@ -101,6 +104,15 @@ export class GanttChartVisualizationComponent implements OnChanges {
       this.createChartAndInitListeners(this.tasks);
       this.setChartColorsAndListeners();
     }
+  }
+
+  private modeChanged(changes: SimpleChanges): boolean {
+    return changes.currentMode && this.ganttChart && !this.ganttChart.view_is(this.currentMode);
+  }
+
+  private refreshMode(mode: GanttChartMode) {
+    this.ganttChart.change_view_mode(mode);
+    this.setChartColorsAndListeners();
   }
 
   private setChartColorsAndListeners() {
