@@ -72,7 +72,9 @@ describe('Table perspective', () => {
       .type('l');
 
     cy.get('[data-test="document-hints"]').should('be.visible');
-    cy.get('[data-test="document-hint"]').click();
+    cy.get('[data-test="document-hint"]')
+      .contains('linked value')
+      .click();
     cy.get('[data-test="document-hints"]').should('not.exist');
 
     cy.get('[data-test="text-data-input"][title="linked value"]').should('have.length', 2);
