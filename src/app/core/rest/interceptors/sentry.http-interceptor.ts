@@ -29,7 +29,7 @@ export class SentryHttpInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(error => {
-        if (environment.sentryDsn && error.status !== 402) {
+        if (environment.sentryDsn && ![402, 500].includes(error.status)) {
           Sentry.captureException(error);
         }
 
