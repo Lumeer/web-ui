@@ -79,8 +79,10 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     const element = this.element.nativeElement as HTMLElement;
     const height = element.offsetHeight;
 
-    const tableElement = getTableElement(this.cursor.tableId);
-    tableElement.style.setProperty('--column-group-height', `${height}px`);
+    if (height) {
+      const tableElement = getTableElement(this.cursor.tableId);
+      tableElement.style.setProperty('--column-group-height', `${height}px`);
+    }
   }
 
   public trackByCollectionAndAttribute(index: number, column: TableConfigColumn): string {
