@@ -127,8 +127,8 @@
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
           Rules
-        </source><target state="new">
-          Rules
+        </source><target>
+          Pravidla
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
@@ -193,7 +193,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add collections.
   </source><target>Je mi líto, ale nemáte oprávnění přidávat kolekce.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="table.query.invalid" datatype="html">
                 <source>Table perspective cannot show the results of your query. The query needs to have exactly one collection.
@@ -1297,7 +1297,7 @@
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
-        <source>Loading...</source><target state="new">Loading...</target>
+        <source>Loading...</source><target>Načítám...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context>
           <context context-type="linenumber">3</context>
@@ -1923,8 +1923,8 @@
       </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source>
     Main settings
-  </source><target state="new">
-    Main settings
+  </source><target>
+    Hlavní nastavení
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
@@ -1933,7 +1933,7 @@
       </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
         <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
-      </source><target state="new">
+      </source><target>
         <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
       </target>
         <context-group purpose="location">
@@ -1941,13 +1941,13 @@
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target state="new">{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</target>
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target>{VAR_SELECT, select, y1 {Nastavení osy Y1} y2 {Nastavení osy Y2} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.empty.title" datatype="html">
-        <source> We can not find any task!</source><target state="new"> We can not find any task!</target>
+        <source> We can not find any task!</source><target> Nebyl nalezen žádný úkol!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
           <context context-type="linenumber">9</context>
@@ -1955,8 +1955,8 @@
       </trans-unit><trans-unit id="perspective.gantt.empty.subtitle" datatype="html">
         <source>
     Select correct attributes from side menu
-  </source><target state="new">
-    Select correct attributes from side menu
+  </source><target>
+    V nabídce vlevo vyberte atributy pro zobrazení
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
@@ -1965,8 +1965,8 @@
       </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
         <source>
   Map settings
-</source><target state="new">
-  Map settings
+</source><target>
+  Nastavení mapy
 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
@@ -1975,8 +1975,8 @@
       </trans-unit><trans-unit id="perspective.map.config.sidebar.description" datatype="html">
         <source>
   Select attributes with addresses or Earth coordinates to position records on the map.
-</source><target state="new">
-  Select attributes with addresses or Earth coordinates to position records on the map.
+</source><target>
+  Vyberte atributy s adresami nebo souřadnicemi pozic pro zobrazení záznamů na mapě.
 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
@@ -2552,7 +2552,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-picker/icon-picker.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="icon-picker.select.icon.search" datatype="html">
         <source>Search for icon...</source><target>Vyhledat ikonu...</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-picker/icon-picker.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
             <trans-unit id="color-picker.select.icon" datatype="html">
                 <source>1. Choose color
@@ -2925,37 +2925,37 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.sort.placeholder" datatype="html">
-        <source>Sort</source><target state="new">Sort</target>
+        <source>Sort</source><target>Třídění</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.sortType.placeholder" datatype="html">
-        <source>Sort order</source><target state="new">Sort order</target>
+        <source>Sort order</source><target>Pořadí</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
-        <source>Select axis</source><target state="new">Select axis</target>
+        <source>Select axis</source><target>Vyberte osu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} }</source><target state="new">{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} }</target>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/aggregation-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.aggregation.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source><target state="new">{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</target>
+        <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source><target>{VAR_SELECT, select, y1 {Agregace osy Y1} y2 {Agregace osy Y2} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/aggregation-select-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.dataSet.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Data set} y2 {Y2 Data set} }</source><target state="new">{VAR_SELECT, select, y1 {Y1 Data set} y2 {Y2 Data set} }</target>
+        <source>{VAR_SELECT, select, y1 {Y1 Data set} y2 {Y2 Data set} }</source><target>{VAR_SELECT, select, y1 {Datová řada osy Y1} y2 {Datová řada osy Y2} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/data-set-select-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -2967,14 +2967,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.sortType.name" datatype="html">
-        <source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source><target state="new">{VAR_SELECT, select, asc {Ascending} desc {Descending} }</target>
+        <source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source><target>{VAR_SELECT, select, asc {Rostoucí} desc {Klesající} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.mode.placeholder" datatype="html">
         <source>View mode</source><target>Styl zobrazení</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
         <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></target>
         <context-group purpose="location">
@@ -2994,7 +2994,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month} }</source><target state="new">{VAR_SELECT, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month} }</target>
+        <source>{VAR_SELECT, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month} }</source><target>{VAR_SELECT, select, Day {Den} Quarter Day {Čtvrt dne} Half Day {Půl dne} Week {Týden} Month {Měsíc} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -3080,13 +3080,13 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="select" datatype="html">
         <source>Select</source><target>Vybrat</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="unlink" datatype="html">
         <source>Unlink</source><target>Rozpojit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="remove" datatype="html">
         <source>Remove</source><target>Odstranit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit>
             <trans-unit id="button.choose" datatype="html">
                 <source>Choose</source>
@@ -3217,21 +3217,21 @@
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
     Add a new rule
-  </source><target state="new">
-    Add a new rule
+  </source><target>
+    Přidat pravidlo
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule/add-rule.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
-        <source>of type</source><target state="new">of type</target>
+        <source>of type</source><target>typu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.type" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target state="new">{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</target>
+        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target>{VAR_SELECT, select, AUTO_LINK {Automatická vazba} BLOCKLY {Blockly} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">8</context>
@@ -3241,13 +3241,13 @@
           <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.on" datatype="html">
-        <source>on</source><target state="new">on</target>
+        <source>on</source><target>při</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.timing.create" datatype="html">
-        <source>Create</source><target state="new">Create</target>
+        <source>Create</source><target>Vytvoření</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">15</context>
@@ -3257,7 +3257,7 @@
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.timing.update" datatype="html">
-        <source>Update</source><target state="new">Update</target>
+        <source>Update</source><target>Změně</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">22</context>
@@ -3267,7 +3267,7 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.timing.delete" datatype="html">
-        <source>Delete</source><target state="new">Delete</target>
+        <source>Delete</source><target>Vymazání</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">29</context>
@@ -3277,7 +3277,7 @@
           <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.name.new" datatype="html">
-        <source>New rule name</source><target state="new">New rule name</target>
+        <source>New rule name</source><target>Název nového pravidla</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">12</context>
@@ -3285,8 +3285,8 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.name.exists" datatype="html">
         <source>
           Rule name already used.
-        </source><target state="new">
-          Rule name already used.
+        </source><target>
+          Pravidlo s tímto jménem už existuje.
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
@@ -3295,27 +3295,27 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source>
           On record
-        </source><target state="new">
-          On record
+        </source><target>
+          Spustit nad záznamem při
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="7908cce89a4826365313ec5d951c732d4b68d82b" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target state="new">{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</target>
+        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target>{VAR_SELECT, select, AUTO_LINK {Automatická vazba} BLOCKLY {Blockly} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
-        <source>Save Changes</source><target state="new">Save Changes</target>
+        <source>Save Changes</source><target>Uložit změny</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
-        <source>Add Rule</source><target state="new">Add Rule</target>
+        <source>Add Rule</source><target>Přidat pravidlo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">90</context>
@@ -3323,8 +3323,8 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
       Link record via
-    </source><target state="new">
-      Link record via
+    </source><target>
+      Spojit záznamy pomocí
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
@@ -3333,8 +3333,8 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
         <source>
       Where
-    </source><target state="new">
-      Where
+    </source><target>
+      Když
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
@@ -3343,15 +3343,15 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source>
       equals
-    </source><target state="new">
-      equals
+    </source><target>
+      se rovná
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
-        <source>Edit Rule Code:</source><target state="new">Edit Rule Code:</target>
+        <source>Edit Rule Code:</source><target>Upravit pravidlo:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">4</context>
@@ -3359,8 +3359,8 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
         <source>
           Dry Run
-        </source><target state="new">
-          Dry Run
+        </source><target>
+          Zkušební běh
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
@@ -3371,13 +3371,13 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.source" datatype="html">
-        <source>Blockly Source Code</source><target state="new">Blockly Source Code</target>
+        <source>Blockly Source Code</source><target>Zdrojový kód pravidla</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.debug" datatype="html">
-        <source>For debugging purposes by advanced users only.</source><target state="new">For debugging purposes by advanced users only.</target>
+        <source>For debugging purposes by advanced users only.</source><target>Slouží k ladění pravidel. Pouze pro pokročilé uživatele.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">28</context>
@@ -3391,13 +3391,13 @@
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noCode" datatype="html">
-        <source>No code generated yet.</source><target state="new">No code generated yet.</target>
+        <source>No code generated yet.</source><target>Žádný kód ještě není vygenerován.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.timestamp" datatype="html">
-        <source>Timestamp:</source><target state="new">Timestamp:</target>
+        <source>Timestamp:</source><target>Čas serveru:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">39</context>
@@ -3407,25 +3407,25 @@
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noResults" datatype="html">
-        <source>No dry run results yet.</source><target state="new">No dry run results yet.</target>
+        <source>No dry run results yet.</source><target>Žádné výsledky zkušebního běhu ještě neexistují.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.error" datatype="html">
-        <source>Error Report</source><target state="new">Error Report</target>
+        <source>Error Report</source><target>Výpis chyb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noError" datatype="html">
-        <source>No error recorded.</source><target state="new">No error recorded.</target>
+        <source>No error recorded.</source><target>K žádné chybě nedošlo.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.close.button" datatype="html">
-        <source>Close</source><target state="new">Close</target>
+        <source>Close</source><target>Zavřít</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">66</context>
@@ -3433,8 +3433,8 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
         <source>
     There are no rules yet.
-  </source><target state="new">
-    There are no rules yet.
+  </source><target>
+    Neexistují ještě žádná pravidla.
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/no-rules/no-rules.component.html</context>
@@ -3522,7 +3522,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.dialog.clone.update" datatype="html">
-        <source>Update</source><target state="new">Update</target>
+        <source>Update</source><target>Aktualizovat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3651,13 +3651,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.remove.title" datatype="html">
-        <source>Delete this rule?</source><target state="new">Delete this rule?</target>
+        <source>Delete this rule?</source><target>Smazat pravidlo?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.remove.message" datatype="html">
-        <source>Do you really want to delete this rule?</source><target state="new">Do you really want to delete this rule?</target>
+        <source>Do you really want to delete this rule?</source><target>Chcete skutečně odstranit toto pravidlo?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
           <context context-type="linenumber">1</context>
