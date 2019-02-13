@@ -1,4 +1,4 @@
-<div *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
+<ng-container *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
   <calendar-header
     class="d-block mb-3"
     [mode]="data.mode"
@@ -8,14 +8,13 @@
     (viewDateChange)="onViewDateChange($event)">
   </calendar-header>
 
-  <div [ngSwitch]="data.mode">
+  <ng-container [ngSwitch]="data.mode">
     <mwl-calendar-month-view
       *ngSwitchCase="calendarMode.Month"
       [viewDate]="data.date"
       [events]="events"
       [refresh]="refresh"
       [weekStartsOn]="1"
-      [cellTemplate]="monthCellTemplate"
       (dayClicked)="dayClicked($event.day)"
       (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-month-view>
@@ -36,56 +35,5 @@
       (dayClicked)="dayClicked($event.day)"
       (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-day-view>
-  </div>
-</div>
-
-<ng-template
-  #popContent
-  class="popover-block">
-  <div *ngFor="let event of shownEvents">
-    <i class="fa fa-circle" [style.color]="event.color.primary"></i>
-    <b *ngIf="event.allDay !== true">
-      {{event.start | date:'shortTime'}}
-    </b>
-    {{event.title}}
-  </div>
-</ng-template>
-
-<ng-template
-  #monthCellTemplate
-  let-day="day"
-  let-openDay="openDay"
-  let-locale="locale"
-  let-tooltipPlacement="tooltipPlacement"
-  let-highlightDay="highlightDay"
-  let-unhighlightDay="unhighlightDay"
-  let-eventClicked="eventClicked">
-
-  <div class="fill-height"
-       [popoverTitle]="viewDate | date"
-       [outsideClick]="true"
-       [popover]="popContent">
-    <div class="cal-cell-top">
-      <span class="cal-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
-      <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-    </div>
-    <div class="cal-events">
-      <div
-        class="cal-event"
-        *ngFor="let event of day.events"
-        [style.backgroundColor]="event.color.primary"
-        [ngClass]="event?.cssClass"
-        (mouseenter)="highlightDay.emit({event: event})"
-        (mouseleave)="unhighlightDay.emit({event: event})"
-        [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
-        mwlDraggable
-        [class.cal-draggable]="event.draggable"
-        dragActiveClass="cal-drag-active"
-        [dropData]="{event: event, draggedFrom: day}"
-        [dragAxis]="{x: event.draggable, y: event.draggable}"
-        [tooltipPlacement]="tooltipPlacement"
-        (mwlClick)="eventClicked.emit({ event: event })">
-      </div>
-    </div>
-  </div>
-</ng-template>
+  </ng-container>
+</ng-container>

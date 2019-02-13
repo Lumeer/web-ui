@@ -52,10 +52,10 @@ export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPrope
 export enum CalendarBarPropertyRequired {
   NAME = 'name',
   START_DATE = 'start',
-  END_DATE = 'end',
 }
 
 export enum CalendarBarPropertyOptional {
+  END_DATE = 'end',
   START_TIME = 'startTime',
   END_TIME = 'endTime',
 }

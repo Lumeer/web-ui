@@ -104,7 +104,8 @@ export class CalendarVisualizationComponent implements OnChanges {
 
       const nameProperty = properties[CalendarBarPropertyRequired.NAME];
       const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
-      const endProperty = properties[CalendarBarPropertyRequired.END_DATE];
+
+      const endProperty = properties[CalendarBarPropertyOptional.END_DATE];
       const startTimeProperty = properties[CalendarBarPropertyOptional.START_TIME];
       const endTimeProperty = properties[CalendarBarPropertyOptional.END_TIME];
 
@@ -112,17 +113,12 @@ export class CalendarVisualizationComponent implements OnChanges {
       const startString = startProperty && document.data[startProperty.attributeId];
       const endString = endProperty && document.data[endProperty.attributeId];
 
-      if (!this.isEventValid(title, startString, endString)) {
+      if (!this.isEventValid(title, startString)) {
         continue;
       }
 
       let start = moment(startString);
-      let end = moment(endString);
-      if (!start.isValid()) {
-        start = end;
-      } else if (!end.isValid()) {
-        end = start;
-      }
+      let end = endString && moment(endString).isValid() && moment(endString);
 
       const startTimeString = startTimeProperty && document.data[startTimeProperty.attributeId];
       const endTimeString = endTimeProperty && document.data[endTimeProperty.attributeId];
@@ -135,16 +131,16 @@ export class CalendarVisualizationComponent implements OnChanges {
       }
 
       if (endTimeChunks) {
-        end = end.hour(endTimeChunks[0]).minute(endTimeChunks[1]);
+        end = end && end.hour(endTimeChunks[0]).minute(endTimeChunks[1]);
       }
 
-      const allDay = this.isAllDayEvent(start.toDate(), end.toDate());
+      const allDay = (end && this.isAllDayEvent(start.toDate(), end.toDate())) || false;
       const collection = this.collections.find(coll => coll.id === document.collectionId);
 
       const event = {
         title,
         start: start.toDate(),
-        end: end.toDate(),
+        end: end && end.toDate(),
         color: this.getColor(allDay, collection.color),
         allDay,
         draggable: true,
@@ -164,8 +160,8 @@ export class CalendarVisualizationComponent implements OnChanges {
     return events;
   }
 
-  private isEventValid(title: string, startString: string, endString: string): boolean {
-    return title && (moment(startString).isValid() || moment(endString).isValid());
+  private isEventValid(title: string, startString: string): boolean {
+    return title && moment(startString).isValid();
   }
 
   //expected input hh:mm or hh.mm
@@ -225,7 +221,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     const properties = collectionConfig.barsProperties || {};
 
     const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
-    const endProperty = properties[CalendarBarPropertyRequired.END_DATE];
+    const endProperty = properties[CalendarBarPropertyOptional.END_DATE];
     const startTimeProperty = properties[CalendarBarPropertyOptional.START_TIME];
     const endTimeProperty = properties[CalendarBarPropertyOptional.END_TIME];
 
