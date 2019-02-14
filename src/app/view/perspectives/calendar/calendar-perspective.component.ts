@@ -27,7 +27,7 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -37,6 +37,9 @@ import {CalendarConfig, CalendarMode, DEFAULT_CALENDAR_ID} from '../../../core/s
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query';
 import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Component({
   selector: 'calendar',
@@ -49,13 +52,14 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public config$: Observable<CalendarConfig>;
   public currentView$: Observable<View>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   public query$ = new BehaviorSubject<Query>(null);
 
   private subscriptions = new Subscription();
   private calendarId = DEFAULT_CALENDAR_ID;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -117,6 +121,10 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
   }
 
   public onConfigChanged(config: CalendarConfig) {

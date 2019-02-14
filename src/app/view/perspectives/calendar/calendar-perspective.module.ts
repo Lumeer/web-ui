@@ -32,12 +32,13 @@ import {
 } from 'angular-calendar';
 import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
-import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
-import {CalendarHeaderComponent} from './visualization/header/calendar-header.component';
+import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
+import {CalendarHeaderComponent} from './events/header/calendar-header.component';
 import {PopoverModule} from 'ngx-bootstrap';
 import {CalendarCollectionConfigComponent} from './config/collection-config/calendar-collection-config.component';
 import {adapterFactory} from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
+import {CalendarEventsComponent} from './events/calendar-events.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -70,6 +71,7 @@ export function momentAdapterFactory() {
     CalendarVisualizationComponent,
     CalendarHeaderComponent,
     CalendarCollectionConfigComponent,
+    CalendarEventsComponent,
   ],
   entryComponents: [CalendarPerspectiveComponent],
   exports: [CalendarPerspectiveComponent],

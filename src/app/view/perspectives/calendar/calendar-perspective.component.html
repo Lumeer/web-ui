@@ -11,15 +11,16 @@
       </calendar-config>
     </collapsible-sidebar>
 
-    <calendar-visualization
+    <calendar-events
       class="flex-grow-1 mx-3 mb-3"
       [collections]="data.collections"
       [documents]="documents$ | async"
       [canManageConfig]="data.canManageConfig"
       [config]="data.config"
+      [permissions]="permissions$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)">
-    </calendar-visualization>
+    </calendar-events>
   </ng-container>
 
 </ng-container>
