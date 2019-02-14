@@ -2,7 +2,8 @@
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
                 canManageConfig: currentView$ | async | canManageConfig | async} as data">
-    <collapsible-sidebar *ngIf="data.canManageConfig">
+    <collapsible-sidebar *ngIf="data.canManageConfig"
+                         class="h-100">
       <calendar-config
         class="d-block m-3"
         [collections]="data.collections"
@@ -12,7 +13,7 @@
     </collapsible-sidebar>
 
     <calendar-events
-      class="flex-grow-1 mx-3 mb-3"
+      class="flex-grow-1 mx-3 mb-3 d-block h-100"
       [collections]="data.collections"
       [documents]="documents$ | async"
       [canManageConfig]="data.canManageConfig"

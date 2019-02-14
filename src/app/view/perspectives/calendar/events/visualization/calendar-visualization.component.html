@@ -4,7 +4,10 @@
     [viewDate]="currentDate"
     [events]="events"
     [refresh]="refresh"
-    [weekStartsOn]="1"
+    [locale]="locale"
+    [weekStartsOn]="locale | firstDayOfWeek"
+    [cellTemplate]="customCellTemplate"
+    (beforeViewRender)="beforeMonthViewRender($event)"
     (dayClicked)="dayClicked($event.day)"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-month-view>
@@ -13,8 +16,8 @@
     [viewDate]="currentDate"
     [events]="events"
     [refresh]="refresh"
-    [weekStartsOn]="1"
-    (dayClicked)="dayClicked($event.day)"
+    [locale]="locale"
+    [weekStartsOn]="locale | firstDayOfWeek"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
@@ -22,7 +25,51 @@
     [viewDate]="currentDate"
     [events]="events"
     [refresh]="refresh"
-    (dayClicked)="dayClicked($event.day)"
+    [locale]="locale"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-day-view>
 </ng-container>
+
+<ng-template #customCellTemplate
+             let-day="day"
+             let-openDay="openDay"
+             let-locale="locale"
+             let-tooltipPlacement="tooltipPlacement"
+             let-highlightDay="highlightDay"
+             let-unhighlightDay="unhighlightDay"
+             let-eventClicked="eventClicked"
+             let-tooltipTemplate="tooltipTemplate"
+             let-tooltipAppendToBody="tooltipAppendToBody">
+  <div class="cal-cell-top">
+    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+  </div>
+  <div class="cell-totals" *ngIf="day.eventGroups">
+    <span
+      *ngFor="let group of day.eventGroups"
+      class="badge m-1" [style.background]="group.color">
+      {{ group.length }}
+    </span>
+  </div>
+  <div class="cal-events" *ngIf="!day.eventGroups && day.events.length > 0">
+    <div
+      class="cal-event"
+      *ngFor="let event of day.events; trackBy:trackByEventId"
+      [style.backgroundColor]="event.color?.primary"
+      [ngClass]="event?.cssClass"
+      (mouseenter)="highlightDay.emit({event: event})"
+      (mouseleave)="unhighlightDay.emit({event: event})"
+      [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+      [tooltipPlacement]="tooltipPlacement"
+      [tooltipEvent]="event"
+      [tooltipTemplate]="tooltipTemplate"
+      [tooltipAppendToBody]="tooltipAppendToBody"
+      mwlDraggable
+      [class.cal-draggable]="event.draggable"
+      dragActiveClass="cal-drag-active"
+      [dropData]="{event: event, draggedFrom: day}"
+      [dragAxis]="{x: event.draggable, y: event.draggable}"
+      (mwlClick)="eventClicked.emit({ event: event })">
+    </div>
+  </div>
+</ng-template>

@@ -75,10 +75,12 @@ export function createCalendarEventsForCollection(
   const startTimeProperty = properties[CalendarBarPropertyOptional.START_TIME];
   const endTimeProperty = properties[CalendarBarPropertyOptional.END_TIME];
   const draggable = permissisions.writeWithView;
+  const allDayColor = getColor(true, collection.color);
+  const color = getColor(false, collection.color);
 
   const events = [];
 
-  for (const document of this.documents) {
+  for (const document of documents) {
     const title = nameProperty && document.data[nameProperty.attributeId];
     const startString = startProperty && document.data[startProperty.attributeId];
 
@@ -93,8 +95,8 @@ export function createCalendarEventsForCollection(
     const startTimeString = startTimeProperty && document.data[startTimeProperty.attributeId];
     const endTimeString = endTimeProperty && document.data[endTimeProperty.attributeId];
 
-    const startTimeChunks = this.parseTime(startTimeString);
-    const endTimeChunks = this.parseTime(endTimeString);
+    const startTimeChunks = parseTime(startTimeString);
+    const endTimeChunks = parseTime(endTimeString);
 
     startTimeChunks && start.setHours(startTimeChunks[0], startTimeChunks[1]);
     endTimeChunks && end && end.setHours(endTimeChunks[0], endTimeChunks[1]);
@@ -108,12 +110,11 @@ export function createCalendarEventsForCollection(
       end && endProperty.attributeId,
       end && endTimeChunks && endTimeProperty.attributeId
     );
-
     const event = {
       title,
       start: interval[0].value,
       end: interval[1].value,
-      color: this.getColor(allDay, collection.color),
+      color: allDay ? allDayColor : color,
       allDay,
       draggable: draggable,
       resizable: {
@@ -123,6 +124,7 @@ export function createCalendarEventsForCollection(
       meta: {
         documentId: document.id,
         collectionId: document.collectionId,
+        color: collection.color,
         startAttributeId: interval[0].attrId,
         startTimeAttributeId: interval[0].timeAttrId,
         endAttributeId: interval[1].attrId,
@@ -139,25 +141,25 @@ export function createCalendarEventsForCollection(
 function createInterval(
   start: Date,
   startAttributeId,
-  startTimeAtributeId,
+  startTimeAttributeId,
   end: Date,
   endAttributeId: string,
   endTimeAttributeId
 ): [{value: Date; attrId: string; timeAttrId: string}, {value?: Date; attrId?: string; timeAttrId?: string}] {
-  if (end && moment(end).isAfter(moment(start))) {
+  if (end && moment(end).isBefore(moment(start))) {
     return [
       {value: end, attrId: endAttributeId, timeAttrId: endTimeAttributeId},
-      {value: start, attrId: startAttributeId, timeAttrId: startTimeAtributeId},
+      {value: start, attrId: startAttributeId, timeAttrId: startTimeAttributeId},
     ];
   }
   return [
-    {value: start, attrId: startAttributeId, timeAttrId: startAttributeId},
+    {value: start, attrId: startAttributeId, timeAttrId: startTimeAttributeId},
     {value: end, attrId: endAttributeId, timeAttrId: endTimeAttributeId},
   ];
 }
 
 function isDateValid(date: string): boolean {
-  return moment(date).isValid();
+  return date && moment(date).isValid();
 }
 
 //expected input hh:mm or hh.mm
@@ -180,14 +182,14 @@ function isAllDayEvent(start: Date, end: Date): boolean {
 }
 
 function getColor(allDay: boolean, color: string) {
-  if (allDay) {
+  if (!allDay) {
     return {
       primary: color,
-      secondary: shadeColor(color, 90),
+      secondary: shadeColor(color, 0.9),
     };
   }
   return {
-    primary: shadeColor(color, 70),
-    secondary: shadeColor(color, 60),
+    primary: shadeColor(color, 0.8),
+    secondary: shadeColor(color, 0.7),
   };
 }

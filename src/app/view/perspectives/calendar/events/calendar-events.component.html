@@ -1,6 +1,6 @@
 <ng-container *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
   <calendar-header
-    class="d-block mb-3"
+    class="d-block mb-3 mx-5"
     [mode]="data.mode"
     [viewDate]="data.date"
     [locale]="locale"
@@ -9,7 +9,7 @@
   </calendar-header>
 
   <calendar-visualization
-    [events]="events$ | async"
+    [events]="(events$ | async) || []"
     [currentMode]="data.mode"
     [currentDate]="data.date"
     (timesChange)="onValueChanged($event)">

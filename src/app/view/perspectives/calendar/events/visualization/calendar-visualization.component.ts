@@ -17,23 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  LOCALE_ID,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, LOCALE_ID, Output} from '@angular/core';
 import {
   CALENDAR_DATE_FORMAT,
   CALENDAR_TIME_FORMAT,
   CalendarMode,
 } from '../../../../../core/store/calendars/calendar.model';
-import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
 
@@ -43,9 +33,9 @@ import * as moment from 'moment';
   styleUrls: ['./calendar-visualization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarVisualizationComponent implements OnChanges {
+export class CalendarVisualizationComponent {
   @Input()
-  public events: CalendarEvent[];
+  public events: CalendarEvent[] = [];
 
   @Input()
   public currentMode: CalendarMode;
@@ -61,16 +51,6 @@ export class CalendarVisualizationComponent implements OnChanges {
   public refresh: Subject<any> = new Subject();
 
   constructor(@Inject(LOCALE_ID) private locale: string) {}
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.events) {
-      this.visualize();
-    }
-  }
-
-  private visualize() {
-    this.refresh.next();
-  }
 
   public dayClicked({date, events}: {date: Date; events: CalendarEvent[]}): void {
     // TODO
@@ -105,5 +85,22 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private timeToString(date: Date): string {
     return moment(date).format(CALENDAR_TIME_FORMAT);
+  }
+
+  public beforeMonthViewRender({body}: {body: CalendarMonthViewDay[]}): void {
+    body.forEach(cell => {
+      const numGroups = new Set(cell.events.map(event => event.meta.collectionId)).size;
+      if (numGroups >= 2 && cell.events.length >= 8) {
+        const groups: Record<string, {color: string; length: number}> = {};
+        cell.events.forEach((event: CalendarEvent<{collectionId: string; color: string}>) => {
+          if (!groups[event.meta.collectionId]) {
+            groups[event.meta.collectionId] = {color: event.meta.color, length: 0};
+          }
+          groups[event.meta.collectionId].length++;
+        });
+
+        cell['eventGroups'] = Object.values(groups);
+      }
+    });
   }
 }

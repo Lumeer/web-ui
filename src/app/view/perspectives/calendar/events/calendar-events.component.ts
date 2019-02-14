@@ -133,7 +133,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
 
     const patchDocument = {...changedDocument};
-    changes.forEach(change => (patchDocument[change.attributeId] = change.value));
+    changes.forEach(change => (patchDocument.data[change.attributeId] = change.value));
     this.patchData.emit(patchDocument);
   }
 }
