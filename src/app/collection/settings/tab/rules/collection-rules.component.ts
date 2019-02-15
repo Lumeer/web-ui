@@ -132,4 +132,8 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
       this.showRemoveConfirm(updatedCollection);
     }
   }
+
+  public trackByRuleName(index: number, rule: Rule): string {
+    return rule.name;
+  }
 }

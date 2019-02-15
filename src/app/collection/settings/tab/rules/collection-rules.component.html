@@ -8,7 +8,7 @@
       </li>
 
       <li
-        *ngFor="let rule of collection.rules; let idx = index"
+        *ngFor="let rule of collection.rules; let idx = index; trackBy:trackByRuleName"
         class="list-group-item flex-column align-items-center">
         <add-rule-form
           *ngIf="editingRules[rule.name]"
