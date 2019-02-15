@@ -39,10 +39,11 @@ import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {DOCUMENT} from '@angular/common';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../../core/store/collections/collection';
-import {Variable} from '../../../variable-type';
+import {RuleVariable} from '../../../rule-variable-type';
 import {shadeColor} from '../../../../../../../shared/utils/html-modifier';
 import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
 import {ContrastColorPipe} from '../../../../../../../shared/pipes/contrast-color.pipe';
+import {BlocklyService} from '../../../../../../../core/service/blockly.service';
 
 declare var Blockly: any;
 
@@ -60,7 +61,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   public linkTypes: LinkType[] = [];
 
   @Input('variables')
-  public variables: Variable[] = [];
+  public variables: RuleVariable[] = [];
 
   @Input('xml')
   public xml: string = '';
@@ -96,19 +97,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     private store$: Store<AppState>,
     private route: ActivatedRoute,
     private dialogService: DialogService,
-    private renderer2: Renderer2,
-    @Inject(DOCUMENT) private document,
-    private contrastColorPipe: ContrastColorPipe
+    private contrastColorPipe: ContrastColorPipe,
+    private blocklyService: BlocklyService
   ) {}
 
   public ngAfterViewInit(): void {
-    const script = this.renderer2.createElement('script');
-    script.type = 'text/javascript';
-    script.src = environment.blocklyCdn;
-    script.onload = () => {
-      this.blocklyOnLoad();
-    };
-    this.renderer2.appendChild(this.document.body, script);
+    this.blocklyService.loadBlockly(this.blocklyOnLoad);
   }
 
   public blocklyOnLoad(): void {

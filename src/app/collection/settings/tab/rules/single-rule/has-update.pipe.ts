@@ -17,7 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Variable {
-  name: string;
-  collectionId: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {RuleTiming} from '../../../../../core/model/rule';
+
+@Pipe({
+  name: 'hasUpdate',
+})
+export class HasUpdatePipe implements PipeTransform {
+  private readonly updateTimings = [
+    RuleTiming.Update,
+    RuleTiming.CreateUpdate,
+    RuleTiming.UpdateDelete,
+    RuleTiming.All,
+  ];
+
+  public transform(value: RuleTiming): boolean {
+    return this.updateTimings.indexOf(value) >= 0;
+  }
 }

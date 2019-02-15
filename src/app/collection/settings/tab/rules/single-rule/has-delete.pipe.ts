@@ -17,12 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {RuleTiming} from '../../../../../core/model/rule';
 
-@Component({
-  selector: '[add-rule]',
-  templateUrl: './add-rule.component.html',
-  styleUrls: ['./add-rule.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'hasDelete',
 })
-export class AddRuleComponent {}
+export class HasDeletePipe implements PipeTransform {
+  private readonly deleteTimings = [
+    RuleTiming.Delete,
+    RuleTiming.UpdateDelete,
+    RuleTiming.CreateDelete,
+    RuleTiming.All,
+  ];
+
+  public transform(value: RuleTiming): boolean {
+    return this.deleteTimings.indexOf(value) >= 0;
+  }
+}

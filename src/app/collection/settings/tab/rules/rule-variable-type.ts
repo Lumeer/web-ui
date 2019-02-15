@@ -17,12 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-
-@Component({
-  selector: '[add-rule]',
-  templateUrl: './add-rule.component.html',
-  styleUrls: ['./add-rule.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AddRuleComponent {}
+export interface RuleVariable {
+  name: string;
+  collectionId: string;
+}

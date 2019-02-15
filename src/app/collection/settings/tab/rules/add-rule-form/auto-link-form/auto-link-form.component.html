@@ -6,6 +6,7 @@
     <select-item
       class="ml-3"
       emptyValue="Select a link type"
+      i18n-emptyValue="@@collection.config.tab.rules.autoLink.selectLinkType"
       placeholderIcon="fas fa-link"
       [items]="selectItems"
       [selectedId]="linkTypeId"
@@ -19,7 +20,7 @@
     <select-item
       class="ml-3"
       (select)="onSelectAttribute1($event)"
-      [emptyValue]="i18n({id: 'collection.config.tab.rules.autoLink.selectFrom', value: 'Select from \{\{collection\}\}'}, {'collection': collection.name})"
+      [emptyValue]="attribute1Empty"
       [placeholderIcon]="collection.icon"
       [items]="attributes1"
       [selectedId]="attribute1Id">
@@ -30,7 +31,7 @@
     <select-item
       class="ml-3"
       (select)="onSelectAttribute2($event)"
-      [emptyValue]="linkedCollection ? i18n({id: 'collection.config.tab.rules.autoLink.selectFrom', value: 'Select from \{\{collection\}\}'}, {'collection': linkedCollection.name}) : i18n({id: 'collection.config.tab.rules.autoLink.linkTypeFirst', value: 'Select link type first'})"
+      [emptyValue]="linkedCollection ? attribute2Empty : attribute2NoCollection"
       [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
       [items]="attributes2"
       [selectedId]="attribute2Id">

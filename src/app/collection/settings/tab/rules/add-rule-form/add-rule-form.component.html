@@ -10,7 +10,7 @@
     <form [formGroup]="form" class="">
       <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
         <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.name.new">New rule name</label>
-        <input type="text" class="form-control ml-3 w-auto" autocomplete="off" id="name" formControlName="name" aria-errormessage="ruleNameError" required="">
+        <input type="text" class="form-control ml-3 w-auto" autocomplete="off" id="name" formControlName="name" aria-errormessage="ruleNameError">
         <small
           *ngIf="name.invalid && name.errors?.usedRuleName"
           id="ruleNameError"

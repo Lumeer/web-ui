@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -53,7 +53,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly types = Object.values(RuleTypeMap);
 
-  public form;
+  public form: FormGroup;
 
   private formSubscription: Subscription;
 
@@ -63,7 +63,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.form = this.fb.group({
-      name: [this.rule.name, this.usedNameValidator()],
+      name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
       timingCreate: this.hasCreate(this.rule.timing),
       timingUpdate: this.hasUpdate(this.rule.timing),
       timingDelete: [

@@ -57,9 +57,36 @@ export class AutoLinkFormComponent implements OnInit, OnDestroy {
   public attributes1: SelectItemModel[] = [];
   public attributes2: SelectItemModel[] = [];
 
+  public attribute1Empty: string;
+  public attribute2Empty: string;
+  public attribute2NoCollection: string;
+
   constructor(private store$: Store<AppState>, public i18n: I18n) {}
 
   public ngOnInit(): void {
+    this.attribute1Empty = this.i18n(
+      {
+        id: 'collection.config.tab.rules.autoLink.selectFrom',
+        value: 'Select from {{collection}}',
+      },
+      {
+        collection: this.collection.name,
+      }
+    );
+    this.attribute2Empty = this.i18n(
+      {
+        id: 'collection.config.tab.rules.autoLink.selectFrom',
+        value: 'Select from {{collection}}',
+      },
+      {
+        collection: this.linkedCollection.name,
+      }
+    );
+    this.attribute2NoCollection = this.i18n({
+      id: 'collection.config.tab.rules.autoLink.linkTypeFirst',
+      value: 'Select link type first',
+    });
+
     this.linkTypes$ = this.selectLinkTypesForCollection(this.collection.id);
     this.subscriptions.add(
       this.linkTypes$.pipe().subscribe(linkTypes => {

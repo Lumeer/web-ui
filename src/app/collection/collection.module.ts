@@ -39,6 +39,9 @@ import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-lin
 import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
 import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
 import {BlocklyEditorComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-editor/blockly-editor.component';
+import {HasCreatePipe} from './settings/tab/rules/single-rule/has-create.pipe';
+import {HasUpdatePipe} from './settings/tab/rules/single-rule/has-update.pipe';
+import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, PickerModule],
@@ -58,6 +61,9 @@ import {BlocklyEditorComponent} from './settings/tab/rules/add-rule-form/blockly
     BlocklyFormComponent,
     NoRulesComponent,
     BlocklyEditorComponent,
+    HasCreatePipe,
+    HasUpdatePipe,
+    HasDeletePipe,
   ],
   providers: [CollectionSettingsGuard],
 })
