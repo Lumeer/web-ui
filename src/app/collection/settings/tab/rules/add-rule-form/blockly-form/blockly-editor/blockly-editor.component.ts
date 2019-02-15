@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -26,12 +25,10 @@ import {
   EventEmitter,
   Inject,
   Input,
-  OnDestroy,
   Output,
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import {environment} from '../../../../../../../../environments/environment';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {ActivatedRoute} from '@angular/router';
@@ -44,6 +41,7 @@ import {shadeColor} from '../../../../../../../shared/utils/html-modifier';
 import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
 import {ContrastColorPipe} from '../../../../../../../shared/pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../../../../../core/service/blockly.service';
+import {BLOCKLY_TOOLBOX} from './blockly-editor-toolbox';
 
 declare var Blockly: any;
 
@@ -96,18 +94,20 @@ export class BlocklyEditorComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private dialogService: DialogService,
     private contrastColorPipe: ContrastColorPipe,
-    private blocklyService: BlocklyService
+    private blocklyService: BlocklyService,
+    private renderer2: Renderer2,
+    @Inject(DOCUMENT) private document
   ) {}
 
   public ngAfterViewInit(): void {
-    this.blocklyService.loadBlockly(this.blocklyOnLoad);
+    this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
   }
 
   public blocklyOnLoad(): void {
     if (!(window as any).Blockly) {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
-      this.workspace = (window as any).Blockly.init(this.blocklyId);
+      this.workspace = (window as any).Blockly.init(this.blocklyId, BLOCKLY_TOOLBOX);
       this.loadingElement.nativeElement.remove();
       this.initBlockly();
     }

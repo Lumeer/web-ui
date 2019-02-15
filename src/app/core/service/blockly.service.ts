@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Inject, Injectable, Renderer2} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {Injectable, Renderer2} from '@angular/core';
 import {environment} from '../../../environments/environment';
 
 export interface BlocklyLoadFn {
@@ -31,20 +30,18 @@ export interface BlocklyLoadFn {
 export class BlocklyService {
   private readonly blocklyId = 'blocklyScript';
 
-  constructor(private renderer2: Renderer2, @Inject(DOCUMENT) private document) {}
-
-  public loadBlockly(onLoad?: BlocklyLoadFn): void {
-    const e = this.document.getElementById(this.blocklyId);
+  public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn): void {
+    const e = document.getElementById(this.blocklyId);
 
     if (!e) {
-      const script = this.renderer2.createElement('script');
+      const script = renderer2.createElement('script');
       script.id = this.blocklyId;
       script.type = 'text/javascript';
       script.src = environment.blocklyCdn;
       if (onLoad) {
         script.onload = onLoad;
       }
-      this.renderer2.appendChild(this.document.body, script);
+      renderer2.appendChild(document.body, script);
     } else if (onLoad) {
       onLoad();
     }
