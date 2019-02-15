@@ -70,5 +70,5 @@ export enum KeyCode {
 }
 
 export function isKeyPrintable(event: KeyboardEvent): boolean {
-  return event.key.length === 1;
+  return event && event.key && event.key.length === 1;
 }
