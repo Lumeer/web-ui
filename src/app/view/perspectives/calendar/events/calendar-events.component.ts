@@ -81,7 +81,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public events$: Observable<CalendarEvent[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
-  constructor(@Inject(LOCALE_ID) private locale: string) {}
+  constructor(@Inject(LOCALE_ID) public locale: string) {}
 
   public ngOnInit() {
     this.events$ = this.subscribeToEvents();

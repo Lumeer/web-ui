@@ -56,8 +56,8 @@ export class CreateCalendarEventFormComponent implements OnInit {
 
   public form: FormGroup;
 
-  private currentStart$: BehaviorSubject<Date>;
-  private currentEnd$: BehaviorSubject<Date>;
+  public currentStart$: BehaviorSubject<Date>;
+  public currentEnd$: BehaviorSubject<Date>;
 
   public constructor(private fb: FormBuilder, private i18n: I18n) {}
 

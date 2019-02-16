@@ -52,7 +52,7 @@ export class CalendarVisualizationComponent {
 
   public refresh: Subject<any> = new Subject();
 
-  constructor(@Inject(LOCALE_ID) private locale: string) {}
+  constructor(@Inject(LOCALE_ID) public locale: string) {}
 
   public eventTimesChanged({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
