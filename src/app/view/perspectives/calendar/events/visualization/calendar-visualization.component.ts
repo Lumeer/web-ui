@@ -110,4 +110,8 @@ export class CalendarVisualizationComponent {
       }
     });
   }
+
+  public trackByEventId(index: number, event: CalendarEvent) {
+    return event.id ? event.id : event;
+  }
 }
