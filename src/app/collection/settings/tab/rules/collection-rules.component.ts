@@ -32,7 +32,6 @@ import {filter} from 'rxjs/operators';
 @Component({
   selector: 'collection-rules',
   templateUrl: './collection-rules.component.html',
-  styleUrls: ['./collection-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionRulesComponent implements OnInit, OnDestroy {

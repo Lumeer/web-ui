@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 @Component({
   selector: '[no-rules]',
   templateUrl: './no-rules.component.html',
-  styleUrls: ['./no-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NoRulesComponent {}

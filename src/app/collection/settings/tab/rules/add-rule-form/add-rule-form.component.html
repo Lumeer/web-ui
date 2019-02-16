@@ -79,7 +79,7 @@
           <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
         </button>
         <button type="button"
-                [disabled]="!this.form.valid"
+                [disabled]="this.form.invalid"
                 (click)="submitRule()"
                 class="btn btn-sm btn-primary ml-2">
           <ng-container *ngIf="originalRuleName">

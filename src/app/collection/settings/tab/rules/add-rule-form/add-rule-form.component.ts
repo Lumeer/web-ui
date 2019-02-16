@@ -95,8 +95,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
     });
     this.form.setValidators(this.formValidator());
 
-    this.formSubscription = this.form.get('type').statusChanges.subscribe(status => {
-      const type = this.form.get('type').value;
+    this.formSubscription = this.form.get('type').valueChanges.subscribe(type => {
       if (type === RuleType.AutoLink) {
         const timingDelete = this.form.get('timingDelete');
         timingDelete.setValue(this.hasDelete(this.rule.timing));

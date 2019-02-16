@@ -26,7 +26,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: 'auto-link-form',
   templateUrl: './auto-link-form.component.html',
-  styleUrls: ['./auto-link-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutoLinkFormComponent implements OnInit {
