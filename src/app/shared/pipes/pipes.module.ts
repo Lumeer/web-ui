@@ -51,6 +51,9 @@ import {DataPipesModule} from './data/data-pipes.module';
 import {ParseDatePipe} from './parse-date.pipe';
 import {CollectionAttributePipe} from './collection-attribute.pipe';
 import {ContrastColorPipe} from './contrast-color.pipe';
+import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
+import {LinkTypesSelectItemsPipe} from './link-types-select-items.pipe';
+import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -85,6 +88,9 @@ import {ContrastColorPipe} from './contrast-color.pipe';
     ParseDatePipe,
     CollectionAttributePipe,
     ContrastColorPipe,
+    AttributesSelectItemsPipe,
+    LinkTypesSelectItemsPipe,
+    CollectionLinkTypesPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -118,6 +124,10 @@ import {ContrastColorPipe} from './contrast-color.pipe';
     DataPipesModule,
     ParseDatePipe,
     CollectionAttributePipe,
+    ContrastColorPipe,
+    AttributesSelectItemsPipe,
+    LinkTypesSelectItemsPipe,
+    CollectionLinkTypesPipe,
   ],
 })
 export class PipesModule {}

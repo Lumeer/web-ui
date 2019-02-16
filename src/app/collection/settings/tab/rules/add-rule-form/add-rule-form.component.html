@@ -62,7 +62,8 @@
         <auto-link-form
           *ngSwitchCase="ruleType.AutoLink"
           [form]="configAutoLink"
-          [collection]="collection">
+          [collection]="collection"
+          [linkTypes]="collection.id | collectionLinkTypes | async">
         </auto-link-form>
         <blockly-form
           *ngSwitchCase="ruleType.Blockly"
