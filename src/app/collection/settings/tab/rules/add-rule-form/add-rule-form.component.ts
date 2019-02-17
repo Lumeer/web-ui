@@ -42,7 +42,6 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   @Input()
   public ruleIndex: number;
 
-  @Input()
   public ruleNames: string[] = [];
 
   @Output()
@@ -60,6 +59,16 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   public readonly ruleType = RuleType;
 
   constructor(private fb: FormBuilder) {}
+
+  @Input('ruleNames')
+  public set setRuleNames(ruleNames: string[]) {
+    this.ruleNames = ruleNames;
+
+    // there can be a new rule added that clashes with currently entered name
+    if (this.form) {
+      this.form.get('name').updateValueAndValidity();
+    }
+  }
 
   public ngOnInit() {
     this.form = this.fb.group({
