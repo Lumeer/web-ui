@@ -49,7 +49,7 @@ export class PostItLayout {
         layoutOnResize: 200,
         layoutOnInit: true,
         layout: {
-          fillGaps: false,
+          fillGaps: true,
           horizontal: false,
           alignRight: false,
           alignBottom: false,
