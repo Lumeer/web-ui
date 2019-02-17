@@ -48,8 +48,7 @@ export class ChartVisualizer {
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
     this.currentType = data.type;
-    react(this.chartElement.nativeElement, this.data, this.layout);
-    this.refreshDrag();
+    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshDrag());
     this.chartElement.nativeElement.on(
       'plotly_relayout',
       () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
@@ -59,8 +58,7 @@ export class ChartVisualizer {
   public refreshChart(data: ChartData) {
     this.createOrRefreshData(data);
     this.currentType = data.type;
-    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config);
-    this.refreshDrag();
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshDrag());
   }
 
   public destroyChart() {
@@ -89,8 +87,7 @@ export class ChartVisualizer {
   public onDataChanged(change: DataChange) {
     this.data[change.trace][change.axis][change.index] = change.value;
     this.incRevisionNumber();
-    react(this.chartElement.nativeElement, this.data, this.layout);
-    this.refreshDrag();
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshDrag());
   }
 
   private createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
