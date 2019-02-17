@@ -46,6 +46,7 @@
             [perspectiveId]="perspectiveId"
             [selectionHelper]="selectionHelper"
             [model]="row.newValue || row.value"
+            [constraint]="(collection | collectionAttribute : row.id)?.constraint"
             (remove)="onUpdateRow(idx, row.newName || row.name, '')"
             (update)="onUpdateRow(idx, row.newName || row.name, $event)"
             (focus)="selectionHelper.focusCellSpan(idx, 1, getDocumentKey())"

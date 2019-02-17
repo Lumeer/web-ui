@@ -48,7 +48,7 @@ export const selectHasNextTableParts = (cursor: TableCursor) =>
 
 export const selectTablePart = (cursor: TableCursor) =>
   createSelector(
-    selectTableById(cursor.tableId),
+    selectTableById(cursor && cursor.tableId),
     table => {
       return table && table.config && table.config.parts && table.config.parts[cursor.partIndex];
     }

@@ -5,7 +5,8 @@
 }
 
 :host(:focus) input,
-:host input:focus {
+:host input:focus,
+:host::ng-deep input:focus {
   outline: auto !important;
   pointer-events: auto;
 }
