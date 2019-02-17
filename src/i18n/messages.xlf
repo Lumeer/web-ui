@@ -32,7 +32,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
@@ -1160,13 +1160,13 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
         <source>Add Rule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
@@ -1176,13 +1176,19 @@
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
+        <source>Select a link type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
         <source>
       Where
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source>
@@ -1190,7 +1196,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
         <source>Edit Rule Code:</source>
@@ -1272,7 +1278,7 @@
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
         <source>
-    There are no rules yet.
+    There are no rules yet. Create some by clicking on the button below!
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/no-rules/no-rules.component.html</context>
@@ -2872,6 +2878,24 @@
         <source>Do you really want to delete the link type &quot;<x id="INTERPOLATION" equiv-text="{{name}}"/>&quot; and all its usages?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.autoLink.selectFrom" datatype="html">
+        <source>Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.autoLink.linkTypeFirst" datatype="html">
+        <source>Select link type first</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
