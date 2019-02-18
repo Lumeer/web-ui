@@ -46,6 +46,8 @@ import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
+import {BlocklyEditorModule} from './blockly-editor/blockly-editor.module';
+import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 
 @NgModule({
   imports: [
@@ -70,6 +72,7 @@ import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.c
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
+    BlocklyEditorModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -79,6 +82,7 @@ import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.c
     SliderComponent,
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
+    BlocklyEditorComponent,
   ],
   exports: [
     CommonModule,
@@ -108,6 +112,7 @@ import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.c
     SelectModule,
     CollapsibleSidebarModule,
     LoadingIndicatorComponent,
+    BlocklyEditorComponent,
   ],
 })
 export class SharedModule {}

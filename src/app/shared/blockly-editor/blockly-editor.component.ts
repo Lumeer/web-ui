@@ -30,18 +30,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../../../core/store/app.state';
 import {ActivatedRoute} from '@angular/router';
-import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {DOCUMENT} from '@angular/common';
-import {LinkType} from '../../../../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../../../../core/store/collections/collection';
-import {RuleVariable} from '../../../rule-variable-type';
-import {shadeColor} from '../../../../../../../shared/utils/html-modifier';
-import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../../../../../core/constants';
-import {ContrastColorPipe} from '../../../../../../../shared/pipes/contrast-color.pipe';
-import {BlocklyService} from '../../../../../../../core/service/blockly.service';
-import {BLOCKLY_TOOLBOX} from './blockly-editor-toolbox';
+import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../core/constants';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
+import {AppState} from '../../core/store/app.state';
+import {DialogService} from '../../dialog/dialog.service';
+import {ContrastColorPipe} from '../pipes/contrast-color.pipe';
+import {BlocklyService} from '../../core/service/blockly.service';
+import {shadeColor} from '../utils/html-modifier';
 
 declare var Blockly: any;
 
@@ -75,6 +74,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
   @Input()
   public xml: string = '';
 
+  @Input()
+  public toolbox: string = '';
+
   @ViewChild('loading')
   private loadingElement: ElementRef;
 
@@ -107,7 +109,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     if (!(window as any).Blockly) {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
-      this.workspace = (window as any).Blockly.init(this.blocklyId, BLOCKLY_TOOLBOX);
+      this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
       this.loadingElement.nativeElement.remove();
       this.initBlockly();
     }

@@ -38,7 +38,7 @@ import {AddRuleFormComponent} from './settings/tab/rules/add-rule-form/add-rule-
 import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component';
 import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
 import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
-import {BlocklyEditorComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-editor/blockly-editor.component';
+import {BlocklyEditorComponent} from '../shared/blockly-editor/blockly-editor.component';
 import {HasCreatePipe} from './settings/tab/rules/single-rule/has-create.pipe';
 import {HasUpdatePipe} from './settings/tab/rules/single-rule/has-update.pipe';
 import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
