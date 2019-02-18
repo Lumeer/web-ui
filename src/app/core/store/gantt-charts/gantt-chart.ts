@@ -47,6 +47,7 @@ export interface GanttChartTask {
   end: string;
   endAttributeId: string;
   progress: number;
+  progressAttributeId: string;
   dependencies: string;
   collectionId?: string;
   color?: string;

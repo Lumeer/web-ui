@@ -37,6 +37,8 @@ function canShowPerspective(perspective: Perspective, query: Query): boolean {
     case Perspective.Chart:
       return isSingleCollectionQuery(query);
     case Perspective.Map:
+    case Perspective.Calendar:
+    case Perspective.GanttChart:
       return isAnyCollectionQuery(query);
     case Perspective.SmartDoc:
       return false;

@@ -34,6 +34,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {BsDatepickerDirective} from 'ngx-bootstrap';
 import {KeyCode} from '../../key-code';
 import * as moment from 'moment';
+import {formatDateTimeDataValue} from '../../utils/data.utils';
 
 @Component({
   selector: 'datetime-data-input',
@@ -72,7 +73,7 @@ export class DatetimeDataInputComponent implements OnChanges {
   private preventSaving: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.readonly && !this.readonly && this.focus) {
+    if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
@@ -82,6 +83,11 @@ export class DatetimeDataInputComponent implements OnChanges {
         this.dateInput.nativeElement.focus();
         this.datePicker.show();
       });
+    }
+    if (changes.focus && !this.focus) {
+      if (this.datePicker) {
+        this.datePicker.hide();
+      }
     }
   }
 
@@ -98,7 +104,7 @@ export class DatetimeDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSaving = true;
-        this.dateInput.nativeElement.value = this.value || '';
+        this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig);
         this.cancel.emit();
         return;
     }

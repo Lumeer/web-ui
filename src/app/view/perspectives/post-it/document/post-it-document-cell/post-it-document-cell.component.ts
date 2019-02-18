@@ -31,6 +31,7 @@ import {
 import {KeyCode} from '../../../../../shared/key-code';
 
 import {SelectionHelper} from '../../util/selection-helper';
+import {Constraint} from '../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -42,7 +43,7 @@ export class PostItDocumentCellComponent implements OnChanges {
   @Input() public perspectiveId: string;
   @Input() public suggestionListId: string;
   @Input() public additionalClasses: string;
-  @Input() public model: string;
+  @Input() public model: any;
   @Input() public key: string;
   @Input() public index: number;
   @Input() public row: number;
@@ -50,10 +51,15 @@ export class PostItDocumentCellComponent implements OnChanges {
   @Input() public selectionHelper: SelectionHelper;
   @Input() public readonly: boolean;
 
+  @Input()
+  public constraint: Constraint;
+
   @Output() public focus = new EventEmitter();
   @Output() public update = new EventEmitter<string>();
   @Output() public enter = new EventEmitter();
   @Output() public remove = new EventEmitter();
+
+  public focusInput: boolean;
 
   @HostBinding('id') public id: string;
   @HostBinding('attr.tabindex') public tabindex: number;
@@ -85,6 +91,7 @@ export class PostItDocumentCellComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
         this.selectionHelper.focusToggle(true);
+        this.focusInput = true;
         break;
       case KeyCode.Backspace:
       case KeyCode.Delete:
@@ -114,5 +121,15 @@ export class PostItDocumentCellComponent implements OnChanges {
       this.model = this.model.trim();
       this.update.emit(this.model);
     }
+  }
+
+  public onSave(value: any) {
+    this.update.emit(value);
+    this.focusInput = false;
+  }
+
+  public onCancel() {
+    this.focusInput = false;
+    this.selectionHelper.focusToggle(false);
   }
 }

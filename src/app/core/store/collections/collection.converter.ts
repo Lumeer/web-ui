@@ -20,8 +20,8 @@
 import {AttributeDto, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {Constraint, constraintTypesMap} from '../../model/data/constraint';
-import {ConstraintDto} from '../../dto/attribute.dto';
-import {Attribute, Collection, ImportedCollection} from './collection';
+import {AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
+import {Attribute, AttributeFunction, Collection, ImportedCollection} from './collection';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {RuleDto} from '../../dto/collection.dto';
 import {Rule, RuleTiming, RuleTimingMap, RuleType, RuleTypeMap} from '../../model/rule';
@@ -69,6 +69,7 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
     id: dto.id,
     name: dto.name,
     constraint: convertAttributeConstraintDtoToModel(dto.constraint),
+    function: convertAttributeFunctionDtoToModel(dto.function),
     usageCount: dto.usageCount,
     correlationId: correlationId,
   };
@@ -79,6 +80,7 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
     id: model.id,
     name: model.name,
     constraint: convertAttributeConstraintModelToDto(model.constraint),
+    function: convertAttributeFunctionModelToDto(model.function),
   };
 }
 
@@ -98,6 +100,14 @@ function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto 
       config: model.config,
     }
   );
+}
+
+function convertAttributeFunctionDtoToModel(dto: AttributeFunctionDto): AttributeFunction {
+  return dto && {...dto};
+}
+
+function convertAttributeFunctionModelToDto(model: AttributeFunction): AttributeFunctionDto {
+  return model && {...model};
 }
 
 export function convertImportedCollectionModelToDto(model: ImportedCollection): ImportedCollectionDto {

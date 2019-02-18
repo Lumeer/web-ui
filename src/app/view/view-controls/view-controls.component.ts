@@ -212,7 +212,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public onSave(canClone: boolean) {
     const value = this.name.trim();
-    if (canClone) {
+    if (canClone && this.nameChanged$.getValue()) {
       this.saveOrClone.emit(value);
     } else {
       this.save.emit(value);

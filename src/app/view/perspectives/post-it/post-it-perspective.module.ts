@@ -30,9 +30,10 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {PostItColumnStylePipe} from './pipes/post-it-column-style';
 import {DocumentCollectionPipe} from './pipes/document-collection.pipe';
 import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
+import {DataInputModule} from '../../../shared/data-input/data-input.module';
 
 @NgModule({
-  imports: [SharedModule, RouterModule, InfiniteScrollModule],
+  imports: [DataInputModule, SharedModule, RouterModule, InfiniteScrollModule],
   declarations: [
     PostItAddDocumentComponent,
     PostItDocumentComponent,

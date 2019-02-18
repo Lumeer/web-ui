@@ -17,44 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from '../../model/resource';
-import {Constraint} from './../../model/data/constraint';
-import {CollectionDto} from '../../dto';
-import {Rule} from '../../model/rule';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../core/store/collections/collection';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
-export interface Attribute {
-  id?: string;
-  name: string;
+@Pipe({
+  name: 'collectionsSelectItems',
+})
+export class CollectionsSelectItemsPipe implements PipeTransform {
+  public transform(collections: Collection[]): SelectItemModel[] {
+    return (collections && collections.map(collection => this.collectionSelectItem(collection))) || [];
+  }
 
-  constraint?: Constraint;
-  function?: AttributeFunction;
-
-  usageCount?: number;
-  intermediate?: boolean;
-
-  correlationId?: string;
-}
-
-export interface AttributeFunction {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-}
-
-export interface Collection extends Resource {
-  attributes?: Attribute[];
-  defaultAttributeId?: string;
-  lastTimeUsed?: Date;
-
-  documentsCount?: number;
-
-  favorite?: boolean;
-
-  rules?: Rule[];
-}
-
-export interface ImportedCollection {
-  collection: Collection;
-  data: string;
+  private collectionSelectItem(collection: Collection): SelectItemModel {
+    return {id: collection.id, value: collection.name, icons: [collection.icon], iconColors: [collection.color]};
+  }
 }

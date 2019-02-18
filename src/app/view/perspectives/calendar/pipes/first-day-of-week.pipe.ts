@@ -17,44 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from '../../model/resource';
-import {Constraint} from './../../model/data/constraint';
-import {CollectionDto} from '../../dto';
-import {Rule} from '../../model/rule';
+import {Pipe, PipeTransform} from '@angular/core';
+import * as moment from 'moment';
 
-export interface Attribute {
-  id?: string;
-  name: string;
-
-  constraint?: Constraint;
-  function?: AttributeFunction;
-
-  usageCount?: number;
-  intermediate?: boolean;
-
-  correlationId?: string;
-}
-
-export interface AttributeFunction {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-}
-
-export interface Collection extends Resource {
-  attributes?: Attribute[];
-  defaultAttributeId?: string;
-  lastTimeUsed?: Date;
-
-  documentsCount?: number;
-
-  favorite?: boolean;
-
-  rules?: Rule[];
-}
-
-export interface ImportedCollection {
-  collection: Collection;
-  data: string;
+@Pipe({
+  name: 'firstDayOfWeek',
+})
+export class FirstDayOfWeekPipe implements PipeTransform {
+  public transform(locale: string): number {
+    return moment.localeData(locale).firstDayOfWeek();
+  }
 }

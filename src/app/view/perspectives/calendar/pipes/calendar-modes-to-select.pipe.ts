@@ -17,35 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {CalendarMode} from '../../../../core/store/calendars/calendar.model';
 
-@Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html',
-  styleUrls: ['./dialog-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'calendarModesToSelect',
 })
-export class DialogWrapperComponent {
-  @Input()
-  public submitDisabled: boolean;
+export class CalendarModesToSelectPipe implements PipeTransform {
+  public constructor(private i18n: I18n) {}
 
-  @Input()
-  public showSubmit: boolean = true;
+  public transform(modes: CalendarMode[]): SelectItemModel[] {
+    return modes.map(mode => ({id: mode, value: this.getTypeValue(mode)}));
+  }
 
-  @Input()
-  public type: DialogType;
-
-  @Input()
-  @HostBinding('style.max-width.px')
-  public width: number;
-
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    if (!this.submitDisabled) {
-      this.submit.emit();
-    }
+  private getTypeValue(mode: CalendarMode): string {
+    return this.i18n(
+      {
+        id: 'perspective.calendar.config.mode',
+        value: '{mode, select, month {Month} week {Week} day {Day}}',
+      },
+      {mode}
+    );
   }
 }
