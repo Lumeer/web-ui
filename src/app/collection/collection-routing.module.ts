@@ -30,6 +30,7 @@ import {CollectionUsersComponent} from './settings/tab/users/collection-users.co
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
+import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
 
 const collectionRoutes: Routes = [
   {
@@ -45,6 +46,10 @@ const collectionRoutes: Routes = [
       {
         path: 'attributes',
         component: CollectionAttributesComponent,
+      },
+      {
+        path: 'rules',
+        component: CollectionRulesComponent,
       },
       {
         path: 'linktypes',

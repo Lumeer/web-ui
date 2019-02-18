@@ -1,0 +1,53 @@
+@import '../../../../../../../../styles/_variables';
+
+.blocklyDiv {
+  font-family: LatoWeb;
+  width: 100%;
+  display: block;
+  height: 80vh;
+}
+
+::ng-deep {
+  .black-text {
+    color: black;
+  }
+
+  .blocklyTreeRow {
+    line-height: 1.8rem;
+    height: 2rem;
+  }
+
+  .blocklyTreeLabel {
+    font-family: LatoWeb;
+  }
+
+  text.blocklyText {
+    font-family: LatoWeb;
+
+    &.text-primary {
+      fill: $primary;
+      color: $primary;
+    }
+
+    &.text-light {
+      fill: $light;
+      color: $light;
+    }
+
+    &.blocklyFontAwesome {
+      font-family: 'Font Awesome 5 Pro';
+    }
+  }
+
+  div.blocklyToolboxDiv {
+    background-color: $gray-100;
+  }
+
+  .blocklyFlyoutBackground {
+    fill: $gray-200;
+  }
+
+  .blocklyFlyoutButtonBackground {
+    fill: $primary;
+  }
+}

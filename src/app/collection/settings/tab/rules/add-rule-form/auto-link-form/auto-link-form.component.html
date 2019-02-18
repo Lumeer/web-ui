@@ -1,0 +1,40 @@
+<div [formGroup]="form">
+  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
+    <div class="text-nowrap" i18n="@@collection.config.tab.rules.autoLink.linkType">
+      Link record via
+    </div>
+    <select-item
+      class="ml-3"
+      emptyValue="Select a link type"
+      i18n-emptyValue="@@collection.config.tab.rules.autoLink.selectLinkType"
+      placeholderIcon="fas fa-link"
+      [items]="linkTypes | linkTypesSelectItems"
+      [selectedId]="linkTypeId"
+      (select)="onSelectLinkType($event)">
+    </select-item>
+  </div>
+  <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
+    <div class="text-nowrap" i18n="@@collection.config.tab.rules.autoLink.where">
+      Where
+    </div>
+    <select-item
+      class="ml-3"
+      (select)="onSelectAttribute1($event)"
+      [emptyValue]="attribute1Empty"
+      [placeholderIcon]="collection.icon"
+      [items]="collection | attributesSelectItems"
+      [selectedId]="attribute1Id">
+    </select-item>
+    <div class="text-nowrap ml-3" i18n="@@collection.config.tab.rules.autoLink.equals">
+      equals
+    </div>
+    <select-item
+      class="ml-3"
+      (select)="onSelectAttribute2($event)"
+      [emptyValue]="linkedCollection ? attribute2Empty : attribute2NoCollection"
+      [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
+      [items]="linkedCollection | attributesSelectItems"
+      [selectedId]="attribute2Id">
+    </select-item>
+  </div>
+</div>

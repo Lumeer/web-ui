@@ -1,0 +1,20 @@
+div.rollout {
+  animation: slide-up 0.5s ease-in-out;
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.limit-width {
+  max-width: var(--blockly-log-width);
+  padding-right: 3rem;
+  overflow: scroll;
+}
