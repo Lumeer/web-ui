@@ -6,9 +6,8 @@
     [refresh]="refresh"
     [locale]="locale"
     [weekStartsOn]="locale | firstDayOfWeek"
-    [cellTemplate]="customCellTemplate"
+    [cellTemplate]="monthCellTemplate"
     (beforeViewRender)="beforeMonthViewRender($event)"
-    (dayClicked)="dayClicked($event.day)"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
@@ -17,6 +16,7 @@
     [events]="events"
     [refresh]="refresh"
     [locale]="locale"
+    [hourSegmentTemplate]="weekHourSegmentTemplate"
     [weekStartsOn]="locale | firstDayOfWeek"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-week-view>
@@ -26,11 +26,12 @@
     [events]="events"
     [refresh]="refresh"
     [locale]="locale"
+    [hourSegmentTemplate]="dayHourSegmentTemplate"
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-day-view>
 </ng-container>
 
-<ng-template #customCellTemplate
+<ng-template #monthCellTemplate
              let-day="day"
              let-openDay="openDay"
              let-locale="locale"
@@ -40,18 +41,19 @@
              let-eventClicked="eventClicked"
              let-tooltipTemplate="tooltipTemplate"
              let-tooltipAppendToBody="tooltipAppendToBody">
-  <div class="cal-cell-top">
+  <div class="cal-cell-top" (dblclick)="monthDoubleClick(day)">
     <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
     <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
   </div>
-  <div class="cell-totals" *ngIf="day.eventGroups">
+  <div class="cell-totals" *ngIf="day.eventGroups" (dblclick)="monthDoubleClick(day)">
     <span
       *ngFor="let group of day.eventGroups"
       class="badge m-1" [style.background]="group.color">
       {{ group.length }}
     </span>
   </div>
-  <div class="cal-events" *ngIf="!day.eventGroups && day.events.length > 0">
+  <div class="cal-events" *ngIf="!day.eventGroups && day.events.length > 0"
+       (dblclick)="monthDoubleClick(day)">
     <div
       class="cal-event"
       *ngFor="let event of day.events; trackBy:trackByEventId"
@@ -70,6 +72,41 @@
       [dropData]="{event: event, draggedFrom: day}"
       [dragAxis]="{x: event.draggable, y: event.draggable}"
       (mwlClick)="eventClicked.emit({ event: event })">
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #weekHourSegmentTemplate
+  let-segment="segment"
+  let-locale="locale"
+  let-segmentHeight="segmentHeight"
+  let-isTimeLabel="isTimeLabel">
+  <div (dblclick)="weekDoubleClick(segment)"
+       class="cal-hour-segment"
+       [style.height.px]="segmentHeight"
+       [class.cal-hour-start]="segment.isStart"
+       [class.cal-after-hour-start]="!segment.isStart"
+       [ngClass]="segment.cssClass">
+    <div class="cal-time" *ngIf="isTimeLabel">
+      {{ segment.date | calendarDate: 'weekViewHour':locale }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #dayHourSegmentTemplate
+  let-segment="segment"
+  let-locale="locale"
+  let-segmentHeight="segmentHeight">
+  <div (dblclick)="dayDoubleClick(segment)"
+    class="cal-hour-segment"
+    [style.height.px]="segmentHeight"
+    [class.cal-hour-start]="segment.isStart"
+    [class.cal-after-hour-start]="!segment.isStart"
+    [ngClass]="segment.cssClass">
+    <div class="cal-time">
+      {{ segment.date | calendarDate: 'dayViewHour':locale }}
     </div>
   </div>
 </ng-template>

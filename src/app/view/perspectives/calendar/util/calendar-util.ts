@@ -27,7 +27,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
-import {isNumeric} from '../../../../shared/utils/common.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 
 export function createCalendarEvents(
@@ -72,8 +71,6 @@ export function createCalendarEventsForCollection(
   const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
 
   const endProperty = properties[CalendarBarPropertyOptional.END_DATE];
-  const startTimeProperty = properties[CalendarBarPropertyOptional.START_TIME];
-  const endTimeProperty = properties[CalendarBarPropertyOptional.END_TIME];
   const draggable = permissisions.writeWithView;
   const allDayColor = getColor(true, collection.color);
   const color = getColor(false, collection.color);
@@ -92,24 +89,8 @@ export function createCalendarEventsForCollection(
     const start = moment(startString).toDate();
     const end = endString && moment(endString).isValid() && moment(endString).toDate();
 
-    const startTimeString = startTimeProperty && document.data[startTimeProperty.attributeId];
-    const endTimeString = endTimeProperty && document.data[endTimeProperty.attributeId];
-
-    const startTimeChunks = parseTime(startTimeString);
-    const endTimeChunks = parseTime(endTimeString);
-
-    startTimeChunks && start.setHours(startTimeChunks[0], startTimeChunks[1]);
-    endTimeChunks && end && end.setHours(endTimeChunks[0], endTimeChunks[1]);
-
     const allDay = isAllDayEvent(start, end);
-    const interval = createInterval(
-      start,
-      startProperty.attributeId,
-      startTimeChunks && startTimeProperty.attributeId,
-      end,
-      end && endProperty.attributeId,
-      end && endTimeChunks && endTimeProperty.attributeId
-    );
+    const interval = createInterval(start, startProperty.attributeId, end, end && endProperty.attributeId);
     const event = {
       title,
       start: interval[0].value,
@@ -126,9 +107,7 @@ export function createCalendarEventsForCollection(
         collectionId: document.collectionId,
         color: collection.color,
         startAttributeId: interval[0].attrId,
-        startTimeAttributeId: interval[0].timeAttrId,
         endAttributeId: interval[1].attrId,
-        endTimeAttributeId: interval[1].timeAttrId,
       },
     };
 
@@ -141,44 +120,21 @@ export function createCalendarEventsForCollection(
 function createInterval(
   start: Date,
   startAttributeId,
-  startTimeAttributeId,
   end: Date,
-  endAttributeId: string,
-  endTimeAttributeId
-): [{value: Date; attrId: string; timeAttrId: string}, {value?: Date; attrId?: string; timeAttrId?: string}] {
+  endAttributeId: string
+): [{value: Date; attrId: string}, {value?: Date; attrId?: string}] {
   if (end && moment(end).isBefore(moment(start))) {
-    return [
-      {value: end, attrId: endAttributeId, timeAttrId: endTimeAttributeId},
-      {value: start, attrId: startAttributeId, timeAttrId: startTimeAttributeId},
-    ];
+    return [{value: end, attrId: endAttributeId}, {value: start, attrId: startAttributeId}];
   }
-  return [
-    {value: start, attrId: startAttributeId, timeAttrId: startTimeAttributeId},
-    {value: end, attrId: endAttributeId, timeAttrId: endTimeAttributeId},
-  ];
+  return [{value: start, attrId: startAttributeId}, {value: end, attrId: endAttributeId}];
 }
 
 function isDateValid(date: string): boolean {
   return date && moment(date).isValid();
 }
 
-//expected input hh:mm or hh.mm
-function parseTime(time: string): [number, number] {
-  const chunks = (time || '').split(/[:.]/g, 2);
-  if (chunks.length !== 2) {
-    return null;
-  }
-
-  const timeChunks = [+chunks[0], +chunks[1]].filter(num => isNumeric(num));
-  if (timeChunks.length !== 2) {
-    return null;
-  }
-
-  return [timeChunks[0], timeChunks[1]];
-}
-
 function isAllDayEvent(start: Date, end: Date): boolean {
-  return end && start.getTime() === end.getTime() && start.getHours() === 0 && start.getMinutes() === 0;
+  return end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0;
 }
 
 function getColor(allDay: boolean, color: string) {

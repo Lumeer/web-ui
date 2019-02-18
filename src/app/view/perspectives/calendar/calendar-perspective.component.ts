@@ -40,6 +40,7 @@ import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {DialogService} from '../../../dialog/dialog.service';
 
 @Component({
   selector: 'calendar',
@@ -59,7 +60,11 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private calendarId = DEFAULT_CALENDAR_ID;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(
+    private store$: Store<AppState>,
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
+    private dialogService: DialogService
+  ) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -138,5 +143,9 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new CalendarsAction.RemoveCalendar({calendarId: this.calendarId}));
+  }
+
+  public onNewEvent(time: number) {
+    this.dialogService.openCreateCalendarEventDialog(this.calendarId, time);
   }
 }

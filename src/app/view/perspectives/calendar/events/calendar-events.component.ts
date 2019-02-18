@@ -72,6 +72,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
 
+  @Output()
+  public newEvent = new EventEmitter<number>();
+
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());
 
@@ -135,5 +138,12 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     const patchDocument = {...changedDocument};
     changes.forEach(change => (patchDocument.data[change.attributeId] = change.value));
     this.patchData.emit(patchDocument);
+  }
+
+  public onNewEvent(time: number) {
+    const atLeastOneWritable = Object.values(this.permissions).some(p => p.writeWithView);
+    if (atLeastOneWritable) {
+      this.newEvent.emit(time);
+    }
   }
 }

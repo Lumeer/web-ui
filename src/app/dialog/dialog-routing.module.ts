@@ -27,6 +27,7 @@ import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
+import {CreateCalendarEventComponent} from './create-calendar-event/create-calendar-event.component';
 
 const routes: Routes = [
   {
@@ -72,6 +73,12 @@ const routes: Routes = [
   {
     path: `${DialogPath.PLAY_VIDEO}/:videoId`,
     component: PlayVideoComponent,
+    outlet: 'dialog',
+    data: {modalDialogClass: 'modal-lg'},
+  },
+  {
+    path: `${DialogPath.CREATE_CALENDAR_EVENT}/:calendarId/:time`,
+    component: CreateCalendarEventComponent,
     outlet: 'dialog',
     data: {modalDialogClass: 'modal-lg'},
   },

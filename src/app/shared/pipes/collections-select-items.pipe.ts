@@ -17,35 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../core/store/collections/collection';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
-@Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html',
-  styleUrls: ['./dialog-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'collectionsSelectItems',
 })
-export class DialogWrapperComponent {
-  @Input()
-  public submitDisabled: boolean;
+export class CollectionsSelectItemsPipe implements PipeTransform {
+  public transform(collections: Collection[]): SelectItemModel[] {
+    return (collections && collections.map(collection => this.collectionSelectItem(collection))) || [];
+  }
 
-  @Input()
-  public showSubmit: boolean = true;
-
-  @Input()
-  public type: DialogType;
-
-  @Input()
-  @HostBinding('style.max-width.px')
-  public width: number;
-
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    if (!this.submitDisabled) {
-      this.submit.emit();
-    }
+  private collectionSelectItem(collection: Collection): SelectItemModel {
+    return {id: collection.id, value: collection.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }

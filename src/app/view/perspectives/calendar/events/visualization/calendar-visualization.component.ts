@@ -18,14 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, LOCALE_ID, Output} from '@angular/core';
-import {
-  CALENDAR_DATE_FORMAT,
-  CALENDAR_TIME_FORMAT,
-  CalendarMode,
-} from '../../../../../core/store/calendars/calendar.model';
+import {CALENDAR_DATE_FORMAT, CalendarMode} from '../../../../../core/store/calendars/calendar.model';
 import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
+import {MonthViewDay, WeekViewHourColumn, DayViewHourSegment} from 'calendar-utils';
+
+const DEFAULT_NEW_EVENT_HOUR = 9;
 
 @Component({
   selector: 'calendar-visualization',
@@ -46,15 +45,14 @@ export class CalendarVisualizationComponent {
   @Output()
   public timesChange = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
 
+  @Output()
+  public newEvent = new EventEmitter<number>();
+
   public readonly calendarMode = CalendarMode;
 
   public refresh: Subject<any> = new Subject();
 
   constructor(@Inject(LOCALE_ID) private locale: string) {}
-
-  public dayClicked({date, events}: {date: Date; events: CalendarEvent[]}): void {
-    // TODO
-  }
 
   public eventTimesChanged({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
@@ -65,14 +63,12 @@ export class CalendarVisualizationComponent {
   }
 
   private onDocumentTimesChange(event: CalendarEvent) {
-    const {startAttributeId, endAttributeId, startTimeAttributeId, endTimeAttributeId} = event.meta;
+    const {startAttributeId, endAttributeId} = event.meta;
 
     const changes = [];
 
     startAttributeId && changes.push({attributeId: startAttributeId, value: this.dateToString(event.start)});
     endAttributeId && changes.push({attributeId: endAttributeId, value: this.dateToString(event.end)});
-    startTimeAttributeId && changes.push({attributeId: startTimeAttributeId, value: this.timeToString(event.start)});
-    endTimeAttributeId && changes.push({attributeId: endTimeAttributeId, value: this.timeToString(event.end)});
 
     if (changes.length) {
       this.timesChange.emit({documentId: event.meta.documentId, changes});
@@ -83,8 +79,19 @@ export class CalendarVisualizationComponent {
     return moment(date).format(CALENDAR_DATE_FORMAT);
   }
 
-  private timeToString(date: Date): string {
-    return moment(date).format(CALENDAR_TIME_FORMAT);
+  public monthDoubleClick(day: MonthViewDay) {
+    const date = moment(day.date)
+      .hours(DEFAULT_NEW_EVENT_HOUR)
+      .toDate();
+    this.newEvent.emit(date.getTime());
+  }
+
+  public weekDoubleClick(segment: WeekViewHourColumn) {
+    this.newEvent.emit(segment.date.getTime());
+  }
+
+  public dayDoubleClick(segment: DayViewHourSegment) {
+    this.newEvent.emit(segment.date.getTime());
   }
 
   public beforeMonthViewRender({body}: {body: CalendarMonthViewDay[]}): void {

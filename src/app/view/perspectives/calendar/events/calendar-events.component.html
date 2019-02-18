@@ -12,7 +12,8 @@
     [events]="(events$ | async) || []"
     [currentMode]="data.mode"
     [currentDate]="data.date"
-    (timesChange)="onValueChanged($event)">
+    (timesChange)="onValueChanged($event)"
+  (newEvent)="onNewEvent($event)">
   </calendar-visualization>
 
 </ng-container>
