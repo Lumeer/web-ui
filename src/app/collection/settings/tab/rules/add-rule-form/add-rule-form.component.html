@@ -51,9 +51,8 @@
                 formControlName="type"
                 id="ruleType">
           <option *ngFor="let type of types"
-                  [value]="type"
-                  i18n="@@collection.config.tab.rules.type">
-            {type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}
+                  [value]="type">
+            <span i18n="@@collection.config.tab.rules.type">{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}</span>
           </option>
         </select>
       </div>
