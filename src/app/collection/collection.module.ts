@@ -60,7 +60,6 @@ import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
     AutoLinkFormComponent,
     BlocklyFormComponent,
     NoRulesComponent,
-    BlocklyEditorComponent,
     HasCreatePipe,
     HasUpdatePipe,
     HasDeletePipe,
