@@ -98,11 +98,11 @@ function createGanttChartTasksForCollection(
     const start = startProperty && document.data[startProperty.attributeId];
     const end = endProperty && document.data[endProperty.attributeId];
 
-    const dependencies = dependenciesProperty && document.data[dependenciesProperty.attributeId];
-    const progress = progressProperty && (document.data[progressProperty.attributeId] || 0);
-
     if (isTaskValid(name, start, end)) {
       const interval = createInterval(start, startProperty.attributeId, end, endProperty.attributeId);
+      const dependencies = dependenciesProperty && document.data[dependenciesProperty.attributeId];
+      const progress = progressProperty && (document.data[progressProperty.attributeId] || 0);
+
       tasks.push({
         id: document.id,
         name,
@@ -112,6 +112,7 @@ function createGanttChartTasksForCollection(
         end: interval[1].value,
         endAttributeId: interval[1].attrId,
         progress: createProgress(progress),
+        progressAttributeId: progressProperty && progressProperty.attributeId,
         collectionId: collection.id,
         color: collection.color,
         custom_class: customClass,
@@ -184,6 +185,7 @@ function cleanGanttTask(task: GanttChartTask | any): GanttChartTask {
     progress: task.progress,
     start: task.start,
     startAttributeId: task.startAttributeId,
+    progressAttributeId: task.progressAttributeId,
     end: task.end,
     endAttributeId: task.endAttributeId,
     collectionId: task.collectionId,

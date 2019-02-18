@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 @Component({
   selector: 'invalid-query',
   templateUrl: './invalid-query.component.html',
-  styleUrls: ['./invalid-query.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidQueryComponent {

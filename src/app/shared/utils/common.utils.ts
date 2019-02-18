@@ -36,3 +36,7 @@ export function deepObjectsEquals(object1: any, object2: any): boolean {
 export function isArray<T>(input?: any): input is T[] {
   return Array.isArray(input);
 }
+
+export function isDateValid(date: Date): boolean {
+  return date && date.getTime && !isNaN(date.getTime());
+}

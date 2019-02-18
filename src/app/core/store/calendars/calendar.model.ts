@@ -18,8 +18,7 @@
  */
 
 export const DEFAULT_CALENDAR_ID = 'default';
-export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD';
-export const CALENDAR_TIME_FORMAT = 'HH:mm';
+export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
 
 export interface CalendarModel {
   id: string;
@@ -27,7 +26,15 @@ export interface CalendarModel {
 }
 
 export interface CalendarConfig {
+  date: Date;
+  mode: CalendarMode;
   collections: Record<string, CalendarCollectionConfig>;
+}
+
+export enum CalendarMode {
+  Month = 'month',
+  Week = 'week',
+  Day = 'day',
 }
 
 export interface CalendarCollectionConfig {
@@ -44,10 +51,8 @@ export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPrope
 export enum CalendarBarPropertyRequired {
   NAME = 'name',
   START_DATE = 'start',
-  END_DATE = 'end',
 }
 
 export enum CalendarBarPropertyOptional {
-  START_TIME = 'startTime',
-  END_TIME = 'endTime',
+  END_DATE = 'end',
 }

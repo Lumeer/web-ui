@@ -17,35 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {Pipe, PipeTransform} from '@angular/core';
+import * as moment from 'moment';
 
-@Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html',
-  styleUrls: ['./dialog-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'firstDayOfWeek',
 })
-export class DialogWrapperComponent {
-  @Input()
-  public submitDisabled: boolean;
-
-  @Input()
-  public showSubmit: boolean = true;
-
-  @Input()
-  public type: DialogType;
-
-  @Input()
-  @HostBinding('style.max-width.px')
-  public width: number;
-
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    if (!this.submitDisabled) {
-      this.submit.emit();
-    }
+export class FirstDayOfWeekPipe implements PipeTransform {
+  public transform(locale: string): number {
+    return moment.localeData(locale).firstDayOfWeek();
   }
 }

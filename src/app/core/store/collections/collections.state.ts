@@ -66,7 +66,7 @@ export const selectCollectionById = (id: string) =>
 export const selectCollectionsByIds = (ids: string[]) =>
   createSelector(
     selectCollectionsDictionary,
-    collectionsDictionary => ids.map(id => collectionsDictionary[id])
+    collectionsDictionary => ids.map(id => collectionsDictionary[id]).filter(collection => !!collection)
   );
 
 export const selectCollectionsByLinkType = (linkTypeId: string) =>

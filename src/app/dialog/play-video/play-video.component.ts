@@ -33,13 +33,13 @@ import {selectVideoById} from '../../core/store/videos/videos.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayVideoComponent implements OnInit {
-  public videoLink: Observable<SafeUrl>;
+  public videoLink$: Observable<SafeUrl>;
   public summary$: Observable<string>;
 
   constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private store: Store<AppState>) {}
 
   public ngOnInit() {
-    this.videoLink = this.route.paramMap.pipe(
+    this.videoLink$ = this.route.paramMap.pipe(
       map(params => params.get('videoId')),
       filter(
         videoId =>

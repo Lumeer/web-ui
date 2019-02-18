@@ -28,13 +28,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  GANTT_DATE_FORMAT,
-  GanttChartBarPropertyOptional,
-  GanttChartConfig,
-  GanttChartMode,
-  GanttChartTask,
-} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {GANTT_DATE_FORMAT, GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from 'frappe-gantt';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
@@ -48,9 +42,6 @@ import {ganttTasksChanged} from '../../util/gantt-chart-util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
-  @Input()
-  public config: GanttChartConfig;
-
   @Input()
   public tasks: GanttChartTask[];
 
@@ -91,7 +82,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
   private refreshChart() {
     if (this.tasks.length) {
       this.ganttChart.refresh(this.tasks);
-      this.ganttChart.change_view_mode(this.config.mode);
+      this.ganttChart.change_view_mode(this.currentMode);
       this.setChartColorsAndListeners();
     } else {
       this.ganttChart.clear();
@@ -193,17 +184,14 @@ export class GanttChartVisualizationComponent implements OnChanges {
           return;
         }
 
-        const collectionId = task.collectionId;
-        const collectionConfig = this.config.collections[collectionId];
-
-        const progressAttributeId = collectionConfig.barsProperties[GanttChartBarPropertyOptional.PROGRESS].attributeId;
+        const progressAttributeId = task.progressAttributeId;
         if (task.progress !== progress) {
           task.progress = progress;
           this.onValueChanged(task.id, progressAttributeId, progress);
         }
       },
     });
-    this.ganttChart.change_view_mode(this.config.mode);
+    this.ganttChart.change_view_mode(this.currentMode);
   }
 
   private onValueChanged(documentId: string, attributeId: string, value: string) {

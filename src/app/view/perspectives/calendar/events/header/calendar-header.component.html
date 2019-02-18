@@ -1,0 +1,57 @@
+<div class="row text-center">
+  <div class="col-lg-4 d-lg-flex align-items-lg-center justify-content-lg-start">
+    <div class="btn-group">
+      <div class="btn btn-primary"
+           mwlCalendarPreviousView
+           [view]="mode"
+           [viewDate]="viewDate"
+           (viewDateChange)="onViewDateChange($event)"
+           i18n="@@perspective.calendar.header.previous">
+        Previous
+      </div>
+      <div class="btn btn-outline-secondary"
+           mwlCalendarToday
+           [viewDate]="viewDate"
+           (viewDateChange)="onViewDateChange($event)"
+           i18n="@@perspective.calendar.header.today">
+        Today
+      </div>
+      <div class="btn btn-primary"
+           mwlCalendarNextView
+           [view]="mode"
+           [viewDate]="viewDate"
+           (viewDateChange)="onViewDateChange($event)"
+           i18n="@@perspective.calendar.header.next">
+        Next
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <h4 class="my-3">{{ viewDate | calendarDate: mode + 'ViewTitle':locale}}</h4>
+  </div>
+  <div class="col-lg-4 d-lg-flex align-items-lg-center justify-content-lg-end">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        (click)="onModeChange(calendarMode.Month)"
+        [class.active]="mode === calendarMode.Month"
+        i18n="@@perspective.calendar.header.month">
+        Month
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="onModeChange(calendarMode.Week)"
+        [class.active]="mode === calendarMode.Week"
+        i18n="@@perspective.calendar.header.week">
+        Week
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="onModeChange(calendarMode.Day)"
+        [class.active]="mode === calendarMode.Day"
+        i18n="@@perspective.calendar.header.day">
+        Day
+      </div>
+    </div>
+  </div>
+</div>

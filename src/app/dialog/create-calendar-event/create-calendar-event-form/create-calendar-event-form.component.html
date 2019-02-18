@@ -1,0 +1,78 @@
+<div [formGroup]="form">
+  <div class="form-group">
+    <select-item [items]="collections | collectionsSelectItems"
+                 [removable]="false"
+                 [selectedId]="form.value.collectionId"
+                 (select)="onCollectionSelect($event)"
+                 [placeholderText]="'Collection'">
+
+    </select-item>
+  </div>
+  <div class="form-group form-check">
+    <input type="checkbox"
+           class="form-check-input"
+           formControlName="allDay"
+           id="allDay">
+    <label class="form-check-label"
+           for="allDay"
+           i18n="@@dialog.create.calendar.event.allDay">
+      All day
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="title"
+           i18n="@@dialog.create.calendar.event.label.title">
+      Title
+    </label>
+    <input class="form-control" formControlName="title"
+           id="title" type="text">
+  </div>
+
+  <div class="form-group">
+    <label for="eventStart"
+           i18n="@@dialog.create.calendar.event.label.start">
+      Event start
+    </label>
+    <div class="d-flex flex-nowrap align-items-center">
+      <input bsDatepicker
+             class="form-control flex-grow-1"
+             formControlName="eventStart"
+             [value]="currentStart$ | async | date:'mediumDate'"
+             (ngModelChange)="onStartChange($event)"
+             id="eventStart"
+             type="text">
+
+      <timepicker class="ml-3" *ngIf="!form.value.allDay"
+                  formControlName="eventStart"
+                  [showMeridian]="false"
+                  (ngModelChange)="onStartChange($event)"
+                  [showSpinners]="false">
+      </timepicker>
+    </div>
+  </div>
+
+  <div class="form-group mb-0">
+    <label for="eventEnd"
+           i18n="@@dialog.create.calendar.event.label.end">
+      Event end
+    </label>
+    <div class="d-flex flex-nowrap align-items-center">
+      <input bsDatepicker
+             class="form-control flex-grow-1"
+             formControlName="eventEnd"
+             [value]="currentEnd$ | async | date:'mediumDate'"
+             [placement]="'top'"
+             (ngModelChange)="onEndChange($event)"
+             id="eventEnd"
+             type="text">
+
+      <timepicker class="ml-3" *ngIf="!form.value.allDay"
+                  formControlName="eventEnd"
+                  [showMeridian]="false"
+                  (ngModelChange)="onEndChange($event)"
+                  [showSpinners]="false">
+      </timepicker>
+    </div>
+  </div>
+
+</div>
