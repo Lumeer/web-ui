@@ -47,7 +47,6 @@ import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 import {BlocklyEditorModule} from './blockly-editor/blockly-editor.module';
-import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 
 @NgModule({
   imports: [
@@ -82,7 +81,6 @@ import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component'
     SliderComponent,
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
-    BlocklyEditorComponent,
   ],
   exports: [
     CommonModule,
@@ -112,7 +110,7 @@ import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component'
     SelectModule,
     CollapsibleSidebarModule,
     LoadingIndicatorComponent,
-    BlocklyEditorComponent,
+    BlocklyEditorModule,
   ],
 })
 export class SharedModule {}
