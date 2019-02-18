@@ -21,13 +21,14 @@
       [permissions]="permissions$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)"
-    (newEvent)="onNewEvent($event)">
+      (newEvent)="onNewEvent($event)">
     </calendar-events>
   </ng-container>
 
 </ng-container>
 
 <ng-template #notDisplayable>
-  <invalid-query [minCollections]="1">
+  <invalid-query class="w-100"
+                 [minCollections]="1">
   </invalid-query>
 </ng-template>
