@@ -21,10 +21,18 @@ export interface AttributeDto {
   id?: string;
   name: string;
   constraint?: ConstraintDto;
+  function?: AttributeFunctionDto;
   usageCount?: number;
 }
 
 export interface ConstraintDto {
   type: string;
   config: any;
+}
+
+export interface AttributeFunctionDto {
+  js?: string;
+  xml?: string;
+  errorReport?: string;
+  timestamp?: number;
 }
