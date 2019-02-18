@@ -27,11 +27,19 @@ export interface Attribute {
   name: string;
 
   constraint?: Constraint;
+  function?: AttributeFunction;
 
   usageCount?: number;
   intermediate?: boolean;
 
   correlationId?: string;
+}
+
+export interface AttributeFunction {
+  js?: string;
+  xml?: string;
+  errorReport?: string;
+  timestamp?: number;
 }
 
 export interface Collection extends Resource {
