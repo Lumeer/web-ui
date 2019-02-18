@@ -17,11 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
-@Component({
-  selector: '[no-rules]',
-  templateUrl: './no-rules.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'linkTypesSelectItems',
 })
-export class NoRulesComponent {}
+export class LinkTypesSelectItemsPipe implements PipeTransform {
+  public transform(linkTypes: LinkType[]): SelectItemModel[] {
+    if (linkTypes) {
+      return linkTypes.map(linkType => {
+        return {
+          id: linkType.id,
+          value: linkType.name,
+          icons: [linkType.collections[0].icon, linkType.collections[1].icon],
+          iconColors: [linkType.collections[0].color, linkType.collections[1].color],
+        } as SelectItemModel;
+      });
+    } else {
+      return [];
+    }
+  }
+}

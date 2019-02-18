@@ -23,7 +23,6 @@ import {Rule, RuleTiming} from '../../../../../core/model/rule';
 @Component({
   selector: 'single-rule',
   templateUrl: './single-rule.component.html',
-  styleUrls: ['./single-rule.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SingleRuleComponent {

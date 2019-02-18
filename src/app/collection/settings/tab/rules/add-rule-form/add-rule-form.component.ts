@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -42,7 +42,6 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   @Input()
   public ruleIndex: number;
 
-  @Input()
   public ruleNames: string[] = [];
 
   @Output()
@@ -53,7 +52,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly types = Object.values(RuleTypeMap);
 
-  public form;
+  public form: FormGroup;
 
   private formSubscription: Subscription;
 
@@ -61,9 +60,19 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder) {}
 
+  @Input('ruleNames')
+  public set setRuleNames(ruleNames: string[]) {
+    this.ruleNames = ruleNames;
+
+    // there can be a new rule added that clashes with currently entered name
+    if (this.form) {
+      this.form.get('name').updateValueAndValidity();
+    }
+  }
+
   public ngOnInit() {
     this.form = this.fb.group({
-      name: [this.rule.name, this.usedNameValidator()],
+      name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
       timingCreate: this.hasCreate(this.rule.timing),
       timingUpdate: this.hasUpdate(this.rule.timing),
       timingDelete: [
@@ -95,8 +104,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
     });
     this.form.setValidators(this.formValidator());
 
-    this.formSubscription = this.form.get('type').statusChanges.subscribe(status => {
-      const type = this.form.get('type').value;
+    this.formSubscription = this.form.get('type').valueChanges.subscribe(type => {
       if (type === RuleType.AutoLink) {
         const timingDelete = this.form.get('timingDelete');
         timingDelete.setValue(this.hasDelete(this.rule.timing));

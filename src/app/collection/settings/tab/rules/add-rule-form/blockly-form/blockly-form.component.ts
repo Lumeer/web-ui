@@ -27,7 +27,7 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {Variable} from '../../variable-type';
+import {RuleVariable} from '../../rule-variable-type';
 
 @Component({
   selector: 'blockly-form',
@@ -51,7 +51,7 @@ export class BlocklyFormComponent implements OnInit {
 
   public linkTypes$: Observable<LinkType[]>;
 
-  public variables: Variable[];
+  public variables: RuleVariable[];
 
   public constructor(private store$: Store<AppState>) {}
 

@@ -9,21 +9,21 @@
     <span class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
 
     <span
-      *ngIf="[ruleTiming.Create, ruleTiming.CreateUpdate, ruleTiming.CreateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      *ngIf="rule.timing | hasCreate"
       class="ml-2">
       <i class="fas fa-check-circle text-success"></i>
       <span class="ml-1" i18n="@@collection.config.tab.rules.timing.create">Create</span>
     </span>
 
     <span
-      *ngIf="[ruleTiming.Update, ruleTiming.CreateUpdate, ruleTiming.UpdateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      *ngIf="rule.timing | hasUpdate"
       class="ml-2">
       <i class="fas fa-check-circle text-success"></i>
       <span class="ml-1" i18n="@@collection.config.tab.rules.timing.update">Update</span>
     </span>
 
     <span
-      *ngIf="[ruleTiming.Delete, ruleTiming.CreateDelete, ruleTiming.UpdateDelete, ruleTiming.All].indexOf(rule.timing) >= 0"
+      *ngIf="rule.timing | hasDelete"
       class="ml-2">
       <i class="fas fa-check-circle text-success"></i>
       <span class="ml-1" i18n="@@collection.config.tab.rules.timing.delete">Delete</span>

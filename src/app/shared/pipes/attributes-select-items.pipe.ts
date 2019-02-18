@@ -17,11 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../core/store/collections/collection';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
-@Component({
-  selector: '[no-rules]',
-  templateUrl: './no-rules.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'attributesSelectItems',
 })
-export class NoRulesComponent {}
+export class AttributesSelectItemsPipe implements PipeTransform {
+  public transform(collection: Collection): SelectItemModel[] {
+    if (collection) {
+      return collection.attributes.map(attribute => {
+        return {
+          id: attribute.id,
+          value: attribute.name,
+          icons: [collection.icon],
+          iconColors: [collection.color],
+        } as SelectItemModel;
+      });
+    } else {
+      return [];
+    }
+  }
+}

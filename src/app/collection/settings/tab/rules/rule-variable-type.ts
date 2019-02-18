@@ -17,11 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-
-@Component({
-  selector: '[no-rules]',
-  templateUrl: './no-rules.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class NoRulesComponent {}
+export interface RuleVariable {
+  name: string;
+  collectionId: string;
+}

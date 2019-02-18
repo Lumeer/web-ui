@@ -17,11 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Injectable, Renderer2} from '@angular/core';
+import {environment} from '../../../environments/environment';
 
-@Component({
-  selector: '[no-rules]',
-  templateUrl: './no-rules.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+export interface BlocklyLoadFn {
+  (): void;
+}
+
+@Injectable({
+  providedIn: 'root',
 })
-export class NoRulesComponent {}
+export class BlocklyService {
+  private readonly blocklyId = 'blocklyScript';
+
+  public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn): void {
+    const e = document.getElementById(this.blocklyId);
+
+    if (!e) {
+      const script = renderer2.createElement('script');
+      script.id = this.blocklyId;
+      script.type = 'text/javascript';
+      script.src = environment.blocklyCdn;
+      if (onLoad) {
+        script.onload = onLoad;
+      }
+      renderer2.appendChild(document.body, script);
+    } else if (onLoad) {
+      onLoad();
+    }
+  }
+}

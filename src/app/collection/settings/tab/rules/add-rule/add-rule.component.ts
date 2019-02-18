@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   selector: '[add-rule]',
   templateUrl: './add-rule.component.html',
-  styleUrls: ['./add-rule.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddRuleComponent {}
