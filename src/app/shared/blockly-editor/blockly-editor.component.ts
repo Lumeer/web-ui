@@ -54,7 +54,7 @@ const SET_ATTRIBUTE = 'set_attribute';
 const VARIABLES_GET_PREFIX = 'variables_get_';
 const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
-const FUNCTION_CONTAINER = 'function_container';
+const VALUE_CONTAINER = 'value_container';
 
 export const enum MasterBlockType {
   Function = 'Function',
@@ -79,6 +79,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
   @Input()
   public attribute: Attribute;
+
+  @Input()
+  public thisDocumentId: string;
 
   @Input()
   public xml: string = '';
@@ -132,8 +135,8 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
     this.workspace.addChangeListener(this.onWorkspaceChange.bind(this));
 
-    this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables);
-    this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks);
+    this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables.bind(this));
+    this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks.bind(this));
 
     if (this.xml) {
       // initiate from previously stored XML
@@ -152,16 +155,16 @@ export class BlocklyEditorComponent implements AfterViewInit {
       this.ensureTypeChecks();
     } else {
       // initiate empty state
-      if (this.masterType === MasterBlockType.Value) {
+      if (this.masterType === MasterBlockType.Function) {
         const containerBlock = this.workspace.newBlock(STATEMENT_CONTAINER);
         containerBlock.setDeletable(false);
         containerBlock.initSvg();
         containerBlock.render();
       } else {
-        const functionBlock = this.workspace.newBlock(FUNCTION_CONTAINER);
-        functionBlock.setDeletable(false);
-        functionBlock.initSvg();
-        functionBlock.render();
+        const valueBlock = this.workspace.newBlock(VALUE_CONTAINER);
+        valueBlock.setDeletable(false);
+        valueBlock.initSvg();
+        valueBlock.render();
       }
     }
 
@@ -214,10 +217,10 @@ export class BlocklyEditorComponent implements AfterViewInit {
       return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
     };
 
-    Blockly.Blocks[FUNCTION_CONTAINER] = {
+    Blockly.Blocks[VALUE_CONTAINER] = {
       init: function() {
         this.jsonInit({
-          type: FUNCTION_CONTAINER,
+          type: VALUE_CONTAINER,
           message0: '%1 %2 = %3',
           args0: [
             {
@@ -239,7 +242,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         });
       },
     };
-    Blockly.JavaScript[FUNCTION_CONTAINER] = function(block) {
+    Blockly.JavaScript[VALUE_CONTAINER] = function(block) {
       const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
       this_.lumeerVar = lumeerVar;
       const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
@@ -358,6 +361,10 @@ export class BlocklyEditorComponent implements AfterViewInit {
     };
   }
 
+  private getLinkParts(linkBlockType: string): string[] {
+    return linkBlockType.split('-', 2)[1].split('_');
+  }
+
   private ensureTypeChecks(): void {
     // first fix variables and links
     this.workspace.getAllBlocks(false).forEach(block => {
@@ -369,7 +376,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         if (children && children.length > 0) {
           const child = children[0];
           const childType = child.type;
-          const linkParts = block.type.split('_');
+          const linkParts = this.getLinkParts(block.type);
           const counterpart =
             linkParts[0] === childType.replace(DOCUMENT_TYPE_SUFFIX, '') ? linkParts[1] : linkParts[0];
           block.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
@@ -500,7 +507,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         // ...a link?
         if (parentBlock.type.endsWith(LINK_TYPE_SUFFIX)) {
           // set the output type to the opposite of what is connected on the input (links are symmetric)
-          const linkParts = parentBlock.type.split('_');
+          const linkParts = this.getLinkParts(parentBlock.type);
           const counterpart =
             linkParts[0] === blockOutputType.replace(DOCUMENT_TYPE_SUFFIX, '') ? linkParts[1] : linkParts[0];
           parentBlock.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
@@ -652,7 +659,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_ATTRIBUTE + '"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + SET_ATTRIBUTE + '"></block></xml>').firstChild);
+    if (this.masterType === MasterBlockType.Function) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + SET_ATTRIBUTE + '"></block></xml>').firstChild);
+    }
 
     return xmlList;
   }
@@ -700,7 +709,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private getBlocklyLinkType(linkType: LinkType): string {
-    return linkType.collectionIds[0] + '_' + linkType.collectionIds[1] + LINK_TYPE_SUFFIX;
+    return linkType.id + '-' + linkType.collectionIds[0] + '_' + linkType.collectionIds[1] + LINK_TYPE_SUFFIX;
   }
 
   private registerLinks(workspace): any[] {
