@@ -246,8 +246,25 @@ export class BlocklyEditorComponent implements AfterViewInit {
       const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
       this_.lumeerVar = lumeerVar;
       const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
-      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || "''";
-      return code + '\n' + lumeerVar + '.setFunctionValue(' + value + ')' + '\n';
+      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
+
+      if (!value) {
+        return code;
+      }
+
+      return (
+        code +
+        '\n' +
+        lumeerVar +
+        '.setDocumentAttribute(' +
+        this_.thisDocumentId +
+        ", '" +
+        this_.attribute.id +
+        "', " +
+        value +
+        ')' +
+        '\n'
+      );
     };
 
     Blockly.Blocks[FOREACH_DOCUMENT_ARRAY] = {
