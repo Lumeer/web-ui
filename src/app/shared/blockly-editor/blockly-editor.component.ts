@@ -33,7 +33,7 @@ import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {DOCUMENT} from '@angular/common';
 import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../core/constants';
-import {Collection} from '../../core/store/collections/collection';
+import {Attribute, Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
 import {AppState} from '../../core/store/app.state';
@@ -54,6 +54,12 @@ const SET_ATTRIBUTE = 'set_attribute';
 const VARIABLES_GET_PREFIX = 'variables_get_';
 const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
+const FUNCTION_CONTAINER = 'function_container';
+
+export const enum MasterBlockType {
+  Function = 'Function',
+  Value = 'Value',
+}
 
 @Component({
   selector: 'blockly-editor',
@@ -72,10 +78,16 @@ export class BlocklyEditorComponent implements AfterViewInit {
   public variables: RuleVariable[] = [];
 
   @Input()
+  public attribute: Attribute;
+
+  @Input()
   public xml: string = '';
 
   @Input()
   public toolbox: string = '';
+
+  @Input()
+  public masterType: MasterBlockType = MasterBlockType.Function;
 
   @ViewChild('loading')
   private loadingElement: ElementRef;
@@ -140,10 +152,17 @@ export class BlocklyEditorComponent implements AfterViewInit {
       this.ensureTypeChecks();
     } else {
       // initiate empty state
-      const containerBlock = this.workspace.newBlock(STATEMENT_CONTAINER);
-      containerBlock.setDeletable(false);
-      containerBlock.initSvg();
-      containerBlock.render();
+      if (this.masterType === MasterBlockType.Value) {
+        const containerBlock = this.workspace.newBlock(STATEMENT_CONTAINER);
+        containerBlock.setDeletable(false);
+        containerBlock.initSvg();
+        containerBlock.render();
+      } else {
+        const functionBlock = this.workspace.newBlock(FUNCTION_CONTAINER);
+        functionBlock.setDeletable(false);
+        functionBlock.initSvg();
+        functionBlock.render();
+      }
     }
 
     // make sure we have all variables created (no matter how the workspace was initiated - either from XML or empty)
@@ -158,6 +177,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     const coreVarTypes = this.variables.map(variable => variable.collectionId + DOCUMENT_TYPE_SUFFIX);
     const collectionTypes = this.collections.map(c => c.id + DOCUMENT_TYPE_SUFFIX);
     const collection = this.getCollection(this.variables[0].collectionId);
+    const attributeName = this.attribute ? this.attribute.name : collection.name;
 
     Blockly.Blocks[STATEMENT_CONTAINER] = {
       init: function() {
@@ -192,6 +212,39 @@ export class BlocklyEditorComponent implements AfterViewInit {
       this_.lumeerVar = lumeerVar;
       const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
       return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
+    };
+
+    Blockly.Blocks[FUNCTION_CONTAINER] = {
+      init: function() {
+        this.jsonInit({
+          type: FUNCTION_CONTAINER,
+          message0: '%1 %2 = %3',
+          args0: [
+            {
+              type: 'field_fa',
+              icon: collection.icon,
+              iconColor: collection.color,
+            },
+            {
+              type: 'field_label',
+              text: attributeName,
+            },
+            {
+              type: 'input_value',
+              name: 'VALUE',
+              check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+            },
+          ],
+          colour: COLOR_DARK,
+        });
+      },
+    };
+    Blockly.JavaScript[FUNCTION_CONTAINER] = function(block) {
+      const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+      this_.lumeerVar = lumeerVar;
+      const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || "''";
+      return code + '\n' + lumeerVar + '.setFunctionValue(' + value + ')' + '\n';
     };
 
     Blockly.Blocks[FOREACH_DOCUMENT_ARRAY] = {
