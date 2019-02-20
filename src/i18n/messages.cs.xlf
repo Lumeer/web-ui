@@ -457,6 +457,12 @@
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
+      </trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
+        <source>Set column function...</source><target>Nastavit funkci ve sloupci...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
       </trans-unit>
 
             <trans-unit id="table.header.menu.hide" datatype="html">
@@ -464,13 +470,13 @@
                 <target>Skrýt sloupec</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.remove" datatype="html">
                 <source>Delete column</source>
                 <target>Smazat sloupec</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
 
 
 
@@ -560,7 +566,7 @@
                 <source>Close</source>
                 <target state="final">Zavřít</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/shared/wrapper/dialog-wrapper.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="attribute.type.label" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/shared/wrapper/dialog-wrapper.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="attribute.type.label" datatype="html">
         <source>
       Type
     </source><target>
@@ -585,6 +591,52 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
+        <source>
+      All day
+    </source><target>
+      Celodenní
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.title" datatype="html">
+        <source>
+      Title
+    </source><target>
+      Název
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.start" datatype="html">
+        <source>
+      Event start
+    </source><target>
+      Začátek události
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.end" datatype="html">
+        <source>
+      Event end
+    </source><target>
+      Konec události
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.title" datatype="html">
+        <source>Create new event</source><target>Vytvořit novou událost</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
             <trans-unit id="collection.new.dialog.title" datatype="html">
@@ -660,17 +712,17 @@
                 <source>Add column right</source>
                 <target state="translated">Přidat sloupec vpravo</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.add.column.previous" datatype="html">
                 <source>Add column left</source>
                 <target state="translated">Přidat sloupec vlevo</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.split" datatype="html">
                 <source>Split column</source>
                 <target state="final">Rozdělit sloupec</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit>
             <trans-unit id="table.header.switch.parts" datatype="html">
                 <source>Switch collections order</source>
                 <target>Obrátit pořadí kolekcí</target>
@@ -1223,7 +1275,13 @@
                     <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
+        <source>New event</source><target>Nová událost</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="resource.already.exist" datatype="html">
                 <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
                 <target state="translated">
@@ -1298,13 +1356,67 @@
         </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source><target>Načítám...</target>
+
+
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+        <source>Blockly Source Code</source><target>Zdrojový kód Blockly</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context>
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.debug" datatype="html">
+        <source>For debugging purposes by advanced users only.</source><target>Slouží k ladění pravidel. Pouze pro pokročilé uživatele.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-editor/blockly-editor.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noCode" datatype="html">
+        <source>No code generated yet.</source><target>Žádný kód ještě není vygenerován.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.dryRun" datatype="html">
+        <source>Dry Run Results</source><target>Výsledky zkušebního běhu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.timestamp" datatype="html">
+        <source>Timestamp:</source><target>Čas serveru:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noResults" datatype="html">
+        <source>No dry run results yet.</source><target>Žádné výsledky zkušebního běhu ještě neexistují.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.error" datatype="html">
+        <source>Error Report</source><target>Výpis chyb</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noError" datatype="html">
+        <source>No error recorded.</source><target>K žádné chybě nedošlo.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
             <trans-unit id="collection.post.it.create.title" datatype="html">
@@ -1852,72 +1964,64 @@
                     Všechny funcke jsou přístupné<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
                 </target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="calendar.query.invalid" datatype="html">
-        <source>Calendar perspective cannot show the results of your query. The query needs to have at least one collection.
-  </source><target>Kalendář nemůže zobrazit výsledky vašeho hledání. Do vyhledávacího pole nahoře napište název alespoň jedné kolekce.
-  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-perspective.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit><trans-unit id="previous" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
         <source>
         Previous
       </source><target>
         Předchozí
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-      </trans-unit><trans-unit id="today" datatype="html">
+      </trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
         <source>
         Today
       </source><target>
         Dnes
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-      </trans-unit><trans-unit id="next" datatype="html">
+      </trans-unit><trans-unit id="perspective.calendar.header.next" datatype="html">
         <source>
         Next
       </source><target>
-        Další
+        Následující
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-      </trans-unit><trans-unit id="month" datatype="html">
+      </trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
         <source>
         Month
       </source><target>
         Měsíc
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-      </trans-unit><trans-unit id="week" datatype="html">
+      </trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
         <source>
         Week
       </source><target>
         Týden
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-      </trans-unit><trans-unit id="day" datatype="html">
+      </trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
         <source>
         Day
       </source><target>
         Den
       </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/calendar-visualization/calendar-header/calendar-header.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
@@ -2012,7 +2116,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
 
 
 
@@ -2812,7 +2916,7 @@
                 <source>Set as displayed attribute</source>
                 <target>Nastavit jako hlavní atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
             <trans-unit id="user.defaultWorkspace.save.fail" datatype="html">
                 <source>Could not save the default workspace</source>
                 <target>Nelze uložit výchozí organizace a projekt.</target>
@@ -2908,7 +3012,13 @@
                     <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
+            </trans-unit><trans-unit id="perspective.calendar.config.mode" datatype="html">
+        <source>{VAR_SELECT, select, month {Month} week {Week} day {Day} }</source><target>{VAR_SELECT, select, month {Měsíc} week {Týden} day {Den} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-modes-to-select.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
         <source>{VAR_SELECT, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} startTime {Počáteční čas} endTime {Koncový čas} }</target>
 
 
@@ -3011,14 +3121,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">79</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>
@@ -3302,19 +3412,13 @@
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-      </trans-unit><trans-unit id="7908cce89a4826365313ec5d951c732d4b68d82b" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target>{VAR_SELECT, select, AUTO_LINK {Automatická vazba} BLOCKLY {Blockly} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source><target>Uložit změny</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
         <source>Add Rule</source><target>Přidat pravidlo</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
       Link record via
     </source><target>
@@ -3356,75 +3460,9 @@
         </source><target>
           Zkušební běh
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.source" datatype="html">
-        <source>Blockly Source Code</source><target>Zdrojový kód pravidla</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.debug" datatype="html">
-        <source>For debugging purposes by advanced users only.</source><target>Slouží k ladění pravidel. Pouze pro pokročilé uživatele.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noCode" datatype="html">
-        <source>No code generated yet.</source><target>Žádný kód ještě není vygenerován.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.timestamp" datatype="html">
-        <source>Timestamp:</source><target>Čas serveru:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noResults" datatype="html">
-        <source>No dry run results yet.</source><target>Žádné výsledky zkušebního běhu ještě neexistují.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.error" datatype="html">
-        <source>Error Report</source><target>Výpis chyb</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.noError" datatype="html">
-        <source>No error recorded.</source><target>K žádné chybě nedošlo.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.close.button" datatype="html">
-        <source>Close</source><target>Zavřít</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
+
+
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
         <source>
     There are no rules yet. Create some by clicking on the button below!
   </source><target>
@@ -3479,7 +3517,17 @@
       Save
     </source><target>Uložit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="view.discard.changes.message.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+        <source>
+      Configure attribute function
+    </source><target>
+      Nastavení funkce atributu
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.discard.changes.message.title" datatype="html">
         <source>Save view</source><target>Uložit pohled</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
