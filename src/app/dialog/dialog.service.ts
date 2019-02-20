@@ -53,6 +53,10 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
+  public openAttributeFunction(collectionId: string, attributeId: string) {
+    this.navigateToDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
+  }
+
   public openAttributeConfigDialog(collectionId: string, attributeId: string) {
     this.navigateToDialog([DialogPath.ATTRIBUTE_TYPE, collectionId, attributeId]);
   }
