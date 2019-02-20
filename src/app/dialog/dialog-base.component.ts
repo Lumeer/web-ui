@@ -18,8 +18,8 @@
  */
 
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
-import {filter} from 'rxjs/operators';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {DialogService} from './dialog.service';
 
@@ -42,7 +42,7 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToOpenDialog());
-    this.subscriptions.add(this.subscribeToActivatedRoute());
+    this.subscriptions.add(this.subscribeToDialogData());
     this.subscriptions.add(this.subscribeToCloseDialog());
   }
 
@@ -55,10 +55,17 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(event => this.openDialog());
   }
 
-  private subscribeToActivatedRoute(): Subscription {
-    return this.route.data.subscribe(data => {
-      this.modalDialogClass = data.modalDialogClass ? data.modalDialogClass : '';
-    });
+  private subscribeToDialogData(): Subscription {
+    return this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => this.route.children.find(route => route.outlet === 'dialog')),
+        filter(route => !!route),
+        switchMap(route => route.data)
+      )
+      .subscribe(data => {
+        this.modalDialogClass = data.modalDialogClass ? data.modalDialogClass : '';
+      });
   }
 
   private subscribeToCloseDialog(): Subscription {
