@@ -29,6 +29,13 @@
     <i class="fa fa-fw fa-shapes mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.changeType">Customize attribute type...</span>
   </ng-template>
+  <ng-template *ngIf="attribute.id"
+               contextMenuItem
+               [enabled]="allowedPermissions?.manageWithView"
+               (execute)="functionEdit.emit()">
+    <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
+    <span i18n="@@table.header.menu.editFunction">Set column function...</span>
+  </ng-template>
   <ng-container *ngIf="attribute.id && !defaultAttribute">
     <ng-template contextMenuItem divider="true"></ng-template>
     <ng-template contextMenuItem

@@ -37,6 +37,7 @@ import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
 import {CreateCalendarEventModule} from './create-calendar-event/create-calendar-event.module';
+import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import {CreateCalendarEventModule} from './create-calendar-event/create-calendar
     FeedbackDialogComponent,
     PlayVideoComponent,
     AttributeTypeDialogComponent,
+    AttributeFunctionDialogComponent,
   ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
   exports: [DialogBaseComponent],

@@ -1,0 +1,39 @@
+<div class="modal-content">
+  <div class="modal-header bg-success text-white rounded-top">
+    <h5 class="modal-title" i18n="@@attribute.function.dialog.title">
+      Configure attribute function
+    </h5>
+    <button aria-label="Close"
+            class="close text-white"
+            data-dismiss="modal"
+            type="button"
+            title="Close" i18n-title="@@dialog.close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <blockly-editor
+      (onJsUpdate)="onJsUpdate($event)"
+      (onXmlUpdate)="onXmlUpdate($event)"
+      [toolbox]="valueToolbox"
+      [masterType]="masterValueType"
+      [collections]="collections$ | async"
+      [linkTypes]="linkTypes$ | async"
+      [variables]="variables"
+      [xml]="(attribute$ | async).function?.xml">
+    </blockly-editor>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-secondary"
+            data-dismiss="modal">
+      <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+    </button>
+    <button (click)="onSubmit()"
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal">
+      <span class="button-submit" i18n="@@button.create">Create</span>
+    </button>
+  </div>
+</div>

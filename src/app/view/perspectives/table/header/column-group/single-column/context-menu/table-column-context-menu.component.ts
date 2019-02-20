@@ -68,6 +68,9 @@ export class TableColumnContextMenuComponent {
   @Output()
   public split = new EventEmitter();
 
+  @Output()
+  public functionEdit = new EventEmitter();
+
   @ViewChild('contextMenu')
   public contextMenu: ElementRef;
 
