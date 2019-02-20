@@ -23,6 +23,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Inject,
   Input,
   Output,
@@ -32,15 +33,15 @@ import {
 import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {DOCUMENT} from '@angular/common';
-import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../core/constants';
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
-import {AppState} from '../../core/store/app.state';
-import {DialogService} from '../../dialog/dialog.service';
-import {ContrastColorPipe} from '../pipes/contrast-color.pipe';
-import {BlocklyService} from '../../core/service/blockly.service';
-import {shadeColor} from '../utils/html-modifier';
+import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../core/constants';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
+import {AppState} from '../../../core/store/app.state';
+import {DialogService} from '../../../dialog/dialog.service';
+import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
+import {BlocklyService} from '../../../core/service/blockly.service';
+import {shadeColor} from '../../utils/html-modifier';
 
 declare var Blockly: any;
 
@@ -103,8 +104,12 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
   public blocklyId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
+  @ViewChild('blocklyDiv')
+  private blocklyDivElement: ElementRef;
+
   private workspace: any;
   private lumeerVar: string;
+  private masterBlock: any;
 
   constructor(
     private store$: Store<AppState>,
@@ -125,9 +130,18 @@ export class BlocklyEditorComponent implements AfterViewInit {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
       this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
-      this.loadingElement.nativeElement.remove();
-      this.initBlockly();
+      setTimeout(() => {
+        this.onResize();
+        this.loadingElement.nativeElement.remove();
+        this.initBlockly();
+      }, 200);
     }
+  }
+
+  @HostListener('window:resize')
+  public onResize(): void {
+    Blockly.svgResize(this.workspace);
+    this.workspace.getAllBlocks().forEach(b => b.render());
   }
 
   public initBlockly() {
@@ -160,11 +174,13 @@ export class BlocklyEditorComponent implements AfterViewInit {
         containerBlock.setDeletable(false);
         containerBlock.initSvg();
         containerBlock.render();
+        this.masterBlock = containerBlock;
       } else {
         const valueBlock = this.workspace.newBlock(VALUE_CONTAINER);
         valueBlock.setDeletable(false);
         valueBlock.initSvg();
         valueBlock.render();
+        this.masterBlock = valueBlock;
       }
     }
 

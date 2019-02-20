@@ -28,12 +28,12 @@ import {selectAllCollections} from '../../../../../../core/store/collections/col
 import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../rule-variable-type';
-import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
+import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 
 @Component({
   selector: 'blockly-form',
   templateUrl: './blockly-form.component.html',
-  styleUrls: ['./blockly-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlocklyFormComponent implements OnInit {
@@ -46,7 +46,7 @@ export class BlocklyFormComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
-  public displayDebug = '';
+  public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
 
   public collections$: Observable<Collection[]>;
 
@@ -55,6 +55,16 @@ export class BlocklyFormComponent implements OnInit {
   public variables: RuleVariable[];
 
   public functionToolbox = BLOCKLY_FUNCTION_TOOLBOX;
+
+  public debugButtons: BlocklyDebugDisplay[] = [
+    BlocklyDebugDisplay.DisplayJs,
+    BlocklyDebugDisplay.DisplayError,
+    BlocklyDebugDisplay.DisplayLog,
+  ];
+
+  public displayJs = BlocklyDebugDisplay.DisplayJs;
+  public displayLog = BlocklyDebugDisplay.DisplayLog;
+  public displayError = BlocklyDebugDisplay.DisplayError;
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -81,9 +91,9 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyResultTimestamp').value;
   }
 
-  public display(part: string): void {
+  public display(part: BlocklyDebugDisplay): void {
     if (this.displayDebug === part) {
-      this.displayDebug = '';
+      this.displayDebug = BlocklyDebugDisplay.DisplayNone;
     } else {
       this.displayDebug = part;
     }

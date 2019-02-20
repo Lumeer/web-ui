@@ -1,0 +1,9 @@
+<a *ngIf="displayButtons.indexOf(displayError) >= 0" class="ml-3" (click)="display(displayError)">
+  <i class="fas fa-bug text-danger cursor-pointer"></i>
+</a>
+<a *ngIf="displayButtons.indexOf(displayJs) >= 0" class="ml-3" (click)="display(displayJs)">
+  <i class="fab fa-js-square text-secondary cursor-pointer"></i>
+</a>
+<a *ngIf="displayButtons.indexOf(displayLog) >= 0" class="ml-3" (click)="display(displayLog)">
+  <i class="fas fa-poll-h text-secondary cursor-pointer"></i>
+</a>

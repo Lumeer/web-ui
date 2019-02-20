@@ -23,14 +23,15 @@ import {Attribute, Collection} from '../../core/store/collections/collection';
 import {ActivatedRoute} from '@angular/router';
 import {DialogService} from '../dialog.service';
 import {select, Store} from '@ngrx/store';
-import {filter, map, mergeMap} from 'rxjs/operators';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
+import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
-import {MasterBlockType} from '../../shared/blockly-editor/blockly-editor.component';
+import {MasterBlockType} from '../../shared/blockly/blockly-editor/blockly-editor.component';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
+import {BlocklyDebugDisplay} from '../../shared/blockly/blockly-debugger/blockly-debugger.component';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -41,13 +42,18 @@ import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions
 export class AttributeFunctionDialogComponent implements OnInit {
   public valueToolbox = BLOCKLY_VALUE_TOOLBOX;
   public masterValueType = MasterBlockType.Value;
-  public variables: RuleVariable[];
+  public variables$: Observable<RuleVariable[]>;
 
+  public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
   public attribute$: Observable<Attribute>;
   public linkTypes$: Observable<LinkType[]>;
 
-  public width = 850;
+  public displayDebug: BlocklyDebugDisplay;
+  public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
+
+  public js: string = '';
+  private xml: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,9 +62,19 @@ export class AttributeFunctionDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    this.collections$ = this.store$.select(selectAllCollections);
     this.collection$ = this.selectCollection();
     this.attribute$ = this.selectAttribute(this.collection$);
     this.linkTypes$ = this.selectLinkTypes();
+    this.variables$ = this.selectVariables();
+  }
+
+  private selectVariables(): Observable<RuleVariable[]> {
+    return this.activatedRoute.paramMap.pipe(
+      map(params => params.get('collectionId')),
+      filter(collectionId => !!collectionId),
+      map(collectionId => [{name: 'thisDocument', collectionId} as RuleVariable])
+    );
   }
 
   private selectCollection(): Observable<Collection> {
@@ -101,15 +117,16 @@ export class AttributeFunctionDialogComponent implements OnInit {
     );
   }
 
-  public onSubmit() {
-    // to save
+  public onSubmit(collection: Collection, attribute: Attribute) {
+    attribute.function = {...attribute.function, js: this.js, xml: this.xml};
+    this.onAttributeChange(collection.id, attribute);
   }
 
   public onJsUpdate(jsCode: string) {
-    //    this.form.get('blocklyJs').setValue(jsCode);
+    this.js = jsCode;
   }
 
   public onXmlUpdate(xmlCode: string) {
-    //    this.form.get('blocklyXml').setValue(xmlCode);
+    this.xml = xmlCode;
   }
 }

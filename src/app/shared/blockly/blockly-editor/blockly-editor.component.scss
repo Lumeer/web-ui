@@ -1,10 +1,10 @@
-@import '../../../styles/_variables';
+@import '../../../../styles/variables';
 
 .blocklyDiv {
   font-family: LatoWeb;
   width: 100%;
   display: block;
-  height: 80vh;
+  height: 75vh;
 }
 
 ::ng-deep {

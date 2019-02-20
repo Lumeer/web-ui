@@ -17,13 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyEditorComponent} from './blockly-editor.component';
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {BlocklyDebugDisplay} from '../blockly-debugger.component';
 
-@NgModule({
-  declarations: [BlocklyEditorComponent],
-  imports: [CommonModule],
-  exports: [BlocklyEditorComponent],
+@Component({
+  selector: 'blockly-debugger-remote',
+  templateUrl: './blockly-debugger-remote.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyEditorModule {}
+export class BlocklyDebuggerRemoteComponent {
+  @Input()
+  public displayButtons: BlocklyDebugDisplay[];
+
+  @Output()
+  public displayEvent = new EventEmitter<BlocklyDebugDisplay>();
+
+  public displayJs = BlocklyDebugDisplay.DisplayJs;
+  public displayLog = BlocklyDebugDisplay.DisplayLog;
+  public displayError = BlocklyDebugDisplay.DisplayError;
+
+  public display(type: BlocklyDebugDisplay) {
+    this.displayEvent.emit(type);
+  }
+}

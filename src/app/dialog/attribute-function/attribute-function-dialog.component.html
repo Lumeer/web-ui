@@ -1,6 +1,6 @@
-<div class="modal-content">
+<div class="modal-content" *ngIf="{collection: (collection$ | async), attribute: (attribute$ | async)} as data">
   <div class="modal-header bg-success text-white rounded-top">
-    <h5 class="modal-title" i18n="@@attribute.function.dialog.title">
+    <h5 class="modal-title" i18n="@@dialog.attribute.function.title">
       Configure attribute function
     </h5>
     <button aria-label="Close"
@@ -12,6 +12,21 @@
     </button>
   </div>
   <div class="modal-body">
+    <div class="d-flex pb-1">
+      <div class="flex-grow-1 text-right">
+        <blockly-debugger-remote
+          (displayEvent)="displayDebug = $event"
+          [displayButtons]="debugButtons">
+        </blockly-debugger-remote>
+      </div>
+    </div>
+    <blockly-debugger
+      [blocklyJs]="js"
+      [blocklyResultTimestamp]="data.attribute.function?.timestamp"
+      [blocklyError]="data.attribute.function?.errorReport"
+      [displayDebug]="displayDebug">
+    </blockly-debugger>
+
     <blockly-editor
       (onJsUpdate)="onJsUpdate($event)"
       (onXmlUpdate)="onXmlUpdate($event)"
@@ -19,8 +34,9 @@
       [masterType]="masterValueType"
       [collections]="collections$ | async"
       [linkTypes]="linkTypes$ | async"
-      [variables]="variables"
-      [xml]="(attribute$ | async).function?.xml">
+      [variables]="variables$ | async"
+      [attribute]="attribute$ | async"
+      [xml]="data.attribute.function?.xml">
     </blockly-editor>
   </div>
   <div class="modal-footer">
@@ -29,11 +45,11 @@
             data-dismiss="modal">
       <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
     </button>
-    <button (click)="onSubmit()"
+    <button (click)="onSubmit(data.collection, data.attribute)"
             type="button"
             class="btn btn-primary"
             data-dismiss="modal">
-      <span class="button-submit" i18n="@@button.create">Create</span>
+      <span class="button-submit" i18n="@@button.save">Save</span>
     </button>
   </div>
 </div>
