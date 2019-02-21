@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-export const enum BlocklyDebugDisplay {
+export enum BlocklyDebugDisplay {
   DisplayNone = '',
   DisplayJs = 'js',
   DisplayError = 'error',
@@ -48,10 +48,7 @@ export class BlocklyDebuggerComponent {
   @Input()
   public blocklyDryRunResult = '';
 
-  public displayNone = BlocklyDebugDisplay.DisplayNone;
-  public displayJs = BlocklyDebugDisplay.DisplayJs;
-  public displayLog = BlocklyDebugDisplay.DisplayLog;
-  public displayError = BlocklyDebugDisplay.DisplayError;
+  public readonly displayTypes = BlocklyDebugDisplay;
 
   public display(type: BlocklyDebugDisplay) {
     this.displayDebug = type;

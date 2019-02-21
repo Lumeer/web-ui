@@ -21,14 +21,12 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   HostListener,
   Inject,
   Input,
   Output,
   Renderer2,
-  ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
@@ -42,6 +40,7 @@ import {DialogService} from '../../../dialog/dialog.service';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
+import {BehaviorSubject} from 'rxjs';
 
 declare var Blockly: any;
 
@@ -93,9 +92,6 @@ export class BlocklyEditorComponent implements AfterViewInit {
   @Input()
   public masterType: MasterBlockType = MasterBlockType.Function;
 
-  @ViewChild('loading')
-  private loadingElement: ElementRef;
-
   @Output()
   public onJsUpdate = new EventEmitter<string>();
 
@@ -104,8 +100,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
   public blocklyId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
-  @ViewChild('blocklyDiv')
-  private blocklyDivElement: ElementRef;
+  public loading$ = new BehaviorSubject(true);
 
   private workspace: any;
   private lumeerVar: string;
@@ -132,7 +127,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
       setTimeout(() => {
         this.onResize();
-        this.loadingElement.nativeElement.remove();
+        this.loading$.next(false);
         this.initBlockly();
       }, 200);
     }

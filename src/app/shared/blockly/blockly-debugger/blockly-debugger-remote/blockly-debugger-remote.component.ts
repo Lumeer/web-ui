@@ -32,9 +32,7 @@ export class BlocklyDebuggerRemoteComponent {
   @Output()
   public displayEvent = new EventEmitter<BlocklyDebugDisplay>();
 
-  public displayJs = BlocklyDebugDisplay.DisplayJs;
-  public displayLog = BlocklyDebugDisplay.DisplayLog;
-  public displayError = BlocklyDebugDisplay.DisplayError;
+  public readonly displayTypes = BlocklyDebugDisplay;
 
   public display(type: BlocklyDebugDisplay) {
     this.displayEvent.emit(type);

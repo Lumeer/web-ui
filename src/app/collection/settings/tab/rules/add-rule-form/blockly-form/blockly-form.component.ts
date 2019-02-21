@@ -62,10 +62,6 @@ export class BlocklyFormComponent implements OnInit {
     BlocklyDebugDisplay.DisplayLog,
   ];
 
-  public displayJs = BlocklyDebugDisplay.DisplayJs;
-  public displayLog = BlocklyDebugDisplay.DisplayLog;
-  public displayError = BlocklyDebugDisplay.DisplayError;
-
   public constructor(private store$: Store<AppState>) {}
 
   @ViewChild('parentFormDiv')
