@@ -115,7 +115,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
-        onSuccess: () => this.dialogService.closeDialog(),
+        onSuccess: () => this.dialogService.closeBlocklyDialog(),
       })
     );
   }
@@ -139,5 +139,9 @@ export class AttributeFunctionDialogComponent implements OnInit {
     } else {
       this.displayDebug = type;
     }
+  }
+
+  public onClose() {
+    this.dialogService.closeBlocklyDialog();
   }
 }

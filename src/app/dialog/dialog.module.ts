@@ -38,6 +38,8 @@ import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dial
 import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
 import {CreateCalendarEventModule} from './create-calendar-event/create-calendar-event.module';
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
+import {BlocklyDialogComponent} from './blockly-dialog/blockly-dialog.component';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   imports: [
@@ -50,6 +52,7 @@ import {AttributeFunctionDialogComponent} from './attribute-function/attribute-f
     ShareViewDialogModule,
     AttributeTypeFormModule,
     CreateCalendarEventModule,
+    ClickOutsideModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,
@@ -64,8 +67,9 @@ import {AttributeFunctionDialogComponent} from './attribute-function/attribute-f
     PlayVideoComponent,
     AttributeTypeDialogComponent,
     AttributeFunctionDialogComponent,
+    BlocklyDialogComponent,
   ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
-  exports: [DialogBaseComponent],
+  exports: [DialogBaseComponent, BlocklyDialogComponent],
 })
 export class DialogModule {}

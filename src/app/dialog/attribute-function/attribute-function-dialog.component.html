@@ -1,9 +1,12 @@
-<div class="modal-content" *ngIf="{collection: (collection$ | async), attribute: (attribute$ | async)} as data">
+<div class="modal-content"
+     *ngIf="{collection: (collection$ | async), attribute: (attribute$ | async)} as data"
+     (clickOutside)="onClose()">
   <div class="modal-header bg-success text-white rounded-top">
     <h5 class="modal-title" i18n="@@dialog.attribute.function.title">
       Configure attribute function
     </h5>
-    <button aria-label="Close"
+    <button (click)="onClose()"
+            aria-label="Close"
             class="close text-white"
             data-dismiss="modal"
             type="button"
@@ -42,7 +45,8 @@
     </blockly-editor>
   </div>
   <div class="modal-footer">
-    <button type="button"
+    <button (click)="onClose()"
+            type="button"
             class="btn btn-outline-secondary"
             data-dismiss="modal">
       <span class="button-cancel" i18n="@@button.cancel">Cancel</span>

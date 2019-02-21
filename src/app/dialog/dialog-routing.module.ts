@@ -34,8 +34,7 @@ const routes: Routes = [
   {
     path: `${DialogPath.ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
     component: AttributeFunctionDialogComponent,
-    outlet: 'dialog',
-    data: {modalDialogClass: 'function-modal-dialog'},
+    outlet: 'blockly-dialog',
   },
   {
     path: `${DialogPath.ATTRIBUTE_TYPE}/:collectionId/:attributeId`,

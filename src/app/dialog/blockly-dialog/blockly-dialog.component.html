@@ -1,0 +1,8 @@
+<ng-container *ngIf="open$ | async">
+  <div class="fade-over"></div>
+  <div class="dialog-base">
+    <div class="dialog">
+      <router-outlet name="blockly-dialog"></router-outlet>
+    </div>
+  </div>
+</ng-container>

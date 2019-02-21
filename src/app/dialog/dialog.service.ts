@@ -53,8 +53,13 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
+  public closeBlocklyDialog() {
+    this.callback = null;
+    this.navigateToBlocklyDialog(null);
+  }
+
   public openAttributeFunction(collectionId: string, attributeId: string) {
-    this.navigateToDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
+    this.navigateToBlocklyDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
   }
 
   public openAttributeConfigDialog(collectionId: string, attributeId: string) {
@@ -109,5 +114,10 @@ export class DialogService {
   private navigateToDialog(path: any[]) {
     this.open = !!path;
     return this.router.navigate(['', {outlets: {dialog: path}}], {queryParamsHandling: 'preserve'});
+  }
+
+  private navigateToBlocklyDialog(path: any[]) {
+    this.open = !!path;
+    return this.router.navigate(['', {outlets: {'blockly-dialog': path}}], {queryParamsHandling: 'preserve'});
   }
 }
