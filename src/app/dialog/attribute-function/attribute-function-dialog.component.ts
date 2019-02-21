@@ -26,7 +26,10 @@ import {select, Store} from '@ngrx/store';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
+import {
+  BLOCKLY_FUNCTION_TOOLBOX,
+  BLOCKLY_VALUE_TOOLBOX,
+} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
 import {MasterBlockType} from '../../shared/blockly/blockly-editor/blockly-editor.component';
 import {LinkType} from '../../core/store/link-types/link.type';

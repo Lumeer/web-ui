@@ -81,7 +81,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
   public attribute: Attribute;
 
   @Input()
-  public thisDocumentId: string;
+  public thisCollectionId: string;
 
   @Input()
   public xml: string = '';
@@ -268,7 +268,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         '\n' +
         lumeerVar +
         '.setDocumentAttribute(' +
-        this_.thisDocumentId +
+        'thisDocument' +
         ", '" +
         this_.attribute.id +
         "', " +
@@ -838,6 +838,12 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private generateJs(): void {
-    this.onJsUpdate.emit(Blockly.JavaScript.workspaceToCode(this.workspace));
+    let js = Blockly.JavaScript.workspaceToCode(this.workspace);
+
+    if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
+      js = 'var thisDocument;\n' + js;
+    }
+
+    this.onJsUpdate.emit(js);
   }
 }
