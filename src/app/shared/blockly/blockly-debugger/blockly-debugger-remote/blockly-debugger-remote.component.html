@@ -1,9 +1,9 @@
-<a *ngIf="displayButtons | includes:displayTypes.DisplayError" class="ml-3" (click)="display(displayTypes.DisplayError)">
+<a *ngIf="displayButtons | includes:(displayTypes.DisplayError)" class="ml-3" (click)="display(displayTypes.DisplayError)">
   <i class="fas fa-bug text-danger cursor-pointer"></i>
 </a>
-<a *ngIf="displayButtons | includes:displayTypes.DisplayJs" class="ml-3" (click)="display(displayTypes.DisplayJs)">
+<a *ngIf="displayButtons | includes:(displayTypes.DisplayJs)" class="ml-3" (click)="display(displayTypes.DisplayJs)">
   <i class="fab fa-js-square text-secondary cursor-pointer"></i>
 </a>
-<a *ngIf="displayButtons | includes:displayTypes.DisplayLog" class="ml-3" (click)="display(displayTypes.DisplayLog)">
+<a *ngIf="displayButtons | includes:(displayTypes.DisplayLog)" class="ml-3" (click)="display(displayTypes.DisplayLog)">
   <i class="fas fa-poll-h text-secondary cursor-pointer"></i>
 </a>

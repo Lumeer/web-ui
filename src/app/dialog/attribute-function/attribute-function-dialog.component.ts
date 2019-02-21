@@ -129,4 +129,12 @@ export class AttributeFunctionDialogComponent implements OnInit {
   public onXmlUpdate(xmlCode: string) {
     this.xml = xmlCode;
   }
+
+  public display(type: BlocklyDebugDisplay) {
+    if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
+      this.display(BlocklyDebugDisplay.DisplayNone);
+    } else {
+      this.displayDebug = type;
+    }
+  }
 }

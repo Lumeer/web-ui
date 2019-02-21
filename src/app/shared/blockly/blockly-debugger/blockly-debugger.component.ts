@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 export enum BlocklyDebugDisplay {
   DisplayNone = '',
@@ -48,9 +48,12 @@ export class BlocklyDebuggerComponent {
   @Input()
   public blocklyDryRunResult = '';
 
+  @Output()
+  public displayEvent = new EventEmitter<BlocklyDebugDisplay>();
+
   public readonly displayTypes = BlocklyDebugDisplay;
 
   public display(type: BlocklyDebugDisplay) {
-    this.displayDebug = type;
+    this.displayEvent.emit(type);
   }
 }

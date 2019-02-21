@@ -22,10 +22,11 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BlocklyDebuggerComponent} from './blockly-debugger/blockly-debugger.component';
 import {BlocklyDebuggerRemoteComponent} from './blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, PipesModule],
   exports: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
 })
 export class BlocklyModule {}

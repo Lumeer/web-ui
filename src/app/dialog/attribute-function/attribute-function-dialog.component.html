@@ -15,12 +15,13 @@
     <div class="d-flex pb-1">
       <div class="flex-grow-1 text-right">
         <blockly-debugger-remote
-          (displayEvent)="displayDebug = $event"
+          (displayEvent)="display($event)"
           [displayButtons]="debugButtons">
         </blockly-debugger-remote>
       </div>
     </div>
     <blockly-debugger
+      (displayEvent)="display($event)"
       [blocklyJs]="js"
       [blocklyResultTimestamp]="data.attribute.function?.timestamp"
       [blocklyError]="data.attribute.function?.errorReport"
