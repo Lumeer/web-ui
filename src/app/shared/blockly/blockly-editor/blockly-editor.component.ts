@@ -492,7 +492,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     options.splice(0, originalLength);
 
     if (parentBlock.type === GET_ATTRIBUTE) {
-      const newType = block.type.endsWith('_link') ? ['Array'] : [''];
+      const newType = block.type.endsWith('_link') ? ['Array'] : ['', 'Number', 'String', 'Boolean'];
       const parentBlockOutputType =
         parentBlock.outputConnection && parentBlock.outputConnection.check_ && parentBlock.outputConnection.check_[0]
           ? parentBlock.outputConnection.check_[0]
