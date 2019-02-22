@@ -403,10 +403,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
         const children = block.getChildren(false);
         if (children && children.length > 0) {
           const child = children[0];
-          const childType = child.type;
+          const childType = child.type.replace(DOCUMENT_TYPE_SUFFIX, '').replace(VARIABLES_GET_PREFIX, '');
           const linkParts = this.getLinkParts(block.type);
-          const counterpart =
-            linkParts[0] === childType.replace(DOCUMENT_TYPE_SUFFIX, '') ? linkParts[1] : linkParts[0];
+          const counterpart = linkParts[0] === childType ? linkParts[1] : linkParts[0];
           block.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
         }
       }
