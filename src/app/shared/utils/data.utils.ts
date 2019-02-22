@@ -28,8 +28,8 @@ import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 
 export function formatDataValue(value: any, constraint: Constraint): string {
-  if (!value || !constraint) {
-    return value;
+  if (!constraint) {
+    return formatUnknownDataValue(value);
   }
 
   switch (constraint.type) {
@@ -40,7 +40,7 @@ export function formatDataValue(value: any, constraint: Constraint): string {
     case ConstraintType.Text:
       return formatTextDataValue(value, constraint.config as TextConstraintConfig);
     default:
-      return value;
+      return formatUnknownDataValue(value);
   }
 }
 
@@ -60,12 +60,16 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
-  return value;
+  return String(value);
 }
 
-export function formatTextDataValue(value: any, config: TextConstraintConfig): string {
-  if (typeof value !== 'string') {
-    return value;
+export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {
+  if (typeof value !== 'string' || !config) {
+    return formatUnknownDataValue(value);
   }
   return transformTextBasedOnCaseStyle(value, config && config.caseStyle);
+}
+
+export function formatUnknownDataValue(value: any): string {
+  return value || value === 0 ? String(value) : '';
 }

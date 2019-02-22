@@ -37,8 +37,9 @@ describe('Table perspective :: Single cell', () => {
       .dblclick();
 
     // type text into input and save changes by loosing focus
+    const firstValue = '0'; // LMR-1463
     cy.get('[data-test="text-data-input"]')
-      .type('first value')
+      .type(firstValue)
       .blur();
 
     // check if the first column has been initialized
@@ -55,8 +56,9 @@ describe('Table perspective :: Single cell', () => {
     cy.get('[data-test="table-data-input"]').should('have.length', 4);
 
     // select first table body cell
-    cy.get('[data-test="table-data-input"]')
+    cy.get('[data-test="text-data-input"]')
       .first()
+      .should('have.value', firstValue)
       .click();
 
     // switch to edit mode by typing a special character
@@ -76,7 +78,7 @@ describe('Table perspective :: Single cell', () => {
     cy.get('[data-test="text-data-input"]')
       .first()
       .should('have.attr', 'readonly', 'readonly')
-      .should('have.value', 'first value');
+      .should('have.value', firstValue);
 
     // start editing by pressing Enter
     cy.focused()
