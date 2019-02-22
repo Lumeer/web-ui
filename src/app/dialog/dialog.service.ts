@@ -58,6 +58,11 @@ export class DialogService {
     this.navigateToBlocklyDialog(null);
   }
 
+  public closeAllDialogs() {
+    this.closeDialog();
+    this.closeBlocklyDialog();
+  }
+
   public openAttributeFunction(collectionId: string, attributeId: string) {
     this.navigateToBlocklyDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
   }
