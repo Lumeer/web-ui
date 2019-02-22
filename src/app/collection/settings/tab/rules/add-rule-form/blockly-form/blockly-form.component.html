@@ -1,4 +1,4 @@
-<div [formGroup]="form" #parentFormDiv>
+<div [formGroup]="form">
   <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
     <div>
       <span class="text-nowrap font-weight-bold" i18n="@@collection.config.tab.rules.blockly.edit.message">Edit Rule Code:</span>
@@ -11,12 +11,13 @@
         </label>
       </div>
       <blockly-debugger-remote
-        (displayEvent)="displayDebug = $event"
+        (displayEvent)="display($event)"
         [displayButtons]="debugButtons">
       </blockly-debugger-remote>
     </div>
   </div>
   <blockly-debugger
+    (displayEvent)="display($event)"
     [displayDebug]="displayDebug"
     [blocklyJs]="blocklyJs"
     [blocklyError]="blocklyError"

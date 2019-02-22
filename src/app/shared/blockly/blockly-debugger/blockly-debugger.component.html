@@ -1,4 +1,4 @@
-<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3">
+<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3" #myDiv  (rendered)="recomputeWidth($event)">
   <div *ngIf="displayDebug === displayTypes.DisplayJs">
     <h5 i18n="@@shared.blockly.debugger.source">Blockly Source Code</h5>
     <small class="text-muted">

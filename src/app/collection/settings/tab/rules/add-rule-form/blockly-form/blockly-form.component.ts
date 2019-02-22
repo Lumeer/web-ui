@@ -64,9 +64,6 @@ export class BlocklyFormComponent implements OnInit {
 
   public constructor(private store$: Store<AppState>) {}
 
-  @ViewChild('parentFormDiv')
-  private parentFormDiv: ElementRef;
-
   public get blocklyXml(): string {
     return this.form.get('blocklyXml').value;
   }
@@ -87,16 +84,15 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyResultTimestamp').value;
   }
 
-  public display(part: BlocklyDebugDisplay): void {
-    if (this.displayDebug === part) {
-      this.displayDebug = BlocklyDebugDisplay.DisplayNone;
+  public display(type: BlocklyDebugDisplay) {
+    if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
+      this.display(BlocklyDebugDisplay.DisplayNone);
     } else {
-      this.displayDebug = part;
+      this.displayDebug = type;
     }
   }
 
   public ngOnInit(): void {
-    this.onWindowResize();
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
     this.variables = [
@@ -111,12 +107,5 @@ export class BlocklyFormComponent implements OnInit {
 
   public onXmlUpdate(xmlCode: string) {
     this.form.get('blocklyXml').setValue(xmlCode);
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    const element = this.parentFormDiv.nativeElement as HTMLElement;
-    const formWidth = element.clientWidth - element.offsetLeft;
-    document.body.style.setProperty('--blockly-log-width', `${formWidth}px`);
   }
 }

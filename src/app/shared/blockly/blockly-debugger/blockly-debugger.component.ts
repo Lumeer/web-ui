@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 export enum BlocklyDebugDisplay {
   DisplayNone = '',
@@ -32,7 +42,7 @@ export enum BlocklyDebugDisplay {
   styleUrls: ['./blockly-debugger.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyDebuggerComponent {
+export class BlocklyDebuggerComponent implements OnInit {
   @Input()
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
 
@@ -48,12 +58,40 @@ export class BlocklyDebuggerComponent {
   @Input()
   public blocklyDryRunResult = '';
 
+  @ViewChild('myDiv')
+  private myDiv: ElementRef;
+
   @Output()
   public displayEvent = new EventEmitter<BlocklyDebugDisplay>();
 
   public readonly displayTypes = BlocklyDebugDisplay;
 
+  public ngOnInit(): void {
+    this.onWindowResize();
+  }
+
   public display(type: BlocklyDebugDisplay) {
     this.displayEvent.emit(type);
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.recomputeWidth(this.myDiv);
+  }
+
+  public recomputeWidth(div: ElementRef) {
+    if (div) {
+      const parentDiv = (div.nativeElement as HTMLElement).offsetParent as HTMLElement;
+      const paddingLeft = +window
+        .getComputedStyle(parentDiv)
+        .getPropertyValue('padding-left')
+        .replace('px', '');
+      const paddingRight = +window
+        .getComputedStyle(parentDiv)
+        .getPropertyValue('padding-right')
+        .replace('px', '');
+      const formWidth = parentDiv.clientWidth - parentDiv.offsetLeft - paddingLeft - paddingRight;
+      document.body.style.setProperty('--blockly-log-width', `${formWidth}px`);
+    }
   }
 }

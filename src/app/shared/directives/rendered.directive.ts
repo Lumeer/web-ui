@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BlocklyDebuggerComponent} from './blockly-debugger/blockly-debugger.component';
-import {BlocklyDebuggerRemoteComponent} from './blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {DirectivesModule} from '../directives/directives.module';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core';
 
-@NgModule({
-  declarations: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
-  imports: [CommonModule, PipesModule, DirectivesModule],
-  exports: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
+@Directive({
+  selector: '[rendered]',
 })
-export class BlocklyModule {}
+export class RenderedDirective implements AfterViewInit {
+  @Output()
+  public rendered = new EventEmitter<ElementRef>();
+
+  public constructor(private _el: ElementRef) {}
+
+  public ngAfterViewInit(): void {
+    this.rendered.emit(this._el);
+  }
+}
