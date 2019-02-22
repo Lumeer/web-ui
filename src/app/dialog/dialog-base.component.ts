@@ -19,9 +19,10 @@
 
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {DialogService} from './dialog.service';
+import {isDialogPathInUrl} from './dialog.utils';
 
 declare let $: any;
 
@@ -50,7 +51,7 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.router.events
       .pipe(
         filter(event => !this.open && event instanceof NavigationStart),
-        filter((event: NavigationStart) => event.url.includes('(dialog:'))
+        filter((event: NavigationStart) => isDialogPathInUrl(event.url))
       )
       .subscribe(event => this.openDialog());
   }
@@ -72,7 +73,7 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.router.events
       .pipe(
         filter(event => this.open && event instanceof NavigationStart),
-        filter((event: NavigationStart) => !event.url.includes('(dialog:'))
+        filter((event: NavigationStart) => !isDialogPathInUrl(event.url))
       )
       .subscribe(event => this.closeDialog());
   }
