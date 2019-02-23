@@ -46,7 +46,6 @@ export enum TablesActionType {
   MOVE_COLUMN = '[Tables] Move Column',
   RESIZE_COLUMN = '[Tables] Resize Column',
   REMOVE_COLUMN = '[Tables] Remove Column',
-  INIT_COLUMN = '[Tables] Initialize Column',
   REMOVE_EMPTY_COLUMNS = '[Tables] Remove Empty Columns',
   SYNC_COLUMNS = '[Tables] Sync Columns',
   UPDATE_COLUMNS = '[Tables] Update Columns',
@@ -197,12 +196,6 @@ export namespace TablesAction {
     public readonly type = TablesActionType.RESIZE_COLUMN;
 
     public constructor(public payload: {cursor: TableHeaderCursor; delta: number}) {}
-  }
-
-  export class InitColumn implements Action {
-    public readonly type = TablesActionType.INIT_COLUMN;
-
-    public constructor(public payload: {cursor: TableHeaderCursor; attributeId: string}) {}
   }
 
   /**
@@ -415,7 +408,6 @@ export namespace TablesAction {
     | ShowColumns
     | MoveColumn
     | ResizeColumn
-    | InitColumn
     | SyncPrimaryRows
     | SyncLinkedRows
     | OrderPrimaryRows

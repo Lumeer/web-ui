@@ -1,5 +1,5 @@
 describe('Table perspective :: Columns', () => {
-  it('adds new columns right and left', () => {
+  it('adds new columns right and left in single table', () => {
     // create new collection and open it in a table
     cy.createCollection('columns', 'fas fa-columns', '#cccccc').then(collection => cy.visitTable(collection.id));
 
@@ -23,7 +23,7 @@ describe('Table perspective :: Columns', () => {
       .should('contain', 'First');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B');
+      .should('contain', 'A');
 
     // add new column left
     cy.get('[data-test="table-column-input"]')
@@ -35,7 +35,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]')
       .first()
-      .should('contain', 'C')
+      .should('contain', 'B')
       .click();
 
     // rename newly added column
@@ -60,12 +60,12 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]')
       .eq(2)
-      .should('contain', 'D');
+      .should('contain', 'B');
 
     // add new column as the last one
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B')
+      .should('contain', 'A')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-add-right"]').click();
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
@@ -73,20 +73,20 @@ describe('Table perspective :: Columns', () => {
     // rename last column
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'E')
+      .should('contain', 'C')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-edit-name"]').click();
-    cy.focused()
-      .type('nd')
-      .trigger('keydown', {code: 'Enter'});
+    cy.focused().trigger('keydown', {code: 'Enter'});
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 6);
     cy.get('[data-test="table-column-input"]')
       .eq(4)
-      .should('contain', 'End');
+      .should('contain', 'C');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'F');
+      .should('contain', 'D');
   });
+
+  // TODO add columns in linked table
 });

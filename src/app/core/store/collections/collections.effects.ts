@@ -580,8 +580,6 @@ function updateCreateAttributesNextAction(nextAction: Action, attributes: Attrib
   } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
     const action = nextAction as DocumentsAction.PatchData;
     action.payload.document = convertNewAttributes(attributes, action);
-  } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
-    (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
   }
 }
 

@@ -245,21 +245,26 @@ export class TableSingleColumnComponent implements OnChanges {
     if (attribute.id) {
       this.updateCollectionAttribute(attribute);
     } else {
+      this.renameUninitializedTableColumn(attribute);
       this.createCollectionAttribute(attribute);
     }
   }
 
-  private createCollectionAttribute(attribute: Attribute) {
-    const nextAction = new TablesAction.InitColumn({
-      cursor: this.cursor,
-      attributeId: null,
-    });
+  private renameUninitializedTableColumn(attribute: Attribute) {
+    this.store$.dispatch(
+      new TablesAction.ReplaceColumns({
+        cursor: this.cursor,
+        deleteCount: 1,
+        columns: [{...this.column, attributeName: extractAttributeLastName(attribute.name)}],
+      })
+    );
+  }
 
+  private createCollectionAttribute(attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
         attributes: [attribute],
-        nextAction,
       })
     );
   }
