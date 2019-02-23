@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -24,6 +25,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
@@ -41,6 +43,7 @@ import {selectTableLastCollectionId} from '../../../../../core/store/tables/tabl
 import {DialogService} from '../../../../../dialog/dialog.service';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 
 const ITEMS_LIMIT = 15;
 
@@ -54,10 +57,20 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableBodyCursor;
 
+  @ViewChild(ContextMenuComponent)
+  public contextMenuComponent: ContextMenuComponent;
+
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
-  constructor(private dialogService: DialogService, private element: ElementRef, private store$: Store<{}>) {}
+  private menuShown: boolean;
+
+  constructor(
+    private contextMenuService: ContextMenuService,
+    private dialogService: DialogService,
+    private element: ElementRef,
+    private store$: Store<{}>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -100,6 +113,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   public ngAfterViewInit() {
     this.setAddButtonColumnWidth();
   }
+
   private setAddButtonColumnWidth() {
     const element = this.element.nativeElement as HTMLElement;
     const tableElement = getTableElement(this.cursor.tableId);
@@ -120,5 +134,37 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
 
   public onUseLinkType(linkType: LinkType) {
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
+  }
+
+  public onButtonClick(event: MouseEvent) {
+    if (this.menuShown) {
+      this.closeMenu();
+    } else {
+      this.showMenu(event);
+    }
+
+    event.stopPropagation();
+  }
+
+  private showMenu(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    this.contextMenuService.show.next({
+      anchorElement: target.firstChild ? target : target.parentElement,
+      contextMenu: this.contextMenuComponent,
+      event,
+      item: null,
+    });
+  }
+
+  private closeMenu() {
+    document.dispatchEvent(new Event('click'));
+  }
+
+  public onOpen() {
+    this.menuShown = true;
+  }
+
+  public onClose() {
+    this.menuShown = false;
   }
 }
