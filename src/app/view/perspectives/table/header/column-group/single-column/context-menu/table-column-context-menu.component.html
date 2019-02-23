@@ -3,14 +3,18 @@
                [enabled]="canManageConfig"
                contextMenuItem
                (execute)="onSort(false)">
-    <i class="fa fa-fw fa-sort-alpha-down mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fa fa-fw fa-sort-alpha-down mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
   </ng-template>
   <ng-template *ngIf="false && cursor.partIndex === 0"
                [enabled]="canManageConfig"
                contextMenuItem
                (execute)="onSort(true)">
-    <i class="fa fa-fw fa-sort-alpha-up mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fa fa-fw fa-sort-alpha-up mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
   </ng-template>
   <ng-template *ngIf="false && cursor.partIndex === 0"
@@ -19,57 +23,80 @@
   <ng-template contextMenuItem
                [enabled]="allowedPermissions?.writeWithView"
                (execute)="edit.emit()">
-    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.edit">Edit name</span>
+    <i class="fa fa-fw fa-edit mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
+    <span data-test="table-column-menu-edit-name"
+          i18n="@@table.header.menu.edit">Edit name</span>
   </ng-template>
   <ng-template *ngIf="attribute.id"
                contextMenuItem
                [enabled]="allowedPermissions?.manageWithView"
                (execute)="configure.emit()">
-    <i class="fa fa-fw fa-shapes mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fa fa-fw fa-shapes mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.changeType">Customize attribute type...</span>
   </ng-template>
   <ng-container *ngIf="attribute.id && !defaultAttribute">
-    <ng-template contextMenuItem divider="true"></ng-template>
+    <ng-template contextMenuItem
+                 divider="true">
+    </ng-template>
     <ng-template contextMenuItem
                  [enabled]="allowedPermissions?.manageWithView"
                  (execute)="setDefaultAttribute.emit()">
-      <i class="fa fa-fw fa-check-square mr-1" aria-hidden="true"></i>&nbsp;
+      <i class="fa fa-fw fa-check-square mr-1"
+         aria-hidden="true">
+      </i>&nbsp;
       <span i18n="@@table.header.menu.defaultAttribute">Set as displayed attribute</span>
     </ng-template>
   </ng-container>
-  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
   <ng-template (execute)="addNextColumn()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-right mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.add.column.next">Add column right</span>
+    <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
+    <span data-test="table-column-menu-add-right"
+          i18n="@@table.header.menu.add.column.next">Add column right</span>
   </ng-template>
   <ng-template (execute)="addPreviousColumn()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-left mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
+    <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
+    <span data-test="table-column-menu-add-left"
+          i18n="@@table.header.menu.add.column.previous">Add column left</span>
   </ng-template>
-  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
   <ng-template *ngIf="false && leaf && attribute.id"
                [enabled]="allowedPermissions?.writeWithView"
                (execute)="split.emit()"
                contextMenuItem>
-    <i class="fa fa-fw fa-columns text-warning mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fa fa-fw fa-columns text-warning mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.split">Split column</span>
   </ng-template>
   <ng-template *ngIf="attribute.id"
                [enabled]="canManageConfig"
                contextMenuItem
                (execute)="hide.emit()">
-    <i class="fa fa-fw fa-eye-slash mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fa fa-fw fa-eye-slash mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.hide">Hide column</span>
   </ng-template>
   <ng-template (execute)="remove.emit()"
                [enabled]="allowedPermissions?.writeWithView"
                contextMenuItem>
-    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>&nbsp;
+    <i class="fas fa-fw fa-trash text-danger mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
     <span i18n="@@table.header.menu.remove">Delete column</span>
   </ng-template>
 </context-menu>

@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Out
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {ContextMenuComponent} from 'ngx-contextmenu';
 
 @Component({
   selector: 'table-column-context-menu',
@@ -68,8 +69,8 @@ export class TableColumnContextMenuComponent {
   @Output()
   public split = new EventEmitter();
 
-  @ViewChild('contextMenu')
-  public contextMenu: ElementRef;
+  @ViewChild(ContextMenuComponent)
+  public contextMenu: ContextMenuComponent;
 
   public addNextColumn() {
     this.add.emit(true);

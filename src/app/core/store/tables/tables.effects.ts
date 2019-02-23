@@ -576,7 +576,7 @@ export class TablesEffects {
         }),
       ];
 
-      if (cursor.columnPath.length === 1) {
+      if (cursor.columnPath.length === 1 && cursor.columnPath[0] === part.columns.length - 1) {
         actions.push(new TablesAction.AddColumn({cursor: {...cursor, columnPath: [cursor.columnPath[0] + 1]}}));
       }
 

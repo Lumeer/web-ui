@@ -1,10 +1,10 @@
 <div tableEditableCell
      [cancelOnBlur]="!(attribute | entityCreated)"
-     [contextMenu]="contextMenuComponent?.contextMenu"
      [disabledCharacters]="disabledCharacters"
      [readonly]="!allowedPermissions?.writeWithView"
      [selected]="selected$ | async"
      [value]="attribute | attributeLastName"
+     (contextmenu)="onContextMenu($event)"
      (valueChange)="onValueChange($event)"
      (editStart)="onEditStart()"
      (editEnd)="onEditEnd($event)"
@@ -14,7 +14,7 @@
      class="table-border-right table-border-bottom h-100 font-italic"
      [class.uninitialized-column]="!column?.attributeIds[0]"
      [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)"
-     data-test="table-single-column-input">
+     data-test="table-column-input">
 </div>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
