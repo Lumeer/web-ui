@@ -11,3 +11,4 @@ cypress/screenshots/
 *.log
 
 .env.json
+environment.ts
