@@ -22,6 +22,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {DialogService} from '../dialog.service';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
+import {isDialogPathInUrl} from '../dialog.utils';
 
 @Component({
   selector: 'fullscreen-dialog',
@@ -45,7 +46,7 @@ export class FullscreenDialogComponent implements OnInit, OnDestroy {
     return this.router.events
       .pipe(
         filter(event => !this.open$.getValue() && event instanceof NavigationStart),
-        filter((event: NavigationStart) => event.url.includes('(fsdialog:'))
+        filter((event: NavigationStart) => isDialogPathInUrl(event.url, 'fsdialog'))
       )
       .subscribe(event => this.openDialog());
   }
@@ -54,7 +55,7 @@ export class FullscreenDialogComponent implements OnInit, OnDestroy {
     return this.router.events
       .pipe(
         filter(event => this.open$.getValue() && event instanceof NavigationStart),
-        filter((event: NavigationStart) => !event.url.includes('(fsdialog:'))
+        filter((event: NavigationStart) => !isDialogPathInUrl(event.url, 'fsdialog'))
       )
       .subscribe(event => this.closeDialog());
   }

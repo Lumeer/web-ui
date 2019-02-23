@@ -60,7 +60,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context>
@@ -718,7 +718,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="select" datatype="html">
         <source>Select</source>
@@ -1298,7 +1298,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="attribute.type.label" datatype="html">
         <source>
@@ -1603,19 +1603,25 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
-        <source>
-      Configure attribute function
-    </source>
+        <source>Configure function of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.attrtibute.function.editable" datatype="html">
+        <source>
+            Allow manual value overwrite
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.title" datatype="html">
         <source>Share View</source>
@@ -1859,7 +1865,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.sort.ascending" datatype="html">
         <source>Sort ascending</source>
@@ -2027,7 +2033,7 @@
         <source>Link collection</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
         <source>Number of users</source>
