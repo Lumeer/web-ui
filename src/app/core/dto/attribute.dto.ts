@@ -35,4 +35,5 @@ export interface AttributeFunctionDto {
   xml?: string;
   errorReport?: string;
   timestamp?: number;
+  editable?: boolean;
 }

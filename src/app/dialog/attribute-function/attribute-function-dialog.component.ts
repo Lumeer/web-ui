@@ -18,12 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {ActivatedRoute} from '@angular/router';
 import {DialogService} from '../dialog.service';
 import {select, Store} from '@ngrx/store';
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {filter, first, map, mergeMap} from 'rxjs/operators';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
@@ -54,6 +54,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
 
   public js: string = '';
   private xml: string = '';
+  public editable$ = new BehaviorSubject<boolean>(undefined);
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,6 +68,10 @@ export class AttributeFunctionDialogComponent implements OnInit {
     this.attribute$ = this.selectAttribute(this.collection$);
     this.linkTypes$ = this.selectLinkTypes();
     this.variables$ = this.selectVariables();
+
+    this.attribute$
+      .pipe(first())
+      .subscribe(attribute => this.editable$.next(attribute.function ? attribute.function.editable : false));
   }
 
   private selectVariables(): Observable<RuleVariable[]> {
@@ -118,7 +123,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
   }
 
   public onSubmit(collection: Collection, attribute: Attribute) {
-    attribute.function = {...attribute.function, js: this.js, xml: this.xml};
+    attribute.function = {...attribute.function, js: this.js, xml: this.xml, editable: this.editable$.getValue()};
     this.onAttributeChange(collection.id, attribute);
   }
 
@@ -140,5 +145,9 @@ export class AttributeFunctionDialogComponent implements OnInit {
 
   public onClose() {
     this.dialogService.closeFullscreenDialog();
+  }
+
+  public switchEditable() {
+    this.editable$.next(!this.editable$.getValue());
   }
 }
