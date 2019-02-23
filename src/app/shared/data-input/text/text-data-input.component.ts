@@ -33,6 +33,7 @@ import {TextConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
+import {formatTextDataValue} from '../../utils/data.utils';
 
 @Component({
   selector: 'text-data-input',
@@ -104,7 +105,7 @@ export class TextDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.textInput.nativeElement.value = this.value || '';
+        this.textInput.nativeElement.value = formatTextDataValue(this.value);
         this.cancel.emit();
         return;
     }

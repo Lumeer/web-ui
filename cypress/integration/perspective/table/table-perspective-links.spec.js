@@ -12,6 +12,22 @@ describe('Table perspective :: Links', () => {
     cy.createCollection('first', 'fas fa-unicorn', '#ff66dd');
     cy.createCollection('second', 'fas fa-acorn', '#994400');
 
+    // other collections created to test LMR-1465
+    cy.createCollection('third', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('fourth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('fifth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('sixth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('seventh', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('eighth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('ninth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('tenth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('eleventh', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('twelfth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('thirteenth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('fourteenth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('fifteenth', 'fas fa-empty-set', '#cccccc');
+    cy.createCollection('sixteenth', 'fas fa-empty-set', '#cccccc');
+
     cy.visitSearchCollections();
 
     cy.get('[data-test="collection-card"] i.fa-unicorn')
