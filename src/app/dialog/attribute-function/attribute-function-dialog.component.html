@@ -2,8 +2,13 @@
      *ngIf="{collection: (collection$ | async), attribute: (attribute$ | async)} as data"
      (clickOutside)="onClose()">
   <div class="modal-header bg-success text-white rounded-top">
-    <h5 class="modal-title" i18n="@@dialog.attribute.function.title">
-      Configure attribute function
+    <h5 class="modal-title">
+      <span i18n="@@dialog.attribute.function.title">Configure function of</span>
+      <icons-presenter class="ml-1"
+                       [colors]="[data.collection.color]"
+                       [icons]="[data.collection.icon]">
+      </icons-presenter>
+      <span class="ml-1">{{data.attribute.name}}</span>
     </h5>
     <button (click)="onClose()"
             aria-label="Close"

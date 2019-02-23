@@ -24,14 +24,12 @@ import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 
 @Component({
-  selector: 'blockly-dialog',
-  templateUrl: './blockly-dialog.component.html',
-  styleUrls: ['./blockly-dialog.component.scss'],
+  selector: 'fullscreen-dialog',
+  templateUrl: './fullscreen-dialog.component.html',
+  styleUrls: ['./fullscreen-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyDialogComponent implements OnInit, OnDestroy {
-  public id = 'blocklyDialog';
-
+export class FullscreenDialogComponent implements OnInit, OnDestroy {
   public open$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
@@ -47,7 +45,7 @@ export class BlocklyDialogComponent implements OnInit, OnDestroy {
     return this.router.events
       .pipe(
         filter(event => !this.open$.getValue() && event instanceof NavigationStart),
-        filter((event: NavigationStart) => event.url.includes('(blockly-dialog:'))
+        filter((event: NavigationStart) => event.url.includes('(fsdialog:'))
       )
       .subscribe(event => this.openDialog());
   }
@@ -56,7 +54,7 @@ export class BlocklyDialogComponent implements OnInit, OnDestroy {
     return this.router.events
       .pipe(
         filter(event => this.open$.getValue() && event instanceof NavigationStart),
-        filter((event: NavigationStart) => !event.url.includes('(blockly-dialog:'))
+        filter((event: NavigationStart) => !event.url.includes('(fsdialog:'))
       )
       .subscribe(event => this.closeDialog());
   }
@@ -71,7 +69,7 @@ export class BlocklyDialogComponent implements OnInit, OnDestroy {
   }
 
   private clearDialogRoute() {
-    this.dialogService.closeBlocklyDialog();
+    this.dialogService.closeFullscreenDialog();
   }
 
   public ngOnDestroy() {

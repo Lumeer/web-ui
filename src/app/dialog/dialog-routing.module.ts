@@ -34,7 +34,7 @@ const routes: Routes = [
   {
     path: `${DialogPath.ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
     component: AttributeFunctionDialogComponent,
-    outlet: 'blockly-dialog',
+    outlet: 'fsdialog',
   },
   {
     path: `${DialogPath.ATTRIBUTE_TYPE}/:collectionId/:attributeId`,

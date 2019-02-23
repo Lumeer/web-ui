@@ -53,18 +53,18 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
-  public closeBlocklyDialog() {
+  public closeFullscreenDialog() {
     this.callback = null;
-    this.navigateToBlocklyDialog(null);
+    this.navigateToFullscreenDialog(null);
   }
 
   public closeAllDialogs() {
     this.closeDialog();
-    this.closeBlocklyDialog();
+    this.closeFullscreenDialog();
   }
 
   public openAttributeFunction(collectionId: string, attributeId: string) {
-    this.navigateToBlocklyDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
+    this.navigateToFullscreenDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
   }
 
   public openAttributeConfigDialog(collectionId: string, attributeId: string) {
@@ -118,11 +118,11 @@ export class DialogService {
 
   private navigateToDialog(path: any[]) {
     this.open = !!path;
-    return this.router.navigate(['', {outlets: {dialog: path}}], {queryParamsHandling: 'preserve'});
+    return this.router.navigate(['', {outlets: {dialog: path, fsdialog: null}}], {queryParamsHandling: 'preserve'});
   }
 
-  private navigateToBlocklyDialog(path: any[]) {
+  private navigateToFullscreenDialog(path: any[]) {
     this.open = !!path;
-    return this.router.navigate(['', {outlets: {'blockly-dialog': path}}], {queryParamsHandling: 'preserve'});
+    return this.router.navigate(['', {outlets: {fsdialog: path, dialog: null}}], {queryParamsHandling: 'preserve'});
   }
 }

@@ -112,7 +112,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
-        onSuccess: () => this.dialogService.closeBlocklyDialog(),
+        onSuccess: () => this.dialogService.closeFullscreenDialog(),
       })
     );
   }
@@ -139,6 +139,6 @@ export class AttributeFunctionDialogComponent implements OnInit {
   }
 
   public onClose() {
-    this.dialogService.closeBlocklyDialog();
+    this.dialogService.closeFullscreenDialog();
   }
 }
