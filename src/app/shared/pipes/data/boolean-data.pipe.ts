@@ -17,17 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {TextDataValuePipe} from './text-data-value.pipe';
-import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
-import {DataValuePipe} from './data-value.pipe';
-import {BooleanDataValuePipe} from './boolean-data.pipe';
-import {NumberDataValuePipe} from './number-data-value.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {parseBooleanDataValue} from '../../utils/data.utils';
 
-@NgModule({
-  imports: [CommonModule],
-  declarations: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe, BooleanDataValuePipe, NumberDataValuePipe],
-  exports: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe, BooleanDataValuePipe, NumberDataValuePipe],
+@Pipe({
+  name: 'booleanDataValue',
 })
-export class DataPipesModule {}
+export class BooleanDataValuePipe implements PipeTransform {
+  public transform(value: any): boolean {
+    return parseBooleanDataValue(value);
+  }
+}

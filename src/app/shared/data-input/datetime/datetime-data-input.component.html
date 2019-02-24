@@ -3,17 +3,19 @@
        [title]="value | dateTimeDataValue: constraintConfig"
        [value]="value | dateTimeDataValue: constraintConfig"
        class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="datetime-data-input"
        type="text">
 
 <ng-template #datePicker>
   <input #dateInput
          bsDatepicker
          [bsConfig]="{ containerClass: 'theme-default', dateInputFormat: constraintConfig?.format }"
-         [bsValue]="value | parseDate"
+         [bsValue]="value | parseDate: constraintConfig?.format"
          [value]="value | dateTimeDataValue: constraintConfig"
          [minDate]="constraintConfig?.minDateTime | parseDate"
          [maxDate]="constraintConfig?.maxDateTime | parseDate"
          (bsValueChange)="onValueChange($event)"
          class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="datetime-data-input"
          type="text">
 </ng-template>

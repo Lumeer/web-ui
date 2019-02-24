@@ -2,12 +2,13 @@
      (click)="onDivClick($event)">
   <input #booleanInput
          [id]="inputId"
-         [attr.checked]="value || null"
+         [attr.checked]="(value | booleanDataValue) || null"
          [readonly]="readonly || null"
          [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"
          type="checkbox"
-         class="custom-control-input">
+         class="custom-control-input"
+         data-test="boolean-data-input">
   <label [for]="inputId"
          [style.cursor]="readonly ? 'unset' : null"
          class="custom-control-label">

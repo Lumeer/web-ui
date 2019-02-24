@@ -1,38 +1,26 @@
 describe('Table perspective :: Links', () => {
-  beforeEach(() => {
-    cy.server();
-
-    const collectionUrl = `${Cypress.env('projectRestUrl')}/collections/**`;
-    cy.route('POST', `${collectionUrl}/attributes`).as('createAttribute');
-    cy.route('POST', `${collectionUrl}/documents`).as('createDocument');
-    cy.route('POST', `${Cypress.env('projectRestUrl')}/link-instances`).as('createLinkInstance');
-  });
-
   it('adds linked table part', () => {
-    cy.createCollection('first', 'fas fa-unicorn', '#ff66dd');
-    cy.createCollection('second', 'fas fa-acorn', '#994400');
+    cy.createCollection('first', 'fas fa-unicorn', '#ff66dd').then(collection => {
+      cy.createCollection('second', 'fas fa-acorn', '#994400');
 
-    // other collections created to test LMR-1465
-    cy.createCollection('third', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('fourth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('fifth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('sixth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('seventh', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('eighth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('ninth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('tenth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('eleventh', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('twelfth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('thirteenth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('fourteenth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('fifteenth', 'fas fa-empty-set', '#cccccc');
-    cy.createCollection('sixteenth', 'fas fa-empty-set', '#cccccc');
+      // other collections created to test LMR-1465
+      cy.createCollection('third', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('fourth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('fifth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('sixth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('seventh', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('eighth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('ninth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('tenth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('eleventh', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('twelfth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('thirteenth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('fourteenth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('fifteenth', 'fas fa-empty-set', '#cccccc');
+      cy.createCollection('sixteenth', 'fas fa-empty-set', '#cccccc');
 
-    cy.visitSearchCollections();
-
-    cy.get('[data-test="collection-card"] i.fa-unicorn')
-      .last()
-      .click();
+      cy.visitTable(collection.id);
+    });
 
     cy.get('[data-test="table-column-input"]')
       .last()

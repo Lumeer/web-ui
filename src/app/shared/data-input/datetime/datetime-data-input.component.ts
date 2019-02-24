@@ -34,7 +34,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {BsDatepickerDirective} from 'ngx-bootstrap';
 import {KeyCode} from '../../key-code';
 import * as moment from 'moment';
-import {formatDateTimeDataValue} from '../../utils/data.utils';
+import {formatDateTimeDataValue, parseDateTimeDataValue} from '../../utils/data.utils';
 
 @Component({
   selector: 'datetime-data-input',
@@ -77,7 +77,7 @@ export class DatetimeDataInputComponent implements OnChanges {
       this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
-          this.dateInput.nativeElement.value = this.value;
+          this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         }
         HtmlModifier.setCursorAtTextContentEnd(this.dateInput.nativeElement);
         this.dateInput.nativeElement.focus();
@@ -88,6 +88,10 @@ export class DatetimeDataInputComponent implements OnChanges {
       if (this.datePicker) {
         this.datePicker.hide();
       }
+    }
+    if (changes.value && String(this.value).length === 1) {
+      // show value entered into hidden input without any changes
+      setTimeout(() => (this.dateInput.nativeElement.value = this.value));
     }
   }
 
@@ -104,7 +108,7 @@ export class DatetimeDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSaving = true;
-        this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig);
+        this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         this.cancel.emit();
         return;
     }
@@ -126,8 +130,10 @@ export class DatetimeDataInputComponent implements OnChanges {
       return;
     }
 
-    const previousValue = !this.value && this.value !== 0 ? '' : this.value;
+    const previousDate = parseDateTimeDataValue(this.value, this.constraintConfig.format);
+    const previousValue = previousDate && previousDate.toISOString();
     const value = date && date.toISOString();
+
     if (value !== previousValue) {
       this.save.emit(value);
     }
