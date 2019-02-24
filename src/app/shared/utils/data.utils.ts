@@ -60,7 +60,7 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
-  return String(value);
+  return formatUnknownDataValue(value);
 }
 
 export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {
