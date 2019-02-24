@@ -45,17 +45,15 @@ export function formatDataValue(value: any, constraint: Constraint): string {
 }
 
 export function formatDateTimeDataValue(value: any, config: DateTimeConstraintConfig): string {
-  if (typeof value !== 'string') {
-    return !value && value !== 0 ? '' : value;
+  if ([undefined, null, ''].includes(value)) {
+    return '';
   }
 
-  const date = new Date(value);
-
-  if (date.toString() === 'Invalid Date') {
-    return value;
+  if (!moment(value).isValid()) {
+    return formatUnknownDataValue(value);
   }
 
-  return config && config.format ? moment(date).format(config.format) : date.toLocaleString();
+  return config && config.format ? moment(value).format(config.format) : formatUnknownDataValue(value);
 }
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
