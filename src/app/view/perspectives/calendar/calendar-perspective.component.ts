@@ -27,7 +27,7 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
