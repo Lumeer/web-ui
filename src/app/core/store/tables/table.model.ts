@@ -50,7 +50,6 @@ export interface TableConfigColumn {
   attributeName?: string;
   width?: number;
   children?: TableConfigColumn[];
-  uniqueId?: string; // TODO maybe not needed
 }
 
 export interface TableConfigRow {

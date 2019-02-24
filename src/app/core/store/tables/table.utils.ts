@@ -299,7 +299,7 @@ export function createCollectionPart(
   const columns = createTableColumnsFromAttributes(collection.attributes, null, columnsConfig);
 
   if (last) {
-    columns.push(createEmptyColumn(collection.attributes));
+    columns.push(createEmptyColumn(collection.attributes, columns));
   }
 
   return {
@@ -308,8 +308,16 @@ export function createCollectionPart(
   };
 }
 
-export function createEmptyColumn(attributes: Attribute[]): TableConfigColumn {
-  const attributeName = generateAttributeName(attributes);
+export function createEmptyColumn(
+  attributes: Attribute[],
+  columns: TableConfigColumn[],
+  parentName?: string
+): TableConfigColumn {
+  const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
+    return column.attributeName ? attributeNames.concat(column.attributeName) : attributeNames;
+  }, []);
+
+  const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
   return {
     type: TableColumnType.COMPOUND,
     attributeIds: [],
@@ -739,6 +747,21 @@ export function addMissingTableColumns(
       }))
     )
     .concat(suffixColumns);
+}
+
+/**
+ * Initializes all columns containing attributeName with existing attribute ID.
+ */
+export function initializeExistingTableColumns(columns: TableConfigColumn[], attributes: Attribute[]) {
+  return columns.map(column => {
+    if (column.attributeName) {
+      const attribute = attributes.find(attr => attr.name === column.attributeName);
+      if (attribute) {
+        return {...column, attributeIds: [attribute.id], attributeName: undefined};
+      }
+    }
+    return column;
+  });
 }
 
 function extractAttributeIdsFromTableColumns(columns: TableConfigColumn[]): string[] {

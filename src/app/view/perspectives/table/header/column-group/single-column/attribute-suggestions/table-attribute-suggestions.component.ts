@@ -99,21 +99,8 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
         attributes: [attribute],
-        callback: attributes => this.initColumn(attributes),
       })
     );
-  }
-
-  private initColumn(attributes: Attribute[]) {
-    const attribute = attributes.find(attr => attr.name === this.attributeName);
-    if (attribute) {
-      this.store$.dispatch(
-        new TablesAction.InitColumn({
-          cursor: this.cursor,
-          attributeId: attribute.id,
-        })
-      );
-    }
   }
 
   public useLinkType(linkType: LinkType) {

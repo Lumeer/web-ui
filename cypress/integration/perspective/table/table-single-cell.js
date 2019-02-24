@@ -1,15 +1,10 @@
 describe('Table perspective :: Single cell', () => {
   it('enters values into a single table body cell', () => {
-    cy.createCollection('empty', 'fas fa-empty-set', '#cccccc');
-    cy.visit('/');
-
-    // open created collection
-    cy.get('[data-test="collection-card"] i.fa-empty-set')
-      .first()
-      .click();
+    // create new collection and open it in a table
+    cy.createCollection('empty', 'fas fa-empty-set', '#cccccc').then(collection => cy.visitTable(collection.id));
 
     // check if there is only a single column called 'A'
-    cy.get('[data-test="table-single-column-input"]')
+    cy.get('[data-test="table-column-input"]')
       .last()
       .should('contain', 'A');
 
@@ -43,12 +38,12 @@ describe('Table perspective :: Single cell', () => {
       .blur();
 
     // check if the first column has been initialized
-    cy.get('[data-test="table-single-column-input"].text-default-attribute')
+    cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
       .should('contain', 'A');
 
     // check if the second column has been added
-    cy.get('[data-test="table-single-column-input"]')
+    cy.get('[data-test="table-column-input"]')
       .last()
       .should('contain', 'B');
 

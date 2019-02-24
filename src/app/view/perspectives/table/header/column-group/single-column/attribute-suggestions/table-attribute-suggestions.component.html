@@ -1,12 +1,14 @@
 <ng-container *ngIf="{linkedAttributes: linkedAttributes$ | async, allAttributes: allAttributes$ | async, selectedIndex: (selectedIndex$ | async)} as suggestions">
   <div *ngIf="lastName && (!(collection | attributeExist:attributeName) || !(suggestions.linkedAttributes | empty) || !(suggestions.allAttributes | empty))"
        class="dropdown">
-    <div class="dropdown-menu show">
+    <div class="dropdown-menu show"
+         data-test="table-attribute-suggestions">
       <ng-container *ngIf="collection && !(collection | attributeExist:attributeName)">
         <div class="dropdown-header cursor-not-allowed"
              i18n="@@create.new.attribute">Create new attribute
         </div>
         <a class="dropdown-item"
+           data-test="table-attribute-name-suggestion"
            [class.selected]="suggestions.selectedIndex === 0 && newCount === 1"
            (mousedown)="createAttribute()">
           <icons-presenter [colors]="[collection.color]"

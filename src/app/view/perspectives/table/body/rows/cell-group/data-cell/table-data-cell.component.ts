@@ -423,7 +423,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: createDocumentAction,
-        callback: this.replaceTableColumnCallback(table, attributeName),
       })
     );
   }
@@ -441,17 +440,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
     return this.cursor.partIndex === 0 ? {parentId: row.parentDocumentId} : undefined;
-  }
-
-  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: Attribute[]) => void {
-    const {cursor} = findTableColumnWithCursor(table, this.cursor.partIndex, attributeName);
-
-    return attributes => {
-      const attribute = attributes.find(attr => attr.name === attributeName);
-      if (attribute) {
-        this.store$.dispatch(new TablesAction.InitColumn({cursor, attributeId: attribute.id}));
-      }
-    };
   }
 
   private createLinkInstanceCallback(table: TableModel): (documentId: string) => void {
@@ -491,21 +479,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     const patchDocumentAction = new DocumentsAction.PatchData({document});
     const newAttribute = {name: attributeName};
 
-    this.store$
-      .pipe(
-        select(selectTableById(this.cursor.tableId)),
-        first()
-      )
-      .subscribe(table => {
-        this.store$.dispatch(
-          new CollectionsAction.CreateAttributes({
-            collectionId: this.document.collectionId,
-            attributes: [newAttribute],
-            nextAction: patchDocumentAction,
-            callback: this.replaceTableColumnCallback(table, attributeName),
-          })
-        );
-      });
+    this.store$.dispatch(
+      new CollectionsAction.CreateAttributes({
+        collectionId: this.document.collectionId,
+        attributes: [newAttribute],
+        nextAction: patchDocumentAction,
+      })
+    );
   }
 
   private updateDocumentWithExistingAttribute(attributeId: string, value: any) {

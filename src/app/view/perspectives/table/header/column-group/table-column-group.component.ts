@@ -88,7 +88,8 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   public trackByCollectionAndAttribute(index: number, column: TableConfigColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
       const part = getTablePart(this.table, this.cursor);
-      return part.collectionId + ':' + (column.attributeIds[0] || column.uniqueId);
+      const attributeSuffix = column.attributeName ? `${column.attributeName}:${index}` : column.attributeIds[0];
+      return `${part.collectionId}:${attributeSuffix}`;
     }
   }
 
