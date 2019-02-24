@@ -28,12 +28,12 @@ import {selectAllCollections} from '../../../../../../core/store/collections/col
 import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../rule-variable-type';
-import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
+import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 
 @Component({
   selector: 'blockly-form',
   templateUrl: './blockly-form.component.html',
-  styleUrls: ['./blockly-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlocklyFormComponent implements OnInit {
@@ -46,7 +46,7 @@ export class BlocklyFormComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
-  public displayDebug = '';
+  public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
 
   public collections$: Observable<Collection[]>;
 
@@ -56,10 +56,13 @@ export class BlocklyFormComponent implements OnInit {
 
   public functionToolbox = BLOCKLY_FUNCTION_TOOLBOX;
 
-  public constructor(private store$: Store<AppState>) {}
+  public debugButtons: BlocklyDebugDisplay[] = [
+    BlocklyDebugDisplay.DisplayJs,
+    BlocklyDebugDisplay.DisplayError,
+    BlocklyDebugDisplay.DisplayLog,
+  ];
 
-  @ViewChild('parentFormDiv')
-  private parentFormDiv: ElementRef;
+  public constructor(private store$: Store<AppState>) {}
 
   public get blocklyXml(): string {
     return this.form.get('blocklyXml').value;
@@ -81,16 +84,15 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyResultTimestamp').value;
   }
 
-  public display(part: string): void {
-    if (this.displayDebug === part) {
-      this.displayDebug = '';
+  public display(type: BlocklyDebugDisplay) {
+    if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
+      this.display(BlocklyDebugDisplay.DisplayNone);
     } else {
-      this.displayDebug = part;
+      this.displayDebug = type;
     }
   }
 
   public ngOnInit(): void {
-    this.onWindowResize();
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
     this.variables = [
@@ -105,12 +107,5 @@ export class BlocklyFormComponent implements OnInit {
 
   public onXmlUpdate(xmlCode: string) {
     this.form.get('blocklyXml').setValue(xmlCode);
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    const element = this.parentFormDiv.nativeElement as HTMLElement;
-    const formWidth = element.clientWidth - element.offsetLeft;
-    document.body.style.setProperty('--blockly-log-width', `${formWidth}px`);
   }
 }

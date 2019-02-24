@@ -40,6 +40,7 @@ export interface AttributeFunction {
   xml?: string;
   errorReport?: string;
   timestamp?: number;
+  editable?: boolean;
 }
 
 export interface Collection extends Resource {

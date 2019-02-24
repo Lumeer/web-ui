@@ -1,0 +1,44 @@
+@import '../../../styles/variables';
+
+.fade-over {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  outline: 0;
+  background-color: #000;
+  opacity: 0.5;
+  transition: opacity 0.15s linear;
+}
+
+.dialog-base {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dialog {
+  max-width: 85vw;
+  margin: 1.75rem auto;
+  position: relative;
+  width: auto;
+  opacity: 1;
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid $gray-200;
+  }
+}

@@ -31,6 +31,7 @@ import {AppState} from './core/store/app.state';
 import {selectCurrentUser} from './core/store/users/users.state';
 import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
+import {PusherService} from './core/pusher/pusher.service';
 
 declare let $: any;
 
@@ -53,7 +54,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private router: Router,
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
-    private title: Title
+    private title: Title,
+    private pusher: PusherService
   ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 

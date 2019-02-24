@@ -28,8 +28,14 @@ import {ShareViewDialogComponent} from './share-view/share-view-dialog.component
 import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 import {CreateCalendarEventComponent} from './create-calendar-event/create-calendar-event.component';
+import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 
 const routes: Routes = [
+  {
+    path: `${DialogPath.ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
+    component: AttributeFunctionDialogComponent,
+    outlet: 'fsdialog',
+  },
   {
     path: `${DialogPath.ATTRIBUTE_TYPE}/:collectionId/:attributeId`,
     component: AttributeTypeDialogComponent,

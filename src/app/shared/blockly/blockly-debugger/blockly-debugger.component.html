@@ -1,0 +1,45 @@
+<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3" #myDiv  (rendered)="recomputeWidth($event)">
+  <div *ngIf="displayDebug === displayTypes.DisplayJs">
+    <h5 i18n="@@shared.blockly.debugger.source">Blockly Source Code</h5>
+    <small class="text-muted">
+      <span i18n="@@shared.blockly.debugger.debug">For debugging purposes by advanced users only.</span>
+    </small>
+    <pre class="text-monospace limit-width" *ngIf="blocklyJs">
+        {{blocklyJs}}
+      </pre>
+    <p *ngIf="!blocklyJs" i18n="@@shared.blockly.debugger.noCode">No code generated yet.</p>
+  </div>
+  <div *ngIf="displayDebug === displayTypes.DisplayLog">
+    <h5 i18n="@@shared.blockly.debugger.dryRun">Dry Run Results</h5>
+    <small class="text-muted">
+      <span i18n="@@shared.blockly.debugger.debug">For debugging purposes by advanced users only.</span>
+      <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@shared.blockly.debugger.timestamp">Timestamp:</span>
+      {{blocklyResultTimestamp | date : 'full'}}
+    </small>
+    <p class="text-monospace limit-width" *ngIf="blocklyDryRunResult">
+      {{blocklyDryRunResult}}
+    </p>
+    <p *ngIf="!blocklyDryRunResult" i18n="@@shared.blockly.debugger.noResults">No dry run results yet.</p>
+  </div>
+  <div *ngIf="displayDebug === displayTypes.DisplayError">
+    <h5 i18n="@@shared.blockly.debugger.error">Error Report</h5>
+    <small class="text-muted">
+      <span i18n="@@shared.blockly.debugger.debug">For debugging purposes by advanced users only.</span>
+      <span *ngIf="blocklyResultTimestamp" class="mx-1" i18n="@@shared.blockly.debugger.timestamp">Timestamp:</span>
+      {{blocklyResultTimestamp | date : 'full'}}
+    </small>
+    <pre class="text-monospace limit-width" *ngIf="blocklyError">
+        {{blocklyError}}
+      </pre>
+    <p *ngIf="!blocklyError" i18n="@@shared.blockly.debugger.noError">No error recorded.</p>
+  </div>
+</div>
+<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-end border-bottom pb-3">
+  <button
+    type="button"
+    class="btn btn-sm btn-primary"
+    (click)="display(displayTypes.DisplayNone)">
+    <i class="fas fa-times"></i>&nbsp;
+    <span class="font-weight-bold" i18n="@@button.close">Close</span>
+  </button>
+</div>

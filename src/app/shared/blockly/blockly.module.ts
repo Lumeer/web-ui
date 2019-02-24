@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyEditorComponent} from './blockly-editor.component';
+import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {BlocklyDebuggerComponent} from './blockly-debugger/blockly-debugger.component';
+import {BlocklyDebuggerRemoteComponent} from './blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component';
+import {PipesModule} from '../pipes/pipes.module';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
-  declarations: [BlocklyEditorComponent],
-  imports: [CommonModule],
-  exports: [BlocklyEditorComponent],
+  declarations: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
+  imports: [CommonModule, PipesModule, DirectivesModule],
+  exports: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],
 })
-export class BlocklyEditorModule {}
+export class BlocklyModule {}

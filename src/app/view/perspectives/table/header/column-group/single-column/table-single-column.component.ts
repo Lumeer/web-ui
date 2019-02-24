@@ -310,6 +310,10 @@ export class TableSingleColumnComponent implements OnChanges {
     this.dialogService.openAttributeConfigDialog(this.collection.id, this.attribute.id);
   }
 
+  public onFunctionEdit() {
+    this.dialogService.openAttributeFunction(this.collection.id, this.attribute.id);
+  }
+
   public onEdit() {
     this.editableCellDirective.startEditing();
   }

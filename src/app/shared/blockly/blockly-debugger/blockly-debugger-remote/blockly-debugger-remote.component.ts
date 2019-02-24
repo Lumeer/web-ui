@@ -17,16 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {BlocklyDebugDisplay} from '../blockly-debugger.component';
 
-import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessor} from './trim-value-accessor';
-import {RenderedDirective} from './rendered.directive';
-
-@NgModule({
-  imports: [CommonModule],
-  declarations: [NgVarDirective, TrimValueAccessor, RenderedDirective],
-  exports: [NgVarDirective, TrimValueAccessor, RenderedDirective],
+@Component({
+  selector: 'blockly-debugger-remote',
+  templateUrl: './blockly-debugger-remote.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectivesModule {}
+export class BlocklyDebuggerRemoteComponent {
+  @Input()
+  public displayButtons: BlocklyDebugDisplay[];
+
+  @Output()
+  public displayEvent = new EventEmitter<BlocklyDebugDisplay>();
+
+  public readonly displayTypes = BlocklyDebugDisplay;
+
+  public display(type: BlocklyDebugDisplay) {
+    this.displayEvent.emit(type);
+  }
+}

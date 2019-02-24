@@ -1,4 +1,5 @@
-<div class="d-flex w-100 justify-content-center" #loading>
+<div class="d-flex w-100 justify-content-center" *ngIf="loading$ | async">
   <span class="font-weight-bold" i18n="@@message.loading">Loading...</span>
 </div>
 <div id="blocklyDiv{{blocklyId}}" class="blocklyDiv"></div>
+<div class="blocklyWidgetDiv"></div>

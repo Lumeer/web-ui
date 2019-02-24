@@ -17,16 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core';
 
-import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessor} from './trim-value-accessor';
-import {RenderedDirective} from './rendered.directive';
-
-@NgModule({
-  imports: [CommonModule],
-  declarations: [NgVarDirective, TrimValueAccessor, RenderedDirective],
-  exports: [NgVarDirective, TrimValueAccessor, RenderedDirective],
+@Directive({
+  selector: '[rendered]',
 })
-export class DirectivesModule {}
+export class RenderedDirective implements AfterViewInit {
+  @Output()
+  public rendered = new EventEmitter<ElementRef>();
+
+  public constructor(private _el: ElementRef) {}
+
+  public ngAfterViewInit(): void {
+    this.rendered.emit(this._el);
+  }
+}

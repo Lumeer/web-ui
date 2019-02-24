@@ -37,6 +37,9 @@ import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
 import {CreateCalendarEventModule} from './create-calendar-event/create-calendar-event.module';
+import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
+import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   imports: [
@@ -49,6 +52,7 @@ import {CreateCalendarEventModule} from './create-calendar-event/create-calendar
     ShareViewDialogModule,
     AttributeTypeFormModule,
     CreateCalendarEventModule,
+    ClickOutsideModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,
@@ -62,8 +66,10 @@ import {CreateCalendarEventModule} from './create-calendar-event/create-calendar
     FeedbackDialogComponent,
     PlayVideoComponent,
     AttributeTypeDialogComponent,
+    AttributeFunctionDialogComponent,
+    FullscreenDialogComponent,
   ],
   entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
-  exports: [DialogBaseComponent],
+  exports: [DialogBaseComponent, FullscreenDialogComponent],
 })
 export class DialogModule {}

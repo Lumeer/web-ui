@@ -21,26 +21,26 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
+  HostListener,
   Inject,
   Input,
   Output,
   Renderer2,
-  ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {DOCUMENT} from '@angular/common';
-import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../core/constants';
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
-import {AppState} from '../../core/store/app.state';
-import {DialogService} from '../../dialog/dialog.service';
-import {ContrastColorPipe} from '../pipes/contrast-color.pipe';
-import {BlocklyService} from '../../core/service/blockly.service';
-import {shadeColor} from '../utils/html-modifier';
+import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../core/constants';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
+import {AppState} from '../../../core/store/app.state';
+import {DialogService} from '../../../dialog/dialog.service';
+import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
+import {BlocklyService} from '../../../core/service/blockly.service';
+import {shadeColor} from '../../utils/html-modifier';
+import {BehaviorSubject} from 'rxjs';
 
 declare var Blockly: any;
 
@@ -81,7 +81,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
   public attribute: Attribute;
 
   @Input()
-  public thisDocumentId: string;
+  public thisCollectionId: string;
 
   @Input()
   public xml: string = '';
@@ -92,9 +92,6 @@ export class BlocklyEditorComponent implements AfterViewInit {
   @Input()
   public masterType: MasterBlockType = MasterBlockType.Function;
 
-  @ViewChild('loading')
-  private loadingElement: ElementRef;
-
   @Output()
   public onJsUpdate = new EventEmitter<string>();
 
@@ -103,8 +100,11 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
   public blocklyId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
+  public loading$ = new BehaviorSubject(true);
+
   private workspace: any;
   private lumeerVar: string;
+  private masterBlock: any;
 
   constructor(
     private store$: Store<AppState>,
@@ -125,9 +125,18 @@ export class BlocklyEditorComponent implements AfterViewInit {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
       this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
-      this.loadingElement.nativeElement.remove();
-      this.initBlockly();
+      setTimeout(() => {
+        this.onResize();
+        this.loading$.next(false);
+        this.initBlockly();
+      }, 200);
     }
+  }
+
+  @HostListener('window:resize')
+  public onResize(): void {
+    Blockly.svgResize(this.workspace);
+    this.workspace.getAllBlocks().forEach(b => b.render());
   }
 
   public initBlockly() {
@@ -160,11 +169,13 @@ export class BlocklyEditorComponent implements AfterViewInit {
         containerBlock.setDeletable(false);
         containerBlock.initSvg();
         containerBlock.render();
+        this.masterBlock = containerBlock;
       } else {
         const valueBlock = this.workspace.newBlock(VALUE_CONTAINER);
         valueBlock.setDeletable(false);
         valueBlock.initSvg();
         valueBlock.render();
+        this.masterBlock = valueBlock;
       }
     }
 
@@ -257,7 +268,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         '\n' +
         lumeerVar +
         '.setDocumentAttribute(' +
-        this_.thisDocumentId +
+        'thisDocument' +
         ", '" +
         this_.attribute.id +
         "', " +
@@ -392,10 +403,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
         const children = block.getChildren(false);
         if (children && children.length > 0) {
           const child = children[0];
-          const childType = child.type;
+          const childType = child.type.replace(DOCUMENT_TYPE_SUFFIX, '').replace(VARIABLES_GET_PREFIX, '');
           const linkParts = this.getLinkParts(block.type);
-          const counterpart =
-            linkParts[0] === childType.replace(DOCUMENT_TYPE_SUFFIX, '') ? linkParts[1] : linkParts[0];
+          const counterpart = linkParts[0] === childType ? linkParts[1] : linkParts[0];
           block.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
         }
       }
@@ -481,7 +491,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     options.splice(0, originalLength);
 
     if (parentBlock.type === GET_ATTRIBUTE) {
-      const newType = block.type.endsWith('_link') ? ['Array'] : [''];
+      const newType = block.type.endsWith('_link') ? ['Array'] : ['', 'Number', 'String', 'Boolean'];
       const parentBlockOutputType =
         parentBlock.outputConnection && parentBlock.outputConnection.check_ && parentBlock.outputConnection.check_[0]
           ? parentBlock.outputConnection.check_[0]
@@ -827,6 +837,12 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private generateJs(): void {
-    this.onJsUpdate.emit(Blockly.JavaScript.workspaceToCode(this.workspace));
+    let js = Blockly.JavaScript.workspaceToCode(this.workspace);
+
+    if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
+      js = 'var thisDocument;\n' + js;
+    }
+
+    this.onJsUpdate.emit(js);
   }
 }
