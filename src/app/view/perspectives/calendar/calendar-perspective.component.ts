@@ -27,7 +27,7 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -115,6 +115,10 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
         this.fetchDocuments(query);
         this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
         this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
+        this.permissions$ = this.collections$.pipe(
+          mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+          distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+        );
       });
     this.subscriptions.add(subscription);
   }
@@ -126,10 +130,6 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
   }
 
   public onConfigChanged(config: CalendarConfig) {

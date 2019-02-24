@@ -31,7 +31,11 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar.model';
+import {
+  CalendarBarPropertyRequired,
+  CalendarConfig,
+  CalendarMode,
+} from '../../../../core/store/calendars/calendar.model';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
@@ -141,9 +145,26 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onNewEvent(time: number) {
-    const atLeastOneWritable = Object.values(this.permissions).some(p => p.writeWithView);
-    if (atLeastOneWritable) {
+    if (this.isAtLeastOneWritable()) {
       this.newEvent.emit(time);
     }
+  }
+
+  private isAtLeastOneWritable(): boolean {
+    for (const entry of Object.entries(this.permissions)) {
+      if (entry[1].writeWithView && this.collectionHasConfig(entry[0])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private collectionHasConfig(collectionId: string): boolean {
+    const collectionConfig = this.config && this.config.collections[collectionId];
+    return (
+      collectionConfig &&
+      (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.NAME] ||
+        !!collectionConfig.barsProperties[CalendarBarPropertyRequired.START_DATE])
+    );
   }
 }
