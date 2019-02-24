@@ -116,20 +116,22 @@ Cypress.Commands.add('dismissAgreement', () => {
 });
 
 Cypress.Commands.add('createCollection', (name, icon, color) => {
-  cy.request({
-    method: 'POST',
-    url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
-      'projectCode'
-    )}/collections`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: {
-      name,
-      icon,
-      color,
-    },
-  });
+  return cy
+    .request({
+      method: 'POST',
+      url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
+        'projectCode'
+      )}/collections`,
+      auth: {
+        bearer: Cypress.env('authAccessToken'),
+      },
+      body: {
+        name,
+        icon,
+        color,
+      },
+    })
+    .then(response => response.body);
 });
 
 Cypress.Commands.add('createProject', (code, name) => {
@@ -169,4 +171,11 @@ Cypress.Commands.add('saveDefaultWorkspace', defaultWorkspace => {
     },
     body: defaultWorkspace,
   });
+});
+
+Cypress.Commands.add('visitTable', collectionId => {
+  const workspacePath = `/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}`;
+  const query = collectionId ? `%7B"stems":%5B%7B"collectionId":"${collectionId}"%7D%5D%7D` : '';
+
+  cy.visit(`${workspacePath}/view/table?query=${query}`);
 });

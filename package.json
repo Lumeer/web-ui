@@ -17,6 +17,7 @@
     "lint": "ng lint lumeer",
     "tslint": "tslint --project ./src/tsconfig.app.json",
     "ng": "ng",
+    "postinstall": "./prepare-environment.sh",
     "prettier": "prettier",
     "reset-env": "echo {} > ./src/environments/.env.json",
     "start": "npm run reset-env && ng serve",

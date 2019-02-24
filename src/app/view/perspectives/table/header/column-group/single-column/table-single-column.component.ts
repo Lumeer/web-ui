@@ -57,6 +57,7 @@ import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
+import {ContextMenuService} from 'ngx-contextmenu';
 
 @Component({
   selector: 'table-single-column',
@@ -118,6 +119,7 @@ export class TableSingleColumnComponent implements OnChanges {
     private attributeNameChangedPipe: AttributeNameChangedPipe,
     private changeDetector: ChangeDetectorRef,
     private columnBackgroundPipe: ColumnBackgroundPipe,
+    private contextMenuService: ContextMenuService,
     private dialogService: DialogService,
     private i18n: I18n,
     private store$: Store<AppState>
@@ -243,21 +245,26 @@ export class TableSingleColumnComponent implements OnChanges {
     if (attribute.id) {
       this.updateCollectionAttribute(attribute);
     } else {
+      this.renameUninitializedTableColumn(attribute);
       this.createCollectionAttribute(attribute);
     }
   }
 
-  private createCollectionAttribute(attribute: Attribute) {
-    const nextAction = new TablesAction.InitColumn({
-      cursor: this.cursor,
-      attributeId: null,
-    });
+  private renameUninitializedTableColumn(attribute: Attribute) {
+    this.store$.dispatch(
+      new TablesAction.ReplaceColumns({
+        cursor: this.cursor,
+        deleteCount: 1,
+        columns: [{...this.column, attributeName: extractAttributeLastName(attribute.name)}],
+      })
+    );
+  }
 
+  private createCollectionAttribute(attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
         attributes: [attribute],
-        nextAction,
       })
     );
   }
@@ -381,5 +388,20 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public onKeyDown(event: KeyboardEvent) {
     event[EDITABLE_EVENT] = this.allowedPermissions && this.allowedPermissions.writeWithView;
+  }
+
+  public onContextMenu(event: MouseEvent) {
+    if (!this.contextMenuComponent) {
+      return;
+    }
+
+    this.contextMenuService.show.next({
+      contextMenu: this.contextMenuComponent.contextMenu,
+      event,
+      item: null,
+    });
+
+    event.preventDefault();
+    event.stopPropagation();
   }
 }

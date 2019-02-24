@@ -35,7 +35,6 @@ import {
 } from 'rxjs/operators';
 import {Direction} from '../../../shared/direction';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
-import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
@@ -73,6 +72,7 @@ import {
   addMissingTableColumns,
   areTableColumnsListsEqual,
   createCollectionPart,
+  createEmptyColumn,
   createEmptyTableRow,
   createLinkPart,
   createTableColumnsBySiblingAttributeIds,
@@ -83,6 +83,7 @@ import {
   findTableColumn,
   findTableRow,
   getAttributeIdFromColumn,
+  initializeExistingTableColumns,
   mergeHiddenColumns,
   resizeLastColumnChild,
   splitColumnPath,
@@ -336,20 +337,7 @@ export class TablesEffects {
         const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
         const parentName = parentAttribute ? parentAttribute.name : null;
 
-        const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
-          return column.attributeName ? attributeNames.concat(column.attributeName) : attributeNames;
-        }, []);
-
-        const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
-        return {
-          type: TableColumnType.COMPOUND,
-          attributeIds: [],
-          attributeName,
-          children: [],
-          uniqueId: Math.random()
-            .toString(36)
-            .substr(2, 9),
-        };
+        return createEmptyColumn(attributes, columns, parentName);
       })
     );
   }
@@ -559,40 +547,16 @@ export class TablesEffects {
   );
 
   @Effect()
-  public initColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.InitColumn>(TablesActionType.INIT_COLUMN),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const part = table.config.parts[action.payload.cursor.partIndex];
-      const column = findTableColumn(part.columns, action.payload.cursor.columnPath);
-      const columns = [{...column, attributeIds: [action.payload.attributeId]}];
-
-      const {cursor} = action.payload;
-      const actions: Action[] = [
-        new TablesAction.ReplaceColumns({
-          cursor,
-          deleteCount: 1,
-          columns,
-        }),
-      ];
-
-      if (cursor.columnPath.length === 1) {
-        actions.push(new TablesAction.AddColumn({cursor: {...cursor, columnPath: [cursor.columnPath[0] + 1]}}));
-      }
-
-      return actions;
-    })
-  );
-
-  @Effect()
   public syncColumns$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.SyncColumns>(TablesActionType.SYNC_COLUMNS),
-    mergeMap(action =>
-      this.store$.pipe(
-        select(selectTablePart(action.payload.cursor)),
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      return this.store$.pipe(
+        select(selectTablePart(cursor)),
         filter(part => !!part),
         take(1),
-        mergeMap((part: TableConfigPart) =>
+        withLatestFrom(this.store$.pipe(select(selectTableById(cursor.tableId)))),
+        mergeMap(([part, table]: [TableConfigPart, TableModel]) =>
           this.store$.pipe(
             select(part.collectionId ? selectCollectionById(part.collectionId) : selectLinkTypeById(part.linkTypeId)),
             filter(entity => !!entity),
@@ -600,19 +564,26 @@ export class TablesEffects {
             withLatestFrom(this.store$.pipe(select(selectViewCode))),
             mergeMap(([entity, viewCode]) => {
               const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
-              const columns = addMissingTableColumns(filteredColumns, entity.attributes, !!viewCode);
+              const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
+              const columns = addMissingTableColumns(initializedColumns, entity.attributes, !!viewCode);
+
+              const lastColumn = columns[columns.length - 1];
+              const lastPartIndex = table.config.parts.length - 1;
+              if (!viewCode && cursor.partIndex === lastPartIndex && (!lastColumn || lastColumn.attributeIds.length)) {
+                columns.push(createEmptyColumn(entity.attributes, columns));
+              }
 
               if (areTableColumnsListsEqual(part.columns, columns)) {
                 return [];
               }
 
               // TODO double check if deletion works as expected
-              return [new TablesAction.UpdateColumns({cursor: action.payload.cursor, columns})];
+              return [new TablesAction.UpdateColumns({cursor, columns})];
             })
           )
         )
-      )
-    )
+      );
+    })
   );
 
   @Effect()
