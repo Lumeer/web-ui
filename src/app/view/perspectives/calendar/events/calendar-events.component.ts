@@ -151,8 +151,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   private isAtLeastOneWritable(): boolean {
-    for (const entry of Object.entries(this.permissions)) {
-      if (entry[1].writeWithView && this.collectionHasConfig(entry[0])) {
+    for (const [collectionId, permissions] of Object.entries(this.permissions)) {
+      if (permissions.writeWithView && this.collectionHasConfig(collectionId)) {
         return true;
       }
     }
