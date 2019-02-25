@@ -150,9 +150,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
   }
 
   public onClose(event: Event) {
-    if (!(event.target as HTMLElement).classList.contains('noClose')) {
-      this.dialogService.closeFullscreenDialog();
-    }
+    this.dialogService.closeFullscreenDialog();
   }
 
   public switchEditable() {

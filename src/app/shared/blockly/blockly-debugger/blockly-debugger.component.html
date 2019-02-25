@@ -37,9 +37,9 @@
 <div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-end border-bottom pb-3">
   <button
     type="button"
-    class="btn btn-sm btn-primary noClose"
-    (click)="display(displayTypes.DisplayNone)">
-    <i class="fas fa-times noClose"></i>&nbsp;
-    <span class="font-weight-bold noClose" i18n="@@button.close">Close</span>
+    class="btn btn-sm btn-primary"
+    (click)="display(displayTypes.DisplayNone, $event)">
+    <i class="fas fa-times"></i>&nbsp;
+    <span class="font-weight-bold" i18n="@@button.close">Close</span>
   </button>
 </div>
