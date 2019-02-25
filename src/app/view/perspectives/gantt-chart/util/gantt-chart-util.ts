@@ -26,11 +26,12 @@ import {
   GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {Collection} from '../../../../core/store/collections/collection';
-import {isArray, isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {isArray, isDateValid, isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import * as moment from 'moment';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
 
 export function createGanttChartTasks(
   config: GanttChartConfig,
@@ -138,11 +139,11 @@ function createDependencies(dependencies: any, idDependenciesMap: Record<string,
 }
 
 function isTaskValid(name: string, start: string, end: string): boolean {
-  return name && (start && isDateValid(start)) && (end && isDateValid(end));
+  return name && areDatesValid(start, end);
 }
 
-function isDateValid(date: string): boolean {
-  return moment(date).isValid();
+function areDatesValid(start: string, end: string): boolean {
+  return isDateValid(parseDateTimeDataValue(start)) && isDateValid(parseDateTimeDataValue(end));
 }
 
 function createProgress(progress: any): number {
@@ -161,8 +162,8 @@ function createInterval(
   end: string,
   endAttributeId: string
 ): [{value: string; attrId: string}, {value: string; attrId: string}] {
-  const startDate = moment(start);
-  const endDate = moment(end);
+  const startDate = moment(parseDateTimeDataValue(start).getTime());
+  const endDate = moment(parseDateTimeDataValue(end).getTime());
   const startDateObj = {value: startDate.format(GANTT_DATE_FORMAT), attrId: startAttributeId};
   const endDateObj = {value: endDate.format(GANTT_DATE_FORMAT), attrId: endAttributeId};
 
