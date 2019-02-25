@@ -28,6 +28,8 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {isDateValid} from '../../../../shared/utils/common.utils';
 
 export function createCalendarEvents(
   config: CalendarConfig,
@@ -81,13 +83,14 @@ export function createCalendarEventsForCollection(
     const title = nameProperty && document.data[nameProperty.attributeId];
     const startString = startProperty && document.data[startProperty.attributeId];
 
-    if (!isDateValid(startString)) {
+    const start = parseDateTimeDataValue(startString);
+
+    if (!isDateValid(start)) {
       continue;
     }
 
     const endString = endProperty && document.data[endProperty.attributeId];
-    const start = moment(startString).toDate();
-    const end = endString && moment(endString).isValid() && moment(endString).toDate();
+    const end = parseDateTimeDataValue(endString);
 
     const allDay = isAllDayEvent(start, end);
     const interval = createInterval(start, startProperty.attributeId, end, end && endProperty.attributeId);
@@ -127,10 +130,6 @@ function createInterval(
     return [{value: end, attrId: endAttributeId}, {value: start, attrId: startAttributeId}];
   }
   return [{value: start, attrId: startAttributeId}, {value: end, attrId: endAttributeId}];
-}
-
-function isDateValid(date: string): boolean {
-  return date && moment(date).isValid();
 }
 
 function isAllDayEvent(start: Date, end: Date): boolean {
