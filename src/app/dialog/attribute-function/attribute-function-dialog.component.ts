@@ -149,7 +149,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
     }
   }
 
-  public onClose(event: Event) {
+  public onClose() {
     this.dialogService.closeFullscreenDialog();
   }
 
