@@ -1,8 +1,18 @@
-<input #numberInput
-       [readonly]="readonly"
-       [title]="value"
-       [value]="value"
-       (blur)="onBlur()"
-       (input)="onInput($event)"
-       type="number"
-       class="border-0 w-100 h-100 px-1 bg-transparent">
+<input *ngIf="readonly; else numberEditing"
+       [title]="value | numberDataValue"
+       [value]="value | numberDataValue"
+       type="text"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="number-data-input"
+       readonly>
+
+<ng-template #numberEditing>
+  <input #numberInput
+         [title]="value | numberDataValue"
+         [value]="value | numberDataValue"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         type="number"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="number-data-input">
+</ng-template>

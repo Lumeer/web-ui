@@ -18,20 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import * as moment from 'moment';
+import {parseDateTimeDataValue} from '../utils/data.utils';
 
 @Pipe({
   name: 'parseDate',
 })
 export class ParseDatePipe implements PipeTransform {
-  public transform(value: any): any {
-    if (!value) {
-      return value;
-    }
-
-    if (!moment(value).isValid()) {
-      return null;
-    }
-    return moment(value).toDate();
+  public transform(value: any, format?: string): any {
+    return parseDateTimeDataValue(value, format) || undefined;
   }
 }

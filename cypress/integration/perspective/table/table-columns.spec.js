@@ -1,11 +1,4 @@
 describe('Table perspective :: Columns', () => {
-  beforeEach(() => {
-    cy.server();
-
-    const collectionUrl = `${Cypress.env('projectRestUrl')}/collections/**`;
-    cy.route('POST', `${collectionUrl}/attributes`).as('createAttribute');
-  });
-
   it('adds new columns in a single table', () => {
     // create new collection and open it in a table
     cy.createCollection('columns', 'fas fa-columns', '#0000ff').then(collection => cy.visitTable(collection.id));

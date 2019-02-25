@@ -134,6 +134,28 @@ Cypress.Commands.add('createCollection', (name, icon, color) => {
     .then(response => response.body);
 });
 
+Cypress.Commands.add('createCollectionAttributes', (collectionId, attributes) => {
+  return cy.request({
+    method: 'POST',
+    url: `${Cypress.env('projectRestUrl')}/collections/${collectionId}/attributes`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: attributes,
+  });
+});
+
+Cypress.Commands.add('createDocument', (collectionId, data) => {
+  return cy.request({
+    method: 'POST',
+    url: `${Cypress.env('projectRestUrl')}/collections/${collectionId}/documents`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: {collectionId, data},
+  });
+});
+
 Cypress.Commands.add('createProject', (code, name) => {
   cy.request({
     method: 'POST',

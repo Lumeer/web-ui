@@ -27,6 +27,30 @@ import {
 import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 
+const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY'];
+const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい'];
+
+export function parseBooleanDataValue(value: any): boolean {
+  return truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
+}
+
+export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {
+  if (!value) {
+    return value;
+  }
+
+  const momentDate = parseMomentDate(value, expectedFormat);
+  return momentDate.isValid() ? momentDate.toDate() : null;
+}
+
+function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
+  const formats = [moment.ISO_8601, ...dateFormats];
+  if (expectedFormat) {
+    formats.splice(1, 0, expectedFormat);
+  }
+  return moment(value, formats);
+}
+
 export function formatDataValue(value: any, constraint: Constraint): string {
   if (!constraint) {
     return formatUnknownDataValue(value);
@@ -44,23 +68,23 @@ export function formatDataValue(value: any, constraint: Constraint): string {
   }
 }
 
-export function formatDateTimeDataValue(value: any, config: DateTimeConstraintConfig): string {
-  if (typeof value !== 'string') {
-    return !value && value !== 0 ? '' : value;
+export function formatDateTimeDataValue(value: any, config: DateTimeConstraintConfig, showInvalid = true): string {
+  if ([undefined, null, ''].includes(value)) {
+    return '';
   }
 
-  const date = new Date(value);
+  const momentDate = parseMomentDate(value, config && config.format);
 
-  if (date.toString() === 'Invalid Date') {
-    return value;
+  if (!momentDate.isValid()) {
+    return showInvalid ? formatUnknownDataValue(value) : '';
   }
 
-  return config && config.format ? moment(date).format(config.format) : date.toLocaleString();
+  return config && config.format ? momentDate.format(config.format) : formatUnknownDataValue(value);
 }
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
-  return String(value);
+  return formatUnknownDataValue(value);
 }
 
 export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {

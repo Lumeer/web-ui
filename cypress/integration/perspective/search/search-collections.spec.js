@@ -1,8 +1,5 @@
 describe('Search Perspective :: Collections', () => {
   it('creates first collection', () => {
-    cy.server();
-    cy.route('POST', `${Cypress.env('projectRestUrl')}/collections`).as('createCollection');
-
     cy.visit('/');
     cy.url().should('contain', '/view/search/all');
 

@@ -31,6 +31,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {parseBooleanDataValue} from '../../utils/data.utils';
 
 @Component({
   selector: 'boolean-data-input',
@@ -46,7 +47,7 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   public readonly: boolean;
 
   @Input()
-  public value: boolean;
+  public value: any;
 
   @Output()
   public valueChange = new EventEmitter<boolean>();
@@ -81,7 +82,8 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    this.save.emit(!this.value);
+    const value = parseBooleanDataValue(this.value);
+    this.save.emit(!value);
   }
 
   @HostListener('dblclick', ['$event'])
