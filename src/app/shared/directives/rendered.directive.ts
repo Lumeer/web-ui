@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, Output} from '@angular/core';
 
 @Directive({
   selector: '[rendered]',

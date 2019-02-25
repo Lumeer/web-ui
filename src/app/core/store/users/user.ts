@@ -29,6 +29,7 @@ export interface User {
   agreement?: boolean;
   agreementDate?: Date;
   newsletter?: boolean;
+  wizardDismissed?: boolean;
 }
 
 export interface DefaultWorkspace {
