@@ -112,11 +112,11 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   private firstNonNullValue(sets: ChartDataSet[]): {x: any; y: any} {
     for (const set of sets) {
-      if (set.isNumeric) {
-        return {x: 0, y: 0};
-      }
       const point = set.points.find(p => isNotNullOrUndefind(p.x) && isNotNullOrUndefind(p.y));
       if (point) {
+        if (set.isNumeric) {
+          return {x: point.x, y: 0};
+        }
         return {x: point.x, y: point.y};
       }
     }
