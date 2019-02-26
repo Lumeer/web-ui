@@ -52,6 +52,8 @@ export class AttributeFunctionDialogComponent implements OnInit {
   public displayDebug: BlocklyDebugDisplay;
   public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
 
+  public saveClicked$ = new BehaviorSubject<boolean>(false);
+
   public js: string = '';
   private xml: string = '';
   public editable$ = new BehaviorSubject<boolean>(undefined);
@@ -117,7 +119,11 @@ export class AttributeFunctionDialogComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
-        onSuccess: () => this.dialogService.closeFullscreenDialog(),
+        onSuccess: () => {
+          this.saveClicked$.next(true);
+          this.dialogService.closeFullscreenDialog();
+        },
+        onFailure: () => this.saveClicked$.next(false),
       })
     );
   }

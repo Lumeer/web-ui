@@ -49,6 +49,7 @@ export function convertUserDtoToModel(dto: UserDto): User {
     agreement: dto.agreement,
     agreementDate: dto.agreementDate ? new Date(dto.agreementDate) : undefined,
     newsletter: dto.newsletter,
+    wizardDismissed: dto.wizardDismissed,
   };
 }
 
@@ -60,5 +61,6 @@ export function convertUserModelToDto(user: Partial<User>): UserDto {
     groups: user.groupsMap,
     agreement: user.agreement,
     newsletter: user.newsletter,
+    wizardDismissed: user.wizardDismissed,
   };
 }

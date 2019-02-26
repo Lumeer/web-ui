@@ -70,7 +70,8 @@ export class BlocklyDebuggerComponent implements OnInit {
     this.onWindowResize();
   }
 
-  public display(type: BlocklyDebugDisplay) {
+  public display(type: BlocklyDebugDisplay, event?: Event) {
+    event && event.stopPropagation();
     this.displayEvent.emit(type);
   }
 

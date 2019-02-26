@@ -63,6 +63,7 @@
       <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
     </button>
     <button (click)="onSubmit(data.collection, data.attribute)"
+            [disabled]="saveClicked$ | async"
             type="button"
             class="btn btn-primary"
             data-dismiss="modal">
