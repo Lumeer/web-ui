@@ -1,4 +1,4 @@
-<div class="dropdown show ml-2">
+<div class="dropdown show ml-2" data-tour="user-menu">
   <a href="#"
      role="button"
      id="profileDropdownLink"
@@ -45,6 +45,15 @@
          data-fa-transform="left-4"
          aria-hidden="true"></i>&nbsp;
       <span i18n="@@menu.sendFeedback">Send Feedback</span>
+    </a>
+    <a (click)="onStartTour()"
+       class="dropdown-item"
+       title="Application tour"
+       i18n-title="@@menu.appTour">
+      <i class="far fa-fw fa-map-signs"
+         data-fa-transform="left-4"
+         aria-hidden="true"></i>&nbsp;
+      <span i18n="@@menu.sendFeedback">Application Tour</span>
     </a>
     <a *ngIf="false"
        class="dropdown-item"

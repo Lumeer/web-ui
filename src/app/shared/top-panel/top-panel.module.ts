@@ -33,8 +33,6 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
 import {NotificationsMenuModule} from './user-panel/notifications-menu/notifications-menu.module';
-import {AppTourComponent} from './app-tour/app-tour.component';
-import {SharedModule} from '../shared.module';
 
 @NgModule({
   imports: [CommonModule, PipesModule, RouterModule, ResourceMenuModule, SearchBoxModule, NotificationsMenuModule],
@@ -48,7 +46,6 @@ import {SharedModule} from '../shared.module';
     UserPanelComponent,
     ControlsToggleComponent,
     VideoMenuComponent,
-    AppTourComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
 })

@@ -77,7 +77,7 @@ export namespace UsersAction {
   export class PatchCurrentUser implements Action {
     public readonly type = UsersActionType.PATCH_CURRENT_USER;
 
-    public constructor(public payload: {user: Partial<User>; onSuccess: () => void; onFailure: () => void}) {}
+    public constructor(public payload: {user: Partial<User>; onSuccess?: () => void; onFailure?: () => void}) {}
   }
 
   export class SaveDefaultWorkspace implements Action {

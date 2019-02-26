@@ -28,5 +28,5 @@ export interface UserDto {
   agreement?: boolean;
   agreementDate?: number;
   newsletter?: boolean;
-  wizardDismissed?: boolean;
+  wizard?: boolean;
 }
