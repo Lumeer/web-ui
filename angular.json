@@ -40,8 +40,9 @@
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "src/styles.scss",
-              "node_modules/frappe-gantt/dist/frappe-gantt.css"
+              "node_modules/frappe-gantt/dist/frappe-gantt.css",
+              "node_modules/driver.js/dist/driver.min.css",
+              "src/styles.scss"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
