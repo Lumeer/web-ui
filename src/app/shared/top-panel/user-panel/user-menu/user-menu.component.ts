@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
@@ -51,9 +51,6 @@ export class UserMenuComponent {
   @Input()
   public workspace: Workspace;
 
-  @Output()
-  public onRestartWizard = new EventEmitter();
-
   public currentUser$: Observable<User>;
   public url$: Observable<string>;
   public freePlan$: Observable<boolean>;
@@ -72,7 +69,10 @@ export class UserMenuComponent {
   public ngOnInit() {
     this.driver = new Driver({
       opacity: 0.5,
-      closeBtnText: 'Dismiss',
+      closeBtnText: this.i18n({
+        id: 'button.dismiss',
+        value: 'Dismiss',
+      }),
       onReset: () => this.dismissWizard(),
     });
 
@@ -132,17 +132,10 @@ export class UserMenuComponent {
 
       if (manual) {
         // we need to make sure to be on the home page
-        this.store$
-          .pipe(
-            select(selectWorkspace),
-            first()
-          )
-          .subscribe(workspace => {
-            this.router
-              .navigate(['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', 'search', 'all'])
-              .then(() => {
-                this.kickstartTour();
-              });
+        this.router
+          .navigate(['/', 'w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'])
+          .then(() => {
+            this.kickstartTour();
           });
       } else {
         // we already checked the url
