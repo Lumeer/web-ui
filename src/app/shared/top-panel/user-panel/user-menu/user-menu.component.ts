@@ -262,7 +262,7 @@ export class UserMenuComponent {
           description: this.i18n({
             id: 'appTour.description.views',
             value:
-              "(5/7) You might connect multiple collections in relations, select a Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on home page or you can share the view with your colleagues.",
+              "(5/7) You might connect multiple collections in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.",
           }),
           position: 'bottom',
         },
