@@ -21,7 +21,11 @@ export interface LinkInstanceDto {
   id?: string;
   linkTypeId: string;
   documentIds: [string, string];
-  version?: number;
+  creationDate?: number;
+  updateDate?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  dataVersion?: number;
 
-  data?: {[key: string]: any};
+  data?: {[attributeId: string]: any};
 }

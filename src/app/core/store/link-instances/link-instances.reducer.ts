@@ -53,7 +53,9 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
 }
 
 function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
-  return linkInstance.version && (!oldLinkInstance.version || linkInstance.version > oldLinkInstance.version);
+  return (
+    linkInstance.dataVersion && (!oldLinkInstance.dataVersion || linkInstance.dataVersion > oldLinkInstance.dataVersion)
+  );
 }
 
 function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {

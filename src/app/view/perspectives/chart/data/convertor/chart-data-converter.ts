@@ -192,9 +192,9 @@ export class ChartDataConverter {
   private areChartAxesThroughLink(xAxis?: ChartAxis, yAxis?: ChartAxis, yName?: ChartAxis): boolean {
     const y1CollectionIndexes = new Set(
       [
-        xAxis && xAxis.collectionIndex,
-        yAxis && yAxis.collectionIndex,
-        xAxis && yAxis && yName && yName.collectionIndex,
+        xAxis && xAxis.resourceIndex,
+        yAxis && yAxis.resourceIndex,
+        xAxis && yAxis && yName && yName.resourceIndex,
       ].filter(index => isNotNullOrUndefind(index))
     );
     return y1CollectionIndexes.size > 1;
@@ -206,11 +206,11 @@ export class ChartDataConverter {
     yAxis: ChartAxis,
     yName?: ChartAxis
   ): CollectionChain[] {
-    let collectionIndex = xAxis.collectionIndex;
+    let collectionIndex = xAxis.resourceIndex;
     const chain: CollectionChain[] = [
       {
-        index: xAxis.collectionIndex,
-        collectionId: xAxis.collectionId,
+        index: xAxis.resourceIndex,
+        collectionId: xAxis.resourceId,
         attributeId: xAxis.attributeId,
         asIdOfArray: !yName,
         asIdOfObject: !!yName,
@@ -220,24 +220,24 @@ export class ChartDataConverter {
     if (yName) {
       const nameSubChain = this.createCollectionChainForRange(
         collectionIdsOrder,
-        xAxis.collectionIndex,
-        yName.collectionIndex
+        xAxis.resourceIndex,
+        yName.resourceIndex
       );
       chain.push(...nameSubChain);
 
       chain.push({
-        index: yName.collectionIndex,
-        collectionId: yName.collectionId,
+        index: yName.resourceIndex,
+        collectionId: yName.resourceId,
         attributeId: yName.attributeId,
         asIdOfArray: true,
       });
-      collectionIndex = yName.collectionIndex;
+      collectionIndex = yName.resourceIndex;
     }
 
-    const axisSubChain = this.createCollectionChainForRange(collectionIdsOrder, collectionIndex, yAxis.collectionIndex);
+    const axisSubChain = this.createCollectionChainForRange(collectionIdsOrder, collectionIndex, yAxis.resourceIndex);
     chain.push(...axisSubChain);
 
-    chain.push({index: yAxis.collectionIndex, collectionId: yAxis.collectionId, attributeId: yAxis.attributeId});
+    chain.push({index: yAxis.resourceIndex, collectionId: yAxis.resourceId, attributeId: yAxis.attributeId});
 
     return chain;
   }
@@ -395,8 +395,8 @@ export class ChartDataConverter {
   }
 
   private canDragAxis(config: ChartConfig, yAxisType: ChartYAxisType): boolean {
-    const yAxis = config.axes[yAxisType];
-    const permission = this.permissions && yAxis && this.permissions[yAxis.collectionId];
+    const yAxis = config.axes[yAxisType]; // TODO link types
+    const permission = this.permissions && yAxis && this.permissions[yAxis.resourceId];
     return (permission && permission.writeWithView) || false;
   }
 
@@ -567,7 +567,7 @@ function sortDocuments(documents: DocumentWithLinks[], sort: ChartSort): Documen
     documents.length === 0 ||
     !sort ||
     !sort.axis ||
-    documents[0].collectionId !== sort.axis.collectionId
+    documents[0].collectionId !== sort.axis.resourceId
   ) {
     return documents || [];
   }

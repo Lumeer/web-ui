@@ -22,9 +22,9 @@ import {isNotNullOrUndefind} from '../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../shared/utils/array.utils';
 
 export function chartConfigCollectionIds(config: ChartConfig): string[] {
-  const sortId = config.sort && config.sort.axis && config.sort.axis.collectionId;
-  const axesIds = Object.values(config.axes || {}).map(axis => axis.collectionId);
-  const axesNamesIds = Object.values(config.names || {}).map(axis => axis.collectionId);
+  const sortId = config.sort && config.sort.axis && config.sort.axis.resourceId;
+  const axesIds = Object.values(config.axes || {}).map(axis => axis.resourceId);
+  const axesNamesIds = Object.values(config.names || {}).map(axis => axis.resourceId);
 
   return uniqueValues<string>([...axesIds, ...axesNamesIds, sortId].filter(id => isNotNullOrUndefind(id)));
 }

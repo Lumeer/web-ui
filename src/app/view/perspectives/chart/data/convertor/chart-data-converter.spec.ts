@@ -539,7 +539,7 @@ describe('Chart data converter linked collections', () => {
       sort: {
         type: ChartSortType.Descending,
         axis: {
-          collectionId: 'C1',
+          resourceId: 'C1',
           attributeId: 'a2',
         },
       },

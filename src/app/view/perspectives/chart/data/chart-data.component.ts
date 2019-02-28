@@ -33,10 +33,10 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query';
-import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartAxisType, ChartConfig, ChartType} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ChartData} from './convertor/chart-data';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
 import {ValueChange} from '../visualizer/plot-maker/plot-maker';
@@ -113,18 +113,20 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const latestData = data[data.length - 1];
     this.updateDataForConverter(latestData);
 
-    const updates = data.map(d => d.updateType);
-    if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
-      return this.chartDataConverter.convert(latestData.config);
-    } else if (updates.includes(UpdateType.Y1)) {
-      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y1);
-    } else if (updates.includes(UpdateType.Y2)) {
-      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y2);
-    } else if (updates.includes(UpdateType.Type)) {
-      return this.chartDataConverter.convertType(latestData.config.type);
-    } else {
-      return this.chartDataConverter.convert(latestData.config);
-    }
+    return {type: ChartType.Line, sets: []};
+
+    // const updates = data.map(d => d.updateType);
+    // if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
+    //   return this.chartDataConverter.convert(latestData.config);
+    // } else if (updates.includes(UpdateType.Y1)) {
+    //   return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y1);
+    // } else if (updates.includes(UpdateType.Y2)) {
+    //   return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y2);
+    // } else if (updates.includes(UpdateType.Type)) {
+    //   return this.chartDataConverter.convertType(latestData.config.type);
+    // } else {
+    //   return this.chartDataConverter.convert(latestData.config);
+    // }
   }
 
   private updateDataForConverter(latestData: Data) {

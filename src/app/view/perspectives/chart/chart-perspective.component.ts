@@ -171,7 +171,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       .pipe(select(selectCollectionsByQuery))
       .pipe(withLatestFrom(this.store$.pipe(select(selectChartConfig))))
       .subscribe(([collections, config]) => {
-        const collectionIdsFromConfig = chartConfigCollectionIds(config);
+        const collectionIdsFromConfig = chartConfigCollectionIds(config); // TODO link types
         const collectionMissing = collectionIdsFromConfig.some(
           id => !collections.find(collection => collection.id === id)
         );
