@@ -551,7 +551,13 @@
         <source>Send Feedback</source><target state="final">Send Feedback</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="menu.appTour" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
+        <source>Application Tour</source><target state="final">Application Tour</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.appTour" datatype="html">
         <source>Application tour</source><target state="final">Application tour</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
