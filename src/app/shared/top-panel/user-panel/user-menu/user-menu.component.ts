@@ -18,20 +18,25 @@
  */
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
-import {selectUrl} from '../../../../core/store/navigation/navigation.state';
+import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {DialogService} from '../../../../dialog/dialog.service';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ServiceLimitsAction} from '../../../../core/store/organizations/service-limits/service-limits.action';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {map} from 'rxjs/operators';
+import {filter, first, map} from 'rxjs/operators';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
+import * as Driver from 'driver.js';
+import {UsersAction} from '../../../../core/store/users/users.action';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import PatchCurrentUser = UsersAction.PatchCurrentUser;
 
 @Component({
   selector: 'user-menu',
@@ -50,22 +55,53 @@ export class UserMenuComponent {
   public url$: Observable<string>;
   public freePlan$: Observable<boolean>;
 
+  private starting: boolean = false;
+  private driver: Driver;
+
   public constructor(
     private authService: AuthService,
     private dialogService: DialogService,
-    private store: Store<AppState>,
-    private router: Router
+    private store$: Store<AppState>,
+    private router: Router,
+    private i18n: I18n
   ) {}
 
   public ngOnInit() {
-    this.currentUser$ = this.store.pipe(select(selectCurrentUser));
-    this.url$ = this.store.pipe(select(selectUrl));
+    this.driver = new Driver({
+      opacity: 0.5,
+      closeBtnText: this.i18n({
+        id: 'button.dismiss',
+        value: 'Dismiss',
+      }),
+      onReset: () => this.dismissWizard(),
+    });
+
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.url$ = this.store$.pipe(select(selectUrl));
     this.bindServiceLimits();
+
+    combineLatest(
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectUrl))
+    )
+      .pipe(
+        filter(([user, collections, url]) => !!user && !!collections && !!url),
+        filter(([user, collections, url]) => this.isViewSearchAll(url)),
+        filter(([user, collections, url]) => !user.wizardDismissed && collections.length === 0),
+        first()
+      )
+      .subscribe(next => this.startTour());
+  }
+
+  private isViewSearchAll(url: string): boolean {
+    const [urlPrefix] = url.split('?');
+    return urlPrefix.includes('view/search/all');
   }
 
   private bindServiceLimits() {
-    this.store.dispatch(new ServiceLimitsAction.GetAll());
-    this.freePlan$ = this.store.pipe(
+    this.store$.dispatch(new ServiceLimitsAction.GetAll());
+    this.freePlan$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE)
     );
@@ -83,5 +119,175 @@ export class UserMenuComponent {
 
   public onLogoutClick() {
     this.authService.logout();
+  }
+
+  public onStartTour(): void {
+    this.recallWizard();
+    this.startTour(true);
+  }
+
+  private startTour(manual?: boolean): void {
+    if (!this.starting) {
+      this.starting = true;
+
+      if (manual) {
+        // we need to make sure to be on the home page
+        this.router
+          .navigate(['/', 'w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'])
+          .then(() => {
+            this.kickstartTour();
+          });
+      } else {
+        // we already checked the url
+        this.kickstartTour();
+      }
+    }
+  }
+
+  private kickstartTour() {
+    setTimeout(() => {
+      // trick to allow access to all document elements
+      this.driver.reset(true);
+      this.defineSteps();
+      this.driver.start();
+      this.starting = false;
+    }, 500);
+  }
+
+  public dismissWizard(): void {
+    if (!this.starting) {
+      this.store$.dispatch(
+        new PatchCurrentUser({
+          user: {wizardDismissed: true},
+        })
+      );
+    }
+  }
+
+  public recallWizard(): void {
+    this.store$.dispatch(
+      new PatchCurrentUser({
+        user: {wizardDismissed: false},
+      })
+    );
+  }
+
+  private defineSteps(): void {
+    const welcomeTitle = this.i18n({
+      id: 'appTour.title.welcome',
+      value: 'Welcome to Lumeer',
+    });
+    const welcomeDescription = this.i18n({
+      id: 'appTour.description.welcome',
+      value:
+        '(1/7) Lumeer organizes your information in collections (i.e. categories) of similar records. Later, you can use this button to add your first collection. Then you can open the collection by simply clicking on it.',
+    });
+
+    this.driver.defineSteps([
+      {
+        element: '[data-tour="collection-add"]',
+        popover: {
+          title: welcomeTitle,
+          description: welcomeDescription,
+          position: 'right',
+        },
+      },
+      {
+        element: '[data-tour="collection-create"]',
+        popover: {
+          title: welcomeTitle,
+          description: welcomeDescription,
+          position: 'bottom',
+        },
+      },
+      {
+        element: '[data-tour="logo"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.home',
+            value: 'Get home',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.home',
+            value:
+              '(2/7) By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
+          }),
+          position: 'right',
+        },
+      },
+      {
+        element: '[data-tour="search-box"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.search',
+            value: 'Search for information',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.search',
+            value:
+              '(3/7) The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.',
+          }),
+          position: 'bottom',
+        },
+      },
+      {
+        element: '[data-tour="perspective"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.perspectives',
+            value: 'Perspectives',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.perspectives',
+            value:
+              '(4/7) When you open your collection or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.',
+          }),
+          position: 'right',
+        },
+      },
+      {
+        element: '[data-tour="view"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.views',
+            value: 'Views and sharing',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.views',
+            value:
+              "(5/7) You might connect multiple collections in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.",
+          }),
+          position: 'bottom',
+        },
+      },
+      {
+        element: '[data-tour="video-menu"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.videos',
+            value: 'Help with Lumeer',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.videos',
+            value: '(6/7) Here you can find a list of one-minute videos that explain controls on each page.',
+          }),
+          position: 'left',
+        },
+      },
+      {
+        element: '[data-tour="user-menu"]',
+        popover: {
+          title: this.i18n({
+            id: 'appTour.title.userMenu',
+            value: 'Return to this Tour',
+          }),
+          description: this.i18n({
+            id: 'appTour.description.userMenu',
+            value: '(7/7) You can always return to this tour by invoking it from the user menu.',
+          }),
+          position: 'left',
+        },
+      },
+    ]);
   }
 }

@@ -1,7 +1,7 @@
 <ng-container *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
   <form class="view-controls-grid mt-2">
     <div class="perspective d-flex align-items-center justify-content-start">
-      <div class="input-group flex-nowrap mr-2 mb-2">
+      <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
         <div class="input-group-prepend">
         <span class="input-group-text">
           <strong *ngIf="novice"
@@ -43,7 +43,7 @@
       </i>
     </div>
 
-    <div class="view-name input-group flex-nowrap flex-fill mb-2">
+    <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view">
       <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
