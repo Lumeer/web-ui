@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -34,7 +35,7 @@ import {
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, take} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -69,12 +70,12 @@ const UNCREATED_THRESHOLD = 5;
   templateUrl: './post-it-collections.component.html',
   styleUrls: ['./post-it-collections.component.scss'],
 })
-export class PostItCollectionsComponent implements OnInit, OnDestroy {
+export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input()
   public maxShown: number = -1;
 
-  @ViewChildren(PostItCollectionComponent)
-  public postIts: QueryList<PostItCollectionComponent>;
+  @ViewChildren('postIt', {read: ElementRef})
+  public postIts: QueryList<ElementRef>;
 
   @ViewChild('postItLayout')
   set content(content: ElementRef) {
@@ -255,6 +256,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     if (!this.layout) {
       this.layout = new PostItLayout(this.postItLayout, false, this.zone);
       this.changeDetector.detectChanges();
+      this.computePostItHeight();
     }
   }
 
@@ -397,5 +399,18 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  public ngAfterViewChecked() {
+    this.computePostItHeight();
+  }
+
+  private computePostItHeight() {
+    if (!this.postIts || !this.postIts.last) {
+      return;
+    }
+
+    const height = this.postIts.last.nativeElement.offsetHeight;
+    document.body.style.setProperty('--post-it-collection-height', `${height}px`);
   }
 }

@@ -24,7 +24,7 @@
     }
 
     .see-all {
-      height: 181px;
+      height: var(--post-it-collection-height);
       font-size: 200%;
     }
   }

@@ -40,6 +40,7 @@
                             (delete)="confirmDeletion(collection)"
                             (favoriteChange)="onFavoriteChange(collection.id, $event)"
                             (togglePanel)="togglePanelVisible($event, idx)"
+                            #postIt
                             data-test="collection-card">
         </post-it-collection>
 
