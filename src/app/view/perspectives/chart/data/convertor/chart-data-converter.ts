@@ -527,9 +527,49 @@ export class ChartDataConverter {
   }
 
   private canDragAxis(config: ChartConfig, yAxisType: ChartYAxisType): boolean {
-    const yAxis = config.axes[yAxisType]; // TODO link types
-    const permission = this.permissions && yAxis && this.permissions[yAxis.resourceId];
-    return (permission && permission.writeWithView) || false;
+    const yAxis = config.axes[yAxisType];
+    if (!yAxis) {
+      return false;
+    }
+
+    if (yAxis.axisResourceType === ChartAxisResourceType.Collection) {
+      return this.canDragCollectionAxis(yAxis.resourceId, yAxis.attributeId);
+    } else if (yAxis.axisResourceType === ChartAxisResourceType.LinkType) {
+      return this.canDragLinkAxis(yAxis.resourceId, yAxis.attributeId);
+    }
+
+    return false;
+  }
+
+  private canDragCollectionAxis(collectionId: string, attributeId: string): boolean {
+    const permission = this.permissions && this.permissions[collectionId];
+    if (!permission || !permission.writeWithView) {
+      return false;
+    }
+
+    const collection = this.collections && this.collections.find(c => c.id === collectionId);
+    const attribute = collection && collection.attributes && collection.attributes.find(a => a.id === attributeId);
+    return this.isAttributeEditable(attribute);
+  }
+
+  private isAttributeEditable(attribute: Attribute): boolean {
+    return attribute && (!attribute.function || attribute.function.editable);
+  }
+
+  private canDragLinkAxis(linkTypeId: string, attributeId: string): boolean {
+    const linkType = this.linkTypes && this.linkTypes.find(lt => lt.id === linkTypeId);
+    if (!linkType) {
+      return false;
+    }
+
+    const permission1 = this.permissions && this.permissions[linkType.collectionIds[0]];
+    const permission2 = this.permissions && this.permissions[linkType.collectionIds[1]];
+    if (!permission1 || !permission2 || !permission1.writeWithView || !permission2.writeWithView) {
+      return false;
+    }
+
+    const attribute = linkType.attributes && linkType.attributes.find(a => a.id === attributeId);
+    return this.isAttributeEditable(attribute);
   }
 
   private getAttributeNameForAxis(axis: ChartAxis, axisResource: AxisResource): string {
