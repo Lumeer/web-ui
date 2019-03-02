@@ -680,7 +680,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
               : '';
 
           if (childOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
-            const newType = childOutputType.replace(LINK_TYPE_ARRAY_SUFFIX, '');
+            const newType = childOutputType.replace(LINK_TYPE_ARRAY_SUFFIX, LINK_VAR_SUFFIX);
             this.updateVariableType(this.workspace, block.getField('VAR').getVariable(), newType);
             block.getField('VAR').setTypes_([newType], newType);
           }
@@ -825,7 +825,14 @@ export class BlocklyEditorComponent implements AfterViewInit {
         if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
           this.setterAndGetterOutputType(parentBlock, block);
         } else {
-          this.tryDisconnect(parentBlock, parentBlock.getInput('DOCUMENT').connection);
+          const document = parentBlock.getInput('DOCUMENT');
+          if (
+            document.connection &&
+            document.connection.targetConnection &&
+            document.connection.targetConnection.getSourceBlock().id === block.id
+          ) {
+            this.tryDisconnect(parentBlock, document.connection);
+          }
         }
       }
       // populate document attribute names in document attr getter and setter
@@ -833,7 +840,14 @@ export class BlocklyEditorComponent implements AfterViewInit {
         if (blockOutputType.endsWith(LINK_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
           this.setterAndGetterOutputType(parentBlock, block);
         } else {
-          this.tryDisconnect(parentBlock, parentBlock.getInput('LINK').connection);
+          const link = parentBlock.getInput('LINK');
+          if (
+            link.connection &&
+            link.connection.targetConnection &&
+            link.connection.targetConnection.getSourceBlock().id === block.id
+          ) {
+            this.tryDisconnect(parentBlock, link.connection);
+          }
         }
       }
     } else if (changeEvent.oldParentId) {
@@ -1096,12 +1110,15 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private registerLinks(workspace): any[] {
-    const xmlList = [];
+    const xmlList = this.registerLinkInstanceVariables(workspace);
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
     if (this.masterType === MasterBlockType.Function) {
       xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + SET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
     }
+
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     this.linkTypes.forEach(linkType => {
@@ -1125,7 +1142,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
-    return xmlList.concat(this.registerLinkInstanceVariables(workspace));
+    return xmlList;
   }
 
   private ensureLinkTypeBlock(linkType: LinkType) {
@@ -1282,7 +1299,8 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private generateXml(): void {
-    this.onXmlUpdate.emit(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace)));
+    const xml = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace));
+    this.onXmlUpdate.emit(xml);
   }
 
   private generateJs(): void {
