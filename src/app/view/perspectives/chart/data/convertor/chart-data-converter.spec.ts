@@ -107,6 +107,7 @@ describe('Chart data converter single collection', () => {
       draggable: false,
       name: undefined,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -138,6 +139,7 @@ describe('Chart data converter single collection', () => {
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -173,6 +175,7 @@ describe('Chart data converter single collection', () => {
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);

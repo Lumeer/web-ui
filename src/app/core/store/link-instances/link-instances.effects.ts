@@ -46,7 +46,7 @@ export class LinkInstancesEffects {
           linkInstances =>
             new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})
         ),
-        catchError(error => of(new LinkInstancesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.GetFailure({error})))
       )
     )
   );
@@ -76,7 +76,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(linkInstance => new LinkInstancesAction.CreateSuccess({linkInstance})),
-        catchError(error => of(new LinkInstancesAction.CreateFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.CreateFailure({error})))
       );
     })
   );
@@ -92,15 +92,15 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
-    ofType<LinkInstancesAction.Update>(LinkInstancesActionType.UPDATE),
+  public patchData$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA),
     mergeMap(action => {
       const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
-      return this.linkInstanceService.updateLinkInstance(action.payload.linkInstance.id, linkInstanceDto).pipe(
+      return this.linkInstanceService.patchLinkInstanceData(linkInstanceDto).pipe(
         map(dto => convertLinkInstanceDtoToModel(dto)),
-        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance: linkInstance})),
-        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error})))
+        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance})),
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error})))
       );
     })
   );
@@ -127,7 +127,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
-        catchError(error => of(new LinkInstancesAction.DeleteFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.DeleteFailure({error})))
       )
     )
   );

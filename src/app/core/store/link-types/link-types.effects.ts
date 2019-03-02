@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -30,7 +30,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesLoaded} from './link-types.state';
-import {LinkInstancesActionType} from '../link-instances/link-instances.action';
+import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {selectQuery} from '../navigation/navigation.state';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
 import {NavigationAction} from '../navigation/navigation.action';
@@ -133,14 +133,15 @@ export class LinkTypesEffects {
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
-    map(([action, query]) => {
+    flatMap(([action, query]) => {
+      const {linkTypeId} = action.payload;
+      const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
       const linkTypeIdsInQuery = getAllLinkTypeIdsFromQuery(query);
       if (linkTypeIdsInQuery.includes(action.payload.linkTypeId)) {
-        return new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId});
+        return [...actions, new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId})];
       }
-      return null;
-    }),
-    filter(action => !!action)
+      return actions;
+    })
   );
 
   @Effect()

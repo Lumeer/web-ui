@@ -23,6 +23,7 @@ import {
   ChartAggregation,
   ChartAxis,
   ChartAxisResourceType,
+  chartAxisResourceTypesMap,
   ChartAxisType,
   ChartConfig,
   ChartSort,
@@ -444,6 +445,7 @@ export class ChartDataConverter {
         isNumeric: isNumericMap[name],
         yAxisType,
         draggable,
+        resourceType: axisResourceTypeFromResourceId(axisResource.id),
       });
       colorAlpha -= colorAlphaStep;
     }
@@ -522,6 +524,7 @@ export class ChartDataConverter {
       yAxisType,
       name,
       draggable,
+      resourceType: axisResourceTypeFromResourceId(axisResource.id),
     };
     return [dataSet];
   }
@@ -636,6 +639,7 @@ export class ChartDataConverter {
       yAxisType,
       name,
       draggable,
+      resourceType: axisResourceTypeFromResourceId(axisResource.id),
     };
     return [dataSet];
   }
@@ -697,6 +701,11 @@ function createAxisResourceOrder(query: Query, collections: Collection[], linkTy
   }
 
   return chain;
+}
+
+function axisResourceTypeFromResourceId(resourceId: string): ChartAxisResourceType {
+  const [type] = resourceId.split(':', 2);
+  return chartAxisResourceTypesMap[type];
 }
 
 function collectionAxisResourceId(id: string): string {

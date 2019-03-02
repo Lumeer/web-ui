@@ -53,6 +53,7 @@ import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/coll
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
 import {ChartDataComponent} from './data/chart-data.component';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'chart-perspective',
@@ -166,12 +167,19 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
+  public patchLinkInstanceData(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+  }
+
   private subscribeValidConfig() {
     const subscription = this.store$
       .pipe(select(selectCollectionsByQuery))
-      .pipe(withLatestFrom(this.store$.pipe(select(selectChartConfig))))
-      .subscribe(([collections, config]) => {
-        const collectionIdsFromConfig = chartConfigCollectionIds(config); // TODO link types
+      .pipe(
+        withLatestFrom(this.store$.pipe(select(selectChartConfig))),
+        withLatestFrom(this.store$.pipe(select(selectAllLinkTypes)))
+      )
+      .subscribe(([[collections, config], linkTypes]) => {
+        const collectionIdsFromConfig = chartConfigCollectionIds(config, linkTypes);
         const collectionMissing = collectionIdsFromConfig.some(
           id => !collections.find(collection => collection.id === id)
         );

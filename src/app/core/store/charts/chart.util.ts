@@ -17,14 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartConfig} from './chart';
+import {ChartAxis, ChartAxisResourceType, ChartConfig} from './chart';
 import {isNotNullOrUndefind} from '../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../shared/utils/array.utils';
+import {LinkType} from '../link-types/link.type';
 
-export function chartConfigCollectionIds(config: ChartConfig): string[] {
-  const sortId = config.sort && config.sort.axis && config.sort.axis.resourceId;
-  const axesIds = Object.values(config.axes || {}).map(axis => axis.resourceId);
-  const axesNamesIds = Object.values(config.names || {}).map(axis => axis.resourceId);
+export function chartConfigCollectionIds(config: ChartConfig, linkTypes: LinkType[]): string[] {
+  const ids: string[] = [];
 
-  return uniqueValues<string>([...axesIds, ...axesNamesIds, sortId].filter(id => isNotNullOrUndefind(id)));
+  config.sort && config.sort.axis && ids.push(...axisCollectionIds(config.sort.axis, linkTypes));
+  Object.values(config.axes || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
+  Object.values(config.names || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
+
+  return uniqueValues<string>(ids.filter(id => isNotNullOrUndefind(id)));
+}
+
+function axisCollectionIds(axis: ChartAxis, linkTypes: LinkType[]): string[] {
+  if (axis.axisResourceType === ChartAxisResourceType.Collection) {
+    return [axis.resourceId];
+  } else if (axis.axisResourceType === ChartAxisResourceType.LinkType) {
+    const linkType = linkTypes && linkTypes.find(lt => lt.id === axis.resourceId);
+    if (linkType) {
+      return linkType.collectionIds;
+    }
+  }
+
+  return [];
 }
