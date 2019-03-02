@@ -21,7 +21,8 @@
       [permissions]="permissions$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)"
-      (newEvent)="onNewEvent($event)">
+      (newEvent)="onNewEvent($event)"
+      (updateEvent)="onUpdateEvent($event)">
     </calendar-events>
   </ng-container>
 

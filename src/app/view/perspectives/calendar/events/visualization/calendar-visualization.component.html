@@ -8,7 +8,8 @@
     [weekStartsOn]="locale | firstDayOfWeek"
     [cellTemplate]="monthCellTemplate"
     (beforeViewRender)="beforeMonthViewRender($event)"
-    (eventTimesChanged)="eventTimesChanged($event)">
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (eventClicked)="onEventClicked($event)">
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
     *ngSwitchCase="calendarMode.Week"
@@ -18,7 +19,8 @@
     [locale]="locale"
     [hourSegmentTemplate]="weekHourSegmentTemplate"
     [weekStartsOn]="locale | firstDayOfWeek"
-    (eventTimesChanged)="eventTimesChanged($event)">
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (eventClicked)="onEventClicked($event)">
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
     *ngSwitchCase="calendarMode.Day"
@@ -27,7 +29,8 @@
     [refresh]="refresh"
     [locale]="locale"
     [hourSegmentTemplate]="dayHourSegmentTemplate"
-    (eventTimesChanged)="eventTimesChanged($event)">
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (eventClicked)="onEventClicked($event)">
   </mwl-calendar-day-view>
 </ng-container>
 
@@ -100,11 +103,11 @@
   let-locale="locale"
   let-segmentHeight="segmentHeight">
   <div (dblclick)="dayDoubleClick(segment)"
-    class="cal-hour-segment"
-    [style.height.px]="segmentHeight"
-    [class.cal-hour-start]="segment.isStart"
-    [class.cal-after-hour-start]="!segment.isStart"
-    [ngClass]="segment.cssClass">
+       class="cal-hour-segment"
+       [style.height.px]="segmentHeight"
+       [class.cal-hour-start]="segment.isStart"
+       [class.cal-after-hour-start]="!segment.isStart"
+       [ngClass]="segment.cssClass">
     <div class="cal-time">
       {{ segment.date | calendarDate: 'dayViewHour':locale }}
     </div>

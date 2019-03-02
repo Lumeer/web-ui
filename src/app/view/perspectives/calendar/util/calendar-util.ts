@@ -31,12 +31,20 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
 import {isDateValid} from '../../../../shared/utils/common.utils';
 
+export interface CalendarMetaData {
+  documentId: string;
+  collectionId: string;
+  color: string;
+  startAttributeId: string;
+  endAttributeId: string;
+}
+
 export function createCalendarEvents(
   config: CalendarConfig,
   collections: Collection[],
   documents: DocumentModel[],
   permissions: Record<string, AllowedPermissions>
-): CalendarEvent[] {
+): CalendarEvent<CalendarMetaData>[] {
   return collections.reduce(
     (tasks, collection) => [
       ...tasks,
@@ -60,7 +68,7 @@ export function createCalendarEventsForCollection(
   collection: Collection,
   documents: DocumentModel[],
   permissisions: AllowedPermissions
-): CalendarEvent[] {
+): CalendarEvent<CalendarMetaData>[] {
   const collectionConfig = config.collections && config.collections[collection.id];
 
   if (!collectionConfig) {
@@ -69,10 +77,10 @@ export function createCalendarEventsForCollection(
 
   const properties = collectionConfig.barsProperties || {};
 
-  const nameProperty = properties[CalendarBarPropertyRequired.NAME];
-  const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
+  const nameProperty = properties[CalendarBarPropertyRequired.Name];
+  const startProperty = properties[CalendarBarPropertyRequired.StartDate];
 
-  const endProperty = properties[CalendarBarPropertyOptional.END_DATE];
+  const endProperty = properties[CalendarBarPropertyOptional.EndDate];
   const draggable = permissisions.writeWithView;
   const allDayColor = getColor(true, collection.color);
   const color = getColor(false, collection.color);
@@ -132,8 +140,10 @@ function createInterval(
   return [{value: start, attrId: startAttributeId}, {value: end, attrId: endAttributeId}];
 }
 
-function isAllDayEvent(start: Date, end: Date): boolean {
-  return end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0;
+export function isAllDayEvent(start: Date, end: Date): boolean {
+  return (
+    start && end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0
+  );
 }
 
 function getColor(allDay: boolean, color: string) {

@@ -17,85 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import * as moment from 'moment';
-import {Collection} from '../../../core/store/collections/collection';
+import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarCollectionConfig,
-  CalendarConfig,
-} from '../../../core/store/calendars/calendar.model';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+} from '../../../../core/store/calendars/calendar.model';
+import {isDateValid} from '../../../../shared/utils/common.utils';
+import * as moment from 'moment';
 import {BehaviorSubject} from 'rxjs';
-import {isDateValid} from '../../../shared/utils/common.utils';
-
-const DEFAULT_EVENT_DURATION = 60;
+import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
 
 @Component({
-  selector: 'create-calendar-event-form',
-  templateUrl: './create-calendar-event-form.component.html',
-  styleUrls: ['./create-calendar-event-form.component.scss'],
+  selector: 'calendar-event-dialog-collection-form',
+  templateUrl: './calendar-event-dialog-collection-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateCalendarEventFormComponent implements OnInit {
+export class CalendarEventDialogCollectionFormComponent implements OnInit {
   @Input()
-  public collections: Collection[];
-
-  @Input()
-  public initialTime: number;
-
-  @Input()
-  public config: CalendarConfig;
-
-  @Output()
-  public createEvent = new EventEmitter<DocumentModel>();
-
   public form: FormGroup;
+
+  @Input()
+  public collectionConfig: CalendarCollectionConfig;
+
+  public readonly requiredProperty = CalendarBarPropertyRequired;
+  public readonly optionalProperty = CalendarBarPropertyOptional;
 
   public currentStart$: BehaviorSubject<Date>;
   public currentEnd$: BehaviorSubject<Date>;
 
-  public constructor(private fb: FormBuilder, private i18n: I18n) {}
-
   public ngOnInit() {
-    this.createForm();
-  }
-
-  private createForm() {
-    const currentStart = this.createEventStart();
-    const currentEnd = this.createEventEnd();
-
-    this.form = this.fb.group({
-      collectionId: [this.getDefaultCollectionId(), Validators.required],
-      allDay: false,
-      title: [this.defaultTitleName(), Validators.required],
-      eventStart: [currentStart, Validators.required],
-      eventEnd: [currentEnd, Validators.required],
-    });
-
-    this.currentStart$ = new BehaviorSubject<Date>(currentStart);
-    this.currentEnd$ = new BehaviorSubject<Date>(currentEnd);
-  }
-
-  private getDefaultCollectionId(): string {
-    return this.collections && this.collections[0] && this.collections[0].id;
-  }
-
-  private createEventStart(): Date {
-    return new Date(this.initialTime);
-  }
-
-  private createEventEnd(): Date {
-    const eventStart = moment(this.createEventStart());
-    return eventStart.add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
-  }
-
-  private defaultTitleName(): string {
-    return this.i18n({id: 'dialog.create.calendar.event.default.title', value: 'New event'});
+    this.currentStart$ = new BehaviorSubject<Date>(this.form.controls.eventStart.value);
+    this.currentEnd$ = new BehaviorSubject<Date>(this.form.controls.eventEnd.value);
   }
 
   public onStartChange(date: Date) {
@@ -188,55 +142,5 @@ export class CreateCalendarEventFormComponent implements OnInit {
 
   private datesChanged(date1: Date, date2: Date): boolean {
     return date1.getTime() !== date2.getTime();
-  }
-
-  public onCollectionSelect(id: string) {
-    this.form.controls.collectionId.setValue(id);
-  }
-
-  public onSubmit() {
-    this.createEvent.emit(this.createEventDocument());
-  }
-
-  private createEventDocument(): DocumentModel {
-    const {collectionId, title, allDay, eventStart, eventEnd} = this.form.value;
-    const collectionConfig: CalendarCollectionConfig = (this.config && this.config.collections[collectionId]) || {};
-    if (!collectionConfig.barsProperties) {
-      return;
-    }
-
-    const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.NAME];
-    const startProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.START_DATE];
-    const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.END_DATE];
-
-    const data = {};
-    if (titleProperty) {
-      data[titleProperty.attributeId] = title;
-    }
-
-    if (startProperty) {
-      data[startProperty.attributeId] = this.cleanDateWhenAllDay(eventStart, allDay);
-    }
-
-    if (endProperty) {
-      data[endProperty.attributeId] = this.cleanDateWhenAllDay(eventEnd, allDay);
-    }
-
-    return {collectionId, data};
-  }
-
-  private cleanDateWhenAllDay(date: Date, allDay: boolean): Date {
-    if (allDay) {
-      return moment(date)
-        .hours(0)
-        .minutes(0)
-        .seconds(0)
-        .milliseconds(0)
-        .toDate();
-    }
-    return moment(date)
-      .seconds(0)
-      .milliseconds(0)
-      .toDate();
   }
 }

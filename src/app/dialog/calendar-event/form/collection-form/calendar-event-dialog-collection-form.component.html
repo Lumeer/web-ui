@@ -1,14 +1,5 @@
 <div [formGroup]="form">
-  <div class="form-group">
-    <select-item [items]="collections | collectionsSelectItems"
-                 [removable]="false"
-                 [selectedId]="form.value.collectionId"
-                 (select)="onCollectionSelect($event)"
-                 [placeholderText]="'Collection'">
-
-    </select-item>
-  </div>
-  <div class="form-group form-check">
+  <div class="form-group form-check" *ngIf="collectionConfig | propertiesDefined:[requiredProperty.StartDate]">
     <input type="checkbox"
            class="form-check-input"
            formControlName="allDay"
@@ -19,7 +10,7 @@
       All day
     </label>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="collectionConfig | propertiesDefined:[requiredProperty.Name]">
     <label for="title"
            i18n="@@dialog.create.calendar.event.label.title">
       Title
@@ -28,7 +19,7 @@
            id="title" type="text">
   </div>
 
-  <div class="form-group">
+  <div class="form-group" *ngIf="collectionConfig | propertiesDefined:[requiredProperty.StartDate]">
     <label for="eventStart"
            i18n="@@dialog.create.calendar.event.label.start">
       Event start
@@ -51,7 +42,7 @@
     </div>
   </div>
 
-  <div class="form-group mb-0">
+  <div class="form-group mb-0" *ngIf="collectionConfig | propertiesDefined:[optionalProperty.EndDate, requiredProperty.StartDate]">
     <label for="eventEnd"
            i18n="@@dialog.create.calendar.event.label.end">
       Event end
@@ -74,5 +65,4 @@
       </timepicker>
     </div>
   </div>
-
 </div>

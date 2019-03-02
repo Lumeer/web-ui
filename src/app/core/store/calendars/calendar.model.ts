@@ -49,10 +49,10 @@ export interface CalendarBarModel {
 export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPropertyOptional;
 
 export enum CalendarBarPropertyRequired {
-  NAME = 'name',
-  START_DATE = 'start',
+  Name = 'name',
+  StartDate = 'start',
 }
 
 export enum CalendarBarPropertyOptional {
-  END_DATE = 'end',
+  EndDate = 'end',
 }
