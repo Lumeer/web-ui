@@ -19,5 +19,6 @@
 
 export interface RuleVariable {
   name: string;
-  collectionId: string;
+  collectionId?: string;
+  linkTypeId?: string;
 }

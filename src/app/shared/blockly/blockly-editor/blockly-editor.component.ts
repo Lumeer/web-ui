@@ -31,7 +31,15 @@ import {
 import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {DOCUMENT} from '@angular/common';
-import {COLOR_DARK, COLOR_GRAY200, COLOR_GREEN, COLOR_PRIMARY, COLOR_RED} from '../../../core/constants';
+import {
+  COLOR_DARK,
+  COLOR_GRAY200,
+  COLOR_GRAY300,
+  COLOR_GRAY400,
+  COLOR_GREEN,
+  COLOR_PRIMARY,
+  COLOR_RED,
+} from '../../../core/constants';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
@@ -41,24 +49,34 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
 import {BehaviorSubject} from 'rxjs';
+import {isArray, uniqueArray} from '../../utils/common.utils';
 
 declare var Blockly: any;
 
-const DOCUMENT_TYPE_SUFFIX = '_document';
+const DOCUMENT_VAR_SUFFIX = '_document';
+const LINK_VAR_SUFFIX = '_linkinst';
+const LINK_TYPE_ARRAY_SUFFIX = '_link_array';
 const DOCUMENT_ARRAY_TYPE_SUFFIX = '_document_array';
-const LINK_TYPE_SUFFIX = '_link';
+const LINK_TYPE_BLOCK_SUFFIX = '_link';
+const LINK_INSTANCE_BLOCK_SUFFIX = '_link_instance';
 const ARRAY_TYPE_SUFFIX = '_array';
 const FOREACH_DOCUMENT_ARRAY = 'foreach_document_array';
+const FOREACH_LINK_ARRAY = 'foreach_link_array';
 const GET_ATTRIBUTE = 'get_attribute';
 const SET_ATTRIBUTE = 'set_attribute';
+const GET_LINK_ATTRIBUTE = 'get_link_attribute';
+const SET_LINK_ATTRIBUTE = 'set_link_attribute';
+const GET_LINK_DOCUMENT = 'get_link_document';
 const VARIABLES_GET_PREFIX = 'variables_get_';
 const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
 const VALUE_CONTAINER = 'value_container';
+const LINK_CONTAINER = 'link_container';
 
 export const enum MasterBlockType {
   Function = 'Function',
   Value = 'Value',
+  Link = 'Link',
 }
 
 @Component({
@@ -104,7 +122,6 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
   private workspace: any;
   private lumeerVar: string;
-  private masterBlock: any;
 
   constructor(
     private store$: Store<AppState>,
@@ -153,12 +170,16 @@ export class BlocklyEditorComponent implements AfterViewInit {
       const vars = dom.getElementsByTagName('variable');
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
-        if (varType.endsWith(DOCUMENT_TYPE_SUFFIX)) {
+        if (varType.endsWith(DOCUMENT_VAR_SUFFIX)) {
           this.ensureVariableTypeBlock(varType);
+        }
+        if (varType.endsWith(LINK_VAR_SUFFIX)) {
+          this.ensureLinkInstanceVariableTypeBlock(varType);
         }
       }
       for (let i = 0; i < this.linkTypes.length; i++) {
         this.ensureLinkTypeBlock(this.linkTypes[i]);
+        this.ensureLinkInstanceBlock(this.linkTypes[i]);
       }
       Blockly.Xml.domToWorkspace(dom, this.workspace);
       this.ensureTypeChecks();
@@ -169,28 +190,43 @@ export class BlocklyEditorComponent implements AfterViewInit {
         containerBlock.setDeletable(false);
         containerBlock.initSvg();
         containerBlock.render();
-        this.masterBlock = containerBlock;
+      } else if (this.masterType === MasterBlockType.Link) {
+        const linkBlock = this.workspace.newBlock(LINK_CONTAINER);
+        linkBlock.setDeletable(false);
+        linkBlock.initSvg();
+        linkBlock.render();
       } else {
         const valueBlock = this.workspace.newBlock(VALUE_CONTAINER);
         valueBlock.setDeletable(false);
         valueBlock.initSvg();
         valueBlock.render();
-        this.masterBlock = valueBlock;
       }
     }
 
     // make sure we have all variables created (no matter how the workspace was initiated - either from XML or empty)
     this.variables.forEach(variable => {
       if (this.workspace.getVariable(variable.name) == null) {
-        this.workspace.createVariable(variable.name, variable.collectionId + DOCUMENT_TYPE_SUFFIX, null);
+        if (variable.collectionId) {
+          this.workspace.createVariable(variable.name, variable.collectionId + DOCUMENT_VAR_SUFFIX, null);
+        } else if (variable.linkTypeId) {
+          this.workspace.createVariable(variable.name, variable.linkTypeId + LINK_VAR_SUFFIX, null);
+        }
       }
     });
   }
 
   private registerCustomBlocks(): void {
-    const coreVarTypes = this.variables.map(variable => variable.collectionId + DOCUMENT_TYPE_SUFFIX);
-    const collectionTypes = this.collections.map(c => c.id + DOCUMENT_TYPE_SUFFIX);
-    const collection = this.getCollection(this.variables[0].collectionId);
+    const coreCollectionVarTypes = this.variables
+      .filter(variable => !!variable.collectionId)
+      .map(variable => variable.collectionId + DOCUMENT_VAR_SUFFIX);
+    const coreLinkVarTypes = this.variables
+      .filter(variable => !!variable.linkTypeId)
+      .map(variable => variable.linkTypeId + LINK_VAR_SUFFIX);
+    const collectionTypes = this.collections.map(c => c.id + DOCUMENT_VAR_SUFFIX);
+    const linkTypes = this.linkTypes.map(l => l.id + LINK_VAR_SUFFIX);
+    const collection =
+      this.masterType !== MasterBlockType.Link ? this.getCollection(this.variables[0].collectionId) : null;
+    const linkType = this.masterType === MasterBlockType.Link ? this.getLinkType(this.variables[0].linkTypeId) : null;
     const attributeName = this.attribute ? this.attribute.name : collection.name;
 
     Blockly.Blocks[STATEMENT_CONTAINER] = {
@@ -278,6 +314,62 @@ export class BlocklyEditorComponent implements AfterViewInit {
       );
     };
 
+    Blockly.Blocks[LINK_CONTAINER] = {
+      init: function() {
+        this.jsonInit({
+          type: LINK_CONTAINER,
+          message0: '%1%2 %3 = %4',
+          args0: [
+            {
+              type: 'field_fa',
+              icon: linkType.collections[0].icon,
+              iconColor: linkType.collections[0].color,
+            },
+            {
+              type: 'field_fa',
+              icon: linkType.collections[1].icon,
+              iconColor: linkType.collections[1].color,
+            },
+            {
+              type: 'field_label',
+              text: attributeName,
+            },
+            {
+              type: 'input_value',
+              name: 'VALUE',
+              check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+            },
+          ],
+          colour: COLOR_DARK,
+        });
+      },
+    };
+
+    Blockly.JavaScript[LINK_CONTAINER] = function(block) {
+      const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+      this_.lumeerVar = lumeerVar;
+      const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
+
+      if (!value) {
+        return code;
+      }
+
+      return (
+        code +
+        '\n' +
+        lumeerVar +
+        '.setLinkAttribute(' +
+        'thisLink' +
+        ", '" +
+        this_.attribute.id +
+        "', " +
+        value +
+        ')' +
+        '\n'
+      );
+    };
+
     Blockly.Blocks[FOREACH_DOCUMENT_ARRAY] = {
       init: function() {
         this.jsonInit({
@@ -309,6 +401,38 @@ export class BlocklyEditorComponent implements AfterViewInit {
       },
     };
     Blockly.JavaScript[FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript['controls_forEach'];
+
+    Blockly.Blocks[FOREACH_LINK_ARRAY] = {
+      init: function() {
+        this.jsonInit({
+          type: FOREACH_LINK_ARRAY,
+          message0: 'for each link %1 in %2',
+          args0: [
+            {
+              type: 'field_variable',
+              name: 'VAR',
+              variable: null,
+            },
+            {
+              type: 'input_value',
+              name: 'LIST',
+              check: null,
+            },
+          ],
+          message1: 'do this %1',
+          args1: [
+            {
+              type: 'input_statement',
+              name: 'DO',
+            },
+          ],
+          previousStatement: null,
+          nextStatement: null,
+          colour: COLOR_RED,
+        });
+      },
+    };
+    Blockly.JavaScript[FOREACH_LINK_ARRAY] = Blockly.JavaScript['controls_forEach'];
 
     Blockly.Blocks[GET_ATTRIBUTE] = {
       init: function() {
@@ -360,7 +484,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: [...coreVarTypes, ...collectionTypes],
+              check: uniqueArray([...coreCollectionVarTypes, ...collectionTypes]),
             },
             {
               type: 'input_value',
@@ -387,10 +511,127 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
       return code;
     };
+
+    Blockly.Blocks[GET_LINK_ATTRIBUTE] = {
+      init: function() {
+        this.jsonInit({
+          type: GET_LINK_ATTRIBUTE,
+          message0: 'get %1 of link %2',
+          args0: [
+            {
+              type: 'field_dropdown',
+              name: 'ATTR',
+              options: [['?', '?']],
+            },
+            {
+              type: 'input_value',
+              name: 'LINK',
+            },
+          ],
+          output: '',
+          colour: COLOR_PRIMARY,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[GET_LINK_ATTRIBUTE] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const attrId = block.getFieldValue('ATTR');
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = this_.lumeerVar + '.getLinkAttribute(' + argument0 + ", '" + attrId + "')";
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[SET_LINK_ATTRIBUTE] = {
+      init: function() {
+        this.jsonInit({
+          type: SET_LINK_ATTRIBUTE,
+          message0: 'set %1 of link %2 to %3',
+          args0: [
+            {
+              type: 'field_dropdown',
+              name: 'ATTR',
+              options: [['?', '?']],
+            },
+            {
+              type: 'input_value',
+              name: 'LINK',
+              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+            },
+            {
+              type: 'input_value',
+              name: 'VALUE',
+              check: ['', 'Number', 'String', 'Boolean'], // only regular variables
+            },
+          ],
+          previousStatement: null,
+          nextStatement: null,
+          colour: COLOR_PRIMARY,
+        });
+      },
+    };
+    Blockly.JavaScript[SET_LINK_ATTRIBUTE] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const argument1 = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const attrId = block.getFieldValue('ATTR');
+
+      if (!argument0 || !argument1) {
+        return '';
+      }
+
+      const code = this_.lumeerVar + '.setLinkAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ')';
+
+      return code;
+    };
+
+    Blockly.Blocks[GET_LINK_DOCUMENT] = {
+      init: function() {
+        this.jsonInit({
+          type: GET_LINK_DOCUMENT,
+          message0: 'doc. from %1 linked via %2',
+          args0: [
+            {
+              type: 'field_dropdown',
+              name: 'COLLECTION',
+              options: [['?', '?']],
+            },
+            {
+              type: 'input_value',
+              name: 'LINK',
+              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+            },
+          ],
+          colour: COLOR_PRIMARY,
+          output: UNKNOWN,
+        });
+      },
+    };
+    Blockly.JavaScript[GET_LINK_DOCUMENT] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const collectionId = block.getFieldValue('COLLECTION');
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = this_.lumeerVar + '.getLinkDocument(' + argument0 + ", '" + collectionId + "'" + ')';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
   }
 
   private getLinkParts(linkBlockType: string): string[] {
     return linkBlockType.split('-', 2)[1].split('_');
+  }
+
+  private getLinkInstanceType(linkBlockType: string): string {
+    return linkBlockType.split('-', 2)[0];
   }
 
   private ensureTypeChecks(): void {
@@ -399,11 +640,11 @@ export class BlocklyEditorComponent implements AfterViewInit {
       this.preventDeletionOfInitialVariables(block);
 
       // set output type of all links
-      if (block.type.endsWith(LINK_TYPE_SUFFIX)) {
+      if (block.type.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
         const children = block.getChildren(false);
         if (children && children.length > 0) {
           const child = children[0];
-          const childType = child.type.replace(DOCUMENT_TYPE_SUFFIX, '').replace(VARIABLES_GET_PREFIX, '');
+          const childType = child.type.replace(DOCUMENT_VAR_SUFFIX, '').replace(VARIABLES_GET_PREFIX, '');
           const linkParts = this.getLinkParts(block.type);
           const counterpart = linkParts[0] === childType ? linkParts[1] : linkParts[0];
           block.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
@@ -424,7 +665,24 @@ export class BlocklyEditorComponent implements AfterViewInit {
               ? child.outputConnection.check_[0]
               : '';
 
-          if (childOutputType.endsWith(DOCUMENT_TYPE_SUFFIX) || childOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
+          if (childOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || childOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(block, child, true);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
+      // link instance getters and setters
+      if (block.type === GET_LINK_ATTRIBUTE || block.type === SET_LINK_ATTRIBUTE) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType =
+            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
+              ? child.outputConnection.check_[0]
+              : '';
+
+          if (childOutputType.endsWith(LINK_VAR_SUFFIX) || childOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
             const value = block.getField('ATTR').getValue();
             this.setterAndGetterOutputType(block, child, true);
             block.getField('ATTR').setValue(value);
@@ -448,6 +706,23 @@ export class BlocklyEditorComponent implements AfterViewInit {
           }
         }
       }
+
+      // link foreach cycle
+      if (block.type === FOREACH_LINK_ARRAY) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType =
+            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
+              ? child.outputConnection.check_[0]
+              : '';
+
+          if (childOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
+            const newType = childOutputType.replace(LINK_TYPE_ARRAY_SUFFIX, LINK_VAR_SUFFIX);
+            this.updateVariableType(this.workspace, block.getField('VAR').getVariable(), newType);
+            block.getField('VAR').setTypes_([newType], newType);
+          }
+        }
+      }
     });
   }
 
@@ -459,28 +734,70 @@ export class BlocklyEditorComponent implements AfterViewInit {
     }
   }
 
-  private setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
-    const options = parentBlock.getField('ATTR').getOptions();
+  private setLinkDocumentOutputType(parentBlock: any, block: any) {
+    const options = parentBlock.getField('COLLECTION').getOptions();
     const originalLength = options.length;
     const blockOutputType =
       block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
         ? block.outputConnection.check_[0]
         : '';
-    const collection = this.getCollection(blockOutputType.split('_')[0]);
+    const linkTypeId = blockOutputType.split('_')[0];
+    const linkType = this.getLinkType(linkTypeId);
+
+    linkType.collectionIds.forEach(collectionId => {
+      const collection = this.getCollection(collectionId);
+      options.push([collection.name, collection.id]);
+    });
+
+    const firstCollection = this.getCollection(linkType.collectionIds[0]);
+    const firstCollectionId = firstCollection.id;
+    const firstCollectionName = firstCollection.name;
+
+    parentBlock.getField('COLLECTION').setValue(firstCollectionId);
+    parentBlock.getField('COLLECTION').text_ = firstCollectionName;
+    parentBlock.getField('COLLECTION').forceRerender();
+    options.splice(0, originalLength);
+
+    parentBlock.outputConnection.check_ = firstCollectionId + DOCUMENT_VAR_SUFFIX;
+  }
+
+  private getOutputConnectionCheck(block: any): string {
+    if (block.outputConnection && block.outputConnection.check_) {
+      return isArray(block.outputConnection.check_) ? block.outputConnection.check_[0] : block.outputConnection.check_;
+    }
+
+    return '';
+  }
+
+  private setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
+    const options = parentBlock.getField('ATTR').getOptions();
+    const originalLength = options.length;
+    const blockOutputType = this.getOutputConnectionCheck(block);
+
+    let attributes: Attribute[];
+    let defaultAttributeId = '';
+    if (parentBlock.type === GET_LINK_ATTRIBUTE || parentBlock.type === SET_LINK_ATTRIBUTE) {
+      const linkType = this.getLinkType(blockOutputType.split('_')[0]);
+      attributes = linkType.attributes;
+    } else {
+      const collection = this.getCollection(blockOutputType.split('_')[0]);
+      attributes = collection.attributes;
+      defaultAttributeId = collection.defaultAttributeId;
+    }
 
     let defaultValue = '',
       defaultText = '';
-    collection.attributes.forEach(attribute => {
+    attributes.forEach(attribute => {
       options.push([attribute.name, attribute.id]);
-      if (attribute.id === collection.defaultAttributeId) {
+      if (attribute.id === defaultAttributeId) {
         defaultValue = attribute.id;
         defaultText = attribute.name;
       }
     });
 
-    if (!defaultValue && collection.attributes) {
-      defaultValue = collection.attributes[0].id;
-      defaultText = collection.attributes[0].name;
+    if (!defaultValue && attributes && attributes.length > 0) {
+      defaultValue = attributes[0].id;
+      defaultText = attributes[0].name;
     }
 
     parentBlock.getField('ATTR').setValue(defaultValue);
@@ -490,12 +807,12 @@ export class BlocklyEditorComponent implements AfterViewInit {
     parentBlock.getField('ATTR').forceRerender();
     options.splice(0, originalLength);
 
-    if (parentBlock.type === GET_ATTRIBUTE) {
-      const newType = block.type.endsWith('_link') ? ['Array'] : ['', 'Number', 'String', 'Boolean'];
-      const parentBlockOutputType =
-        parentBlock.outputConnection && parentBlock.outputConnection.check_ && parentBlock.outputConnection.check_[0]
-          ? parentBlock.outputConnection.check_[0]
-          : '';
+    if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === GET_LINK_ATTRIBUTE) {
+      const newType =
+        block.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) || block.type.endsWith(LINK_INSTANCE_BLOCK_SUFFIX)
+          ? ['Array']
+          : ['', 'Number', 'String', 'Boolean'];
+      const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
       if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
         this.tryDisconnect(parentBlock, parentBlock.outputConnection);
       }
@@ -515,28 +832,34 @@ export class BlocklyEditorComponent implements AfterViewInit {
       // prevent deletion of the initial variables
       this.preventDeletionOfInitialVariables(block);
 
-      if (block.type === GET_ATTRIBUTE) {
+      if (block.type === GET_ATTRIBUTE || block.type === GET_LINK_ATTRIBUTE) {
         block.outputConnection.check_ = [UNKNOWN];
+      }
+    }
+
+    // change output type in getter of linked document from link instance
+    if (changeEvent instanceof Blockly.Events.Change) {
+      const block = workspace.getBlockById(changeEvent.blockId);
+
+      if (block.type === GET_LINK_DOCUMENT && changeEvent.element === 'field' && changeEvent.name === 'COLLECTION') {
+        block.outputConnection.check_ = changeEvent.newValue + DOCUMENT_VAR_SUFFIX;
       }
     }
 
     if (changeEvent.newParentId) {
       // is there a new connection made?
       const block = workspace.getBlockById(changeEvent.blockId);
-      const blockOutputType =
-        block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
-          ? block.outputConnection.check_[0]
-          : '';
+      const blockOutputType = this.getOutputConnectionCheck(block);
       const parentBlock = workspace.getBlockById(changeEvent.newParentId);
 
       // is it a document being connected to ...
-      if (blockOutputType.endsWith(DOCUMENT_TYPE_SUFFIX)) {
+      if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX)) {
         // ...a link?
-        if (parentBlock.type.endsWith(LINK_TYPE_SUFFIX)) {
+        if (parentBlock.type.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
           // set the output type to the opposite of what is connected on the input (links are symmetric)
           const linkParts = this.getLinkParts(parentBlock.type);
           const counterpart =
-            linkParts[0] === blockOutputType.replace(DOCUMENT_TYPE_SUFFIX, '') ? linkParts[1] : linkParts[0];
+            linkParts[0] === blockOutputType.replace(DOCUMENT_VAR_SUFFIX, '') ? linkParts[1] : linkParts[0];
           parentBlock.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
         }
       }
@@ -555,12 +878,56 @@ export class BlocklyEditorComponent implements AfterViewInit {
         }
       }
 
+      // disconnect invalid foreach input
+      if (parentBlock.type === FOREACH_LINK_ARRAY) {
+        if (parentBlock.getInput('LIST').connection.targetConnection.sourceBlock_.id === block.id) {
+          if (!blockOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
+            parentBlock.getInput('LIST').connection.disconnect();
+          } else {
+            // otherwise set a correct type of the cycle variable
+            const newType = blockOutputType.replace(LINK_TYPE_ARRAY_SUFFIX, LINK_VAR_SUFFIX);
+            this.updateVariableType(workspace, parentBlock.getField('VAR').getVariable(), newType);
+            parentBlock.getField('VAR').setTypes_([newType], newType);
+          }
+        }
+      }
+
       // populate document attribute names in document attr getter and setter
-      if (
-        (blockOutputType.endsWith(DOCUMENT_TYPE_SUFFIX) || blockOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) &&
-        (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === SET_ATTRIBUTE)
-      ) {
-        this.setterAndGetterOutputType(parentBlock, block);
+      if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === SET_ATTRIBUTE) {
+        if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
+          this.setterAndGetterOutputType(parentBlock, block);
+        } else {
+          const document = parentBlock.getInput('DOCUMENT');
+          if (
+            document.connection &&
+            document.connection.targetConnection &&
+            document.connection.targetConnection.getSourceBlock().id === block.id
+          ) {
+            this.tryDisconnect(parentBlock, document.connection);
+          }
+        }
+      }
+      // populate document attribute names in document attr getter and setter
+      if (parentBlock.type === GET_LINK_ATTRIBUTE || parentBlock.type === SET_LINK_ATTRIBUTE) {
+        if (blockOutputType.endsWith(LINK_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
+          this.setterAndGetterOutputType(parentBlock, block);
+        } else {
+          const link = parentBlock.getInput('LINK');
+          if (
+            link.connection &&
+            link.connection.targetConnection &&
+            link.connection.targetConnection.getSourceBlock().id === block.id
+          ) {
+            this.tryDisconnect(parentBlock, link.connection);
+          }
+        }
+      }
+
+      // populate collections in getter of linked document from link instance
+      if (parentBlock.type === GET_LINK_DOCUMENT) {
+        if (blockOutputType.endsWith(LINK_VAR_SUFFIX)) {
+          this.setLinkDocumentOutputType(parentBlock, block);
+        }
       }
     } else if (changeEvent.oldParentId) {
       // reset output type and disconnect when linked document is removed
@@ -574,15 +941,15 @@ export class BlocklyEditorComponent implements AfterViewInit {
         const parentBlock = workspace.getBlockById(changeEvent.oldParentId);
 
         // document being removed from link
-        if (blockOutputType.endsWith(DOCUMENT_TYPE_SUFFIX)) {
-          if (parentBlock.type.endsWith(LINK_TYPE_SUFFIX) && parentBlock.outputConnection) {
+        if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX)) {
+          if (parentBlock.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) && parentBlock.outputConnection) {
             parentBlock.setOutput(true, UNKNOWN);
             this.tryDisconnect(parentBlock, parentBlock.outputConnection);
           }
         }
 
         // document or link being removed from attr getter
-        if (blockOutputType.endsWith(DOCUMENT_TYPE_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_SUFFIX)) {
+        if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
           if (parentBlock.type === GET_ATTRIBUTE && parentBlock.outputConnection) {
             parentBlock.setOutput(true, UNKNOWN);
             this.tryDisconnect(parentBlock, parentBlock.outputConnection);
@@ -590,24 +957,26 @@ export class BlocklyEditorComponent implements AfterViewInit {
         }
 
         // reset list of attributes upon disconnection
-        if (parentBlock.type === GET_ATTRIBUTE) {
-          const options = parentBlock.getField('ATTR').getOptions();
-          const originalLength = options.length;
-          parentBlock.getField('ATTR').setValue('?');
-          options.push(['?', '?']);
-          options.splice(0, originalLength);
+        if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === GET_LINK_ATTRIBUTE) {
+          this.resetOptions(parentBlock, 'ATTR');
         }
 
         // reset list of attributes upon disconnection
         if (
-          parentBlock.type === SET_ATTRIBUTE &&
-          parentBlock.getInput('DOCUMENT').connection.targetConnection === null
+          (parentBlock.type === SET_ATTRIBUTE &&
+            parentBlock.getInput('DOCUMENT').connection.targetConnection === null) ||
+          (parentBlock.type === SET_LINK_ATTRIBUTE && parentBlock.getInput('LINK').connection.targetConnection === null)
         ) {
-          const options = parentBlock.getField('ATTR').getOptions();
-          const originalLength = options.length;
-          parentBlock.getField('ATTR').setValue('?');
-          options.push(['?', '?']);
-          options.splice(0, originalLength);
+          this.resetOptions(parentBlock, 'ATTR');
+        }
+
+        // reset list of collections upon disconnection
+        if (
+          parentBlock.type === GET_LINK_DOCUMENT &&
+          parentBlock.getInput('COLLECTION').connection.targetConnection === null
+        ) {
+          parentBlock.setOutput(true, UNKNOWN);
+          this.resetOptions(parentBlock, 'COLLECTION');
         }
       }
     }
@@ -615,6 +984,14 @@ export class BlocklyEditorComponent implements AfterViewInit {
     // render new state
     this.generateXml();
     this.generateJs();
+  }
+
+  private resetOptions(block: any, field: string): void {
+    const options = block.getField(field).getOptions();
+    const originalLength = options.length;
+    block.getField(field).setValue('?');
+    options.push(['?', '?']);
+    options.splice(0, originalLength);
   }
 
   private ensureEmptyTypes(block): void {
@@ -662,7 +1039,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     const xmlList = [];
 
     workspace.getAllVariables().forEach(variable => {
-      if (variable.type.endsWith(DOCUMENT_TYPE_SUFFIX)) {
+      if (variable.type.endsWith(DOCUMENT_VAR_SUFFIX)) {
         this.ensureVariableTypeBlock(variable.type);
         const blockText =
           '<xml>' +
@@ -693,13 +1070,46 @@ export class BlocklyEditorComponent implements AfterViewInit {
     return xmlList;
   }
 
+  private registerLinkInstanceVariables(workspace): any[] {
+    const xmlList = [];
+
+    workspace.getAllVariables().forEach(variable => {
+      if (variable.type.endsWith(LINK_VAR_SUFFIX)) {
+        this.ensureLinkInstanceVariableTypeBlock(variable.type);
+        const blockText =
+          '<xml>' +
+          '<block type="' +
+          VARIABLES_GET_PREFIX +
+          variable.type +
+          '">' +
+          '<field name="VAR" id="' +
+          variable.getId() +
+          '" variabletype="' +
+          variable.type +
+          '">' +
+          variable.name +
+          '</field>' +
+          '</block>' +
+          '</xml>';
+        const block = Blockly.Xml.textToDom(blockText).firstChild;
+        xmlList.push(block);
+      }
+    });
+
+    return xmlList;
+  }
+
   private getCollection(id: string): Collection {
     return this.collections.find(collection => collection.id === id);
   }
 
+  private getLinkType(id: string): LinkType {
+    return this.linkTypes.find(linkType => linkType.id === id);
+  }
+
   private ensureVariableTypeBlock(type: string): void {
     if (!Blockly.Blocks[VARIABLES_GET_PREFIX + type]) {
-      const collection = this.getCollection(type.replace(DOCUMENT_TYPE_SUFFIX, ''));
+      const collection = this.getCollection(type.replace(DOCUMENT_VAR_SUFFIX, ''));
 
       const this_ = this;
       Blockly.Blocks[VARIABLES_GET_PREFIX + type] = {
@@ -735,12 +1145,70 @@ export class BlocklyEditorComponent implements AfterViewInit {
     }
   }
 
+  private ensureLinkInstanceVariableTypeBlock(type: string): void {
+    if (!Blockly.Blocks[VARIABLES_GET_PREFIX + type]) {
+      const linkType = this.getLinkType(type.replace(LINK_VAR_SUFFIX, ''));
+      const c1 = this.getCollection(linkType.collectionIds[0]);
+      const c2 = this.getCollection(linkType.collectionIds[1]);
+
+      Blockly.Blocks[VARIABLES_GET_PREFIX + type] = {
+        init: function() {
+          this.jsonInit({
+            type: VARIABLES_GET_PREFIX + type,
+            message0: '%1%2 %3 %4',
+            args0: [
+              {
+                type: 'field_fa',
+                icon: c1.icon,
+                iconColor: c1.color,
+              },
+              {
+                type: 'field_fa',
+                icon: c2.icon,
+                iconColor: c2.color,
+              },
+              {
+                type: 'field_label',
+                text: linkType.name,
+                class: 'text-primary',
+              },
+              {
+                type: 'field_variable',
+                name: 'VAR',
+                variable: '%{BKY_VARIABLES_DEFAULT_NAME}',
+                variableTypes: [type],
+                defaultType: type,
+              },
+            ],
+            colour: COLOR_GRAY300,
+            output: type,
+          });
+        },
+      };
+      Blockly.JavaScript[VARIABLES_GET_PREFIX + type] = Blockly.JavaScript['variables_get'];
+    }
+  }
+
   private getBlocklyLinkType(linkType: LinkType): string {
-    return linkType.id + '-' + linkType.collectionIds[0] + '_' + linkType.collectionIds[1] + LINK_TYPE_SUFFIX;
+    return linkType.id + '-' + linkType.collectionIds[0] + '_' + linkType.collectionIds[1] + LINK_TYPE_BLOCK_SUFFIX;
+  }
+
+  private getBlocklyLinkInstance(linkType: LinkType): string {
+    return linkType.id + '-' + linkType.collectionIds[0] + '_' + linkType.collectionIds[1] + LINK_INSTANCE_BLOCK_SUFFIX;
   }
 
   private registerLinks(workspace): any[] {
-    const xmlList = [];
+    const xmlList = this.registerLinkInstanceVariables(workspace);
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
+    if (this.masterType === MasterBlockType.Function) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + SET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
+    }
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_DOCUMENT + '"></block></xml>').firstChild);
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     this.linkTypes.forEach(linkType => {
       this.ensureLinkTypeBlock(linkType);
@@ -749,6 +1217,19 @@ export class BlocklyEditorComponent implements AfterViewInit {
       const block = Blockly.Xml.textToDom(blockText).firstChild;
       xmlList.push(block);
     });
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+
+    this.linkTypes.forEach(linkType => {
+      this.ensureLinkInstanceBlock(linkType);
+
+      const blockText =
+        '<xml>' + '<block type="' + this.getBlocklyLinkInstance(linkType) + '">' + '</block>' + '</xml>';
+      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      xmlList.push(block);
+    });
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     return xmlList;
   }
@@ -786,8 +1267,8 @@ export class BlocklyEditorComponent implements AfterViewInit {
                 type: 'input_value',
                 name: 'DOCUMENT',
                 check: [
-                  linkType.collectionIds[0] + DOCUMENT_TYPE_SUFFIX,
-                  linkType.collectionIds[1] + DOCUMENT_TYPE_SUFFIX,
+                  linkType.collectionIds[0] + DOCUMENT_VAR_SUFFIX,
+                  linkType.collectionIds[1] + DOCUMENT_VAR_SUFFIX,
                 ],
               },
             ],
@@ -822,6 +1303,80 @@ export class BlocklyEditorComponent implements AfterViewInit {
     }
   }
 
+  private ensureLinkInstanceBlock(linkType: LinkType) {
+    const type = this.getBlocklyLinkInstance(linkType);
+    const linkTypeId = linkType.id;
+
+    if (!Blockly.Blocks[type]) {
+      const c1 = this.getCollection(linkType.collectionIds[0]);
+      const c2 = this.getCollection(linkType.collectionIds[1]);
+
+      Blockly.Blocks[type] = {
+        init: function() {
+          this.jsonInit({
+            type: type,
+            message0: '%1 %2%3 %4 %5',
+            args0: [
+              {
+                type: 'field_label',
+                text: 'Attrs. of',
+                class: 'text-primary',
+              },
+              {
+                type: 'field_fa',
+                icon: c1.icon,
+                iconColor: c1.color,
+              },
+              {
+                type: 'field_fa',
+                icon: c2.icon,
+                iconColor: c2.color,
+              },
+              {
+                type: 'field_label',
+                text: linkType.name,
+                class: 'text-primary',
+              },
+              {
+                type: 'input_value',
+                name: 'DOCUMENT',
+                check: [
+                  linkType.collectionIds[0] + DOCUMENT_VAR_SUFFIX,
+                  linkType.collectionIds[1] + DOCUMENT_VAR_SUFFIX,
+                ],
+              },
+            ],
+            output: linkType.id + LINK_TYPE_ARRAY_SUFFIX,
+            colour: COLOR_GRAY400,
+            tooltip: '',
+            helpUrl: '',
+          });
+        },
+      };
+
+      const this_ = this;
+      Blockly.JavaScript[type] = function(block) {
+        const lumeerVar = this_.lumeerVar
+          ? this_.lumeerVar
+          : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        if (!this_.lumeerVar) {
+          this_.lumeerVar = lumeerVar;
+        }
+
+        const argument0 =
+          Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+
+        if (!argument0) {
+          return '';
+        }
+
+        const code = lumeerVar + '.getLinks(' + argument0 + ", '" + linkTypeId + "')";
+
+        return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+      };
+    }
+  }
+
   // bridge for functions running outside of ng zone
   private shadeColor(color: string, percent: number): string {
     return shadeColor(color, percent);
@@ -833,7 +1388,8 @@ export class BlocklyEditorComponent implements AfterViewInit {
   }
 
   private generateXml(): void {
-    this.onXmlUpdate.emit(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.workspace)));
+    const xml = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace));
+    this.onXmlUpdate.emit(xml);
   }
 
   private generateJs(): void {
@@ -841,6 +1397,10 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
     if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
       js = 'var thisDocument;\n' + js;
+    }
+
+    if (this.masterType === MasterBlockType.Link && js.indexOf('var thisLink;') < 0) {
+      js = 'var thisLink;\n' + js;
     }
 
     this.onJsUpdate.emit(js);
