@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {ChartAxisResourceType, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 
 export interface ChartData {
   sets: ChartDataSet[];
@@ -32,6 +32,7 @@ export interface ChartDataSet {
   yAxisType: ChartYAxisType;
   name: string;
   draggable: boolean;
+  resourceType: ChartAxisResourceType;
 }
 
 export interface ChartPoint {

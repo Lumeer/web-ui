@@ -36,7 +36,6 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
-import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {
   convertAttributeDtoToModel,
   convertAttributeModelToDto,
@@ -246,10 +245,7 @@ export class CollectionsEffects {
     mergeMap(action =>
       this.collectionService.removeCollection(action.payload.collectionId).pipe(
         mergeMap(collectionId => {
-          const actions: Action[] = [
-            new CollectionsAction.DeleteSuccess({collectionId}),
-            new DocumentsAction.ClearByCollection({collectionId}),
-          ];
+          const actions: Action[] = [new CollectionsAction.DeleteSuccess({collectionId})];
 
           const {callback} = action.payload;
           if (callback) {
@@ -268,23 +264,23 @@ export class CollectionsEffects {
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
-    map(([[action, navigation], linkTypes]) => {
+    flatMap(([[action, navigation], linkTypes]) => {
       const {collectionId} = action.payload;
+      const actions: Action[] = [new DocumentsAction.ClearByCollection({collectionId})];
       const isCollectionSettingsPage =
         navigation && navigation.workspace && navigation.workspace.collectionId === collectionId;
       if (isCollectionSettingsPage) {
-        return new RouterAction.Go({path: ['/']});
+        return [...actions, new RouterAction.Go({path: ['/']})];
       }
 
       const query = navigation.query || {};
       const collectionIdsFromQuery = getAllCollectionIdsFromQuery(query, linkTypes);
       if (collectionIdsFromQuery.includes(collectionId)) {
-        return new NavigationAction.RemoveCollectionFromQuery({collectionId});
+        return [...actions, new NavigationAction.RemoveCollectionFromQuery({collectionId})];
       }
 
-      return null;
-    }),
-    filter(action => !!action)
+      return actions;
+    })
   );
 
   @Effect()

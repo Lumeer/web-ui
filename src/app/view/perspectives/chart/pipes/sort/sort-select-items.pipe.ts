@@ -18,26 +18,40 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxis, ChartAxisType, ChartConfig, ChartSort, ChartSortType} from '../../../../../core/store/charts/chart';
+import {ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.util';
 
 @Pipe({
   name: 'sortSelectItems',
 })
 export class SortSelectItemsPipe implements PipeTransform {
-  public transform(config: ChartConfig, collections: Collection[]): SelectItemModel[] {
+  public transform(config: ChartConfig, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
     const xAxis = config.axes && config.axes[ChartAxisType.X];
     if (!xAxis) {
       return [];
     }
-
-    const collection = collections.find(coll => xAxis.collectionId === coll.id);
-    return (collection && collection.attributes.map(attribute => this.attributeToItem(collection, attribute))) || [];
-  }
-
-  private attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const axis: ChartAxis = {collectionId: collection.id, attributeId: attribute.id};
-    return {id: axis, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
+    if (xAxis.axisResourceType === ChartAxisResourceType.Collection) {
+      const collection = collections.find(coll => xAxis.resourceId === coll.id);
+      return (
+        (collection && collection.attributes.map(attribute => collectionAttributeToItem(collection, attribute))) || []
+      );
+    } else if (xAxis.axisResourceType === ChartAxisResourceType.LinkType) {
+      const linkType = linkTypes.find(lt => xAxis.resourceId === lt.id);
+      const collection1 = linkType && collections.find(c => c.id === linkType.collectionIds[0]);
+      const collection2 = linkType && collections.find(c => c.id === linkType.collectionIds[1]);
+      return (
+        (linkType &&
+          collection1 &&
+          collection2 &&
+          linkType.attributes.map(attribute =>
+            linkTypeAttributeToItem(linkType, [collection1, collection2], attribute)
+          )) ||
+        []
+      );
+    }
+    return [];
   }
 }

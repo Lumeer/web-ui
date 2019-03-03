@@ -26,7 +26,13 @@ export function isNotNullOrUndefind(object: any): boolean {
 }
 
 export function isNumeric(value: any): boolean {
-  return !isNaN(value);
+  const val =
+    value &&
+    value
+      .toString()
+      .replace(/\s/g, '')
+      .replace(',', '.');
+  return !isNaN(Number(val));
 }
 
 export function deepObjectsEquals(object1: any, object2: any): boolean {

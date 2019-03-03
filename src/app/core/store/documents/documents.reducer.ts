@@ -43,7 +43,7 @@ export function documentsReducer(
     case DocumentsActionType.REMOVE_FAVORITE_FAILURE:
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
     case DocumentsActionType.CLEAR_BY_COLLECTION:
-      return documentsAdapter.removeMany(findCollectionDocumentIds(state, action.payload.collectionId), state);
+      return documentsAdapter.removeMany(document => document.collectionId === action.payload.collectionId, state);
     case DocumentsActionType.CLEAR:
       return initialDocumentsState;
     default:
@@ -76,10 +76,4 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
 
 function isDocumentNewer(document: DocumentModel, oldDocument: DocumentModel): boolean {
   return document.dataVersion && (!oldDocument.dataVersion || document.dataVersion > oldDocument.dataVersion);
-}
-
-function findCollectionDocumentIds(state: DocumentsState, collectionId: string): string[] {
-  return Object.values(state.entities)
-    .filter(document => document.collectionId === collectionId)
-    .map(document => document.id);
 }

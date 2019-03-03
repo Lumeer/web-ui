@@ -23,7 +23,12 @@ export interface LinkInstance {
   id?: string;
   linkTypeId: string;
   documentIds: [string, string];
-  version?: number;
+
+  creationDate?: Date;
+  updateDate?: Date;
+  createdBy?: string;
+  updatedBy?: string;
+  dataVersion?: number;
 
   data?: {[attributeId: string]: DataValue | any}; // TODO remove any
 }

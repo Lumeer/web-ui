@@ -225,10 +225,15 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         const set = plotMaker.chartData.sets[pointData.setIx];
         const setId = set.id;
+        const resourceType = set.resourceType;
         const pointId = set && set.points[datum.i].id;
         const value = this.newValue;
 
-        pointId && setId && value && plotMaker.onValueChanged && plotMaker.onValueChanged({pointId, setId, value});
+        pointId &&
+          setId &&
+          value &&
+          plotMaker.onValueChanged &&
+          plotMaker.onValueChanged({pointId, setId, value, resourceType: resourceType});
       });
   }
 

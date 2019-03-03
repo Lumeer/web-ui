@@ -20,7 +20,7 @@
 import {LinkTypeDto, SuggestionsDto} from '../../../../../../core/dto';
 import {convertCollectionDtoToModel} from '../../../../../../core/store/collections/collection.converter';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkTypeConverter} from '../../../../../../core/store/link-types/link-type.converter';
+import {convertLinkTypeDtoToModel} from '../../../../../../core/store/link-types/link-type.converter';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {ViewConverter} from '../../../../../../core/store/views/view.converter';
 import {View} from '../../../../../../core/store/views/view';
@@ -39,7 +39,7 @@ export function convertSuggestionsDtoToModel(suggestions: SuggestionsDto, allCol
 }
 
 function convertLinkType(dto: LinkTypeDto, allCollections: Collection[]): LinkType {
-  const linkType = LinkTypeConverter.fromDto(dto);
+  const linkType = convertLinkTypeDtoToModel(dto);
   linkType.collections = [
     allCollections.find(collection => collection.id === linkType.collectionIds[0]),
     allCollections.find(collection => collection.id === linkType.collectionIds[1]),

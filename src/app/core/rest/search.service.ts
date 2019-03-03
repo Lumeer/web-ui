@@ -24,7 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {SuggestionsDto, DocumentDto, QueryDto} from '../dto';
+import {SuggestionsDto, DocumentDto, QueryDto, LinkInstanceDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace';
@@ -48,8 +48,8 @@ export class SearchService {
     return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
-  public searchLinkInstances(query: QueryDto): Observable<LinkInstance[]> {
-    return this.http.post<LinkInstance[]>(`${this.searchPath()}/linkInstances`, query);
+  public searchLinkInstances(query: QueryDto): Observable<LinkInstanceDto[]> {
+    return this.http.post<LinkInstanceDto[]>(`${this.searchPath()}/linkInstances`, query);
   }
 
   public searchDocuments(query: QueryDto): Observable<DocumentDto[]> {

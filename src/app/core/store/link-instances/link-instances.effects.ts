@@ -27,7 +27,7 @@ import {LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {LinkInstanceConverter} from './link-instance.converter';
+import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstancesQueries} from './link-instances.state';
 import {convertQueryModelToDto} from '../navigation/query.converter';
@@ -41,12 +41,12 @@ export class LinkInstancesEffects {
     filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) =>
       this.searchService.searchLinkInstances(convertQueryModelToDto(action.payload.query)).pipe(
-        map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
+        map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         map(
           linkInstances =>
             new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})
         ),
-        catchError(error => of(new LinkInstancesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.GetFailure({error})))
       )
     )
   );
@@ -65,10 +65,10 @@ export class LinkInstancesEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Create>(LinkInstancesActionType.CREATE),
     mergeMap(action => {
-      const linkInstanceDto = LinkInstanceConverter.toDto(action.payload.linkInstance);
+      const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
       return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
-        map(dto => LinkInstanceConverter.fromDto(dto)),
+        map(dto => convertLinkInstanceDtoToModel(dto)),
         tap(linkInstance => {
           const callback = action.payload.callback;
           if (callback) {
@@ -76,7 +76,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(linkInstance => new LinkInstancesAction.CreateSuccess({linkInstance})),
-        catchError(error => of(new LinkInstancesAction.CreateFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.CreateFailure({error})))
       );
     })
   );
@@ -92,15 +92,15 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
-    ofType<LinkInstancesAction.Update>(LinkInstancesActionType.UPDATE),
+  public patchData$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA),
     mergeMap(action => {
-      const linkInstanceDto = LinkInstanceConverter.toDto(action.payload.linkInstance);
+      const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
-      return this.linkInstanceService.updateLinkInstance(action.payload.linkInstance.id, linkInstanceDto).pipe(
-        map(dto => LinkInstanceConverter.fromDto(dto)),
-        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance: linkInstance})),
-        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error})))
+      return this.linkInstanceService.patchLinkInstanceData(linkInstanceDto).pipe(
+        map(dto => convertLinkInstanceDtoToModel(dto)),
+        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance})),
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error})))
       );
     })
   );
@@ -127,7 +127,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
-        catchError(error => of(new LinkInstancesAction.DeleteFailure({error: error})))
+        catchError(error => of(new LinkInstancesAction.DeleteFailure({error})))
       )
     )
   );

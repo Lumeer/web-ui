@@ -21,6 +21,7 @@ import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
 import {ChartData} from '../../data/convertor/chart-data';
+import {ChartAxisResourceType} from '../../../../../core/store/charts/chart';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -52,6 +53,7 @@ export interface ValueChange {
   setId: string;
   pointId: string;
   value: string;
+  resourceType: ChartAxisResourceType;
 }
 
 export interface DataChange {
