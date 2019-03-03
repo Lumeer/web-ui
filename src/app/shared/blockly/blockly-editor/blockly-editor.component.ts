@@ -49,7 +49,7 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
 import {BehaviorSubject} from 'rxjs';
-import {isArray} from '../../utils/common.utils';
+import {isArray, uniqueArray} from '../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -484,7 +484,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: this_.uniqueArray([...coreCollectionVarTypes, ...collectionTypes]),
+              check: uniqueArray([...coreCollectionVarTypes, ...collectionTypes]),
             },
             {
               type: 'input_value',
@@ -562,7 +562,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'LINK',
-              check: this_.uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
             },
             {
               type: 'input_value',
@@ -604,7 +604,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'LINK',
-              check: this_.uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
             },
           ],
           colour: COLOR_PRIMARY,
@@ -724,16 +724,6 @@ export class BlocklyEditorComponent implements AfterViewInit {
         }
       }
     });
-  }
-
-  private uniqueArray(ar: any[]): any[] {
-    const j = {};
-
-    ar.forEach(v => {
-      j[v + '::' + typeof v] = v;
-    });
-
-    return Object.keys(j).map(v => j[v]);
   }
 
   private preventDeletionOfInitialVariables(block: any): void {
@@ -1329,7 +1319,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             args0: [
               {
                 type: 'field_label',
-                text: 'Links',
+                text: 'Attrs. of',
                 class: 'text-primary',
               },
               {
