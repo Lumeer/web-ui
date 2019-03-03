@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
-import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {DialogService} from '../../../../dialog/dialog.service';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ServiceLimitsAction} from '../../../../core/store/organizations/service-limits/service-limits.action';
@@ -56,6 +56,7 @@ export class UserMenuComponent {
   public freePlan$: Observable<boolean>;
 
   private starting: boolean = false;
+  private dismissing: boolean = false;
   private driver: Driver;
 
   public constructor(
@@ -91,7 +92,7 @@ export class UserMenuComponent {
         filter(([user, collections, url]) => !user.wizardDismissed && collections.length === 0),
         first()
       )
-      .subscribe(next => this.startTour());
+      .subscribe(() => this.startTour());
   }
 
   private isViewSearchAll(url: string): boolean {
@@ -127,7 +128,7 @@ export class UserMenuComponent {
   }
 
   private startTour(manual?: boolean): void {
-    if (!this.starting) {
+    if (!this.starting && !this.dismissing) {
       this.starting = true;
 
       if (manual) {
@@ -155,21 +156,26 @@ export class UserMenuComponent {
   }
 
   public dismissWizard(): void {
-    if (!this.starting) {
+    if (!this.starting && !this.dismissing) {
+      this.dismissing = true;
       this.store$.dispatch(
         new PatchCurrentUser({
           user: {wizardDismissed: true},
+          onSuccess: () => (this.dismissing = false),
+          onFailure: () => (this.dismissing = false),
         })
       );
     }
   }
 
   public recallWizard(): void {
-    this.store$.dispatch(
-      new PatchCurrentUser({
-        user: {wizardDismissed: false},
-      })
-    );
+    if (!this.dismissing) {
+      this.store$.dispatch(
+        new PatchCurrentUser({
+          user: {wizardDismissed: false},
+        })
+      );
+    }
   }
 
   private defineSteps(): void {
@@ -289,5 +295,19 @@ export class UserMenuComponent {
         },
       },
     ]);
+  }
+
+  @HostListener('document:click', ['$event'])
+  public onClick(event: MouseEvent): void {
+    const element = event.target as HTMLElement;
+    if (
+      !this.starting &&
+      this.driver.isActivated &&
+      (!element.id || element.id.indexOf('driver') < 0) &&
+      (!element.className || element.className.indexOf('driver') < 0)
+    ) {
+      this.dismissWizard();
+      this.driver.reset(true);
+    }
   }
 }
