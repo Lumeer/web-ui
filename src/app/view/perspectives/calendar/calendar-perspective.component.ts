@@ -146,6 +146,10 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onNewEvent(time: number) {
-    this.dialogService.openCreateCalendarEventDialog(this.calendarId, time);
+    this.dialogService.openCalendarEventDialog(this.calendarId, time);
+  }
+
+  public onUpdateEvent(documentId: string) {
+    this.dialogService.openCalendarEventDialog(this.calendarId, 0, documentId);
   }
 }

@@ -108,8 +108,10 @@ export class DialogService {
     this.navigateToDialog([DialogPath.PLAY_VIDEO, videoId]);
   }
 
-  public openCreateCalendarEventDialog(calendarId: string, time: number) {
-    this.navigateToDialog([DialogPath.CREATE_CALENDAR_EVENT, calendarId, time]);
+  public openCalendarEventDialog(calendarId: string, time: number, documentId?: string) {
+    const path = [DialogPath.CALENDAR_EVENT, calendarId, time];
+    documentId && path.push(documentId);
+    this.navigateToDialog(path);
   }
 
   public isDialogOpen(): boolean {

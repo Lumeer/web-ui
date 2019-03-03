@@ -13,7 +13,8 @@
     [currentMode]="data.mode"
     [currentDate]="data.date"
     (timesChange)="onValueChanged($event)"
-  (newEvent)="onNewEvent($event)">
+    (newEvent)="onNewEvent($event)"
+    (eventClick)="onEventClicked($event)">
   </calendar-visualization>
 
 </ng-container>

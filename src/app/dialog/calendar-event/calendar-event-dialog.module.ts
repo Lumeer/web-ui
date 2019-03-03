@@ -19,16 +19,23 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CreateCalendarEventComponent} from './create-calendar-event.component';
-import {CreateCalendarEventFormComponent} from './create-calendar-event-form/create-calendar-event-form.component';
+import {CalendarEventDialogComponent} from './calendar-event-dialog.component';
+import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-form.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsDatepickerModule, TimepickerModule} from 'ngx-bootstrap';
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
 import {SelectModule} from '../../shared/select/select.module';
 import {PipesModule} from '../../shared/pipes/pipes.module';
+import {CalendarEventDialogCollectionFormComponent} from './form/collection-form/calendar-event-dialog-collection-form.component';
+import {PropertiesDefinedPipe} from './pipes/properties-defined.pipe';
 
 @NgModule({
-  declarations: [CreateCalendarEventComponent, CreateCalendarEventFormComponent],
+  declarations: [
+    CalendarEventDialogComponent,
+    CalendarEventDialogFormComponent,
+    CalendarEventDialogCollectionFormComponent,
+    PropertiesDefinedPipe,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -39,6 +46,6 @@ import {PipesModule} from '../../shared/pipes/pipes.module';
     TimepickerModule,
     DialogWrapperModule,
   ],
-  exports: [CreateCalendarEventComponent],
+  exports: [CalendarEventDialogComponent],
 })
-export class CreateCalendarEventModule {}
+export class CalendarEventDialogModule {}

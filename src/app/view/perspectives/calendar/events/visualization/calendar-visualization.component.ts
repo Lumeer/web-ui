@@ -23,18 +23,18 @@ import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} fro
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
 import {MonthViewDay, WeekViewHourColumn, DayViewHourSegment} from 'calendar-utils';
+import {CalendarMetaData} from '../../util/calendar-util';
 
 const DEFAULT_NEW_EVENT_HOUR = 9;
 
 @Component({
   selector: 'calendar-visualization',
   templateUrl: './calendar-visualization.component.html',
-  styleUrls: ['./calendar-visualization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarVisualizationComponent {
   @Input()
-  public events: CalendarEvent[] = [];
+  public events: CalendarEvent<CalendarMetaData>[] = [];
 
   @Input()
   public currentMode: CalendarMode;
@@ -47,6 +47,9 @@ export class CalendarVisualizationComponent {
 
   @Output()
   public newEvent = new EventEmitter<number>();
+
+  @Output()
+  public eventClick = new EventEmitter<CalendarEvent<CalendarMetaData>>();
 
   public readonly calendarMode = CalendarMode;
 
@@ -113,5 +116,10 @@ export class CalendarVisualizationComponent {
 
   public trackByEventId(index: number, event: CalendarEvent) {
     return event.id ? event.id : event;
+  }
+
+  public onEventClicked(data: {event: CalendarEvent<CalendarMetaData>}) {
+    const {event} = data;
+    this.eventClick.emit(event);
   }
 }
