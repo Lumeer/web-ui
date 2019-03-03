@@ -40,7 +40,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {createCalendarEvents} from '../util/calendar-util';
+import {CalendarMetaData, createCalendarEvents} from '../util/calendar-util';
 
 interface Data {
   collections: Collection[];
@@ -79,10 +79,13 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   @Output()
   public newEvent = new EventEmitter<number>();
 
+  @Output()
+  public updateEvent = new EventEmitter<string>();
+
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());
 
-  public events$: Observable<CalendarEvent[]>;
+  public events$: Observable<CalendarEvent<CalendarMetaData>[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(@Inject(LOCALE_ID) public locale: string) {}
@@ -163,8 +166,12 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     const collectionConfig = this.config && this.config.collections[collectionId];
     return (
       collectionConfig &&
-      (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.NAME] ||
-        !!collectionConfig.barsProperties[CalendarBarPropertyRequired.START_DATE])
+      (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.Name] ||
+        !!collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate])
     );
+  }
+
+  public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
+    this.updateEvent.emit(event.meta.documentId);
   }
 }

@@ -26,7 +26,13 @@ export function isNotNullOrUndefind(object: any): boolean {
 }
 
 export function isNumeric(value: any): boolean {
-  return !isNaN(value);
+  const val =
+    value &&
+    value
+      .toString()
+      .replace(/\s/g, '')
+      .replace(',', '.');
+  return !isNaN(Number(val));
 }
 
 export function deepObjectsEquals(object1: any, object2: any): boolean {
@@ -39,4 +45,14 @@ export function isArray<T>(input?: any): input is T[] {
 
 export function isDateValid(date: Date): boolean {
   return date && date.getTime && !isNaN(date.getTime());
+}
+
+export function uniqueArray<T>(ar: T[]): T[] {
+  const j = {};
+
+  ar.forEach(v => {
+    j[v + '::' + typeof v] = v;
+  });
+
+  return Object.keys(j).map(v => j[v]);
 }

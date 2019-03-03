@@ -18,35 +18,29 @@
  */
 
 import {LinkTypeDto} from '../../dto';
-import {Collection} from '../collections/collection';
 import {LinkType} from './link.type';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/collection.converter';
 
-export class LinkTypeConverter {
-  public static fromDto(dto: LinkTypeDto, correlationId?: string): LinkType {
-    return {
-      id: dto.id,
-      name: dto.name,
-      collectionIds: dto.collectionIds,
-      attributes: [], // TODO
-      correlationId: correlationId,
-      version: dto.version,
-    };
-  }
+export function convertLinkTypeDtoToModel(dto: LinkTypeDto, correlationId?: string): LinkType {
+  return {
+    id: dto.id,
+    name: dto.name,
+    collectionIds: dto.collectionIds,
+    attributes: dto.attributes
+      ? dto.attributes
+          .map(attribute => convertAttributeDtoToModel(attribute))
+          .sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
+      : [],
+    correlationId: correlationId,
+    version: dto.version,
+  };
+}
 
-  public static toDto(model: LinkType): LinkTypeDto {
-    return {
-      id: model.id,
-      name: model.name,
-      collectionIds: model.collectionIds,
-      attributes: [], // TODO
-    };
-  }
-
-  public static addCollections(linkType: LinkType, collections: Collection[]): LinkType {
-    const usedCollections: [Collection, Collection] = [
-      collections.find(collection => collection.id === linkType.collectionIds[0]),
-      collections.find(collection => collection.id === linkType.collectionIds[1]),
-    ];
-    return {...linkType, collections: usedCollections};
-  }
+export function convertLinkTypeModelToDto(model: LinkType): LinkTypeDto {
+  return {
+    id: model.id,
+    name: model.name,
+    collectionIds: model.collectionIds,
+    attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
+  };
 }

@@ -1,5 +1,7 @@
 describe('Search Perspective :: Collections', () => {
   it('creates first collection', () => {
+    cy.dismissAppTour();
+
     cy.visit('/');
     cy.url().should('contain', '/view/search/all');
 

@@ -17,8 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface RuleVariable {
-  name: string;
-  collectionId?: string;
-  linkTypeId?: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {Attribute, Collection} from '../../core/store/collections/collection';
+
+@Pipe({
+  name: 'collectionById',
+})
+export class CollectionByIdPipe implements PipeTransform {
+  public transform(collections: Collection[], collectionId: string): Attribute {
+    return collections && collections.find(collection => collection.id === collectionId);
+  }
 }

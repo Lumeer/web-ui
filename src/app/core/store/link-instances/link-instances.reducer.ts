@@ -20,7 +20,6 @@
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
-import {LinkType} from '../link-types/link.type';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -35,6 +34,11 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
+    case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:
+      return linkInstancesAdapter.removeMany(
+        linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,
+        state
+      );
     case LinkInstancesActionType.CLEAR:
       return initialLinkInstancesState;
     default:
@@ -53,7 +57,9 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
 }
 
 function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
-  return linkInstance.version && (!oldLinkInstance.version || linkInstance.version > oldLinkInstance.version);
+  return (
+    linkInstance.dataVersion && (!oldLinkInstance.dataVersion || linkInstance.dataVersion > oldLinkInstance.dataVersion)
+  );
 }
 
 function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {

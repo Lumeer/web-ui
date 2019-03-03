@@ -1,4 +1,6 @@
 import {WebAuth} from 'auth0-js';
+import './commands/rest.commands.js';
+import './commands/visit.commands.js';
 
 Cypress.Commands.add('login', () => {
   const auth = new WebAuth({
@@ -64,140 +66,15 @@ Cypress.Commands.add('logout', () => {
 });
 
 Cypress.Commands.add('dismissAgreement', () => {
-  cy.withToken(token => {
-    // make sure to pass license agreement
-    cy.request({
-      method: 'PATCH',
-      url: Cypress.env('engineUrl') + 'rest/users/current',
-      body: {
-        agreement: true,
-        newsletter: true,
-      },
-      auth: {
-        bearer: token,
-      },
-    });
-
-    function pollAgreementStatus(tries = 0) {
-      cy.request({
-        method: 'GET',
-        url: Cypress.env('engineUrl') + 'rest/users/current',
-        auth: {
-          bearer: token,
-        },
-      })
-        .its('body')
-        .then(user => {
-          if (user.agreement) {
-            return;
-          }
-
-          if (tries < 10) {
-            pollAgreementStatus(tries + 1);
-          } else {
-            assert.fail(false, true, 'Expected user agreement to be true');
-          }
-        });
-    }
-
-    pollAgreementStatus();
-
-    cy.request({
-      method: 'GET',
-      url: Cypress.env('engineUrl') + 'rest/organizations',
-      auth: {
-        bearer: token,
-      },
-    })
-      .its('body')
-      .its('length')
-      .should('gt', 0);
+  // make sure to pass license agreement
+  cy.patchCurrentUser({
+    agreement: true,
+    newsletter: true,
   });
 });
 
-Cypress.Commands.add('createCollection', (name, icon, color) => {
-  return cy
-    .request({
-      method: 'POST',
-      url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
-        'projectCode'
-      )}/collections`,
-      auth: {
-        bearer: Cypress.env('authAccessToken'),
-      },
-      body: {
-        name,
-        icon,
-        color,
-      },
-    })
-    .then(response => response.body);
-});
-
-Cypress.Commands.add('createCollectionAttributes', (collectionId, attributes) => {
-  return cy.request({
-    method: 'POST',
-    url: `${Cypress.env('projectRestUrl')}/collections/${collectionId}/attributes`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: attributes,
+Cypress.Commands.add('dismissAppTour', () => {
+  cy.patchCurrentUser({
+    wizardDismissed: true,
   });
-});
-
-Cypress.Commands.add('createDocument', (collectionId, data) => {
-  return cy.request({
-    method: 'POST',
-    url: `${Cypress.env('projectRestUrl')}/collections/${collectionId}/documents`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: {collectionId, data},
-  });
-});
-
-Cypress.Commands.add('createProject', (code, name) => {
-  cy.request({
-    method: 'POST',
-    url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: {
-      code,
-      name,
-    },
-  });
-});
-
-Cypress.Commands.add('deleteOrganization', code => {
-  cy.request({
-    method: 'DELETE',
-    url: `${Cypress.env('engineUrl')}rest/organizations/${code}`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-  });
-});
-
-Cypress.Commands.add('visitSearchCollections', () => {
-  cy.visit(`/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
-});
-
-Cypress.Commands.add('saveDefaultWorkspace', defaultWorkspace => {
-  cy.request({
-    method: 'PUT',
-    url: `${Cypress.env('engineUrl')}rest/users/workspace`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: defaultWorkspace,
-  });
-});
-
-Cypress.Commands.add('visitTable', collectionId => {
-  const workspacePath = `/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}`;
-  const query = collectionId ? `%7B"stems":%5B%7B"collectionId":"${collectionId}"%7D%5D%7D` : '';
-
-  cy.visit(`${workspacePath}/view/table?query=${query}`);
 });

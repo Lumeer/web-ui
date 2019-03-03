@@ -17,18 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../collections/collection';
-import {Constraint} from '../../model/data/constraint';
-
-export interface LinkTypeAttribute {
-  id: string;
-  name: string;
-
-  constraint?: Constraint; // TODO make compulsory
-
-  usageCount: number;
-  intermediate?: boolean;
-}
+import {Attribute, Collection} from '../collections/collection';
 
 export interface LinkType {
   id?: string;
@@ -38,7 +27,7 @@ export interface LinkType {
   collectionIds: [string, string];
   collections?: [Collection, Collection];
 
-  attributes?: LinkTypeAttribute[];
+  attributes?: Attribute[];
 
   correlationId?: string;
 }

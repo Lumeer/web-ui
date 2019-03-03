@@ -1,0 +1,16 @@
+<div [formGroup]="form">
+  <div class="form-group">
+    <select-item [items]="collections | collectionsSelectItems"
+                 [removable]="false"
+                 [selectedId]="form.value.collectionId"
+                 (select)="onCollectionSelect($event)"
+                 [placeholderText]="collectionPlaceholder">
+    </select-item>
+  </div>
+
+  <calendar-event-dialog-collection-form [form]="form"
+                                         [collectionConfig]="config.collections[collectionIdControl.value]"
+                                         [collection]="collections | collectionById:collectionIdControl.value">
+  </calendar-event-dialog-collection-form>
+
+</div>

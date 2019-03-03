@@ -55,6 +55,7 @@ import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
 import {LinkTypesSelectItemsPipe} from './link-types-select-items.pipe';
 import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
 import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
+import {CollectionByIdPipe} from './collection-by-id.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -93,6 +94,7 @@ import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
     LinkTypesSelectItemsPipe,
     CollectionLinkTypesPipe,
     CollectionsSelectItemsPipe,
+    CollectionByIdPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -131,6 +133,7 @@ import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
     LinkTypesSelectItemsPipe,
     CollectionLinkTypesPipe,
     CollectionsSelectItemsPipe,
+    CollectionByIdPipe,
   ],
 })
 export class PipesModule {}

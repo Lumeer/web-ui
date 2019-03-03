@@ -21,7 +21,8 @@
       [query]="data.query"
       [permissions]="permissions$ | async"
       [config]="data.config"
-      (patchData)="patchDocumentData($event)">
+      (patchData)="patchDocumentData($event)"
+      (patchLinkData)="patchLinkInstanceData($event)">
     </chart-data>
 
   </ng-container>

@@ -36,7 +36,7 @@ import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 import {PlayVideoComponent} from './play-video/play-video.component';
 import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
 import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
-import {CreateCalendarEventModule} from './create-calendar-event/create-calendar-event.module';
+import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.module';
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
@@ -51,7 +51,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     DialogWrapperModule,
     ShareViewDialogModule,
     AttributeTypeFormModule,
-    CreateCalendarEventModule,
+    CalendarEventDialogModule,
     ClickOutsideModule,
   ],
   declarations: [

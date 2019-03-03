@@ -17,26 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstanceDto} from '../../dto/link-instance.dto';
+import {LinkInstanceDto} from '../../dto';
 import {LinkInstance} from './link.instance';
 
-export class LinkInstanceConverter {
-  public static fromDto(dto: LinkInstanceDto): LinkInstance {
-    return {
-      id: dto.id,
-      linkTypeId: dto.linkTypeId,
-      documentIds: dto.documentIds,
-      data: dto.data,
-      version: dto.version,
-    };
-  }
+export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto): LinkInstance {
+  return {
+    id: dto.id,
+    linkTypeId: dto.linkTypeId,
+    documentIds: dto.documentIds,
+    data: dto.data,
+    dataVersion: dto.dataVersion,
+    creationDate: new Date(dto.creationDate),
+    updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
+    createdBy: dto.createdBy,
+    updatedBy: dto.updatedBy,
+  };
+}
 
-  public static toDto(model: LinkInstance): LinkInstanceDto {
-    return {
-      id: model.id,
-      linkTypeId: model.linkTypeId,
-      documentIds: model.documentIds,
-      data: model.data,
-    };
-  }
+export function convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
+  return {
+    id: model.id,
+    linkTypeId: model.linkTypeId,
+    documentIds: model.documentIds,
+    data: model.data,
+  };
 }

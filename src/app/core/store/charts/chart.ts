@@ -34,9 +34,10 @@ export interface ChartConfig {
 }
 
 export interface ChartAxis {
-  collectionId: string;
+  resourceId: string;
   attributeId: string;
-  collectionIndex?: number;
+  resourceIndex?: number;
+  axisResourceType: ChartAxisResourceType;
 }
 
 export enum ChartType {
@@ -45,16 +46,20 @@ export enum ChartType {
   Pie = 'pie',
 }
 
-export const chartTypesMap: {[id: string]: ChartType} = {
-  [ChartType.Line]: ChartType.Line,
-  [ChartType.Bar]: ChartType.Bar,
-  [ChartType.Pie]: ChartType.Pie,
-};
-
-export const chartTypesIconsMap: {[id: string]: string} = {
+export const chartTypesIconsMap: Record<string, string> = {
   [ChartType.Line]: 'far fa-chart-line',
   [ChartType.Bar]: 'far fa-chart-bar',
   [ChartType.Pie]: 'far fa-chart-pie',
+};
+
+export enum ChartAxisResourceType {
+  Collection = 'collection',
+  LinkType = 'linkType',
+}
+
+export const chartAxisResourceTypesMap: Record<string, ChartAxisResourceType> = {
+  [ChartAxisResourceType.Collection]: ChartAxisResourceType.Collection,
+  [ChartAxisResourceType.LinkType]: ChartAxisResourceType.LinkType,
 };
 
 export enum ChartAxisType {

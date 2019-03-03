@@ -46,9 +46,9 @@ import {UserNotificationsAction} from '../store/user-notifications/user-notifica
 import {UserNotificationConverter} from '../store/user-notifications/user-notification.converter';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
-import {LinkInstanceConverter} from '../store/link-instances/link-instance.converter';
+import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instance.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
-import {LinkTypeConverter} from '../store/link-types/link-type.converter';
+import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {selectOrganizationsDictionary} from '../store/organizations/organizations.state';
 import {selectProjectsDictionary} from '../store/projects/projects.state';
 import {Project} from '../store/projects/project';
@@ -288,12 +288,12 @@ export class PusherService implements OnDestroy {
   private bindLinkTypeEvents() {
     this.channel.bind('LinkType:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new LinkTypesAction.CreateSuccess({linkType: LinkTypeConverter.fromDto(data.object)}));
+        this.store$.dispatch(new LinkTypesAction.CreateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
       }
     });
     this.channel.bind('LinkType:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new LinkTypesAction.UpdateSuccess({linkType: LinkTypeConverter.fromDto(data.object)}));
+        this.store$.dispatch(new LinkTypesAction.UpdateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
       }
     });
     this.channel.bind('LinkType:remove', data => {
@@ -307,14 +307,14 @@ export class PusherService implements OnDestroy {
     this.channel.bind('LinkInstance:create', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
-          new LinkInstancesAction.CreateSuccess({linkInstance: LinkInstanceConverter.fromDto(data.object)})
+          new LinkInstancesAction.CreateSuccess({linkInstance: convertLinkInstanceDtoToModel(data.object)})
         );
       }
     });
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
-          new LinkInstancesAction.UpdateSuccess({linkInstance: LinkInstanceConverter.fromDto(data.object)})
+          new LinkInstancesAction.UpdateSuccess({linkInstance: convertLinkInstanceDtoToModel(data.object)})
         );
       }
     });

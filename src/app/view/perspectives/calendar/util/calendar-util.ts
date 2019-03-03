@@ -28,15 +28,23 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
 import {isDateValid} from '../../../../shared/utils/common.utils';
+import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
+
+export interface CalendarMetaData {
+  documentId: string;
+  collectionId: string;
+  color: string;
+  startAttributeId: string;
+  endAttributeId: string;
+}
 
 export function createCalendarEvents(
   config: CalendarConfig,
   collections: Collection[],
   documents: DocumentModel[],
   permissions: Record<string, AllowedPermissions>
-): CalendarEvent[] {
+): CalendarEvent<CalendarMetaData>[] {
   return collections.reduce(
     (tasks, collection) => [
       ...tasks,
@@ -60,7 +68,7 @@ export function createCalendarEventsForCollection(
   collection: Collection,
   documents: DocumentModel[],
   permissisions: AllowedPermissions
-): CalendarEvent[] {
+): CalendarEvent<CalendarMetaData>[] {
   const collectionConfig = config.collections && config.collections[collection.id];
 
   if (!collectionConfig) {
@@ -69,11 +77,14 @@ export function createCalendarEventsForCollection(
 
   const properties = collectionConfig.barsProperties || {};
 
-  const nameProperty = properties[CalendarBarPropertyRequired.NAME];
-  const startProperty = properties[CalendarBarPropertyRequired.START_DATE];
+  const nameProperty = properties[CalendarBarPropertyRequired.Name];
+  const startProperty = properties[CalendarBarPropertyRequired.StartDate];
 
-  const endProperty = properties[CalendarBarPropertyOptional.END_DATE];
-  const draggable = permissisions.writeWithView;
+  const endProperty = properties[CalendarBarPropertyOptional.EndDate];
+  const draggableStart =
+    permissisions.writeWithView && isAttributeEditable(startProperty && startProperty.attributeId, collection);
+  const draggableEnd =
+    permissisions.writeWithView && isAttributeEditable(endProperty && endProperty.attributeId, collection);
   const allDayColor = getColor(true, collection.color);
   const color = getColor(false, collection.color);
 
@@ -83,14 +94,14 @@ export function createCalendarEventsForCollection(
     const title = nameProperty && document.data[nameProperty.attributeId];
     const startString = startProperty && document.data[startProperty.attributeId];
 
-    const start = parseDateTimeDataValue(startString);
+    const start = parseCalendarEventDate(startString);
 
     if (!isDateValid(start)) {
       continue;
     }
 
     const endString = endProperty && document.data[endProperty.attributeId];
-    const end = parseDateTimeDataValue(endString);
+    const end = parseCalendarEventDate(endString);
 
     const allDay = isAllDayEvent(start, end);
     const interval = createInterval(start, startProperty.attributeId, end, end && endProperty.attributeId);
@@ -100,10 +111,10 @@ export function createCalendarEventsForCollection(
       end: interval[1].value,
       color: allDay ? allDayColor : color,
       allDay,
-      draggable: draggable,
+      draggable: draggableStart || draggableEnd,
       resizable: {
-        beforeStart: draggable && interval[1].value, // an end date is always required for resizable events to work
-        afterEnd: draggable && interval[1].value,
+        beforeStart: draggableStart && interval[1].value, // an end date is always required for resizable events to work
+        afterEnd: draggableEnd && interval[1].value,
       },
       meta: {
         documentId: document.id,
@@ -132,8 +143,10 @@ function createInterval(
   return [{value: start, attrId: startAttributeId}, {value: end, attrId: endAttributeId}];
 }
 
-function isAllDayEvent(start: Date, end: Date): boolean {
-  return end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0;
+export function isAllDayEvent(start: Date, end: Date): boolean {
+  return (
+    start && end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0
+  );
 }
 
 function getColor(allDay: boolean, color: string) {
@@ -147,4 +160,57 @@ function getColor(allDay: boolean, color: string) {
     primary: shadeColor(color, 0.8),
     secondary: shadeColor(color, 0.7),
   };
+}
+
+const dateFormats = [
+  'D.M.YYYY',
+  'DD.M.YYYY',
+  'DD.MM.YYYY',
+  'D/M/YYYY',
+  'DD/M/YYYY',
+  'DD/MM/YYYY',
+  'D/M/YY',
+  'DD/M/YY',
+  'DD/MM/YY',
+  'YYYY/MM/DD',
+  'YYYY/M/DD',
+  'YYYY/M/D',
+  'YYYY-MM-DD',
+  'YYYY-M-DD',
+  'YYYY-M-D',
+  'D MMM YYYY',
+  'DD MMM YYYY',
+  'D MMMM YYYY',
+  'DD MMMM YYYY',
+  'MMM D, YYYY',
+  'MMM DD, YYYY',
+];
+
+const timeFormats = [
+  'HH:mm',
+  'H:mm',
+  'H:m',
+  'hh:mm A',
+  'hh:mmA',
+  'h:mm A',
+  'h:mmA',
+  'hh.mm A',
+  'hh.mmA',
+  'h.mm A',
+  'h.mmA',
+];
+
+export function parseCalendarEventDate(value: any): Date {
+  if (!value) {
+    return value;
+  }
+
+  const dateAndTimeFormats = dateFormats.reduce(
+    (formats, format) => [...formats, ...timeFormats.map(tf => [format, tf].join(' '))],
+    []
+  );
+
+  const allFormats = [moment.ISO_8601, ...dateFormats, ...dateAndTimeFormats];
+  const momentDate = moment(value, allFormats);
+  return momentDate.isValid() ? momentDate.toDate() : null;
 }

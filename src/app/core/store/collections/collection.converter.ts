@@ -24,7 +24,7 @@ import {AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
 import {Attribute, AttributeFunction, Collection, ImportedCollection} from './collection';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {RuleDto} from '../../dto/collection.dto';
-import {Rule, RuleTiming, RuleTimingMap, RuleType, RuleTypeMap} from '../../model/rule';
+import {Rule, RuleTimingMap, RuleTypeMap} from '../../model/rule';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {

@@ -22,15 +22,15 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {LinkTypeConverter} from './link-type.converter';
+import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesLoaded} from './link-types.state';
-import {LinkInstancesActionType} from '../link-instances/link-instances.action';
+import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {selectQuery} from '../navigation/navigation.state';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
 import {NavigationAction} from '../navigation/navigation.action';
@@ -44,7 +44,7 @@ export class LinkTypesEffects {
     filter(([action, loaded]) => action.payload.force || !loaded),
     mergeMap(() => {
       return this.linkTypeService.getLinkTypes().pipe(
-        map(dtos => dtos.map(dto => LinkTypeConverter.fromDto(dto))),
+        map(dtos => dtos.map(dto => convertLinkTypeDtoToModel(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
         catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
       );
@@ -65,10 +65,10 @@ export class LinkTypesEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Create>(LinkTypesActionType.CREATE),
     mergeMap(action => {
-      const linkTypeDto = LinkTypeConverter.toDto(action.payload.linkType);
+      const linkTypeDto = convertLinkTypeModelToDto(action.payload.linkType);
 
       return this.linkTypeService.createLinkType(linkTypeDto).pipe(
-        map(dto => LinkTypeConverter.fromDto(dto, action.payload.linkType.correlationId)),
+        map(dto => convertLinkTypeDtoToModel(dto, action.payload.linkType.correlationId)),
         mergeMap(linkType => {
           const actions: Action[] = [new LinkTypesAction.CreateSuccess({linkType: linkType})];
 
@@ -98,10 +98,10 @@ export class LinkTypesEffects {
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Update>(LinkTypesActionType.UPDATE),
     mergeMap(action => {
-      const linkTypeDto = LinkTypeConverter.toDto(action.payload.linkType);
+      const linkTypeDto = convertLinkTypeModelToDto(action.payload.linkType);
 
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
-        map(dto => LinkTypeConverter.fromDto(dto)),
+        map(dto => convertLinkTypeDtoToModel(dto)),
         map(linkType => new LinkTypesAction.UpdateSuccess({linkType: linkType})),
         catchError(error => of(new LinkTypesAction.UpdateFailure({error: error})))
       );
@@ -133,14 +133,15 @@ export class LinkTypesEffects {
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
-    map(([action, query]) => {
+    flatMap(([action, query]) => {
+      const {linkTypeId} = action.payload;
+      const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
       const linkTypeIdsInQuery = getAllLinkTypeIdsFromQuery(query);
       if (linkTypeIdsInQuery.includes(action.payload.linkTypeId)) {
-        return new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId});
+        return [...actions, new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId})];
       }
-      return null;
-    }),
-    filter(action => !!action)
+      return actions;
+    })
   );
 
   @Effect()

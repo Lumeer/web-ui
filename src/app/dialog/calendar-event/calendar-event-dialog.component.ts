@@ -28,24 +28,26 @@ import {AppState} from '../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCalendarById} from '../../core/store/calendars/calendars.state';
 import {CollectionsPermissionsPipe} from '../../shared/pipes/permissions/collections-permissions.pipe';
-import {selectCollectionsByIds} from '../../core/store/collections/collections.state';
+import {selectCollectionById, selectCollectionsByIds} from '../../core/store/collections/collections.state';
 import {deepObjectsEquals} from '../../shared/utils/common.utils';
-import {CreateCalendarEventFormComponent} from './create-calendar-event-form/create-calendar-event-form.component';
+import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-form.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../core/store/documents/documents.state';
 
 @Component({
-  selector: 'create-calendar-event',
-  templateUrl: './create-calendar-event.component.html',
+  templateUrl: './calendar-event-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateCalendarEventComponent implements OnInit, AfterViewInit {
-  @ViewChild(CreateCalendarEventFormComponent)
-  public formComponent: CreateCalendarEventFormComponent;
+export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
+  @ViewChild(CalendarEventDialogFormComponent)
+  public formComponent: CalendarEventDialogFormComponent;
 
   public collections$: Observable<Collection[]>;
   public config$: Observable<CalendarConfig>;
   public initialTime$: Observable<number>;
+  public document$: Observable<DocumentModel>;
+  public update$: Observable<boolean>;
   public formInvalid$: Observable<boolean>;
 
   constructor(
@@ -58,7 +60,9 @@ export class CreateCalendarEventComponent implements OnInit, AfterViewInit {
   public ngOnInit() {
     this.config$ = this.subscribeConfig();
     this.initialTime$ = this.subscribeInitialTime();
+    this.document$ = this.subscribeDocument();
     this.collections$ = this.subscribeWritableCollections();
+    this.update$ = this.document$.pipe(map(document => !!document));
   }
 
   private subscribeConfig(): Observable<CalendarConfig> {
@@ -80,6 +84,18 @@ export class CreateCalendarEventComponent implements OnInit, AfterViewInit {
   }
 
   private subscribeWritableCollections(): Observable<Collection[]> {
+    return this.document$.pipe(
+      mergeMap(
+        document => (document && this.subscribeCollectionsByDocument(document)) || this.subscribeCollectionsByConfig()
+      )
+    );
+  }
+
+  private subscribeCollectionsByDocument(document: DocumentModel) {
+    return this.store$.pipe(select(selectCollectionById(document.collectionId))).pipe(map(collection => [collection]));
+  }
+
+  private subscribeCollectionsByConfig(): Observable<Collection[]> {
     return this.config$.pipe(
       map(config => Object.keys(config.collections)),
       mergeMap(collectionIds => this.store$.pipe(select(selectCollectionsByIds(collectionIds)))),
@@ -90,6 +106,20 @@ export class CreateCalendarEventComponent implements OnInit, AfterViewInit {
         )
       )
     );
+  }
+
+  public subscribeDocument(): Observable<DocumentModel> {
+    return this.route.paramMap.pipe(
+      map(params => params.get('documentId')),
+      mergeMap(documentId => this.getDocumentById(documentId))
+    );
+  }
+
+  private getDocumentById(documentId: string): Observable<DocumentModel> {
+    if (!documentId) {
+      return of(null);
+    }
+    return this.store$.pipe(select(selectDocumentById(documentId)));
   }
 
   public ngAfterViewInit() {
@@ -103,5 +133,9 @@ export class CreateCalendarEventComponent implements OnInit, AfterViewInit {
 
   public onCreateEvent(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.Create({document}));
+  }
+
+  public onUpdateEvent(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 }

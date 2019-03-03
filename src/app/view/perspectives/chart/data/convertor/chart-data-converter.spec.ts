@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {} from 'jasmine';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query';
 import {
   ChartAggregation,
+  ChartAxisResourceType,
   ChartAxisType,
   ChartConfig,
   ChartSortType,
@@ -86,7 +86,14 @@ describe('Chart data converter single collection', () => {
   it('should return data by x', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
-      axes: {[ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0}},
+      axes: {
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+      },
     };
     const set: ChartDataSet = {
       id: null,
@@ -100,6 +107,7 @@ describe('Chart data converter single collection', () => {
       draggable: false,
       name: undefined,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -109,7 +117,14 @@ describe('Chart data converter single collection', () => {
   it('should return data by y', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
-      axes: {[ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0}},
+      axes: {
+        [ChartAxisType.Y1]: {
+          resourceId: 'C1',
+          attributeId: 'a2',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+      },
     };
     const set: ChartDataSet = {
       id: 'a2',
@@ -124,6 +139,7 @@ describe('Chart data converter single collection', () => {
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -134,8 +150,18 @@ describe('Chart data converter single collection', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C1',
+          attributeId: 'a2',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {
         [ChartAxisType.Y1]: ChartAggregation.Sum,
@@ -149,6 +175,7 @@ describe('Chart data converter single collection', () => {
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
+      resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -178,9 +205,24 @@ describe('Chart data converter single collection', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C1', attributeId: 'a2', collectionIndex: 0},
-        [ChartAxisType.Y2]: {collectionId: 'C1', attributeId: 'a3', collectionIndex: 0},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C1',
+          attributeId: 'a2',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y2]: {
+          resourceId: 'C1',
+          attributeId: 'a3',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {
         [ChartAxisType.Y1]: ChartAggregation.Sum,
@@ -311,16 +353,19 @@ const collections2 = [
     id: 'C2',
     name: 'collection2',
     color: '#bcbcbcb',
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
   },
   {
     id: 'C3',
     name: 'collection3',
     color: '#aabb44',
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
   },
   {
     id: 'C4',
     name: 'collection4',
     color: '#123456',
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
   },
 ];
 
@@ -336,159 +381,232 @@ const linkTypes2: LinkType[] = [
     id: 'LT1',
     name: 'LinkType1',
     collectionIds: ['C1', 'C2'],
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
   {
     id: 'LT2',
     name: 'LinkType2',
     collectionIds: ['C2', 'C3'],
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
   {
     id: 'LT3',
     name: 'LinkType3',
     collectionIds: ['C3', 'C4'],
+    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
 ];
 
 const linkInstances2: LinkInstance[] = [
   {
+    id: 'l1',
     linkTypeId: 'LT1',
     documentIds: ['D1', 'D21'],
+    data: {a1: 'Lmx', a2: 30},
   },
   {
+    id: 'l2',
     linkTypeId: 'LT1',
     documentIds: ['D1', 'D22'],
+    data: {a1: 'Lmp', a2: 20},
   },
   {
+    id: 'l3',
     linkTypeId: 'LT1',
     documentIds: ['D2', 'D23'],
+    data: {a1: 'Lpr', a2: 80},
   },
   {
+    id: 'l4',
     linkTypeId: 'LT1',
     documentIds: ['D3', 'D24'],
+    data: {a1: 'Lxx', a2: 10},
   },
   {
+    id: 'l5',
     linkTypeId: 'LT1',
     documentIds: ['D3', 'D23'],
+    data: {a1: 'Lll', a2: 30},
   },
   {
+    id: 'l6',
     linkTypeId: 'LT1',
     documentIds: ['D4', 'D26'],
+    data: {a1: 'Lop', a2: 100},
   },
   {
+    id: 'l7',
     linkTypeId: 'LT1',
     documentIds: ['D4', 'D23'],
+    data: {a1: 'Los', a2: 310},
   },
   {
+    id: 'l8',
     linkTypeId: 'LT1',
     documentIds: ['D4', 'D22'],
+    data: {a1: 'Lqq', a2: 70},
   },
   {
+    id: 'l9',
     linkTypeId: 'LT1',
     documentIds: ['D5', 'D24'],
+    data: {a1: 'Lss', a2: 90},
   },
   {
+    id: 'l10',
     linkTypeId: 'LT1',
     documentIds: ['D5', 'D22'],
+    data: {a1: 'Ldd', a2: 304},
   },
   {
+    id: 'l11',
     linkTypeId: 'LT1',
     documentIds: ['D6', 'D21'],
+    data: {a1: 'Lee', a2: 330},
   },
   {
+    id: 'l12',
     linkTypeId: 'LT1',
     documentIds: ['D6', 'D26'],
+    data: {a1: 'Loo', a2: 3},
   },
   {
+    id: 'l13',
     linkTypeId: 'LT2',
     documentIds: ['D21', 'D33'],
+    data: {a1: 'Lzz', a2: 430},
   },
   {
+    id: 'l14',
     linkTypeId: 'LT2',
     documentIds: ['D21', 'D32'],
+    data: {a1: 'Ltt', a2: 220},
   },
   {
+    id: 'l15',
     linkTypeId: 'LT2',
     documentIds: ['D22', 'D31'],
+    data: {a1: 'Lff', a2: 3440},
   },
   {
+    id: 'l16',
     linkTypeId: 'LT2',
     documentIds: ['D22', 'D35'],
+    data: {a1: 'L11', a2: 350},
   },
   {
+    id: 'l17',
     linkTypeId: 'LT2',
     documentIds: ['D23', 'D34'],
+    data: {a1: 'Les', a2: 65},
   },
   {
+    id: 'l18',
     linkTypeId: 'LT2',
     documentIds: ['D23', 'D36'],
+    data: {a1: 'Lhg', a2: 55},
   },
   {
+    id: 'l19',
     linkTypeId: 'LT2',
     documentIds: ['D24', 'D32'],
+    data: {a1: 'Lss', a2: 220},
   },
   {
+    id: 'l20',
     linkTypeId: 'LT2',
     documentIds: ['D24', 'D33'],
+    data: {a1: 'Lmm', a2: 99},
   },
   {
+    id: 'l21',
     linkTypeId: 'LT2',
     documentIds: ['D25', 'D34'],
+    data: {a1: 'Llg', a2: 81},
   },
   {
+    id: 'l22',
     linkTypeId: 'LT2',
     documentIds: ['D26', 'D31'],
+    data: {a1: 'Lrr', a2: 61},
   },
   {
+    id: 'l23',
     linkTypeId: 'LT2',
     documentIds: ['D26', 'D35'],
+    data: {a1: 'Lcx', a2: 39},
   },
   {
+    id: 'l24',
     linkTypeId: 'LT2',
     documentIds: ['D26', 'D33'],
+    data: {a1: 'Lrf', a2: 92},
   },
   {
+    id: 'l25',
     linkTypeId: 'LT3',
     documentIds: ['D31', 'D42'],
+    data: {a1: 'Len', a2: 45},
   },
   {
+    id: 'l26',
     linkTypeId: 'LT3',
     documentIds: ['D31', 'D43'],
+    data: {a1: 'Lsa', a2: 65},
   },
   {
+    id: 'l27',
     linkTypeId: 'LT3',
     documentIds: ['D32', 'D45'],
+    data: {a1: 'Las', a2: 96},
   },
   {
+    id: 'l28',
     linkTypeId: 'LT3',
     documentIds: ['D33', 'D41'],
+    data: {a1: 'Lmx', a2: 30},
   },
   {
+    id: 'l29',
     linkTypeId: 'LT3',
     documentIds: ['D33', 'D46'],
+    data: {a1: 'Lkq', a2: 651},
   },
   {
+    id: 'l30',
     linkTypeId: 'LT3',
     documentIds: ['D34', 'D43'],
+    data: {a1: 'Ler', a2: 34},
   },
   {
+    id: 'l31',
     linkTypeId: 'LT3',
     documentIds: ['D34', 'D44'],
+    data: {a1: 'Lww', a2: 67},
   },
   {
+    id: 'l32',
     linkTypeId: 'LT3',
     documentIds: ['D34', 'D45'],
+    data: {a1: 'Lvb', a2: 11},
   },
   {
+    id: 'l33',
     linkTypeId: 'LT3',
     documentIds: ['D35', 'D41'],
+    data: {a1: 'Lbo', a2: 77},
   },
   {
+    id: 'l34',
     linkTypeId: 'LT3',
     documentIds: ['D35', 'D46'],
+    data: {a1: 'Lwl', a2: 83},
   },
   {
+    id: 'l35',
     linkTypeId: 'LT3',
     documentIds: ['D36', 'D44'],
+    data: {a1: 'Lmy', a2: 19},
   },
 ];
 
@@ -509,8 +627,18 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a2',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {
         [ChartAxisType.Y1]: ChartAggregation.Sum,
@@ -533,14 +661,25 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a2',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       sort: {
         type: ChartSortType.Descending,
         axis: {
-          collectionId: 'C1',
+          resourceId: 'C1',
           attributeId: 'a2',
+          axisResourceType: ChartAxisResourceType.Collection,
         },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
@@ -562,8 +701,18 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a1', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a1',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
@@ -579,8 +728,18 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a2',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min},
     };
@@ -601,8 +760,18 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a2',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max},
     };
@@ -623,8 +792,18 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C4', attributeId: 'a2', collectionIndex: 3},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C4',
+          attributeId: 'a2',
+          resourceIndex: 6,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Avg},
     };
@@ -645,11 +824,26 @@ describe('Chart data converter linked collections', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {
-        [ChartAxisType.X]: {collectionId: 'C1', attributeId: 'a1', collectionIndex: 0},
-        [ChartAxisType.Y1]: {collectionId: 'C2', attributeId: 'a2', collectionIndex: 1},
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C2',
+          attributeId: 'a2',
+          resourceIndex: 2,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       names: {
-        [ChartAxisType.Y1]: {collectionId: 'C3', attributeId: 'a1', collectionIndex: 2},
+        [ChartAxisType.Y1]: {
+          resourceId: 'C3',
+          attributeId: 'a1',
+          resourceIndex: 4,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
       },
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
@@ -665,5 +859,44 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 1002});
     expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 320});
     expect(chartData.sets[5].points).toContain({id: 'D23', x: 'Sport', y: 8});
+  });
+  it('should return data with from linked attributes', () => {
+    const config: ChartConfig = {
+      type: ChartType.Line,
+      axes: {
+        [ChartAxisType.X]: {
+          resourceId: 'LT1',
+          attributeId: 'a1',
+          resourceIndex: 1,
+          axisResourceType: ChartAxisResourceType.LinkType,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'LT3',
+          attributeId: 'a2',
+          resourceIndex: 5,
+          axisResourceType: ChartAxisResourceType.LinkType,
+        },
+      },
+      names: {
+        [ChartAxisType.Y1]: {
+          resourceId: 'C2',
+          attributeId: 'a1',
+          resourceIndex: 2,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+      },
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
+    };
+
+    const converter = new ChartDataConverter();
+    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    const chartData = converter.convert(config);
+    expect(chartData.sets.length).toEqual(5);
+    expect(chartData.sets.map(set => set.name)).toEqual(['Min', 'Max', 'Avg', 'Sum', 'Lep']);
+    expect(chartData.sets[0].points).toContain({id: null, x: 'Lmx', y: 777});
+    expect(chartData.sets[1].points).toContain({id: null, x: 'Lmp', y: 270});
+    expect(chartData.sets[2].points).toContain({id: null, x: 'Lpr', y: 131});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Lxx', y: 777});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: 951});
   });
 });

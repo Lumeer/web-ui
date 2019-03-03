@@ -17,11 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributeDto} from './attribute.dto';
+
 export interface LinkTypeDto {
   id?: string; // TODO make compulsory
   name: string;
   version?: number;
   collectionIds?: [string, string];
 
-  attributes?: string[]; // TODO use complex object
+  attributes?: AttributeDto[];
 }

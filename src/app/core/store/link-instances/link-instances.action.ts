@@ -30,7 +30,8 @@ export enum LinkInstancesActionType {
   CREATE_SUCCESS = '[Link Instances] Create :: Success',
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
-  UPDATE = '[Link Instances] Update',
+  PATCH_DATA = '[Link Instances] Patch Data',
+
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
 
@@ -40,6 +41,7 @@ export enum LinkInstancesActionType {
   DELETE_FAILURE = '[Link Instances] Delete :: Failure',
 
   CLEAR = '[Link Instances] Clear',
+  CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
 }
 
 export namespace LinkInstancesAction {
@@ -79,8 +81,8 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class Update implements Action {
-    public readonly type = LinkInstancesActionType.UPDATE;
+  export class PatchData implements Action {
+    public readonly type = LinkInstancesActionType.PATCH_DATA;
 
     public constructor(public payload: {linkInstance: LinkInstance}) {}
   }
@@ -125,6 +127,12 @@ export namespace LinkInstancesAction {
     public readonly type = LinkInstancesActionType.CLEAR;
   }
 
+  export class ClearByLinkType implements Action {
+    public readonly type = LinkInstancesActionType.CLEAR_BY_LINK_TYPE;
+
+    public constructor(public payload: {linkTypeId: string}) {}
+  }
+
   export type All =
     | Get
     | GetSuccess
@@ -132,12 +140,13 @@ export namespace LinkInstancesAction {
     | Create
     | CreateSuccess
     | CreateFailure
-    | Update
+    | PatchData
     | UpdateSuccess
     | UpdateFailure
     | Delete
     | DeleteConfirm
     | DeleteSuccess
     | DeleteFailure
-    | Clear;
+    | Clear
+    | ClearByLinkType;
 }
