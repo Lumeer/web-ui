@@ -49,6 +49,7 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
 import {BehaviorSubject} from 'rxjs';
+import {isArray} from '../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -65,6 +66,7 @@ const GET_ATTRIBUTE = 'get_attribute';
 const SET_ATTRIBUTE = 'set_attribute';
 const GET_LINK_ATTRIBUTE = 'get_link_attribute';
 const SET_LINK_ATTRIBUTE = 'set_link_attribute';
+const GET_LINK_DOCUMENT = 'get_link_document';
 const VARIABLES_GET_PREFIX = 'variables_get_';
 const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
@@ -482,7 +484,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: [...coreCollectionVarTypes, ...collectionTypes],
+              check: this_.uniqueArray([...coreCollectionVarTypes, ...collectionTypes]),
             },
             {
               type: 'input_value',
@@ -560,7 +562,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'LINK',
-              check: [...coreLinkVarTypes, ...linkTypes],
+              check: this_.uniqueArray([...coreLinkVarTypes, ...linkTypes]),
             },
             {
               type: 'input_value',
@@ -586,6 +588,41 @@ export class BlocklyEditorComponent implements AfterViewInit {
       const code = this_.lumeerVar + '.setLinkAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ')';
 
       return code;
+    };
+
+    Blockly.Blocks[GET_LINK_DOCUMENT] = {
+      init: function() {
+        this.jsonInit({
+          type: GET_LINK_DOCUMENT,
+          message0: 'doc. from %1 linked via %2',
+          args0: [
+            {
+              type: 'field_dropdown',
+              name: 'COLLECTION',
+              options: [['?', '?']],
+            },
+            {
+              type: 'input_value',
+              name: 'LINK',
+              check: this_.uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+            },
+          ],
+          colour: COLOR_PRIMARY,
+          output: UNKNOWN,
+        });
+      },
+    };
+    Blockly.JavaScript[GET_LINK_DOCUMENT] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const collectionId = block.getFieldValue('COLLECTION');
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = this_.lumeerVar + '.getLinkDocument(' + argument0 + ", '" + collectionId + "'" + ')';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
   }
 
@@ -689,6 +726,16 @@ export class BlocklyEditorComponent implements AfterViewInit {
     });
   }
 
+  private uniqueArray(ar: any[]): any[] {
+    const j = {};
+
+    ar.forEach(v => {
+      j[v + '::' + typeof v] = v;
+    });
+
+    return Object.keys(j).map(v => j[v]);
+  }
+
   private preventDeletionOfInitialVariables(block: any): void {
     if (block.type.startsWith(VARIABLES_GET_PREFIX)) {
       if (this.variables.map(v => v.name).indexOf(block.getField('VAR').getVariable().name) >= 0) {
@@ -697,13 +744,45 @@ export class BlocklyEditorComponent implements AfterViewInit {
     }
   }
 
-  private setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
-    const options = parentBlock.getField('ATTR').getOptions();
+  private setLinkDocumentOutputType(parentBlock: any, block: any) {
+    const options = parentBlock.getField('COLLECTION').getOptions();
     const originalLength = options.length;
     const blockOutputType =
       block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
         ? block.outputConnection.check_[0]
         : '';
+    const linkTypeId = blockOutputType.split('_')[0];
+    const linkType = this.getLinkType(linkTypeId);
+
+    linkType.collectionIds.forEach(collectionId => {
+      const collection = this.getCollection(collectionId);
+      options.push([collection.name, collection.id]);
+    });
+
+    const firstCollection = this.getCollection(linkType.collectionIds[0]);
+    const firstCollectionId = firstCollection.id;
+    const firstCollectionName = firstCollection.name;
+
+    parentBlock.getField('COLLECTION').setValue(firstCollectionId);
+    parentBlock.getField('COLLECTION').text_ = firstCollectionName;
+    parentBlock.getField('COLLECTION').forceRerender();
+    options.splice(0, originalLength);
+
+    parentBlock.outputConnection.check_ = firstCollectionId + DOCUMENT_VAR_SUFFIX;
+  }
+
+  private getOutputConnectionCheck(block: any): string {
+    if (block.outputConnection && block.outputConnection.check_) {
+      return isArray(block.outputConnection.check_) ? block.outputConnection.check_[0] : block.outputConnection.check_;
+    }
+
+    return '';
+  }
+
+  private setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
+    const options = parentBlock.getField('ATTR').getOptions();
+    const originalLength = options.length;
+    const blockOutputType = this.getOutputConnectionCheck(block);
 
     let attributes: Attribute[];
     let defaultAttributeId = '';
@@ -743,10 +822,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         block.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) || block.type.endsWith(LINK_INSTANCE_BLOCK_SUFFIX)
           ? ['Array']
           : ['', 'Number', 'String', 'Boolean'];
-      const parentBlockOutputType =
-        parentBlock.outputConnection && parentBlock.outputConnection.check_ && parentBlock.outputConnection.check_[0]
-          ? parentBlock.outputConnection.check_[0]
-          : '';
+      const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
       if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
         this.tryDisconnect(parentBlock, parentBlock.outputConnection);
       }
@@ -771,13 +847,19 @@ export class BlocklyEditorComponent implements AfterViewInit {
       }
     }
 
+    // change output type in getter of linked document from link instance
+    if (changeEvent instanceof Blockly.Events.Change) {
+      const block = workspace.getBlockById(changeEvent.blockId);
+
+      if (block.type === GET_LINK_DOCUMENT && changeEvent.element === 'field' && changeEvent.name === 'COLLECTION') {
+        block.outputConnection.check_ = changeEvent.newValue + DOCUMENT_VAR_SUFFIX;
+      }
+    }
+
     if (changeEvent.newParentId) {
       // is there a new connection made?
       const block = workspace.getBlockById(changeEvent.blockId);
-      const blockOutputType =
-        block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
-          ? block.outputConnection.check_[0]
-          : '';
+      const blockOutputType = this.getOutputConnectionCheck(block);
       const parentBlock = workspace.getBlockById(changeEvent.newParentId);
 
       // is it a document being connected to ...
@@ -850,6 +932,13 @@ export class BlocklyEditorComponent implements AfterViewInit {
           }
         }
       }
+
+      // populate collections in getter of linked document from link instance
+      if (parentBlock.type === GET_LINK_DOCUMENT) {
+        if (blockOutputType.endsWith(LINK_VAR_SUFFIX)) {
+          this.setLinkDocumentOutputType(parentBlock, block);
+        }
+      }
     } else if (changeEvent.oldParentId) {
       // reset output type and disconnect when linked document is removed
       const block = workspace.getBlockById(changeEvent.blockId);
@@ -879,11 +968,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
 
         // reset list of attributes upon disconnection
         if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === GET_LINK_ATTRIBUTE) {
-          const options = parentBlock.getField('ATTR').getOptions();
-          const originalLength = options.length;
-          parentBlock.getField('ATTR').setValue('?');
-          options.push(['?', '?']);
-          options.splice(0, originalLength);
+          this.resetOptions(parentBlock, 'ATTR');
         }
 
         // reset list of attributes upon disconnection
@@ -892,11 +977,16 @@ export class BlocklyEditorComponent implements AfterViewInit {
             parentBlock.getInput('DOCUMENT').connection.targetConnection === null) ||
           (parentBlock.type === SET_LINK_ATTRIBUTE && parentBlock.getInput('LINK').connection.targetConnection === null)
         ) {
-          const options = parentBlock.getField('ATTR').getOptions();
-          const originalLength = options.length;
-          parentBlock.getField('ATTR').setValue('?');
-          options.push(['?', '?']);
-          options.splice(0, originalLength);
+          this.resetOptions(parentBlock, 'ATTR');
+        }
+
+        // reset list of collections upon disconnection
+        if (
+          parentBlock.type === GET_LINK_DOCUMENT &&
+          parentBlock.getInput('COLLECTION').connection.targetConnection === null
+        ) {
+          parentBlock.setOutput(true, UNKNOWN);
+          this.resetOptions(parentBlock, 'COLLECTION');
         }
       }
     }
@@ -904,6 +994,14 @@ export class BlocklyEditorComponent implements AfterViewInit {
     // render new state
     this.generateXml();
     this.generateJs();
+  }
+
+  private resetOptions(block: any, field: string): void {
+    const options = block.getField(field).getOptions();
+    const originalLength = options.length;
+    block.getField(field).setValue('?');
+    options.push(['?', '?']);
+    options.splice(0, originalLength);
   }
 
   private ensureEmptyTypes(block): void {
@@ -1118,6 +1216,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
     if (this.masterType === MasterBlockType.Function) {
       xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + SET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
     }
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_DOCUMENT + '"></block></xml>').firstChild);
 
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
