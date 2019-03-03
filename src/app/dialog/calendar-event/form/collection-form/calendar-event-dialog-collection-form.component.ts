@@ -28,6 +28,8 @@ import {isDateValid} from '../../../../shared/utils/common.utils';
 import * as moment from 'moment';
 import {BehaviorSubject} from 'rxjs';
 import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
+import {Collection} from '../../../../core/store/collections/collection';
+import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'calendar-event-dialog-collection-form',
@@ -40,6 +42,9 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
 
   @Input()
   public collectionConfig: CalendarCollectionConfig;
+
+  @Input()
+  public collection: Collection;
 
   public readonly requiredProperty = CalendarBarPropertyRequired;
   public readonly optionalProperty = CalendarBarPropertyOptional;
@@ -59,6 +64,11 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
     }
 
     const newStart = this.checkDateChangeByTimes(this.currentStart$.getValue(), date);
+    if (this.eventStartIsNotCorrect(newStart)) {
+      this.refreshEventStart();
+      return;
+    }
+
     if (this.datesChanged(newStart, date)) {
       this.form.controls.eventStart.setValue(newStart);
     }
@@ -76,6 +86,15 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
     this.currentStart$.next(new Date(currentStart.getTime()));
   }
 
+  // happens when end attribute is not editable and start is after end
+  private eventStartIsNotCorrect(date: Date): boolean {
+    const endProperty = this.collectionConfig && this.collectionConfig.barsProperties[this.optionalProperty.EndDate];
+    const isEndEditable = !endProperty || isAttributeEditable(endProperty.attributeId, this.collection);
+    const currentEnd = this.currentEnd$.getValue();
+
+    return !isEndEditable && date.getTime() >= currentEnd.getTime();
+  }
+
   public onEndChange(date: Date) {
     if (!isDateValid(date)) {
       this.refreshEventEnd();
@@ -83,6 +102,11 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
     }
 
     const newEnd = this.checkDateChangeByTimes(this.currentEnd$.getValue(), date);
+    if (this.eventEndIsNotCorrect(newEnd)) {
+      this.refreshEventEnd();
+      return;
+    }
+
     if (this.datesChanged(newEnd, date)) {
       this.form.controls.eventEnd.setValue(newEnd);
     }
@@ -98,6 +122,16 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
     const currentEnd = this.currentEnd$.getValue();
     this.form.controls.eventEnd.setValue(currentEnd);
     this.currentEnd$.next(new Date(currentEnd.getTime()));
+  }
+
+  // happens when start attribute is not editable and end is before start
+  private eventEndIsNotCorrect(date: Date): boolean {
+    const startProperty =
+      this.collectionConfig && this.collectionConfig.barsProperties[this.requiredProperty.StartDate];
+    const isStartEditable = !startProperty || isAttributeEditable(startProperty.attributeId, this.collection);
+    const currentStart = this.currentStart$.getValue();
+
+    return !isStartEditable && date.getTime() <= currentStart.getTime();
   }
 
   private checkDateChangeByTimes(dateBefore: Date, dateAfter: Date): Date {

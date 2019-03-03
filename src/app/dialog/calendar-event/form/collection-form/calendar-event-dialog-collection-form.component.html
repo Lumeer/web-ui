@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-  <div class="form-group form-check" *ngIf="collectionConfig | propertiesDefined:[requiredProperty.StartDate]">
+  <div class="form-group form-check" *ngIf="collectionConfig | propertiesDefined:[requiredProperty.StartDate, optionalProperty.EndDate]">
     <input type="checkbox"
            class="form-check-input"
            formControlName="allDay"

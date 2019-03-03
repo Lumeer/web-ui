@@ -17,21 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as moment from 'moment';
 import {Collection} from '../../../core/store/collections/collection';
 import {
+  CALENDAR_DATE_FORMAT,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarCollectionConfig,
   CalendarConfig,
 } from '../../../core/store/calendars/calendar.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {parseDateTimeDataValue} from '../../../shared/utils/data.utils';
-import {isAllDayEvent} from '../../../view/perspectives/calendar/util/calendar-util';
+import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
+import {deepObjectsEquals, isDateValid} from '../../../shared/utils/common.utils';
+import {isAttributeEditable} from '../../../core/store/collections/collection.util';
 
 export const DEFAULT_EVENT_DURATION = 60;
 
@@ -40,7 +51,7 @@ export const DEFAULT_EVENT_DURATION = 60;
   templateUrl: './calendar-event-dialog-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarEventDialogFormComponent implements OnInit {
+export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -76,15 +87,55 @@ export class CalendarEventDialogFormComponent implements OnInit {
   }
 
   private createForm() {
-    const initialDocumentData = this.getInitialDocumentData();
+    const {
+      collectionId,
+      allDay,
+      title,
+      eventStart,
+      eventEnd,
+      startEditable,
+      endEditable,
+    } = this.getInitialDocumentData();
 
     this.form = this.fb.group({
-      collectionId: [initialDocumentData.collectionId || this.getInitialCollection(), Validators.required],
-      allDay: initialDocumentData.allDay || this.getInitialAllDay(),
-      title: [initialDocumentData.title || this.getInitialTitleName(), Validators.required],
-      eventStart: [initialDocumentData.eventStart || this.getInitialEventStart(), Validators.required],
-      eventEnd: [initialDocumentData.eventEnd || this.getInitialEventEnd(), Validators.required],
+      collectionId: [collectionId || this.getInitialCollection(), Validators.required],
+      allDay: allDay || this.getInitialAllDay(),
+      title: [title || this.getInitialTitleName(), Validators.required],
+      eventStart: [eventStart || this.getInitialEventStart(), Validators.required],
+      eventEnd: [eventEnd || this.getInitialEventEnd(), Validators.required],
     });
+
+    if (!startEditable) {
+      this.form.controls.allDay.disable();
+      this.form.controls.eventStart.disable();
+    }
+
+    if (!endEditable) {
+      this.form.controls.eventEnd.disable();
+    }
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections && this.form) {
+      this.disableOrEnableControls();
+    }
+  }
+
+  private disableOrEnableControls() {
+    const {startEditable, endEditable} = this.getInitialDocumentData();
+    if (startEditable) {
+      this.form.controls.allDay.enable();
+      this.form.controls.eventStart.enable();
+    } else {
+      this.form.controls.allDay.disable();
+      this.form.controls.eventStart.disable();
+    }
+
+    if (endEditable) {
+      this.form.controls.eventEnd.enable();
+    } else {
+      this.form.controls.eventEnd.disable();
+    }
   }
 
   private getInitialDocumentData(): {
@@ -93,9 +144,11 @@ export class CalendarEventDialogFormComponent implements OnInit {
     title?: string;
     eventStart?: Date;
     eventEnd?: Date;
+    startEditable?: boolean;
+    endEditable?: boolean;
   } {
     if (!this.document) {
-      return {};
+      return {startEditable: true, endEditable: true};
     }
 
     const collectionConfig = (this.config && this.config.collections[this.document.collectionId]) || {};
@@ -104,15 +157,42 @@ export class CalendarEventDialogFormComponent implements OnInit {
     const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
 
     const collectionId = this.document.collectionId;
+    const collection = this.collections && this.collections.find(coll => coll.id === collectionId);
     const title = titleProperty && this.document.data[titleProperty.attributeId];
-    const start = startProperty && this.document.data[startProperty.attributeId];
-    const end = endProperty && this.document.data[endProperty.attributeId];
+    const start = parseCalendarEventDate(startProperty && this.document.data[startProperty.attributeId]);
+    const end = parseCalendarEventDate(endProperty && this.document.data[endProperty.attributeId]);
 
-    const eventStart = parseDateTimeDataValue(start);
-    const eventEnd = parseDateTimeDataValue(end);
+    const {eventStart, eventEnd} = this.createEventDatesFromDocument(start, end);
+
     const allDay = isAllDayEvent(eventStart, eventEnd);
 
-    return {collectionId, allDay, title, eventStart, eventEnd};
+    const startEditable = isAttributeEditable(startProperty && startProperty.attributeId, collection);
+    const endEditable = isAttributeEditable(endProperty && endProperty.attributeId, collection);
+
+    return {collectionId, allDay, title, eventStart, eventEnd, startEditable, endEditable};
+  }
+
+  private createEventDatesFromDocument(start: Date, end: Date): {eventStart: Date; eventEnd: Date} {
+    if (isDateValid(start) && isDateValid(end)) {
+      return {eventStart: start, eventEnd: end};
+    } else if (isDateValid(start)) {
+      const eventEnd = moment(start)
+        .add(DEFAULT_EVENT_DURATION, 'minutes')
+        .toDate();
+      return {eventStart: start, eventEnd};
+    } else if (isDateValid(end)) {
+      const eventStart = moment(start)
+        .subtract(DEFAULT_EVENT_DURATION, 'minutes')
+        .toDate();
+      return {eventStart, eventEnd: end};
+    }
+
+    return {
+      eventStart: new Date(),
+      eventEnd: moment()
+        .add(DEFAULT_EVENT_DURATION, 'minutes')
+        .toDate(),
+    };
   }
 
   private getInitialCollection(): string {
@@ -142,7 +222,10 @@ export class CalendarEventDialogFormComponent implements OnInit {
 
   public onSubmit() {
     if (this.document) {
-      this.updateEvent.emit(this.createEventDocument());
+      const updateDocument = this.createEventDocument();
+      if (!deepObjectsEquals(this.document.data, updateDocument.data)) {
+        this.updateEvent.emit(updateDocument);
+      }
     } else {
       this.createEvent.emit(this.createEventDocument());
     }
@@ -158,35 +241,36 @@ export class CalendarEventDialogFormComponent implements OnInit {
     const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];
     const startProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
     const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
+    const collection = this.collections && this.collections.find(coll => coll.id === collectionId);
 
-    const data = (this.document && this.document.data) || {};
+    const data = (this.document && {...this.document.data}) || {};
     if (titleProperty) {
       data[titleProperty.attributeId] = title;
     }
 
-    if (startProperty) {
+    if (eventStart && startProperty && isAttributeEditable(startProperty && startProperty.attributeId, collection)) {
       data[startProperty.attributeId] = this.cleanDateWhenAllDay(eventStart, allDay);
     }
 
-    if (endProperty) {
+    if (eventEnd && endProperty && isAttributeEditable(endProperty && endProperty.attributeId, collection)) {
       data[endProperty.attributeId] = this.cleanDateWhenAllDay(eventEnd, allDay);
     }
 
     return {...this.document, collectionId, data};
   }
 
-  private cleanDateWhenAllDay(date: Date, allDay: boolean): Date {
+  private cleanDateWhenAllDay(date: Date, allDay: boolean): string {
     if (allDay) {
       return moment(date)
         .hours(0)
         .minutes(0)
         .seconds(0)
         .milliseconds(0)
-        .toDate();
+        .format(CALENDAR_DATE_FORMAT);
     }
     return moment(date)
       .seconds(0)
       .milliseconds(0)
-      .toDate();
+      .format(CALENDAR_DATE_FORMAT);
   }
 }

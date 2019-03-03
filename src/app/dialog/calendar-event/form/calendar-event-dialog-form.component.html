@@ -9,7 +9,8 @@
   </div>
 
   <calendar-event-dialog-collection-form [form]="form"
-                                         [collectionConfig]="config.collections[collectionIdControl.value]">
+                                         [collectionConfig]="config.collections[collectionIdControl.value]"
+                                         [collection]="collections | collectionById:collectionIdControl.value">
   </calendar-event-dialog-collection-form>
 
 </div>

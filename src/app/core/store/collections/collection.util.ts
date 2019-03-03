@@ -19,6 +19,12 @@
 
 import {Attribute, Collection} from './collection';
 
+export function isAttributeEditable(attributeId: string, collection: Collection): boolean {
+  const attribute =
+    attributeId && collection && collection.attributes && collection.attributes.find(attr => attr.id === attributeId);
+  return attribute && (!attribute.function || attribute.function.editable);
+}
+
 export function getDefaultAttributeId(collection: Collection): string {
   if (collection.defaultAttributeId) {
     const defaultAttribute = collection.attributes.find(attr => attr.id === collection.defaultAttributeId);
