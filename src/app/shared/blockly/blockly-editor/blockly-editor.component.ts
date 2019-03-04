@@ -233,7 +233,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: STATEMENT_CONTAINER,
-          message0: 'On document event in %1 %2 %3 do %4',
+          message0: '%{BKY_BLOCK_STATEMENT_CONTAINER}', // With record in %1 %2 %3 do %4
           args0: [
             {
               type: 'field_fa',
@@ -268,7 +268,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: VALUE_CONTAINER,
-          message0: '%1 %2 = %3',
+          message0: '%{BKY_BLOCK_VALUE_CONTAINER}', // %1 %2 = %3
           args0: [
             {
               type: 'field_fa',
@@ -318,7 +318,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: LINK_CONTAINER,
-          message0: '%1%2 %3 = %4',
+          message0: '%{BKY_BLOCK_LINK_CONTAINER}', // %1%2 %3 = %4
           args0: [
             {
               type: 'field_fa',
@@ -374,7 +374,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: FOREACH_DOCUMENT_ARRAY,
-          message0: 'for each document %1 in %2',
+          message0: '%{BKY_BLOCK_FOREACH_DOCUMENT}', // for each record %1 in %2
           args0: [
             {
               type: 'field_variable',
@@ -387,7 +387,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
               check: null,
             },
           ],
-          message1: 'do this %1',
+          message1: '%{BKY_BLOCK_FOREACH_DOCUMENT_DO}', // do this %1
           args1: [
             {
               type: 'input_statement',
@@ -406,7 +406,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: FOREACH_LINK_ARRAY,
-          message0: 'for each link %1 in %2',
+          message0: '%{BKY_BLOCK_FOREACH_LINK}', // for each link %1 in %2
           args0: [
             {
               type: 'field_variable',
@@ -419,7 +419,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
               check: null,
             },
           ],
-          message1: 'do this %1',
+          message1: '%{BKY_BLOCK_FOREACH_LINK_DO}', // do this %1
           args1: [
             {
               type: 'input_statement',
@@ -438,7 +438,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: GET_ATTRIBUTE,
-          message0: 'get %1 of %2',
+          message0: '%{BKY_BLOCK_GET_ATTRIBUTE}', // get %1 of %2
           args0: [
             {
               type: 'field_dropdown',
@@ -474,7 +474,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: SET_ATTRIBUTE,
-          message0: 'set %1 of %2 to %3',
+          message0: '%{BKY_BLOCK_SET_ATTRIBUTE}', // set %1 of %2 to %3
           args0: [
             {
               type: 'field_dropdown',
@@ -516,7 +516,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: GET_LINK_ATTRIBUTE,
-          message0: 'get %1 of link %2',
+          message0: '%{BKY_BLOCK_GET_LINK_ATTRIBUTE}', // get %1 of link %2
           args0: [
             {
               type: 'field_dropdown',
@@ -552,7 +552,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: SET_LINK_ATTRIBUTE,
-          message0: 'set %1 of link %2 to %3',
+          message0: '%{BKY_BLOCK_SET_LINK_ATTRIBUTE}', // set %1 of link %2 to %3
           args0: [
             {
               type: 'field_dropdown',
@@ -594,7 +594,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       init: function() {
         this.jsonInit({
           type: GET_LINK_DOCUMENT,
-          message0: 'doc. from %1 linked via %2',
+          message0: '%{BKY_BLOCK_GET_LINK_DOCUMENT}', // record from %1 linked via %2
           args0: [
             {
               type: 'field_dropdown',
@@ -1116,7 +1116,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         init: function() {
           this.jsonInit({
             type: VARIABLES_GET_PREFIX + type,
-            message0: '%1 %2 %3',
+            message0: '%{BKY_BLOCK_VARIABLE}', // %1 %2 %3
             args0: [
               {
                 type: 'field_fa',
@@ -1155,7 +1155,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         init: function() {
           this.jsonInit({
             type: VARIABLES_GET_PREFIX + type,
-            message0: '%1%2 %3 %4',
+            message0: '%{BKY_BLOCK_LINK_VARIABLE}', // %1%2 %3 %4
             args0: [
               {
                 type: 'field_fa',
@@ -1246,7 +1246,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
         init: function() {
           this.jsonInit({
             type: type,
-            message0: '%1%2 %3 %4',
+            message0: '%{BKY_BLOCK_LINK_VARIABLE}', // %1%2 %3 %4
             args0: [
               {
                 type: 'field_fa',
@@ -1315,11 +1315,11 @@ export class BlocklyEditorComponent implements AfterViewInit {
         init: function() {
           this.jsonInit({
             type: type,
-            message0: '%1 %2%3 %4 %5',
+            message0: '%{BKY_BLOCK_LINK_INSTANCE}', // %1 %2%3 %4 %5
             args0: [
               {
                 type: 'field_label',
-                text: 'Attrs. of',
+                text: '%{BKY_BLOCK_LINK_INSTANCE_ATTRS}', // Attrs. of
                 class: 'text-primary',
               },
               {
