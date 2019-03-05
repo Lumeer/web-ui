@@ -35,8 +35,8 @@
           <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
@@ -117,7 +117,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context>
@@ -1334,50 +1334,32 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
-        <source>
-      All day
-    </source>
+      </trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
+        <source><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> event</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.create.calendar.event.label.title" datatype="html">
-        <source>
-      Title
-    </source>
+      </trans-unit><trans-unit id="d773af282de0ab61044453b33cca89e449e4f198" datatype="html">
+        <source>{VAR_SELECT, select, 1 {Update} other {Create new} }</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.create.calendar.event.label.start" datatype="html">
-        <source>
-      Event start
-    </source>
+      </trans-unit><trans-unit id="dialog.calendar.event.button" datatype="html">
+        <source>{VAR_SELECT, select, 1 {Update} other {Create} }</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
+          <context context-type="linenumber">19</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.create.calendar.event.label.end" datatype="html">
-        <source>
-      Event end
-    </source>
+      </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
+        <source>Create new linked collection</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.create.calendar.event.title" datatype="html">
-        <source>Create new event</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-calendar-event/create-calendar-event.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
           <context context-type="linenumber">27</context>
@@ -1389,12 +1371,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
           <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
-        <source>Create new linked collection</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
-          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.file.name.placeholder" datatype="html">
         <source>Enter collection name...</source>
@@ -1778,6 +1754,38 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
+        <source>
+      All day
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.title" datatype="html">
+        <source>
+      Title
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.start" datatype="html">
+        <source>
+      Event start
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.label.end" datatype="html">
+        <source>
+      Event end
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
         <source>1. Select View</source>
@@ -3645,10 +3653,17 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="dialog.calendar.event.collection" datatype="html">
+        <source>Collection</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/calendar-event/form/calendar-event-dialog-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
         <source>New event</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/dialog/create-calendar-event/create-calendar-event-form/create-calendar-event-form.component.ts</context>
+          <context context-type="sourcefile">src/app/dialog/calendar-event/form/calendar-event-dialog-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

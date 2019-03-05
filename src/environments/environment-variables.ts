@@ -51,7 +51,7 @@ const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
 const videoKey = env['VIDEO_KEY'] || '';
 const blocklyCdn =
-  env['BLOCKLY_CDN'] || 'https://s3.eu-central-1.amazonaws.com/lumeer-cdn.fra/blockly/v1/blockly.min.js';
+  env['BLOCKLY_CDN'] || `https://s3.eu-central-1.amazonaws.com/lumeer-cdn.fra/blockly/v1/blockly.${locale}.min.js`;
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
