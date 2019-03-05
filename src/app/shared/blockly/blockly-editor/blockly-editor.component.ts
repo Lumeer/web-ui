@@ -637,17 +637,31 @@ export class BlocklyEditorComponent implements AfterViewInit {
   private ensureTypeChecks(): void {
     // first fix variables and links
     this.workspace.getAllBlocks(false).forEach(block => {
+      const children = block.getChildren(false);
       this.preventDeletionOfInitialVariables(block);
 
       // set output type of all links
       if (block.type.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
-        const children = block.getChildren(false);
         if (children && children.length > 0) {
           const child = children[0];
           const childType = child.type.replace(DOCUMENT_VAR_SUFFIX, '').replace(VARIABLES_GET_PREFIX, '');
           const linkParts = this.getLinkParts(block.type);
           const counterpart = linkParts[0] === childType ? linkParts[1] : linkParts[0];
           block.setOutput(true, counterpart + DOCUMENT_ARRAY_TYPE_SUFFIX);
+        }
+      }
+
+      // get link instance document
+      if (block.type === GET_LINK_DOCUMENT) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType = this.getOutputConnectionCheck(child);
+
+          if (childOutputType.endsWith(LINK_VAR_SUFFIX)) {
+            const value = block.getField('COLLECTION').getValue();
+            this.setLinkDocumentOutputType(block, child);
+            block.getField('COLLECTION').setValue(value);
+          }
         }
       }
     });
@@ -660,10 +674,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       if (block.type === GET_ATTRIBUTE || block.type === SET_ATTRIBUTE) {
         if (children && children.length > 0) {
           const child = children[0];
-          const childOutputType =
-            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
-              ? child.outputConnection.check_[0]
-              : '';
+          const childOutputType = this.getOutputConnectionCheck(child);
 
           if (childOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || childOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             const value = block.getField('ATTR').getValue();
@@ -677,10 +688,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       if (block.type === GET_LINK_ATTRIBUTE || block.type === SET_LINK_ATTRIBUTE) {
         if (children && children.length > 0) {
           const child = children[0];
-          const childOutputType =
-            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
-              ? child.outputConnection.check_[0]
-              : '';
+          const childOutputType = this.getOutputConnectionCheck(child);
 
           if (childOutputType.endsWith(LINK_VAR_SUFFIX) || childOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
             const value = block.getField('ATTR').getValue();
@@ -694,10 +702,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       if (block.type === FOREACH_DOCUMENT_ARRAY) {
         if (children && children.length > 0) {
           const child = children[0];
-          const childOutputType =
-            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
-              ? child.outputConnection.check_[0]
-              : '';
+          const childOutputType = this.getOutputConnectionCheck(child);
 
           if (childOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             const newType = childOutputType.replace(ARRAY_TYPE_SUFFIX, '');
@@ -711,10 +716,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       if (block.type === FOREACH_LINK_ARRAY) {
         if (children && children.length > 0) {
           const child = children[0];
-          const childOutputType =
-            child.outputConnection && child.outputConnection.check_ && child.outputConnection.check_[0]
-              ? child.outputConnection.check_[0]
-              : '';
+          const childOutputType = this.getOutputConnectionCheck(child);
 
           if (childOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX)) {
             const newType = childOutputType.replace(LINK_TYPE_ARRAY_SUFFIX, LINK_VAR_SUFFIX);
@@ -737,10 +739,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
   private setLinkDocumentOutputType(parentBlock: any, block: any) {
     const options = parentBlock.getField('COLLECTION').getOptions();
     const originalLength = options.length;
-    const blockOutputType =
-      block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
-        ? block.outputConnection.check_[0]
-        : '';
+    const blockOutputType = this.getOutputConnectionCheck(block);
     const linkTypeId = blockOutputType.split('_')[0];
     const linkType = this.getLinkType(linkTypeId);
 
@@ -934,10 +933,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
       const block = workspace.getBlockById(changeEvent.blockId);
       if (block) {
         // when replacing a shadow block, the original block might not exist anymore
-        const blockOutputType =
-          block.outputConnection && block.outputConnection.check_ && block.outputConnection.check_[0]
-            ? block.outputConnection.check_[0]
-            : '';
+        const blockOutputType = this.getOutputConnectionCheck(block);
         const parentBlock = workspace.getBlockById(changeEvent.oldParentId);
 
         // document being removed from link
