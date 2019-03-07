@@ -19,7 +19,7 @@
 
 import {ElementRef} from '@angular/core';
 
-import {Config, Data, Layout, newPlot, Plots, purge, react, redraw, relayout} from 'plotly.js';
+import {Config, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
 import {ChartData} from '../data/convertor/chart-data';
 import {ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
@@ -27,6 +27,7 @@ import {LinePlotMaker} from './plot-maker/line-plot-maker';
 import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
+import {createRange} from './plot-maker/plot-util';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -86,8 +87,26 @@ export class ChartVisualizer {
 
   public onDataChanged(change: DataChange) {
     this.data[change.trace][change.axis][change.index] = change.value;
+    this.checkLayoutRange();
     this.incRevisionNumber();
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshDrag());
+  }
+
+  private checkLayoutRange() {
+    const {yaxis, yaxis2} = this.layout;
+    if (!yaxis || !yaxis.range || !yaxis2 || !yaxis2.range) {
+      return;
+    }
+
+    const values = this.data.reduce((allValues, data) => [...allValues, ...this.dataValues(data)], []);
+    const range = createRange(values);
+
+    this.layout.yaxis.range = range;
+    this.layout.yaxis2.range = range;
+  }
+
+  private dataValues(data: Data): any[] {
+    return data.y as any[];
   }
 
   private createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {

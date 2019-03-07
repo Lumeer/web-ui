@@ -105,11 +105,19 @@ export class ChartDataConverter {
   }
 
   public convertType(type: ChartType): ChartData {
+    if (this.areSetsEmpty()) {
+      return this.createEmptyData({...this.currentConfig, type});
+    }
+
     this.currentConfig = {...this.currentConfig, type};
     return {
       type,
       sets: [...(this.y1Sets || []), ...(this.y2Sets || [])],
     };
+  }
+
+  private areSetsEmpty(): boolean {
+    return (!this.y1Sets || this.y1Sets.length === 0) && (!this.y2Sets || this.y2Sets.length === 0);
   }
 
   public convert(config: ChartConfig): ChartData {
@@ -653,21 +661,41 @@ export class ChartDataConverter {
     const axisResourcesOrder = createAxisResourceOrder(this.query, this.collections, this.linkTypes);
     const dataMap = this.createDataMap(axisResourcesOrder);
 
-    const sets = this.convertAxis(config, type, dataMap, axisResourcesOrder);
+    const xAxis = config.axes[ChartAxisType.X];
+    const yAxis = config.axes[type];
+
+    const otherSets = type === ChartAxisType.Y1 ? this.y2Sets : this.y1Sets;
+    const otherSetsAreEmpty = !otherSets || otherSets.length === 0;
+
+    const sets =
+      ((yAxis || (xAxis && otherSetsAreEmpty)) && this.convertAxis(config, type, dataMap, axisResourcesOrder)) || [];
     if (type === ChartAxisType.Y1) {
       this.y1Sets = sets;
     } else {
       this.y2Sets = sets;
     }
+
     this.currentConfig = config;
     return this.convertType(config.type);
   }
 
   private createEmptyData(config: ChartConfig): ChartData {
-    this.y1Sets = [];
+    const color = this.collections && this.collections[0] && this.collections[0].color;
+    const emptySet: ChartDataSet = {
+      yAxisType: ChartAxisType.Y1,
+      isNumeric: true,
+      name: '',
+      draggable: false,
+      points: [],
+      id: null,
+      resourceType: ChartAxisResourceType.Collection,
+      color,
+    };
+
+    this.y1Sets = [emptySet];
     this.y2Sets = [];
     this.currentConfig = config;
-    return {sets: [], type: config.type};
+    return {sets: [emptySet], type: config.type};
   }
 }
 

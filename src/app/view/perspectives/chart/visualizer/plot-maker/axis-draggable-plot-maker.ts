@@ -22,6 +22,8 @@ import * as d3 from 'd3';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {createRange} from './plot-util';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -43,7 +45,30 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         },
       };
     }
-    return {};
+    return {
+      yaxis: {
+        range: this.createRange(),
+      },
+    };
+  }
+
+  private createRange(): any[] {
+    if (
+      !this.areBothYAxisPresented() ||
+      this.isAxisCategory(ChartAxisType.Y1) ||
+      this.isAxisCategory(ChartAxisType.Y2)
+    ) {
+      return null;
+    }
+
+    const values = this.chartData.sets.reduce((allValues, set) => {
+      const setValues = set.points
+        .filter(point => isNotNullOrUndefind(point.y) && isNumeric(point.y))
+        .map(point => point.y);
+      return [...allValues, ...setValues];
+    }, []);
+
+    return createRange(values);
   }
 
   protected yAxis2Layout(): Partial<Layout> {
@@ -63,6 +88,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         yaxis2: {
           overlaying: 'y',
           side: 'right',
+          range: this.createRange(),
         },
       };
     }
