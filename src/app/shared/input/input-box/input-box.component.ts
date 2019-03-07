@@ -50,6 +50,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public alwaysFrame: boolean = false;
   @Input() public textAttribute: boolean = false;
   @Input() public innerClass: string = '';
+  @Input() public filter: RegExp;
 
   @Output() public focus: EventEmitter<string> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -91,7 +92,17 @@ export class InputBoxComponent implements OnInit {
     this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
+  private filterValue(value: string): string {
+    if (this.filter) {
+      value = value.replace(this.filter, '');
+    }
+
+    return value;
+  }
+
   public onNewValue(value: string) {
+    value = this.filterValue(value);
+
     this.blur.emit();
     this.removeFocusFromInputParent();
 
@@ -102,12 +113,13 @@ export class InputBoxComponent implements OnInit {
       } else {
         this.mCurrentValue = value;
         this.newValue.emit(value);
+        this.input.nativeElement.textContent = value;
       }
     }
   }
 
   public setValue(value: string) {
-    this.mCurrentValue = value;
+    this.mCurrentValue = this.filterValue(value);
   }
 
   public onFocus() {
@@ -140,7 +152,9 @@ export class InputBoxComponent implements OnInit {
 
   public onInterimNewValue(textContent: string | null) {
     if (this.emitAllChanges) {
-      this.newValue.emit(textContent);
+      const value = this.filterValue(textContent);
+      this.newValue.emit(value);
+      this.input.nativeElement.textContent = value;
     }
   }
 

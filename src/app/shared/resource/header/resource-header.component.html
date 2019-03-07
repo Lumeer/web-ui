@@ -31,7 +31,8 @@
     (blur)="onFirstLineBlur()"
     (focus)="onFirstLineFocus()"
     [placeholder]="firstLinePlaceholder()"
-    (newValue)="onNewFirstLine($event)">
+    (newValue)="onNewFirstLine($event)"
+    [filter]="getFilter()">
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
