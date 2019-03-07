@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {User} from '../store/users/user';
-import {filter, map, take, tap} from 'rxjs/operators';
+import {catchError, filter, map, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -58,6 +58,9 @@ import {ResourceType} from '../model/resource-type';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {UsersAction} from '../store/users/users.action';
 import {convertUserDtoToModel} from '../store/users/user.converter';
+import {OrganizationService, ProjectService} from '../rest';
+import {OrganizationDto, ProjectDto} from '../dto';
+import {of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +72,12 @@ export class PusherService implements OnDestroy {
   private currentProject: Project;
   private user: User;
 
-  constructor(private store$: Store<AppState>, private authService: AuthService) {
+  constructor(
+    private store$: Store<AppState>,
+    private authService: AuthService,
+    private organizationService: OrganizationService,
+    private projectService: ProjectService
+  ) {
     if (environment.pusherKey) {
       this.init();
     }
@@ -139,7 +147,20 @@ export class PusherService implements OnDestroy {
       });
     });
     this.channel.bind('Organization:update:ALT', data => {
-      this.store$.dispatch(new OrganizationsAction.GetSingle({organizationCode: data.extraId}));
+      this.organizationService.getOrganization(data.extraId).pipe(
+        map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
+        map((newOrganization: Organization) => {
+          if (data.id === this.getCurrentOrganizationId()) {
+            this.checkIfUserGainManage(data);
+            this.checkIfUserLostManage(data, ResourceType.Organization);
+          }
+          this.getOrganization(data.id, oldOrganization => {
+            const oldCode = oldOrganization && oldOrganization.code;
+            this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: newOrganization, oldCode}));
+          });
+        }),
+        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+      );
     });
     this.channel.bind('Organization:remove', data => {
       this.getOrganization(data.id, oldOrganization => {
@@ -213,9 +234,20 @@ export class PusherService implements OnDestroy {
       });
     });
     this.channel.bind('Project:update:ALT', data => {
-      this.store$.dispatch(
-        new ProjectsAction.GetSingle({organizationId: data.organizationId, projectCode: data.extraId})
-      );
+      this.getProject(data.id, oldProject => {
+        this.projectService.getProject(oldProject.organizationCode, data.extraId).pipe(
+          map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
+          map((newProject: Project) => {
+            if (data.id === this.getCurrentProjectId()) {
+              this.checkIfUserGainManage(data);
+              this.checkIfUserLostManage(data, ResourceType.Project);
+            }
+            const oldCode = oldProject && oldProject.code;
+            this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));
+          }),
+          catchError(error => of(new ProjectsAction.GetFailure({error: error})))
+        );
+      });
     });
     this.channel.bind('Project:remove', data => {
       this.getProject(data.id, oldProject => {
