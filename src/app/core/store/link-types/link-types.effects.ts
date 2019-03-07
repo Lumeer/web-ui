@@ -34,6 +34,7 @@ import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/li
 import {selectQuery} from '../navigation/navigation.state';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
 import {NavigationAction} from '../navigation/navigation.action';
+import {LinkTypeDto} from '../../dto';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -46,6 +47,18 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkTypes().pipe(
         map(dtos => dtos.map(dto => convertLinkTypeDtoToModel(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
+        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.GetSingle>(LinkTypesActionType.GET_SINGLE),
+    mergeMap(action => {
+      return this.linkTypeService.getLinkType(action.payload.linkTypeId).pipe(
+        map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto)),
+        map(linkType => new LinkTypesAction.GetSuccess({linkTypes: [linkType]})),
         catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
       );
     })
