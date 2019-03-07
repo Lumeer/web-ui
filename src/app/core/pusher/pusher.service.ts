@@ -148,11 +148,12 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Organization:update:ALT', data => {
       this.organizationService.getOrganization(data.extraId).pipe(
+        filter(projectDto => !!projectDto),
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map((newOrganization: Organization) => {
           if (data.id === this.getCurrentOrganizationId()) {
-            this.checkIfUserGainManage(data);
-            this.checkIfUserLostManage(data, ResourceType.Organization);
+            this.checkIfUserGainManage(newOrganization);
+            this.checkIfUserLostManage(newOrganization, ResourceType.Organization);
           }
           this.getOrganization(data.id, oldOrganization => {
             const oldCode = oldOrganization && oldOrganization.code;
@@ -235,12 +236,14 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Project:update:ALT', data => {
       this.getProject(data.id, oldProject => {
-        this.projectService.getProject(oldProject.organizationCode, data.extraId).pipe(
+        const [organizationCode, newProjectCode] = data.extraId.split('/');
+        this.projectService.getProject(organizationCode, newProjectCode).pipe(
+          filter(projectDto => !!projectDto),
           map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
           map((newProject: Project) => {
             if (data.id === this.getCurrentProjectId()) {
-              this.checkIfUserGainManage(data);
-              this.checkIfUserLostManage(data, ResourceType.Project);
+              this.checkIfUserGainManage(newProject);
+              this.checkIfUserLostManage(newProject, ResourceType.Project);
             }
             const oldCode = oldProject && oldProject.code;
             this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));
