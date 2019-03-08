@@ -51,6 +51,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public textAttribute: boolean = false;
   @Input() public innerClass: string = '';
   @Input() public filter: RegExp;
+  @Input() public maxLength = 0;
 
   @Output() public focus: EventEmitter<string> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -101,21 +102,48 @@ export class InputBoxComponent implements OnInit {
   }
 
   public onNewValue(value: string) {
+    const oldValue = value;
     value = this.filterValue(value);
+
+    if (this.maxLength && value.length > this.maxLength) {
+      value = value.substring(0, this.maxLength);
+    }
 
     this.blur.emit();
     this.removeFocusFromInputParent();
 
     if (value !== this.mCurrentValue) {
+      const element = this.input.nativeElement;
+
       if (value.length === 0 && !this.canStayEmpty) {
         this.emptyValue.emit();
-        this.input.nativeElement.textContent = this.mCurrentValue;
+        element.textContent = this.mCurrentValue;
       } else {
         this.mCurrentValue = value;
         this.newValue.emit(value);
-        this.input.nativeElement.textContent = value;
+        const caret = this.getCaret(element);
+        element.textContent = value;
+        this.setCaret(element, caret - (oldValue.length - value.length));
       }
     }
+  }
+
+  private setCaret(el: HTMLElement, caret: number) {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.setStart(el.childNodes[0], caret);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    el.focus();
+  }
+
+  private getCaret(el: HTMLElement): number {
+    const range = window.getSelection().getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(el);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    return preCaretRange.toString().length;
   }
 
   public setValue(value: string) {
@@ -152,9 +180,17 @@ export class InputBoxComponent implements OnInit {
 
   public onInterimNewValue(textContent: string | null) {
     if (this.emitAllChanges) {
-      const value = this.filterValue(textContent);
+      let value = this.filterValue(textContent);
+
+      if (this.maxLength && value.length > this.maxLength) {
+        value = value.substring(0, this.maxLength);
+      }
+
+      const element = this.input.nativeElement;
       this.newValue.emit(value);
-      this.input.nativeElement.textContent = value;
+      const caret = this.getCaret(element);
+      element.textContent = value;
+      this.setCaret(element, caret - (textContent.length - value.length));
     }
   }
 
