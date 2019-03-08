@@ -24,6 +24,7 @@ import {Organization} from '../organizations/organization';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
+  GET_SINGLE = '[Projects] Get Single',
   GET_SUCCESS = '[Projects] Get :: Success',
   GET_FAILURE = '[Projects] Get :: Failure',
 
@@ -60,6 +61,12 @@ export namespace ProjectsAction {
     public readonly type = ProjectsActionType.GET;
 
     public constructor(public payload: {organizationId: string; force?: boolean}) {}
+  }
+
+  export class GetSingle implements Action {
+    public readonly type = ProjectsActionType.GET_SINGLE;
+
+    public constructor(public payload: {organizationId: string; projectCode: string}) {}
   }
 
   export class GetSuccess implements Action {
@@ -202,6 +209,7 @@ export namespace ProjectsAction {
   export type All =
     | Select
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | GetOneSuccess

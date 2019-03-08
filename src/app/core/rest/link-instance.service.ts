@@ -37,6 +37,10 @@ export class LinkInstanceService {
     this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
   }
 
+  public getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto> {
+    return this.httpClient.get<LinkInstanceDto>(this.restApiPrefix(linkTypeId, linkInstanceId));
+  }
+
   public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
     return this.httpClient.post<LinkInstanceDto>(this.restApiPrefix(), linkInstance);
   }
@@ -49,10 +53,10 @@ export class LinkInstanceService {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
-  private restApiPrefix(id?: string): string {
+  private restApiPrefix(id?: string, secondId?: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
-    const suffix = id ? `/${id}` : '';
+    const suffix = (id ? `/${id}` : '') + (secondId ? `/${secondId}` : '');
 
     return `${
       environment.apiUrl

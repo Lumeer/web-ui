@@ -23,6 +23,7 @@ import {Query} from '../navigation/query';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
+  GET_SINGLE = '[Link Instances] Get Single',
   GET_SUCCESS = '[Link Instances] Get :: Success',
   GET_FAILURE = '[Link Instances] Get :: Failure',
 
@@ -51,10 +52,16 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {query: Query}) {}
   }
 
+  export class GetSingle implements Action {
+    public readonly type = LinkInstancesActionType.GET_SINGLE;
+
+    public constructor(public payload: {linkTypeId: string; linkInstanceId: string}) {}
+  }
+
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkInstances: LinkInstance[]; query: Query}) {}
+    public constructor(public payload: {linkInstances: LinkInstance[]; query?: Query}) {}
   }
 
   export class GetFailure implements Action {
@@ -135,6 +142,7 @@ export namespace LinkInstancesAction {
 
   export type All =
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | Create

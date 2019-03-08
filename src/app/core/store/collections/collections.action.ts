@@ -23,6 +23,7 @@ import {Attribute, Collection, ImportedCollection} from './collection';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
+  GET_SINGLE = '[Collections] Get Single',
   GET_SUCCESS = '[Collections] Get :: Success',
   GET_FAILURE = '[Collections] Get :: Failure',
 
@@ -78,6 +79,12 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.GET;
 
     public constructor(public payload: {force?: boolean}) {}
+  }
+
+  export class GetSingle implements Action {
+    public readonly type = CollectionsActionType.GET_SINGLE;
+
+    public constructor(public payload: {collectionId: string}) {}
   }
 
   export class GetSuccess implements Action {
@@ -327,6 +334,7 @@ export namespace CollectionsAction {
 
   export type All =
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | Create

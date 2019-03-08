@@ -23,6 +23,7 @@ import {Permission, PermissionType} from '../permissions/permissions';
 
 export enum OrganizationsActionType {
   GET = '[Organizations] Get',
+  GET_SINGLE = '[Organizations] Get Single',
   GET_SUCCESS = '[Organizations] Get :: Success',
   GET_FAILURE = '[Organizations] Get :: Failure',
 
@@ -54,6 +55,12 @@ export enum OrganizationsActionType {
 export namespace OrganizationsAction {
   export class Get implements Action {
     public readonly type = OrganizationsActionType.GET;
+  }
+
+  export class GetSingle implements Action {
+    public readonly type = OrganizationsActionType.GET_SINGLE;
+
+    public constructor(public payload: {organizationCode: string}) {}
   }
 
   export class GetSuccess implements Action {
@@ -180,6 +187,7 @@ export namespace OrganizationsAction {
   export type All =
     | Select
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | GetOneSuccess
