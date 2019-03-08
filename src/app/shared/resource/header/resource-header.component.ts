@@ -190,4 +190,12 @@ export class ResourceHeaderComponent implements AfterViewInit {
       this.colorPickerVisible = false;
     });
   }
+
+  public getFilter(): RegExp {
+    if (this.hasVisibleCode()) {
+      return /[^_0-9A-Za-z]/g;
+    }
+
+    return undefined;
+  }
 }
