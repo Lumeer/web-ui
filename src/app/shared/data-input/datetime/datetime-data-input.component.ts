@@ -79,6 +79,7 @@ export class DatetimeDataInputComponent implements OnChanges {
         if (changes.value) {
           this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         }
+
         HtmlModifier.setCursorAtTextContentEnd(this.dateInput.nativeElement);
         this.dateInput.nativeElement.focus();
         this.datePicker.show();
@@ -91,7 +92,8 @@ export class DatetimeDataInputComponent implements OnChanges {
     }
     if (changes.value && String(this.value).length === 1) {
       // show value entered into hidden input without any changes
-      setTimeout(() => (this.dateInput.nativeElement.value = this.value));
+      const input = this.dateInput;
+      setTimeout(() => (input.nativeElement.value = this.value));
     }
   }
 

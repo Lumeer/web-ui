@@ -81,10 +81,11 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        const input = this.numberInput;
         // needs to be executed after parent event handlers
         setTimeout(() => {
           this.preventSave = true;
-          this.save.emit(this.transformValue(this.numberInput.nativeElement.value));
+          this.save.emit(this.transformValue(input.nativeElement.value));
         });
         return;
       case KeyCode.Escape:

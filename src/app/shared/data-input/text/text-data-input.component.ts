@@ -70,9 +70,10 @@ export class TextDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      const input = this.textInput;
       setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.textInput.nativeElement);
-        this.textInput.nativeElement.focus();
+        HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
+        input.nativeElement.focus();
       });
     }
   }
@@ -87,7 +88,7 @@ export class TextDataInputComponent implements OnChanges {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.saveValue();
+      this.saveValue(this.textInput);
     }
   }
 
@@ -98,9 +99,10 @@ export class TextDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         // needs to be executed after parent event handlers
+        const input = this.textInput;
         setTimeout(() => {
           this.preventSave = true;
-          this.saveValue();
+          this.saveValue(input);
         });
         return;
       case KeyCode.Escape:
@@ -111,8 +113,8 @@ export class TextDataInputComponent implements OnChanges {
     }
   }
 
-  private saveValue() {
-    const value = this.transformValue(this.textInput.nativeElement.value);
+  private saveValue(input: ElementRef) {
+    const value = this.transformValue(input.nativeElement.value);
     this.save.emit(value);
   }
 
