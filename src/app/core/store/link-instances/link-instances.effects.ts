@@ -31,6 +31,7 @@ import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './li
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstancesQueries} from './link-instances.state';
 import {convertQueryModelToDto} from '../navigation/query.converter';
+import {LinkInstanceDto} from '../../dto';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -46,6 +47,18 @@ export class LinkInstancesEffects {
           linkInstances =>
             new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})
         ),
+        catchError(error => of(new LinkInstancesAction.GetFailure({error})))
+      )
+    )
+  );
+
+  @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.GetSingle>(LinkInstancesActionType.GET_SINGLE),
+    mergeMap(action =>
+      this.linkInstanceService.getLinkInstance(action.payload.linkTypeId, action.payload.linkInstanceId).pipe(
+        map((dto: LinkInstanceDto) => convertLinkInstanceDtoToModel(dto)),
+        map(linkInstance => new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]})),
         catchError(error => of(new LinkInstancesAction.GetFailure({error})))
       )
     )

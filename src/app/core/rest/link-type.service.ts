@@ -45,6 +45,10 @@ export class LinkTypeService {
     return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(), linkType);
   }
 
+  public getLinkType(id: string): Observable<LinkTypeDto> {
+    return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id));
+  }
+
   public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
     return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id), linkType);
   }

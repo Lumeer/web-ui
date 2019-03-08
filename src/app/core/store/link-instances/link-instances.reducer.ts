@@ -47,7 +47,7 @@ export function linkInstancesReducer(
 }
 
 function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction.GetSuccess): LinkInstancesState {
-  const newState = {...state, queries: state.queries.concat(action.payload.query)};
+  const newState = action.payload.query ? {...state, queries: state.queries.concat(action.payload.query)} : state;
   const filteredLinkInstances = action.payload.linkInstances.filter(linkInstance => {
     const oldLinkInstance = state.entities[linkInstance.id];
     return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);

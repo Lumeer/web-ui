@@ -22,6 +22,7 @@ import {LinkType} from './link.type';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',
+  GET_SINGLE = '[Link Types] Get Single',
   GET_SUCCESS = '[Link Types] Get :: Success',
   GET_FAILURE = '[Link Types] Get :: Failure',
 
@@ -45,6 +46,12 @@ export namespace LinkTypesAction {
     public readonly type = LinkTypesActionType.GET;
 
     public constructor(public payload: {force?: boolean}) {}
+  }
+
+  export class GetSingle implements Action {
+    public readonly type = LinkTypesActionType.GET_SINGLE;
+
+    public constructor(public payload: {linkTypeId: string}) {}
   }
 
   export class GetSuccess implements Action {
@@ -119,6 +126,7 @@ export namespace LinkTypesAction {
 
   export type All =
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | Create

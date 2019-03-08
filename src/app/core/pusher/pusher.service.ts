@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {User} from '../store/users/user';
-import {filter, map, take, tap} from 'rxjs/operators';
+import {catchError, filter, map, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -58,6 +58,9 @@ import {ResourceType} from '../model/resource-type';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {UsersAction} from '../store/users/users.action';
 import {convertUserDtoToModel} from '../store/users/user.converter';
+import {OrganizationService, ProjectService} from '../rest';
+import {OrganizationDto, ProjectDto} from '../dto';
+import {of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +72,12 @@ export class PusherService implements OnDestroy {
   private currentProject: Project;
   private user: User;
 
-  constructor(private store$: Store<AppState>, private authService: AuthService) {
+  constructor(
+    private store$: Store<AppState>,
+    private authService: AuthService,
+    private organizationService: OrganizationService,
+    private projectService: ProjectService
+  ) {
     if (environment.pusherKey) {
       this.init();
     }
@@ -123,6 +131,9 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Organization:create', data => {
       this.store$.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
+    this.channel.bind('Organization:create:ALT', data => {
+      this.store$.dispatch(new OrganizationsAction.GetSingle({organizationCode: data.extraId}));
+    });
     this.channel.bind('Organization:update', data => {
       if (data.id === this.getCurrentOrganizationId()) {
         this.checkIfUserGainManage(data);
@@ -134,6 +145,23 @@ export class PusherService implements OnDestroy {
           new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data), oldCode})
         );
       });
+    });
+    this.channel.bind('Organization:update:ALT', data => {
+      this.organizationService.getOrganization(data.extraId).pipe(
+        filter(projectDto => !!projectDto),
+        map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
+        map((newOrganization: Organization) => {
+          if (data.id === this.getCurrentOrganizationId()) {
+            this.checkIfUserGainManage(newOrganization);
+            this.checkIfUserLostManage(newOrganization, ResourceType.Organization);
+          }
+          this.getOrganization(data.id, oldOrganization => {
+            const oldCode = oldOrganization && oldOrganization.code;
+            this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: newOrganization, oldCode}));
+          });
+        }),
+        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+      );
     });
     this.channel.bind('Organization:remove', data => {
       this.getOrganization(data.id, oldOrganization => {
@@ -186,6 +214,11 @@ export class PusherService implements OnDestroy {
         new ProjectsAction.CreateSuccess({project: ProjectConverter.fromDto(data.object, data.organizationId)})
       );
     });
+    this.channel.bind('Project:create:ALT', data => {
+      this.store$.dispatch(
+        new ProjectsAction.GetSingle({organizationId: data.organizationId, projectCode: data.extraId})
+      );
+    });
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
         if (data.object.id === this.getCurrentProjectId()) {
@@ -198,6 +231,24 @@ export class PusherService implements OnDestroy {
             project: ProjectConverter.fromDto(data.object, data.organizationId),
             oldCode,
           })
+        );
+      });
+    });
+    this.channel.bind('Project:update:ALT', data => {
+      this.getProject(data.id, oldProject => {
+        const [organizationCode, newProjectCode] = data.extraId.split('/');
+        this.projectService.getProject(organizationCode, newProjectCode).pipe(
+          filter(projectDto => !!projectDto),
+          map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
+          map((newProject: Project) => {
+            if (data.id === this.getCurrentProjectId()) {
+              this.checkIfUserGainManage(newProject);
+              this.checkIfUserLostManage(newProject, ResourceType.Project);
+            }
+            const oldCode = oldProject && oldProject.code;
+            this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));
+          }),
+          catchError(error => of(new ProjectsAction.GetFailure({error: error})))
         );
       });
     });
@@ -231,11 +282,29 @@ export class PusherService implements OnDestroy {
         );
       }
     });
+    this.channel.bind('Collection:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new CollectionsAction.GetSingle({
+            collectionId: data.id,
+          })
+        );
+      }
+    });
     this.channel.bind('Collection:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new CollectionsAction.UpdateSuccess({
             collection: convertCollectionDtoToModel(data.object, data.correlationId),
+          })
+        );
+      }
+    });
+    this.channel.bind('Collection:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new CollectionsAction.GetSingle({
+            collectionId: data.id,
           })
         );
       }
@@ -253,9 +322,19 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
       }
     });
+    this.channel.bind('View:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new ViewsAction.GetByCode({viewCode: data.id}));
+      }
+    });
     this.channel.bind('View:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
+      }
+    });
+    this.channel.bind('View:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new ViewsAction.GetByCode({viewCode: data.id}));
       }
     });
     this.channel.bind('View:remove', data => {
@@ -273,9 +352,41 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data.object)}));
       }
     });
+    this.channel.bind('Document:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new DocumentsAction.Get({
+            query: {
+              stems: [
+                {
+                  collectionId: data.extraId,
+                  documentIds: [data.id],
+                },
+              ],
+            },
+          })
+        );
+      }
+    });
     this.channel.bind('Document:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data.object)}));
+      }
+    });
+    this.channel.bind('Document:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new DocumentsAction.Get({
+            query: {
+              stems: [
+                {
+                  collectionId: data.extraId,
+                  documentIds: [data.id],
+                },
+              ],
+            },
+          })
+        );
       }
     });
     this.channel.bind('Document:remove', data => {
@@ -291,9 +402,19 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new LinkTypesAction.CreateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
       }
     });
+    this.channel.bind('LinkType:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new LinkTypesAction.GetSingle({linkTypeId: data.id}));
+      }
+    });
     this.channel.bind('LinkType:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkTypesAction.UpdateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
+      }
+    });
+    this.channel.bind('LinkType:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new LinkTypesAction.GetSingle({linkTypeId: data.id}));
       }
     });
     this.channel.bind('LinkType:remove', data => {
@@ -311,11 +432,21 @@ export class PusherService implements OnDestroy {
         );
       }
     });
+    this.channel.bind('LinkInstance:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new LinkInstancesAction.GetSingle({linkTypeId: data.extraId, linkInstanceId: data.id}));
+      }
+    });
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new LinkInstancesAction.UpdateSuccess({linkInstance: convertLinkInstanceDtoToModel(data.object)})
         );
+      }
+    });
+    this.channel.bind('LinkInstance:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new LinkInstancesAction.GetSingle({linkTypeId: data.extraId, linkInstanceId: data.id}));
       }
     });
     this.channel.bind('LinkInstance:remove', data => {

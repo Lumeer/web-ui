@@ -26,7 +26,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {PermissionDto} from '../../dto';
+import {PermissionDto, ProjectDto} from '../../dto';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {CollectionsAction} from '../collections/collections.action';
@@ -69,6 +69,24 @@ export class ProjectsEffects {
       const organization = organizationsEntities[organizationId];
       return this.projectService.getProjects(organization.code).pipe(
         map(dtos => ({organizationId, projects: dtos.map(dto => ProjectConverter.fromDto(dto, organizationId))})),
+        map(payload => new ProjectsAction.GetSuccess(payload)),
+        catchError(error => of(new ProjectsAction.GetFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetSingle>(ProjectsActionType.GET_SINGLE),
+    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
+    filter(([action, organizationsEntities]) => {
+      return !!organizationsEntities[action.payload.organizationId];
+    }),
+    mergeMap(([action, organizationsEntities]) => {
+      const organizationId = action.payload.organizationId;
+      const organization = organizationsEntities[organizationId];
+      return this.projectService.getProject(organization.code, action.payload.projectCode).pipe(
+        map((dto: ProjectDto) => ({organizationId, projects: [ProjectConverter.fromDto(dto, organizationId)]})),
         map(payload => new ProjectsAction.GetSuccess(payload)),
         catchError(error => of(new ProjectsAction.GetFailure({error})))
       );

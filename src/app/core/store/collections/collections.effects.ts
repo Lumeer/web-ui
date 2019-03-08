@@ -69,6 +69,18 @@ export class CollectionsEffects {
   );
 
   @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.GetSingle>(CollectionsActionType.GET_SINGLE),
+    mergeMap(action => {
+      return this.collectionService.getCollection(action.payload.collectionId).pipe(
+        map((dto: CollectionDto) => convertCollectionDtoToModel(dto)),
+        map(collection => new CollectionsAction.GetSuccess({collections: [collection]})),
+        catchError(error => of(new CollectionsAction.GetFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
   public getFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),

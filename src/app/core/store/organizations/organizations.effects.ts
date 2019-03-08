@@ -33,7 +33,7 @@ import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {PermissionDto} from '../../dto';
+import {OrganizationDto, PermissionDto} from '../../dto';
 import {PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
@@ -52,6 +52,18 @@ export class OrganizationsEffects {
       this.organizationService.getOrganizations().pipe(
         map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
         map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
+        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+      )
+    )
+  );
+
+  @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.GetSingle>(OrganizationsActionType.GET_SINGLE),
+    mergeMap(action =>
+      this.organizationService.getOrganization(action.payload.organizationCode).pipe(
+        map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
+        map(organization => new OrganizationsAction.GetSuccess({organizations: [organization]})),
         catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
       )
     )
