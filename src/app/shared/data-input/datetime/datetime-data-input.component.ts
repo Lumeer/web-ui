@@ -75,13 +75,13 @@ export class DatetimeDataInputComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       this.preventSaving = !!changes.value;
-      const input = this.dateInput;
       setTimeout(() => {
         if (changes.value) {
-          input.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
+          this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         }
-        HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
-        input.nativeElement.focus();
+
+        HtmlModifier.setCursorAtTextContentEnd(this.dateInput.nativeElement);
+        this.dateInput.nativeElement.focus();
         this.datePicker.show();
       });
     }
