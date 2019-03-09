@@ -28,7 +28,7 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {ChartDataSet} from './chart-data';
+import {ChartDataSet, ChartYAxisType} from './chart-data';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {ChartDataConverter} from './chart-data-converter';
@@ -80,7 +80,21 @@ describe('Chart data converter single collection', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
-    expect(converter.convert(config)).toEqual({sets: [], type: ChartType.Line});
+    expect(converter.convert(config)).toEqual({
+      sets: [
+        {
+          yAxisType: ChartAxisType.Y1,
+          isNumeric: true,
+          name: '',
+          draggable: false,
+          points: [],
+          id: null,
+          resourceType: ChartAxisResourceType.Collection,
+          color: '#ffffff',
+        },
+      ],
+      type: ChartType.Line,
+    });
   });
 
   it('should return data by x', () => {
@@ -618,7 +632,18 @@ describe('Chart data converter linked collections', () => {
     const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
     expect(converter.convert(config)).toEqual({
-      sets: [],
+      sets: [
+        {
+          yAxisType: ChartAxisType.Y1,
+          isNumeric: true,
+          name: '',
+          draggable: false,
+          points: [],
+          id: null,
+          resourceType: ChartAxisResourceType.Collection,
+          color: '#ffffff',
+        },
+      ],
       type: ChartType.Line,
     });
   });
