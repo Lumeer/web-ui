@@ -29,10 +29,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {GANTT_DATE_FORMAT, GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
-import * as frappeGantt from 'frappe-gantt';
+import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
-import {ganttTasksChanged} from '../../util/gantt-chart-util';
+import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -55,7 +55,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public currentMode: GanttChartMode;
 
   @Output()
-  public patchData = new EventEmitter<{documentId: string; attributeId: string; value: any}>();
+  public patchData = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
 
   public ganttChart: frappeGantt;
 
@@ -63,9 +63,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tasks && this.tasks) {
-      if (ganttTasksChanged(this.tasks, this.ganttChart && this.ganttChart.tasks)) {
-        this.visualize();
-      }
+      this.visualize();
     } else if (this.modeChanged(changes)) {
       this.refreshMode(this.currentMode);
     }
@@ -80,6 +78,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private refreshChart() {
+    const scrollLeft = this.ganttChart.$svg.parentElement && this.ganttChart.$svg.parentElement.scrollLeft;
     if (this.tasks.length) {
       this.ganttChart.refresh(this.tasks);
       this.ganttChart.change_view_mode(this.currentMode);
@@ -88,6 +87,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
       this.ganttChart.clear();
       this.ganttChart = null;
     }
+    isNotNullOrUndefind(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
   }
 
   private createChart() {
@@ -130,6 +130,20 @@ export class GanttChartVisualizationComponent implements OnChanges {
       if (task.disabled) {
         this.removeListeners(element);
         disabledTaskIds.add(taskId);
+      } else {
+        const handleGroupElement = element.querySelector('.handle-group');
+        if (!task.startAttributeId) {
+          const handleElement = handleGroupElement.querySelector('.handle.left');
+          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
+        }
+        if (!task.endAttributeId) {
+          const handleElement = handleGroupElement.querySelector('.handle.left');
+          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
+        }
+        if (!task.progressAttributeId) {
+          const handleElement = handleGroupElement.querySelector('.handle.progress');
+          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
+        }
       }
     });
 
@@ -158,24 +172,27 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const startAttributeId = task.startAttributeId;
         const endAttributeId = task.endAttributeId;
 
-        const startTimeTask = moment(task.start, GANTT_DATE_FORMAT).local();
-        const startTime = moment(start, GANTT_DATE_FORMAT).local();
+        // TODO due to frappe bug we need to add 1 hour
+        const startTimeTask = moment(task.start).add(1, 'hours');
+        const startTime = moment(start).add(1, 'hours');
 
-        const endTimeTask = moment(task.end, GANTT_DATE_FORMAT).local();
-        const endTime = moment(end, GANTT_DATE_FORMAT).local();
+        const endTimeTask = moment(task.end).add(1, 'hours');
+        const endTime = moment(end).add(1, 'hours');
+
+        const changes = [];
 
         //start time changed
-        if (!startTimeTask.isSame(startTime)) {
-          const startFormatted = startTime.format(GANTT_DATE_FORMAT);
-          task.start = startFormatted;
-          this.onValueChanged(task.id, startAttributeId, startFormatted);
+        if (startAttributeId && !startTimeTask.isSame(startTime)) {
+          changes.push({attributeId: startAttributeId, value: startTime.format(GANTT_DATE_FORMAT)});
         }
 
         //end time changed
-        if (!endTimeTask.isSame(endTime)) {
-          const endFormatted = endTime.format(GANTT_DATE_FORMAT);
-          task.end = endFormatted;
-          this.onValueChanged(task.id, endAttributeId, endFormatted);
+        if (endAttributeId && !endTimeTask.isSame(endTime)) {
+          changes.push({attributeId: endAttributeId, value: endTime.format(GANTT_DATE_FORMAT)});
+        }
+
+        if (changes) {
+          this.onValueChanged(task.id, changes);
         }
       },
 
@@ -185,16 +202,16 @@ export class GanttChartVisualizationComponent implements OnChanges {
         }
 
         const progressAttributeId = task.progressAttributeId;
-        if (task.progress !== progress) {
+        if (progressAttributeId) {
           task.progress = progress;
-          this.onValueChanged(task.id, progressAttributeId, progress);
+          this.onValueChanged(task.id, [{attributeId: progressAttributeId, value: progress}]);
         }
       },
     });
     this.ganttChart.change_view_mode(this.currentMode);
   }
 
-  private onValueChanged(documentId: string, attributeId: string, value: string) {
-    this.patchData.emit({documentId, attributeId, value});
+  private onValueChanged(documentId: string, changes: {attributeId: string; value: string}[]) {
+    this.patchData.emit({documentId, changes});
   }
 }

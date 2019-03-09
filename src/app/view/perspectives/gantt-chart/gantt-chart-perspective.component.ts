@@ -99,7 +99,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): GanttChartConfig {
-    return {mode: GanttChartMode.Day, collections: {}};
+    return {mode: GanttChartMode.Month, collections: {}};
   }
 
   private subscribeToQuery() {
@@ -111,7 +111,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       .subscribe(query => {
         this.fetchDocuments(query);
         this.query$.next(query);
-        this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
+        this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query, false, true)));
         this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
       });
     this.subscriptions.add(subscription);

@@ -26,12 +26,15 @@ import {
   GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {Collection} from '../../../../core/store/collections/collection';
-import {isArray, isDateValid, isNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {isDateValid, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import * as moment from 'moment';
-import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
+
+const MIN_PROGRESS = 0.001;
+const MAX_PROGRESS = 1000;
 
 export function createGanttChartTasks(
   config: GanttChartConfig,
@@ -69,73 +72,67 @@ function createGanttChartTasksForCollection(
     return [];
   }
 
-  const nameProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.NAME];
-  const startProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.START];
-  const endProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.END];
-  const idProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.ID];
-  const dependenciesProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.DEPENDENCIES];
-  const progressProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.PROGRESS];
+  const nameProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.Name];
+  const startProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.Start];
+  const endProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.End];
+  const progressProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.Progress];
   const disabled = !permissions.writeWithView;
   const customClass = disabled ? 'gantt-bar-disabled' : null;
 
-  let idDependenciesMap: Record<string, string> = {};
-  if (idProperty && dependenciesProperty) {
-    idDependenciesMap = documents.reduce((map, document) => {
-      const name = nameProperty && document.data[nameProperty.attributeId];
-      const start = startProperty && document.data[startProperty.attributeId];
-      const end = endProperty && document.data[endProperty.attributeId];
-      const id = document.data[idProperty.attributeId];
-      if (!map[id] && isTaskValid(name, start, end)) {
-        map[id] = document.id;
-      }
-      return map;
-    }, {});
-  }
+  const validDocumentsMap: Record<string, DocumentModel> = documents.reduce((map, document) => {
+    const name = nameProperty && document.data[nameProperty.attributeId];
+    const start = startProperty && document.data[startProperty.attributeId];
+    const end = endProperty && document.data[endProperty.attributeId];
+    if (!map[document.id] && isTaskValid(name, start, end)) {
+      map[document.id] = document;
+    }
+    return map;
+  }, {});
 
   const tasks = [];
 
-  for (const document of documents) {
+  for (const document of Object.values(validDocumentsMap)) {
     const name = nameProperty && document.data[nameProperty.attributeId];
     const start = startProperty && document.data[startProperty.attributeId];
     const end = endProperty && document.data[endProperty.attributeId];
 
-    if (isTaskValid(name, start, end)) {
-      const interval = createInterval(start, startProperty.attributeId, end, endProperty.attributeId);
-      const dependencies = dependenciesProperty && document.data[dependenciesProperty.attributeId];
-      const progress = progressProperty && (document.data[progressProperty.attributeId] || 0);
+    const startEditable = isAttributeEditable(startProperty.attributeId, collection);
+    const endEditable = isAttributeEditable(endProperty.attributeId, collection);
 
-      tasks.push({
-        id: document.id,
-        name,
-        dependencies: createDependencies(dependencies, idDependenciesMap),
-        start: interval[0].value,
-        startAttributeId: interval[0].attrId,
-        end: interval[1].value,
-        endAttributeId: interval[1].attrId,
-        progress: createProgress(progress),
-        progressAttributeId: progressProperty && progressProperty.attributeId,
-        collectionId: collection.id,
-        color: collection.color,
-        custom_class: customClass,
-        disabled,
-      });
-    }
+    const interval = createInterval(
+      start,
+      startEditable && startProperty.attributeId,
+      end,
+      endEditable && endProperty.attributeId
+    );
+    const progress = progressProperty && (document.data[progressProperty.attributeId] || 0);
+    const progressEditable = isAttributeEditable(progressProperty && progressProperty.attributeId, collection);
+
+    tasks.push({
+      id: document.id,
+      name,
+      dependencies: createDependencies(document, validDocumentsMap),
+      start: interval[0].value,
+      startAttributeId: interval[0].attrId,
+      end: interval[1].value,
+      endAttributeId: interval[1].attrId,
+      progress: createProgress(progress),
+      progressAttributeId: progressEditable && progressProperty && progressProperty.attributeId,
+      collectionId: collection.id,
+      color: collection.color,
+      custom_class: customClass,
+      disabled,
+    });
   }
 
   return tasks;
 }
 
-function createDependencies(dependencies: any, idDependenciesMap: Record<string, string>): string {
-  if (isNullOrUndefined(dependencies)) {
-    return '';
+function createDependencies(document: DocumentModel, documentsMap: Record<string, DocumentModel>): string {
+  if (document.metaData && document.metaData.parentId && documentsMap[document.metaData.parentId]) {
+    return document.metaData.parentId;
   }
-
-  return dependencies
-    .toString()
-    .split(',')
-    .map(part => idDependenciesMap[part.trim()])
-    .filter(value => !!value)
-    .join(',');
+  return '';
 }
 
 function isTaskValid(name: string, start: string, end: string): boolean {
@@ -148,12 +145,14 @@ function areDatesValid(start: string, end: string): boolean {
 
 function createProgress(progress: any): number {
   if (isNullOrUndefined(progress)) {
-    return 0;
+    return MIN_PROGRESS;
   }
-  if (isNumeric(progress)) {
-    return Math.max(+progress, 0);
+
+  const progressWithoutPercent = progress.toString().replace(/%*$/g, '');
+  if (isNumeric(progressWithoutPercent)) {
+    return Math.min(Math.max(toNumber(progressWithoutPercent), MIN_PROGRESS), MAX_PROGRESS);
   }
-  return 0;
+  return MIN_PROGRESS;
 }
 
 function createInterval(
@@ -161,51 +160,14 @@ function createInterval(
   startAttributeId,
   end: string,
   endAttributeId: string
-): [{value: string; attrId: string}, {value: string; attrId: string}] {
-  const startDate = moment(parseDateTimeDataValue(start).getTime());
-  const endDate = moment(parseDateTimeDataValue(end).getTime());
-  const startDateObj = {value: startDate.format(GANTT_DATE_FORMAT), attrId: startAttributeId};
-  const endDateObj = {value: endDate.format(GANTT_DATE_FORMAT), attrId: endAttributeId};
+): [{value: Date; attrId: string}, {value: Date; attrId: string}] {
+  const startDate = moment(parseDateTimeDataValue(start));
+  const endDate = moment(parseDateTimeDataValue(end));
+  const startDateObj = {value: startDate.toDate(), attrId: startAttributeId};
+  const endDateObj = {value: endDate.toDate(), attrId: endAttributeId};
 
   if (endDate.isAfter(startDate)) {
     return [startDateObj, endDateObj];
   }
   return [endDateObj, startDateObj];
-}
-
-export function ganttTasksChanged(newTasks: GanttChartTask[], currentTasks: any[]): boolean {
-  const tasks1 = (newTasks && newTasks.map(task => cleanGanttTask(task))) || [];
-  const tasks2 = (currentTasks && currentTasks.map(task => cleanGanttTask(task))) || [];
-  return !deepArrayEquals(tasks1, tasks2);
-}
-
-function cleanGanttTask(task: GanttChartTask | any): GanttChartTask {
-  return {
-    id: task.id,
-    name: task.name,
-    progress: task.progress,
-    start: task.start,
-    startAttributeId: task.startAttributeId,
-    progressAttributeId: task.progressAttributeId,
-    end: task.end,
-    endAttributeId: task.endAttributeId,
-    collectionId: task.collectionId,
-    color: task.color,
-    dependencies: cleanGanttTaskDependencies(task.dependencies),
-    disabled: task.disabled,
-  };
-}
-
-function cleanGanttTaskDependencies(dependencies: any): string {
-  if (isNullOrUndefined(dependencies)) {
-    return '';
-  }
-  if (isArray(dependencies)) {
-    return dependencies.map(dep => dep.toString()).join(',');
-  }
-  return dependencies
-    .toString()
-    .split(',')
-    .map(dep => dep.trim())
-    .join(',');
 }

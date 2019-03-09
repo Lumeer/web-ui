@@ -3167,7 +3167,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Day {Day} Quarter Day {Quarter Day} Half Day {Half Day} Week {Week} Month {Month} }</source><target>{VAR_SELECT, select, Day {Den} Quarter Day {Čtvrt dne} Half Day {Půl dne} Week {Týden} Month {Měsíc} }</target>
+        <source>{VAR_SELECT, select, Day {Day} Week {Week} Month {Month} Year {Year} }</source><target>{VAR_SELECT, select, Day {Den} Week {Týden} Month {Měsíc} Year {Rok} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>

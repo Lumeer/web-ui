@@ -40,7 +40,7 @@ export interface GanttChartBarModel {
 }
 
 export interface GanttChartTask {
-  id?: string;
+  id: string;
   name: string;
   start: string;
   startAttributeId: string;
@@ -56,22 +56,19 @@ export interface GanttChartTask {
 
 export enum GanttChartMode {
   Day = 'Day',
-  QuarterDay = 'Quarter Day',
-  HalfDay = 'Half Day',
   Week = 'Week',
   Month = 'Month',
+  Year = 'Year',
 }
 
 export type GanttChartBarProperty = GanttChartBarPropertyRequired | GanttChartBarPropertyOptional;
 
 export enum GanttChartBarPropertyRequired {
-  NAME = 'name',
-  START = 'start',
-  END = 'end',
+  Name = 'name',
+  Start = 'start',
+  End = 'end',
 }
 
 export enum GanttChartBarPropertyOptional {
-  ID = 'id',
-  DEPENDENCIES = 'dependencies',
-  PROGRESS = 'progress',
+  Progress = 'progress',
 }
