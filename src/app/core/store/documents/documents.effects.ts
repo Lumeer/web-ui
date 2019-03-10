@@ -200,11 +200,12 @@ export class DocumentsEffects {
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
     mergeMap(action => {
+      const originalDocument = action.payload.originalDocument;
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.updateDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
         map(document => new DocumentsAction.UpdateSuccess({document})),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
       );
     })
   );
@@ -213,11 +214,12 @@ export class DocumentsEffects {
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
     mergeMap(action => {
+      const originalDocument = action.payload.originalDocument;
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
         map(document => new DocumentsAction.UpdateSuccess({document})),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
       );
     })
   );

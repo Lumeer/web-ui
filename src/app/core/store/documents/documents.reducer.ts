@@ -30,8 +30,18 @@ export function documentsReducer(
       return addDocuments(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
+    case DocumentsActionType.UPDATE_DATA:
+      return updateDocument(state, action);
+    case DocumentsActionType.PATCH_DATA:
+      return patchDocument(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
+    case DocumentsActionType.UPDATE_FAILURE:
+      if (action.payload.originalDocument) {
+        return documentsAdapter.upsertOne(action.payload.originalDocument, state);
+      } else {
+        return state;
+      }
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
@@ -49,6 +59,33 @@ export function documentsReducer(
     default:
       return state;
   }
+}
+
+function patchDocument(state: DocumentsState, action: DocumentsAction.PatchData): DocumentsState {
+  const originalDocument = state.entities[action.payload.document.id];
+  if (!action.payload.originalDocument) {
+    action.payload.originalDocument = originalDocument;
+  }
+
+  return documentsAdapter.upsertOne(
+    {
+      ...action.payload.document,
+      data: {
+        ...originalDocument.data,
+        ...action.payload.document.data,
+      },
+    },
+    state
+  );
+}
+
+function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateData): DocumentsState {
+  const originalDocument = state.entities[action.payload.document.id];
+  if (!action.payload.originalDocument) {
+    action.payload.originalDocument = originalDocument;
+  }
+
+  return documentsAdapter.upsertOne(action.payload.document, state);
 }
 
 function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {

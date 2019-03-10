@@ -110,19 +110,19 @@ export namespace DocumentsAction {
   export class UpdateFailure implements Action {
     public readonly type = DocumentsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; originalDocument?: DocumentModel}) {}
   }
 
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
   }
 
   export class PatchData implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
   }
 
   export class UpdateMetaData implements Action {
