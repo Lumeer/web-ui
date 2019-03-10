@@ -22,6 +22,7 @@ import {ChartDataSet} from '../../data/convertor/chart-data';
 import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
 const MAX_COLUMNS = 3;
 
@@ -30,6 +31,11 @@ export class PiePlotMaker extends PlotMaker {
     const dataStyle = this.getDataStyle();
 
     const sets = this.getSets();
+
+    if (sets.length === 0) {
+      return [this.createEmptyPie()];
+    }
+
     const columns = Math.min(sets.length, MAX_COLUMNS);
 
     return sets.map((set, index) => {
@@ -40,7 +46,12 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private getSets(): ChartDataSet[] {
-    return this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1 && set.isNumeric);
+    return this.chartData.sets.filter(
+      set =>
+        set.yAxisType === ChartAxisType.Y1 &&
+        set.isNumeric &&
+        set.points.some(point => isNotNullOrUndefind(point.x) && isNotNullOrUndefind(point.y))
+    );
   }
 
   private getDataStyle(): Data {
@@ -50,16 +61,32 @@ export class PiePlotMaker extends PlotMaker {
     return trace;
   }
 
+  private createEmptyPie(): Data {
+    const setWithColor = this.chartData.sets.find(set => isNotNullOrUndefind(set.color));
+    const color = setWithColor && setWithColor.color;
+
+    const dataStyle = this.getDataStyle();
+    dataStyle['showlegend'] = false;
+    dataStyle['hoverinfo'] = 'none';
+    dataStyle['textinfo'] = 'none';
+    if (color) {
+      dataStyle['marker'] = {colors: [shadeColor(color, 0.7)]};
+    }
+    return {...dataStyle, labels: [''], values: [20]};
+  }
+
   private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
     const data = {...dataStyle};
 
     const traceX = [];
     const traceY = [];
 
-    set.points.forEach(point => {
-      traceX.push(point.x);
-      traceY.push(point.y);
-    });
+    set.points
+      .filter(point => isNotNullOrUndefind(point.x) && isNotNullOrUndefind(point.y))
+      .forEach(point => {
+        traceX.push(point.x);
+        traceY.push(point.y);
+      });
 
     set.name && (data['name'] = set.name);
     data['labels'] = traceX;
