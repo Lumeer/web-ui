@@ -129,21 +129,25 @@ export class InputBoxComponent implements OnInit {
   }
 
   private setCaret(el: HTMLElement, caret: number) {
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.setStart(el.childNodes[0], caret);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-    el.focus();
+    if (el.nodeType === Node.ELEMENT_NODE) {
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setStart(el.childNodes[0], caret);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      el.focus();
+    }
   }
 
   private getCaret(el: HTMLElement): number {
-    const range = window.getSelection().getRangeAt(0);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(el);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    return preCaretRange.toString().length;
+    if (el.nodeType === Node.ELEMENT_NODE) {
+      const range = window.getSelection().getRangeAt(0);
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(el);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      return preCaretRange.toString().length;
+    }
   }
 
   public setValue(value: string) {
