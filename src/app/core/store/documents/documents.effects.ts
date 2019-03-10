@@ -34,7 +34,7 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {RouterAction} from '../router/router.action';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {selectDocumentById, selectDocumentsQueries} from './documents.state';
+import {selectDocumentById, selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
 
 @Injectable()
 export class DocumentsEffects {
@@ -199,6 +199,16 @@ export class DocumentsEffects {
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([action, documents]) => {
+      const originalDocument = documents[action.payload.document.id];
+      return of(new DocumentsAction.UpdateDataInternal({...action.payload, originalDocument}));
+    })
+  );
+
+  @Effect()
+  public updateDataInternal$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateDataInternal>(DocumentsActionType.UPDATE_DATA_INTERNAL),
     mergeMap(action => {
       const originalDocument = action.payload.originalDocument;
       const documentDto = convertDocumentModelToDto(action.payload.document);
@@ -213,6 +223,16 @@ export class DocumentsEffects {
   @Effect()
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([action, documents]) => {
+      const originalDocument = documents[action.payload.document.id];
+      return of(new DocumentsAction.PatchDataInternal({...action.payload, originalDocument}));
+    })
+  );
+
+  @Effect()
+  public patchDataInternal$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.PatchDataInternal>(DocumentsActionType.PATCH_DATA_INTERNAL),
     mergeMap(action => {
       const originalDocument = action.payload.originalDocument;
       const documentDto = convertDocumentModelToDto(action.payload.document);

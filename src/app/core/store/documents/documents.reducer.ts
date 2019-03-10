@@ -30,9 +30,9 @@ export function documentsReducer(
       return addDocuments(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
-    case DocumentsActionType.UPDATE_DATA:
+    case DocumentsActionType.UPDATE_DATA_INTERNAL:
       return updateDocument(state, action);
-    case DocumentsActionType.PATCH_DATA:
+    case DocumentsActionType.PATCH_DATA_INTERNAL:
       return patchDocument(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
@@ -61,11 +61,8 @@ export function documentsReducer(
   }
 }
 
-function patchDocument(state: DocumentsState, action: DocumentsAction.PatchData): DocumentsState {
-  const originalDocument = state.entities[action.payload.document.id];
-  if (!action.payload.originalDocument) {
-    action.payload.originalDocument = originalDocument;
-  }
+function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
+  const originalDocument = action.payload.originalDocument;
 
   return documentsAdapter.upsertOne(
     {
@@ -79,11 +76,8 @@ function patchDocument(state: DocumentsState, action: DocumentsAction.PatchData)
   );
 }
 
-function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateData): DocumentsState {
-  const originalDocument = state.entities[action.payload.document.id];
-  if (!action.payload.originalDocument) {
-    action.payload.originalDocument = originalDocument;
-  }
+function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDataInternal): DocumentsState {
+  const originalDocument = action.payload.originalDocument;
 
   return documentsAdapter.upsertOne(action.payload.document, state);
 }
