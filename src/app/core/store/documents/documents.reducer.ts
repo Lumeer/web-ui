@@ -77,8 +77,6 @@ function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataI
 }
 
 function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDataInternal): DocumentsState {
-  const originalDocument = action.payload.originalDocument;
-
   return documentsAdapter.upsertOne(action.payload.document, state);
 }
 
