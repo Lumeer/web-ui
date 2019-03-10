@@ -17,10 +17,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisResourceType, ChartConfig} from './chart';
-import {isNotNullOrUndefind} from '../../../shared/utils/common.utils';
+import {ChartAxis, ChartAxisResourceType, ChartConfig, ChartSort} from './chart';
+import {deepObjectsEquals, isNotNullOrUndefind} from '../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../shared/utils/array.utils';
 import {LinkType} from '../link-types/link.type';
+
+export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
+  if (viewConfig.type !== currentConfig.type || viewConfig.prediction !== currentConfig.prediction) {
+    return true;
+  }
+
+  if (sortChanged(viewConfig.sort, currentConfig.sort)) {
+    return true;
+  }
+
+  return (
+    mapsChanged(viewConfig.axes, currentConfig.axes) ||
+    mapsChanged(viewConfig.names, currentConfig.names) ||
+    mapsChanged(viewConfig.aggregations, currentConfig.aggregations)
+  );
+}
+
+function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {
+  if ((!sort1 && sort2) || (sort1 && !sort2)) {
+    return true;
+  }
+
+  return sort1.type !== sort2.type || !deepObjectsEquals(sort1.axis || {}, sort2.axis || {});
+}
+
+function mapsChanged(map1: Record<string, any>, map2: Record<string, any>): boolean {
+  if (Object.keys(map1 || {}).length !== Object.keys(map2 || {}).length) {
+    return true;
+  }
+
+  return Object.entries(map1 || {}).some(([key, value]) => {
+    return !map2[key] || !deepObjectsEquals(value, map2[key]);
+  });
+}
 
 export function chartConfigCollectionIds(config: ChartConfig, linkTypes: LinkType[]): string[] {
   const ids: string[] = [];

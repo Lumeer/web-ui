@@ -17,23 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../../../view/perspectives/perspective';
-import {DocumentModel} from '../documents/document.model';
-import {isTableConfigChanged} from '../tables/table.utils';
-import {isChartConfigChanged} from '../charts/chart.util';
+import {isNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
-export function isViewConfigChanged(
-  perspective: Perspective,
-  viewConfig: any,
-  perspectiveConfig: any,
-  documentsMap: {[id: string]: DocumentModel}
-): boolean {
-  switch (perspective) {
-    case Perspective.Table:
-      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap);
-    case Perspective.Chart:
-      return isChartConfigChanged(viewConfig, perspectiveConfig);
-    default:
-      return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
+export function createRange(values: number[]): any[] {
+  let min = null;
+  let max = null;
+
+  values.forEach(value => {
+    if (isNullOrUndefined(min) || min > value) {
+      min = value;
+    }
+    if (isNullOrUndefined(max) || max < value) {
+      max = value;
+    }
+  });
+
+  if (isNullOrUndefined(min) || isNullOrUndefined(max)) {
+    return null;
   }
+
+  const bottomRange = min < 0 ? Math.min(min * 1.1, min - 10) : Math.min(min * 0.9, min - 10);
+  const upperRange = max < 0 ? Math.max(max * 0.9, max + 10) : Math.max(max * 1.1, max + 10);
+
+  return [bottomRange, upperRange];
 }
