@@ -31,8 +31,7 @@ export class GanttChartBarPlaceholderPipe implements PipeTransform {
     return this.i18n(
       {
         id: 'ganttChart.bar.placeholder',
-        value:
-          '{barProperty, select, name {Name} start {Start} end {End} id {Task identifier} dependencies {Depending tasks} progress {Progress}}',
+        value: '{barProperty, select, name {Name} start {Start} end {End} progress {Progress}}',
       },
       {
         barProperty,

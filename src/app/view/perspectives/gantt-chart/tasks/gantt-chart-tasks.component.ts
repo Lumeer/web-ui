@@ -29,11 +29,17 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttChartConfig, GanttChartMode, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
+import {
+  GanttChartBarPropertyOptional,
+  GanttChartConfig,
+  GanttChartMode,
+  GanttChartTask,
+} from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {isNotNullOrUndefind, isNumeric} from '../../../../shared/utils/common.utils';
 
 interface Data {
   collections: Collection[];
@@ -72,7 +78,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
-  public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Day);
+  public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public tasks$: Observable<GanttChartTask[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
@@ -111,14 +117,39 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onValueChanged(data: {documentId: string; attributeId: string; value: any}) {
-    const {documentId, attributeId, value} = data;
+  public onValueChanged(data: {documentId: string; changes: {attributeId: string; value: any}[]}) {
+    const {documentId, changes} = data;
     const changedDocument = this.documents.find(document => document.id === documentId);
     if (!changedDocument) {
       return;
     }
 
-    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
-    this.patchData.emit(patchDocument);
+    const patchData = {};
+    for (const {attributeId, value} of changes) {
+      const changed = (changedDocument.data && changedDocument.data[attributeId] !== value) || false;
+      if (changed) {
+        patchData[attributeId] = this.formatNewValue(changedDocument, attributeId, value);
+      }
+    }
+
+    if (Object.keys(patchData).length > 0) {
+      this.patchData.emit({...changedDocument, data: patchData});
+    }
+  }
+
+  private formatNewValue(document: DocumentModel, attributeId: string, value: any): any {
+    if (this.isProgressAttribute(document.collectionId, attributeId)) {
+      const currentProgress = document.data[attributeId];
+      if (isNotNullOrUndefind(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
+        return `${value}%`;
+      }
+    }
+    return value;
+  }
+
+  private isProgressAttribute(collectionId: string, attributeId: string): boolean {
+    const collectionConfig = this.config && this.config.collections && this.config.collections[collectionId];
+    const progressAxis = collectionConfig && collectionConfig.barsProperties[GanttChartBarPropertyOptional.Progress];
+    return progressAxis && progressAxis.attributeId === attributeId;
   }
 }
