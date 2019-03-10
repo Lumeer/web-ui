@@ -37,11 +37,7 @@ export function documentsReducer(
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_FAILURE:
-      if (action.payload.originalDocument) {
-        return documentsAdapter.upsertOne(action.payload.originalDocument, state);
-      } else {
-        return state;
-      }
+      return revertDocument(state, action.payload.originalDocument);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
@@ -100,6 +96,26 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
   if (isDocumentNewer(document, oldDocument)) {
     return documentsAdapter.upsertOne(document, state);
   }
+  return state;
+}
+
+function revertDocument(state: DocumentsState, originalDocument: DocumentModel): DocumentsState {
+  if (originalDocument) {
+    const storedDocument = state.entities[originalDocument.id];
+
+    if (!storedDocument) {
+      return documentsAdapter.addOne(originalDocument, state);
+    }
+
+    if (
+      originalDocument.dataVersion &&
+      storedDocument.dataVersion &&
+      originalDocument.dataVersion >= storedDocument.dataVersion
+    ) {
+      return documentsAdapter.upsertOne(originalDocument, state);
+    }
+  }
+
   return state;
 }
 
