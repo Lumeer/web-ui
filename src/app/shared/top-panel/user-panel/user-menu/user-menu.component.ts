@@ -37,6 +37,7 @@ import {UsersAction} from '../../../../core/store/users/users.action';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 
 @Component({
   selector: 'user-menu',
@@ -133,10 +134,32 @@ export class UserMenuComponent {
 
       if (manual) {
         // we need to make sure to be on the home page
-        this.router
-          .navigate(['/', 'w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'])
-          .then(() => {
-            this.kickstartTour();
+        this.currentUser$
+          .pipe(
+            filter(user => !!user),
+            first()
+          )
+          .subscribe(user => {
+            const organizationCode =
+              this.workspace.organizationCode || (user.defaultWorkspace && user.defaultWorkspace.organizationCode);
+            const projectCode =
+              this.workspace.projectCode || (user.defaultWorkspace && user.defaultWorkspace.projectCode);
+
+            if (organizationCode && projectCode) {
+              this.router.navigate(['/', 'w', organizationCode, projectCode, 'view', 'search', 'all']).then(() => {
+                this.kickstartTour();
+              });
+            } else {
+              this.store$.dispatch(
+                new NotificationsAction.Error({
+                  message: this.i18n({
+                    id: 'menu.appTour.invocationError',
+                    value:
+                      'Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.',
+                  }),
+                })
+              );
+            }
           });
       } else {
         // we already checked the url
