@@ -61,6 +61,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.DateTime:
     case ConstraintType.Number:
     case ConstraintType.Text:
+    case ConstraintType.Percentage:
       return true;
     default:
       return false;

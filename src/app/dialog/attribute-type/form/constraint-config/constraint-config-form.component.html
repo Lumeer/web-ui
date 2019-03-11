@@ -9,6 +9,11 @@
                                  [form]="form">
   </number-constraint-config-form>
 
+  <percentage-constraint-config-form *ngSwitchCase="'Percentage'"
+                                     [config]="config"
+                                     [form]="form">
+  </percentage-constraint-config-form>
+
   <text-constraint-config-form *ngSwitchCase="'Text'"
                                [config]="config"
                                [form]="form">

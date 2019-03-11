@@ -22,6 +22,7 @@ import {
   ConstraintType,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
+  PercentageConstraintConfig,
   TextConstraintConfig,
 } from '../../core/model/data/constraint';
 import * as moment from 'moment';
@@ -84,6 +85,36 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
+  return formatUnknownDataValue(value);
+}
+
+export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig): string {
+  if ([undefined, null, ''].includes(value)) {
+    return '';
+  }
+
+  if (typeof value === 'number') {
+    return value * 100 + '%';
+  }
+
+  if (typeof value !== 'string' || !config) {
+    return formatUnknownDataValue(value);
+  }
+
+  const percChars = (value.match(/%/g) || []).length;
+
+  if (percChars === 1 && value.endsWith('%')) {
+    const prefix = value.substring(0, value.length - 1);
+
+    if (!isNaN(+prefix)) {
+      return +prefix + '%';
+    }
+  } else if (percChars === 0) {
+    if (!isNaN(+value)) {
+      return +value * 100 + '%';
+    }
+  }
+
   return formatUnknownDataValue(value);
 }
 

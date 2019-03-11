@@ -29,6 +29,17 @@
                      class="d-block">
   </number-data-input>
 
+  <percentage-data-input *ngSwitchCase="constraintType.Percentage"
+                         [focus]="focus"
+                         [readonly]="readonly"
+                         [constraintConfig]="constraint.config"
+                         [value]="value"
+                         (valueChange)="onValueChange($event)"
+                         (save)="save.emit($event)"
+                         (cancel)="cancel.emit()"
+                         class="d-block">
+  </percentage-data-input>
+
   <text-data-input *ngSwitchDefault
                    [constraintConfig]="constraint?.config"
                    [focus]="focus"

@@ -27,6 +27,7 @@ import {ConstraintConfigFormComponent} from './constraint-config/constraint-conf
 import {ReactiveFormsModule} from '@angular/forms';
 import {DatetimeConstraintConfigFormComponent} from './constraint-config/datetime/datetime-constraint-config-form.component';
 import {BsDatepickerModule} from 'ngx-bootstrap';
+import {PercentageConstraintConfigFormComponent} from './constraint-config/percentage/percentage-constraint-config-form.component';
 
 @NgModule({
   imports: [BsDatepickerModule, CommonModule, ReactiveFormsModule, SelectModule],
@@ -36,6 +37,7 @@ import {BsDatepickerModule} from 'ngx-bootstrap';
     TextConstraintConfigFormComponent,
     ConstraintConfigFormComponent,
     DatetimeConstraintConfigFormComponent,
+    PercentageConstraintConfigFormComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })

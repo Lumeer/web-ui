@@ -1,0 +1,19 @@
+<input *ngIf="readonly; else percentageEditing"
+       [title]="value | percentageDataValue : constraintConfig"
+       [value]="value | percentageDataValue : constraintConfig"
+       type="text"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="percentage-data-input"
+       readonly>
+
+<ng-template #percentageEditing>
+  <input #percentageInput
+         [title]="value | percentageDataValue : constraintConfig"
+         [value]="value | percentageDataValue : constraintConfig"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         type="text"
+         pattern="[-]?[0-9]*[.,]?[]0-9]*[%]?"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="percentage-data-input">
+</ng-template>
