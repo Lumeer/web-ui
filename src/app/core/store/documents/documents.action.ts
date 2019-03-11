@@ -37,6 +37,8 @@ export enum DocumentsActionType {
 
   UPDATE_DATA = '[Documents] Update Data',
   PATCH_DATA = '[Documents] Patch Data',
+  UPDATE_DATA_INTERNAL = '[Documents] Update Data Internal',
+  PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
 
   UPDATE_META_DATA = '[Documents] Update Meta Data',
   PATCH_META_DATA = '[Documents] Patch Meta Data',
@@ -110,7 +112,7 @@ export namespace DocumentsAction {
   export class UpdateFailure implements Action {
     public readonly type = DocumentsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; originalDocument?: DocumentModel}) {}
   }
 
   export class UpdateData implements Action {
@@ -119,10 +121,22 @@ export namespace DocumentsAction {
     public constructor(public payload: {document: DocumentModel}) {}
   }
 
+  export class UpdateDataInternal implements Action {
+    public readonly type = DocumentsActionType.UPDATE_DATA_INTERNAL;
+
+    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+  }
+
   export class PatchData implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA;
 
     public constructor(public payload: {document: DocumentModel}) {}
+  }
+
+  export class PatchDataInternal implements Action {
+    public readonly type = DocumentsActionType.PATCH_DATA_INTERNAL;
+
+    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
   }
 
   export class UpdateMetaData implements Action {
@@ -229,7 +243,9 @@ export namespace DocumentsAction {
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
     | UpdateData
+    | UpdateDataInternal
     | PatchData
+    | PatchDataInternal
     | UpdateMetaData
     | PatchMetaData
     | UpdateSuccess

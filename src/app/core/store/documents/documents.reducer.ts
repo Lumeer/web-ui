@@ -30,8 +30,14 @@ export function documentsReducer(
       return addDocuments(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
+    case DocumentsActionType.UPDATE_DATA_INTERNAL:
+      return updateDocument(state, action);
+    case DocumentsActionType.PATCH_DATA_INTERNAL:
+      return patchDocument(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
+    case DocumentsActionType.UPDATE_FAILURE:
+      return revertDocument(state, action.payload.originalDocument);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
@@ -49,6 +55,25 @@ export function documentsReducer(
     default:
       return state;
   }
+}
+
+function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
+  const originalDocument = action.payload.originalDocument;
+
+  return documentsAdapter.upsertOne(
+    {
+      ...action.payload.document,
+      data: {
+        ...originalDocument.data,
+        ...action.payload.document.data,
+      },
+    },
+    state
+  );
+}
+
+function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDataInternal): DocumentsState {
+  return documentsAdapter.upsertOne(action.payload.document, state);
 }
 
 function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {
@@ -71,6 +96,26 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
   if (isDocumentNewer(document, oldDocument)) {
     return documentsAdapter.upsertOne(document, state);
   }
+  return state;
+}
+
+function revertDocument(state: DocumentsState, originalDocument: DocumentModel): DocumentsState {
+  if (originalDocument) {
+    const storedDocument = state.entities[originalDocument.id];
+
+    if (!storedDocument) {
+      return documentsAdapter.addOne(originalDocument, state);
+    }
+
+    if (
+      originalDocument.dataVersion &&
+      storedDocument.dataVersion &&
+      originalDocument.dataVersion >= storedDocument.dataVersion
+    ) {
+      return documentsAdapter.upsertOne(originalDocument, state);
+    }
+  }
+
   return state;
 }
 

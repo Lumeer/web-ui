@@ -49,7 +49,8 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
 import {BehaviorSubject} from 'rxjs';
-import {isArray, uniqueArray} from '../../utils/common.utils';
+import {isArray} from '../../utils/common.utils';
+import {uniqueValues} from '../../utils/array.utils';
 
 declare var Blockly: any;
 
@@ -484,7 +485,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: uniqueArray([...coreCollectionVarTypes, ...collectionTypes]),
+              check: uniqueValues([...coreCollectionVarTypes, ...collectionTypes]),
             },
             {
               type: 'input_value',
@@ -562,7 +563,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'LINK',
-              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+              check: uniqueValues([...coreLinkVarTypes, ...linkTypes]),
             },
             {
               type: 'input_value',
@@ -604,7 +605,7 @@ export class BlocklyEditorComponent implements AfterViewInit {
             {
               type: 'input_value',
               name: 'LINK',
-              check: uniqueArray([...coreLinkVarTypes, ...linkTypes]),
+              check: uniqueValues([...coreLinkVarTypes, ...linkTypes]),
             },
           ],
           colour: COLOR_PRIMARY,
