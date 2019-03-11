@@ -36,8 +36,8 @@ import * as Driver from 'driver.js';
 import {UsersAction} from '../../../../core/store/users/users.action';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import PatchCurrentUser = UsersAction.PatchCurrentUser;
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import PatchCurrentUser = UsersAction.PatchCurrentUser;
 
 @Component({
   selector: 'user-menu',
