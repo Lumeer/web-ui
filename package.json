@@ -62,6 +62,7 @@
     "angular-resizable-element": "^3.2.3",
     "angulartics2": "^7.4.1",
     "auth0-js": "^9.10.0",
+    "big.js": "^5.2.2",
     "bootstrap": "^4.3.1",
     "coordinate-parser": "^1.0.2",
     "core-js": "^2.6.5",

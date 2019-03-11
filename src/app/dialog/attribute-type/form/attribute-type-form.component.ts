@@ -87,6 +87,12 @@ export class AttributeTypeFormComponent implements OnChanges {
           maxValue: this.configForm.get('maxValue').value,
           precision: undefined, // TODO
         };
+      case ConstraintType.Percentage:
+        return {
+          format: undefined, // TODO
+          minValue: this.configForm.get('minValue').value,
+          maxValue: this.configForm.get('maxValue').value,
+        };
       case ConstraintType.Text:
         return {
           caseStyle: this.configForm.get('caseStyle').value,

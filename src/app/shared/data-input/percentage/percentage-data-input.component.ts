@@ -33,6 +33,8 @@ import {NumberConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {PercentageValidPipe} from './percentage-valid.pipe';
+import Big from 'big.js';
+import {decimalSeparator} from '../../utils/data.utils';
 
 @Component({
   selector: 'percentage-data-input',
@@ -65,6 +67,8 @@ export class PercentageDataInputComponent implements OnChanges {
   @ViewChild('percentageInput')
   public percentageInput: ElementRef<HTMLInputElement>;
 
+  public valid = true;
+
   private preventSave: boolean;
 
   constructor(private percentageValid: PercentageValidPipe) {}
@@ -76,6 +80,11 @@ export class PercentageDataInputComponent implements OnChanges {
         this.percentageInput.nativeElement.focus();
       });
     }
+    if (changes.value && String(this.value).length === 1) {
+      // show value entered into hidden input without any changes
+      const input = this.percentageInput;
+      setTimeout(() => (input.nativeElement.value = this.value));
+    }
   }
 
   @HostListener('keydown', ['$event'])
@@ -86,8 +95,9 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.percentageInput;
 
-        if (!this.percentageValid.transform(input)) {
-          event.stopPropagation();
+        if (!this.percentageValid.transform(input.nativeElement.value, this.constraintConfig)) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
           return;
         }
 
@@ -108,6 +118,8 @@ export class PercentageDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
+    this.valid = this.percentageValid.transform(element.value, this.constraintConfig);
+
     this.valueChange.emit(value);
   }
 
@@ -120,15 +132,29 @@ export class PercentageDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): number | string {
-    const text = String(value).trim();
+    const text = String(value)
+      .trim()
+      .replace(decimalSeparator(), '.');
     if (text.endsWith('%')) {
       const prefix = text.substring(0, text.length - 1);
       if (!isNaN(+prefix)) {
-        return Number(prefix) / 100;
+        try {
+          const big = new Big(prefix);
+          big.e = big.e - 2;
+          return big.toString();
+        } catch (e) {
+          return value;
+        }
       }
     } else {
-      if (!isNaN(+value)) {
-        return Number(value) / 100;
+      if (!isNaN(+text)) {
+        try {
+          const big = new Big(text);
+          big.e = big.e - 2;
+          return big.toString();
+        } catch (e) {
+          return text;
+        }
       }
     }
 

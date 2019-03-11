@@ -19,6 +19,8 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import Big from 'big.js';
+import {decimalSeparator} from '../../utils/data.utils';
 
 @Pipe({
   name: 'percentageValid',
@@ -31,21 +33,32 @@ export class PercentageValidPipe implements PipeTransform {
     }
 
     if (typeof value === 'string') {
-      const text = value.trim();
+      const text = value.trim().replace(decimalSeparator(), '.');
 
-      const percChars = (value.match(/%/g) || []).length;
-      if (percChars === 1 && value.endsWith('%')) {
-        const prefix = value.substring(0, value.length - 1);
-
-        if (!isNaN(+prefix)) {
-          return this.checkRange(+prefix, config);
-        }
+      const percChars = (text.match(/%/g) || []).length;
+      if (percChars === 1 && text.endsWith('%')) {
+        const prefix = text.substring(0, text.length - 1);
+        return this.checkNumber(prefix, config);
       } else if (percChars === 0) {
-        if (!isNaN(+value)) {
-          return this.checkRange(+value, config);
-        }
+        return this.checkNumber(text, config);
       }
     }
+
+    return false;
+  }
+
+  private checkNumber(value: string, config?: PercentageConstraintConfig): boolean {
+    if (!isNaN(+value)) {
+      try {
+        new Big(value);
+      } catch (e) {
+        return false;
+      }
+
+      return this.checkRange(+value, config);
+    }
+
+    return false;
   }
 
   private checkRange(n: number, config?: PercentageConstraintConfig) {

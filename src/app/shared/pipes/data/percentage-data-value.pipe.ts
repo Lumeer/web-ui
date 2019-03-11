@@ -18,14 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {NumberConstraintConfig, PercentageConstraintConfig} from '../../../core/model/data/constraint';
-import {formatNumberDataValue, formatPercentageDataValue} from '../../utils/data.utils';
+import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import {formatPercentageDataValue} from '../../utils/data.utils';
 
 @Pipe({
   name: 'percentageDataValue',
 })
 export class PercentageDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: PercentageConstraintConfig): any {
-    return formatPercentageDataValue(value, config);
+  public transform(value: any, config?: PercentageConstraintConfig, suffix = ''): any {
+    const result = formatPercentageDataValue(value, config);
+    return result ? result + suffix : '';
   }
 }

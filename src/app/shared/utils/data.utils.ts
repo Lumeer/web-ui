@@ -27,9 +27,10 @@ import {
 } from '../../core/model/data/constraint';
 import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
+import Big from 'big.js';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY'];
-const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい'];
+const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
 export function parseBooleanDataValue(value: any): boolean {
   return truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
@@ -77,7 +78,7 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
   const momentDate = parseMomentDate(value, config && config.format);
 
   if (!momentDate.isValid()) {
-    return showInvalid ? formatUnknownDataValue(value) : '';
+    return showInvalid ? formatUnknownDataValue(value, true) : '';
   }
 
   return config && config.format ? momentDate.format(config.format) : formatUnknownDataValue(value);
@@ -94,7 +95,9 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
   }
 
   if (typeof value === 'number') {
-    return value * 100 + '%';
+    const big = new Big(value);
+    big.e = big.e + 2;
+    return big.toString().replace('.', decimalSeparator());
   }
 
   if (typeof value !== 'string' || !config) {
@@ -107,11 +110,13 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
     const prefix = value.substring(0, value.length - 1);
 
     if (!isNaN(+prefix)) {
-      return +prefix + '%';
+      return prefix;
     }
   } else if (percChars === 0) {
     if (!isNaN(+value)) {
-      return +value * 100 + '%';
+      const big = new Big(value);
+      big.e = big.e + 2;
+      return big.toString().replace('.', decimalSeparator());
     }
   }
 
@@ -120,11 +125,25 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
 
 export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {
   if (typeof value !== 'string' || !config) {
-    return formatUnknownDataValue(value);
+    return formatUnknownDataValue(value, true);
   }
   return transformTextBasedOnCaseStyle(value, config && config.caseStyle);
 }
 
-export function formatUnknownDataValue(value: any): string {
-  return value || value === 0 ? String(value) : '';
+export function formatUnknownDataValue(value: any, skipDecimal = false): string {
+  if (value || value === 0) {
+    if (!skipDecimal && !isNaN(+value)) {
+      return String(value).replace('.', decimalSeparator());
+    }
+
+    return String(value);
+  }
+
+  return '';
+}
+
+const separator = (1.1).toLocaleString(window.navigator.language).substring(1, 2);
+
+export function decimalSeparator(): string {
+  return separator;
 }
