@@ -34,7 +34,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {PercentageValidPipe} from './percentage-valid.pipe';
 import Big from 'big.js';
-import {decimalSeparator} from '../../utils/data.utils';
+import {decimalUserToStore} from '../../utils/data.utils';
 
 @Component({
   selector: 'percentage-data-input',
@@ -132,9 +132,7 @@ export class PercentageDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): number | string {
-    const text = String(value)
-      .trim()
-      .replace(decimalSeparator(), '.');
+    const text = decimalUserToStore(String(value).trim());
     if (text.endsWith('%')) {
       const prefix = text.substring(0, text.length - 1);
       if (!isNaN(+prefix)) {

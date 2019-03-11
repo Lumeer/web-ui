@@ -97,7 +97,7 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
   if (typeof value === 'number') {
     const big = new Big(value);
     big.e = big.e + 2;
-    return big.toString().replace('.', decimalSeparator());
+    return decimalStoreToUser(big.toString());
   }
 
   if (typeof value !== 'string' || !config) {
@@ -116,7 +116,7 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
     if (!isNaN(+value)) {
       const big = new Big(value);
       big.e = big.e + 2;
-      return big.toString().replace('.', decimalSeparator());
+      return decimalStoreToUser(big.toString());
     }
   }
 
@@ -133,7 +133,7 @@ export function formatTextDataValue(value: any, config?: TextConstraintConfig): 
 export function formatUnknownDataValue(value: any, skipDecimal = false): string {
   if (value || value === 0) {
     if (!skipDecimal && !isNaN(+value)) {
-      return String(value).replace('.', decimalSeparator());
+      return decimalStoreToUser(String(value));
     }
 
     return String(value);
@@ -146,4 +146,12 @@ const separator = (1.1).toLocaleString(window.navigator.language).substring(1, 2
 
 export function decimalSeparator(): string {
   return separator;
+}
+
+export function decimalUserToStore(value: string): string {
+  return separator === '.' ? value : value.replace(separator, '.');
+}
+
+export function decimalStoreToUser(value: string): string {
+  return separator === '.' ? value : value.replace('.', separator);
 }

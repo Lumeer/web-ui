@@ -20,7 +20,7 @@
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import Big from 'big.js';
-import {decimalSeparator} from '../../utils/data.utils';
+import {decimalUserToStore} from '../../utils/data.utils';
 
 @Pipe({
   name: 'percentageValid',
@@ -33,7 +33,7 @@ export class PercentageValidPipe implements PipeTransform {
     }
 
     if (typeof value === 'string') {
-      const text = value.trim().replace(decimalSeparator(), '.');
+      const text = decimalUserToStore(value.trim());
 
       const percChars = (text.match(/%/g) || []).length;
       if (percChars === 1 && text.endsWith('%')) {
