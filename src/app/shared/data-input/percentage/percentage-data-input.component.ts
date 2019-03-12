@@ -137,9 +137,7 @@ export class PercentageDataInputComponent implements OnChanges {
       const prefix = text.substring(0, text.length - 1);
       if (!isNaN(+prefix)) {
         try {
-          const big = new Big(prefix);
-          big.e = big.e - 2;
-          return big.toString();
+          return this.bigger(prefix);
         } catch (e) {
           return value;
         }
@@ -147,9 +145,7 @@ export class PercentageDataInputComponent implements OnChanges {
     } else {
       if (!isNaN(+text)) {
         try {
-          const big = new Big(text);
-          big.e = big.e - 2;
-          return big.toString();
+          return this.bigger(text);
         } catch (e) {
           return text;
         }
@@ -157,5 +153,11 @@ export class PercentageDataInputComponent implements OnChanges {
     }
 
     return String(value);
+  }
+
+  private bigger(value: string): string {
+    const big = new Big(value);
+    big.e = big.e - 2;
+    return big.toString();
   }
 }
