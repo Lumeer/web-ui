@@ -1392,14 +1392,24 @@ export class BlocklyEditorComponent implements AfterViewInit {
   private generateJs(): void {
     let js = Blockly.JavaScript.workspaceToCode(this.workspace);
 
-    if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
-      js = 'var thisDocument;\n' + js;
-    }
+    if (this.emptyJs(js)) {
+      js = '';
+    } else {
+      if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
+        js = 'var thisDocument;\n' + js;
+      }
 
-    if (this.masterType === MasterBlockType.Link && js.indexOf('var thisLink;') < 0) {
-      js = 'var thisLink;\n' + js;
+      if (this.masterType === MasterBlockType.Link && js.indexOf('var thisLink;') < 0) {
+        js = 'var thisLink;\n' + js;
+      }
     }
 
     this.onJsUpdate.emit(js);
+  }
+
+  private emptyJs(js: string): boolean {
+    const clean = js.replace(/var.* = Polyglot\.import\('lumeer'\);/g, '').trim();
+
+    return clean.length === 0;
   }
 }
