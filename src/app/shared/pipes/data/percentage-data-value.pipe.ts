@@ -26,7 +26,6 @@ import {formatPercentageDataValue} from '../../utils/data.utils';
 })
 export class PercentageDataValuePipe implements PipeTransform {
   public transform(value: any, config?: PercentageConstraintConfig, suffix = ''): any {
-    const result = formatPercentageDataValue(value, config);
-    return result ? result + suffix : '';
+    return formatPercentageDataValue(value, config, suffix);
   }
 }

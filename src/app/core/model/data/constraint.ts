@@ -111,6 +111,7 @@ export interface NumberConstraintConfig {
 
 export interface PercentageConstraintConfig {
   format: string;
+  decimals: number;
   minValue: number;
   maxValue: number;
 }

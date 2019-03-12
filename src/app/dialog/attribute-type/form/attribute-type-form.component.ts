@@ -90,6 +90,7 @@ export class AttributeTypeFormComponent implements OnChanges {
       case ConstraintType.Percentage:
         return {
           format: undefined, // TODO
+          decimals: this.configForm.get('decimals').value,
           minValue: this.configForm.get('minValue').value,
           maxValue: this.configForm.get('maxValue').value,
         };
