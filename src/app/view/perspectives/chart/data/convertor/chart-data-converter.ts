@@ -675,8 +675,19 @@ export class ChartDataConverter {
       this.y2Sets = sets;
     }
 
+    const otherYAxis = config.axes[type === ChartAxisType.Y1 ? ChartAxisType.Y2 : ChartAxisType.Y1];
+    sets.length > 0 && !otherYAxis && this.clearOtherSetsByType(type);
+
     this.currentConfig = config;
     return this.convertType(config.type);
+  }
+
+  private clearOtherSetsByType(type: ChartAxisType) {
+    if (type === ChartAxisType.Y1) {
+      this.y2Sets = [];
+    } else {
+      this.y1Sets = [];
+    }
   }
 
   private createEmptyData(config: ChartConfig): ChartData {

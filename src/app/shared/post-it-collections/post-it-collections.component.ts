@@ -257,6 +257,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
       this.layout = new PostItLayout(this.postItLayout, false, this.zone);
       this.changeDetector.detectChanges();
       this.computePostItHeight();
+      this.layout.refresh();
     }
   }
 

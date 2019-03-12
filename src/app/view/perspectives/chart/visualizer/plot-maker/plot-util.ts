@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {isNullOrUndefined, toNumber} from '../../../../../shared/utils/common.utils';
 
 export function createRange(values: number[]): any[] {
   let min = null;
   let max = null;
 
   values.forEach(value => {
-    if (isNullOrUndefined(min) || min > value) {
-      min = value;
+    const numberValue = toNumber(value);
+    if (isNullOrUndefined(min) || min > numberValue) {
+      min = numberValue;
     }
-    if (isNullOrUndefined(max) || max < value) {
-      max = value;
+    if (isNullOrUndefined(max) || max < numberValue) {
+      max = numberValue;
     }
   });
 

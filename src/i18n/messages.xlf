@@ -4023,7 +4023,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Day {Day} Week {Week} Month {Month} Year {Year}}</source>
+        <source>{VAR_SELECT, select, Day {Days} Week {Weeks} Month {Months} Year {Years}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>

@@ -31,7 +31,7 @@ export class GanttChartModeTextPipe implements PipeTransform {
     return this.i18n(
       {
         id: 'perspective.gantt.config.mode',
-        value: '{mode, select, Day {Day} Week {Week} Month {Month} Year {Year}}',
+        value: '{mode, select, Day {Days} Week {Weeks} Month {Months} Year {Years}}',
       },
       {mode}
     );
