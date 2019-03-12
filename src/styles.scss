@@ -287,3 +287,7 @@ div#driver-popover-item {
     }
   }
 }
+
+.bg-danger-light {
+  background-color: lighten($danger, 30%);
+}

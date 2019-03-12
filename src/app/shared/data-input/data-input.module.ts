@@ -26,6 +26,8 @@ import {NumberDataInputComponent} from './number/number-data-input.component';
 import {BooleanDataInputComponent} from './boolean/boolean-data-input.component';
 import {BsDatepickerModule} from 'ngx-bootstrap';
 import {PipesModule} from '../pipes/pipes.module';
+import {PercentageDataInputComponent} from './percentage/percentage-data-input.component';
+import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
 
 @NgModule({
   imports: [BsDatepickerModule, CommonModule, PipesModule],
@@ -35,7 +37,10 @@ import {PipesModule} from '../pipes/pipes.module';
     DatetimeDataInputComponent,
     NumberDataInputComponent,
     BooleanDataInputComponent,
+    PercentageDataInputComponent,
+    PercentageValidPipe,
   ],
+  providers: [PercentageValidPipe],
   exports: [DataInputComponent, BooleanDataInputComponent],
 })
 export class DataInputModule {}

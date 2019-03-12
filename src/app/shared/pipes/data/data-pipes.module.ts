@@ -24,10 +24,25 @@ import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
 import {DataValuePipe} from './data-value.pipe';
 import {BooleanDataValuePipe} from './boolean-data.pipe';
 import {NumberDataValuePipe} from './number-data-value.pipe';
+import {PercentageDataValuePipe} from './percentage-data-value.pipe';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe, BooleanDataValuePipe, NumberDataValuePipe],
-  exports: [TextDataValuePipe, DateTimeDataValuePipe, DataValuePipe, BooleanDataValuePipe, NumberDataValuePipe],
+  declarations: [
+    TextDataValuePipe,
+    DateTimeDataValuePipe,
+    DataValuePipe,
+    BooleanDataValuePipe,
+    NumberDataValuePipe,
+    PercentageDataValuePipe,
+  ],
+  exports: [
+    TextDataValuePipe,
+    DateTimeDataValuePipe,
+    DataValuePipe,
+    BooleanDataValuePipe,
+    NumberDataValuePipe,
+    PercentageDataValuePipe,
+  ],
 })
 export class DataPipesModule {}
