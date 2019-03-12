@@ -89,15 +89,13 @@ export function formatNumberDataValue(value: any, config: NumberConstraintConfig
   return formatUnknownDataValue(value);
 }
 
-export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig): string {
+export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig, suffix = ''): string {
   if ([undefined, null, ''].includes(value)) {
     return '';
   }
 
   if (typeof value === 'number') {
-    const big = new Big(value);
-    big.e = big.e + 2;
-    return decimalStoreToUser(big.toString());
+    return convertPercentageValue(String(value), config.decimals, suffix) + suffix;
   }
 
   if (typeof value !== 'string' || !config) {
@@ -110,17 +108,35 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
     const prefix = value.substring(0, value.length - 1);
 
     if (!isNaN(+prefix)) {
-      return prefix;
+      return prefix + suffix;
     }
   } else if (percChars === 0) {
     if (!isNaN(+value)) {
-      const big = new Big(value);
-      big.e = big.e + 2;
-      return decimalStoreToUser(big.toString());
+      return convertPercentageValue(value, config.decimals, suffix) + suffix;
     }
   }
 
   return formatUnknownDataValue(value);
+}
+
+function convertPercentageValue(value: string, decimals?: number, suffix = ''): string {
+  let big = new Big(value);
+  big.e = big.e + 2;
+
+  // prevents extra zeroes after moving the decimal point
+  if (big.eq('0')) {
+    big = new Big('0');
+  }
+
+  if (![undefined, null].includes(decimals)) {
+    big = big.round(decimals);
+
+    if (big.eq('0') && decimals > 0 && suffix) {
+      return decimalStoreToUser('0.' + '0'.repeat(decimals));
+    }
+  }
+
+  return decimalStoreToUser(big.toString());
 }
 
 export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {

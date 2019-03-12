@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint';
+import {NumberConstraintConfig, PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {PercentageValidPipe} from './percentage-valid.pipe';
@@ -44,7 +44,7 @@ import {decimalUserToStore} from '../../utils/data.utils';
 })
 export class PercentageDataInputComponent implements OnChanges {
   @Input()
-  public constraintConfig: NumberConstraintConfig;
+  public constraintConfig: PercentageConstraintConfig;
 
   @Input()
   public focus: boolean;
@@ -83,7 +83,11 @@ export class PercentageDataInputComponent implements OnChanges {
     if (changes.value && String(this.value).length === 1) {
       // show value entered into hidden input without any changes
       const input = this.percentageInput;
-      setTimeout(() => (input.nativeElement.value = this.value));
+      setTimeout(() => {
+        if (input && input.nativeElement) {
+          input.nativeElement.value = this.value;
+        }
+      });
     }
   }
 
