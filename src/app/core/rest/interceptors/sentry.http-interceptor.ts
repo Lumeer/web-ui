@@ -20,6 +20,7 @@
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import * as Sentry from '@sentry/browser';
+import {Severity} from '@sentry/browser';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
@@ -30,7 +31,7 @@ export class SentryHttpInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(error => {
         if (environment.sentryDsn && ![402, 500].includes(error.status)) {
-          Sentry.captureException(this.processError(error));
+          this.processError(error);
         }
 
         return throwError(error);
@@ -38,19 +39,19 @@ export class SentryHttpInterceptor implements HttpInterceptor {
     );
   }
 
-  private processError(error: any): Error | ErrorEvent | any {
+  private processError(error: any): void {
     if (error instanceof Error || error instanceof ErrorEvent) {
-      return error;
+      Sentry.captureException(error);
     }
 
     if (error instanceof HttpErrorResponse) {
       if (error.error instanceof ErrorEvent) {
-        return error.error;
+        Sentry.captureException(error.error);
       }
 
-      return new Error(`${error.status}: ${error.error}`);
+      Sentry.captureMessage(`${error.status}: ${error.error}`, Severity.Error);
     }
 
-    return error;
+    Sentry.captureMessage(error);
   }
 }
