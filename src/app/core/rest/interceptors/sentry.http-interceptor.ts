@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import * as Sentry from '@sentry/browser';
 import {Observable, throwError} from 'rxjs';
@@ -30,11 +30,27 @@ export class SentryHttpInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(error => {
         if (environment.sentryDsn && ![402, 500].includes(error.status)) {
-          Sentry.captureException(error);
+          Sentry.captureException(this.processError(error));
         }
 
         return throwError(error);
       })
     );
+  }
+
+  private processError(error: any): Error | ErrorEvent | any {
+    if (error instanceof Error || error instanceof ErrorEvent) {
+      return error;
+    }
+
+    if (error instanceof HttpErrorResponse) {
+      if (error.error instanceof ErrorEvent) {
+        return error.error;
+      }
+
+      return new Error(`${error.status}: ${error.error}`);
+    }
+
+    return error;
   }
 }
