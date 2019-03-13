@@ -231,27 +231,21 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
         <source>
         Minimum value
       </source><target>
         Minimální hodnota
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.number.maxValue.label" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="constraint.number.maxValue.label" datatype="html">
         <source>
         Maximum value
       </source><target>
         Maximální hodnota
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.number.decimal.label" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="constraint.number.decimal.label" datatype="html">
         <source>
       Floating point
     </source><target>
@@ -326,7 +320,39 @@
         Maximální hodnota
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
+        <source>
+      Format any recognizable values as percentages.
+      There is no need to enter the percent (%) character. It is added automatically.
+    </source><target>
+      Formátuje všechny rozpoznatelné hodnoty jako procenta.
+      Není nutné ručně psát znak pro procenta (%). Přidává se automaticky.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.percentage.decimals.label" datatype="html">
+        <source>
+          Round to no. of decimal digits:
+        </source><target>
+          Zaokrouhlit na počet desetinných míst:
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.percentage.decimals.description" datatype="html">
+        <source>
+          Leave empty for no rounding.
+        </source><target>
+          Pokud nechcete zaokrouhlovat, ponechejte pole prázdné.
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist!
         </source>
@@ -334,8 +360,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/view.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="view.perspective.name" datatype="html">
-                <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} chart {Chart} ganttChart {Gantt chart} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
-                <target>{VAR_SELECT, select, detail {Detail} postit {Lepíky} chart {Graf} search {Hledání} table {Tabulka} table2 {Tabulka 2} smartdoc {Chytrý dokument} }</target>
+                <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
+                <target>{VAR_SELECT, select, detail {Detail} postit {Lepíky} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
@@ -542,15 +568,18 @@
         </context-group>
       </trans-unit><trans-unit id="attribute.type.value" datatype="html">
         <source>
-        <x id="ICU" equiv-text="{type, select, Boolean {...} DateTime {...} None {...} Number {...} Text {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Boolean {...} DateTime {...} None {...} Number {...} Percentage {...} Text {...}}"/>
       </source><target>
         <x id="ICU" equiv-text="{type, select, DateTime {...} Number {...} Text {...}}"/>
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="9edf41f5514af80c194717fdac2a95cc12e06c6d" datatype="html">
-        <source>{VAR_SELECT, select, Boolean {Checkbox} DateTime {Date} None {None} Number {Number} Text {Text} }</source><target>{VAR_SELECT, select, Boolean {Zaškrtávátko} DateTime {Datum} None {Žádný} Number {Číslo} Text {Text} }</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="81de587830f7b7df7a4604e52625f255704aed6d" datatype="html">
+        <source>{VAR_SELECT, select, Boolean {Checkbox} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Text {Text} }</source><target>{VAR_SELECT, select, Boolean {Zaškrtávátko} DateTime {Datum} None {Žádný} Number {Číslo} Percentage {Procenta} Text {Text} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
         <source><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> event</source><target><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> událost</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
@@ -1299,23 +1328,17 @@
                 <source>Delete</source>
                 <target>Smazat</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="resource.value.error.duplicity" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="resource.value.error.duplicity" datatype="html">
         <source>
   This <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> is already taken. Try another!
 </source><target>
   <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> je již použité, zkuste něco jiného!
 </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="ba1f0128edbddbedec519987d91131b95cf7b6c8" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="ba1f0128edbddbedec519987d91131b95cf7b6c8" datatype="html">
         <source>{VAR_SELECT, select, organization {code} project {code} collection {name} }</source><target>{VAR_SELECT, select, organization {Tento kód} project {Tento kód} collection {Toto jméno} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="message.loading" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source><target>Načítám...</target>
 
 
@@ -2012,16 +2035,16 @@
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.empty.title" datatype="html">
-        <source> We can not find any task!</source><target> Nebyl nalezen žádný úkol!</target>
+        <source>I could not find any tasks</source><target> Nenalezl jsem žádný úkol</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.empty.subtitle" datatype="html">
         <source>
-    Select correct attributes from side menu
+    Please select correct attributes from the side menu
   </source><target>
-    V nabídce vlevo vyberte atributy pro zobrazení
+    Prosím vyberte atributy pro zobrazení v nabídce vlevo
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
@@ -2812,28 +2835,28 @@
                 <source>Enter code</source>
                 <target>Zadejte kód</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.error.length.min" datatype="html">
                 <source>
             Code must have at least 2 characters.
           </source>
                 <target>Kód musí mít minimálně 2 znaky.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.error.length.max" datatype="html">
                 <source>
             Code can have 5 characters at most.
           </source>
                 <target>Kód může mít maximálně 5 znaků.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
                 <source>
             Sorry, this code is already taken. Try another!
           </source>
                 <target>Je mi líto, tento kód už někdo používá. Zkuste jiný!</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.name.label" datatype="html">
                 <source>Name:</source>
                 <target>Jméno:</target>
@@ -2969,6 +2992,12 @@
                 </context-group>
             </trans-unit><trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source><target>Ukončit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.appTour.invocationError" datatype="html">
+        <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source><target>Nemohu spustit prohlídku aplikace, protože jsem nenalezl žádný projekt, na kterém by ji bylo možné ukázat. Přejděte na libovolnou stránku s obsahem projektu a zkuste to prosím znovu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3149,25 +3178,25 @@
         <source>View mode</source><target>Styl zobrazení</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></target>
+        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="d86cea561fb49cd03a07c9266b7a2ad797108a07" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} id {task identifier} dependencies {depending tasks} progress {progress} }</source><target>{VAR_SELECT, select, name {název} start {počáteční datum} end {koncové datum} id {identifikátor úlohy} dependencies {závisející úlohy} progress {průběh} }</target>
+      </trans-unit><trans-unit id="7a6181759492992ae2262f745b89628d30a5d6fb" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} }</source><target>{VAR_SELECT, select, name {název} start {počáteční datum} end {koncové datum} progress {průběh} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} id {Task identifier} dependencies {Depending tasks} progress {Progress} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} }</target>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Day {Days} Week {Weeks} Month {Months} Year {Years} }</source><target>{VAR_SELECT, select, Day {Dni} Week {Týdne} Month {Měsíce} Year {Roky} }</target>
+        <source>{VAR_SELECT, select, Day {Days} Week {Weeks} Month {Months} Year {Years} }</source><target>{VAR_SELECT, select, Day {Dny} Week {Týdny} Month {Měsíce} Year {Roky} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
