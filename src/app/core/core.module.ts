@@ -52,6 +52,7 @@ import {VideoService} from './api/video/video.service';
 import {UserNotificationsService} from './rest/user-notifications.service';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
+import {DeviceDetectorModule} from 'ngx-device-detector';
 
 @NgModule({
   imports: [
@@ -68,6 +69,7 @@ import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
     BsDatepickerModule.forRoot(),
     PopoverModule.forRoot(),
     TimepickerModule.forRoot(),
+    DeviceDetectorModule.forRoot(),
   ],
   declarations: [HomeComponent],
   providers: [

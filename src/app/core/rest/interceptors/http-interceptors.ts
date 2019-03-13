@@ -22,8 +22,10 @@ import {AuthHttpInterceptor} from './auth.http-interceptor';
 import {SentryHttpInterceptor} from './sentry.http-interceptor';
 import {SessionHttpInterceptor} from './session.http-interceptor';
 import {ViewHttpInterceptor} from './view.http-interceptor';
+import {ResponseTimeHttpInterceptor} from './response.time.http-interceptor';
 
 export const httpInterceptorProviders = [
+  {provide: HTTP_INTERCEPTORS, useClass: ResponseTimeHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: SentryHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
