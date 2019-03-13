@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as Driver from 'driver.js';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'tour',
@@ -45,6 +46,8 @@ export class TourComponent implements OnInit {
 
   @Output()
   public onPrevious = new EventEmitter();
+
+  public constructor(private i18n: I18n) {}
 
   public ngOnInit() {
     this.driver = new Driver({
