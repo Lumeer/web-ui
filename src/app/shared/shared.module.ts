@@ -47,6 +47,7 @@ import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 import {BlocklyModule} from './blockly/blockly.module';
+import {TourComponent} from './tour/tour.component';
 
 @NgModule({
   imports: [
@@ -81,6 +82,7 @@ import {BlocklyModule} from './blockly/blockly.module';
     SliderComponent,
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
+    TourComponent,
   ],
   exports: [
     CommonModule,
@@ -96,6 +98,7 @@ import {BlocklyModule} from './blockly/blockly.module';
     SearchBoxModule,
     InfiniteScrollModule,
     SliderComponent,
+    TourComponent,
     PipesModule,
     TagModule,
     InputModule,
