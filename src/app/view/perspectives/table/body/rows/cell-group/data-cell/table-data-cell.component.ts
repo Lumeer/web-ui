@@ -603,7 +603,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         return;
       case KeyCode.Tab:
         // needs to be executed after the value is stored
-        setTimeout(() => this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right})));
+        setTimeout(() =>
+          this.store$.dispatch(
+            new TablesAction.MoveCursor({direction: event.shiftKey ? Direction.Left : Direction.Right})
+          )
+        );
         return;
     }
 

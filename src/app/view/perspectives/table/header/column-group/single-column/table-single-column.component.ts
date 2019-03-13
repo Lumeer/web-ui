@@ -382,7 +382,9 @@ export class TableSingleColumnComponent implements OnChanges {
       case KeyCode.ArrowUp:
         return this.suggestions && this.suggestions.moveSelection(Direction.Up);
       case KeyCode.Tab:
-        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+        return this.store$.dispatch(
+          new TablesAction.MoveCursor({direction: event.shiftKey ? Direction.Left : Direction.Right})
+        );
     }
 
     if (isKeyPrintable(event) && this.suggestions) {
