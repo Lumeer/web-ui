@@ -83,11 +83,11 @@ export class GanttChartVisualizationComponent implements OnChanges {
       this.ganttChart.refresh(this.tasks);
       this.ganttChart.change_view_mode(this.currentMode);
       this.setChartColorsAndListeners();
+      isNotNullOrUndefind(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
     } else {
       this.ganttChart.clear();
       this.ganttChart = null;
     }
-    isNotNullOrUndefind(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
   }
 
   private createChart() {
