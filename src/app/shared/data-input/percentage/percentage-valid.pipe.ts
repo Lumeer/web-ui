@@ -61,7 +61,7 @@ export class PercentageValidPipe implements PipeTransform {
     return false;
   }
 
-  private checkRange(n: number, config?: PercentageConstraintConfig) {
+  private checkRange(n: number, config?: PercentageConstraintConfig): boolean {
     let passed = true;
     if (config.minValue || config.minValue === 0) {
       passed = n >= config.minValue;

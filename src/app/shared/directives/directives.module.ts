@@ -23,10 +23,11 @@ import {CommonModule} from '@angular/common';
 import {NgVarDirective} from './ng-var.directive';
 import {TrimValueAccessor} from './trim-value-accessor';
 import {RenderedDirective} from './rendered.directive';
+import {NumberDirective} from './number.directive';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [NgVarDirective, TrimValueAccessor, RenderedDirective],
-  exports: [NgVarDirective, TrimValueAccessor, RenderedDirective],
+  declarations: [NgVarDirective, TrimValueAccessor, RenderedDirective, NumberDirective],
+  exports: [NgVarDirective, TrimValueAccessor, RenderedDirective, NumberDirective],
 })
 export class DirectivesModule {}

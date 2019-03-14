@@ -28,6 +28,7 @@ import {
 import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 import Big from 'big.js';
+import {isNullOrUndefined} from './common.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -86,7 +87,14 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
-  return formatUnknownDataValue(value);
+  if ([undefined, null, ''].includes(value)) {
+    return '';
+  }
+  const valueBig = convertToBig(value);
+  if (valueBig) {
+    return decimalStoreToUser(valueBig.toFixed());
+  }
+  return String(value);
 }
 
 export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig, suffix = ''): string {
@@ -170,4 +178,15 @@ export function decimalUserToStore(value: string): string {
 
 export function decimalStoreToUser(value: string): string {
   return separator === '.' ? value : value.replace('.', separator);
+}
+
+export function convertToBig(value: any): Big {
+  if (isNullOrUndefined(value) || value === '') {
+    return null;
+  }
+  try {
+    return new Big(value);
+  } catch (e) {
+    return null;
+  }
 }

@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberConstraintConfig, PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {PercentageValidPipe} from './percentage-valid.pipe';
@@ -89,6 +89,7 @@ export class PercentageDataInputComponent implements OnChanges {
         }
       });
     }
+    this.valid = this.percentageValid.transform(this.value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])
