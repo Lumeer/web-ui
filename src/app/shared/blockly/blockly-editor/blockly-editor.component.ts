@@ -1198,7 +1198,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private registerLinks(workspace): any[] {
     const xmlList = this.registerLinkInstanceVariables(workspace);
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    if (xmlList.length) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    }
 
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
     if (this.masterType === MasterBlockType.Function) {
