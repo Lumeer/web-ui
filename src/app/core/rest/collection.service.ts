@@ -36,12 +36,8 @@ export class CollectionService extends PermissionService {
     super(httpClient, store);
   }
 
-  public createCollection(collection: CollectionDto, correlationId?: string): Observable<CollectionDto> {
-    let headers = new HttpHeaders();
-    if (correlationId) {
-      headers = headers.set('correlation_id', correlationId);
-    }
-    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection, {headers});
+  public createCollection(collection: CollectionDto): Observable<CollectionDto> {
+    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
   }
 
   public updateCollection(collection: CollectionDto): Observable<CollectionDto> {

@@ -349,7 +349,9 @@ export class PusherService implements OnDestroy {
   private bindDocumentEvents() {
     this.channel.bind('Document:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data.object)}));
+        this.store$.dispatch(
+          new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data.object, data.correlationId)})
+        );
       }
     });
     this.channel.bind('Document:create:ALT', data => {
@@ -370,7 +372,9 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data.object)}));
+        this.store$.dispatch(
+          new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data.object, data.correlationId)})
+        );
       }
     });
     this.channel.bind('Document:update:ALT', data => {
@@ -399,7 +403,9 @@ export class PusherService implements OnDestroy {
   private bindLinkTypeEvents() {
     this.channel.bind('LinkType:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new LinkTypesAction.CreateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
+        this.store$.dispatch(
+          new LinkTypesAction.CreateSuccess({linkType: convertLinkTypeDtoToModel(data.object, data.correlationId)})
+        );
       }
     });
     this.channel.bind('LinkType:create:ALT', data => {
@@ -409,7 +415,9 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('LinkType:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new LinkTypesAction.UpdateSuccess({linkType: convertLinkTypeDtoToModel(data.object)}));
+        this.store$.dispatch(
+          new LinkTypesAction.UpdateSuccess({linkType: convertLinkTypeDtoToModel(data.object, data.correlationId)})
+        );
       }
     });
     this.channel.bind('LinkType:update:ALT', data => {
@@ -428,7 +436,9 @@ export class PusherService implements OnDestroy {
     this.channel.bind('LinkInstance:create', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
-          new LinkInstancesAction.CreateSuccess({linkInstance: convertLinkInstanceDtoToModel(data.object)})
+          new LinkInstancesAction.CreateSuccess({
+            linkInstance: convertLinkInstanceDtoToModel(data.object, data.correlationId),
+          })
         );
       }
     });
@@ -440,7 +450,9 @@ export class PusherService implements OnDestroy {
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
-          new LinkInstancesAction.UpdateSuccess({linkInstance: convertLinkInstanceDtoToModel(data.object)})
+          new LinkInstancesAction.UpdateSuccess({
+            linkInstance: convertLinkInstanceDtoToModel(data.object, data.correlationId),
+          })
         );
       }
     });

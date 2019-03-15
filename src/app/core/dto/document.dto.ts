@@ -19,6 +19,7 @@
 
 export interface DocumentDto {
   id: string;
+  correlationId?: string;
   collectionId: string;
   parentId?: string;
   creationDate?: number;

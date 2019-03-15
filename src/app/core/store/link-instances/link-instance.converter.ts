@@ -20,9 +20,10 @@
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstance} from './link.instance';
 
-export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto): LinkInstance {
+export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationId?: string): LinkInstance {
   return {
     id: dto.id,
+    correlationId,
     linkTypeId: dto.linkTypeId,
     documentIds: dto.documentIds,
     data: dto.data,
@@ -37,6 +38,7 @@ export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto): LinkInstanc
 export function convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
   return {
     id: model.id,
+    correlationId: model.correlationId,
     linkTypeId: model.linkTypeId,
     documentIds: model.documentIds,
     data: model.data,

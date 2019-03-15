@@ -97,7 +97,7 @@ export class CollectionsEffects {
       const {collection, callback} = action.payload;
       const collectionDto = convertCollectionModelToDto(collection);
 
-      return this.collectionService.createCollection(collectionDto, collection.correlationId).pipe(
+      return this.collectionService.createCollection(collectionDto).pipe(
         map(dto => convertCollectionDtoToModel(dto, collection.correlationId)),
         mergeMap(newCollection => {
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection: newCollection})];

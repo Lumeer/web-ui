@@ -21,6 +21,7 @@ import {AttributeDto} from './attribute.dto';
 import {ResourceDto} from './resource.dto';
 
 export interface CollectionDto extends ResourceDto {
+  correlationId?: string;
   attributes?: AttributeDto[];
   defaultAttributeId?: string;
   documentsCount?: number;

@@ -53,6 +53,7 @@ export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: 
 export function convertCollectionModelToDto(model: Collection): CollectionDto {
   return {
     id: model.id,
+    correlationId: model.correlationId,
     code: model.code,
     name: model.name,
     description: model.description,
