@@ -42,6 +42,7 @@ export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: stri
 export function convertDocumentModelToDto(model: DocumentModel | Partial<DocumentModel>): DocumentDto {
   return {
     id: model.id,
+    correlationId: model.correlationId,
     collectionId: model.collectionId,
     data: model.data, // TODO convert values
     metaData: model.metaData,

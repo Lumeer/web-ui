@@ -17,23 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../model/data/data-value';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {isBackendUrl} from '../../api/api.utils';
 
-export interface LinkInstance {
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
-  correlationId?: string;
+@Injectable()
+export class CorrelationIdHttpInterceptor implements HttpInterceptor {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!isBackendUrl(request.url)) {
+      return next.handle(request);
+    }
 
-  creationDate?: Date;
-  updateDate?: Date;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
+    if (request.body && request.body.correlationId) {
+      const requestClone = request.clone({
+        setHeaders: {correlation_id: request.body.correlationId},
+      });
+      return next.handle(requestClone);
+    }
 
-  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
-}
-
-export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
+    return next.handle(request);
+  }
 }
