@@ -153,6 +153,9 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
         }
         return RuleTiming.Update;
       }
+      if (hasDelete) {
+        return RuleTiming.Delete;
+      }
     }
     return null;
   }
