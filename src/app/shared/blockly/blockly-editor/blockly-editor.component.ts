@@ -25,6 +25,7 @@ import {
   HostListener,
   Inject,
   Input,
+  OnDestroy,
   Output,
   Renderer2,
 } from '@angular/core';
@@ -86,7 +87,7 @@ export const enum MasterBlockType {
   styleUrls: ['./blockly-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyEditorComponent implements AfterViewInit {
+export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   @Input()
   public collections: Collection[] = [];
 
@@ -1411,5 +1412,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
     const clean = js.replace(/var.* = Polyglot\.import\('lumeer'\);/g, '').trim();
 
     return clean.length === 0;
+  }
+
+  public ngOnDestroy(): void {
+    this.workspace.dispose();
   }
 }

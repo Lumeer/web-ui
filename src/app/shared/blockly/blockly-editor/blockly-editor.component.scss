@@ -34,8 +34,14 @@
       color: $light;
     }
 
-    &.blocklyFontAwesome {
-      font-family: 'Font Awesome 5 Pro';
+    &.blocklyFontAwesome.fa {
+      font-family: 'Font Awesome 5 Pro Regular';
+    }
+    &.blocklyFontAwesome.fas {
+      font-family: 'Font Awesome 5 Pro Solid';
+    }
+    &.blocklyFontAwesome.fab {
+      font-family: 'Font Awesome 5 Pro Brands';
     }
   }
 
