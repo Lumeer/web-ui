@@ -19,6 +19,7 @@
 
 export interface LinkInstanceDto {
   id?: string;
+  correlationId?: string;
   linkTypeId: string;
   documentIds: [string, string];
   creationDate?: number;

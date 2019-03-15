@@ -21,6 +21,7 @@ import {AttributeDto} from './attribute.dto';
 
 export interface LinkTypeDto {
   id?: string; // TODO make compulsory
+  correlationId?: string;
   name: string;
   version?: number;
   collectionIds?: [string, string];

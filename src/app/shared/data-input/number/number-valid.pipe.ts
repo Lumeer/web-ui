@@ -17,23 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../model/data/data-value';
+import {Pipe, PipeTransform} from '@angular/core';
+import {NumberConstraintConfig} from '../../../core/model/data/constraint';
+import {isNumberValid} from '../../utils/data.utils';
 
-export interface LinkInstance {
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
-  correlationId?: string;
-
-  creationDate?: Date;
-  updateDate?: Date;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
-}
-
-export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
+@Pipe({
+  name: 'numberValid',
+})
+export class NumberValidPipe implements PipeTransform {
+  public transform(value: any, config?: NumberConstraintConfig): boolean {
+    return isNumberValid(value, config);
+  }
 }

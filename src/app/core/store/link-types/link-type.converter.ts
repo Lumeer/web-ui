@@ -39,6 +39,7 @@ export function convertLinkTypeDtoToModel(dto: LinkTypeDto, correlationId?: stri
 export function convertLinkTypeModelToDto(model: LinkType): LinkTypeDto {
   return {
     id: model.id,
+    correlationId: model.correlationId,
     name: model.name,
     collectionIds: model.collectionIds,
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],

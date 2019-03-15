@@ -23,6 +23,7 @@ import {SentryHttpInterceptor} from './sentry.http-interceptor';
 import {SessionHttpInterceptor} from './session.http-interceptor';
 import {ViewHttpInterceptor} from './view.http-interceptor';
 import {ResponseTimeHttpInterceptor} from './response.time.http-interceptor';
+import {CorrelationIdHttpInterceptor} from './correlation-id.http-interceptor';
 
 export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: ResponseTimeHttpInterceptor, multi: true},
@@ -30,4 +31,5 @@ export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: SentryHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true},
+  {provide: HTTP_INTERCEPTORS, useClass: CorrelationIdHttpInterceptor, multi: true},
 ];

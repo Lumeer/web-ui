@@ -17,59 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
-import Big from 'big.js';
-import {decimalUserToStore} from '../../utils/data.utils';
+import {isPercentageValid} from '../../utils/data.utils';
 
 @Pipe({
   name: 'percentageValid',
 })
-@Injectable()
 export class PercentageValidPipe implements PipeTransform {
   public transform(value: any, config?: PercentageConstraintConfig): boolean {
-    if (!value || typeof value === 'number') {
-      return true;
-    }
-
-    if (typeof value === 'string') {
-      const text = decimalUserToStore(value.trim());
-
-      const percChars = (text.match(/%/g) || []).length;
-      if (percChars === 1 && text.endsWith('%')) {
-        const prefix = text.substring(0, text.length - 1);
-        return this.checkNumber(prefix, config);
-      } else if (percChars === 0) {
-        return this.checkNumber(text, config);
-      }
-    }
-
-    return false;
-  }
-
-  private checkNumber(value: string, config?: PercentageConstraintConfig): boolean {
-    if (!isNaN(+value)) {
-      try {
-        new Big(value);
-      } catch (e) {
-        return false;
-      }
-
-      return this.checkRange(+value, config);
-    }
-
-    return false;
-  }
-
-  private checkRange(n: number, config?: PercentageConstraintConfig) {
-    let passed = true;
-    if (config.minValue || config.minValue === 0) {
-      passed = n >= config.minValue;
-    }
-    if (config.maxValue || config.maxValue === 0) {
-      passed = passed && n <= config.maxValue;
-    }
-
-    return passed;
+    return isPercentageValid(value, config);
   }
 }
