@@ -25,6 +25,7 @@ import {
   HostListener,
   Inject,
   Input,
+  OnDestroy,
   Output,
   Renderer2,
 } from '@angular/core';
@@ -86,7 +87,7 @@ export const enum MasterBlockType {
   styleUrls: ['./blockly-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyEditorComponent implements AfterViewInit {
+export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   @Input()
   public collections: Collection[] = [];
 
@@ -1197,7 +1198,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
   private registerLinks(workspace): any[] {
     const xmlList = this.registerLinkInstanceVariables(workspace);
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    if (xmlList.length) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    }
 
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="' + GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild);
     if (this.masterType === MasterBlockType.Function) {
@@ -1411,5 +1414,9 @@ export class BlocklyEditorComponent implements AfterViewInit {
     const clean = js.replace(/var.* = Polyglot\.import\('lumeer'\);/g, '').trim();
 
     return clean.length === 0;
+  }
+
+  public ngOnDestroy(): void {
+    this.workspace.dispose();
   }
 }

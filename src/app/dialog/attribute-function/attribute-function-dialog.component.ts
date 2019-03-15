@@ -149,8 +149,15 @@ export class AttributeFunctionDialogComponent implements OnInit {
     }
   }
 
-  public onClose() {
-    this.dialogService.closeFullscreenDialog();
+  public onClose(event: MouseEvent) {
+    let blocklyClick = false;
+    (event.target as HTMLElement).classList.forEach(
+      classItem => (blocklyClick = blocklyClick || classItem.indexOf('blockly') >= 0)
+    );
+
+    if (!blocklyClick) {
+      this.dialogService.closeFullscreenDialog();
+    }
   }
 
   public switchEditable() {
