@@ -28,6 +28,7 @@ import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {createRange} from './plot-maker/plot-util';
+import {environment} from '../../../../../environments/environment';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -144,7 +145,7 @@ export class ChartVisualizer {
   }
 
   private createConfig(): Partial<Config> {
-    return {responsive: true};
+    return {responsive: true, locale: environment.locale};
   }
 
   public resize() {
