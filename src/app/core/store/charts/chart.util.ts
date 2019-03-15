@@ -32,13 +32,17 @@ export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: Cha
   }
 
   return (
-    mapsChanged(viewConfig.axes, currentConfig.axes) ||
-    mapsChanged(viewConfig.names, currentConfig.names) ||
-    mapsChanged(viewConfig.aggregations, currentConfig.aggregations)
+    mapsChanged(viewConfig.axes || {}, currentConfig.axes || {}) ||
+    mapsChanged(viewConfig.names || {}, currentConfig.names || {}) ||
+    mapsChanged(viewConfig.aggregations || {}, currentConfig.aggregations || {})
   );
 }
 
 function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {
+  if (!sort1 && !sort2) {
+    return false;
+  }
+
   if ((!sort1 && sort2) || (sort1 && !sort2)) {
     return true;
   }
@@ -47,11 +51,11 @@ function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {
 }
 
 function mapsChanged(map1: Record<string, any>, map2: Record<string, any>): boolean {
-  if (Object.keys(map1 || {}).length !== Object.keys(map2 || {}).length) {
+  if (Object.keys(map1).length !== Object.keys(map2).length) {
     return true;
   }
 
-  return Object.entries(map1 || {}).some(([key, value]) => {
+  return Object.entries(map1).some(([key, value]) => {
     return !map2[key] || !deepObjectsEquals(value, map2[key]);
   });
 }
