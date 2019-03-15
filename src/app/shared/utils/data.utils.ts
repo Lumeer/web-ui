@@ -28,6 +28,7 @@ import {
 import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 import Big from 'big.js';
+import {isNullOrUndefined} from './common.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -86,6 +87,13 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
+  if ([undefined, null, ''].includes(value)) {
+    return '';
+  }
+  const valueBig = convertToBig(value);
+  if (valueBig) {
+    return decimalStoreToUser(valueBig.toFixed());
+  }
   return formatUnknownDataValue(value);
 }
 
@@ -170,4 +178,84 @@ export function decimalUserToStore(value: string): string {
 
 export function decimalStoreToUser(value: string): string {
   return separator === '.' ? value : value.replace('.', separator);
+}
+
+export function convertToBig(value: any): Big {
+  if (isNullOrUndefined(value) || value === '') {
+    return null;
+  }
+  try {
+    return new Big(value);
+  } catch (e) {
+    return null;
+  }
+}
+
+export function isNumberValid(value: any, config?: NumberConstraintConfig): boolean {
+  if (!value) {
+    return true;
+  }
+  const valueBig = convertToBig(value);
+  if (!valueBig) {
+    return false;
+  }
+  return checkNumberRange(valueBig, config);
+}
+
+function checkNumberRange(n: Big, config?: NumberConstraintConfig): boolean {
+  let passed = true;
+  if (config.minValue) {
+    passed = n.gte(config.minValue);
+  }
+  if (config.maxValue) {
+    passed = passed && n.lte(config.maxValue);
+  }
+
+  return passed;
+}
+
+export function isPercentageValid(value: any, config?: PercentageConstraintConfig): boolean {
+  if (!value || typeof value === 'number') {
+    return true;
+  }
+
+  if (typeof value === 'string') {
+    const text = decimalUserToStore(value.trim());
+
+    const percChars = (text.match(/%/g) || []).length;
+    if (percChars === 1 && text.endsWith('%')) {
+      const prefix = text.substring(0, text.length - 1);
+      return checkPercentageNumber(prefix, config);
+    } else if (percChars === 0) {
+      return checkPercentageNumber(text, config);
+    }
+  }
+
+  return false;
+}
+
+function checkPercentageNumber(value: string, config?: PercentageConstraintConfig): boolean {
+  if (!isNaN(+value)) {
+    try {
+      new Big(value);
+    } catch (e) {
+      return false;
+    }
+
+    return checkPercentageRange(+value, config);
+  }
+
+  return false;
+}
+
+function checkPercentageRange(n: number, config?: PercentageConstraintConfig): boolean {
+  let passed = true;
+  if (config.minValue || config.minValue === 0) {
+    passed = n >= config.minValue;
+  }
+  if (config.maxValue || config.maxValue === 0) {
+    passed = passed && n <= config.maxValue;
+  }
+
+  return passed;
 }

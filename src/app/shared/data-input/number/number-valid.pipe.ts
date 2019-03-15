@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
-import {isPercentageValid} from '../../utils/data.utils';
+import {NumberConstraintConfig} from '../../../core/model/data/constraint';
+import {isNumberValid} from '../../utils/data.utils';
 
 @Pipe({
-  name: 'percentageValid',
+  name: 'numberValid',
 })
-export class PercentageValidPipe implements PipeTransform {
-  public transform(value: any, config?: PercentageConstraintConfig): boolean {
-    return isPercentageValid(value, config);
+export class NumberValidPipe implements PipeTransform {
+  public transform(value: any, config?: NumberConstraintConfig): boolean {
+    return isNumberValid(value, config);
   }
 }

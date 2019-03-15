@@ -19,12 +19,13 @@
 
 import {AttributeDto, CollectionDto} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {Constraint, constraintTypesMap} from '../../model/data/constraint';
+import {Constraint, ConstraintType, constraintTypesMap, NumberConstraintConfig} from '../../model/data/constraint';
 import {AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
 import {Attribute, AttributeFunction, Collection, ImportedCollection} from './collection';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {RuleDto} from '../../dto/collection.dto';
 import {Rule, RuleTimingMap, RuleTypeMap} from '../../model/rule';
+import {convertToBig} from '../../../shared/utils/data.utils';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
@@ -85,21 +86,68 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
 }
 
 function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
-  return (
-    dto && {
-      type: constraintTypesMap[dto.type],
-      config: dto.config,
-    }
-  );
+  if (!dto) {
+    return null;
+  }
+  switch (dto.type) {
+    case ConstraintType.Number:
+      return convertNumberConstraintDtoToModel(dto);
+    default:
+      return convertAnyConstraintDtoToModel(dto);
+  }
+}
+
+function convertNumberConstraintDtoToModel(dto: ConstraintDto): Constraint {
+  return {
+    type: ConstraintType.Number,
+    config: {
+      decimal: dto.config.decimal,
+      format: dto.config.format,
+      precision: dto.config.precision,
+      minValue: convertToBig(dto.config.minValue),
+      maxValue: convertToBig(dto.config.maxValue),
+    },
+  };
+}
+
+function convertAnyConstraintDtoToModel(dto: ConstraintDto): Constraint {
+  return {
+    type: constraintTypesMap[dto.type],
+    config: dto.config,
+  };
 }
 
 function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto {
-  return (
-    model && {
-      type: model.type,
-      config: model.config,
-    }
-  );
+  if (!model) {
+    return null;
+  }
+  switch (model.type) {
+    case ConstraintType.Number:
+      return convertNumberConstraintModelToDto(model);
+    default:
+      return convertAnyConstraintModelToDto(model);
+  }
+}
+
+function convertNumberConstraintModelToDto(model: Constraint): ConstraintDto {
+  const config = model.config as NumberConstraintConfig;
+  return {
+    type: ConstraintType.Number,
+    config: {
+      decimal: config.decimal,
+      format: config.format,
+      precision: config.precision,
+      minValue: config.minValue && config.minValue.toFixed(),
+      maxValue: config.maxValue && config.maxValue.toFixed(),
+    },
+  };
+}
+
+function convertAnyConstraintModelToDto(model: Constraint): ConstraintDto {
+  return {
+    type: model.type,
+    config: model.config,
+  };
 }
 
 function convertAttributeFunctionDtoToModel(dto: AttributeFunctionDto): AttributeFunction {

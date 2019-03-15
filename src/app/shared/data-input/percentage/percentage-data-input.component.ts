@@ -29,12 +29,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberConstraintConfig, PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {PercentageValidPipe} from './percentage-valid.pipe';
 import Big from 'big.js';
-import {decimalUserToStore} from '../../utils/data.utils';
+import {decimalUserToStore, isPercentageValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'percentage-data-input',
@@ -71,8 +70,6 @@ export class PercentageDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
 
-  constructor(private percentageValid: PercentageValidPipe) {}
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
@@ -89,6 +86,7 @@ export class PercentageDataInputComponent implements OnChanges {
         }
       });
     }
+    this.valid = isPercentageValid(this.value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])
@@ -99,7 +97,7 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.percentageInput;
 
-        if (!this.percentageValid.transform(input.nativeElement.value, this.constraintConfig)) {
+        if (!isPercentageValid(input.nativeElement.value, this.constraintConfig)) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -122,7 +120,7 @@ export class PercentageDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = this.percentageValid.transform(element.value, this.constraintConfig);
+    this.valid = isPercentageValid(element.value, this.constraintConfig);
 
     this.valueChange.emit(value);
   }

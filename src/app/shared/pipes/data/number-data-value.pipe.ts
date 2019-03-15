@@ -25,7 +25,7 @@ import {formatNumberDataValue} from '../../utils/data.utils';
   name: 'numberDataValue',
 })
 export class NumberDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: NumberConstraintConfig): any {
+  public transform(value: any, config?: NumberConstraintConfig): string {
     return formatNumberDataValue(value, config);
   }
 }

@@ -32,6 +32,7 @@ import {
 import {NumberConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
+import {decimalUserToStore, formatNumberDataValue, isNumberValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'number-data-input',
@@ -64,15 +65,22 @@ export class NumberDataInputComponent implements OnChanges {
   @ViewChild('numberInput')
   public numberInput: ElementRef<HTMLInputElement>;
 
+  public valid = true;
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
+        if (this.value && !this.numberInput.nativeElement.value) {
+          this.numberInput.nativeElement.value = decimalUserToStore(
+            formatNumberDataValue(this.value, this.constraintConfig)
+          );
+        }
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
       });
     }
+    this.valid = isNumberValid(this.value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])
@@ -82,6 +90,13 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.numberInput;
+
+        if (!isNumberValid(input.nativeElement.value, this.constraintConfig)) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          return;
+        }
+
         // needs to be executed after parent event handlers
         setTimeout(() => {
           this.preventSave = true;
@@ -99,6 +114,8 @@ export class NumberDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
+    this.valid = isNumberValid(element.value, this.constraintConfig);
+
     this.valueChange.emit(value);
   }
 
@@ -110,8 +127,7 @@ export class NumberDataInputComponent implements OnChanges {
     }
   }
 
-  private transformValue(value: any): number | string {
-    // TODO NaN, decimal, etc.
-    return value !== '' ? Number(value) : '';
+  private transformValue(value: any): string {
+    return decimalUserToStore(String(value).trim());
   }
 }

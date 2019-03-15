@@ -27,6 +27,7 @@ import {
   isConstraintTypeEnabled,
 } from '../../../core/model/data/constraint';
 import {Attribute} from '../../../core/store/collections/collection';
+import {convertToBig} from '../../../shared/utils/data.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -83,8 +84,8 @@ export class AttributeTypeFormComponent implements OnChanges {
         return {
           decimal: this.configForm.get('decimal').value,
           format: undefined, // TODO
-          minValue: this.configForm.get('minValue').value,
-          maxValue: this.configForm.get('maxValue').value,
+          minValue: convertToBig(this.configForm.get('minValue').value),
+          maxValue: convertToBig(this.configForm.get('maxValue').value),
           precision: undefined, // TODO
         };
       case ConstraintType.Percentage:

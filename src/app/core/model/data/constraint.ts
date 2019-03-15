@@ -18,6 +18,7 @@
  */
 
 import {ColumnFunction} from './column-function';
+import Big from 'big.js';
 
 export enum ConstraintType {
   Text = 'Text',
@@ -104,8 +105,8 @@ export interface FunctionConstraintConfig {
 export interface NumberConstraintConfig {
   decimal: boolean;
   format: string;
-  minValue: number; // TODO use BigInt
-  maxValue: number; // TODO use BigInt
+  minValue: Big;
+  maxValue: Big;
   precision: number;
 }
 
