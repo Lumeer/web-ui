@@ -17,36 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {NumberConstraintConfig} from '../../../core/model/data/constraint';
-import Big from 'big.js';
-import {convertToBig} from '../../utils/data.utils';
+import {isNumberValid} from '../../utils/data.utils';
 
 @Pipe({
   name: 'numberValid',
 })
-@Injectable()
 export class NumberValidPipe implements PipeTransform {
   public transform(value: any, config?: NumberConstraintConfig): boolean {
-    if (!value) {
-      return true;
-    }
-    const valueBig = convertToBig(value);
-    if (!valueBig) {
-      return false;
-    }
-    return this.checkRange(valueBig, config);
-  }
-
-  private checkRange(n: Big, config?: NumberConstraintConfig): boolean {
-    let passed = true;
-    if (config.minValue) {
-      passed = n.gte(config.minValue);
-    }
-    if (config.maxValue) {
-      passed = passed && n.lte(config.maxValue);
-    }
-
-    return passed;
+    return isNumberValid(value, config);
   }
 }

@@ -32,8 +32,7 @@ import {
 import {NumberConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {NumberValidPipe} from './number-valid.pipe';
-import {decimalUserToStore, formatNumberDataValue} from '../../utils/data.utils';
+import {decimalUserToStore, formatNumberDataValue, isNumberValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'number-data-input',
@@ -69,8 +68,6 @@ export class NumberDataInputComponent implements OnChanges {
   public valid = true;
   private preventSave: boolean;
 
-  constructor(private numberValidPipe: NumberValidPipe) {}
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
@@ -83,7 +80,7 @@ export class NumberDataInputComponent implements OnChanges {
         this.numberInput.nativeElement.focus();
       });
     }
-    this.valid = this.numberValidPipe.transform(this.value, this.constraintConfig);
+    this.valid = isNumberValid(this.value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])
@@ -94,7 +91,7 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.numberInput;
 
-        if (!this.numberValidPipe.transform(input.nativeElement.value, this.constraintConfig)) {
+        if (!isNumberValid(input.nativeElement.value, this.constraintConfig)) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -117,7 +114,7 @@ export class NumberDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = this.numberValidPipe.transform(element.value, this.constraintConfig);
+    this.valid = isNumberValid(element.value, this.constraintConfig);
 
     this.valueChange.emit(value);
   }

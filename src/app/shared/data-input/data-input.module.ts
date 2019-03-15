@@ -43,7 +43,6 @@ import {DirectivesModule} from '../directives/directives.module';
     PercentageValidPipe,
     NumberValidPipe,
   ],
-  providers: [PercentageValidPipe, NumberValidPipe],
   exports: [DataInputComponent, BooleanDataInputComponent],
 })
 export class DataInputModule {}

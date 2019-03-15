@@ -94,7 +94,7 @@ export function formatNumberDataValue(value: any, config: NumberConstraintConfig
   if (valueBig) {
     return decimalStoreToUser(valueBig.toFixed());
   }
-  return String(value);
+  return formatUnknownDataValue(value);
 }
 
 export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig, suffix = ''): string {
@@ -189,4 +189,73 @@ export function convertToBig(value: any): Big {
   } catch (e) {
     return null;
   }
+}
+
+export function isNumberValid(value: any, config?: NumberConstraintConfig): boolean {
+  if (!value) {
+    return true;
+  }
+  const valueBig = convertToBig(value);
+  if (!valueBig) {
+    return false;
+  }
+  return checkNumberRange(valueBig, config);
+}
+
+function checkNumberRange(n: Big, config?: NumberConstraintConfig): boolean {
+  let passed = true;
+  if (config.minValue) {
+    passed = n.gte(config.minValue);
+  }
+  if (config.maxValue) {
+    passed = passed && n.lte(config.maxValue);
+  }
+
+  return passed;
+}
+
+export function isPercentageValid(value: any, config?: PercentageConstraintConfig): boolean {
+  if (!value || typeof value === 'number') {
+    return true;
+  }
+
+  if (typeof value === 'string') {
+    const text = decimalUserToStore(value.trim());
+
+    const percChars = (text.match(/%/g) || []).length;
+    if (percChars === 1 && text.endsWith('%')) {
+      const prefix = text.substring(0, text.length - 1);
+      return checkPercentageNumber(prefix, config);
+    } else if (percChars === 0) {
+      return checkPercentageNumber(text, config);
+    }
+  }
+
+  return false;
+}
+
+function checkPercentageNumber(value: string, config?: PercentageConstraintConfig): boolean {
+  if (!isNaN(+value)) {
+    try {
+      new Big(value);
+    } catch (e) {
+      return false;
+    }
+
+    return checkPercentageRange(+value, config);
+  }
+
+  return false;
+}
+
+function checkPercentageRange(n: number, config?: PercentageConstraintConfig): boolean {
+  let passed = true;
+  if (config.minValue || config.minValue === 0) {
+    passed = n >= config.minValue;
+  }
+  if (config.maxValue || config.maxValue === 0) {
+    passed = passed && n <= config.maxValue;
+  }
+
+  return passed;
 }
