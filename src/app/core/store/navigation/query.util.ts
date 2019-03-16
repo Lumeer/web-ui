@@ -25,7 +25,6 @@ import {AttributeFilter, Query, QueryStem, ConditionType} from './query';
 import {LinkType} from '../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -76,6 +75,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
         value: new FormControl(queryItem.value, Validators.required),
       });
     case QueryItemType.Attribute:
+    case QueryItemType.LinkAttribute:
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
         condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
@@ -238,21 +238,4 @@ export function filterStemByAttributeIds(stem: QueryStem, collectionId: string, 
     stem.filters &&
     stem.filters.filter(filter => filter.collectionId !== collectionId || !attributeIds.includes(filter.attributeId));
   return {...stem, filters};
-}
-
-export function queryStemCollectionsOrder(linkTypes: LinkType[], stem: QueryStem): string[] {
-  if (!stem) {
-    return [];
-  }
-  const order = [stem.collectionId];
-  for (const linkTypeId of stem.linkTypeIds || []) {
-    const linkType = linkTypes.find(lt => lt.id === linkTypeId);
-    if (!linkType) {
-      return order;
-    }
-    const otherCollectionId = getOtherLinkedCollectionId(linkType, order[order.length - 1]);
-    order.push(otherCollectionId);
-  }
-
-  return order;
 }
