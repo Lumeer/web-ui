@@ -1689,14 +1689,6 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.number.decimal.label" datatype="html">
-        <source>
-      Floating point
-    </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
       </trans-unit><trans-unit id="constraint.text.caseStyle.label" datatype="html">
         <source>
       Case style
@@ -3827,6 +3819,10 @@
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="menu.appTour.invocationError" datatype="html">
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source>
@@ -4144,21 +4140,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.message" datatype="html">
-        <source>Do you want to create a copy of the view or just update the existing one?</source>
+        <source>Do you want to make a copy of the view or rename the existing one?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.clone" datatype="html">
-        <source>Create a copy</source>
+        <source>Make a copy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.update" datatype="html">
-        <source>Update</source>
+        <source>Rename</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
