@@ -226,16 +226,11 @@ export function queryWithoutLinks(query: Query): Query {
 }
 
 export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
-  const stemCopy = {...stem};
-  const stemLinkTypes = stem.linkTypeIds.map(id => linkTypes.find(lt => lt.id === id));
-  const removingLinkTypes = stemLinkTypes.slice(linkIndex);
-  stemCopy.linkTypeIds = stem.linkTypeIds.slice(0, linkIndex);
+  const stemCopy = {...stem, linkTypeIds: stem.linkTypeIds.slice(0, linkIndex)};
+  const notRemovedCollectionIds = collectionIdsChainForStem(stemCopy, linkTypes);
 
-  const removingCollections = removingLinkTypes.reduce((ids, linkType) => {
-    const idsToAdd = linkType.collectionIds.filter(id => !ids.includes(id));
-    return [...ids, ...idsToAdd];
-  }, []);
-  stemCopy.filters = stem.filters && stem.filters.filter(filter => !removingCollections.includes(filter.collectionId));
+  stemCopy.filters =
+    stem.filters && stem.filters.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
   stemCopy.linkFilters =
     stem.linkFilters && stem.linkFilters.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
 
