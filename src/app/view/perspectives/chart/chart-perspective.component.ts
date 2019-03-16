@@ -54,6 +54,8 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
 import {ChartDataComponent} from './data/chart-data.component';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import * as PlotlyJS from 'plotly.js';
+import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 
 @Component({
   selector: 'chart-perspective',
@@ -81,6 +83,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
+    (PlotlyJS as any).register(CSLocale);
     this.initChart();
     this.subscribeToQuery();
     this.subscribeData();
