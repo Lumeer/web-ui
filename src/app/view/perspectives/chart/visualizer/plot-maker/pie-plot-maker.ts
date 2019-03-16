@@ -19,7 +19,7 @@
 
 import {Data, Layout} from 'plotly.js';
 import {ChartDataSet} from '../../data/convertor/chart-data';
-import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
@@ -50,7 +50,7 @@ export class PiePlotMaker extends PlotMaker {
       set =>
         set.yAxisType === ChartAxisType.Y1 &&
         set.isNumeric &&
-        set.points.some(point => isNotNullOrUndefind(point.x) && isNotNullOrUndefind(point.y))
+        set.points.some(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
     );
   }
 
@@ -62,7 +62,7 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private createEmptyPie(): Data {
-    const setWithColor = this.chartData.sets.find(set => isNotNullOrUndefind(set.color));
+    const setWithColor = this.chartData.sets.find(set => isNotNullOrUndefined(set.color));
     const color = setWithColor && setWithColor.color;
 
     const dataStyle = this.getDataStyle();
@@ -82,7 +82,7 @@ export class PiePlotMaker extends PlotMaker {
     const traceY = [];
 
     set.points
-      .filter(point => isNotNullOrUndefind(point.x) && isNotNullOrUndefind(point.y))
+      .filter(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
       .forEach(point => {
         traceX.push(point.x);
         traceY.push(point.y);
@@ -92,7 +92,7 @@ export class PiePlotMaker extends PlotMaker {
     data['labels'] = traceX;
     data['values'] = traceY;
 
-    if (isNotNullOrUndefind(row) && isNotNullOrUndefind(column)) {
+    if (isNotNullOrUndefined(row) && isNotNullOrUndefined(column)) {
       data['domain'] = {row, column};
     }
 

@@ -31,31 +31,22 @@ import {selectNavigation, selectQuery} from '../../../core/store/navigation/navi
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {View} from '../../../core/store/views/view';
 import {Perspective} from '../../../view/perspectives/perspective';
-import {QueryData} from './query-data';
+import {QueryData} from './util/query-data';
 import {QueryItem} from './query-item/model/query-item';
 import {QueryItemType} from './query-item/model/query-item-type';
-import {
-  convertQueryItemsToQueryModel,
-  convertQueryItemsToString,
-  QueryItemsConverter,
-} from './query-item/query-items.converter';
+import {convertQueryItemsToString, QueryItemsConverter} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {filterStemByLinkIndex, queryItemToForm} from '../../../core/store/navigation/query.util';
+import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {LinkQueryItem} from './query-item/model/link.query-item';
-import {CollectionQueryItem} from './query-item/model/collection.query-item';
-import {getArrayDifference} from '../../utils/array.utils';
-import {DocumentQueryItem} from './query-item/model/documents.query-item';
-import {AttributeQueryItem} from './query-item/model/attribute.query-item';
-import {Query} from '../../../core/store/navigation/query';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
+import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 
 const allowAutomaticSubmission = true;
 
@@ -151,192 +142,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private addQueryItemWithRelatedItems(queryItem: QueryItem) {
-    switch (queryItem.type) {
-      case QueryItemType.Collection:
-        return this.addItemBeforeFulltexts(queryItem);
-      case QueryItemType.Link:
-        return this.addLinkItem(queryItem as LinkQueryItem);
-      case QueryItemType.Attribute:
-        return this.addAttributeItem(queryItem as AttributeQueryItem);
-      case QueryItemType.Document:
-        return this.addDocumentItem(queryItem as DocumentQueryItem);
-      case QueryItemType.Fulltext:
-        return this.addItemToEnd(queryItem);
-      case QueryItemType.View:
-        return this.addItemToEnd(queryItem);
-    }
-  }
-
-  private addItemBeforeFulltexts(queryItem: QueryItem) {
-    const queryItems = this.queryItems$.getValue();
-    const fulltextIndex = queryItems.findIndex(qi => qi.type === QueryItemType.Fulltext);
-    const insertIndex = fulltextIndex !== -1 ? fulltextIndex : queryItems.length;
-    this.addQueryItemAtIndex(queryItem, insertIndex);
-  }
-
-  private addLinkItem(linkItem: LinkQueryItem) {
-    const queryItems = this.queryItems$.getValue();
-    let skipItems = false;
-    for (let i = queryItems.length - 1; i >= 0; i--) {
-      const queryItem = queryItems[i];
-      if (queryItem.type === QueryItemType.Link && !skipItems) {
-        const linkingCollectionId = this.getLinkingCollectionIdForLinkIndex(i);
-        if (linkingCollectionId && linkItem.collectionIds.includes(linkingCollectionId)) {
-          this.addQueryItemAtIndex(linkItem, i + 1);
-          return;
-        }
-        skipItems = true;
-      } else if (queryItem.type === QueryItemType.Collection) {
-        if (!skipItems && linkItem.collectionIds.includes((queryItem as CollectionQueryItem).collection.id)) {
-          this.addQueryItemAtIndex(linkItem, i + 1);
-          return;
-        }
-        skipItems = false;
-      }
-    }
-
-    const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(linkItem.collectionIds[0]);
-    this.addItemBeforeFulltexts(collectionItem);
-    this.addItemBeforeFulltexts(linkItem);
-  }
-
-  private getLinkingCollectionIdForLinkIndex(linkIndex: number): string {
-    const stemData = this.getStemCollectionIdForLinkIndex(linkIndex);
-    if (!stemData) {
-      return null;
-    }
-
-    const {collectionId, index} = stemData;
-    const queryItems = this.queryItems$.getValue();
-
-    let linkingCollectionId = collectionId;
-    for (let i = index + 1; i <= linkIndex; i++) {
-      const linkItem = queryItems[i] as LinkQueryItem;
-      const otherCollectionIds = getArrayDifference(linkItem.collectionIds, [linkingCollectionId]);
-      if (otherCollectionIds.length !== 1) {
-        return null;
-      }
-      linkingCollectionId = otherCollectionIds[0];
-    }
-    return linkingCollectionId;
-  }
-
-  private getStemCollectionIdForLinkIndex(index: number): {collectionId: string; index: number} {
-    const queryItems = this.queryItems$.getValue();
-
-    let collectionItemIndex = index;
-    let currentItem: QueryItem = queryItems[index];
-    while (currentItem.type === QueryItemType.Link) {
-      collectionItemIndex--;
-      currentItem = queryItems[collectionItemIndex];
-    }
-
-    if (collectionItemIndex < 0 || currentItem.type !== QueryItemType.Collection) {
-      return null;
-    }
-
-    return {collectionId: (currentItem as CollectionQueryItem).collection.id, index: collectionItemIndex};
-  }
-
-  private addAttributeItem(attributeItem: AttributeQueryItem) {
-    const queryStartData = this.findQueryStemStartIndexForCollection(attributeItem.collection.id);
-    if (queryStartData) {
-      const queryItems = this.queryItems$.getValue();
-      const {index, distanceFromCollection} = queryStartData;
-      for (let i = index + 1; i < queryItems.length; i++) {
-        const queryItem = queryItems[i];
-        if (queryItem.type === QueryItemType.Attribute) {
-          const currentAttributeItem = queryItem as AttributeQueryItem;
-          if (currentAttributeItem.collection.id !== attributeItem.collection.id) {
-            const attributeStartData = this.findQueryStemStartIndexForCollection(currentAttributeItem.collection.id);
-            if (distanceFromCollection < attributeStartData.distanceFromCollection) {
-              // we found attributeItem which should be behind adding item
-              this.addQueryItemAtIndex(attributeItem, i);
-              return;
-            }
-          }
-        } else if ([QueryItemType.Collection, QueryItemType.Document].includes(queryItem.type)) {
-          // index is now at the end of attributes or at the start of another query stem
-          this.addQueryItemAtIndex(attributeItem, i);
-          return;
-        }
-      }
-
-      this.addItemBeforeFulltexts(attributeItem);
-    } else {
-      const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(attributeItem.collection.id);
-      this.addItemBeforeFulltexts(collectionItem);
-      this.addItemBeforeFulltexts(attributeItem);
-    }
-  }
-
-  private addDocumentItem(documentItem: DocumentQueryItem) {
-    const queryStartData = this.findQueryStemStartIndexForCollection(documentItem.document.collectionId);
-    if (queryStartData) {
-      const queryItems = this.queryItems$.getValue();
-      const {index, distanceFromCollection} = queryStartData;
-      for (let i = index + 1; i < queryItems.length; i++) {
-        const queryItem = queryItems[i];
-        if (queryItem.type === QueryItemType.Document) {
-          const currentDocumentItem = queryItem as DocumentQueryItem;
-          if (currentDocumentItem.document.collectionId !== documentItem.document.collectionId) {
-            const documentStartData = this.findQueryStemStartIndexForCollection(
-              currentDocumentItem.document.collectionId
-            );
-            if (distanceFromCollection < documentStartData.distanceFromCollection) {
-              // we found documentItem which should be behind adding item
-              this.addQueryItemAtIndex(documentItem, i);
-              return;
-            }
-          }
-        } else if (queryItem.type === QueryItemType.Collection) {
-          // index is now at the end of documents or at the start of another query stem
-          this.addQueryItemAtIndex(documentItem, i);
-          return;
-        }
-      }
-
-      this.addItemBeforeFulltexts(documentItem);
-    } else {
-      const collectionItem = new QueryItemsConverter(this.queryData).createCollectionItem(
-        documentItem.document.collectionId
-      );
-      this.addItemBeforeFulltexts(collectionItem);
-      this.addItemBeforeFulltexts(documentItem);
-    }
-  }
-
-  private findQueryStemStartIndexForCollection(collectionId: string): {index: number; distanceFromCollection: number} {
-    const queryItems = this.queryItems$.getValue();
-    let properLinkIndex = -1;
-    for (let index = queryItems.length - 1; index >= 0; index--) {
-      const queryItem = queryItems[index];
-      if (queryItem.type === QueryItemType.Link) {
-        if ((queryItem as LinkQueryItem).collectionIds.includes(collectionId)) {
-          properLinkIndex = index;
-        }
-      } else if (queryItem.type === QueryItemType.Collection) {
-        if (properLinkIndex !== -1) {
-          const distanceFromCollection = properLinkIndex - index;
-          return {index, distanceFromCollection};
-        } else if (collectionId === (queryItem as CollectionQueryItem).collection.id) {
-          return {index, distanceFromCollection: 0};
-        }
-      }
-    }
-    return null;
-  }
-
-  private addItemToEnd(queryItem: QueryItem) {
-    const lastIndex = this.queryItems$.getValue().length;
-    this.addQueryItemAtIndex(queryItem, lastIndex);
-  }
-
-  private addQueryItemAtIndex(queryItem: QueryItem, index: number) {
-    const currentQueryItems = this.queryItems$.getValue();
-    currentQueryItems.splice(index, 0, queryItem);
-    this.queryItems$.next(currentQueryItems);
-    this.queryItemsControl.insert(index, queryItemToForm(queryItem));
+    const newQueryItems = addQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), queryItem);
+    this.queryItems$.next(newQueryItems);
+    this.initForm(newQueryItems);
   }
 
   public onRemoveLastQueryItem() {
@@ -365,60 +173,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private removeQueryItemWithRelatedItems(index: number) {
-    const queryItem = this.queryItems$.getValue()[index];
-    switch (queryItem.type) {
-      case QueryItemType.Collection:
-        return this.removeCollectionStem(queryItem as CollectionQueryItem);
-      case QueryItemType.Link:
-        return this.removeLinkChainFromStem(index);
-      case QueryItemType.Attribute:
-        return this.removeQueryItem(index);
-      case QueryItemType.Document:
-        return this.removeQueryItem(index);
-      case QueryItemType.Fulltext:
-        return this.removeQueryItem(index);
-    }
-  }
-
-  private removeCollectionStem(item: CollectionQueryItem) {
-    const collectionId = item.collection.id;
-    const currentQuery = convertQueryItemsToQueryModel(this.queryItems$.getValue());
-
-    const stems = (currentQuery.stems || []).filter(stem => stem.collectionId !== collectionId);
-    this.setNewQueryItemsByQuery({...currentQuery, stems});
-  }
-
-  private setNewQueryItemsByQuery(query: Query) {
-    const newQueryItems = new QueryItemsConverter(this.queryData).fromQuery(query);
-
-    this.queryItems$.next(newQueryItems);
-    this.initForm(newQueryItems);
-  }
-
-  private removeLinkChainFromStem(linkIndex: number) {
-    const stemData = this.getStemCollectionIdForLinkIndex(linkIndex);
-    if (!stemData) {
-      return;
-    }
-    const {collectionId, index} = stemData;
-    const currentQuery = convertQueryItemsToQueryModel(this.queryItems$.getValue());
-    const stemIndex = (currentQuery.stems || []).findIndex(st => st.collectionId === collectionId);
-
-    if (stemIndex !== -1) {
-      currentQuery.stems[stemIndex] = filterStemByLinkIndex(
-        currentQuery.stems[stemIndex],
-        linkIndex - (index + 1),
-        this.queryData.linkTypes
-      );
-      this.setNewQueryItemsByQuery(currentQuery);
-    }
-  }
-
-  private removeQueryItem(index: number) {
-    const queryItems = this.queryItems$.getValue().slice();
-    queryItems.splice(index, 1);
-    this.queryItems$.next(queryItems);
-    this.queryItemsControl.removeAt(index);
+    removeQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), index);
   }
 
   public onQueryItemsChanged() {

@@ -22,7 +22,7 @@ import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
-import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
@@ -112,7 +112,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   private firstNonNullValue(sets: ChartDataSet[]): {x: any; y: any} {
     for (const set of sets) {
-      const point = set.points.find(p => isNotNullOrUndefind(p.x) && isNotNullOrUndefind(p.y));
+      const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
         if (set.isNumeric) {
           return {x: point.x, y: 0};

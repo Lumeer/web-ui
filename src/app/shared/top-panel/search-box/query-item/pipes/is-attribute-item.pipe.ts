@@ -27,6 +27,6 @@ import {QueryItemType} from '../model/query-item-type';
 })
 export class IsAttributeItemPipe implements PipeTransform {
   public transform(queryItem: QueryItem): boolean {
-    return queryItem.type === QueryItemType.Attribute;
+    return queryItem.type === QueryItemType.Attribute || queryItem.type === QueryItemType.LinkAttribute;
   }
 }

@@ -20,6 +20,7 @@
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
+  CalendarCollectionConfig,
   CalendarConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -28,7 +29,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {isDateValid} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
 
 export interface CalendarMetaData {
@@ -213,4 +214,51 @@ export function parseCalendarEventDate(value: any): Date {
   const allFormats = [moment.ISO_8601, ...dateFormats, ...dateAndTimeFormats];
   const momentDate = moment(value, allFormats);
   return momentDate.isValid() ? momentDate.toDate() : null;
+}
+
+export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfig: CalendarConfig): boolean {
+  if (viewConfig.mode !== currentConfig.mode || datesChanged(viewConfig.date, currentConfig.date)) {
+    return true;
+  }
+
+  return calendarConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
+}
+
+function datesChanged(date1: Date, date2: Date): boolean {
+  const isDate1Valid = isDateValid(date1);
+  const isDate2Valid = isDateValid(date2);
+  if (!isDate1Valid && !isDate2Valid) {
+    return false;
+  }
+  if (isDate1Valid !== isDate2Valid) {
+    return true;
+  }
+
+  return date1.getTime() !== date2.getTime();
+}
+
+function calendarConfigCollectionsChanged(
+  collections1: Record<string, CalendarCollectionConfig>,
+  collections2: Record<string, CalendarCollectionConfig>
+): boolean {
+  if (Object.keys(collections1).length !== Object.keys(collections2).length) {
+    return true;
+  }
+
+  return Object.entries(collections1).some(([key, value]) => {
+    return !collections2[key] || calendarConfigCollectionChanged(value, collections2[key]);
+  });
+}
+
+function calendarConfigCollectionChanged(
+  config1: CalendarCollectionConfig,
+  config2: CalendarCollectionConfig
+): boolean {
+  if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
+    return true;
+  }
+
+  return Object.entries(config1.barsProperties).some(([key, value]) => {
+    return !config2.barsProperties[key] || !deepObjectsEquals(value, config2.barsProperties[key]);
+  });
 }

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../core/store/collections/collection';
-import {LinkType} from '../../../core/store/link-types/link.type';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 export interface QueryData {
   collections: Collection[];

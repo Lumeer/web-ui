@@ -29,10 +29,18 @@ export interface QueryStemDto {
   linkTypeIds?: string[];
   documentIds?: string[];
   filters?: AttributeFilterDto[];
+  linkFilters?: LinkAttributeFilterDto[];
 }
 
 export interface AttributeFilterDto {
   collectionId: string;
+  operator: string;
+  attributeId: string;
+  value: any;
+}
+
+export interface LinkAttributeFilterDto {
+  linkTypeId: string;
   operator: string;
   attributeId: string;
   value: any;

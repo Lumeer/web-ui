@@ -21,6 +21,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Attribute} from '../../../../../core/store/collections/collection';
+import {LinkAttributeFilter} from '../../../../../core/store/navigation/query';
 
 export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;
@@ -50,5 +51,14 @@ export class LinkAttributeQueryItem implements QueryItem {
 
   public get value() {
     return `${this.linkType.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+  }
+
+  public getLinkAttributeFilter(): LinkAttributeFilter {
+    return {
+      linkTypeId: this.linkType.id,
+      attributeId: this.attribute.id,
+      condition: this.condition,
+      value: this.conditionValue,
+    };
   }
 }

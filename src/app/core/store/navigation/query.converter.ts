@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from 'util';
 import {QueryDto} from '../../dto';
-import {AttributeFilter, Query, QueryStem} from './query';
-import {AttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
+import {AttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
@@ -46,6 +46,7 @@ function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
     documentIds: dto.documentIds,
     linkTypeIds: dto.linkTypeIds,
     filters: dto.filters && dto.filters.map(filter => convertAttributeFilterDtoToModel(filter)),
+    linkFilters: dto.linkFilters && dto.linkFilters.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
   };
 }
 
@@ -55,6 +56,7 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
     documentIds: model.documentIds,
     linkTypeIds: model.linkTypeIds,
     filters: model.filters && model.filters.map(filter => convertAttributeFilterModelToDto(filter)),
+    linkFilters: model.linkFilters && model.linkFilters.map(filter => convertLinkAttributeFilterModelToDto(filter)),
   };
 }
 
@@ -67,9 +69,27 @@ function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFil
   };
 }
 
+function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto): LinkAttributeFilter {
+  return {
+    linkTypeId: dto.linkTypeId,
+    attributeId: dto.attributeId,
+    condition: dto.operator,
+    value: dto.value,
+  };
+}
+
 function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
   return {
     collectionId: model.collectionId,
+    attributeId: model.attributeId,
+    operator: model.condition,
+    value: model.value,
+  };
+}
+
+function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkAttributeFilterDto {
+  return {
+    linkTypeId: model.linkTypeId,
     attributeId: model.attributeId,
     operator: model.condition,
     value: model.value,
