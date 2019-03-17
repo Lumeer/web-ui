@@ -173,7 +173,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private removeQueryItemWithRelatedItems(index: number) {
-    removeQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), index);
+    const newQueryItems = removeQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), index);
+    this.queryItems$.next(newQueryItems);
+    this.initForm(newQueryItems);
   }
 
   public onQueryItemsChanged() {

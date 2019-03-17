@@ -25,7 +25,6 @@ import {AttributeFilter, Query, QueryStem, ConditionType, LinkAttributeFilter} f
 import {LinkType} from '../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {Collection} from '../collections/collection';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
