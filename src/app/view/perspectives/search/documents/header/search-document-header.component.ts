@@ -45,17 +45,10 @@ export class SearchDocumentHeaderComponent {
   public size: SizeType;
 
   @Output()
-  public toggle = new EventEmitter();
-
-  @Output()
   public detail = new EventEmitter();
 
   public readonly collectionType = ResourceType.Collection;
   public readonly sSize = SizeType.S;
-
-  public onToggleDocument() {
-    this.toggle.emit();
-  }
 
   public onDetail() {
     this.detail.emit();
