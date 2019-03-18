@@ -292,7 +292,7 @@ export namespace CollectionsAction {
   export class RemoveAttributeSuccess implements Action {
     public readonly type = CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS;
 
-    public constructor(public payload: {collectionId: string; attributeId: string}) {}
+    public constructor(public payload: {collectionId: string; attribute?: Attribute}) {}
   }
 
   export class RemoveAttributeFailure implements Action {

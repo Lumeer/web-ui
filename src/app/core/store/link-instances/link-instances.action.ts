@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query';
+import {LinkInstance} from './link.instance';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
@@ -32,6 +32,7 @@ export enum LinkInstancesActionType {
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
   PATCH_DATA = '[Link Instances] Patch Data',
+  PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
@@ -94,6 +95,12 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkInstance: LinkInstance}) {}
   }
 
+  export class PatchDataInternal implements Action {
+    public readonly type = LinkInstancesActionType.PATCH_DATA_INTERNAL;
+
+    public constructor(public payload: {linkInstanceId: string; data: Record<string, any>}) {}
+  }
+
   export class UpdateSuccess implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_SUCCESS;
 
@@ -103,7 +110,7 @@ export namespace LinkInstancesAction {
   export class UpdateFailure implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; originalLinkInstance?: LinkInstance}) {}
   }
 
   export class Delete implements Action {
@@ -149,6 +156,7 @@ export namespace LinkInstancesAction {
     | CreateSuccess
     | CreateFailure
     | PatchData
+    | PatchDataInternal
     | UpdateSuccess
     | UpdateFailure
     | Delete

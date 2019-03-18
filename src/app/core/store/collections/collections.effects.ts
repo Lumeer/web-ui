@@ -17,25 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {from, Observable, of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {from, Observable, of} from 'rxjs';
+import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionDto, PermissionDto} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {NavigationAction} from '../navigation/navigation.action';
+import {selectNavigation, selectQuery} from '../navigation/navigation.state';
+import {getAllCollectionIdsFromQuery, getQueryFiltersForCollection} from '../navigation/query.util';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions';
+import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
+import {Attribute, Collection} from './collection';
 import {
   convertAttributeDtoToModel,
   convertAttributeModelToDto,
@@ -43,13 +48,13 @@ import {
   convertCollectionModelToDto,
   convertImportedCollectionModelToDto,
 } from './collection.converter';
-import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
-import {selectNavigation, selectQuery} from '../navigation/navigation.state';
-import {NavigationAction} from '../navigation/navigation.action';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {getAllCollectionIdsFromQuery, getQueryFiltersForCollection} from '../navigation/query.util';
+import {
+  selectCollectionAttributeById,
+  selectCollectionById,
+  selectCollectionsDictionary,
+  selectCollectionsLoaded,
+} from './collections.state';
 
 @Injectable()
 export class CollectionsEffects {
@@ -216,6 +221,7 @@ export class CollectionsEffects {
       );
     })
   );
+
   @Effect()
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.UpdateSuccess>(CollectionsActionType.UPDATE_SUCCESS),
@@ -481,19 +487,25 @@ export class CollectionsEffects {
     ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE),
     mergeMap(action => {
       const {collectionId, attributeId} = action.payload;
-      return this.collectionService.removeAttribute(collectionId, attributeId).pipe(
-        withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
-        flatMap(([, collection]) => {
-          const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess(action.payload)];
-          if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
-            const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, null, attributeId);
-            if (setDefaultAttributeAction) {
-              actions.push(setDefaultAttributeAction);
-            }
-          }
-          return actions;
-        }),
-        catchError(error => of(new CollectionsAction.RemoveAttributeFailure({error: error})))
+      return this.store$.pipe(
+        select(selectCollectionAttributeById(collectionId, attributeId)),
+        take(1),
+        mergeMap(attribute =>
+          this.collectionService.removeAttribute(collectionId, attributeId).pipe(
+            withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
+            flatMap(([, collection]) => {
+              const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess({collectionId, attribute})];
+              if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
+                const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, null, attributeId);
+                if (setDefaultAttributeAction) {
+                  actions.push(setDefaultAttributeAction);
+                }
+              }
+              return actions;
+            }),
+            catchError(error => of(new CollectionsAction.RemoveAttributeFailure({error})))
+          )
+        )
       );
     })
   );

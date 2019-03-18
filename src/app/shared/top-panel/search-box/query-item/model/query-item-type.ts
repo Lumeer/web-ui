@@ -23,6 +23,7 @@ export enum QueryItemType {
   Document = 'Document',
   Fulltext = 'Fulltext',
   Link = 'Link',
+  LinkAttribute = 'LinkAttribute',
   View = 'View',
   Deleted = 'Deleted',
 }

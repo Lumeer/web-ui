@@ -30,7 +30,7 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
 import {Injectable} from '@angular/core';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
@@ -256,7 +256,7 @@ export class ChartDataConverter {
         xAxis && xAxis.resourceIndex,
         yAxis && yAxis.resourceIndex,
         xAxis && yAxis && yName && yName.resourceIndex,
-      ].filter(index => isNotNullOrUndefind(index))
+      ].filter(index => isNotNullOrUndefined(index))
     );
     return y1CollectionIndexes.size > 1;
   }
@@ -344,7 +344,7 @@ export class ChartDataConverter {
     if (index === chain.length - 1) {
       const values = objectData
         .map(d => ({id: d.id, value: d.data[stage.attributeId]}))
-        .filter(obj => isNotNullOrUndefind(obj.value));
+        .filter(obj => isNotNullOrUndefined(obj.value));
       data.push(...values);
       return;
     }
@@ -432,7 +432,7 @@ export class ChartDataConverter {
           const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
           isNumericMap[nestedKey] = isNumericMap[nestedKey] && isNumeric(yValue);
           pointsMap[nestedKey].push({id, x: key, y: yValue});
-          draggable = draggable || isNotNullOrUndefind(id);
+          draggable = draggable || isNotNullOrUndefined(id);
         }
       }
     }
@@ -508,11 +508,11 @@ export class ChartDataConverter {
       }
 
       // we know that x or y is set
-      if (isNotNullOrUndefind(xValue) && actualValues.has(xValue)) {
+      if (isNotNullOrUndefined(xValue) && actualValues.has(xValue)) {
         continue;
       }
 
-      if (isNotNullOrUndefind(yValue) && actualValues.has(yValue)) {
+      if (isNotNullOrUndefined(yValue) && actualValues.has(yValue)) {
         continue;
       }
 
@@ -628,11 +628,11 @@ export class ChartDataConverter {
       const valueObjects: {id: string; value: any}[] = data[key];
       const values = valueObjects.map(obj => obj.value);
       const yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
-      if (isNotNullOrUndefind(yValue)) {
+      if (isNotNullOrUndefined(yValue)) {
         const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
         isNum = isNum && isNumeric(yValue);
         points.push({id, x: key, y: yValue});
-        draggable = draggable || isNotNullOrUndefind(id);
+        draggable = draggable || isNotNullOrUndefined(id);
       }
     }
 

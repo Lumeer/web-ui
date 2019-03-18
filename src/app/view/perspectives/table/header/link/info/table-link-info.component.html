@@ -2,13 +2,26 @@
      [contextMenu]="contextMenu"
      (click)="onClick($event)"
      class="d-flex justify-content-center h-100 p-1">
-  <icons-presenter [colors]="collections | colors"
+  <icons-presenter *ngIf="!hidden; else iconPlaceholder"
+                   [colors]="collections | colors"
                    [icons]="collections | icons"
                    [title]="linkType.name">
   </icons-presenter>
+  <ng-template #iconPlaceholder>
+    <i class="fa fa-fw fa-expand text-white"></i>
+  </ng-template>
 </div>
 
 <context-menu #contextMenu>
+  <ng-template (execute)="addLinkColumn.emit()"
+               [enabled]="canManageView"
+               contextMenuItem>
+    <i class="fa fa-fw fa-plus-circle mr-1"></i>&nbsp;
+    <span i18n="@@table.header.add.link.column">Add link column</span>
+  </ng-template>
+  <ng-template contextMenuItem
+               divider="true">
+  </ng-template>
   <ng-template *ngIf="switchingEnabled"
                (execute)="switchParts.emit()"
                [enabled]="canManageView"

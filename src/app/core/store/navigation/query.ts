@@ -29,10 +29,18 @@ export interface QueryStem {
   linkTypeIds?: string[];
   documentIds?: string[];
   filters?: AttributeFilter[];
+  linkFilters?: LinkAttributeFilter[];
 }
 
 export interface AttributeFilter {
   collectionId: string;
+  condition: string;
+  attributeId: string;
+  value: any;
+}
+
+export interface LinkAttributeFilter {
+  linkTypeId: string;
   condition: string;
   attributeId: string;
   value: any;

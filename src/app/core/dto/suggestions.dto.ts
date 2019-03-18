@@ -24,4 +24,5 @@ export interface SuggestionsDto {
   collections: CollectionDto[];
   views: ViewDto[];
   linkTypes: LinkTypeDto[];
+  linkAttributes: LinkTypeDto[];
 }

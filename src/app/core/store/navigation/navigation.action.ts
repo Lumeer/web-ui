@@ -29,6 +29,7 @@ export enum NavigationActionType {
   REMOVE_COLLECTION_FROM_QUERY = '[Navigation] Remove Collection from Query',
 
   REMOVE_ATTRIBUTES_FROM_QUERY = '[Navigation] Remove Attributes from Query',
+  REMOVE_LINK_ATTRIBUTES_FROM_QUERY = '[Navigation] Remove Link Attributes from Query',
 
   NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
 
@@ -66,6 +67,12 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.REMOVE_ATTRIBUTES_FROM_QUERY;
 
     public constructor(public payload: {collectionId: string; attributeIds: string[]}) {}
+  }
+
+  export class RemoveLinkAttributesFromQuery implements Action {
+    public readonly type = NavigationActionType.REMOVE_LINK_ATTRIBUTES_FROM_QUERY;
+
+    public constructor(public payload: {linkTypeId: string; attributeIds: string[]}) {}
   }
 
   export class SetQuery implements Action {

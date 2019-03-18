@@ -17,13 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
-@Pipe({
-  name: 'pixel',
-})
-export class PixelPipe implements PipeTransform {
-  public transform(length: number): string {
-    return `${length}px`;
-  }
+export interface QueryData {
+  collections: Collection[];
+  linkTypes: LinkType[];
 }

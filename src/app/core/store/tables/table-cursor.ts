@@ -185,7 +185,7 @@ function moveTableHeaderCursorDown(table: TableModel, cursor: TableHeaderCursor)
     tableId: cursor.tableId,
     partIndex: cursor.partIndex,
     columnIndex: cursor.columnPath[0], // TODO nested attributes
-    rowPath: Array(cursor.partIndex / 2 + 1).fill(0), // TODO check link instance parts
+    rowPath: Array(Math.ceil(cursor.partIndex / 2) + 1).fill(0),
   };
 }
 
@@ -222,13 +222,14 @@ function moveTableBodyCursorLeftToPreviousPart(table: TableModel, cursor: TableB
     return cursor;
   }
 
-  const partIndex = cursor.partIndex - 2; // TODO link instance parts
+  const previousPart = table.config.parts[cursor.partIndex - 1];
+  const partIndex = cursor.partIndex - (previousPart.columns.length > 0 ? 1 : 2);
   const {columns} = table.config.parts[partIndex];
   const nextCursor = {
     ...cursor,
     partIndex,
     columnIndex: filterLeafColumns(columns).length - 1,
-    rowPath: cursor.rowPath.slice(0, -1),
+    rowPath: partIndex % 2 === 0 ? cursor.rowPath.slice(0, -1) : cursor.rowPath,
   };
 
   const nextColumn = findTableColumnByIndex(columns, partIndex);
@@ -344,11 +345,13 @@ function moveTableBodyCursorRightWithinPart(table: TableModel, cursor: TableBody
 }
 
 function moveTableBodyCursorRightToNextPart(table: TableModel, cursor: TableBodyCursor) {
+  const nextPart = table.config.parts[cursor.partIndex + 1];
+
   const nextCursor = {
     ...cursor,
-    partIndex: cursor.partIndex + 2, // TODO link instance parts
+    partIndex: cursor.partIndex + (nextPart.columns.length > 0 ? 1 : 2),
     columnIndex: 0,
-    rowPath: cursor.rowPath.concat(0),
+    rowPath: cursor.partIndex % 2 === 0 ? cursor.rowPath.concat(0) : cursor.rowPath,
   };
 
   if (table.config.parts.length - 1 < nextCursor.partIndex) {

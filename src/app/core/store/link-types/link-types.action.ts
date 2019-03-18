@@ -18,6 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
+import {Attribute} from '../collections/collection';
 import {LinkType} from './link.type';
 
 export enum LinkTypesActionType {
@@ -37,6 +38,18 @@ export enum LinkTypesActionType {
   DELETE = '[Link Types] Delete',
   DELETE_SUCCESS = '[Link Types] Delete :: Success',
   DELETE_FAILURE = '[Link Types] Delete :: Failure',
+
+  CREATE_ATTRIBUTES = '[Link Types] Create Attributes',
+  CREATE_ATTRIBUTES_SUCCESS = '[Link Types] Create Attributes :: Success',
+  CREATE_ATTRIBUTES_FAILURE = '[Link Types] Create Attributes :: Failure',
+
+  UPDATE_ATTRIBUTE = '[Link Types] Update Attribute',
+  UPDATE_ATTRIBUTE_SUCCESS = '[Link Types] Update Attribute :: Success',
+  UPDATE_ATTRIBUTE_FAILURE = '[Link Types] Update Attribute :: Failure',
+
+  DELETE_ATTRIBUTE = '[Link Types] Delete Attribute',
+  DELETE_ATTRIBUTE_SUCCESS = '[Link Types] Delete Attribute :: Success',
+  DELETE_ATTRIBUTE_FAILURE = '[Link Types] Delete Attribute :: Failure',
 
   CLEAR = '[Link Types] Clear',
 }
@@ -120,6 +133,82 @@ export namespace LinkTypesAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class CreateAttributes implements Action {
+    public readonly type = LinkTypesActionType.CREATE_ATTRIBUTES;
+
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        attributes: Attribute[];
+        onSuccess?: (attributes: Attribute[]) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class CreateAttributesSuccess implements Action {
+    public readonly type = LinkTypesActionType.CREATE_ATTRIBUTES_SUCCESS;
+
+    public constructor(public payload: {linkTypeId: string; attributes: Attribute[]}) {}
+  }
+
+  export class CreateAttributesFailure implements Action {
+    public readonly type = LinkTypesActionType.CREATE_ATTRIBUTES_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class UpdateAttribute implements Action {
+    public readonly type = LinkTypesActionType.UPDATE_ATTRIBUTE;
+
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        attributeId: string;
+        attribute: Attribute;
+        onSuccess?: (attribute: Attribute) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class UpdateAttributeSuccess implements Action {
+    public readonly type = LinkTypesActionType.UPDATE_ATTRIBUTE_SUCCESS;
+
+    public constructor(public payload: {linkTypeId: string; attribute: Attribute}) {}
+  }
+
+  export class UpdateAttributeFailure implements Action {
+    public readonly type = LinkTypesActionType.UPDATE_ATTRIBUTE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class DeleteAttribute implements Action {
+    public readonly type = LinkTypesActionType.DELETE_ATTRIBUTE;
+
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        attributeId: string;
+        onSuccess?: () => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class DeleteAttributeSuccess implements Action {
+    public readonly type = LinkTypesActionType.DELETE_ATTRIBUTE_SUCCESS;
+
+    public constructor(public payload: {linkTypeId: string; attribute: Attribute}) {}
+  }
+
+  export class DeleteAttributeFailure implements Action {
+    public readonly type = LinkTypesActionType.DELETE_ATTRIBUTE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = LinkTypesActionType.CLEAR;
   }
@@ -138,5 +227,14 @@ export namespace LinkTypesAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
+    | CreateAttributes
+    | CreateAttributesSuccess
+    | CreateAttributesFailure
+    | UpdateAttribute
+    | UpdateAttributeSuccess
+    | UpdateAttributeFailure
+    | DeleteAttribute
+    | DeleteAttributeSuccess
+    | DeleteAttributeFailure
     | Clear;
 }

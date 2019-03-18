@@ -29,12 +29,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
-import {HtmlModifier} from '../../utils/html-modifier';
-import {BsDatepickerDirective} from 'ngx-bootstrap';
-import {KeyCode} from '../../key-code';
 import * as moment from 'moment';
+import {BsDatepickerDirective} from 'ngx-bootstrap';
+import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {KeyCode} from '../../key-code';
 import {formatDateTimeDataValue, parseDateTimeDataValue} from '../../utils/data.utils';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'datetime-data-input',
@@ -93,7 +93,7 @@ export class DatetimeDataInputComponent implements OnChanges {
     if (changes.value && String(this.value).length === 1) {
       // show value entered into hidden input without any changes
       const input = this.dateInput;
-      setTimeout(() => (input.nativeElement.value = this.value));
+      setTimeout(() => input && (input.nativeElement.value = this.value));
     }
   }
 

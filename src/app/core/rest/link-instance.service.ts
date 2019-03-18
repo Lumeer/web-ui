@@ -45,8 +45,8 @@ export class LinkInstanceService {
     return this.httpClient.post<LinkInstanceDto>(this.restApiPrefix(), linkInstance);
   }
 
-  public patchLinkInstanceData(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.patch<LinkInstanceDto>(`${this.restApiPrefix(linkInstance.id)}/data`, linkInstance.data);
+  public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
+    return this.httpClient.patch<LinkInstanceDto>(`${this.restApiPrefix(linkInstanceId)}/data`, data);
   }
 
   public deleteLinkInstance(id: string): Observable<string> {

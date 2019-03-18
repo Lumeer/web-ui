@@ -33,7 +33,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {Query, QueryStem} from './query';
 import {DialogPath} from '../../../dialog/dialog-path';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {filterStemByAttributeIds, filterStemByLinkIndex} from './query.util';
+import {filterStemByAttributeIds, filterStemByLinkAttributeIds, filterStemByLinkIndex} from './query.util';
 
 @Injectable()
 export class NavigationEffects {
@@ -79,6 +79,17 @@ export class NavigationEffects {
     map(([action, query]) => {
       const {collectionId, attributeIds} = action.payload;
       const newStems = (query.stems || []).map(stem => filterStemByAttributeIds(stem, collectionId, attributeIds));
+      return newQueryAction({...query, stems: newStems});
+    })
+  );
+
+  @Effect()
+  public removeLinkAttributesFromQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.RemoveLinkAttributesFromQuery>(NavigationActionType.REMOVE_LINK_ATTRIBUTES_FROM_QUERY),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    map(([action, query]) => {
+      const {linkTypeId, attributeIds} = action.payload;
+      const newStems = (query.stems || []).map(stem => filterStemByLinkAttributeIds(stem, linkTypeId, attributeIds));
       return newQueryAction({...query, stems: newStems});
     })
   );

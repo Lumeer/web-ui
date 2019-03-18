@@ -17,10 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../core/store/collections/collection';
-import {LinkType} from '../../../core/store/link-types/link.type';
+import {Action} from '@ngrx/store';
+import {from, Observable} from 'rxjs';
+import {CommonAction} from './common/common.action';
 
-export interface QueryData {
-  collections: Collection[];
-  linkTypes: LinkType[];
+export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
+  return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
+}
+
+export function emitErrorActions(error: any, onFailure?: (error: any) => void): Observable<Action> {
+  const actions: Action[] = [];
+  if (onFailure) {
+    actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
+  }
+  return from(actions);
 }

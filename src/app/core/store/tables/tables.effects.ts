@@ -51,6 +51,7 @@ import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
+import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
 import {selectQuery, selectViewCode} from '../navigation/navigation.state';
 import {Query} from '../navigation/query';
@@ -512,20 +513,23 @@ export class TablesEffects {
     mergeMap(action =>
       this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
         first(),
-        map(table => ({action, table}))
-      )
-    ),
-    flatMap(({action, table}) => {
-      const {cursor} = action.payload;
-      const part = table.config.parts[cursor.partIndex];
-      const column = findTableColumn(part.columns, cursor.columnPath);
-      const attributeId = getAttributeIdFromColumn(column);
+        flatMap(table => {
+          const {cursor} = action.payload;
+          const part = table.config.parts[cursor.partIndex];
+          const column = findTableColumn(part.columns, cursor.columnPath);
+          const attributeId = getAttributeIdFromColumn(column);
 
-      return [
-        new TablesAction.ReplaceColumns({cursor, deleteCount: 1}),
-        new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}),
-      ];
-    })
+          const actions: Action[] = [new TablesAction.ReplaceColumns({cursor, deleteCount: 1})];
+          if (attributeId && part.collectionId) {
+            actions.push(new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}));
+          }
+          if (attributeId && part.linkTypeId) {
+            actions.push(new LinkTypesAction.DeleteAttribute({linkTypeId: part.linkTypeId, attributeId}));
+          }
+          return actions;
+        })
+      )
+    )
   );
 
   @Effect()

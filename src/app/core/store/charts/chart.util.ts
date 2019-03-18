@@ -18,7 +18,7 @@
  */
 
 import {ChartAxis, ChartAxisResourceType, ChartConfig, ChartSort} from './chart';
-import {deepObjectsEquals, isNotNullOrUndefind} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../shared/utils/array.utils';
 import {LinkType} from '../link-types/link.type';
 
@@ -67,7 +67,7 @@ export function chartConfigCollectionIds(config: ChartConfig, linkTypes: LinkTyp
   Object.values(config.axes || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
   Object.values(config.names || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
 
-  return uniqueValues<string>(ids.filter(id => isNotNullOrUndefind(id)));
+  return uniqueValues<string>(ids.filter(id => isNotNullOrUndefined(id)));
 }
 
 function axisCollectionIds(axis: ChartAxis, linkTypes: LinkType[]): string[] {

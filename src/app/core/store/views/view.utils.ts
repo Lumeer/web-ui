@@ -21,6 +21,8 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {DocumentModel} from '../documents/document.model';
 import {isTableConfigChanged} from '../tables/table.utils';
 import {isChartConfigChanged} from '../charts/chart.util';
+import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
+import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -33,6 +35,10 @@ export function isViewConfigChanged(
       return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap);
     case Perspective.Chart:
       return isChartConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.GanttChart:
+      return isGanttConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Calendar:
+      return isCalendarConfigChanged(viewConfig, perspectiveConfig);
     default:
       return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
   }

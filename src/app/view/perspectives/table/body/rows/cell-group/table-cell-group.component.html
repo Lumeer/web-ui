@@ -1,6 +1,6 @@
 <ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async} as data">
 
-  <ng-container *ngIf="{linkInstance: data.linkInstances && data.linkInstances[0] | linkInstancePermissions | async,
+  <ng-container *ngIf="{linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0] | linkInstancePermissions | async,
                         document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async | documentPermissions | async} as permissions">
     <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
       <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
@@ -9,7 +9,7 @@
                          [cursor]="cursor | columnCursor:columnIndex"
                          [document]="data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async"
                          [canManageConfig]="canManageConfig"
-                         [linkInstance]="data.linkInstances ? data.linkInstances[0] : null"
+                         [linkInstance]="data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]"
                          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                          [table]="table$ | async"
                          [allowedPermissions]="data.linkInstances ? permissions.linkInstance : permissions.document"
@@ -22,8 +22,8 @@
                                 [documents]="data.documents"
                                 [linkInstances]="data.linkInstances"
                                 [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
-                                [style.width]="column | columnWidth | pixel"
-                                [style.width]="column | columnWidth:canManageConfig | pixel"
+                                [style.width.px]="column | columnWidth"
+                                [style.width.px]="column | columnWidth:canManageConfig"
                                 class="d-block table-border-right table-border-bottom">
           </table-collapsed-cell>
         </ng-template>

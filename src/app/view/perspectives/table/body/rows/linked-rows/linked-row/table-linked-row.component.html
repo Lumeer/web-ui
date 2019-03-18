@@ -1,13 +1,13 @@
 <table-cell-group [cursor]="cursor"
                   [rows]="rows"
                   [canManageConfig]="canManageConfig"
-                  [style.width]="linkInstancePart$ | async | partWidth:canManageConfig | pixel">
+                  [style.width.px]="linkInstancePart$ | async | partWidth:canManageConfig">
 </table-cell-group>
 
 <table-cell-group [cursor]="cursor | nextPartCursor"
                   [rows]="rows"
                   [canManageConfig]="canManageConfig"
-                  [style.width]="documentPart$ | async | partWidth:canManageConfig | pixel">
+                  [style.width.px]="documentPart$ | async | partWidth:canManageConfig">
 </table-cell-group>
 
 <table-linked-rows *ngIf="hasNextParts$ | async"

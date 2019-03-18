@@ -13,13 +13,14 @@
      (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100 font-italic"
      [class.uninitialized-column]="!column?.attributeIds[0]"
-     [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)"
+     [class.text-default-attribute]="collection ? (attribute | isDefaultAttribute: collection) : null"
      data-test="table-column-input">
 </div>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
                              [attributeName]="attribute | attributeName:lastName"
                              [collection]="collection"
+                             [linkType]="linkType"
                              [cursor]="cursor"
                              [table]="table">
 </table-attribute-suggestions>
@@ -29,7 +30,7 @@
                            [cursor]="cursor"
                            [canManageConfig]="canManageConfig"
                            [allowedPermissions]="allowedPermissions"
-                           [defaultAttribute]="attribute | isDefaultAttribute:(collection)"
+                           [defaultAttribute]="collection ? (attribute | isDefaultAttribute: collection) : true"
                            [leaf]="leaf"
                            (add)="onAdd($event)"
                            (configure)="onConfigure()"

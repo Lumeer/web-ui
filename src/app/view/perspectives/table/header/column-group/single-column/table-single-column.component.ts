@@ -30,18 +30,21 @@ import {
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ContextMenuService} from 'ngx-contextmenu';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
+import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableModel} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
+import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
@@ -56,8 +59,6 @@ import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe
 import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
-import {ContextMenuService} from 'ngx-contextmenu';
 
 @Component({
   selector: 'table-single-column',
@@ -237,7 +238,7 @@ export class TableSingleColumnComponent implements OnChanges {
       this.renameCollectionAttribute(attribute);
     }
     if (this.linkType) {
-      // TODO
+      this.renameLinkTypeAttribute(attribute);
     }
   }
 
@@ -279,6 +280,34 @@ export class TableSingleColumnComponent implements OnChanges {
     );
   }
 
+  private renameLinkTypeAttribute(attribute: Attribute) {
+    if (attribute.id) {
+      this.updateLinkTypeAttribute(attribute);
+    } else {
+      this.renameUninitializedTableColumn(attribute);
+      this.createLinkTypeAttribute(attribute);
+    }
+  }
+
+  private createLinkTypeAttribute(attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.CreateAttributes({
+        linkTypeId: this.linkType.id,
+        attributes: [attribute],
+      })
+    );
+  }
+
+  private updateLinkTypeAttribute(attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.UpdateAttribute({
+        linkTypeId: this.linkType.id,
+        attributeId: attribute.id,
+        attribute,
+      })
+    );
+  }
+
   public isUniqueAttributeName(attributes: Attribute[], attributeId: string, lastName: string): boolean {
     if (this.cursor.columnPath.length === 1) {
       return filterAttributesByDepth(attributes, 1)
@@ -307,7 +336,12 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   public onConfigure() {
-    this.dialogService.openAttributeConfigDialog(this.collection.id, this.attribute.id);
+    if (this.collection) {
+      this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, this.attribute.id);
+    }
+    if (this.linkType) {
+      this.dialogService.openLinkTypeAttributeConfigDialog(this.linkType.id, this.attribute.id);
+    }
   }
 
   public onFunctionEdit() {
@@ -344,7 +378,7 @@ export class TableSingleColumnComponent implements OnChanges {
     const title = this.i18n({id: 'table.delete.column.dialog.title', value: 'Delete this column?'});
     const message = this.i18n({
       id: 'table.delete.column.dialog.message',
-      value: 'Do you really want to delete the column? This will remove the attribute from the collection permanently.',
+      value: 'Do you really want to delete the column? This will permanently remove the attribute and all its data.',
     });
 
     return new NotificationsAction.Confirm({title, message, action});

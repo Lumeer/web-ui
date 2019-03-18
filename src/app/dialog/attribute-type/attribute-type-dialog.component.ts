@@ -18,15 +18,18 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
-import {filter, map, mergeMap, tap} from 'rxjs/operators';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {DialogService} from '../dialog.service';
+import {select, Store} from '@ngrx/store';
+import {combineLatest, Observable, of} from 'rxjs';
+import {filter, map, mergeMap} from 'rxjs/operators';
 import {Attribute, Collection} from '../../core/store/collections/collection';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionById, selectCollectionsByLinkType} from '../../core/store/collections/collections.state';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {DialogService} from '../dialog.service';
+import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
 
 @Component({
   selector: 'attribute-type-dialog',
@@ -39,6 +42,8 @@ export class AttributeTypeDialogComponent implements OnInit {
   public constraintForm: AttributeTypeFormComponent;
 
   public collection$: Observable<Collection>;
+  public linkType$: Observable<LinkType>;
+  public linkCollections$: Observable<Collection[]>;
   public attribute$: Observable<Attribute>;
 
   constructor(
@@ -49,34 +54,88 @@ export class AttributeTypeDialogComponent implements OnInit {
 
   public ngOnInit() {
     this.collection$ = this.selectCollection();
-    this.attribute$ = this.selectAttribute(this.collection$);
+    this.linkType$ = this.selectLinkType();
+
+    this.linkCollections$ = this.selectLinkCollections(this.linkType$);
+
+    const attributes$ = this.selectAttributes(this.collection$, this.linkType$);
+    this.attribute$ = this.selectAttribute(attributes$);
   }
 
   private selectCollection(): Observable<Collection> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('collectionId')),
-      filter(collectionId => !!collectionId),
-      mergeMap(collectionId => this.store$.pipe(select(selectCollectionById(collectionId))))
+      mergeMap(collectionId => (collectionId ? this.store$.pipe(select(selectCollectionById(collectionId))) : of(null)))
     );
   }
 
-  private selectAttribute(collection$: Observable<Collection>): Observable<Collection> {
+  private selectLinkType(): Observable<LinkType> {
+    return this.activatedRoute.paramMap.pipe(
+      map(params => params.get('linkTypeId')),
+      mergeMap(linkTypeId => (linkTypeId ? this.store$.pipe(select(selectLinkTypeById(linkTypeId))) : of(null)))
+    );
+  }
+
+  private selectLinkCollections(linkType$: Observable<LinkType>): Observable<Collection[]> {
+    return linkType$.pipe(
+      mergeMap(linkType => (linkType ? this.store$.pipe(select(selectCollectionsByLinkType(linkType.id))) : of([])))
+    );
+  }
+
+  private selectAttributes(
+    collection$: Observable<Collection>,
+    linkType$: Observable<LinkType>
+  ): Observable<Attribute[]> {
+    return combineLatest(collection$, linkType$).pipe(
+      map(([collection, linkType]) => {
+        if (collection) {
+          return collection.attributes;
+        }
+        if (linkType) {
+          return linkType.attributes;
+        }
+        return [];
+      })
+    );
+  }
+
+  private selectAttribute(attributes$: Observable<Attribute[]>): Observable<Collection> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('attributeId')),
       filter(attributeId => !!attributeId),
       mergeMap(attributeId =>
-        collection$.pipe(
-          map(collection => collection && collection.attributes.find(attribute => attribute.id === attributeId)),
+        attributes$.pipe(
+          map(attributes => attributes.find(attribute => attribute.id === attributeId)),
           filter(attribute => !!attribute)
         )
       )
     );
   }
 
-  public onAttributeChange(collectionId: string, attribute: Attribute) {
+  public onAttributeChange(collectionId: string, linkTypeId: string, attribute: Attribute) {
+    if (collectionId) {
+      this.updateCollectionAttribute(collectionId, attribute);
+    }
+    if (linkTypeId) {
+      this.updateLinkTypeAttribute(linkTypeId, attribute);
+    }
+  }
+
+  private updateCollectionAttribute(collectionId: string, attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
         collectionId,
+        attributeId: attribute.id,
+        attribute,
+        onSuccess: () => this.dialogService.closeDialog(),
+      })
+    );
+  }
+
+  private updateLinkTypeAttribute(linkTypeId: string, attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.UpdateAttribute({
+        linkTypeId,
         attributeId: attribute.id,
         attribute,
         onSuccess: () => this.dialogService.closeDialog(),

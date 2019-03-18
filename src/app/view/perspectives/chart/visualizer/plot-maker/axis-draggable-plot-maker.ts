@@ -22,7 +22,7 @@ import * as d3 from 'd3';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefind, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
 import {createRange} from './plot-util';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
@@ -63,7 +63,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
     const values = this.chartData.sets.reduce((allValues, set) => {
       const setValues = set.points
-        .filter(point => isNotNullOrUndefind(point.y) && isNumeric(point.y))
+        .filter(point => isNotNullOrUndefined(point.y) && isNumeric(point.y))
         .map(point => point.y);
       return [...allValues, ...setValues];
     }, []);

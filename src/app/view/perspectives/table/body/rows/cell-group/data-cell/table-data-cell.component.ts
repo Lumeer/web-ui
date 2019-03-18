@@ -36,17 +36,20 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, skip, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, skip, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
+import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
-import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
+import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
+import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
+import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
@@ -56,8 +59,6 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
-import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'table-data-cell',
@@ -191,6 +192,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if ((changes.column || changes.document) && this.column && this.document) {
       this.constraint$ = this.store$.pipe(
         select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeIds[0]))
+      );
+    }
+    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
+      this.constraint$ = this.store$.pipe(
+        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0])),
+        map(attribute => attribute && attribute.constraint)
       );
     }
     if (changes.selected) {
@@ -342,7 +349,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setEditedAttribute() {
-    if (this.document.id) {
+    if (this.document && this.document.id) {
       this.store$.dispatch(
         new TablesAction.SetEditedAttribute({
           editedAttribute: {
@@ -355,7 +362,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private clearEditedAttribute() {
-    if (this.document.id) {
+    if (this.document && this.document.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
   }
@@ -519,8 +526,32 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(removeRowAction);
   }
 
-  private updateLinkInstanceData(key: string, name: string, value: any) {
-    // TODO dispatch patch link instance action
+  private updateLinkInstanceData(attributeId: string, attributeName: string, value: any) {
+    if (attributeId) {
+      this.updateLinkInstanceWithExistingAttribute(attributeId, value);
+    } else {
+      this.updateLinkInstanceWithNewAttribute(attributeName, value);
+    }
+  }
+
+  private updateLinkInstanceWithNewAttribute(attributeName: string, value: any) {
+    this.store$.dispatch(
+      new LinkTypesAction.CreateAttributes({
+        linkTypeId: this.linkInstance.linkTypeId,
+        attributes: [{name: attributeName}],
+        onSuccess: ([attribute]) => this.updateLinkInstanceWithExistingAttribute(attribute.id, value),
+      })
+    );
+  }
+
+  private updateLinkInstanceWithExistingAttribute(attributeId: string, value: any) {
+    const linkInstance: LinkInstance = {
+      id: this.linkInstance.id,
+      documentIds: [null, null], // documentIds is not used
+      linkTypeId: null, // linkTypeId is not used
+      data: {[attributeId]: value},
+    };
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
   }
 
   public onEdit() {

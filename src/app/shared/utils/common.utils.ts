@@ -21,7 +21,7 @@ export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
 }
 
-export function isNotNullOrUndefind(object: any): boolean {
+export function isNotNullOrUndefined(object: any): boolean {
   return !isNullOrUndefined(object);
 }
 

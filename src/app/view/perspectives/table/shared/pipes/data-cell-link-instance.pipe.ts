@@ -18,18 +18,32 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {findAttributeByName} from '../../../../../shared/utils/attribute.utils';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'attributeExist',
+  name: 'dataCellLinkInstance',
 })
-export class AttributeExistPipe implements PipeTransform {
-  public transform(entity: Collection | LinkType, attributeName: string): boolean {
-    if (entity) {
-      return !!findAttributeByName(entity.attributes, attributeName); // TODO add support for nested attributes
+export class DataCellLinkInstancePipe implements PipeTransform {
+  public transform(
+    linkInstances: LinkInstance[],
+    part: TableConfigPart,
+    partIndex: number,
+    row: TableConfigRow
+  ): LinkInstance {
+    if (linkInstances && linkInstances[0]) {
+      return linkInstances[0];
     }
-    return false;
+
+    if (!part.linkTypeId) {
+      return null;
+    }
+
+    return {
+      linkTypeId: part.linkTypeId,
+      documentIds: [null, null],
+      correlationId: row.correlationId,
+      data: {},
+    };
   }
 }

@@ -39,7 +39,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {isNotNullOrUndefind, isNumeric} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 
 interface Data {
   collections: Collection[];
@@ -140,7 +140,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private formatNewValue(document: DocumentModel, attributeId: string, value: any): any {
     if (this.isProgressAttribute(document.collectionId, attributeId)) {
       const currentProgress = document.data[attributeId];
-      if (isNotNullOrUndefind(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
+      if (isNotNullOrUndefined(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
         return `${value}%`;
       }
     }
