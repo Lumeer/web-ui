@@ -17,7 +17,7 @@
   <table-cell-group [cursor]="cursor"
                     [rows]="[row]"
                     [canManageConfig]="canManageConfig"
-                    [style.width]="part$ | async | partWidth:canManageConfig | pixel">
+                    [style.width.px]="part$ | async | partWidth:canManageConfig">
   </table-cell-group>
 
   <table-linked-rows *ngIf="hasNextParts$ | async"

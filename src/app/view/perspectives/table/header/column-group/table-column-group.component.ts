@@ -76,6 +76,10 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   }
 
   public ngAfterViewChecked() {
+    this.calculateColumnGroupHeight();
+  }
+
+  private calculateColumnGroupHeight() {
     const element = this.element.nativeElement as HTMLElement;
     const height = element.offsetHeight;
 

@@ -30,7 +30,6 @@ import {LightenColorPipe} from './lighten-color.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
-import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
 import {EmptyQueryPipe} from './empty-query.pipe';
@@ -61,7 +60,6 @@ import {CollectionByIdPipe} from './collection-by-id.pipe';
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
-    PixelPipe,
     IconsPipe,
     ColorsPipe,
     PrefixPipe,
@@ -98,7 +96,6 @@ import {CollectionByIdPipe} from './collection-by-id.pipe';
   ],
   exports: [
     LightenColorPipe,
-    PixelPipe,
     IconsPipe,
     ColorsPipe,
     PrefixPipe,

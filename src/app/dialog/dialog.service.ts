@@ -67,8 +67,12 @@ export class DialogService {
     this.navigateToFullscreenDialog([DialogPath.ATTRIBUTE_FUNCTION, collectionId, attributeId]);
   }
 
-  public openAttributeConfigDialog(collectionId: string, attributeId: string) {
-    this.navigateToDialog([DialogPath.ATTRIBUTE_TYPE, collectionId, attributeId]);
+  public openCollectionAttributeConfigDialog(collectionId: string, attributeId: string) {
+    this.navigateToDialog([DialogPath.COLLECTION_ATTRIBUTE_TYPE, collectionId, attributeId]);
+  }
+
+  public openLinkTypeAttributeConfigDialog(linkTypeId: string, attributeId: string) {
+    this.navigateToDialog([DialogPath.LINK_ATTRIBUTE_TYPE, linkTypeId, attributeId]);
   }
 
   public openCreateOrganizationDialog(callback?: (organization: Organization) => void) {

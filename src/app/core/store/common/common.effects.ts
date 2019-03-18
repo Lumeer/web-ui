@@ -32,5 +32,11 @@ export class CommonEffects {
     tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
   );
 
+  @Effect({dispatch: false})
+  public handleError$: Observable<Action> = this.actions$.pipe(
+    ofType<CommonAction.HandleError>(CommonActionType.HANDLE_ERROR),
+    tap((action: CommonAction.HandleError) => console.error(action.payload.error)) // TODO maybe send to Sentry as well
+  );
+
   constructor(private actions$: Actions) {}
 }

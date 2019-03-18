@@ -17,21 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
+import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
-import {selectLinkInstancesQueries} from './link-instances.state';
-import {convertQueryModelToDto} from '../navigation/query.converter';
-import {LinkInstanceDto} from '../../dto';
+import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -108,12 +108,19 @@ export class LinkInstancesEffects {
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA),
     mergeMap(action => {
-      const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
+      const {id: linkInstanceId, data} = action.payload.linkInstance;
 
-      return this.linkInstanceService.patchLinkInstanceData(linkInstanceDto).pipe(
-        map(dto => convertLinkInstanceDtoToModel(dto)),
-        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance})),
-        catchError(error => of(new LinkInstancesAction.UpdateFailure({error})))
+      return this.store$.pipe(
+        select(selectLinkInstanceById(linkInstanceId)),
+        take(1),
+        tap(() => this.store$.dispatch(new LinkInstancesAction.PatchDataInternal({linkInstanceId, data}))),
+        mergeMap(originalLinkInstance =>
+          this.linkInstanceService.patchLinkInstanceData(linkInstanceId, data).pipe(
+            map(dto => convertLinkInstanceDtoToModel(dto)),
+            map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance})),
+            catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
+          )
+        )
       );
     })
   );

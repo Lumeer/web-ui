@@ -1,6 +1,14 @@
-<icons-presenter [colors]="[collection.color]"
-                 [icons]="[collection.icon]">
-</icons-presenter>
-<span data-test="table-caption-name">
-  {{collection.name}}
-</span>
+<div *ngIf="!hidden; else emptyCaption"
+     [class.pb-1]="!!linkType">
+  <icons-presenter [colors]="colors"
+                   [icons]="icons"
+                   [class.mx-1]="!!linkType">
+  </icons-presenter>
+  <span data-test="table-caption-name">
+  {{ linkType?.name || collections[0]?.name }}
+  </span>
+</div>
+
+<ng-template #emptyCaption>
+  <div class="text-white">&zwnj;</div>
+</ng-template>

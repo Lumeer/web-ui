@@ -45,6 +45,10 @@ export class DataCellDocumentPipe implements PipeTransform {
           return documents[0];
         }
 
+        if (!part.collectionId) {
+          return null;
+        }
+
         return {
           collectionId: part.collectionId,
           correlationId: row.correlationId,

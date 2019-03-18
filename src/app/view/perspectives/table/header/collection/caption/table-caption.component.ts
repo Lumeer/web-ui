@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 
@@ -28,21 +29,41 @@ import {getTableElement} from '../../../../../../core/store/tables/table.utils';
   styleUrls: ['./table-caption.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableCaptionComponent implements AfterViewChecked {
+export class TableCaptionComponent implements OnChanges {
   @Input()
-  public collection: Collection;
+  public collections: Collection[];
+
+  @Input()
+  public linkType: LinkType;
 
   @Input()
   public cursor: TableHeaderCursor;
 
-  constructor(private element: ElementRef) {}
+  @Input()
+  public hidden: boolean;
 
-  public ngAfterViewChecked() {
-    const element = this.element.nativeElement as HTMLElement;
-    const height = element.offsetHeight;
+  public colors: string[];
+  public icons: string[];
 
-    if (height) {
-      const tableElement = getTableElement(this.cursor.tableId);
+  constructor(private element: ElementRef<HTMLElement>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections && this.collections) {
+      this.colors = this.collections.map(collection => collection.color);
+      this.icons = this.collections.map(collection => collection.icon);
+    }
+    setTimeout(() => this.calculateCaptionHeight());
+  }
+
+  public calculateCaptionHeight() {
+    const height = this.element.nativeElement.clientHeight;
+
+    const tableElement = getTableElement(this.cursor.tableId);
+
+    const captionHeightValue = tableElement.style.getPropertyValue('--caption-height') || '';
+    const captionHeight = Number(captionHeightValue.split('px')[0] || 0);
+
+    if (height > captionHeight) {
       tableElement.style.setProperty('--caption-height', `${height}px`);
     }
   }

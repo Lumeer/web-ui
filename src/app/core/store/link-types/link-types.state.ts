@@ -52,3 +52,8 @@ export const selectLinkTypeById = (linkTypeId: string) =>
     selectLinkTypesDictionary,
     linkTypes => linkTypes[linkTypeId]
   );
+export const selectLinkTypeAttributeById = (linkTypeId: string, attributeId: string) =>
+  createSelector(
+    selectLinkTypeById(linkTypeId),
+    linkType => linkType && linkType.attributes && linkType.attributes.find(attribute => attribute.id === attributeId)
+  );

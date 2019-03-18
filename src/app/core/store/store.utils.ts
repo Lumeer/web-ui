@@ -17,13 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Action} from '@ngrx/store';
+import {from, Observable} from 'rxjs';
+import {CommonAction} from './common/common.action';
 
-@Pipe({
-  name: 'pixel',
-})
-export class PixelPipe implements PipeTransform {
-  public transform(length: number): string {
-    return `${length}px`;
+export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
+  return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
+}
+
+export function emitErrorActions(error: any, onFailure?: (error: any) => void): Observable<Action> {
+  const actions: Action[] = [];
+  if (onFailure) {
+    actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
   }
+  return from(actions);
 }

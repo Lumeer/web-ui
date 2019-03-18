@@ -17,6 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  filterOutAttributeAndChildren,
+  renameChildAttributes,
+  updateAttributes,
+} from '../../../shared/utils/attribute.utils';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
@@ -109,43 +114,28 @@ function onChangeAttributeSuccess(
   state: CollectionsState,
   action: CollectionsAction.ChangeAttributeSuccess
 ): CollectionsState {
-  let attributes = state.entities[action.payload.collectionId].attributes.slice();
-  const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
-  const oldAttributeCopy = index >= 0 ? {...attributes[index]} : null;
-  if (index >= 0) {
-    attributes.splice(index, 1, action.payload.attribute);
-  } else {
-    attributes.push(action.payload.attribute); // TODO preserve order
+  const collection = state.entities[action.payload.collectionId];
+  if (!collection) {
+    return state;
   }
 
-  if (oldAttributeCopy && oldAttributeCopy.name !== action.payload.attribute.name) {
-    attributes = renameChildAttributes(attributes, oldAttributeCopy.name, action.payload.attribute.name);
-  }
-
-  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
-}
-
-function renameChildAttributes(attributes: Attribute[], oldParentName: string, newParentName: string): Attribute[] {
-  const prefix = oldParentName + '.';
-  return attributes.map(attribute => {
-    if (attribute.name.startsWith(prefix)) {
-      const [, suffix] = attribute.name.split(oldParentName, 2);
-      return {...attribute, name: newParentName + suffix};
-    }
-    return attribute;
-  });
+  const attributes = updateAttributes(collection.attributes, action.payload.attribute);
+  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes}}, state);
 }
 
 function onRemoveAttributeSuccess(
   state: CollectionsState,
   action: CollectionsAction.RemoveAttributeSuccess
 ): CollectionsState {
-  const attributeId = action.payload.attributeId;
-  const attributes = state.entities[action.payload.collectionId].attributes.filter(
-    attribute => attribute.id !== attributeId && !attribute.id.startsWith(attributeId + '.')
-  );
+  const {collectionId, attribute} = action.payload;
 
-  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
+  const collection = state.entities[action.payload.collectionId];
+  if (!collection) {
+    return state;
+  }
+
+  const attributes = filterOutAttributeAndChildren(collection.attributes, attribute);
+  return collectionsAdapter.updateOne({id: collectionId, changes: {attributes}}, state);
 }
 
 function onChangePermission(

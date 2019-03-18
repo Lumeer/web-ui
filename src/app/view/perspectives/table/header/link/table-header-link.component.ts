@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {selectCollectionsByLinkType} from '../../../../../core/store/collections/collections.state';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
+import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
 @Component({
@@ -35,7 +35,7 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   styleUrls: ['./table-header-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderLinkComponent implements OnChanges {
+export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -51,20 +51,33 @@ export class TableHeaderLinkComponent implements OnChanges {
   public collections$: Observable<Collection[]>;
   public linkType$: Observable<LinkType>;
 
-  public constructor(private store: Store<AppState>) {}
+  public linkInfoWidth = 0;
+
+  public constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
-      this.linkType$ = this.store.select(selectLinkTypeById(this.part.linkTypeId));
-      this.collections$ = this.store.select(selectCollectionsByLinkType(this.part.linkTypeId));
+      this.linkType$ = this.store$.select(selectLinkTypeById(this.part.linkTypeId));
+      this.collections$ = this.store$.select(selectCollectionsByLinkType(this.part.linkTypeId));
     }
   }
 
+  public ngAfterViewInit() {
+    const tableElement = getTableElement(this.cursor.tableId);
+    const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
+    this.linkInfoWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+  }
+
+  public onAddLinkColumn() {
+    const cursor: TableHeaderCursor = {...this.cursor, columnPath: [0]};
+    this.store$.dispatch(new TablesAction.AddColumn({cursor}));
+  }
+
   public onSwitchParts() {
-    this.store.dispatch(new TablesAction.SwitchParts({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.SwitchParts({cursor: this.cursor}));
   }
 
   public onRemovePart() {
-    this.store.dispatch(new TablesAction.RemovePart({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.RemovePart({cursor: this.cursor}));
   }
 }

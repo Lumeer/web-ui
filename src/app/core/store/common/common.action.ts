@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 
 export enum CommonActionType {
   EXECUTE_CALLBACK = '[Common] Execute Callback',
+  HANDLE_ERROR = '[Common] Handle Error',
 }
 
 export namespace CommonAction {
@@ -28,5 +29,11 @@ export namespace CommonAction {
     public readonly type = CommonActionType.EXECUTE_CALLBACK;
 
     public constructor(public payload: {callback: () => void}) {}
+  }
+
+  export class HandleError implements Action {
+    public readonly type = CommonActionType.HANDLE_ERROR;
+
+    public constructor(public payload: {error: any}) {}
   }
 }
