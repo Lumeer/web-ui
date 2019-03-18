@@ -21,7 +21,7 @@ import {QueryItem} from '../../../query-item/model/query-item';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {QueryItemType} from '../../../query-item/model/query-item-type';
 import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item';
-import {shiftArray} from '../../../../../utils/array.utils';
+import {shiftArrayFromIndex} from '../../../../../utils/array.utils';
 import {DocumentQueryItem} from '../../../query-item/model/documents.query-item';
 import {CollectionQueryItem} from '../../../query-item/model/collection.query-item';
 import {LinkQueryItem} from '../../../query-item/model/link.query-item';
@@ -30,6 +30,7 @@ import {View} from '../../../../../../core/store/views/view';
 import {ViewQueryItem} from '../../../query-item/model/view.query-item';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Suggestions} from './suggestions';
+import {LinkAttributeQueryItem} from '../../../query-item/model/link-attribute.query-item';
 
 export function convertSuggestionsToQueryItemsSorted(suggestions: Suggestions, currentItems: QueryItem[]): QueryItem[] {
   if (!suggestions) {
@@ -44,13 +45,29 @@ export function convertSuggestionsToQueryItemsSorted(suggestions: Suggestions, c
 
   const lastStemItems = filterLastQueryStemItems(currentItems);
   const collectionIdsChain = getCollectionIdsChainForStemItems(lastStemItems);
+  const linkTypeIdsChain = getLinkTypeIdsChainForStemItems(lastStemItems);
   const lastItem = lastStemItems[lastStemItems.length - 1];
 
   if (lastItem.type === QueryItemType.Collection || lastItem.type === QueryItemType.Link) {
-    return createItemsByLinksPriority(suggestions, collectionIdsChain);
+    return createItemsByLinksPriority(suggestions, collectionIdsChain, linkTypeIdsChain);
   } else if (lastItem.type === QueryItemType.Attribute) {
     const lastAttrCollectionId = (lastItem as AttributeQueryItem).collection.id;
-    return createItemsByAttributePriority(suggestions, collectionIdsChain, lastAttrCollectionId);
+    const index = collectionIdsChain.findIndex(id => id === lastAttrCollectionId);
+    const shiftedCollectionIds = shiftArrayFromIndex<string>(collectionIdsChain, index);
+    const shiftedLinkTypeIds = shiftArrayFromIndex<string>(linkTypeIdsChain, index);
+    return createItemsByAttributePriority(suggestions, collectionIdsChain, shiftedCollectionIds, shiftedLinkTypeIds);
+  } else if (lastItem.type === QueryItemType.LinkAttribute) {
+    const lastAttrLinkTypeId = (lastItem as LinkAttributeQueryItem).linkType.id;
+    const index = linkTypeIdsChain.findIndex(id => id === lastAttrLinkTypeId);
+    const shiftedCollectionIds = shiftArrayFromIndex<string>(collectionIdsChain, index + 1);
+    const shiftedLinkTypeIds = shiftArrayFromIndex<string>(linkTypeIdsChain, index);
+    return createItemsByAttributePriority(
+      suggestions,
+      collectionIdsChain,
+      shiftedCollectionIds,
+      shiftedLinkTypeIds,
+      true
+    );
   } else if (lastItem.type === QueryItemType.Document) {
     const lastDocCollectionId = (lastItem as DocumentQueryItem).document.collectionId;
     return createItemsByDocumentPriority(suggestions, collectionIdsChain, lastDocCollectionId);
@@ -106,12 +123,27 @@ function getCollectionIdsChainForStemItems(queryItems: QueryItem[]): string[] {
   return chainIds;
 }
 
+function getLinkTypeIdsChainForStemItems(queryItems: QueryItem[]): string[] {
+  if (!queryItems[0] || queryItems[0].type !== QueryItemType.Collection) {
+    return [];
+  }
+  const chainIds = [];
+  for (let i = 1; i < queryItems.length; i++) {
+    if (queryItems[i].type !== QueryItemType.Link) {
+      break;
+    }
+    chainIds.push((queryItems[i] as LinkQueryItem).linkType.id);
+  }
+  return chainIds;
+}
+
 function createAllQueryItems(suggestions: Suggestions, withViews?: boolean): QueryItem[] {
   return [
     ...createViewQueryItems(withViews ? suggestions.views : []),
     ...createCollectionQueryItems(suggestions.collections),
     ...createLinkQueryItems(suggestions.linkTypes),
     ...createAttributeQueryItems(suggestions.attributes),
+    ...createLinkAttributesQueryItems(suggestions.linkAttributes),
   ];
 }
 
@@ -134,17 +166,28 @@ function createLinkQueryItems(linkTypes: LinkType[]): QueryItem[] {
   return linkTypes.map(linkType => new LinkQueryItem(linkType));
 }
 
-function createItemsByLinksPriority(suggestions: Suggestions, collectionIdsChain: string[]): QueryItem[] {
+function createLinkAttributesQueryItems(linkTypes: LinkType[]): QueryItem[] {
+  return linkTypes.reduce(
+    (items, linkType) => [...items, ...linkType.attributes.map(a => new LinkAttributeQueryItem(linkType, a, '', ''))],
+    []
+  );
+}
+
+function createItemsByLinksPriority(
+  suggestions: Suggestions,
+  collectionIdsChain: string[],
+  linkTypeIdsChain: string[]
+): QueryItem[] {
   const lastCollectionId = collectionIdsChain[collectionIdsChain.length - 1];
-  const splitedLinks = splitLinkTypesForCollection(suggestions.linkTypes, lastCollectionId);
-  const splitedAttributes = splitAndSortAttributesForCollections(suggestions.attributes, collectionIdsChain);
+  const splitLinks = splitLinkTypesForCollection(suggestions.linkTypes, lastCollectionId);
+  const splitAttributeItems = splitAndSortAttributes(suggestions, collectionIdsChain, linkTypeIdsChain);
 
   return [
-    ...createLinkQueryItems(splitedLinks[0]),
-    ...createAttributeQueryItems(splitedAttributes[0]),
+    ...createLinkQueryItems(splitLinks[0]),
+    ...splitAttributeItems[0],
     ...createCollectionQueryItems(suggestions.collections),
-    ...createLinkQueryItems(splitedLinks[1]),
-    ...createAttributeQueryItems(splitedAttributes[1]),
+    ...createLinkQueryItems(splitLinks[1]),
+    ...splitAttributeItems[1],
   ];
 }
 
@@ -154,37 +197,75 @@ function splitLinkTypesForCollection(linkTypes: LinkType[], collectionId: string
   return [linkTypesByCollection, otherLinkTypes];
 }
 
-function splitAndSortAttributesForCollections(
-  attributes: Collection[],
-  collectionIdsOrder: string[]
-): [Collection[], Collection[]] {
-  const attributesByCollections: Collection[] = [];
-  for (let i = 0; i < collectionIdsOrder.length; i++) {
-    const attributesByCollection = attributes.filter(collection => collection.id === collectionIdsOrder[i]);
-    attributesByCollections.push(...attributesByCollection);
+function splitAndSortAttributes(
+  suggestions: Suggestions,
+  collectionIdsChain: string[],
+  linkTypeIdsChain: string[],
+  linkFirst?: boolean
+): [QueryItem[], QueryItem[]] {
+  const attributes = suggestions.attributes;
+  const linkAttributes = suggestions.linkAttributes;
+
+  const usedAttributesIds = [];
+  const usedLinkAttributesIds = [];
+  const firstItems = [];
+  for (let i = 0; i < Math.max(collectionIdsChain.length, linkTypeIdsChain.length); i++) {
+    const collectionId = collectionIdsChain[i];
+    const linkTypeId = linkTypeIdsChain[i];
+
+    let attribute = null;
+    if (collectionId) {
+      attribute = attributes.find(collAttr => collAttr.id === collectionId);
+      attribute && usedAttributesIds.push(attribute.id);
+    }
+
+    let linkAttribute = null;
+    if (linkTypeId) {
+      linkAttribute = linkAttributes.find(lta => lta.id === linkTypeId);
+      linkAttribute && usedLinkAttributesIds.push(linkAttribute.id);
+    }
+
+    if (linkFirst) {
+      linkAttribute && firstItems.push(...createLinkAttributesQueryItems([linkAttribute]));
+      attribute && firstItems.push(...createAttributeQueryItems([attribute]));
+    } else {
+      attribute && firstItems.push(...createAttributeQueryItems([attribute]));
+      linkAttribute && firstItems.push(...createLinkAttributesQueryItems([linkAttribute]));
+    }
   }
-  const otherAttributes = attributes.filter(
-    collection => !attributesByCollections.find(coll => coll.id === collection.id)
-  );
-  return [attributesByCollections, otherAttributes];
+
+  const otherAttributes = attributes.filter(attr => !usedAttributesIds.includes(attr.id));
+  const otherLinkAttributes = linkAttributes.filter(attr => !usedLinkAttributesIds.includes(attr.id));
+  const otherItems = [
+    ...createAttributeQueryItems(otherAttributes),
+    ...createLinkAttributesQueryItems(otherLinkAttributes),
+  ];
+
+  return [firstItems, otherItems];
 }
 
 function createItemsByAttributePriority(
   suggestions: Suggestions,
-  collectionIdsOrder: string[],
-  lastAttrCollectionId: string
+  originalCollectionIdsOrder: string[],
+  shiftedCollectionIdsOrder: string[],
+  shifterLinkTypeIdsOrder: string[],
+  linkFirst?: boolean
 ): QueryItem[] {
-  const lastCollectionId = collectionIdsOrder[collectionIdsOrder.length - 1];
-  const splitedLinks = splitLinkTypesForCollection(suggestions.linkTypes, lastCollectionId);
-  const shiftedIdsOrder = shiftArray<string>(collectionIdsOrder, lastAttrCollectionId);
-  const splitedAttributes = splitAndSortAttributesForCollections(suggestions.attributes, shiftedIdsOrder);
+  const lastCollectionId = originalCollectionIdsOrder[originalCollectionIdsOrder.length - 1];
+  const splitLinks = splitLinkTypesForCollection(suggestions.linkTypes, lastCollectionId);
+  const splitAttributeItems = splitAndSortAttributes(
+    suggestions,
+    shiftedCollectionIdsOrder,
+    shifterLinkTypeIdsOrder,
+    linkFirst
+  );
 
   return [
-    ...createAttributeQueryItems(splitedAttributes[0]),
-    ...createLinkQueryItems(splitedLinks[0]),
+    ...splitAttributeItems[0],
+    ...createLinkQueryItems(splitLinks[0]),
     ...createCollectionQueryItems(suggestions.collections),
-    ...createLinkQueryItems(splitedLinks[1]),
-    ...createAttributeQueryItems(splitedAttributes[1]),
+    ...createLinkQueryItems(splitLinks[1]),
+    ...splitAttributeItems[1],
   ];
 }
 

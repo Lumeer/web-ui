@@ -18,7 +18,6 @@
  */
 
 import {
-  GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
@@ -26,7 +25,13 @@ import {
   GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {Collection} from '../../../../core/store/collections/collection';
-import {isDateValid, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
+import {
+  deepObjectsEquals,
+  isDateValid,
+  isNullOrUndefined,
+  isNumeric,
+  toNumber,
+} from '../../../../shared/utils/common.utils';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -170,4 +175,38 @@ function createInterval(
     return [startDateObj, endDateObj];
   }
   return [endDateObj, startDateObj];
+}
+
+export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
+  if (viewConfig.mode !== currentConfig.mode) {
+    return true;
+  }
+
+  return ganttConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
+}
+
+function ganttConfigCollectionsChanged(
+  collections1: Record<string, GanttChartCollectionConfig>,
+  collections2: Record<string, GanttChartCollectionConfig>
+): boolean {
+  if (Object.keys(collections1).length !== Object.keys(collections2).length) {
+    return true;
+  }
+
+  return Object.entries(collections1).some(([key, value]) => {
+    return !collections2[key] || ganttConfigCollectionChanged(value, collections2[key]);
+  });
+}
+
+function ganttConfigCollectionChanged(
+  config1: GanttChartCollectionConfig,
+  config2: GanttChartCollectionConfig
+): boolean {
+  if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
+    return true;
+  }
+
+  return Object.entries(config1.barsProperties).some(([key, value]) => {
+    return !config2.barsProperties[key] || !deepObjectsEquals(value, config2.barsProperties[key]);
+  });
 }

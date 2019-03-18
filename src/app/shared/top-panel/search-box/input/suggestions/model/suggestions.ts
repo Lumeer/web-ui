@@ -26,4 +26,5 @@ export interface Suggestions {
   collections: Collection[];
   views: View[];
   linkTypes: LinkType[];
+  linkAttributes: LinkType[];
 }

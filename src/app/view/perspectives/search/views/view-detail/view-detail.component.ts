@@ -30,7 +30,7 @@ import {
 
 import {perspectiveIconsMap} from '../../../perspective';
 import {View} from '../../../../../core/store/views/view';
-import {QueryData} from '../../../../../shared/top-panel/search-box/query-data';
+import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 import {BehaviorSubject} from 'rxjs';

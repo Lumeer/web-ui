@@ -29,7 +29,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
-import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
+import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {filter, map} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';

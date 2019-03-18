@@ -29,10 +29,10 @@ import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
-import {selectLinkTypesLoaded} from './link-types.state';
+import {selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {selectQuery} from '../navigation/navigation.state';
-import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
+import {getAllLinkTypeIdsFromQuery, getQueryFiltersForLinkType} from '../navigation/query.util';
 import {NavigationAction} from '../navigation/navigation.action';
 import {LinkTypeDto} from '../../dto';
 
@@ -115,10 +115,35 @@ export class LinkTypesEffects {
 
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
         map(dto => convertLinkTypeDtoToModel(dto)),
-        map(linkType => new LinkTypesAction.UpdateSuccess({linkType: linkType})),
-        catchError(error => of(new LinkTypesAction.UpdateFailure({error: error})))
+        map(linkType => new LinkTypesAction.UpdateSuccess({linkType})),
+        catchError(error => of(new LinkTypesAction.UpdateFailure({error})))
       );
     })
+  );
+
+  @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.UpdateSuccess>(LinkTypesActionType.UPDATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
+    map(([[action, query], linkTypesMap]) => {
+      const linkTypeId = action.payload.linkType.id;
+      const linkType = linkTypesMap[linkTypeId];
+      const linkTypeAttributesIds = ((linkType && linkType.attributes) || []).map(attribute => attribute.id);
+
+      const linkTypeFiltersInQuery = getQueryFiltersForLinkType(query, linkTypeId);
+      const attributeIdsInQuery = linkTypeFiltersInQuery.map(attrFilter => attrFilter.attributeId);
+      const removedAttributeIds = attributeIdsInQuery.filter(
+        attributeId => !linkTypeAttributesIds.find(attrId => attrId === attributeId)
+      );
+
+      if (removedAttributeIds.length > 0) {
+        return new NavigationAction.RemoveLinkAttributesFromQuery({linkTypeId, attributeIds: removedAttributeIds});
+      }
+
+      return null;
+    }),
+    filter(action => !!action)
   );
 
   @Effect()

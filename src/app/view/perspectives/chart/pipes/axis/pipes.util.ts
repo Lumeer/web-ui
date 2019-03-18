@@ -22,7 +22,7 @@ import {Attribute, Collection} from '../../../../../core/store/collections/colle
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 
 type AxisResource = Collection | LinkType;
@@ -92,7 +92,9 @@ function getRestrictedResourceIndexes(config: ChartConfig, axisType: ChartAxisTy
   if (axisType === ChartAxisType.X) {
     const y1Name = config.names && config.names[ChartAxisType.Y1];
     const y2Name = config.names && config.names[ChartAxisType.Y2];
-    return [y1Name && y1Name.resourceIndex, y2Name && y2Name.resourceIndex].filter(value => isNotNullOrUndefind(value));
+    return [y1Name && y1Name.resourceIndex, y2Name && y2Name.resourceIndex].filter(value =>
+      isNotNullOrUndefined(value)
+    );
   }
 
   const yName = config.names && config.names[axisType];
@@ -103,7 +105,7 @@ function getRestrictedCollectionIndexesForDataset(config: ChartConfig, axisType:
   const xAxis = config.axes[ChartAxisType.X];
   const yAxis = config.axes[axisType];
 
-  return [xAxis && xAxis.resourceIndex, yAxis && yAxis.resourceIndex].filter(value => isNotNullOrUndefind(value));
+  return [xAxis && xAxis.resourceIndex, yAxis && yAxis.resourceIndex].filter(value => isNotNullOrUndefined(value));
 }
 
 export function collectionAttributeToItem(

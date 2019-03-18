@@ -20,11 +20,18 @@
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {Attribute} from '../../../../../core/store/collections/collection';
+import {LinkAttributeFilter} from '../../../../../core/store/navigation/query';
 
-export class LinkQueryItem implements QueryItem {
-  public type = QueryItemType.Link;
+export class LinkAttributeQueryItem implements QueryItem {
+  public type = QueryItemType.LinkAttribute;
 
-  public constructor(public linkType: LinkType) {}
+  public constructor(
+    public linkType: LinkType,
+    public attribute: Attribute,
+    public condition: string,
+    public conditionValue: string
+  ) {}
 
   public get icons(): string[] {
     return this.linkType.collections.map(collection => collection.icon);
@@ -39,10 +46,19 @@ export class LinkQueryItem implements QueryItem {
   }
 
   public get text(): string {
-    return this.linkType.name;
+    return this.attribute.name;
   }
 
-  public get value(): string {
-    return this.linkType.id;
+  public get value() {
+    return `${this.linkType.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+  }
+
+  public getLinkAttributeFilter(): LinkAttributeFilter {
+    return {
+      linkTypeId: this.linkType.id,
+      attributeId: this.attribute.id,
+      condition: this.condition,
+      value: this.conditionValue,
+    };
   }
 }

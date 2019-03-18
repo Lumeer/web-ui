@@ -59,10 +59,14 @@ export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
 
 export function shiftArray<T>(array: T[], fromItem: T): T[] {
   const index = array.findIndex(item => item === fromItem);
-  if (index === -1) {
+  return shiftArrayFromIndex<T>(array, index);
+}
+
+export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
+  if (fromIndex < 0) {
     return [...array];
   }
-  return [...array.slice(index), ...array.slice(0, index)];
+  return [...array.slice(fromIndex), ...array.slice(0, fromIndex)];
 }
 
 export function uniqueValues<T>(array: T[]): T[] {

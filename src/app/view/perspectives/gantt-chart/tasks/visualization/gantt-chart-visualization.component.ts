@@ -32,7 +32,7 @@ import {GANTT_DATE_FORMAT, GanttChartMode, GanttChartTask} from '../../../../../
 import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
-import {isNotNullOrUndefind} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -83,7 +83,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
       this.ganttChart.refresh(this.tasks);
       this.ganttChart.change_view_mode(this.currentMode);
       this.setChartColorsAndListeners();
-      isNotNullOrUndefind(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
+      isNotNullOrUndefined(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
     } else {
       this.ganttChart.clear();
       this.ganttChart = null;

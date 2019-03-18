@@ -216,6 +216,7 @@ export class CollectionsEffects {
       );
     })
   );
+
   @Effect()
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.UpdateSuccess>(CollectionsActionType.UPDATE_SUCCESS),

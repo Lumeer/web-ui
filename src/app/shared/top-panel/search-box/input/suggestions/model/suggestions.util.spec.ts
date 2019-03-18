@@ -27,6 +27,7 @@ import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item
 import {ViewQueryItem} from '../../../query-item/model/view.query-item';
 import {LinkQueryItem} from '../../../query-item/model/link.query-item';
 import {FulltextQueryItem} from '../../../query-item/model/fulltext.query-item';
+import {LinkAttributeQueryItem} from '../../../query-item/model/link-attribute.query-item';
 
 const collections: Collection[] = [
   {
@@ -98,6 +99,19 @@ const linkTypes: LinkType[] = [
 ];
 const linkTypeQueryItems = linkTypes.map(l => new LinkQueryItem(l));
 
+const linkAttributes: LinkType[] = [
+  {
+    ...linkTypes[0],
+    attributes: [{id: 'a1', name: 'a1'}],
+  },
+  {
+    ...linkTypes[1],
+    attributes: [{id: 'a2', name: 'a2'}],
+  },
+];
+
+const linkAttributeQueryItems = linkAttributes.map(a => new LinkAttributeQueryItem(a, a.attributes[0], '', ''));
+
 const fulltextQueryItems = [new FulltextQueryItem('la'), new FulltextQueryItem('he')];
 
 describe('Suggestions util', () => {
@@ -107,28 +121,37 @@ describe('Suggestions util', () => {
 
   it('should filter empty suggestions', () => {
     expect(
-      convertSuggestionsToQueryItemsSorted({views: [], collections: [], attributes: [], linkTypes: []}, [])
+      convertSuggestionsToQueryItemsSorted(
+        {views: [], collections: [], attributes: [], linkTypes: [], linkAttributes: []},
+        []
+      )
     ).toEqual([]);
   });
 
   it('should filter empty current query items', () => {
-    expect(convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, [])).toEqual([
+    expect(
+      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes, linkAttributes}, [])
+    ).toEqual([
       ...viewsQueryItems,
       ...collectionQueryItems,
       ...linkTypeQueryItems,
       ...attributeQueryItems,
+      ...linkAttributeQueryItems,
     ]);
   });
 
   it('should filter with only fulltext query items', () => {
     expect(
-      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, fulltextQueryItems)
-    ).toEqual([...collectionQueryItems, ...linkTypeQueryItems, ...attributeQueryItems]);
+      convertSuggestionsToQueryItemsSorted(
+        {views, collections, attributes, linkTypes, linkAttributes},
+        fulltextQueryItems
+      )
+    ).toEqual([...collectionQueryItems, ...linkTypeQueryItems, ...attributeQueryItems, ...linkAttributeQueryItems]);
   });
 
   it('should filter with collection as last query item', () => {
     expect(
-      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes}, [
+      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes, linkAttributes}, [
         collectionQueryItems[0],
         ...fulltextQueryItems,
       ])
@@ -138,38 +161,57 @@ describe('Suggestions util', () => {
       ...collectionQueryItems,
       linkTypeQueryItems[1],
       ...attributeQueryItems.slice(1),
+      ...linkAttributeQueryItems,
     ]);
   });
 
   it('should filter with link as last query item', () => {
     expect(
-      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes: [linkTypes[1]]}, [
-        collectionQueryItems[0],
-        linkTypeQueryItems[0],
-        ...fulltextQueryItems,
-      ])
+      convertSuggestionsToQueryItemsSorted(
+        {views, collections, attributes, linkTypes: [linkTypes[1]], linkAttributes},
+        [collectionQueryItems[0], linkTypeQueryItems[0], ...fulltextQueryItems]
+      )
     ).toEqual([
       linkTypeQueryItems[1],
-      ...attributeQueryItems.slice(0, 2),
+      attributeQueryItems[0],
+      linkAttributeQueryItems[0],
+      attributeQueryItems[1],
       ...collectionQueryItems,
       attributeQueryItems[2],
+      linkAttributeQueryItems[1],
     ]);
   });
 
   it('should filter with attribute as last query item', () => {
     expect(
-      convertSuggestionsToQueryItemsSorted({views, collections, attributes, linkTypes: [linkTypes[1]]}, [
-        collectionQueryItems[0],
-        linkTypeQueryItems[0],
-        attributeQueryItems[1],
-        ...fulltextQueryItems,
-      ])
+      convertSuggestionsToQueryItemsSorted(
+        {views, collections, attributes, linkTypes: [linkTypes[1]], linkAttributes},
+        [collectionQueryItems[0], linkTypeQueryItems[0], attributeQueryItems[1], ...fulltextQueryItems]
+      )
     ).toEqual([
+      attributeQueryItems[1],
+      linkAttributeQueryItems[0],
+      attributeQueryItems[0],
+      linkTypeQueryItems[1],
+      ...collectionQueryItems,
+      attributeQueryItems[2],
+      linkAttributeQueryItems[1],
+    ]);
+  });
+  it('should filter with link attribute as last query item', () => {
+    expect(
+      convertSuggestionsToQueryItemsSorted(
+        {views, collections, attributes, linkTypes: [linkTypes[1]], linkAttributes},
+        [collectionQueryItems[0], linkTypeQueryItems[0], linkAttributeQueryItems[0], ...fulltextQueryItems]
+      )
+    ).toEqual([
+      linkAttributeQueryItems[0],
       attributeQueryItems[1],
       attributeQueryItems[0],
       linkTypeQueryItems[1],
       ...collectionQueryItems,
       attributeQueryItems[2],
+      linkAttributeQueryItems[1],
     ]);
   });
 });
