@@ -104,7 +104,7 @@ export class DocumentsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
-          yesFirst: true,
+          yesFirst: false,
         });
       }
       const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});

@@ -133,7 +133,7 @@ export class CollectionsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
-          yesFirst: true,
+          yesFirst: false,
         });
       }
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create collection'});
@@ -183,7 +183,7 @@ export class CollectionsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
-          yesFirst: true,
+          yesFirst: false,
         });
       }
       const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import collection'});

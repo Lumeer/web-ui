@@ -186,7 +186,7 @@ export class ProjectsEffects {
             path: ['/organization', action.payload.organizationCode, 'detail'],
             extras: {fragment: 'orderService'},
           }),
-          yesFirst: true,
+          yesFirst: false,
         });
       }
       const errorMessage = this.i18n({id: 'project.create.fail', value: 'Could not create the project'});
