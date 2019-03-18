@@ -1,3 +1,5 @@
+@import '../../../../../../styles/variables';
+
 .gantt-bar-disabled {
   cursor: default !important;
 
@@ -8,4 +10,13 @@
 
 .zero-height {
   height: 0;
+}
+
+.gantt .tick {
+  stroke-width: 0.6;
+
+  &.thick {
+    stroke-width: 1;
+    color: $gray-600;
+  }
 }
