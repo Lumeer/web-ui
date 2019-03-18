@@ -19,19 +19,20 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+import {Constraint} from '../../../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
+import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
-import {Constraint} from '../../../../../../../core/model/data/constraint';
-import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
-import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
 import {TableConfigColumn} from '../../../../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
+import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
+import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -94,6 +95,15 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   }
 
   private bindConstraint(): Observable<Constraint> {
+    if (this.documents) {
+      return this.bindCollectionAttributeConstraint();
+    }
+    if (this.linkInstances) {
+      return this.bindLinkTypeAttributeConstraint();
+    }
+  }
+
+  private bindCollectionAttributeConstraint(): Observable<Constraint> {
     return this.store$.pipe(
       select(
         selectCollectionAttributeConstraint(
@@ -101,6 +111,18 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
           this.column.attributeIds[0]
         )
       )
+    );
+  }
+
+  private bindLinkTypeAttributeConstraint(): Observable<Constraint> {
+    return this.store$.pipe(
+      select(
+        selectLinkTypeAttributeById(
+          this.linkInstances && this.linkInstances.length > 0 && this.linkInstances[0].linkTypeId,
+          this.column.attributeIds[0]
+        )
+      ),
+      map(attribute => attribute && attribute.constraint)
     );
   }
 

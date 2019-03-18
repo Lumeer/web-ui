@@ -37,7 +37,12 @@ const routes: Routes = [
     outlet: 'fsdialog',
   },
   {
-    path: `${DialogPath.ATTRIBUTE_TYPE}/:collectionId/:attributeId`,
+    path: `${DialogPath.COLLECTION_ATTRIBUTE_TYPE}/:collectionId/:attributeId`,
+    component: AttributeTypeDialogComponent,
+    outlet: 'dialog',
+  },
+  {
+    path: `${DialogPath.LINK_ATTRIBUTE_TYPE}/:linkTypeId/:attributeId`,
     component: AttributeTypeDialogComponent,
     outlet: 'dialog',
   },

@@ -30,8 +30,12 @@ export function linkInstancesReducer(
       return addLinkInstances(state, action);
     case LinkInstancesActionType.CREATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
+    case LinkInstancesActionType.PATCH_DATA_INTERNAL:
+      return patchData(state, action);
     case LinkInstancesActionType.UPDATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
+    case LinkInstancesActionType.UPDATE_FAILURE:
+      return revertLinkInstance(state, action.payload.originalLinkInstance);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:
@@ -71,5 +75,32 @@ function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkIn
   if (isLinkInstanceNewer(linkInstance, oldLinkInstance)) {
     return linkInstancesAdapter.upsertOne(linkInstance, state);
   }
+  return state;
+}
+
+function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchDataInternal) {
+  const {linkInstanceId, data} = action.payload;
+
+  const linkInstance = state.entities[linkInstanceId];
+  if (!linkInstance) {
+    return state;
+  }
+
+  return linkInstancesAdapter.updateOne({id: linkInstanceId, changes: {data: {...linkInstance.data, ...data}}}, state);
+}
+
+function revertLinkInstance(state: LinkInstancesState, originalLinkInstance: LinkInstance): LinkInstancesState {
+  const storedLinkInstance = state.entities[originalLinkInstance && originalLinkInstance.id];
+
+  if (
+    storedLinkInstance &&
+    originalLinkInstance &&
+    storedLinkInstance.dataVersion &&
+    originalLinkInstance.dataVersion &&
+    storedLinkInstance.dataVersion <= originalLinkInstance.dataVersion
+  ) {
+    return linkInstancesAdapter.upsertOne(originalLinkInstance, state);
+  }
+
   return state;
 }

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {filterOutAttributeAndChildren, updateAttributes} from '../../../shared/utils/attribute.utils';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-types.state';
 import {LinkType} from './link.type';
@@ -34,6 +35,12 @@ export function linkTypesReducer(
       return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
+    case LinkTypesActionType.CREATE_ATTRIBUTES_SUCCESS:
+      return onCreateAttributesSuccess(action, state);
+    case LinkTypesActionType.UPDATE_ATTRIBUTE_SUCCESS:
+      return onUpdateAttributeSuccess(action, state);
+    case LinkTypesActionType.DELETE_ATTRIBUTE_SUCCESS:
+      return onDeleteAttributeSuccess(action, state);
     case LinkTypesActionType.CLEAR:
       return initialLinkTypesState;
     default:
@@ -65,4 +72,44 @@ function addOrUpdateLinkType(state: LinkTypesState, linkType: LinkType): LinkTyp
     return linkTypesAdapter.upsertOne(linkType, state);
   }
   return state;
+}
+
+function onCreateAttributesSuccess(
+  action: LinkTypesAction.CreateAttributesSuccess,
+  state: LinkTypesState
+): LinkTypesState {
+  const linkType = state.entities[action.payload.linkTypeId];
+  if (!linkType) {
+    return state;
+  }
+
+  const attributes = linkType.attributes.concat(action.payload.attributes);
+  return linkTypesAdapter.updateOne({id: action.payload.linkTypeId, changes: {attributes}}, state);
+}
+
+function onUpdateAttributeSuccess(
+  action: LinkTypesAction.UpdateAttributeSuccess,
+  state: LinkTypesState
+): LinkTypesState {
+  const linkType = state.entities[action.payload.linkTypeId];
+  if (!linkType) {
+    return state;
+  }
+
+  const attributes = updateAttributes(linkType.attributes, action.payload.attribute);
+  return linkTypesAdapter.updateOne({id: action.payload.linkTypeId, changes: {attributes}}, state);
+}
+
+function onDeleteAttributeSuccess(
+  action: LinkTypesAction.DeleteAttributeSuccess,
+  state: LinkTypesState
+): LinkTypesState {
+  const {linkTypeId, attribute} = action.payload;
+  const linkType = state.entities[linkTypeId];
+  if (!linkType) {
+    return state;
+  }
+
+  const attributes = filterOutAttributeAndChildren(linkType.attributes, attribute);
+  return linkTypesAdapter.updateOne({id: linkTypeId, changes: {attributes}}, state);
 }

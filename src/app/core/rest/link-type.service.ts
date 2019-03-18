@@ -19,16 +19,14 @@
 
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
 import {Store} from '@ngrx/store';
-
 import {Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {LinkTypeDto} from '../dto';
+import {AttributeDto, LinkTypeDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace';
-import {filter, map} from 'rxjs/operators';
 
 @Injectable()
 export class LinkTypeService {
@@ -60,6 +58,18 @@ export class LinkTypeService {
   public getLinkTypes(): Observable<LinkTypeDto[]> {
     const queryParams = new HttpParams().set('fromViews', 'true');
     return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(), {params: queryParams});
+  }
+
+  public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
+    return this.httpClient.post<AttributeDto[]>(`${this.restApiPrefix()}/${linkTypeId}/attributes`, attributes);
+  }
+
+  public updateAttribute(linkTypeId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`, attribute);
+  }
+
+  public deleteAttribute(linkTypeId: string, id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`);
   }
 
   private restApiPrefix(id?: string): string {

@@ -30,6 +30,7 @@ import {
 } from '../../../../../../../core/store/collections/collections.state';
 import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
+import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
@@ -67,6 +68,9 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
+  @Input()
+  public linkType: LinkType;
+
   public lastName: string;
 
   public linkedAttributes$: Observable<LinkedAttribute[]>;
@@ -95,9 +99,26 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     const attribute: Attribute = {
       name: this.attributeName,
     };
+    if (this.collection) {
+      this.createCollectionAttribute(attribute);
+    } else if (this.linkType) {
+      this.createLinkTypeAttribute(attribute);
+    }
+  }
+
+  private createCollectionAttribute(attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
+        attributes: [attribute],
+      })
+    );
+  }
+
+  private createLinkTypeAttribute(attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.CreateAttributes({
+        linkTypeId: this.linkType.id,
         attributes: [attribute],
       })
     );

@@ -78,12 +78,16 @@ export const selectCollectionsByLinkType = (linkTypeId: string) =>
     }
   );
 
-export const selectCollectionAttributeConstraint = (collectionId: string, attributeId: string) => {
+export const selectCollectionAttributeById = (collectionId: string, attributeId: string) => {
   return createSelector(
     selectCollectionById(collectionId),
-    collection => {
-      const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-      return attribute && attribute.constraint;
-    }
+    collection => collection && collection.attributes.find(attr => attr.id === attributeId)
+  );
+};
+
+export const selectCollectionAttributeConstraint = (collectionId: string, attributeId: string) => {
+  return createSelector(
+    selectCollectionAttributeById(collectionId, attributeId),
+    attribute => attribute && attribute.constraint
   );
 };

@@ -106,3 +106,42 @@ export function increaseChar(name: string): string {
 
   return increaseChar(name.substring(0, lastIndex)) + 'A';
 }
+
+export function updateAttributes(attributes: Attribute[], newAttribute: Attribute): Attribute[] {
+  const index = attributes.findIndex(attr => attr.id === newAttribute.id);
+
+  if (index < 0) {
+    return attributes.concat(newAttribute);
+  }
+
+  const oldAttribute = attributes[index];
+  const updatedAttributes = [...attributes];
+  updatedAttributes.splice(index, 1, newAttribute);
+
+  if (oldAttribute && oldAttribute.name !== newAttribute.name) {
+    return renameChildAttributes(updatedAttributes, oldAttribute.name, newAttribute.name);
+  }
+
+  return updatedAttributes;
+}
+
+export function renameChildAttributes(
+  attributes: Attribute[],
+  oldParentName: string,
+  newParentName: string
+): Attribute[] {
+  const prefix = oldParentName + '.';
+  return attributes.map(attribute => {
+    if (attribute.name.startsWith(prefix)) {
+      const [, suffix] = attribute.name.split(oldParentName, 2);
+      return {...attribute, name: newParentName + suffix};
+    }
+    return attribute;
+  });
+}
+
+export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttribute: Attribute): Attribute[] {
+  return attributes.filter(
+    attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
+  );
+}

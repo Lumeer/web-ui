@@ -24,7 +24,9 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
@@ -39,7 +41,7 @@ import {getTableElement} from '../../../../../../core/store/tables/table.utils';
   styleUrls: ['./table-link-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableLinkInfoComponent implements AfterViewInit {
+export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -50,10 +52,16 @@ export class TableLinkInfoComponent implements AfterViewInit {
   public linkType: LinkType;
 
   @Input()
+  public hidden: boolean;
+
+  @Input()
   public switchingEnabled: boolean;
 
   @Input()
   public canManageView: boolean;
+
+  @Output()
+  public addLinkColumn = new EventEmitter();
 
   @Output()
   public switchParts = new EventEmitter();
@@ -68,6 +76,12 @@ export class TableLinkInfoComponent implements AfterViewInit {
   public contextMenuComponent: ContextMenuComponent;
 
   constructor(private contextMenuService: ContextMenuService) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.hidden) {
+      setTimeout(() => this.setTableLinkInfoWidthCssVariable());
+    }
+  }
 
   public ngAfterViewInit() {
     this.setTableLinkInfoWidthCssVariable();

@@ -26,7 +26,7 @@ export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationI
     correlationId,
     linkTypeId: dto.linkTypeId,
     documentIds: dto.documentIds,
-    data: dto.data,
+    data: dto.data || {},
     dataVersion: dto.dataVersion,
     creationDate: new Date(dto.creationDate),
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,

@@ -1,10 +1,10 @@
 <div *ngIf="collection$ | async as collection"
      class="d-flex flex-column align-items-start h-100">
   <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
-    <table-caption [collection]="collection"
+    <table-caption [collections]="[collection]"
                    [cursor]="cursor"
                    [attr.title]="collection?.name || ''"
-                   [style.width]="part | partWidth:canManageConfig | pixel"
+                   [style.width.px]="part | partWidth:canManageConfig"
                    (click)="onCaptionClick()"
                    class="text-truncate">
     </table-caption>

@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../model/data/data-value';
-
 export interface LinkInstance {
   id?: string;
   linkTypeId: string;
@@ -31,7 +29,7 @@ export interface LinkInstance {
   updatedBy?: string;
   dataVersion?: number;
 
-  data?: {[attributeId: string]: DataValue | any}; // TODO remove any
+  data?: Record<string, any>;
 }
 
 export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
