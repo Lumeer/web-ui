@@ -345,7 +345,12 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   public onFunctionEdit() {
-    this.dialogService.openAttributeFunction(this.collection.id, this.attribute.id);
+    if (this.collection) {
+      this.dialogService.openCollectionAttributeFunction(this.collection.id, this.attribute.id);
+    }
+    if (this.linkType) {
+      this.dialogService.openLinkTypeAttributeFunction(this.linkType.id, this.attribute.id);
+    }
   }
 
   public onEdit() {

@@ -117,9 +117,12 @@ export class PaymentsOrderComponent implements OnInit {
     }
   }
 
+  private isDiscount(): boolean {
+    return this.subscriptionLength.indexOf(this.i18n({id: 'organizations.tab.detail.order.term', value: 'year'})) > 0;
+  }
+
   private calculatePrice() {
-    this.discount =
-      this.subscriptionLength.indexOf(this.i18n({id: 'organizations.tab.detail.order.term', value: 'year'})) > 0;
+    this.discount = this.isDiscount();
     this.months = +this.subscriptionLength.split(' ')[0] * (this.discount ? 12 : 1);
 
     switch (this.currency) {
@@ -136,6 +139,19 @@ export class PaymentsOrderComponent implements OnInit {
           this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL
         );
     }
+  }
+
+  private getPricePerUser(): number {
+    switch (this.currency) {
+      case 'EUR':
+        return this.discount ? PaymentsOrderComponent.EUR_SALE : PaymentsOrderComponent.EUR_FULL;
+      case 'USD':
+        return this.discount ? PaymentsOrderComponent.USD_SALE : PaymentsOrderComponent.USD_FULL;
+      case 'CZK':
+        return this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL;
+    }
+
+    return 0;
   }
 
   private calculatePriceFromMonthly(monthlyPrice: number): number {
@@ -171,7 +187,7 @@ export class PaymentsOrderComponent implements OnInit {
         break;
     }
     this.price = this.calculatePrice();
-    this.pricePerUser = Math.round((this.price / this.months / this.numberOfUsers) * 100) / 100;
+    this.pricePerUser = this.getPricePerUser();
 
     if (this.discountAmount > 0) {
       this.discountInfoPerUser =

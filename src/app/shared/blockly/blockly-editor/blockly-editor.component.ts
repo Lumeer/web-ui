@@ -104,6 +104,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   public thisCollectionId: string;
 
   @Input()
+  public thisLinkTypeId: string;
+
+  @Input()
   public xml: string = '';
 
   @Input()
@@ -219,10 +222,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   private registerCustomBlocks(): void {
     const coreCollectionVarTypes = this.variables
-      .filter(variable => !!variable.collectionId)
+      .filter(variable => !!variable && variable.collectionId)
       .map(variable => variable.collectionId + DOCUMENT_VAR_SUFFIX);
     const coreLinkVarTypes = this.variables
-      .filter(variable => !!variable.linkTypeId)
+      .filter(variable => !!variable && variable.linkTypeId)
       .map(variable => variable.linkTypeId + LINK_VAR_SUFFIX);
     const collectionTypes = this.collections.map(c => c.id + DOCUMENT_VAR_SUFFIX);
     const linkTypes = this.linkTypes.map(l => l.id + LINK_VAR_SUFFIX);

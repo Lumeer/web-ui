@@ -18,7 +18,8 @@
  */
 
 export enum DialogPath {
-  ATTRIBUTE_FUNCTION = 'attribute-function',
+  COLLECTION_ATTRIBUTE_FUNCTION = 'collection-attribute-function',
+  LINK_ATTRIBUTE_FUNCTION = 'link-attribute-function',
   COLLECTION_ATTRIBUTE_TYPE = 'collection-attribute-type',
   LINK_ATTRIBUTE_TYPE = 'link-attribute-type',
   CREATE_COLLECTION = 'create-collection',
@@ -32,7 +33,8 @@ export enum DialogPath {
 }
 
 export const dialogPathsMap: {[id: string]: DialogPath} = {
-  [DialogPath.ATTRIBUTE_FUNCTION]: DialogPath.ATTRIBUTE_FUNCTION,
+  [DialogPath.COLLECTION_ATTRIBUTE_FUNCTION]: DialogPath.COLLECTION_ATTRIBUTE_FUNCTION,
+  [DialogPath.LINK_ATTRIBUTE_FUNCTION]: DialogPath.LINK_ATTRIBUTE_FUNCTION,
   [DialogPath.COLLECTION_ATTRIBUTE_TYPE]: DialogPath.COLLECTION_ATTRIBUTE_TYPE,
   [DialogPath.LINK_ATTRIBUTE_TYPE]: DialogPath.LINK_ATTRIBUTE_TYPE,
   [DialogPath.CREATE_COLLECTION]: DialogPath.CREATE_COLLECTION,
