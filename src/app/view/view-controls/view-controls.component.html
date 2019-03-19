@@ -65,12 +65,12 @@
              class="form-control"
              autocomplete="off"
              placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-      <div class="input-group-append">
-        <button [disabled]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
+      <div class="input-group-append" *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
+        <button [disabled]="buttonsData.disabled"
                 class="btn"
-                [class.btn-primary]="name && (!view.code || state.viewChanged) && state.permissions.canManage"
-                [class.btn-outline-secondary]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
-                [class.disabled]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
+                [class.btn-primary]="!buttonsData.disabled"
+                [class.btn-outline-secondary]="buttonsData.disabled"
+                [class.disabled]="buttonsData.disabled"
                 type="button"
                 title="Save" i18n-title="@@button.save"
                 (click)="onSave(state.permissions.canClone)">

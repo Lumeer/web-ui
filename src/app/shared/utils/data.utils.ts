@@ -185,7 +185,7 @@ export function convertToBig(value: any): Big {
     return null;
   }
   try {
-    return new Big(value);
+    return new Big(decimalUserToStore(String(value)));
   } catch (e) {
     return null;
   }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take} from 'rxjs/operators';
@@ -32,6 +32,7 @@ import {Query} from '../core/store/navigation/query';
 import {NotificationService} from '../core/notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
+import {ViewControlsComponent} from './view-controls/view-controls.component';
 
 @Component({
   templateUrl: './view.component.html',
@@ -39,6 +40,9 @@ import {selectViewsByRead} from '../core/store/common/permissions.selectors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewComponent implements OnInit, OnDestroy {
+  @ViewChild(ViewControlsComponent)
+  public viewControlsComponent: ViewControlsComponent;
+
   public view$ = new BehaviorSubject<View>(null);
   public viewsExist$: Observable<boolean>;
 
@@ -193,10 +197,35 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private createView(view: View) {
-    this.store$.dispatch(new ViewsAction.Create({view}));
+    this.startSaveLoading();
+
+    this.store$.dispatch(
+      new ViewsAction.Create({
+        view,
+        onSuccess: () => this.endSaveLoading(),
+        onFailure: () => this.endSaveLoading(),
+      })
+    );
   }
 
   private updateView(view: View) {
-    this.store$.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
+    this.startSaveLoading();
+
+    this.store$.dispatch(
+      new ViewsAction.Update({
+        viewCode: view.code,
+        view,
+        onSuccess: () => this.endSaveLoading(),
+        onFailure: () => this.endSaveLoading(),
+      })
+    );
+  }
+
+  private startSaveLoading() {
+    this.viewControlsComponent.startSaveLoading();
+  }
+
+  private endSaveLoading() {
+    this.viewControlsComponent.endSaveLoading();
   }
 }

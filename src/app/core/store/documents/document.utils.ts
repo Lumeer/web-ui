@@ -60,31 +60,33 @@ export function generateDocumentData(
     return acc;
   }, {});
 
-  collectionFilters.forEach(filter => {
-    const isNumber = !isNaN(Number(filter.value));
-    const value = isNumber ? +filter.value : filter.value.toString();
+  (collectionFilters || [])
+    .filter(filter => filter.collectionId === collection.id)
+    .forEach(filter => {
+      const isNumber = !isNaN(Number(filter.value));
+      const value = isNumber ? +filter.value : filter.value.toString();
 
-    switch (conditionFromString(filter.condition || '')) {
-      case ConditionType.GreaterThan:
-        data[filter.attributeId] = isNumber ? value + 1 : value + 'a';
-        break;
-      case ConditionType.LowerThan:
-        data[filter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
-        break;
-      case ConditionType.NotEquals:
-        data[filter.attributeId] = isNumber ? value + 1 : '';
-        break;
-      case ConditionType.GreaterThanEquals:
-      case ConditionType.LowerThanEquals:
-      case ConditionType.Equals:
-      default:
-        if (currentUser && filter.value === 'userEmail()') {
-          data[filter.attributeId] = currentUser.email;
-        } else {
-          data[filter.attributeId] = filter.value;
-        }
-    }
-  });
+      switch (conditionFromString(filter.condition || '')) {
+        case ConditionType.GreaterThan:
+          data[filter.attributeId] = isNumber ? value + 1 : value + 'a';
+          break;
+        case ConditionType.LowerThan:
+          data[filter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
+          break;
+        case ConditionType.NotEquals:
+          data[filter.attributeId] = isNumber ? value + 1 : '';
+          break;
+        case ConditionType.GreaterThanEquals:
+        case ConditionType.LowerThanEquals:
+        case ConditionType.Equals:
+        default:
+          if (currentUser && filter.value === 'userEmail()') {
+            data[filter.attributeId] = currentUser.email;
+          } else {
+            data[filter.attributeId] = filter.value;
+          }
+      }
+    });
   return data;
 }
 

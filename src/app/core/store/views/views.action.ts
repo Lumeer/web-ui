@@ -83,7 +83,7 @@ export namespace ViewsAction {
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: {view: View}) {}
+    public constructor(public payload: {view: View; onSuccess?: () => void; onFailure?: () => void}) {}
   }
 
   export class CreateSuccess implements Action {
@@ -101,7 +101,15 @@ export namespace ViewsAction {
   export class Update implements Action {
     public readonly type = ViewsActionType.UPDATE;
 
-    public constructor(public payload: {viewCode: string; view: View; nextAction?: Action}) {}
+    public constructor(
+      public payload: {
+        viewCode: string;
+        view: View;
+        nextAction?: Action;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class UpdateSuccess implements Action {

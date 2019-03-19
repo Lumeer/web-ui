@@ -85,11 +85,18 @@ export class ViewsEffects {
     ofType<ViewsAction.Create>(ViewsActionType.CREATE),
     mergeMap(action => {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
+      const {onSuccess, onFailure} = action.payload;
 
       return this.viewService.createView(viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
-        map(view => new ViewsAction.CreateSuccess({view: view})),
-        catchError(error => of(new ViewsAction.CreateFailure({error: error})))
+        map(view => {
+          onSuccess && onSuccess();
+          return new ViewsAction.CreateSuccess({view: view});
+        }),
+        catchError(error => {
+          onFailure && onFailure();
+          return of(new ViewsAction.CreateFailure({error: error}));
+        })
       );
     })
   );
@@ -123,11 +130,18 @@ export class ViewsEffects {
     ofType<ViewsAction.Update>(ViewsActionType.UPDATE),
     mergeMap(action => {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
+      const {onSuccess, onFailure} = action.payload;
 
       return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
-        map(view => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
-        catchError(error => of(new ViewsAction.UpdateFailure({error: error})))
+        map(view => {
+          onSuccess && onSuccess();
+          return new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction});
+        }),
+        catchError(error => {
+          onFailure && onFailure();
+          return of(new ViewsAction.UpdateFailure({error: error}));
+        })
       );
     })
   );
