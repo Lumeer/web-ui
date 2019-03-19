@@ -35,7 +35,7 @@ import {DialogService} from '../dialog.service';
   templateUrl: './create-link-dialog.component.html',
 })
 export class CreateLinkDialogComponent implements OnInit, OnDestroy {
-  private collections: Collection[];
+  public collections: Collection[];
 
   private subscriptions = new Subscription();
 
