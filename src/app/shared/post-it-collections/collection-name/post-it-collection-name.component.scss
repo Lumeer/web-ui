@@ -1,9 +1,6 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/bootstrap_var';
 
-$name-collapsed: 1.85rem;
-$name-expanded: 300px;
-
 :host {
   display: block;
 }
@@ -25,8 +22,8 @@ $name-expanded: 300px;
 
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: $name-collapsed;
-  max-height: $name-collapsed;
+  min-height: $post-it-name-collapsed;
+  max-height: $post-it-name-collapsed;
   white-space: nowrap;
   cursor: text;
 
@@ -34,7 +31,8 @@ $name-expanded: 300px;
 
   &:hover,
   &:focus {
-    max-height: $name-expanded;
+    height: auto;
+    max-height: $post-it-name-expanded;
     white-space: normal;
     text-overflow: unset;
   }
