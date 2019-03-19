@@ -1,6 +1,6 @@
 <div *ngIf="{linkType: linkType$ | async, collections: collections$ | async} as data"
      class="d-flex flex-column h-100">
-  <table-caption [hidden]="part.columns.length < 2"
+  <table-caption [hidden]="part.columns.length < 1"
                  [linkType]="data.linkType"
                  [collections]="data.collections"
                  [cursor]="cursor"
@@ -11,7 +11,7 @@
   <div class="d-flex flex-grow-1 align-items-stretch">
     <table-link-info [cursor]="cursor"
                      [canManageView]="canManageConfig"
-                     [hidden]="part.columns.length > 1"
+                     [hidden]="part.columns.length >= 1"
                      [linkType]="data.linkType"
                      [collections]="data.collections"
                      [switchingEnabled]="table | maxParts:3"
