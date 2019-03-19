@@ -114,3 +114,12 @@
 .uninitialized-dropdown {
   transform: translate3d(-8px, 120px, 0px) !important;
 }
+
+::ng-deep {
+  .post-it:hover .name {
+    height: auto !important;
+    max-height: $post-it-name-expanded;
+    white-space: normal;
+    text-overflow: unset;
+  }
+}
