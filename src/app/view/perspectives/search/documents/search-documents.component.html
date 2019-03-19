@@ -12,7 +12,6 @@
          *ngFor="let document of (maxLines > 0 ? (getDocuments() | slice:0:maxLines) : getDocuments()); trackBy:trackByDocument">
 
       <search-document-header
-        (toggle)="toggleDocument(document)"
         (detail)="onDetailClick(document)"
         [size]="size"
         [document]="document"

@@ -27,7 +27,7 @@
     [emitAllChanges]="true"
     [fontSizeRem]="2"
     [maxLines]="1"
-    [maxLength]="5"
+    [maxLength]="hasVisibleCode() ? 5 : undefined"
     [title]="firstLineValue()"
     (blur)="onFirstLineBlur()"
     (focus)="onFirstLineFocus()"

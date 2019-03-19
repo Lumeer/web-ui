@@ -194,8 +194,8 @@ export class ResourceHeaderComponent implements AfterViewInit {
   public getFilter(): RegExp {
     if (this.hasVisibleCode()) {
       return /[^_0-9A-Za-z]/g;
+    } else {
+      return /\./g;
     }
-
-    return undefined;
   }
 }
