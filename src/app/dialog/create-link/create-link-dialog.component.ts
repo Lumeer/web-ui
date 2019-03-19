@@ -42,7 +42,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public linkTypeFormGroup: FormGroup;
 
-  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store: Store<AppState>) {
+  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store$: Store<AppState>) {
     this.createForm();
   }
 
@@ -77,7 +77,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
           filter(linkCollectionIds => !!linkCollectionIds),
           map(linkCollectionIds => linkCollectionIds.split(',')),
           filter(linkCollectionIds => linkCollectionIds.length === 2),
-          withLatestFrom(this.store.select(selectAllCollections))
+          withLatestFrom(this.store$.select(selectAllCollections))
         )
         .subscribe(([linkCollectionIds, collections]) => {
           this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
@@ -90,31 +90,21 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public colors(): string[] {
-    return this.collections ? this.collections.map(collection => collection.color) : [];
-  }
-
-  public icons(): string[] {
-    return this.collections ? this.collections.map(collection => collection.icon) : [];
-  }
-
   public onSubmit() {
     if (!this.form.valid) {
       return;
     }
 
-    const callback = this.dialogService.callback;
-    this.store.dispatch(this.createLinkTypeAction());
-    if (!callback) {
-      this.dialogService.closeDialog();
-    }
+    this.store$.dispatch(this.createLinkTypeAction());
+    this.dialogService.closeDialog();
   }
 
   private createLinkTypeAction(): LinkTypesAction.Create {
+    const callback = this.dialogService.callback;
     const linkType: LinkType = {
       name: this.linkNameInput.value,
       collectionIds: [this.collections[0].id, this.collections[1].id],
     };
-    return new LinkTypesAction.Create({linkType, callback: this.dialogService.callback});
+    return new LinkTypesAction.Create({linkType, callback});
   }
 }
