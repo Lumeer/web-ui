@@ -10,6 +10,8 @@
       [collections]="collections$ | async"
       [initialTime]="initialTime$ | async"
       [document]="document$ | async"
+      [query]="query$ | async"
+      [currentUser]="currentUser$ | async"
       (createEvent)="onCreateEvent($event)"
       (updateEvent)="onUpdateEvent($event)">
     </create-calendar-event-form>

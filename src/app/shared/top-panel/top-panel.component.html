@@ -1,6 +1,6 @@
 <ng-container *ngIf="{workspace: workspace$ | async, controlsShown: controlsShown$ | async} as state">
   <lumeer-logo [height]="lineHeight"
-               [link]="['/']"
+               [link]="state.workspace | workspaceDefaultUrl"
                [text]="!(state.workspace | workspaceSet) ? 'Lumeer' : null"
                class="logo">
   </lumeer-logo>

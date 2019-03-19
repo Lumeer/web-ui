@@ -18,13 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Resource} from '../../core/model/resource';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Pipe({
-  name: 'icons',
+  name: 'workspaceDefaultUrl',
 })
-export class IconsPipe implements PipeTransform {
-  public transform(entities: Resource[]): string[] {
-    return (entities && entities.filter(entity => !!entity).map(entity => entity.icon)) || [];
+export class WorkspaceDefaultUrlPipe implements PipeTransform {
+  public transform(workspace: Workspace): any[] {
+    if (workspace && workspace.organizationCode && workspace.projectCode) {
+      return ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', 'search', 'all'];
+    }
+    return ['/'];
   }
 }

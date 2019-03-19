@@ -43,6 +43,9 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
 import {deepObjectsEquals, isDateValid} from '../../../shared/utils/common.utils';
 import {isAttributeEditable} from '../../../core/store/collections/collection.util';
+import {Query} from '../../../core/store/navigation/query';
+import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {User} from '../../../core/store/users/user';
 
 export const DEFAULT_EVENT_DURATION = 60;
 
@@ -63,6 +66,12 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   @Input()
   public document: DocumentModel;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public currentUser: User;
 
   @Output()
   public createEvent = new EventEmitter<DocumentModel>();
@@ -243,7 +252,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
     const collection = this.collections && this.collections.find(coll => coll.id === collectionId);
 
-    const data = (this.document && {...this.document.data}) || {};
+    const data = this.document ? {...this.document.data} : this.generateDocumentData(collectionId);
     if (titleProperty) {
       data[titleProperty.attributeId] = title;
     }
@@ -257,6 +266,13 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     }
 
     return {...this.document, collectionId, data};
+  }
+
+  private generateDocumentData(collectionId: string): {[attributeId: string]: any} {
+    const collection = this.collections.find(coll => coll.id === collectionId);
+    const stem = this.query && (this.query.stems || []).find(s => s.collectionId === collectionId);
+    const filters = (stem && (stem.filters || []).filter(filter => filter.collectionId === collectionId)) || [];
+    return generateDocumentData(collection, filters, this.currentUser);
   }
 
   private cleanDateWhenAllDay(date: Date, allDay: boolean): string {

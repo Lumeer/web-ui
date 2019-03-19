@@ -120,13 +120,8 @@ export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    const callback = this.dialogService.callback;
-
     this.store.dispatch(this.createCollectionAction());
-
-    if (!callback) {
-      this.dialogService.closeDialog();
-    }
+    this.dialogService.closeDialog();
   }
 
   private createCollectionAction(): CollectionsAction.Create {

@@ -584,7 +584,8 @@ export class ChartDataConverter {
   }
 
   private getAttributeNameForAxis(axis: ChartAxis, axisResource: AxisResource): string {
-    const attribute = axis && (axisResource.attributes || []).find(attr => attr.id === axis.attributeId);
+    const attribute =
+      axis && axisResource && (axisResource.attributes || []).find(attr => attr.id === axis.attributeId);
     return attribute && attribute.name;
   }
 
@@ -642,12 +643,12 @@ export class ChartDataConverter {
     const dataSet = {
       id: this.yAxisCollectionId(config, yAxisType),
       points,
-      color: axisResource.color,
+      color: axisResource && axisResource.color,
       isNumeric: isNum,
       yAxisType,
       name,
       draggable,
-      resourceType: axisResourceTypeFromResourceId(axisResource.id),
+      resourceType: axisResource && axisResourceTypeFromResourceId(axisResource.id),
     };
     return [dataSet];
   }

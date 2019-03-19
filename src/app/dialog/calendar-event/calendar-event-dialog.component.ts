@@ -34,6 +34,10 @@ import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-for
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
+import {Query} from '../../core/store/navigation/query';
+import {selectQuery} from '../../core/store/navigation/navigation.state';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 @Component({
   templateUrl: './calendar-event-dialog.component.html',
@@ -48,6 +52,8 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
   public initialTime$: Observable<number>;
   public document$: Observable<DocumentModel>;
   public update$: Observable<boolean>;
+  public query$: Observable<Query>;
+  public currentUser$: Observable<User>;
   public formInvalid$: Observable<boolean>;
 
   constructor(
@@ -63,6 +69,8 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
     this.document$ = this.subscribeDocument();
     this.collections$ = this.subscribeWritableCollections();
     this.update$ = this.document$.pipe(map(document => !!document));
+    this.query$ = this.store$.pipe(select(selectQuery));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   private subscribeConfig(): Observable<CalendarConfig> {

@@ -17,14 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Resource} from '../../core/model/resource';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
 
-@Pipe({
-  name: 'icons',
+@Component({
+  selector: 'gantt-chart-invalid-range',
+  templateUrl: './gantt-chart-invalid-range.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconsPipe implements PipeTransform {
-  public transform(entities: Resource[]): string[] {
-    return (entities && entities.filter(entity => !!entity).map(entity => entity.icon)) || [];
-  }
+export class GanttChartInvalidRangeComponent {
+  @Input()
+  public info: {minTask: GanttChartTask; minDate: Date; maxTask: GanttChartTask; maxDate: Date};
 }

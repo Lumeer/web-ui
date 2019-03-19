@@ -72,6 +72,7 @@ export class NumberDataInputComponent implements OnChanges {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
         if (this.value && !this.numberInput.nativeElement.value) {
+          this.refreshValid(this.value);
           this.numberInput.nativeElement.value = decimalUserToStore(
             formatNumberDataValue(this.value, this.constraintConfig)
           );
@@ -80,7 +81,11 @@ export class NumberDataInputComponent implements OnChanges {
         this.numberInput.nativeElement.focus();
       });
     }
-    this.valid = isNumberValid(this.value, this.constraintConfig);
+    this.refreshValid(this.value);
+  }
+
+  private refreshValid(value: any) {
+    this.valid = isNumberValid(value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])
@@ -114,7 +119,7 @@ export class NumberDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = isNumberValid(element.value, this.constraintConfig);
+    this.refreshValid(element.value);
 
     this.valueChange.emit(value);
   }

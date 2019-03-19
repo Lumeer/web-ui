@@ -76,6 +76,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public config$: Observable<ViewConfig>;
   public perspective$: Observable<Perspective>;
 
+  public saveLoading$ = new BehaviorSubject(false);
   public nameChanged$ = new BehaviorSubject(false);
   public viewChanged$: Observable<boolean>;
 
@@ -142,7 +143,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewPerspectiveChanged))
     ).pipe(
       debounceTime(100),
-      tap(([nameChanged, configChanged, queryChanged]) => {
+      tap(([nameChanged, configChanged, queryChanged, perspectiveChanged]) => {
         this.configChanged = configChanged;
         this.queryChanged = queryChanged;
       }),
@@ -225,5 +226,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public onPerspectiveChooserClick(event: MouseEvent) {
     event[PERSPECTIVE_CHOOSER_CLICK] = true;
+  }
+
+  public startSaveLoading() {
+    this.setSaveLoading(true);
+  }
+
+  public endSaveLoading() {
+    this.setSaveLoading(false);
+  }
+
+  private setSaveLoading(loading: boolean) {
+    this.saveLoading$.next(loading);
   }
 }

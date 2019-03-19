@@ -25,6 +25,6 @@ import {Resource} from '../../core/model/resource';
 })
 export class ColorsPipe implements PipeTransform {
   public transform(entities: Resource[]): string[] {
-    return entities.filter(entity => !!entity).map(entity => entity.color);
+    return (entities && entities.filter(entity => !!entity).map(entity => entity.color)) || [];
   }
 }

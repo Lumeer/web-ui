@@ -131,7 +131,7 @@ export function linkTypeAttributeToItem(
   const axis: ChartAxis = {
     resourceId: linkType.id,
     attributeId: attribute.id,
-    axisResourceType: ChartAxisResourceType.Collection,
+    axisResourceType: ChartAxisResourceType.LinkType,
     resourceIndex: index,
   };
   return {

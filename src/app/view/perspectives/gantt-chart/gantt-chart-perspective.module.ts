@@ -28,6 +28,7 @@ import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
 import {GanttChartCollectionConfigComponent} from './config/collection-config/gantt-chart-collection-config.component';
 import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
 import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.component';
+import {GanttChartInvalidRangeComponent} from './tasks/invalid-range/gantt-chart-invalid-range.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, PickerModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
@@ -38,6 +39,7 @@ import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.compo
     GanttChartCollectionConfigComponent,
     GanttChartTasksComponent,
     GanttChartHeaderComponent,
+    GanttChartInvalidRangeComponent,
   ],
   entryComponents: [GanttChartPerspectiveComponent],
   exports: [GanttChartPerspectiveComponent],
