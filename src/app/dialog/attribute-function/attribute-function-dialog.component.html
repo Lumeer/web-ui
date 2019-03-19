@@ -1,12 +1,14 @@
 <div class="modal-content"
-     *ngIf="{collection: (collection$ | async), attribute: (attribute$ | async)} as data"
+     *ngIf="{collection: (collection$ | async), linkType: (linkType$ | async), attribute: (attribute$ | async)} as data"
      (clickOutside)="onClose($event)">
-  <div class="modal-header bg-success text-white rounded-top">
+  <div class="modal-header bg-success text-white rounded-top"
+       *ngIf="{icons: data.collection ? [data.collection.icon] : [data.linkType.collections[0]?.icon, data.linkType.collections[1]?.icon],
+               colors: data.collection ? [data.collection.color] : [data.linkType.collections[0]?.color, data.linkType.collections[1]?.color] } as resource">
     <h5 class="modal-title">
       <span i18n="@@dialog.attribute.function.title">Configure function of</span>
       <icons-presenter class="ml-1"
-                       [colors]="[data.collection.color]"
-                       [icons]="[data.collection.icon]">
+                       [colors]="resource.colors"
+                       [icons]="resource.icons">
       </icons-presenter>
       <span class="ml-1">{{data.attribute.name}}</span>
     </h5>
@@ -46,12 +48,13 @@
       (onJsUpdate)="onJsUpdate($event)"
       (onXmlUpdate)="onXmlUpdate($event)"
       [toolbox]="valueToolbox"
-      [masterType]="masterValueType"
+      [masterType]="data.collection ? masterValueType : masterLinkType"
       [collections]="collections$ | async"
       [linkTypes]="linkTypes$ | async"
       [variables]="variables$ | async"
       [attribute]="data.attribute"
-      [thisCollectionId]="data.collection.id"
+      [thisCollectionId]="data.collection?.id"
+      [thisLinkTypeId]="data.linkType?.id"
       [xml]="data.attribute.function?.xml">
     </blockly-editor>
   </div>
@@ -62,7 +65,7 @@
             data-dismiss="modal">
       <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
     </button>
-    <button (click)="onSubmit(data.collection, data.attribute)"
+    <button (click)="onSubmit(data.collection?.id, data.linkType?.id, data.attribute)"
             [disabled]="saveClicked$ | async"
             type="button"
             class="btn btn-primary"

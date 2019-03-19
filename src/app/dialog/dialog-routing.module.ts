@@ -32,7 +32,12 @@ import {AttributeFunctionDialogComponent} from './attribute-function/attribute-f
 
 const routes: Routes = [
   {
-    path: `${DialogPath.ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
+    path: `${DialogPath.COLLECTION_ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
+    component: AttributeFunctionDialogComponent,
+    outlet: 'fsdialog',
+  },
+  {
+    path: `${DialogPath.LINK_ATTRIBUTE_FUNCTION}/:linkTypeId/:attributeId`,
     component: AttributeFunctionDialogComponent,
     outlet: 'fsdialog',
   },

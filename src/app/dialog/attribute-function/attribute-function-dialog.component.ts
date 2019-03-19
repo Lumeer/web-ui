@@ -18,12 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {ActivatedRoute} from '@angular/router';
 import {DialogService} from '../dialog.service';
 import {select, Store} from '@ngrx/store';
-import {filter, first, map, mergeMap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
@@ -32,6 +32,8 @@ import {MasterBlockType} from '../../shared/blockly/blockly-editor/blockly-edito
 import {LinkType} from '../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
 import {BlocklyDebugDisplay} from '../../shared/blockly/blockly-debugger/blockly-debugger.component';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../core/store/link-types/link-types.state';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -42,12 +44,14 @@ import {BlocklyDebugDisplay} from '../../shared/blockly/blockly-debugger/blockly
 export class AttributeFunctionDialogComponent implements OnInit {
   public valueToolbox = BLOCKLY_VALUE_TOOLBOX;
   public masterValueType = MasterBlockType.Value;
+  public masterLinkType = MasterBlockType.Link;
   public variables$: Observable<RuleVariable[]>;
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
   public attribute$: Observable<Attribute>;
   public linkTypes$: Observable<LinkType[]>;
+  public linkType$: Observable<LinkType>;
 
   public displayDebug: BlocklyDebugDisplay;
   public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
@@ -67,8 +71,10 @@ export class AttributeFunctionDialogComponent implements OnInit {
   public ngOnInit() {
     this.collections$ = this.store$.select(selectAllCollections);
     this.collection$ = this.selectCollection();
-    this.attribute$ = this.selectAttribute(this.collection$);
-    this.linkTypes$ = this.selectLinkTypes();
+    this.linkType$ = this.selectLinkType();
+
+    this.attribute$ = this.selectAttribute(this.selectAttributes(this.collection$, this.linkType$));
+    this.linkTypes$ = this.store$.select(selectAllLinkTypes); // this.selectLinkTypes();
     this.variables$ = this.selectVariables();
 
     this.attribute$
@@ -78,30 +84,61 @@ export class AttributeFunctionDialogComponent implements OnInit {
 
   private selectVariables(): Observable<RuleVariable[]> {
     return this.activatedRoute.paramMap.pipe(
-      map(params => params.get('collectionId')),
-      filter(collectionId => !!collectionId),
-      map(collectionId => [{name: 'thisDocument', collectionId} as RuleVariable])
+      map(params => ({collectionId: params.get('collectionId'), linkTypeId: params.get('linkTypeId')})),
+      map(({collectionId, linkTypeId}) => {
+        const variables = [];
+        if (collectionId) {
+          variables.push({name: 'thisDocument', collectionId} as RuleVariable);
+        }
+        if (linkTypeId) {
+          variables.push({name: 'thisLink', linkTypeId} as RuleVariable);
+        }
+        return variables;
+      })
     );
   }
 
   private selectCollection(): Observable<Collection> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('collectionId')),
-      filter(collectionId => !!collectionId),
-      mergeMap(collectionId => this.store$.pipe(select(selectCollectionById(collectionId))))
+      mergeMap(collectionId => (collectionId ? this.store$.pipe(select(selectCollectionById(collectionId))) : of(null)))
     );
   }
 
-  private selectAttribute(collection$: Observable<Collection>): Observable<Collection> {
+  private selectLinkType(): Observable<LinkType> {
+    return this.activatedRoute.paramMap.pipe(
+      map(params => params.get('linkTypeId')),
+      mergeMap(linkTypeId => (linkTypeId ? this.store$.pipe(select(selectLinkTypeById(linkTypeId))) : of(null)))
+    );
+  }
+
+  private selectAttributes(
+    collection$: Observable<Collection>,
+    linkType$: Observable<LinkType>
+  ): Observable<Attribute[]> {
+    return combineLatest(collection$, linkType$).pipe(
+      map(([collection, linkType]) => {
+        if (collection) {
+          return collection.attributes;
+        }
+        if (linkType) {
+          return linkType.attributes;
+        }
+        return [];
+      })
+    );
+  }
+
+  private selectAttribute(attributes$: Observable<Attribute[]>): Observable<Attribute> {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('attributeId')),
       filter(attributeId => !!attributeId),
-      mergeMap(attributeId =>
-        collection$.pipe(
-          map(collection => collection && collection.attributes.find(attribute => attribute.id === attributeId)),
+      mergeMap(attributeId => {
+        return attributes$.pipe(
+          map(attributes => attributes.find(attribute => attribute.id === attributeId)),
           filter(attribute => !!attribute)
-        )
-      )
+        );
+      })
     );
   }
 
@@ -113,7 +150,16 @@ export class AttributeFunctionDialogComponent implements OnInit {
     );
   }
 
-  public onAttributeChange(collectionId: string, attribute: Attribute) {
+  public onAttributeChange(collectionId: string, linkTypeId: string, attribute: Attribute) {
+    if (collectionId) {
+      this.updateCollectionAttribute(collectionId, attribute);
+    }
+    if (linkTypeId) {
+      this.updateLinkTypeAttribute(linkTypeId, attribute);
+    }
+  }
+
+  public updateCollectionAttribute(collectionId: string, attribute: Attribute) {
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
         collectionId,
@@ -128,9 +174,24 @@ export class AttributeFunctionDialogComponent implements OnInit {
     this.dialogService.closeFullscreenDialog();
   }
 
-  public onSubmit(collection: Collection, attribute: Attribute) {
+  private updateLinkTypeAttribute(linkTypeId: string, attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.UpdateAttribute({
+        linkTypeId,
+        attributeId: attribute.id,
+        attribute,
+        onSuccess: () => {
+          this.saveClicked$.next(true);
+        },
+        onFailure: () => this.saveClicked$.next(false),
+      })
+    );
+    this.dialogService.closeFullscreenDialog();
+  }
+
+  public onSubmit(collectionId: string, linkTypeId: string, attribute: Attribute) {
     attribute.function = {...attribute.function, js: this.js, xml: this.xml, editable: this.editable$.getValue()};
-    this.onAttributeChange(collection.id, attribute);
+    this.onAttributeChange(collectionId, linkTypeId, attribute);
   }
 
   public onJsUpdate(jsCode: string) {
