@@ -127,9 +127,9 @@ export class AttributeTypeDialogComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
-        onSuccess: () => this.dialogService.closeDialog(),
       })
     );
+    this.dialogService.closeDialog();
   }
 
   private updateLinkTypeAttribute(linkTypeId: string, attribute: Attribute) {
