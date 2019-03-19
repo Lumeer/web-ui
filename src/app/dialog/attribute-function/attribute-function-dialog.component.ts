@@ -121,11 +121,11 @@ export class AttributeFunctionDialogComponent implements OnInit {
         attribute,
         onSuccess: () => {
           this.saveClicked$.next(true);
-          this.dialogService.closeFullscreenDialog();
         },
         onFailure: () => this.saveClicked$.next(false),
       })
     );
+    this.dialogService.closeFullscreenDialog();
   }
 
   public onSubmit(collection: Collection, attribute: Attribute) {
