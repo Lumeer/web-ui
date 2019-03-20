@@ -21,7 +21,13 @@ import {createSelector} from '@ngrx/store';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
 import {DEFAULT_TABLE_ID} from './table.model';
-import {calculateRowHierarchyLevel, filterLeafColumns, findTableRow, isTableRowStriped} from './table.utils';
+import {
+  calculateRowHierarchyLevel,
+  filterLeafColumns,
+  findTableColumn,
+  findTableRow,
+  isTableRowStriped,
+} from './table.utils';
 import {EditedAttribute, selectTablesDictionary, selectTablesState} from './tables.state';
 
 export const selectTableById = (tableId: string) =>
@@ -52,6 +58,12 @@ export const selectTablePart = (cursor: TableCursor) =>
     table => {
       return table && table.config && table.config.parts && table.config.parts[cursor.partIndex];
     }
+  );
+
+export const selectTableColumn = (cursor: TableCursor) =>
+  createSelector(
+    selectTablePart(cursor),
+    part => part && part.columns && findTableColumn(part.columns, cursor.columnPath)
   );
 
 export const selectTablePartLeafColumns = (cursor: TableCursor) =>

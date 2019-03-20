@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, first, map, tap} from 'rxjs/operators';
+import {filter, first, map, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -37,6 +37,7 @@ import {selectQuery} from '../../../../../../../core/store/navigation/navigation
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
+import {selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../../shared/direction';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
@@ -99,6 +100,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     const attribute: Attribute = {
       name: this.attributeName,
     };
+    this.renameUninitializedTableColumn(attribute);
     if (this.collection) {
       this.createCollectionAttribute(attribute);
     } else if (this.linkType) {
@@ -122,6 +124,23 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
         attributes: [attribute],
       })
     );
+  }
+
+  private renameUninitializedTableColumn(attribute: Attribute) {
+    this.store$
+      .pipe(
+        select(selectTableColumn(this.cursor)),
+        take(1)
+      )
+      .subscribe(column =>
+        this.store$.dispatch(
+          new TablesAction.ReplaceColumns({
+            cursor: this.cursor,
+            deleteCount: 1,
+            columns: [{...column, attributeName: extractAttributeLastName(attribute.name)}],
+          })
+        )
+      );
   }
 
   public useLinkType(linkType: LinkType) {
