@@ -19,7 +19,7 @@
   }
 }
 
-.data-input {
+.data-input:not(.read-only) {
   &::ng-deep > * {
     &:hover:not(boolean-data-input) {
       border: 1px solid $gray-400;
