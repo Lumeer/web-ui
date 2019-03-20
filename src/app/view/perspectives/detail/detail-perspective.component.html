@@ -14,7 +14,7 @@
       *ngIf="selected.collection && selected.document"
       [document]="selected.document"
       [collection]="selected.collection"
-      (select)="selectCollectionAndDocument($event)">
+      (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>
   </ng-container>
 </div>

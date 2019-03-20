@@ -103,10 +103,12 @@ export class DatetimeDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        this.preventSaving = true;
-        const value = this.transformValue(this.dateInput.nativeElement.value);
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(value));
+        if (this.dateInput) {
+          this.preventSaving = true;
+          const value = this.transformValue(this.dateInput.nativeElement.value);
+          // needs to be executed after parent event handlers
+          setTimeout(() => this.save.emit(value));
+        }
         return;
       case KeyCode.Escape:
         this.preventSaving = true;

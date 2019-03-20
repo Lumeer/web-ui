@@ -41,7 +41,7 @@ export class LinksListComponent implements OnChanges {
 
   @Input() public collection: Collection;
 
-  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+  @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   public linkTypes$: Observable<LinkType[]>;
   public activeLinkType: LinkType;
@@ -105,5 +105,9 @@ export class LinksListComponent implements OnChanges {
       const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
       this.store.dispatch(new DocumentsAction.Get({query}));
     }
+  }
+
+  public onSelectDocument($event: {collection: Collection; document: DocumentModel}) {
+    this.documentSelect.emit($event);
   }
 }

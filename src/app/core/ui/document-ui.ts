@@ -32,6 +32,8 @@ import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
+import {CollectionAttributePipe} from '../../shared/pipes/collection-attribute.pipe';
+import {ConstraintType} from '../model/data/constraint';
 
 export class DocumentUi {
   public rows$ = new BehaviorSubject<UiRow[]>([]);
@@ -44,6 +46,8 @@ export class DocumentUi {
   private summary: string = '';
   private favorite: boolean = null;
   private favoriteChange$ = new Subject<boolean>();
+
+  private collectionAttribute = new CollectionAttributePipe();
 
   private subscriptions = new Subscription();
 
@@ -293,7 +297,10 @@ export class DocumentUi {
           this.addedRows.splice(rowByName, 1);
         }
 
-        if (attr.usageCount > 0 && this.document.data[attr.id] !== undefined) {
+        if (
+          (attr.usageCount > 0 && this.document.data[attr.id] !== undefined) ||
+          (attr.constraint && attr.constraint.type === ConstraintType.Boolean)
+        ) {
           this.rows.push({
             id: attr.id,
             correlationId: attr.correlationId,

@@ -61,7 +61,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   @Input() public document: DocumentModel;
 
-  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+  @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
