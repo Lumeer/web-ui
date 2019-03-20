@@ -23,7 +23,7 @@ import {Attribute, Collection} from '../../core/store/collections/collection';
 import {ActivatedRoute} from '@angular/router';
 import {DialogService} from '../dialog.service';
 import {select, Store} from '@ngrx/store';
-import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
+import {filter, first, map, mergeMap} from 'rxjs/operators';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
@@ -32,7 +32,7 @@ import {MasterBlockType} from '../../shared/blockly/blockly-editor/blockly-edito
 import {LinkType} from '../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
 import {BlocklyDebugDisplay} from '../../shared/blockly/blockly-debugger/blockly-debugger.component';
-import {selectAllLinkTypes, selectLinkTypeById} from '../../core/store/link-types/link-types.state';
+import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 
 @Component({
@@ -74,7 +74,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
     this.linkType$ = this.selectLinkType();
 
     this.attribute$ = this.selectAttribute(this.selectAttributes(this.collection$, this.linkType$));
-    this.linkTypes$ = this.store$.select(selectAllLinkTypes); // this.selectLinkTypes();
+    this.linkTypes$ = this.selectLinkTypes(this.collection$, this.linkType$); // this.store$.select(selectAllLinkTypes);
     this.variables$ = this.selectVariables();
 
     this.attribute$
@@ -142,11 +142,39 @@ export class AttributeFunctionDialogComponent implements OnInit {
     );
   }
 
-  private selectLinkTypes(): Observable<LinkType[]> {
-    return this.activatedRoute.paramMap.pipe(
-      map(params => params.get('collectionId')),
-      filter(collectionId => !!collectionId),
-      mergeMap(collectionId => this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))))
+  private selectLinkTypes(
+    collection$: Observable<Collection>,
+    linkType$: Observable<LinkType>
+  ): Observable<LinkType[]> {
+    return combineLatest(collection$, linkType$).pipe(
+      mergeMap(([collection, linkType]) => {
+        if (collection) {
+          return this.store$.pipe(select(selectLinkTypesByCollectionId(collection.id)));
+        }
+        if (linkType) {
+          return of([linkType]);
+        }
+
+        return [];
+      })
+    );
+  }
+
+  private selectCollections(
+    collection$: Observable<Collection>,
+    linkType$: Observable<LinkType>
+  ): Observable<LinkType[]> {
+    return combineLatest(collection$, linkType$).pipe(
+      mergeMap(([collection, linkType]) => {
+        if (collection) {
+          return this.store$.pipe(select(selectLinkTypesByCollectionId(collection.id)));
+        }
+        if (linkType) {
+          return of(linkType);
+        }
+
+        return [];
+      })
     );
   }
 
