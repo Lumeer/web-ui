@@ -139,6 +139,7 @@ describe('Table perspective :: Columns', () => {
 
     // verify table caption and columns
     cy.get('[data-test="table-caption-name"]')
+      .should('have.length', 2)
       .last()
       .should('contain', 'second');
     cy.get('[data-test="table-column-input"]')
