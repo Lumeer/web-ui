@@ -17,11 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  filterOutAttributeAndChildren,
-  renameChildAttributes,
-  updateAttributes,
-} from '../../../shared/utils/attribute.utils';
+import {filterOutAttributeAndChildren, updateAttributes} from '../../../shared/utils/attribute.utils';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
@@ -106,7 +102,12 @@ function onCreateAttributesSuccess(
   collectionId: string,
   attributes: Attribute[]
 ): CollectionsState {
-  const newAttributes = state.entities[collectionId].attributes.concat(attributes);
+  const collection = state.entities[collectionId];
+  if (!collection) {
+    return state;
+  }
+  const attributesToAdd = attributes.filter(attr => !collection.attributes.find(a => a.id === attr.id));
+  const newAttributes = state.entities[collectionId].attributes.concat(attributesToAdd);
   return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
 }
 
