@@ -78,3 +78,15 @@ Cypress.Commands.add('dismissAppTour', () => {
     wizardDismissed: true,
   });
 });
+
+Cypress.Commands.add('waitForModalShown', () => {
+  cy.get('[data-test="modal-dialog"]')
+    .then(modal => new Promise(resolve => modal.on('shown.bs.modal', () => resolve(true))))
+    .should('be.true');
+});
+
+Cypress.Commands.add('waitForModalHidden', () => {
+  cy.get('[data-test="modal-dialog"]')
+    .then(modal => new Promise(resolve => modal.on('hidden.bs.modal', () => resolve(true))))
+    .should('be.true');
+});
