@@ -72,9 +72,9 @@ export class TextDataInputComponent implements OnChanges {
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    const input = this.textInput;
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
+        const input = this.textInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
