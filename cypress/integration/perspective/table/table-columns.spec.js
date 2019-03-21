@@ -11,8 +11,9 @@ describe('Table perspective :: Columns', () => {
     // rename first column
     cy.focused()
       .trigger('keydown', {code: 'Backspace'})
-      .type('First')
-      .trigger('keydown', {code: 'Enter'});
+      .type('First');
+    cy.get('[data-test="table-attribute-suggestions"]').should('be.visible');
+    cy.get('[data-test="table-attribute-name-suggestion"]').click();
     cy.wait('@createAttribute')
       .its('status')
       .should('eq', 200);

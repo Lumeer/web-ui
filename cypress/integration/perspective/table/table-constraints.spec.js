@@ -370,6 +370,7 @@ describe('Table perspective :: Constraints', () => {
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
+    cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
     cy.get('[data-test="attribute-type-select"]').select('Text');
     cy.get('[data-test="text-constraint-case-style-select"]').select('TitleCase');
@@ -404,6 +405,7 @@ describe('Table perspective :: Constraints', () => {
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
+    cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
     cy.get('[data-test="attribute-type-select"]').select('Checkbox');
     cy.get('[data-test="attribute-type-save-button"]').click();
@@ -447,6 +449,7 @@ describe('Table perspective :: Constraints', () => {
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
+    cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
     cy.get('[data-test="attribute-type-select"]').select('Date');
     cy.get('[data-test="datetime-constraint-format-select"]').select('YYYY-MM-DD');
@@ -554,6 +557,7 @@ describe('Table perspective :: Constraints', () => {
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
+    cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
     cy.get('[data-test="attribute-type-select"]').select('Number');
     cy.get('[data-test="attribute-type-save-button"]').click();
