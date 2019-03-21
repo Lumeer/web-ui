@@ -450,7 +450,7 @@ export function findTableRow(rows: TableConfigRow[], rowPath: number[]): TableCo
 }
 
 export function countLinkedRows(row: TableConfigRow): number {
-  if (!row || !row.linkedRows || row.linkedRows.length === 0 || !row.expanded) {
+  if (!row || !row.linkedRows || row.linkedRows.length === 0 || (!row.expanded && row.linkedRows.length > 1)) {
     return 1;
   }
 
