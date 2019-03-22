@@ -83,7 +83,8 @@ function onCreateAttributesSuccess(
     return state;
   }
 
-  const attributes = linkType.attributes.concat(action.payload.attributes);
+  const attributesToAdd = action.payload.attributes.filter(attr => !linkType.attributes.find(a => a.id === attr.id));
+  const attributes = linkType.attributes.concat(attributesToAdd);
   return linkTypesAdapter.updateOne({id: action.payload.linkTypeId, changes: {attributes}}, state);
 }
 
