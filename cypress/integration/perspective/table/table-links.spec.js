@@ -30,8 +30,8 @@ describe('Table perspective :: Links', () => {
       .first()
       .should('be.empty')
       .dblclick();
-    cy.get('[data-test="text-data-input"]')
-      .first()
+    cy.focused()
+      .should('have.attr', 'data-test', 'text-data-input')
       .type('first value')
       .blur();
 
