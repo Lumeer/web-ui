@@ -37,6 +37,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Query} from '../../../core/store/navigation/query';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
+import {DialogService} from '../../../dialog/dialog.service';
 
 @Component({
   selector: 'document-detail',
@@ -65,7 +66,8 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private documentUiService: DocumentUiService,
-    private perspective: PerspectiveService
+    private perspective: PerspectiveService,
+    private dialogService: DialogService
   ) {}
 
   public ngOnInit() {
@@ -160,5 +162,13 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
       this.document,
       collectionQuery
     );
+  }
+
+  public fireConstraintConfig(id: string) {
+    this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
+  }
+
+  public fireFunctionConfig(id: string) {
+    this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
   }
 }

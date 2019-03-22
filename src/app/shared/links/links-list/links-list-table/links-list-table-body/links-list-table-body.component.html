@@ -12,6 +12,13 @@
   <tr class="clickable-row table-row"
       *ngIf="{read: otherCollection | permissions:collectionType:'read' | async} as permissions"
       (dblclick)="permissions.read && documentSelected(otherCollection, linkRow)">
+    <td *ngFor="let attr of linkType.attributes">
+      <data-input *ngIf="linkRow.linkInstance?.data[attr.id]"
+                  [constraint]="attr.constraint"
+                  [value]="linkRow.linkInstance.data[attr.id]"
+                  [readonly]="true">
+      </data-input>
+    </td>
     <td *ngFor="let attr of otherCollection.attributes">
       <data-input [constraint]="attr.constraint"
                   [value]="linkRow.document.data[attr.id]"
@@ -33,8 +40,10 @@
 
 <ng-template #editableRow let-linkRow>
   <tr class="table-row" id="{{linkRow.correlationId}}">
+    <td *ngFor="let attr of linkType.attributes">
+      &nbsp;
+    </td>
     <td *ngFor="let attr of otherCollection.attributes">
-
       <input-box [paddingRem]="0.25"
                  [placeholder]="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"
                  [canStayEmpty]="true"

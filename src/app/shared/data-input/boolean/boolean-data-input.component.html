@@ -6,6 +6,7 @@
          [readonly]="readonly || null"
          [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"
+         (focus)="onFocus.emit($event)"
          type="checkbox"
          class="custom-control-input"
          data-test="boolean-data-input">

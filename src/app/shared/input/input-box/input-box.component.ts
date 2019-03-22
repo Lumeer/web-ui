@@ -123,7 +123,9 @@ export class InputBoxComponent implements OnInit {
         this.newValue.emit(value);
         const caret = this.getCaret(element);
         element.textContent = value;
-        this.setCaret(element, caret - (oldValue.length - value.length));
+        if (oldValue.length !== value.length) {
+          this.setCaret(element, caret - (oldValue.length - value.length));
+        }
       }
     }
   }
@@ -194,7 +196,9 @@ export class InputBoxComponent implements OnInit {
       this.newValue.emit(value);
       const caret = this.getCaret(element);
       element.textContent = value;
-      this.setCaret(element, caret - (textContent.length - value.length));
+      if (textContent.length !== value.length) {
+        this.setCaret(element, caret - (textContent.length - value.length));
+      }
     }
   }
 

@@ -59,7 +59,7 @@ export class LinksListTableBodyComponent {
   @Input()
   public readonly: boolean;
 
-  @Output() public select = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+  @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   @Output() public unlink = new EventEmitter<string>();
 
@@ -75,7 +75,7 @@ export class LinksListTableBodyComponent {
 
   public documentSelected(collection: Collection, linkRow: LinkRowModel) {
     const document = linkRow.document;
-    this.select.emit({collection, document});
+    this.documentSelect.emit({collection, document});
   }
 
   public removeEmptyLinkRow(linkRow: LinkRowModel) {

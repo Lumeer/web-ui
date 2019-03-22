@@ -1,6 +1,6 @@
 <ng-container *ngIf="linkTypes$ | async as linkTypes">
   <ng-container *ngIf="linkTypes.length > 0">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-5">
       <div class="col">
         <h5 i18n="@@shared.links.title">Links to other records</h5>
         <links-list-tabs
@@ -10,13 +10,13 @@
         </links-list-tabs>
       </div>
     </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-5">
       <div class="col">
         <links-list-table
           [linkType]="activeLinkType"
           [document]="document"
           (unlink)="unLinkDocument($event)"
-          (select)="select.emit($event)">
+          (documentSelect)="onSelectDocument($event)">
         </links-list-table>
       </div>
     </div>

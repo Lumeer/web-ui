@@ -1,10 +1,21 @@
-<input #textInput
+<input *ngIf="readonly; else textEditing"
        [attr.maxlength]="constraintConfig?.maxLength"
        [readonly]="readonly"
        [title]="value | textDataValue: constraintConfig"
        [value]="value | textDataValue: constraintConfig"
-       (blur)="onBlur()"
-       (input)="onInput($event)"
+       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        data-test="text-data-input"
        type="text">
+
+<ng-template #textEditing>
+  <input #textInput
+         [attr.maxlength]="constraintConfig?.maxLength"
+         [title]="value | textDataValue: constraintConfig"
+         [value]="value | textDataValue: constraintConfig"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="text-data-input"
+         type="text">
+</ng-template>

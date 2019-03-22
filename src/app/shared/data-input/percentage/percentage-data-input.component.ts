@@ -63,6 +63,9 @@ export class PercentageDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   @ViewChild('percentageInput')
   public percentageInput: ElementRef<HTMLInputElement>;
 
@@ -97,7 +100,7 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.percentageInput;
 
-        if (!isPercentageValid(input.nativeElement.value, this.constraintConfig)) {
+        if (input && !isPercentageValid(input.nativeElement.value, this.constraintConfig)) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -127,6 +130,7 @@ export class PercentageDataInputComponent implements OnChanges {
 
   public onBlur() {
     if (this.preventSave) {
+      this.cancel.emit();
       this.preventSave = false;
     } else {
       this.save.emit(this.transformValue(this.percentageInput.nativeElement.value));
