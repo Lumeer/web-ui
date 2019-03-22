@@ -52,7 +52,10 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(2)
-      .type('second value')
+      .type('s');
+    cy.focused()
+      .should('have.attr', 'data-test', 'text-data-input')
+      .type('econd value')
       .blur();
     cy.wait('@createDocument')
       .its('status')

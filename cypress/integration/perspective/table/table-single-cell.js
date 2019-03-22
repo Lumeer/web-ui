@@ -33,8 +33,9 @@ describe('Table perspective :: Single cell', () => {
 
     // type text into input and save changes by loosing focus
     const firstValue = '0'; // LMR-1463
-    cy.get('[data-test="text-data-input"]')
-      .type(firstValue)
+    cy.get('[data-test="text-data-input"]').type(firstValue);
+    cy.focused()
+      .should('have.attr', 'data-test', 'text-data-input')
       .blur();
 
     // check if the first column has been initialized
