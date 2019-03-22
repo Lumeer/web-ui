@@ -52,6 +52,9 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(2)
+      .click();
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-hidden-input')
       .type('s');
     cy.focused()
       .should('have.attr', 'data-test', 'text-data-input')
@@ -84,8 +87,19 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(1)
-      .type('linked value')
+      .click();
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-hidden-input')
+      .type('l');
+    cy.focused()
+      .should('have.attr', 'data-test', 'text-data-input')
+      .type('inked value')
       .blur();
+    // cannot find the value
+    //cy.get('[data-test="text-data-input"]')
+    //.eq(1)
+    //.should('have.attr', 'readonly', 'readonly')
+    //.contains('linked value');
 
     cy.wait('@createAttribute')
       .its('status')
@@ -105,6 +119,9 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(4)
+      .click();
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-hidden-input')
       .type('l');
 
     cy.get('[data-test="document-hints"]').should('be.visible');
