@@ -36,7 +36,8 @@ describe('Table perspective :: Single cell', () => {
     cy.get('[data-test="text-data-input"]').type(firstValue);
     cy.focused()
       .should('have.attr', 'data-test', 'text-data-input')
-      .blur();
+      .trigger('keydown', {code: 'Tab'});
+    //      .blur();
 
     // check if the first column has been initialized
     cy.get('[data-test="table-column-input"].text-default-attribute')
@@ -76,22 +77,6 @@ describe('Table perspective :: Single cell', () => {
       .should('have.attr', 'readonly', 'readonly')
       .should('have.value', firstValue);
 
-    // check a different way of entering accent
-    cy.get('[data-test="text-data-input"]')
-      .first()
-      .click();
-
-    cy.focused()
-      .should('have.attr', 'data-test', 'table-hidden-input')
-      .should('have.value', '')
-      .trigger('keydown', {code: 229})
-      .trigger('keydown', {code: 'r'});
-
-    cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
-      .should('have.value', 'ř')
-      .trigger('keydown', {code: 'Escape'});
-
     // start editing by pressing Enter
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
@@ -107,7 +92,6 @@ describe('Table perspective :: Single cell', () => {
 
     // check if the second value has been saved
     cy.get('[data-test="text-data-input"]')
-      .first()
       .should('have.attr', 'readonly', 'readonly')
       .should('have.value', 'second value');
   });
