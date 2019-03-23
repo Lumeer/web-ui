@@ -34,6 +34,8 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import Big from 'big.js';
 import {decimalUserToStore, isPercentageValid} from '../../utils/data.utils';
+import {BehaviorSubject} from 'rxjs';
+import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pipe';
 
 @Component({
   selector: 'percentage-data-input',
@@ -70,23 +72,34 @@ export class PercentageDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
 
+  private percentageDataValue = new PercentageDataValuePipe();
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
+        this.initValue();
         HtmlModifier.setCursorAtTextContentEnd(this.percentageInput.nativeElement);
         this.percentageInput.nativeElement.focus();
       });
     }
-    if (changes.value && String(this.value).length === 1) {
-      // show value entered into hidden input without any changes
-      const input = this.percentageInput;
-      setTimeout(() => {
-        if (input && input.nativeElement) {
-          input.nativeElement.value = this.value;
-        }
-      });
+    if (changes.value) {
+      this.initValue();
     }
     this.valid = isPercentageValid(this.value, this.constraintConfig);
+  }
+
+  private initValue() {
+    const input = this.percentageInput;
+    setTimeout(() => {
+      if (input && input.nativeElement) {
+        // show value entered into hidden input without any changes
+        if (String(this.value).length === 1) {
+          input.nativeElement.value = this.value;
+        } else {
+          input.nativeElement.value = this.percentageDataValue.transform(this.value, this.constraintConfig);
+        }
+      }
+    });
   }
 
   @HostListener('keydown', ['$event'])

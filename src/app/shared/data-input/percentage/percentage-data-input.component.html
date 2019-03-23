@@ -9,7 +9,7 @@
 <ng-template #percentageEditing>
   <input #percentageInput
          [title]="value | percentageDataValue : constraintConfig : '%'"
-         [value]="value | percentageDataValue : constraintConfig"
+         [value]=""
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"
