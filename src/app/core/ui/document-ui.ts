@@ -47,8 +47,6 @@ export class DocumentUi {
   private favorite: boolean = null;
   private favoriteChange$ = new Subject<boolean>();
 
-  private collectionAttribute = new CollectionAttributePipe();
-
   private subscriptions = new Subscription();
 
   constructor(
