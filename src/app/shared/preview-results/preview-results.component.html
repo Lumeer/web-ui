@@ -21,7 +21,7 @@
              data-toggle="collapse"
              class="preview"
              i18n="@@shared.preview.results.moreResults">
-            There are multiple results, please select one&hellip;
+            Search results
           </a>
         </p>
       </div>
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="row justify-content-center">
-        <div class="col">
+        <div class="col mb-3">
           <preview-results-table
             [documents]="data.documents"
             [selectedDocumentId]="selectedDocument?.id"
@@ -47,7 +47,6 @@
           </preview-results-table>
         </div>
       </div>
-      <hr/>
     </div>
     <div class="row" *ngIf="data.loaded && data.collections.length === 1 && data.documents.length === 0">
       <div class="col justify-content-center text-lg-center">

@@ -2,23 +2,42 @@
 
 :host {
   display: flex;
+  outline: none;
+  box-sizing: border-box;
+  border-color: transparent;
+  border-radius: $border-radius-base;
+  border-style: solid;
+  border-width: 2px;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0px 0px 4px $secondary;
+  }
 }
 
 :host(:focus) input,
 :host input:focus,
 :host::ng-deep input:focus {
-  outline: auto !important;
+  outline: none !important;
   pointer-events: auto;
+  border-radius: $border-radius-base;
+  border-style: solid !important;
+  border-width: 2px !important;
 }
 
-input {
+:host::ng-deep input {
   padding: 0 3px;
   width: 100%;
   pointer-events: none;
   text-overflow: ellipsis;
-  background: transparent;
+
+  &:not(:focus) {
+    border: 2px solid transparent !important;
+  }
 
   &:focus {
     text-overflow: clip;
+    border-color: $success !important;
+    box-shadow: 2px 2px 4px $secondary !important;
   }
 }

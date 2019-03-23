@@ -62,6 +62,9 @@ export class NumberDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   @ViewChild('numberInput')
   public numberInput: ElementRef<HTMLInputElement>;
 

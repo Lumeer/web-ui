@@ -16,11 +16,13 @@
 .selected {
   @extend %highlighted;
   outline: $primary solid 2px;
+  box-shadow: 0px 0px 4px $secondary;
 }
 
 .edited {
   @extend %highlighted;
   outline: $success solid 2px;
+  box-shadow: 2px 2px 4px $secondary;
 }
 
 .affected {

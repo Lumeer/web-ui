@@ -15,7 +15,14 @@
     <table class="table table-sm" id="preview-results-table">
       <thead>
         <tr>
-          <th class="sticky-header" *ngFor="let attr of collection.attributes; trackBy:trackByAttribute" scope="col" title="{{attr.name}}">{{attr.name}}</th>
+          <th class="sticky-header"
+              [style.background-color]="collection.color | lightenColor:0.5"
+              [style.font-weight]="attr.id === collection.defaultAttributeId || (!collection.defaultAttributeId && idx === 0) ? 'bold' : 'normal'"
+              *ngFor="let attr of collection.attributes; trackBy:trackByAttribute; let idx = index"
+              scope="col"
+              title="{{attr.name}}">
+            {{attr.name}}
+          </th>
         </tr>
       </thead>
       <tbody>

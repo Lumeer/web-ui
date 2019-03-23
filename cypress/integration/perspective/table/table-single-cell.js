@@ -33,9 +33,11 @@ describe('Table perspective :: Single cell', () => {
 
     // type text into input and save changes by loosing focus
     const firstValue = '0'; // LMR-1463
-    cy.get('[data-test="text-data-input"]')
-      .type(firstValue)
-      .blur();
+    cy.get('[data-test="text-data-input"]').type(firstValue);
+    cy.focused()
+      .should('have.attr', 'data-test', 'text-data-input')
+      .trigger('keydown', {code: 'Tab'});
+    //      .blur();
 
     // check if the first column has been initialized
     cy.get('[data-test="table-column-input"].text-default-attribute')
@@ -90,7 +92,6 @@ describe('Table perspective :: Single cell', () => {
 
     // check if the second value has been saved
     cy.get('[data-test="text-data-input"]')
-      .first()
       .should('have.attr', 'readonly', 'readonly')
       .should('have.value', 'second value');
   });

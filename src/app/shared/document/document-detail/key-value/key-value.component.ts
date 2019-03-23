@@ -19,7 +19,9 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
+import {BehaviorSubject} from 'rxjs';
+import {KeyCode} from '../../../../shared/key-code';
 
 @Component({
   selector: 'key-value',
@@ -55,7 +57,20 @@ export class KeyValueComponent {
   public defaultAttribute = false;
 
   @Input()
+  public configurable = false;
+
+  @Output()
+  public onConfigure = new EventEmitter();
+
+  @Output()
+  public onFunction = new EventEmitter();
+
+  @Input()
   public warning: string = '';
+
+  public constraintTypeBoolean = ConstraintType.Boolean;
+
+  public editing$ = new BehaviorSubject(false);
 
   constructor(public i18n: I18n) {}
 
@@ -69,9 +84,43 @@ export class KeyValueComponent {
     this.value = value;
     this.valueChange.emit(value);
     this.change.emit([this.key, value]);
+    this.editing$.next(false);
   }
 
   public invokeRemove() {
     this.remove.emit();
+  }
+
+  public dataInputKeyDown($event: KeyboardEvent, constraint?: Constraint) {
+    switch ($event.code) {
+      case KeyCode.NumpadEnter:
+      case KeyCode.Enter:
+        if (constraint && constraint.type === ConstraintType.Boolean) {
+          this.onNewRowValue(!this.value);
+        } else {
+          this.editing$.next(!this.editing$.value);
+        }
+        return;
+      case KeyCode.Escape:
+        this.editing$.next(false);
+        return;
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowUp:
+      case KeyCode.ArrowLeft:
+      case KeyCode.ArrowRight:
+      case KeyCode.F2:
+        if (!this.editing$.value) {
+          this.editing$.next(true);
+        }
+        return;
+    }
+  }
+
+  public invokeConstraintConfig(): void {
+    this.onConfigure.emit();
+  }
+
+  public invokeFunctionConfig(): void {
+    this.onFunction.emit();
   }
 }

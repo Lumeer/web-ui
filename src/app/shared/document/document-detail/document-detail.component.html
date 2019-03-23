@@ -1,5 +1,5 @@
 <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
-  <div class="row mt-2 mb-2">
+  <div class="row mt-5 mb-2">
     <div class="col-8 d-flex align-bottom align-self-end">
       <div class="align-text-bottom w-100">
         <h4>
@@ -46,19 +46,22 @@
       </div>
     </div>
   </div>
-  <ng-container *ngFor="let row of rows$ | async; trackBy: getTrackBy(); let idx = index;">
+  <ng-container *ngFor="let row of rows$ | async; trackBy: getTrackBy(); let idx = index">
     <key-value *ngIf="!row.remove"
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"
                [constraint]="(collection | collectionAttribute : row.id)?.constraint"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
-               [readOnly]="!allowedPermissions.writeWithView"
+               [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id)"
                (change)="submitRowChange(idx, $event)"
                (remove)="onRemoveRow(idx)"
-               [warning]="row.warning">
+               [warning]="row.warning"
+               [configurable]="true"
+               (onConfigure)="fireConstraintConfig(row.id)"
+               (onFunction)="fireFunctionConfig(row.id)">
     </key-value>
   </ng-container>
-  <div *ngIf="allowedPermissions.writeWithView" class="row border-top mb-4">
+  <div *ngIf="allowedPermissions.writeWithView" class="row border-top mb-5">
     <div class="col">
       <button class="btn btn-sm btn-primary my-2" (click)="addAttrRow()">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;

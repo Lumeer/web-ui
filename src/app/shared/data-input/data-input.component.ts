@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Constraint, ConstraintType} from '../../core/model/data/constraint';
-import {KeyCode} from '../key-code';
 
 @Component({
   selector: 'data-input',
@@ -49,9 +48,16 @@ export class DataInputComponent {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   public readonly constraintType = ConstraintType;
 
   public onValueChange(value: any) {
     this.valueChange.emit(value);
+  }
+
+  public emitFocus($event: any) {
+    this.onFocus.emit($event);
   }
 }

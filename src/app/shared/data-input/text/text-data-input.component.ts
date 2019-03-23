@@ -63,6 +63,9 @@ export class TextDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
@@ -70,8 +73,8 @@ export class TextDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      const input = this.textInput;
       setTimeout(() => {
+        const input = this.textInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });

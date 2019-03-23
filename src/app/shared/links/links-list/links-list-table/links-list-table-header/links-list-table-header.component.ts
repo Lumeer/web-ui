@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {DocumentHintColumn} from '../../../../document-hints/document-hint-column';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: '[links-list-table-header]',
@@ -33,6 +34,9 @@ export class LinksListTableHeaderComponent {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public linkType: LinkType;
 
   public trackByAttribute(index: number, attribute: Attribute): string {
     return attribute.correlationId || attribute.id;

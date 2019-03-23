@@ -1,7 +1,9 @@
 @import '../../../../../styles/variables';
 
 :host {
-  .button-remove {
+  .button-remove,
+  .button-config,
+  .button-function {
     opacity: 0;
     transition: opacity $animation-color-duration;
   }
@@ -9,13 +11,15 @@
   &:hover,
   &:focus,
   &:active {
-    .button-remove {
+    .button-remove,
+    .button-config,
+    .button-function {
       opacity: 1;
     }
   }
 }
 
-.data-input {
+.data-input:not(.read-only) {
   &::ng-deep > * {
     &:hover:not(boolean-data-input) {
       border: 1px solid $gray-400;
