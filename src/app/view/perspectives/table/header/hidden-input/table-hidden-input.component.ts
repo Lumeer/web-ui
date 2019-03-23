@@ -45,6 +45,8 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
+  private skipCompose = false;
+
   constructor(
     private actions$: Actions,
     private collectionPermissions: CollectionPermissionsPipe,
@@ -72,6 +74,11 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   }
 
   public onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Dead') {
+      this.skipCompose = true;
+      return;
+    }
+
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
@@ -134,6 +141,12 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   public onInput(event: KeyboardEvent) {
     const element = event.target as HTMLInputElement;
+    if ((event as any).isComposing && this.skipCompose) {
+      this.skipCompose = false;
+      return;
+    }
+
+    this.skipCompose = false;
     this.store$.dispatch(new TablesAction.EditSelectedCell({value: element.value}));
     element.value = '';
   }
