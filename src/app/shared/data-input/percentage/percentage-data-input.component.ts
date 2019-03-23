@@ -32,9 +32,7 @@ import {
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import Big from 'big.js';
-import {decimalUserToStore, isPercentageValid} from '../../utils/data.utils';
-import {BehaviorSubject} from 'rxjs';
+import {isPercentageValid, getPercentageValue} from '../../utils/data.utils';
 import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pipe';
 
 @Component({
@@ -151,32 +149,6 @@ export class PercentageDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): number | string {
-    const text = decimalUserToStore(String(value).trim());
-    if (text.endsWith('%')) {
-      const prefix = text.substring(0, text.length - 1);
-      if (!isNaN(+prefix)) {
-        try {
-          return this.bigger(prefix);
-        } catch (e) {
-          return value;
-        }
-      }
-    } else {
-      if (!isNaN(+text)) {
-        try {
-          return this.bigger(text);
-        } catch (e) {
-          return text;
-        }
-      }
-    }
-
-    return String(value);
-  }
-
-  private bigger(value: string): string {
-    const big = new Big(value);
-    big.e = big.e - 2;
-    return big.toString();
+    return getPercentageValue(value);
   }
 }
