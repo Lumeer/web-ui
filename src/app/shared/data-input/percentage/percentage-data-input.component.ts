@@ -32,7 +32,7 @@ import {
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {isPercentageValid, getPercentageValue, getPercentageSaveValue} from '../../utils/data.utils';
+import {isPercentageValid, getPercentageSaveValue} from '../../utils/data.utils';
 import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pipe';
 
 @Component({
