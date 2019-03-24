@@ -390,10 +390,10 @@ export class ChartDataConverter {
       data.push(...values);
       return;
     }
-    const forward = chain[index + 1].index < stage.index;
+    const nextStage = chain[index + 1];
+    const forward = nextStage.index < stage.index;
 
     for (const object of objectData) {
-      const nextStage = chain[index + 1];
       const linkedObjectData = forward ? object.from : object.to;
       const nextStageObjectData = dataMap[nextStage.resource.id] || {};
 
@@ -467,7 +467,9 @@ export class ChartDataConverter {
           isNumericMap[nestedKey] = true;
         }
 
-        const valueObjects: {id: string; value: any}[] = nestedValue[nestedKey];
+        const valueObjects: {id: string; value: any}[] = nestedValue[nestedKey].filter(
+          obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
+        );
         const values = valueObjects.map(obj => obj.value);
         let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
         if (isNotNullOrUndefined(yValue)) {
@@ -679,7 +681,9 @@ export class ChartDataConverter {
     const points: ChartPoint[] = [];
 
     for (const key of xEntries) {
-      const valueObjects: {id: string; value: any}[] = data[key];
+      const valueObjects: {id: string; value: any}[] = data[key].filter(
+        obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
+      );
       const values = valueObjects.map(obj => obj.value);
       let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
       if (isNotNullOrUndefined(yValue)) {

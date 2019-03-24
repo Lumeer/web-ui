@@ -162,7 +162,7 @@ function comparePercentageValues(a: any, b: any, config: PercentageConstraintCon
 
 export function formatDataValue(value: any, constraint: Constraint): any {
   if (!constraint) {
-    return formatUnknownDataValue(value);
+    return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
 
   switch (constraint.type) {
@@ -177,7 +177,7 @@ export function formatDataValue(value: any, constraint: Constraint): any {
     case ConstraintType.Boolean:
       return !!value && value !== '0';
     default:
-      return formatUnknownDataValue(value);
+      return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
 }
 
