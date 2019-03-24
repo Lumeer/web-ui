@@ -1,6 +1,6 @@
 <data-input *ngIf="constraint; else basicInput"
             [constraint]="constraint"
-            [readonly]="readonly"
+            [readonly]="readonly || !(editing$ | async)"
             [value]="model"
             [focus]="focusInput"
             (save)="onSave($event)"

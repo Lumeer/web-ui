@@ -32,6 +32,7 @@ import {KeyCode} from '../../../../../shared/key-code';
 
 import {SelectionHelper} from '../../util/selection-helper';
 import {Constraint} from '../../../../../core/model/data/constraint';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -65,6 +66,8 @@ export class PostItDocumentCellComponent implements OnChanges {
   @HostBinding('attr.tabindex') public tabindex: number;
   @HostBinding('title') public title: string;
 
+  public editing$ = new BehaviorSubject(false);
+
   @HostListener('focus', ['$event'])
   public hostFocus(event: FocusEvent) {
     if (event) {
@@ -90,6 +93,8 @@ export class PostItDocumentCellComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
+        this.editing$.next(true);
+
         this.selectionHelper.focusToggle(true);
         this.focusInput = true;
         break;
@@ -113,10 +118,13 @@ export class PostItDocumentCellComponent implements OnChanges {
   }
 
   public onEnter() {
+    this.editing$.next(true);
     this.enter.emit();
   }
 
   public onBlur() {
+    this.editing$.next(false);
+
     if (!this.readonly) {
       this.model = this.model.trim();
       this.update.emit(this.model);
@@ -124,11 +132,13 @@ export class PostItDocumentCellComponent implements OnChanges {
   }
 
   public onSave(value: any) {
+    this.editing$.next(false);
     this.update.emit(value);
     this.focusInput = false;
   }
 
   public onCancel() {
+    this.editing$.next(false);
     this.focusInput = false;
     this.selectionHelper.focusToggle(false);
   }
