@@ -353,7 +353,7 @@ export function convertToBig(value: any): Big {
 }
 
 export function isNumberValid(value: any, config?: NumberConstraintConfig): boolean {
-  if (isNullOrUndefined(value)) {
+  if (!value) {
     return true;
   }
   const valueBig = convertToBig(value);
