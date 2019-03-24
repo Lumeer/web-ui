@@ -56,6 +56,25 @@ function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
   return moment(value, formats);
 }
 
+export function getSaveValue(value: any, constraint: Constraint): any {
+  if (!constraint) {
+    return value;
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Percentage:
+      return getPercentageSaveValue(value);
+    case ConstraintType.Number:
+      return getNumberSaveValue(value);
+    case ConstraintType.DateTime:
+      return getDateTimeSaveValue(value, constraint.config as DateTimeConstraintConfig);
+    case ConstraintType.Boolean:
+      return parseBooleanDataValue(value);
+    default:
+      return value;
+  }
+}
+
 export function formatData(data: DocumentData, attributes: Attribute[], filterInvalid?: boolean): DocumentData {
   const idsMap: Record<string, Attribute> = (attributes || []).reduce((map, attr) => ({...map, [attr.id]: attr}), {});
   const newData = {};
@@ -135,8 +154,8 @@ function compareDateTimeValues(a: any, b: any, config: DateTimeConstraintConfig,
 function comparePercentageValues(a: any, b: any, config: PercentageConstraintConfig, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
 
-  const aValue = getPercentageValue(a);
-  const bValue = getPercentageValue(b);
+  const aValue = getPercentageSaveValue(a);
+  const bValue = getPercentageSaveValue(b);
 
   return aValue > bValue ? multiplier : bValue > aValue ? -1 * multiplier : 0;
 }
@@ -185,6 +204,10 @@ export function isDateTimeValid(value: any, config?: DateTimeConstraintConfig): 
   return momentDate.isValid();
 }
 
+export function getDateTimeSaveValue(value: any, config: DateTimeConstraintConfig): string {
+  return value ? moment(value, config.format).toISOString() : '';
+}
+
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
   if ([undefined, null, ''].includes(value)) {
@@ -195,6 +218,10 @@ export function formatNumberDataValue(value: any, config: NumberConstraintConfig
     return decimalStoreToUser(valueBig.toFixed());
   }
   return formatUnknownDataValue(value);
+}
+
+export function getNumberSaveValue(value: any): string {
+  return decimalUserToStore(String(value).trim());
 }
 
 export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig, suffix = ''): string {
@@ -251,7 +278,7 @@ function convertPercentageValue(value: string, decimals?: number, suffix = ''): 
   return decimalStoreToUser(big.toString());
 }
 
-export function getPercentageValue(value: any): number | string {
+export function getPercentageSaveValue(value: any): number | string {
   const text = decimalUserToStore(String(value).trim());
   if (text.endsWith('%')) {
     const prefix = text.substring(0, text.length - 1);

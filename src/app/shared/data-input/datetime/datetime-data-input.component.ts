@@ -29,11 +29,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import * as moment from 'moment';
 import {BsDatepickerDirective} from 'ngx-bootstrap';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {KeyCode} from '../../key-code';
-import {formatDateTimeDataValue, parseDateTimeDataValue} from '../../utils/data.utils';
+import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -144,6 +143,6 @@ export class DatetimeDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: string): string {
-    return value ? moment(value, this.constraintConfig.format).toISOString() : '';
+    return getDateTimeSaveValue(value, this.constraintConfig);
   }
 }

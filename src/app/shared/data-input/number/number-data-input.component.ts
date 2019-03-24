@@ -32,7 +32,7 @@ import {
 import {NumberConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {decimalUserToStore, formatNumberDataValue, isNumberValid} from '../../utils/data.utils';
+import {decimalUserToStore, formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'number-data-input',
@@ -136,6 +136,6 @@ export class NumberDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): string {
-    return decimalUserToStore(String(value).trim());
+    return getNumberSaveValue(value);
   }
 }
