@@ -30,7 +30,7 @@ import {
 
 import {select, Store} from '@ngrx/store';
 import {distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -44,7 +44,6 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
-import {Observable, BehaviorSubject} from 'rxjs';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfig, View} from '../../../core/store/views/view';
 import {PostItAction} from '../../../core/store/postit/postit.action';
@@ -61,12 +60,20 @@ import {deepArrayEquals} from '../../../shared/utils/array.utils';
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: any) {
-    const id = event.target.id || '';
-    const parent = event.target.parentElement;
-    const idParent = (parent && parent.id) || '';
+    let element = event.target as HTMLElement;
 
-    if (!id.startsWith(this.perspectiveId) && !idParent.startsWith(this.perspectiveId)) {
-      this.selectionHelper.clearSelection();
+    if (element) {
+      while (element.tagName.toLowerCase().endsWith('-data-input')) {
+        element = element.parentElement;
+      }
+
+      const id = element.id || '';
+      const parent = element.parentElement;
+      const idParent = (parent && parent.id) || '';
+
+      if (!id.startsWith(this.perspectiveId) && !idParent.startsWith(this.perspectiveId)) {
+        this.selectionHelper.clearSelection();
+      }
     }
   }
 
