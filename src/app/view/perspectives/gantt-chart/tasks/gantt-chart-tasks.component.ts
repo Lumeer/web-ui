@@ -40,6 +40,7 @@ import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {getSaveValue} from '../../../../shared/utils/data.utils';
 
 interface Data {
   collections: Collection[];
@@ -124,11 +125,17 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       return;
     }
 
+    const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
+
     const patchData = {};
     for (const {attributeId, value} of changes) {
-      const changed = (changedDocument.data && changedDocument.data[attributeId] !== value) || false;
+      const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
+      const saveValue = getSaveValue(value, attribute && attribute.constraint);
+
+      const changed = (changedDocument.data && changedDocument.data[attributeId] !== saveValue) || false;
       if (changed) {
-        patchData[attributeId] = this.formatNewValue(changedDocument, attributeId, value);
+        patchData[attributeId] =
+          attribute && attribute.constraint ? saveValue : this.formatNewValue(changedDocument, attributeId, value);
       }
     }
 
