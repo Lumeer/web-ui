@@ -31,7 +31,7 @@ import {
 import {KeyCode} from '../../../../../shared/key-code';
 
 import {SelectionHelper} from '../../util/selection-helper';
-import {Constraint} from '../../../../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -66,6 +66,8 @@ export class PostItDocumentCellComponent implements OnChanges {
   @HostBinding('attr.tabindex') public tabindex: number;
   @HostBinding('title') public title: string;
 
+  public constraintTypeBoolean = ConstraintType.Boolean;
+
   public editing$ = new BehaviorSubject(false);
 
   @HostListener('focus', ['$event'])
@@ -90,10 +92,20 @@ export class PostItDocumentCellComponent implements OnChanges {
       case KeyCode.ArrowUp:
         this.selectionHelper.moveUp();
         break;
+      case KeyCode.Space:
+        if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+          this.update.emit(String(!!!this.model));
+          event.stopPropagation();
+        }
+        break;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
-        this.editing$.next(true);
+        if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+          this.update.emit(String(!!!this.model));
+        } else {
+          this.editing$.next(true);
+        }
 
         this.selectionHelper.focusToggle(true);
         this.focusInput = true;
