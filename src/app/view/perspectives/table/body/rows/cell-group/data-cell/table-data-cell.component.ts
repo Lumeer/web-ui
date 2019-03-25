@@ -42,7 +42,10 @@ import {Constraint, ConstraintType} from '../../../../../../../core/model/data/c
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
+import {
+  selectCollectionAttributeById,
+  selectCollectionAttributeConstraint,
+} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
@@ -59,6 +62,8 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {isAttributeEditable, isAttributeEditable_} from '../../../../../../../core/store/collections/collection.util';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'table-data-cell',
@@ -120,6 +125,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public suggesting$ = new BehaviorSubject(false);
 
   public constraint$: Observable<Constraint>;
+  public attribute$: Observable<Attribute>;
 
   public editedValue: any;
   public hiddenInputValue$ = new BehaviorSubject<any>('');
@@ -193,6 +199,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.constraint$ = this.store$.pipe(
         select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeIds[0]))
       );
+      this.attribute$ = this.store$.pipe(
+        select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
+      );
     }
     if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
       this.constraint$ = this.store$.pipe(
@@ -230,21 +239,24 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(
         ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
-        withLatestFrom(this.constraint$)
+        withLatestFrom(this.constraint$, this.attribute$)
       )
-      .subscribe(([action, constraint]) => {
+      .subscribe(([action, constraint, attribute]) => {
         const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
-          if (constraint && constraint.type === ConstraintType.Boolean) {
-            // switch checkbox only if Enter or Space is pressed
-            if (!value || value === ' ') {
-              const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
-              this.saveData(!data[this.column.attributeIds[0]]);
+          if (isAttributeEditable_(attribute)) {
+            if (constraint && constraint.type === ConstraintType.Boolean) {
+              // switch checkbox only if Enter or Space is pressed
+              if (!value || value === ' ') {
+                const data =
+                  (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
+                this.saveData(!data[this.column.attributeIds[0]]);
+              }
+            } else {
+              this.editedValue = value;
+              this.hiddenInputValue$.next(value);
+              this.editing$.next(true);
             }
-          } else {
-            this.editedValue = value;
-            this.hiddenInputValue$.next(value);
-            this.editing$.next(true);
           }
         }
       });
@@ -295,8 +307,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public onDoubleClick(event: MouseEvent) {
     if (!this.editing$.getValue()) {
       event.preventDefault();
-      this.editing$.next(true); // TODO maybe set edited attribute?
+      this.attribute$.pipe(first()).subscribe(attribute => {
+        if (isAttributeEditable_(attribute)) {
+          this.editing$.next(true); // TODO maybe set edited attribute?
+        }
+      });
     }
+  }
+
+  public isEditable(attribute: Attribute): boolean {
+    return isAttributeEditable_(attribute);
   }
 
   @HostListener('contextmenu', ['$event'])

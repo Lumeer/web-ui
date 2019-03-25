@@ -22,6 +22,10 @@ import {Attribute, Collection} from './collection';
 export function isAttributeEditable(attributeId: string, collection: Collection): boolean {
   const attribute =
     attributeId && collection && collection.attributes && collection.attributes.find(attr => attr.id === attributeId);
+  return isAttributeEditable_(attribute);
+}
+
+export function isAttributeEditable_(attribute: Attribute): boolean {
   return attribute && (!attribute.function || !attribute.function.js || attribute.function.editable);
 }
 

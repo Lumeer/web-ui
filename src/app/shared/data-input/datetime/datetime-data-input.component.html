@@ -3,6 +3,7 @@
        [title]="value | dateTimeDataValue: constraintConfig"
        [value]="value | dateTimeDataValue: constraintConfig"
        class="border-0 w-100 h-100 px-1 bg-transparent"
+       [class.invalid-value]="!(value | dateTimeValid:constraintConfig)"
        data-test="datetime-data-input"
        type="text">
 
