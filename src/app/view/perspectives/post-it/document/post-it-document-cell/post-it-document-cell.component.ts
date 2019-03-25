@@ -94,16 +94,20 @@ export class PostItDocumentCellComponent implements OnChanges {
         break;
       case KeyCode.Space:
         if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-          this.update.emit(String(!!!this.model));
+          this.update.emit(String(!this.model));
           event.preventDefault();
         }
         break;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
-      case KeyCode.F2:
+        /* tslint:disable:no-switch-case-fall-through */
         if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-          this.update.emit(String(!!!this.model));
-        } else {
+          this.update.emit(String(!this.model));
+          break;
+        }
+      case KeyCode.F2:
+        /* tslint:enable:no-switch-case-fall-through */
+        if (!this.constraint || this.constraint.type !== ConstraintType.Boolean) {
           this.editing$.next(true);
           this.selectionHelper.focusToggle(true);
           this.focusInput = true;
