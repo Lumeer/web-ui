@@ -95,7 +95,7 @@ export class PostItDocumentCellComponent implements OnChanges {
       case KeyCode.Space:
         if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
           this.update.emit(String(!!!this.model));
-          event.stopPropagation();
+          event.preventDefault();
         }
         break;
       case KeyCode.Enter:
@@ -105,10 +105,9 @@ export class PostItDocumentCellComponent implements OnChanges {
           this.update.emit(String(!!!this.model));
         } else {
           this.editing$.next(true);
+          this.selectionHelper.focusToggle(true);
+          this.focusInput = true;
         }
-
-        this.selectionHelper.focusToggle(true);
-        this.focusInput = true;
         break;
       case KeyCode.Backspace:
       case KeyCode.Delete:
