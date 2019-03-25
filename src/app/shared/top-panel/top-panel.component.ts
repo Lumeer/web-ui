@@ -60,7 +60,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   @ViewChild(WorkspacePanelComponent)
   public workspacePanel: WorkspacePanelComponent;
 
-  public readonly lineHeight = 48;
+  public readonly lineHeight = 36;
 
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
