@@ -41,6 +41,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {CalendarMetaData, createCalendarEvents} from '../util/calendar-util';
+import {getSaveValue} from '../../../../shared/utils/data.utils';
 
 interface Data {
   collections: Collection[];
@@ -141,9 +142,15 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     if (!changedDocument) {
       return;
     }
+    const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
 
     const patchDocument = {...changedDocument};
-    changes.forEach(change => (patchDocument.data[change.attributeId] = change.value));
+    changes.forEach(change => {
+      const attribute = ((collection && collection.attributes) || []).find(a => a.id === change.attributeId);
+      const saveValue = getSaveValue(change.value, attribute && attribute.constraint);
+
+      patchDocument.data[change.attributeId] = saveValue;
+    });
     this.patchData.emit(patchDocument);
   }
 

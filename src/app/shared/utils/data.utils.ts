@@ -28,7 +28,9 @@ import {
 import * as moment from 'moment';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 import Big from 'big.js';
-import {isNullOrUndefined} from './common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
+import {DocumentData} from '../../core/store/documents/document.model';
+import {Attribute} from '../../core/store/collections/collection';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -54,9 +56,113 @@ function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
   return moment(value, formats);
 }
 
-export function formatDataValue(value: any, constraint: Constraint): string {
+export function getSaveValue(value: any, constraint: Constraint): any {
   if (!constraint) {
-    return formatUnknownDataValue(value);
+    return value;
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Percentage:
+      return getPercentageSaveValue(value);
+    case ConstraintType.Number:
+      return getNumberSaveValue(value);
+    case ConstraintType.DateTime:
+      return getDateTimeSaveValue(value, constraint.config as DateTimeConstraintConfig);
+    case ConstraintType.Boolean:
+      return parseBooleanDataValue(value);
+    default:
+      return value;
+  }
+}
+
+export function formatData(data: DocumentData, attributes: Attribute[], filterInvalid?: boolean): DocumentData {
+  const idsMap: Record<string, Attribute> = (attributes || []).reduce((map, attr) => ({...map, [attr.id]: attr}), {});
+  const newData = {};
+  for (const [attributeId, attribute] of Object.entries(idsMap)) {
+    const formattedValue = formatDataValue(data[attributeId], attribute.constraint);
+    if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, true)) {
+      newData[attributeId] = formattedValue;
+    }
+  }
+  return newData;
+}
+
+export function isValueValid(value: any, constraint: Constraint, withoutConfig?: boolean): boolean {
+  if (!constraint) {
+    return true;
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.DateTime:
+      return isDateTimeValid(value, !withoutConfig ? (constraint.config as DateTimeConstraintConfig) : null);
+    case ConstraintType.Number:
+      return isNumberValid(value, !withoutConfig ? (constraint.config as NumberConstraintConfig) : null);
+    case ConstraintType.Percentage:
+      return isPercentageValid(value, !withoutConfig ? (constraint.config as PercentageConstraintConfig) : null);
+    default:
+      return true;
+  }
+}
+
+export function compareValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
+  const multiplier = asc ? 1 : -1;
+  if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    return 0;
+  } else if (isNullOrUndefined(b)) {
+    return multiplier;
+  } else if (isNullOrUndefined(a)) {
+    return -1 * multiplier;
+  }
+
+  if (!constraint) {
+    return compareAnyValues(a, b, asc);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.DateTime:
+      return compareDateTimeValues(a, b, constraint.config as DateTimeConstraintConfig, asc);
+    case ConstraintType.Percentage:
+      return comparePercentageValues(a, b, constraint.config as PercentageConstraintConfig, asc);
+    default:
+      return compareAnyValues(a, b, asc);
+  }
+}
+
+function compareAnyValues(a: any, b: any, asc: boolean = true): number {
+  const multiplier = asc ? 1 : -1;
+  const aValue = isNumeric(a) ? toNumber(a) : a;
+  const bValue = isNumeric(b) ? toNumber(b) : b;
+
+  if (aValue > bValue) {
+    return multiplier;
+  } else if (bValue > aValue) {
+    return -1 * multiplier;
+  }
+
+  return 0;
+}
+
+function compareDateTimeValues(a: any, b: any, config: DateTimeConstraintConfig, asc: boolean = true): number {
+  const multiplier = asc ? 1 : -1;
+
+  const aMoment = parseMomentDate(a, config && config.format);
+  const bMoment = parseMomentDate(b, config && config.format);
+
+  return aMoment.isAfter(bMoment) ? multiplier : bMoment.isAfter(aMoment) ? -1 * multiplier : 0;
+}
+
+function comparePercentageValues(a: any, b: any, config: PercentageConstraintConfig, asc: boolean = true): number {
+  const multiplier = asc ? 1 : -1;
+
+  const aValue = getPercentageSaveValue(a);
+  const bValue = getPercentageSaveValue(b);
+
+  return aValue > bValue ? multiplier : bValue > aValue ? -1 * multiplier : 0;
+}
+
+export function formatDataValue(value: any, constraint: Constraint): any {
+  if (!constraint) {
+    return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
 
   switch (constraint.type) {
@@ -66,8 +172,12 @@ export function formatDataValue(value: any, constraint: Constraint): string {
       return formatNumberDataValue(value, constraint.config as NumberConstraintConfig);
     case ConstraintType.Text:
       return formatTextDataValue(value, constraint.config as TextConstraintConfig);
+    case ConstraintType.Percentage:
+      return formatPercentageDataValue(value, constraint.config as PercentageConstraintConfig);
+    case ConstraintType.Boolean:
+      return !!value && value !== '0';
     default:
-      return formatUnknownDataValue(value);
+      return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
 }
 
@@ -85,6 +195,19 @@ export function formatDateTimeDataValue(value: any, config: DateTimeConstraintCo
   return config && config.format ? momentDate.format(config.format) : formatUnknownDataValue(value);
 }
 
+export function isDateTimeValid(value: any, config?: DateTimeConstraintConfig): boolean {
+  if (!value) {
+    return true;
+  }
+
+  const momentDate = parseMomentDate(value, config && config.format);
+  return momentDate.isValid();
+}
+
+export function getDateTimeSaveValue(value: any, config: DateTimeConstraintConfig): string {
+  return value ? moment(value, config.format).toISOString() : '';
+}
+
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {
   // TODO format based on config
   if ([undefined, null, ''].includes(value)) {
@@ -95,6 +218,10 @@ export function formatNumberDataValue(value: any, config: NumberConstraintConfig
     return decimalStoreToUser(valueBig.toFixed());
   }
   return formatUnknownDataValue(value);
+}
+
+export function getNumberSaveValue(value: any): string {
+  return decimalUserToStore(String(value).trim());
 }
 
 export function formatPercentageDataValue(value: any, config: PercentageConstraintConfig, suffix = ''): string {
@@ -110,6 +237,10 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
     return formatUnknownDataValue(value);
   }
 
+  return formatPercentageStringValue(value, config, suffix);
+}
+
+export function formatPercentageStringValue(value: string, config: PercentageConstraintConfig, suffix = ''): string {
   const percChars = (value.match(/%/g) || []).length;
 
   if (percChars === 1 && value.endsWith('%')) {
@@ -136,7 +267,7 @@ function convertPercentageValue(value: string, decimals?: number, suffix = ''): 
     big = new Big('0');
   }
 
-  if (![undefined, null].includes(decimals)) {
+  if (isNotNullOrUndefined(decimals)) {
     big = big.round(decimals);
 
     if (big.eq('0') && decimals > 0 && suffix) {
@@ -145,6 +276,36 @@ function convertPercentageValue(value: string, decimals?: number, suffix = ''): 
   }
 
   return decimalStoreToUser(big.toString());
+}
+
+export function getPercentageSaveValue(value: any): number | string {
+  const text = decimalUserToStore(String(value).trim());
+  if (text.endsWith('%')) {
+    const prefix = text.substring(0, text.length - 1);
+    if (isNumeric(prefix)) {
+      try {
+        return moveDecimalComma(toNumber(prefix), -2);
+      } catch (e) {
+        return value;
+      }
+    }
+  } else {
+    if (isNumeric(text)) {
+      try {
+        return moveDecimalComma(toNumber(text), -2);
+      } catch (e) {
+        return text;
+      }
+    }
+  }
+
+  return String(value);
+}
+
+function moveDecimalComma(value: any, offset: number): string {
+  const big = new Big(value);
+  big.e = big.e + offset;
+  return big.toString();
 }
 
 export function formatTextDataValue(value: any, config?: TextConstraintConfig): string {
@@ -204,10 +365,10 @@ export function isNumberValid(value: any, config?: NumberConstraintConfig): bool
 
 function checkNumberRange(n: Big, config?: NumberConstraintConfig): boolean {
   let passed = true;
-  if (config.minValue) {
+  if (config && config.minValue) {
     passed = n.gte(config.minValue);
   }
-  if (config.maxValue) {
+  if (config && config.maxValue) {
     passed = passed && n.lte(config.maxValue);
   }
 
@@ -250,10 +411,10 @@ function checkPercentageNumber(value: string, config?: PercentageConstraintConfi
 
 function checkPercentageRange(n: number, config?: PercentageConstraintConfig): boolean {
   let passed = true;
-  if (config.minValue || config.minValue === 0) {
+  if (config && (config.minValue || config.minValue === 0)) {
     passed = n >= config.minValue;
   }
-  if (config.maxValue || config.maxValue === 0) {
+  if (config && (config.maxValue || config.maxValue === 0)) {
     passed = passed && n <= config.maxValue;
   }
 

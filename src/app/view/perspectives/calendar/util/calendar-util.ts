@@ -31,6 +31,7 @@ import * as moment from 'moment';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {formatData} from '../../../../shared/utils/data.utils';
 
 export interface CalendarMetaData {
   documentId: string;
@@ -92,8 +93,10 @@ export function createCalendarEventsForCollection(
   const events = [];
 
   for (const document of documents) {
-    const title = nameProperty && document.data[nameProperty.attributeId];
-    const startString = startProperty && document.data[startProperty.attributeId];
+    const formattedData = formatData(document.data, collection.attributes);
+
+    const title = nameProperty && formattedData[nameProperty.attributeId];
+    const startString = startProperty && formattedData[startProperty.attributeId];
 
     const start = parseCalendarEventDate(startString);
 
@@ -101,7 +104,7 @@ export function createCalendarEventsForCollection(
       continue;
     }
 
-    const endString = endProperty && document.data[endProperty.attributeId];
+    const endString = endProperty && formattedData[endProperty.attributeId];
     const end = parseCalendarEventDate(endString);
 
     const allDay = isAllDayEvent(start, end);

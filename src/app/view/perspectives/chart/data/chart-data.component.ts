@@ -42,6 +42,7 @@ import {ChartDataConverter} from './convertor/chart-data-converter';
 import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
+import {getSaveValue} from '../../../../shared/utils/data.utils';
 
 interface Data {
   collections: Collection[];
@@ -261,12 +262,15 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const documentId = valueChange.pointId;
     const value = valueChange.value;
 
-    const changedDocument = this.documents.find(document => document.id === documentId);
+    const changedDocument = (this.documents || []).find(document => document.id === documentId);
     if (!changedDocument) {
       return;
     }
+    const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
+    const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
+    const saveValue = getSaveValue(value, attribute && attribute.constraint);
 
-    const patchDocument = {...changedDocument, data: {[attributeId]: value}};
+    const patchDocument = {...changedDocument, data: {[attributeId]: saveValue}};
     this.patchData.emit(patchDocument);
   }
 
@@ -279,8 +283,11 @@ export class ChartDataComponent implements OnInit, OnChanges {
     if (!changedLinkInstance) {
       return;
     }
+    const linkType = (this.linkTypes || []).find(lt => lt.id === changedLinkInstance.linkTypeId);
+    const attribute = ((linkType && linkType.attributes) || []).find(a => a.id === attributeId);
+    const saveValue = getSaveValue(value, attribute && attribute.constraint);
 
-    const patchLinkInstance = {...changedLinkInstance, data: {[attributeId]: value}};
+    const patchLinkInstance = {...changedLinkInstance, data: {[attributeId]: saveValue}};
     this.patchLinkData.emit(patchLinkInstance);
   }
 
