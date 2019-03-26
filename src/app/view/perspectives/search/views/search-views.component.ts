@@ -114,7 +114,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public deleteView(view: View) {
-    this.store$.dispatch(new ViewsAction.Delete({viewCode: view.code}));
+    this.store$.dispatch(new ViewsAction.Delete({viewId: view.id}));
   }
 
   public isLoading(): boolean {

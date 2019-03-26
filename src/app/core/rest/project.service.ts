@@ -27,66 +27,45 @@ import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class ProjectService extends PermissionService {
-  public getProjects(orgCode: string): Observable<ProjectDto[]> {
-    if (!this.hasOrganizationApiPrefix(orgCode)) {
-      throw Error('Organization not set');
-    }
-
-    return this.httpClient.get<ProjectDto[]>(this.apiPrefix(orgCode));
+  public getProjects(organizationId: string): Observable<ProjectDto[]> {
+    return this.httpClient.get<ProjectDto[]>(this.apiPrefix(organizationId));
   }
 
-  public getProjectCodes(orgCode: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix(orgCode)}/info/codes`).pipe();
+  public getProjectCodes(organizationId: string): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.apiPrefix(organizationId)}/info/codes`).pipe();
   }
 
-  public getProject(orgCode: string, projCode: string): Observable<ProjectDto> {
-    if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw Error(`Workspace not set ${orgCode} ${projCode}`);
-    }
-
-    return this.httpClient.get<ProjectDto>(this.apiPrefix(orgCode, projCode));
+  public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
+    return this.httpClient.get<ProjectDto>(this.apiPrefix(organizationId, projectId));
   }
 
-  public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
-    if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw Error(`Workspace not set ${orgCode} ${projCode}`);
-    }
-
-    return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
+  public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {
+    return this.httpClient.get<ProjectDto>(`${this.apiPrefix(organizationId)}/code/${projectCode}`);
   }
 
-  public createProject(orgCode: string, project: ProjectDto): Observable<ProjectDto> {
-    if (!this.hasOrganizationApiPrefix(orgCode)) {
-      throw Error('Organization not set');
-    }
-
-    return this.httpClient.post<ProjectDto>(this.apiPrefix(orgCode), project);
+  public deleteProject(organizationId: string, projectId: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(this.apiPrefix(organizationId, projectId), {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
-  public editProject(orgCode: string, projCode: string, project: ProjectDto): Observable<ProjectDto> {
-    if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw Error(`Workspace not set ${orgCode} ${projCode}`);
-    }
-    return this.httpClient.put<ProjectDto>(this.apiPrefix(orgCode, projCode), project);
+  public createProject(organizationId: string, project: ProjectDto): Observable<ProjectDto> {
+    return this.httpClient.post<ProjectDto>(this.apiPrefix(organizationId), project);
   }
 
-  private hasOrganizationApiPrefix(orgCode: string): boolean {
-    return !!orgCode;
+  public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {
+    return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
   }
 
-  private hasFullApiPrefix(orgCode: string, projCode: string): boolean {
-    return !!(orgCode && projCode);
-  }
-
-  private apiPrefix(orgCode: string, projCode?: string): string {
-    return `${environment.apiUrl}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
+  private apiPrefix(organizationId: string, projectId?: string): string {
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects${projectId ? `/${projectId}` : ''}`;
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
-    const actualWorkspace = workspace || this.workspace;
-    const orgCode = actualWorkspace.organizationCode;
-    const projCode = actualWorkspace.projectCode;
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
 
-    return this.apiPrefix(orgCode, projCode);
+    return this.apiPrefix(organizationId, projectId);
   }
 }

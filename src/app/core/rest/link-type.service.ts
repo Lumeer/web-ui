@@ -21,22 +21,16 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AttributeDto, LinkTypeDto} from '../dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class LinkTypeService {
-  private workspace: Workspace;
-
-  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
-    this.store
-      .select(selectWorkspace)
-      .pipe(filter(workspace => !!workspace))
-      .subscribe(workspace => (this.workspace = workspace));
+export class LinkTypeService extends BaseService {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
@@ -73,10 +67,10 @@ export class LinkTypeService {
   }
 
   private restApiPrefix(id?: string): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+    const organizationId = this.getOrCurrentOrganizationId();
+    const projectId = this.getOrCurrentProjectId();
     const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
   }
 }

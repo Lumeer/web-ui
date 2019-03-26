@@ -23,18 +23,15 @@ import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {CollectionDto} from '../dto/collection.dto';
-import {Workspace} from '../store/navigation/workspace';
+import {CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
 import {ImportedCollectionDto} from '../dto/imported-collection.dto';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class ImportService {
-  private workspace: Workspace;
-
-  constructor(private http: HttpClient, private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+export class ImportService extends BaseService {
+  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public importFile(format: string, importedCollection: ImportedCollectionDto): Observable<CollectionDto> {
@@ -44,9 +41,9 @@ export class ImportService {
   }
 
   private apiPrefix(): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+    const organizationId = this.getOrCurrentOrganizationId();
+    const projectId = this.getOrCurrentProjectId();
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/import`;
   }
 }

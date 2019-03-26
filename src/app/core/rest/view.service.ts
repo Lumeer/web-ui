@@ -20,11 +20,12 @@
 import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {ViewDto} from '../dto';
 import {PermissionService} from './permission.service';
 import {map} from 'rxjs/operators';
+import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class ViewService extends PermissionService {
@@ -32,38 +33,37 @@ export class ViewService extends PermissionService {
     return this.httpClient.post<ViewDto>(this.apiPrefix(), view);
   }
 
-  public updateView(code: string, view: ViewDto): Observable<ViewDto> {
-    return this.httpClient.put<ViewDto>(this.apiPrefix(code), view);
+  public updateView(id: string, view: ViewDto): Observable<ViewDto> {
+    return this.httpClient.put<ViewDto>(this.apiPrefix(id), view);
   }
 
-  public getView(code: string): Observable<ViewDto> {
-    return this.httpClient.get<ViewDto>(this.apiPrefix(code));
+  public getView(id: string): Observable<ViewDto> {
+    return this.httpClient.get<ViewDto>(this.apiPrefix(id));
   }
 
-  public deleteView(code: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(code)).pipe(map(() => code));
+  public deleteView(id: string): Observable<string> {
+    return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
   }
 
   public getViews(pageNumber?: number, pageSize?: number): Observable<ViewDto[]> {
     const queryParams = new HttpParams();
 
-    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+    if (isNotNullOrUndefined(pageNumber) && isNotNullOrUndefined(pageSize)) {
       queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
 
     return this.httpClient.get<ViewDto[]>(this.apiPrefix(), {params: queryParams});
   }
 
-  protected actualApiPrefix(): string {
-    const viewCode = this.workspace.viewCode;
-    return this.apiPrefix(viewCode);
+  protected actualApiPrefix(workspace?: Workspace): string {
+    return this.apiPrefix(this.getOrCurrentViewId(workspace));
   }
 
-  private apiPrefix(code?: string): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+  private apiPrefix(id?: string): string {
+    const organizationId = this.getOrCurrentOrganizationId();
+    const projectId = this.getOrCurrentProjectId();
 
-    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
-    return code ? viewsPath.concat('/', code) : viewsPath;
+    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
+    return id ? viewsPath.concat('/', id) : viewsPath;
   }
 }

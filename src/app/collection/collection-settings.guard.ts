@@ -118,7 +118,7 @@ export class CollectionSettingsGuard implements CanActivate {
     if (organization) {
       return combineLatest(
         this.selectUser(),
-        this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode)
+        this.workspaceService.getProjectFromStoreOrApi(organization.id, projectCode)
       ).pipe(map(([user, project]) => ({user, project})));
     }
     return this.selectUser().pipe(map(user => ({user})));

@@ -31,7 +31,7 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     case ViewsActionType.UPDATE_SUCCESS:
       return addOrUpdateView(state, action.payload.view);
     case ViewsActionType.DELETE_SUCCESS:
-      return viewsAdapter.removeOne(action.payload.viewCode, state);
+      return viewsAdapter.removeOne(action.payload.viewId, state);
     case ViewsActionType.SET_PERMISSIONS_SUCCESS:
       return onSetPermissions(state, action);
     case ViewsActionType.CHANGE_CONFIG:
@@ -50,14 +50,14 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
 function addViews(state: ViewsState, views: View[]): ViewsState {
   const newState = {...state, loaded: true};
   const filteredViews = views.filter(view => {
-    const oldView = state.entities[view.code];
+    const oldView = state.entities[view.id];
     return !oldView || isViewNewer(view, oldView);
   });
   return viewsAdapter.addMany(filteredViews, newState);
 }
 
 function addOrUpdateView(state: ViewsState, view: View): ViewsState {
-  const oldView = state.entities[view.code];
+  const oldView = state.entities[view.id];
   if (!oldView) {
     return viewsAdapter.addOne(view, state);
   }
@@ -73,11 +73,11 @@ function isViewNewer(view: View, oldView: View): boolean {
 }
 
 function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {
-  let permissions = state.entities[action.payload.viewCode].permissions;
+  let permissions = state.entities[action.payload.viewId].permissions;
   if (action.payload.type === PermissionType.Users) {
     permissions = {...permissions, users: action.payload.permissions};
   } else {
     permissions = {...permissions, groups: action.payload.permissions};
   }
-  return viewsAdapter.updateOne({id: action.payload.viewCode, changes: {permissions}}, state);
+  return viewsAdapter.updateOne({id: action.payload.viewId, changes: {permissions}}, state);
 }

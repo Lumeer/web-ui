@@ -36,7 +36,7 @@ export class ContactsEffects {
   public getContact$: Observable<Action> = this.actions$.pipe(
     ofType<ContactsAction.GetContact>(ContactsActionType.GET_CONTACT),
     mergeMap(action =>
-      this.organizationService.getOrganizationContact(action.payload.organizationCode).pipe(
+      this.organizationService.getOrganizationContact(action.payload.organizationId).pipe(
         map(contact => new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(contact)})),
         catchError(error => of(new ContactsAction.GetContactFailure({error: error})))
       )
@@ -58,7 +58,7 @@ export class ContactsEffects {
     ofType<ContactsAction.SetContact>(ContactsActionType.SET_CONTACT),
     mergeMap(action =>
       this.organizationService
-        .setOrganizationContact(action.payload.organizationCode, ContactConverter.toDto(action.payload.contact))
+        .setOrganizationContact(action.payload.organizationId, ContactConverter.toDto(action.payload.contact))
         .pipe(
           map(contact => new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)})),
           catchError(error => of(new ContactsAction.SetContactFailure({error: error})))

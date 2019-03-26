@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {AttributeDto, CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
 import {Workspace} from '../store/navigation/workspace';
+import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class CollectionService extends PermissionService {
@@ -65,7 +65,7 @@ export class CollectionService extends PermissionService {
   public getCollections(pageNumber?: number, pageSize?: number): Observable<CollectionDto[]> {
     let queryParams = new HttpParams();
 
-    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+    if (isNotNullOrUndefined(pageNumber) && isNotNullOrUndefined(pageSize)) {
       queryParams = queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
     }
     queryParams = queryParams.set('fromViews', 'true');
@@ -109,13 +109,13 @@ export class CollectionService extends PermissionService {
     const actualWorkspace = workspace || this.workspace;
     const collectionId = actualWorkspace.collectionId;
 
-    return `${this.apiPrefix()}/${collectionId}`;
+    return `${this.apiPrefix(workspace)}/${collectionId}`;
   }
 
-  private apiPrefix(): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+  private apiPrefix(workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections`;
   }
 }

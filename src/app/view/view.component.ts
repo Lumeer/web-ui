@@ -213,7 +213,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(
       new ViewsAction.Update({
-        viewCode: view.code,
+        viewId: view.id,
         view,
         onSuccess: () => this.endSaveLoading(),
         onFailure: () => this.endSaveLoading(),

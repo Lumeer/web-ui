@@ -199,7 +199,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     const permissions = [...changeablePermissions, ...staticPermissions];
 
     this.store$.dispatch(
-      new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions})
+      new ViewsAction.SetPermissions({viewId: this.view.id, type: PermissionType.Users, permissions})
     );
   }
 

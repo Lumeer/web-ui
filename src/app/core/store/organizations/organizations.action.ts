@@ -60,7 +60,7 @@ export namespace OrganizationsAction {
   export class GetSingle implements Action {
     public readonly type = OrganizationsActionType.GET_SINGLE;
 
-    public constructor(public payload: {organizationCode: string}) {}
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class GetSuccess implements Action {

@@ -23,16 +23,14 @@ import {Store} from '@ngrx/store';
 
 import {PermissionsDto, PermissionDto} from '../dto';
 import {Observable} from 'rxjs';
-import {Workspace} from '../store/navigation/workspace';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
+import {BaseService} from './base.service';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
-export abstract class PermissionService {
-  protected workspace: Workspace;
-
-  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+export abstract class PermissionService extends BaseService {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public getPermissions(): Observable<PermissionsDto> {
