@@ -26,7 +26,7 @@ export function isAttributeEditable(attributeId: string, collection: Collection)
 }
 
 export function isAttributeEditable_(attribute: Attribute): boolean {
-  return attribute && (!attribute.function || !attribute.function.js || attribute.function.editable);
+  return !attribute || !attribute.function || !attribute.function.js || attribute.function.editable;
 }
 
 export function getDefaultAttributeId(collection: Collection): string {
