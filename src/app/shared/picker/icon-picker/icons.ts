@@ -8252,6 +8252,21 @@ export function safeGetRandomIcon(): string {
     'fa-tombstone-alt',
     'fa-flask-poison',
     'fa-hockey-mask',
+    'fa-genderless',
+    'fa-mars-double',
+    'fa-mars-stroke',
+    'fa-mars-stroke-h',
+    'fa-mars-stroke-v',
+    'fa-transgender',
+    'fa-transgender-alt',
+    'fa-venus-double',
+    'fa-angry',
+    'fa-frown',
+    'fa-frown-open',
+    'fa-sad-tear',
+    'fa-sed-cry',
+    'fa-tired',
+    'fa-poo',
   ];
   let icon: string;
   do {
