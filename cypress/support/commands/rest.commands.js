@@ -2,9 +2,7 @@ Cypress.Commands.add('createCollection', (name, icon, color) => {
   return cy
     .request({
       method: 'POST',
-      url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
-        'projectCode'
-      )}/collections`,
+      url: `${Cypress.env('projectRestUrl')}/collections`,
       auth: {
         bearer: Cypress.env('authAccessToken'),
       },
