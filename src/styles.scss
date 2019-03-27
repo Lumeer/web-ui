@@ -291,3 +291,7 @@ div#driver-popover-item {
 .bg-danger-light {
   background-color: lighten($danger, 30%);
 }
+
+.invalid-value {
+  text-decoration: underline $danger dashed;
+}

@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {isCollectionAttributeEditable} from '../../core/store/collections/collection.util';
+import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {isDateTimeValid} from '../../utils/data.utils';
 
 @Pipe({
-  name: 'collectionAttributeEditable',
+  name: 'dateTimeValid',
 })
-export class CollectionAttributeEditablePipe implements PipeTransform {
-  public transform(collection: Collection, attributeId: string): boolean {
-    return isCollectionAttributeEditable(attributeId, collection);
+export class DateTimeValidPipe implements PipeTransform {
+  public transform(value: any, config?: DateTimeConstraintConfig): boolean {
+    return isDateTimeValid(value, config);
   }
 }

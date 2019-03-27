@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {isCollectionAttributeEditable} from '../../core/store/collections/collection.util';
+import {Attribute} from '../../core/store/collections/collection';
+import {isAttributeEditable} from '../../core/store/collections/collection.util';
 
 @Pipe({
-  name: 'collectionAttributeEditable',
+  name: 'attributeEditable',
 })
-export class CollectionAttributeEditablePipe implements PipeTransform {
-  public transform(collection: Collection, attributeId: string): boolean {
-    return isCollectionAttributeEditable(attributeId, collection);
+export class AttributeEditablePipe implements PipeTransform {
+  public transform(attribute: Attribute): boolean {
+    return isAttributeEditable(attribute);
   }
 }

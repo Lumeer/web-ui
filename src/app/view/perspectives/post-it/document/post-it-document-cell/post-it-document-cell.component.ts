@@ -120,6 +120,14 @@ export class PostItDocumentCellComponent implements OnChanges {
     }
   }
 
+  public onDblClick() {
+    if (!this.constraint || this.constraint.type !== ConstraintType.Boolean) {
+      this.editing$.next(true);
+      this.selectionHelper.focusToggle(true);
+      this.focusInput = true;
+    }
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     this.id = `${this.perspectiveId}#${this.key}#${this.column}#${this.row}`;
     this.tabindex = this.index * 1000 + this.row * 2 + this.column;
@@ -141,7 +149,9 @@ export class PostItDocumentCellComponent implements OnChanges {
     this.editing$.next(false);
 
     if (!this.readonly) {
-      this.model = this.model.trim();
+      if (typeof this.model === 'string') {
+        this.model = this.model.trim();
+      }
       this.update.emit(this.model);
     }
   }

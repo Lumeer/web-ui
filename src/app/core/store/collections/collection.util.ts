@@ -18,11 +18,22 @@
  */
 
 import {Attribute, Collection} from './collection';
+import {LinkType} from '../link-types/link.type';
 
-export function isAttributeEditable(attributeId: string, collection: Collection): boolean {
+export function isCollectionAttributeEditable(attributeId: string, collection: Collection): boolean {
   const attribute =
     attributeId && collection && collection.attributes && collection.attributes.find(attr => attr.id === attributeId);
-  return attribute && (!attribute.function || !attribute.function.js || attribute.function.editable);
+  return isAttributeEditable(attribute);
+}
+
+export function isLinkTypeAttributeEditable(attributeId: string, linkType: LinkType): boolean {
+  const attribute =
+    attributeId && linkType && linkType.attributes && linkType.attributes.find(attr => attr.id === attributeId);
+  return isAttributeEditable(attribute);
+}
+
+export function isAttributeEditable(attribute: Attribute): boolean {
+  return !attribute || !attribute.function || !attribute.function.js || attribute.function.editable;
 }
 
 export function getDefaultAttributeId(collection: Collection): string {

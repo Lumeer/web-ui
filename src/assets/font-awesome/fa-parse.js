@@ -19,7 +19,7 @@
 
 console.log('*** FontAwesome icons.json parser ***\n');
 console.log('1) Copy icons.json to this directory');
-console.log('2) Run: node fa-parse.sh');
+console.log('2) Run: node fa-parse.js');
 console.log('3) Read brands, icons and meta output\n\nWorking...\n');
 
 const fs = require('fs');
