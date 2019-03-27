@@ -25,8 +25,6 @@ import {ContactDto, OrganizationDto} from '../dto';
 import {PermissionService} from './permission.service';
 import {ServiceLimitsDto} from '../dto/service-limits.dto';
 import {PaymentDto} from '../dto/payment.dto';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
@@ -39,32 +37,36 @@ export class OrganizationService extends PermissionService {
     return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe();
   }
 
-  public getOrganization(code: string): Observable<OrganizationDto> {
-    return this.httpClient.get<OrganizationDto>(this.apiPrefix(code));
+  public getOrganization(id: string): Observable<OrganizationDto> {
+    return this.httpClient.get<OrganizationDto>(this.apiPrefix(id));
   }
 
-  public deleteOrganization(code: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(this.apiPrefix(code), {observe: 'response', responseType: 'text'});
+  public getOrganizationByCode(code: string): Observable<OrganizationDto> {
+    return this.httpClient.get<OrganizationDto>(`${this.apiPrefix()}/code/${code}`);
+  }
+
+  public deleteOrganization(id: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'});
   }
 
   public createOrganization(organization: OrganizationDto): Observable<OrganizationDto> {
     return this.httpClient.post<OrganizationDto>(this.apiPrefix(), organization);
   }
 
-  public updateOrganization(code: string, organization: OrganizationDto): Observable<OrganizationDto> {
-    return this.httpClient.put<OrganizationDto>(this.apiPrefix(code), organization);
+  public updateOrganization(id: string, organization: OrganizationDto): Observable<OrganizationDto> {
+    return this.httpClient.put<OrganizationDto>(this.apiPrefix(id), organization);
   }
 
-  public getOrganizationContact(code: string): Observable<ContactDto> {
-    return this.httpClient.get<ContactDto>(`${this.apiPrefix(code)}/contact`);
+  public getOrganizationContact(id: string): Observable<ContactDto> {
+    return this.httpClient.get<ContactDto>(`${this.apiPrefix(id)}/contact`);
   }
 
-  public setOrganizationContact(code: string, contact: ContactDto): Observable<ContactDto> {
-    return this.httpClient.put<ContactDto>(`${this.apiPrefix(code)}/contact`, contact);
+  public setOrganizationContact(id: string, contact: ContactDto): Observable<ContactDto> {
+    return this.httpClient.put<ContactDto>(`${this.apiPrefix(id)}/contact`, contact);
   }
 
-  public getServiceLimits(code: string): Observable<ServiceLimitsDto> {
-    return this.httpClient.get<ServiceLimitsDto>(`${this.apiPrefix(code)}/serviceLimit`);
+  public getServiceLimits(id: string): Observable<ServiceLimitsDto> {
+    return this.httpClient.get<ServiceLimitsDto>(`${this.apiPrefix(id)}/serviceLimit`);
   }
 
   public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
@@ -88,13 +90,10 @@ export class OrganizationService extends PermissionService {
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
-    const actualWorkspace = workspace || this.workspace;
-    const organizationCode = actualWorkspace.organizationCode;
-
-    return this.apiPrefix(organizationCode);
+    return this.apiPrefix(this.getOrCurrentOrganizationId(workspace));
   }
 
-  private apiPrefix(code?: string): string {
-    return `${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
+  private apiPrefix(id?: string): string {
+    return `${environment.apiUrl}/rest/organizations${id ? `/${id}` : ''}`;
   }
 }

@@ -25,16 +25,13 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {LinkInstanceDto} from '../dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace';
 import {map} from 'rxjs/operators';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class LinkInstanceService {
-  private workspace: Workspace;
-
-  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+export class LinkInstanceService extends BaseService {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto> {
@@ -54,12 +51,10 @@ export class LinkInstanceService {
   }
 
   private restApiPrefix(id?: string, secondId?: string): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+    const organizationId = this.getOrCurrentOrganizationId();
+    const projectId = this.getOrCurrentProjectId();
     const suffix = (id ? `/${id}` : '') + (secondId ? `/${secondId}` : '');
 
-    return `${
-      environment.apiUrl
-    }/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-instances${suffix}`;
   }
 }

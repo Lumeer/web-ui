@@ -17,30 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {CollectionDto, DocumentDto} from '../dto';
+import {DocumentDto} from '../dto';
 import {DocumentMetaDataDto} from '../dto/document.dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
+import {BaseService} from './base.service';
 import {Workspace} from '../store/navigation/workspace';
 
 // TODO send data attribute without '_id'
 @Injectable()
-export class DocumentService {
-  private workspace: Workspace;
-
-  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => (this.workspace = workspace));
+export class DocumentService extends BaseService {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.post<DocumentDto>(this.apiPrefix(document.collectionId), document);
+    return this.httpClient.post<DocumentDto>(this.apiPrefix({collectionId: document.collectionId}), document);
   }
 
   public patchDocument(
@@ -48,12 +46,12 @@ export class DocumentService {
     documentId: string,
     document: Partial<DocumentDto>
   ): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`, document);
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`, document);
   }
 
   public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient
-      .put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
+      .put<DocumentDto>(`${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`, document.data)
       .pipe(
         map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
@@ -63,14 +61,14 @@ export class DocumentService {
 
   public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient.patch<DocumentDto>(
-      `${this.apiPrefix(document.collectionId)}/${document.id}/data`,
+      `${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`,
       document.data
     );
   }
 
   public updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient.put<DocumentDto>(
-      `${this.apiPrefix(document.collectionId)}/${document.id}/meta`,
+      `${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/meta`,
       document.metaData
     );
   }
@@ -80,34 +78,35 @@ export class DocumentService {
     documentId: string,
     metaData: DocumentMetaDataDto
   ): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}/meta`, metaData);
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}/meta`, metaData);
   }
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix(collectionId)}/${documentId}`, {
+    return this.httpClient.delete(`${this.apiPrefix({collectionId})}/${documentId}`, {
       observe: 'response',
       responseType: 'text',
     });
   }
 
   public addFavorite(collectionId: string, documentId: string): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix(collectionId)}/${documentId}/favorite`, {});
+    return this.httpClient.post(`${this.apiPrefix({collectionId})}/${documentId}/favorite`, {});
   }
 
   public removeFavorite(collectionId: string, documentId: string): Observable<any> {
-    return this.httpClient.delete(`${this.apiPrefix(collectionId)}/${documentId}/favorite`);
+    return this.httpClient.delete(`${this.apiPrefix({collectionId})}/${documentId}/favorite`);
   }
 
   public getDocument(collectionId: string, documentId: string): Observable<DocumentDto> {
-    return this.httpClient.get<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`);
+    return this.httpClient.get<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`);
   }
 
-  private apiPrefix(collectionId: string): string {
-    const organizationCode = this.workspace.organizationCode;
-    const projectCode = this.workspace.projectCode;
+  private apiPrefix(workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
+    const collectionId = this.getOrCurrentCollectionId(workspace);
 
     return `${
       environment.apiUrl
-    }/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
+    }/rest/organizations/${organizationId}/projects/${projectId}/collections/${collectionId}/documents`;
   }
 }

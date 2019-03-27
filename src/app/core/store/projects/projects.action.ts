@@ -66,7 +66,7 @@ export namespace ProjectsAction {
   export class GetSingle implements Action {
     public readonly type = ProjectsActionType.GET_SINGLE;
 
-    public constructor(public payload: {organizationId: string; projectCode: string}) {}
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
   }
 
   export class GetSuccess implements Action {

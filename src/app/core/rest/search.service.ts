@@ -20,28 +20,19 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {SuggestionsDto, DocumentDto, QueryDto, LinkInstanceDto} from '../dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace';
-import {LinkInstance} from '../store/link-instances/link.instance';
 import {SuggestionQueryDto} from '../dto/suggestion-query.dto';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class SearchService {
-  private workspace: Workspace;
-
-  constructor(private http: HttpClient, private store$: Store<AppState>) {
-    this.store$
-      .pipe(
-        select(selectWorkspace),
-        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
-      )
-      .subscribe(workspace => (this.workspace = workspace));
+export class SearchService extends BaseService {
+  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
@@ -57,7 +48,8 @@ export class SearchService {
   }
 
   private searchPath(workspace?: Workspace): string {
-    const w = workspace || this.workspace;
-    return `${environment.apiUrl}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/search`;
   }
 }

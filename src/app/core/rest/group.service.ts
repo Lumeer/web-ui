@@ -25,20 +25,13 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {GroupDto} from '../dto';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {Workspace} from '../store/navigation/workspace';
-import {isNullOrUndefined} from 'util';
-import {filter, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class GroupService {
-  private workspace: Workspace;
-
-  constructor(private httpClient: HttpClient, private store: Store<AppState>) {
-    this.store
-      .select(selectWorkspace)
-      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
-      .subscribe(workspace => (this.workspace = workspace));
+export class GroupService extends BaseService {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public createGroup(group: GroupDto): Observable<GroupDto> {
@@ -58,8 +51,7 @@ export class GroupService {
   }
 
   private apiPrefix(groupId?: string): string {
-    return `${environment.apiUrl}/rest/organizations/${this.workspace.organizationCode}/groups${
-      groupId ? `/${groupId}` : ''
-    }`;
+    const organizationId = this.getOrCurrentOrganizationId();
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/groups${groupId ? `/${groupId}` : ''}`;
   }
 }

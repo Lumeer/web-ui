@@ -61,7 +61,7 @@ export class OrganizationsEffects {
   public getSingle$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.GetSingle>(OrganizationsActionType.GET_SINGLE),
     mergeMap(action =>
-      this.organizationService.getOrganization(action.payload.organizationCode).pipe(
+      this.organizationService.getOrganization(action.payload.organizationId).pipe(
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map(organization => new OrganizationsAction.GetSuccess({organizations: [organization]})),
         catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
@@ -155,7 +155,7 @@ export class OrganizationsEffects {
     mergeMap(([action, organizationEntities]) => {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
-      return this.organizationService.updateOrganization(oldOrganization.code, organizationDto).pipe(
+      return this.organizationService.updateOrganization(action.payload.organization.id, organizationDto).pipe(
         map(dto => OrganizationConverter.fromDto(dto)),
         map(
           organization =>
@@ -213,19 +213,20 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationEntities]) => {
-      const organization = organizationEntities[action.payload.organizationId];
-      return this.organizationService.deleteOrganization(organization.code).pipe(
+      const {organizationId, onSuccess} = action.payload;
+      const organization = organizationEntities[organizationId];
+      return this.organizationService.deleteOrganization(organizationId).pipe(
         withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
         flatMap(([, organizationCodes]) => {
           const codes = organizationCodes.filter(code => code !== organization.code);
 
           const actions: Action[] = [
-            new OrganizationsAction.DeleteSuccess({...action.payload, organizationCode: organization.code}),
+            new OrganizationsAction.DeleteSuccess({organizationId, organizationCode: organization.code}),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}),
           ];
 
-          if (action.payload.onSuccess) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess()}));
           }
 
           return actions;

@@ -53,6 +53,7 @@ export const selectWorkspace = createSelector(
   selectNavigation,
   (state: NavigationState) => state.workspace
 );
+
 export const selectSearchTab = createSelector(
   selectNavigation,
   (state: NavigationState) => state.searchTab

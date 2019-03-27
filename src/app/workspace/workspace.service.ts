@@ -62,7 +62,7 @@ export class WorkspaceService {
   }
 
   private getOrganizationFromApi(code: string): Observable<Organization> {
-    return this.organizationService.getOrganization(code).pipe(
+    return this.organizationService.getOrganizationByCode(code).pipe(
       map(organization => OrganizationConverter.fromDto(organization)),
       tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
       catchError(() => {
@@ -71,13 +71,13 @@ export class WorkspaceService {
     );
   }
 
-  public getProjectFromStoreOrApi(orgCode: string, orgId: string, projCode: string): Observable<Project> {
+  public getProjectFromStoreOrApi(orgId: string, projCode: string): Observable<Project> {
     return this.getProjectFromStore(projCode).pipe(
       mergeMap(project => {
         if (!isNullOrUndefined(project)) {
           return of(project);
         }
-        return this.getProjectFromApi(orgCode, orgId, projCode);
+        return this.getProjectFromApi(orgId, projCode);
       })
     );
   }
@@ -90,8 +90,8 @@ export class WorkspaceService {
     );
   }
 
-  private getProjectFromApi(orgCode: string, orgId: string, projCode: string): Observable<Project> {
-    return this.projectService.getProject(orgCode, projCode).pipe(
+  private getProjectFromApi(orgId: string, projCode: string): Observable<Project> {
+    return this.projectService.getProjectByCode(orgId, projCode).pipe(
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => {

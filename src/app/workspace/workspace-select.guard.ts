@@ -23,7 +23,6 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 import {Store} from '@ngrx/store';
 import {Observable, combineLatest, of} from 'rxjs';
 import {filter, first, map, mergeMap, switchMap} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
 import {OrganizationsAction} from '../core/store/organizations/organizations.action';
@@ -32,10 +31,11 @@ import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectSelectedProject} from '../core/store/projects/projects.state';
 import {DefaultWorkspace} from '../core/store/users/user';
 import {selectCurrentUser} from '../core/store/users/users.state';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 
 @Injectable()
 export class WorkspaceSelectGuard implements CanActivate {
-  public constructor(private workspaceService: WorkspaceService, private store: Store<AppState>) {}
+  public constructor(private workspaceService: WorkspaceService, private store$: Store<AppState>) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isSomethingSelected().pipe(switchMap(selected => this.checkOrFetch(selected)));
@@ -50,11 +50,14 @@ export class WorkspaceSelectGuard implements CanActivate {
   }
 
   private isSomethingSelected(): Observable<boolean> {
-    return combineLatest(this.store.select(selectSelectedOrganization), this.store.select(selectSelectedProject)).pipe(
+    return combineLatest(
+      this.store$.select(selectSelectedOrganization),
+      this.store$.select(selectSelectedProject)
+    ).pipe(
       first(),
       map(
         ([selectedOrganization, selectedProject]) =>
-          !isNullOrUndefined(selectedOrganization) || !isNullOrUndefined(selectedProject)
+          isNotNullOrUndefined(selectedOrganization) || isNotNullOrUndefined(selectedProject)
       )
     );
   }
@@ -68,7 +71,7 @@ export class WorkspaceSelectGuard implements CanActivate {
               if (isNullOrUndefined(organization)) {
                 return of(true);
               }
-              return this.checkProject(workspace.organizationCode, organization.id, workspace.projectCode);
+              return this.checkProject(organization.id, workspace.projectCode);
             })
           );
         } else {
@@ -79,18 +82,18 @@ export class WorkspaceSelectGuard implements CanActivate {
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspace> {
-    return this.store.select(selectCurrentUser).pipe(
-      filter(user => !isNullOrUndefined(user)),
+    return this.store$.select(selectCurrentUser).pipe(
+      filter(user => isNotNullOrUndefined(user)),
       map(user => user.defaultWorkspace)
     );
   }
 
-  private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
-    return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(
+  private checkProject(orgId: string, projCode: string): Observable<boolean> {
+    return this.workspaceService.getProjectFromStoreOrApi(orgId, projCode).pipe(
       switchMap(project => {
-        if (!isNullOrUndefined(project)) {
-          this.store.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
-          this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
+        if (isNotNullOrUndefined(project)) {
+          this.store$.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
+          this.store$.dispatch(new ProjectsAction.Select({projectId: project.id}));
         }
         return of(true);
       })

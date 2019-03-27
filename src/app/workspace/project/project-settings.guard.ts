@@ -60,7 +60,7 @@ export class ProjectSettingsGuard implements CanActivate {
 
   private checkProject(organization: Organization, projectCode: string): Observable<boolean> {
     return combineLatest(
-      this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode),
+      this.workspaceService.getProjectFromStoreOrApi(organization.id, projectCode),
       this.store$.pipe(select(selectCurrentUserForWorkspace))
     ).pipe(
       filter(([project, user]) => !isNullOrUndefined(user)),

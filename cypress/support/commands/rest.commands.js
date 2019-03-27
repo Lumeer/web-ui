@@ -2,9 +2,7 @@ Cypress.Commands.add('createCollection', (name, icon, color) => {
   return cy
     .request({
       method: 'POST',
-      url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects/${Cypress.env(
-        'projectCode'
-      )}/collections`,
+      url: `${Cypress.env('projectRestUrl')}/collections`,
       auth: {
         bearer: Cypress.env('authAccessToken'),
       },
@@ -39,24 +37,38 @@ Cypress.Commands.add('createDocument', (collectionId, data) => {
   });
 });
 
-Cypress.Commands.add('createProject', (code, name) => {
-  cy.request({
-    method: 'POST',
-    url: `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}/projects`,
-    auth: {
-      bearer: Cypress.env('authAccessToken'),
-    },
-    body: {
-      code,
-      name,
-    },
-  });
+Cypress.Commands.add('createProject', (organizationId, code, name) => {
+  return cy
+    .request({
+      method: 'POST',
+      url: `${Cypress.env('engineUrl')}rest/organizations/${organizationId}/projects`,
+      auth: {
+        bearer: Cypress.env('authAccessToken'),
+      },
+      body: {
+        code,
+        name,
+      },
+    })
+    .then(response => response.body);
 });
 
-Cypress.Commands.add('deleteOrganization', code => {
+Cypress.Commands.add('getOrganizationByCode', code => {
+  return cy
+    .request({
+      method: 'GET',
+      url: `${Cypress.env('engineUrl')}rest/organizations/code/${code}`,
+      auth: {
+        bearer: Cypress.env('authAccessToken'),
+      },
+    })
+    .then(response => response.body);
+});
+
+Cypress.Commands.add('deleteOrganization', id => {
   cy.request({
     method: 'DELETE',
-    url: `${Cypress.env('engineUrl')}rest/organizations/${code}`,
+    url: `${Cypress.env('engineUrl')}rest/organizations/${id}`,
     auth: {
       bearer: Cypress.env('authAccessToken'),
     },

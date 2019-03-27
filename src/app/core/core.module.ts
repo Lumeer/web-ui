@@ -32,7 +32,6 @@ import {NotificationsModule} from './notifications/notifications.module';
 import {
   CollectionService,
   DocumentService,
-  EventService,
   GroupService,
   ImportService,
   LinkInstanceService,
@@ -53,6 +52,7 @@ import {UserNotificationsService} from './rest/user-notifications.service';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
 import {DeviceDetectorModule} from 'ngx-device-detector';
+import {BaseService} from './rest/base.service';
 
 @NgModule({
   imports: [
@@ -83,13 +83,13 @@ import {DeviceDetectorModule} from 'ngx-device-detector';
     OrganizationService,
     ProjectService,
     SearchService,
+    BaseService,
     ImportService,
     UserService,
     GroupService,
     ViewService,
     LinkInstanceService,
     LinkTypeService,
-    EventService,
     OrganizationValidators,
     ProjectValidators,
     PusherService,

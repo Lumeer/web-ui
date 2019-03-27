@@ -19,7 +19,10 @@
 
 export interface Workspace {
   organizationCode?: string;
+  organizationId?: string;
   projectCode?: string;
+  projectId?: string;
   collectionId?: string;
   viewCode?: string;
+  viewId?: string;
 }

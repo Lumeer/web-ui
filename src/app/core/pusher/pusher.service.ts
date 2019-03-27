@@ -60,7 +60,9 @@ import {UsersAction} from '../store/users/users.action';
 import {convertUserDtoToModel} from '../store/users/user.converter';
 import {OrganizationService, ProjectService} from '../rest';
 import {OrganizationDto, ProjectDto} from '../dto';
-import {of} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {View} from '../store/views/view';
+import {selectViewByCode, selectViewsDictionary} from '../store/views/views.state';
 
 @Injectable({
   providedIn: 'root',
@@ -132,7 +134,7 @@ export class PusherService implements OnDestroy {
       this.store$.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
     this.channel.bind('Organization:create:ALT', data => {
-      this.store$.dispatch(new OrganizationsAction.GetSingle({organizationCode: data.extraId}));
+      this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: data.id}));
     });
     this.channel.bind('Organization:update', data => {
       if (data.id === this.getCurrentOrganizationId()) {
@@ -147,8 +149,8 @@ export class PusherService implements OnDestroy {
       });
     });
     this.channel.bind('Organization:update:ALT', data => {
-      this.organizationService.getOrganization(data.extraId).pipe(
-        filter(projectDto => !!projectDto),
+      this.organizationService.getOrganization(data.id).pipe(
+        filter(dto => !!dto),
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map((newOrganization: Organization) => {
           if (data.id === this.getCurrentOrganizationId()) {
@@ -215,9 +217,7 @@ export class PusherService implements OnDestroy {
       );
     });
     this.channel.bind('Project:create:ALT', data => {
-      this.store$.dispatch(
-        new ProjectsAction.GetSingle({organizationId: data.organizationId, projectCode: data.extraId})
-      );
+      this.store$.dispatch(new ProjectsAction.GetSingle({organizationId: data.organizationId, projectId: data.id}));
     });
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
@@ -236,8 +236,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Project:update:ALT', data => {
       this.getProject(data.id, oldProject => {
-        const [organizationCode, newProjectCode] = data.extraId.split('/');
-        this.projectService.getProject(organizationCode, newProjectCode).pipe(
+        this.projectService.getProject(data.organizationId, data.id).pipe(
           filter(projectDto => !!projectDto),
           map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
           map((newProject: Project) => {
@@ -324,7 +323,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('View:create:ALT', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new ViewsAction.GetByCode({viewCode: data.id}));
+        this.store$.dispatch(new ViewsAction.GetOne({viewId: data.id}));
       }
     });
     this.channel.bind('View:update', data => {
@@ -334,16 +333,27 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('View:update:ALT', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new ViewsAction.GetByCode({viewCode: data.id}));
+        this.store$.dispatch(new ViewsAction.GetOne({viewId: data.id}));
       }
     });
     this.channel.bind('View:remove', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new ViewsAction.DeleteSuccess({viewCode: data.id}) // backend sends code in id in case of View for simplicity
-        );
+        this.getView(data.id, (view: View) => {
+          const viewCode = view && view.code;
+          this.store$.dispatch(new ViewsAction.DeleteSuccess({viewId: data.id, viewCode}));
+        });
       }
     });
+  }
+
+  private getView(id: string, action: (View) => void) {
+    this.store$
+      .pipe(
+        select(selectViewsDictionary),
+        map(views => views[id]),
+        take(1)
+      )
+      .subscribe(view => action(view));
   }
 
   private bindDocumentEvents() {

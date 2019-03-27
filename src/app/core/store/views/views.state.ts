@@ -39,7 +39,7 @@ export interface ViewsState extends EntityState<View> {
   cursor: ViewCursor;
 }
 
-export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.code});
+export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
 
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
@@ -59,14 +59,16 @@ export const selectViewsDictionary = createSelector(
 );
 export const selectViewByCode = (code: string) =>
   createSelector(
-    selectViewsDictionary,
-    viewsMap => viewsMap[code]
+    selectAllViews,
+    views => views && views.find(view => view.code === code)
   );
 export const selectCurrentView = createSelector(
   selectNavigation,
-  selectViewsDictionary,
-  (navigation, viewsMap) => {
-    return navigation.workspace && navigation.workspace.viewCode ? viewsMap[navigation.workspace.viewCode] : null;
+  selectAllViews,
+  (navigation, views) => {
+    return navigation.workspace && navigation.workspace.viewCode
+      ? views.find(view => view.code === navigation.workspace.viewCode)
+      : null;
   }
 );
 

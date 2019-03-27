@@ -62,10 +62,10 @@ export namespace ViewsAction {
     public constructor(public payload: {force?: boolean}) {}
   }
 
-  export class GetByCode implements Action {
+  export class GetOne implements Action {
     public readonly type = ViewsActionType.GET_BY_CODE;
 
-    public constructor(public payload: {viewCode: string}) {}
+    public constructor(public payload: {viewId: string}) {}
   }
 
   export class GetSuccess implements Action {
@@ -103,7 +103,7 @@ export namespace ViewsAction {
 
     public constructor(
       public payload: {
-        viewCode: string;
+        viewId: string;
         view: View;
         nextAction?: Action;
         onSuccess?: () => void;
@@ -127,13 +127,13 @@ export namespace ViewsAction {
   export class SetPermissions implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS;
 
-    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(public payload: {viewId: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class SetPermissionsSuccess implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
 
-    public constructor(public payload: {viewCode: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(public payload: {viewId: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class SetPermissionsFailure implements Action {
@@ -145,13 +145,13 @@ export namespace ViewsAction {
   export class Delete implements Action {
     public readonly type = ViewsActionType.DELETE;
 
-    public constructor(public payload: {viewCode: string}) {}
+    public constructor(public payload: {viewId: string}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = ViewsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {viewCode: string}) {}
+    public constructor(public payload: {viewId: string; viewCode: string}) {}
   }
 
   export class DeleteFailure implements Action {
@@ -183,7 +183,7 @@ export namespace ViewsAction {
   }
 
   export type All =
-    | GetByCode
+    | GetOne
     | GetSuccess
     | GetFailure
     | Create

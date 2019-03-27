@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'share-view-copy',
@@ -29,9 +28,6 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 export class ShareViewCopyComponent {
   @Input()
   public viewShareUrl: string;
-
-  @Input()
-  public workspace: Workspace;
 
   @Output()
   public copy = new EventEmitter();

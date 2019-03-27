@@ -44,7 +44,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
 
   public updateContact(contact: Contact) {
-    this.store$.dispatch(new ContactsAction.SetContact({organizationCode: this.organization.code, contact}));
+    this.store$.dispatch(new ContactsAction.SetContact({organizationId: this.organization.id, contact}));
   }
 
   public ngOnInit(): void {
@@ -77,6 +77,6 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private requestData() {
-    this.store$.dispatch(new ContactsAction.GetContact({organizationCode: this.organization.code}));
+    this.store$.dispatch(new ContactsAction.GetContact({organizationId: this.organization.id}));
   }
 }

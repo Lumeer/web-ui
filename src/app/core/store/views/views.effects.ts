@@ -39,6 +39,7 @@ import {PermissionType} from '../permissions/permissions';
 import {NavigationAction} from '../navigation/navigation.action';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {Router} from '@angular/router';
+import {CommonAction} from '../common/common.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -57,15 +58,13 @@ export class ViewsEffects {
   );
 
   @Effect()
-  public getByCode$: Observable<Action> = this.actions$.pipe(
-    ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE),
-    withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
-    filter(([action, views]) => !(action.payload.viewCode in views)),
-    mergeMap(([action]) =>
-      this.viewService.getView(action.payload.viewCode).pipe(
+  public getOne$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.GetOne>(ViewsActionType.GET_BY_CODE),
+    mergeMap(action =>
+      this.viewService.getView(action.payload.viewId).pipe(
         map((dto: ViewDto) => ViewConverter.convertToModel(dto)),
         map((view: View) => new ViewsAction.GetSuccess({views: [view]})),
-        catchError(error => of(new ViewsAction.GetFailure({error: error})))
+        catchError(error => of(new ViewsAction.GetFailure({error})))
       )
     )
   );
@@ -132,15 +131,23 @@ export class ViewsEffects {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
       const {onSuccess, onFailure} = action.payload;
 
-      return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
+      return this.viewService.updateView(action.payload.viewId, viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
-        map(view => {
-          onSuccess && onSuccess();
-          return new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction});
+        flatMap(view => {
+          const actions: Action[] = [
+            new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction}),
+          ];
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess()}));
+          }
+          return actions;
         }),
         catchError(error => {
-          onFailure && onFailure();
-          return of(new ViewsAction.UpdateFailure({error: error}));
+          const actions: Action[] = [new ViewsAction.UpdateFailure({error})];
+          if (onFailure) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
+          }
+          return of(...actions);
         })
       );
     })
@@ -159,9 +166,12 @@ export class ViewsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
-    mergeMap(action => {
-      return this.viewService.deleteView(action.payload.viewCode).pipe(
-        map(() => new ViewsAction.DeleteSuccess(action.payload)),
+    withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
+    filter(([action, viewsMap]) => !!viewsMap[action.payload.viewId]),
+    mergeMap(([action, viewsMap]) => {
+      const view = viewsMap[action.payload.viewId];
+      return this.viewService.deleteView(action.payload.viewId).pipe(
+        map(() => new ViewsAction.DeleteSuccess({viewId: action.payload.viewId, viewCode: view.code})),
         catchError(error => of(new ViewsAction.DeleteFailure({error: error})))
       );
     })
