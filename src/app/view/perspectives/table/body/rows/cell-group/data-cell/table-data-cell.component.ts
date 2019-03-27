@@ -62,7 +62,10 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {isAttributeEditable, isAttributeEditable_} from '../../../../../../../core/store/collections/collection.util';
+import {
+  isCollectionAttributeEditable,
+  isAttributeEditable,
+} from '../../../../../../../core/store/collections/collection.util';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 
 @Component({
@@ -244,7 +247,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe(([action, constraint, attribute]) => {
         const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
-          if (isAttributeEditable_(attribute)) {
+          if (isAttributeEditable(attribute)) {
             if (constraint && constraint.type === ConstraintType.Boolean) {
               // switch checkbox only if Enter or Space is pressed
               if (!value || value === ' ') {
@@ -308,7 +311,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (isAttributeEditable_(attribute)) {
+        if (isAttributeEditable(attribute)) {
           this.editing$.next(true); // TODO maybe set edited attribute?
         }
       });
@@ -316,7 +319,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public isEditable(attribute: Attribute): boolean {
-    return isAttributeEditable_(attribute);
+    return isAttributeEditable(attribute);
   }
 
   @HostListener('contextmenu', ['$event'])

@@ -30,7 +30,7 @@ import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
-import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {formatData} from '../../../../shared/utils/data.utils';
 
 export interface CalendarMetaData {
@@ -84,9 +84,10 @@ export function createCalendarEventsForCollection(
 
   const endProperty = properties[CalendarBarPropertyOptional.EndDate];
   const draggableStart =
-    permissisions.writeWithView && isAttributeEditable(startProperty && startProperty.attributeId, collection);
+    permissisions.writeWithView &&
+    isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection);
   const draggableEnd =
-    permissisions.writeWithView && isAttributeEditable(endProperty && endProperty.attributeId, collection);
+    permissisions.writeWithView && isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection);
   const allDayColor = getColor(true, collection.color);
   const color = getColor(false, collection.color);
 

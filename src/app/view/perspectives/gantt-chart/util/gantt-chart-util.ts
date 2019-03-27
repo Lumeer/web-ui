@@ -36,7 +36,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {formatData, parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
-import {isAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
@@ -103,8 +103,8 @@ function createGanttChartTasksForCollection(
     const start = startProperty && formattedData[startProperty.attributeId];
     const end = endProperty && formattedData[endProperty.attributeId];
 
-    const startEditable = isAttributeEditable(startProperty.attributeId, collection);
-    const endEditable = isAttributeEditable(endProperty.attributeId, collection);
+    const startEditable = isCollectionAttributeEditable(startProperty.attributeId, collection);
+    const endEditable = isCollectionAttributeEditable(endProperty.attributeId, collection);
 
     const interval = createInterval(
       start,
@@ -113,7 +113,10 @@ function createGanttChartTasksForCollection(
       endEditable && endProperty.attributeId
     );
     const progress = progressProperty && (formattedData[progressProperty.attributeId] || 0);
-    const progressEditable = isAttributeEditable(progressProperty && progressProperty.attributeId, collection);
+    const progressEditable = isCollectionAttributeEditable(
+      progressProperty && progressProperty.attributeId,
+      collection
+    );
 
     tasks.push({
       id: document.id,

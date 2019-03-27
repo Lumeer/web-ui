@@ -42,7 +42,7 @@ import {
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
 import {deepObjectsEquals, isDateValid} from '../../../shared/utils/common.utils';
-import {isAttributeEditable} from '../../../core/store/collections/collection.util';
+import {isCollectionAttributeEditable} from '../../../core/store/collections/collection.util';
 import {Query} from '../../../core/store/navigation/query';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {User} from '../../../core/store/users/user';
@@ -175,8 +175,8 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
     const allDay = isAllDayEvent(eventStart, eventEnd);
 
-    const startEditable = isAttributeEditable(startProperty && startProperty.attributeId, collection);
-    const endEditable = isAttributeEditable(endProperty && endProperty.attributeId, collection);
+    const startEditable = isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection);
+    const endEditable = isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection);
 
     return {collectionId, allDay, title, eventStart, eventEnd, startEditable, endEditable};
   }
@@ -257,11 +257,15 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
       data[titleProperty.attributeId] = title;
     }
 
-    if (eventStart && startProperty && isAttributeEditable(startProperty && startProperty.attributeId, collection)) {
+    if (
+      eventStart &&
+      startProperty &&
+      isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection)
+    ) {
       data[startProperty.attributeId] = this.cleanDateWhenAllDay(eventStart, allDay);
     }
 
-    if (eventEnd && endProperty && isAttributeEditable(endProperty && endProperty.attributeId, collection)) {
+    if (eventEnd && endProperty && isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection)) {
       data[endProperty.attributeId] = this.cleanDateWhenAllDay(eventEnd, allDay);
     }
 
