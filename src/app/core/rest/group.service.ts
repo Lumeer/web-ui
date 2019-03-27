@@ -30,7 +30,7 @@ import {BaseService} from './base.service';
 
 @Injectable()
 export class GroupService extends BaseService {
-  constructor(private httpClient: HttpClient, private store$: Store<AppState>) {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 

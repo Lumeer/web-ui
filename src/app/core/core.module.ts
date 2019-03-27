@@ -32,7 +32,6 @@ import {NotificationsModule} from './notifications/notifications.module';
 import {
   CollectionService,
   DocumentService,
-  EventService,
   GroupService,
   ImportService,
   LinkInstanceService,
@@ -91,7 +90,6 @@ import {BaseService} from './rest/base.service';
     ViewService,
     LinkInstanceService,
     LinkTypeService,
-    EventService,
     OrganizationValidators,
     ProjectValidators,
     PusherService,

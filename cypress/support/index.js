@@ -18,34 +18,38 @@ import './commands';
 beforeEach(() => {
   cy.loginAndDismissAgreement();
 
-  // create a new project for each test
+  // get organization id
 
-  const projectCode = Math.random()
-    .toString(36)
-    .substr(2);
-  Cypress.env('projectCode', projectCode);
-  cy.createProject(projectCode, 'Test project');
+  cy.getOrganizationByCode(Cypress.env('organizationCode')).then(organization => {
+    // create a new project for each test
 
-  // save default workspace to newly created project
+    const projectCode = Math.random()
+      .toString(36)
+      .substr(2);
+    Cypress.env('projectCode', projectCode);
+    cy.createProject(organization.id, projectCode, 'Test project').then(project => {
+      // save default workspace to newly created project
 
-  cy.saveDefaultWorkspace({
-    organizationCode: Cypress.env('organizationCode'),
-    projectCode,
+      cy.saveDefaultWorkspace({
+        organizationCode: Cypress.env('organizationCode'),
+        projectCode,
+      });
+
+      // initialize REST API routes
+
+      const organizationRestUrl = `${Cypress.env('engineUrl')}rest/organizations/${organization.id}`;
+      const projectRestUrl = `${organizationRestUrl}/projects/${project.id}`;
+      Cypress.env('projectRestUrl', projectRestUrl);
+      const collectionRestUrl = `${projectRestUrl}/collections/**`;
+
+      cy.server();
+
+      cy.route('POST', `${projectRestUrl}/collections`).as('createCollection');
+      cy.route('POST', `${collectionRestUrl}/attributes`).as('createAttribute');
+      cy.route('PUT', `${collectionRestUrl}/attributes/**`).as('updateAttribute');
+      cy.route('POST', `${collectionRestUrl}/documents`).as('createDocument');
+      cy.route('PATCH', `${collectionRestUrl}/documents/**/data`).as('patchDocumentData');
+      cy.route('POST', `${projectRestUrl}/link-instances`).as('createLinkInstance');
+    });
   });
-
-  // initialize REST API routes
-
-  const organizationRestUrl = `${Cypress.env('engineUrl')}rest/organizations/${Cypress.env('organizationCode')}`;
-  const projectRestUrl = `${organizationRestUrl}/projects/${projectCode}`;
-  Cypress.env('projectRestUrl', projectRestUrl);
-  const collectionRestUrl = `${projectRestUrl}/collections/**`;
-
-  cy.server();
-
-  cy.route('POST', `${projectRestUrl}/collections`).as('createCollection');
-  cy.route('POST', `${collectionRestUrl}/attributes`).as('createAttribute');
-  cy.route('PUT', `${collectionRestUrl}/attributes/**`).as('updateAttribute');
-  cy.route('POST', `${collectionRestUrl}/documents`).as('createDocument');
-  cy.route('PATCH', `${collectionRestUrl}/documents/**/data`).as('patchDocumentData');
-  cy.route('POST', `${projectRestUrl}/link-instances`).as('createLinkInstance');
 });

@@ -18,11 +18,35 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {selectProjectByWorkspace} from '../projects/projects.state';
+import {selectAllOrganizations, selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectAllProjects, selectProjectByWorkspace} from '../projects/projects.state';
+import {selectAllViews} from '../views/views.state';
+import {Workspace} from '../navigation/workspace';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export const selectWorkspaceModels = createSelector(
   selectOrganizationByWorkspace,
   selectProjectByWorkspace,
   (organization, project) => ({organization, project})
+);
+
+export const selectWorkspaceWithIds = createSelector(
+  selectWorkspace,
+  selectAllOrganizations,
+  selectAllProjects,
+  selectAllViews,
+  (workspace, organizations, projects, views) => {
+    if (!workspace) {
+      return {} as Workspace;
+    }
+    const organization = organizations.find(org => org.code === workspace.organizationCode);
+    const project = projects.find(proj => proj.code === workspace.projectCode);
+    const view = views.find(v => v.code === workspace.viewCode);
+    return {
+      ...workspace,
+      organizationId: (organization && organization.id) || '',
+      projectId: (project && project.id) || '',
+      viewId: (view && view.id) || '',
+    };
+  }
 );

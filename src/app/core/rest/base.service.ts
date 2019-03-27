@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {selectWorkspaceWithIds} from '../store/navigation/navigation.state';
+import {selectWorkspaceWithIds} from '../store/common/common.selectors';
 import {filter} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace';
 

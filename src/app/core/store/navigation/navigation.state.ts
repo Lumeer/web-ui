@@ -23,9 +23,6 @@ import {AppState} from '../app.state';
 import {SearchTab} from './search-tab';
 import {Workspace} from './workspace';
 import {Query} from './query';
-import {selectAllOrganizations} from '../organizations/organizations.state';
-import {selectAllProjects} from '../projects/projects.state';
-import {selectAllViews} from '../views/views.state';
 
 export interface NavigationState {
   query: Query;
@@ -55,27 +52,6 @@ export const selectPerspective = createSelector(
 export const selectWorkspace = createSelector(
   selectNavigation,
   (state: NavigationState) => state.workspace
-);
-
-export const selectWorkspaceWithIds = createSelector(
-  selectWorkspace,
-  selectAllOrganizations,
-  selectAllProjects,
-  selectAllViews,
-  (workspace, organizations, projects, views) => {
-    if (!workspace) {
-      return {} as Workspace;
-    }
-    const organization = organizations.find(org => org.code === workspace.organizationCode);
-    const project = projects.find(proj => proj.code === workspace.projectCode);
-    const view = views.find(v => v.code === workspace.viewCode);
-    return {
-      ...workspace,
-      organizationId: (organization && organization.id) || '',
-      projectId: (project && project.id) || '',
-      viewId: (view && view.id) || '',
-    };
-  }
 );
 
 export const selectSearchTab = createSelector(
