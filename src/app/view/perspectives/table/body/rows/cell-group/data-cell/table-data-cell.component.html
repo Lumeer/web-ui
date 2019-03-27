@@ -15,7 +15,7 @@
             (save)="onValueSave($event)"
             (cancel)="onCancelEditing()"
             class="d-block h-100"
-            [class.cursor-default]="!isEditable(attribute$ | async)"
+            [class.cursor-default]="!(attribute$ | async | attributeEditable)"
             data-test="table-data-input">
 </data-input>
 

@@ -57,6 +57,7 @@ import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
 import {CollectionByIdPipe} from './collection-by-id.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
 import {CollectionAttributeEditablePipe} from './collection-attribute-editable.pipe';
+import {AttributeEditablePipe} from './attribute-editable.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -97,6 +98,7 @@ import {CollectionAttributeEditablePipe} from './collection-attribute-editable.p
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
     CollectionAttributeEditablePipe,
+    AttributeEditablePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -137,6 +139,7 @@ import {CollectionAttributeEditablePipe} from './collection-attribute-editable.p
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
     CollectionAttributeEditablePipe,
+    AttributeEditablePipe,
   ],
 })
 export class PipesModule {}

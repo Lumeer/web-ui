@@ -62,10 +62,7 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {
-  isCollectionAttributeEditable,
-  isAttributeEditable,
-} from '../../../../../../../core/store/collections/collection.util';
+import {isAttributeEditable} from '../../../../../../../core/store/collections/collection.util';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 
 @Component({
@@ -316,10 +313,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
     }
-  }
-
-  public isEditable(attribute: Attribute): boolean {
-    return isAttributeEditable(attribute);
   }
 
   @HostListener('contextmenu', ['$event'])
