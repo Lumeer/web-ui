@@ -33,7 +33,7 @@ export class DocumentHintColumnsPipe implements PipeTransform {
     showHiddenColumns: boolean = false
   ): DocumentHintColumn[] {
     return filterLeafColumns(table.config.parts[cursor.partIndex].columns)
-      .filter(column => column.children.length === 0 && column.attributeIds[0])
+      .filter(column => (!column.children || column.children.length === 0) && column.attributeIds[0])
       .map(column => ({
         attributeId: column.attributeIds[0],
         width: getTableColumnWidth(column, showHiddenColumns),
