@@ -124,7 +124,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editing$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
 
-  public constraint$: Observable<Constraint>;
   public attribute$: Observable<Attribute>;
 
   public editedValue: any;
@@ -196,17 +195,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.column || changes.document) && this.column && this.document) {
-      this.constraint$ = this.store$.pipe(
-        select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeIds[0]))
-      );
       this.attribute$ = this.store$.pipe(
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
     }
     if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
-      this.constraint$ = this.store$.pipe(
-        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0])),
-        map(attribute => attribute && attribute.constraint)
+      this.attribute$ = this.store$.pipe(
+        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
     }
     if (changes.selected) {
@@ -239,13 +234,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(
         ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
-        withLatestFrom(this.constraint$, this.attribute$)
+        withLatestFrom(this.attribute$)
       )
-      .subscribe(([action, constraint, attribute]) => {
+      .subscribe(([action, attribute]) => {
         const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
           if (isAttributeEditable(attribute)) {
-            if (constraint && constraint.type === ConstraintType.Boolean) {
+            if (attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
               // switch checkbox only if Enter or Space is pressed
               if (!value || value === ' ') {
                 const data =
