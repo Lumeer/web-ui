@@ -36,16 +36,13 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, skip, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, skip, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {
-  selectCollectionAttributeById,
-  selectCollectionAttributeConstraint,
-} from '../../../../../../../core/store/collections/collections.state';
+import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
