@@ -36,16 +36,13 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, skip, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, skip, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {
-  selectCollectionAttributeById,
-  selectCollectionAttributeConstraint,
-} from '../../../../../../../core/store/collections/collections.state';
+import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
@@ -124,7 +121,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editing$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
 
-  public constraint$: Observable<Constraint>;
   public attribute$: Observable<Attribute>;
 
   public editedValue: any;
@@ -196,17 +192,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.column || changes.document) && this.column && this.document) {
-      this.constraint$ = this.store$.pipe(
-        select(selectCollectionAttributeConstraint(this.document.collectionId, this.column.attributeIds[0]))
-      );
       this.attribute$ = this.store$.pipe(
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
     }
     if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
-      this.constraint$ = this.store$.pipe(
-        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0])),
-        map(attribute => attribute && attribute.constraint)
+      this.attribute$ = this.store$.pipe(
+        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
     }
     if (changes.selected) {
@@ -239,13 +231,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(
         ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
-        withLatestFrom(this.constraint$, this.attribute$)
+        withLatestFrom(this.attribute$)
       )
-      .subscribe(([action, constraint, attribute]) => {
+      .subscribe(([action, attribute]) => {
         const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
           if (isAttributeEditable(attribute)) {
-            if (constraint && constraint.type === ConstraintType.Boolean) {
+            if (attribute && attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
               // switch checkbox only if Enter or Space is pressed
               if (!value || value === ' ') {
                 const data =

@@ -7,7 +7,7 @@
                       (edit)="onEdit()">
 </table-data-cell-menu>
 
-<data-input [constraint]="constraint$ | async"
+<data-input [constraint]="(attribute$ | async)?.constraint"
             [focus]="true"
             [readonly]="!(editing$ | async)"
             [value]="(hiddenInputValue$ | async) || (document ? (document | extractValue:column) : (linkInstance | extractValue:column))"
