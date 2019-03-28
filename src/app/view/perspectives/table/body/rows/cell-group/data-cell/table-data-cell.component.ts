@@ -237,7 +237,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
           if (isAttributeEditable(attribute)) {
-            if (attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
+            if (attribute && attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
               // switch checkbox only if Enter or Space is pressed
               if (!value || value === ' ') {
                 const data =
