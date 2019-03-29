@@ -21,17 +21,19 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {DocumentModel} from './document.model';
-import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
 import {Query} from '../navigation/query';
+import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
+import {DocumentData, DocumentModel} from './document.model';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
+  pendingDataUpdates: Record<string, DocumentData>; // key is correlationId
   queries: Query[];
 }
 
 export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: document => document.id});
 
 export const initialDocumentsState: DocumentsState = documentsAdapter.getInitialState({
+  pendingDataUpdates: {},
   queries: [],
 });
 
@@ -72,4 +74,15 @@ export const selectDocumentsByIds = (ids: string[]) =>
   createSelector(
     selectDocumentsDictionary,
     documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc)
+  );
+
+const selectPendingDocumentDataUpdates = createSelector(
+  selectDocumentsState,
+  state => state.pendingDataUpdates
+);
+
+export const selectPendingDocumentDataUpdatesByCorrelationId = (correlationId: string) =>
+  createSelector(
+    selectPendingDocumentDataUpdates,
+    pendingDataUpdates => pendingDataUpdates[correlationId]
   );
