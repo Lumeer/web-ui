@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -34,6 +35,8 @@ import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {KeyCode} from '../../key-code';
 import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
+import * as moment from 'moment';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'datetime-data-input',
@@ -41,7 +44,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
   styleUrls: ['./datetime-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatetimeDataInputComponent implements OnChanges {
+export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @Input()
   public constraintConfig: DateTimeConstraintConfig;
 
@@ -68,6 +71,8 @@ export class DatetimeDataInputComponent implements OnChanges {
 
   @ViewChild(BsDatepickerDirective)
   public datePicker: BsDatepickerDirective;
+
+  public locale = moment.locale('cz');
 
   private preventSaving: boolean;
 
@@ -144,5 +149,9 @@ export class DatetimeDataInputComponent implements OnChanges {
 
   private transformValue(value: string): string {
     return getDateTimeSaveValue(value, this.constraintConfig);
+  }
+
+  public ngAfterViewInit(): void {
+    document.body.style.setProperty('--first-day-of-week', environment.locale === 'cs' ? '8' : '2');
   }
 }

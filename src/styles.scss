@@ -309,3 +309,31 @@ color-picker .color-picker .preset-area {
     border-radius: 0px;
   }
 }
+
+.bs-datepicker-container div.bs-datepicker-head {
+  background-color: $primary;
+}
+
+.bs-datepicker-container div.bs-datepicker-body {
+  font-family: LatoWeb;
+
+  table {
+    td[role='gridcell'] {
+      color: $primary;
+    }
+
+    tr {
+      td.week {
+        span {
+          color: $gray-300;
+        }
+      }
+
+      td:nth-of-type(--first-day-of-week) {
+        span:not(.is-other-month) {
+          color: $danger;
+        }
+      }
+    }
+  }
+}
