@@ -1,0 +1,18 @@
+<input *ngIf="readonly; else colorPicker"
+       readonly="true"
+       [title]="value | colorValue: constraintConfig"
+       [value]=""
+       class="border-0 w-100 h-100 px-1"
+       [class.bg-transparent]="!(value | colorValid:constraintConfig)"
+       [class.invalid-value]="!(value | colorValid:constraintConfig)"
+       [ngStyle]="{'background-color': (value | colorValid:constraintConfig) ? (value | colorValue: constraintConfig) : ''}"
+       data-test="color-data-input"
+       type="text">
+
+<ng-template #colorPicker>
+  <input #colorInput
+         [value]="value | colorValue: constraintConfig"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="color-data-input"
+         type="text">
+</ng-template>

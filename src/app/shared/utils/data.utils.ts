@@ -18,6 +18,7 @@
  */
 
 import {
+  ColorConstraintConfig,
   Constraint,
   ConstraintType,
   DateTimeConstraintConfig,
@@ -48,6 +49,14 @@ export function parseDateTimeDataValue(value: any, expectedFormat?: string): Dat
   return momentDate.isValid() ? momentDate.toDate() : null;
 }
 
+export function parseColorValue(value: any, colorConstraint?: ColorConstraintConfig): string {
+  if (!value) {
+    return value;
+  }
+
+  return value;
+}
+
 function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
   const formats = [moment.ISO_8601, ...dateFormats];
   if (expectedFormat) {
@@ -70,6 +79,8 @@ export function getSaveValue(value: any, constraint: Constraint): any {
       return getDateTimeSaveValue(value, constraint.config as DateTimeConstraintConfig);
     case ConstraintType.Boolean:
       return parseBooleanDataValue(value);
+    case ConstraintType.Color:
+      return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     default:
       return value;
   }
@@ -99,6 +110,8 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
       return isNumberValid(value, !withoutConfig ? (constraint.config as NumberConstraintConfig) : null);
     case ConstraintType.Percentage:
       return isPercentageValid(value, !withoutConfig ? (constraint.config as PercentageConstraintConfig) : null);
+    case ConstraintType.Color:
+      return isColorValid(value, !withoutConfig ? (constraint.config as ColorConstraintConfig) : null);
     default:
       return true;
   }
@@ -174,6 +187,8 @@ export function formatDataValue(value: any, constraint: Constraint): any {
       return formatTextDataValue(value, constraint.config as TextConstraintConfig);
     case ConstraintType.Percentage:
       return formatPercentageDataValue(value, constraint.config as PercentageConstraintConfig);
+    case ConstraintType.Color:
+      return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Boolean:
       return !!value && value !== '0';
     default:
@@ -206,6 +221,36 @@ export function isDateTimeValid(value: any, config?: DateTimeConstraintConfig): 
 
 export function getDateTimeSaveValue(value: any, config: DateTimeConstraintConfig): string {
   return value ? moment(value, config.format).toISOString() : '';
+}
+
+export function formatColorDataValue(value: any, config: ColorConstraintConfig, showInvalid = true): string {
+  if (!value) {
+    return '';
+  }
+
+  if (typeof value !== 'string' || !config) {
+    return formatUnknownDataValue(value);
+  }
+
+  const filter = String(value).replace(/[^a-fA-F0-9#]/g, '');
+  const correction = filter.startsWith('#') ? 1 : 0;
+
+  if (filter.length === 3 + correction || filter.length === 6 + correction) {
+    return correction === 1 ? filter : '#' + filter;
+  }
+
+  return '';
+}
+
+export function isColorValid(value: any, config?: ColorConstraintConfig): boolean {
+  const filter = String(value).replace(/[^a-fA-F0-9#]/g, '');
+  const correction = filter.startsWith('#') ? 1 : 0;
+
+  if (filter.length === 3 + correction || filter.length === 6 + correction) {
+    return true;
+  }
+
+  return false;
 }
 
 export function formatNumberDataValue(value: any, config: NumberConstraintConfig): string {

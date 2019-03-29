@@ -26,6 +26,8 @@ import {BooleanDataValuePipe} from './boolean-data.pipe';
 import {NumberDataValuePipe} from './number-data-value.pipe';
 import {PercentageDataValuePipe} from './percentage-data-value.pipe';
 import {DateTimeValidPipe} from './datetime-valid.pipe';
+import {ColorValidPipe} from './color-valid.pipe';
+import {ColorValuePipe} from './color-value.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,6 +39,8 @@ import {DateTimeValidPipe} from './datetime-valid.pipe';
     BooleanDataValuePipe,
     NumberDataValuePipe,
     PercentageDataValuePipe,
+    ColorValidPipe,
+    ColorValuePipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -46,6 +50,8 @@ import {DateTimeValidPipe} from './datetime-valid.pipe';
     BooleanDataValuePipe,
     NumberDataValuePipe,
     PercentageDataValuePipe,
+    ColorValidPipe,
+    ColorValuePipe,
   ],
 })
 export class DataPipesModule {}

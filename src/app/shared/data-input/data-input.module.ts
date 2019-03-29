@@ -30,6 +30,7 @@ import {PercentageDataInputComponent} from './percentage/percentage-data-input.c
 import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
 import {NumberValidPipe} from './number/number-valid.pipe';
 import {DirectivesModule} from '../directives/directives.module';
+import {ColorDataInputComponent} from './color/color-data-input.component';
 
 @NgModule({
   imports: [BsDatepickerModule, CommonModule, PipesModule, DirectivesModule],
@@ -42,6 +43,7 @@ import {DirectivesModule} from '../directives/directives.module';
     PercentageDataInputComponent,
     PercentageValidPipe,
     NumberValidPipe,
+    ColorDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent],
 })

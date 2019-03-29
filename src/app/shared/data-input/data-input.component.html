@@ -43,6 +43,18 @@
                          class="d-block">
   </percentage-data-input>
 
+  <color-data-input *ngSwitchCase="constraintType.Color"
+                         [focus]="focus"
+                         [readonly]="readonly"
+                         [constraintConfig]="constraint.config"
+                         [value]="value"
+                         (valueChange)="onValueChange($event)"
+                         (save)="save.emit($event)"
+                         (cancel)="cancel.emit()"
+                         (onFocus)="emitFocus($event)"
+                         class="d-block">
+  </color-data-input>
+
   <text-data-input *ngSwitchDefault
                    [constraintConfig]="constraint?.config"
                    [focus]="focus"
