@@ -39,6 +39,7 @@ export enum DocumentsActionType {
   PATCH_DATA = '[Documents] Patch Data',
   UPDATE_DATA_INTERNAL = '[Documents] Update Data Internal',
   PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
+  PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 
   UPDATE_META_DATA = '[Documents] Update Meta Data',
   PATCH_META_DATA = '[Documents] Patch Meta Data',
@@ -137,6 +138,15 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.PATCH_DATA_INTERNAL;
 
     public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+  }
+
+  /**
+   * Applies data updates that were accumulated while the document was being created.
+   */
+  export class PatchDataPending implements Action {
+    public readonly type = DocumentsActionType.PATCH_DATA_PENDING;
+
+    public constructor(public payload: {collectionId: string; documentId: string; correlationId: string}) {}
   }
 
   export class UpdateMetaData implements Action {
@@ -246,6 +256,7 @@ export namespace DocumentsAction {
     | UpdateDataInternal
     | PatchData
     | PatchDataInternal
+    | PatchDataPending
     | UpdateMetaData
     | PatchMetaData
     | UpdateSuccess
