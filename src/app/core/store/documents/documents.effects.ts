@@ -23,7 +23,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
-import {catchError, filter, first, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, first, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -34,7 +34,12 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {RouterAction} from '../router/router.action';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {selectDocumentById, selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
+import {
+  selectDocumentById,
+  selectDocumentsDictionary,
+  selectDocumentsQueries,
+  selectPendingDocumentDataUpdatesByCorrelationId,
+} from './documents.state';
 
 @Injectable()
 export class DocumentsEffects {
@@ -67,21 +72,35 @@ export class DocumentsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
-    mergeMap(action => {
-      const documentDto = convertDocumentModelToDto(action.payload.document);
+    mergeMap(action =>
+      this.store$.pipe(
+        select(selectPendingDocumentDataUpdatesByCorrelationId(action.payload.document.correlationId)),
+        take(1),
+        filter(pendingDataUpdates => !pendingDataUpdates || Object.keys(pendingDataUpdates).length === 0),
+        mergeMap(() => {
+          const documentDto = convertDocumentModelToDto(action.payload.document);
 
-      return this.documentService.createDocument(documentDto).pipe(
-        map(dto => convertDocumentDtoToModel(dto, action.payload.document.correlationId)),
-        tap(document => {
-          const callback = action.payload.callback;
-          if (callback) {
-            callback(document.id);
-          }
-        }),
-        map(document => new DocumentsAction.CreateSuccess({document})),
-        catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
-      );
-    })
+          return this.documentService.createDocument(documentDto).pipe(
+            map(dto => convertDocumentDtoToModel(dto, action.payload.document.correlationId)),
+            tap(document => {
+              const callback = action.payload.callback;
+              if (callback) {
+                callback(document.id);
+              }
+            }),
+            mergeMap(document => [
+              new DocumentsAction.CreateSuccess({document}),
+              new DocumentsAction.PatchDataPending({
+                collectionId: document.collectionId,
+                documentId: document.id,
+                correlationId: document.correlationId,
+              }),
+            ]),
+            catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
+          );
+        })
+      )
+    )
   );
 
   @Effect()
@@ -240,6 +259,20 @@ export class DocumentsEffects {
         map(dto => convertDocumentDtoToModel(dto)),
         map(document => new DocumentsAction.UpdateSuccess({document})),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
+      );
+    })
+  );
+
+  @Effect()
+  public patchDataPending$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.PatchDataPending>(DocumentsActionType.PATCH_DATA_PENDING),
+    mergeMap(action => {
+      const {collectionId, correlationId, documentId: id} = action.payload;
+      return this.store$.pipe(
+        select(selectPendingDocumentDataUpdatesByCorrelationId(correlationId)),
+        take(1),
+        filter(data => data && Object.keys(data).length > 0),
+        map(data => new DocumentsAction.PatchData({document: {collectionId, correlationId, id, data}}))
       );
     })
   );

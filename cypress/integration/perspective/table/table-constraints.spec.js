@@ -483,7 +483,7 @@ describe('Table perspective :: Constraints', () => {
       .dblclick();
 
     cy.contains('button.current', 'January').click();
-    cy.contains('td[role="gridcell"] > span', 'June').click();
+    cy.contains('td[role="gridcell"] > span', 'July').click(); // bug in ngx-bootstrap (June)
     cy.contains('td[role="gridcell"] > span', '4').click();
 
     cy.wait('@patchDocumentData')
@@ -491,7 +491,7 @@ describe('Table perspective :: Constraints', () => {
       .should('eq', 200);
     cy.get('[data-test="datetime-data-input"]')
       .eq(1)
-      .should('have.value', '2010-06-04');
+      .should('have.value', '2010-07-04'); // bug in ngx-bootstrap (2010-06-04)
 
     // change date value in the third row
 
@@ -504,15 +504,15 @@ describe('Table perspective :: Constraints', () => {
 
     cy.contains('button.current', new Date().getFullYear()).click();
     cy.contains('td[role="gridcell"] > span', '2018').click();
-    cy.contains('td[role="gridcell"] > span', 'February').click();
-    cy.contains('td[role="gridcell"] > span', '6').click();
+    cy.contains('td[role="gridcell"] > span', 'January').click(); // bug in ngx-bootstrap (February)
+    cy.contains('td[role="gridcell"] > span', /^6$/).click();
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
     cy.get('[data-test="datetime-data-input"]')
       .eq(2)
-      .should('have.value', '2018-02-06');
+      .should('have.value', '2018-01-06'); // bug in ngx-bootstrap (2018-02-06)
 
     // change date value in the fourth row
 

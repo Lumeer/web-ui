@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
-import {DocumentModel} from './document.model';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,
@@ -28,10 +28,14 @@ export function documentsReducer(
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
       return addDocuments(state, action);
+    case DocumentsActionType.CREATE:
+      return onCreateDocument(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_DATA_INTERNAL:
       return updateDocument(state, action);
+    case DocumentsActionType.PATCH_DATA:
+      return onPatchData(state, action);
     case DocumentsActionType.PATCH_DATA_INTERNAL:
       return patchDocument(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
@@ -55,6 +59,22 @@ export function documentsReducer(
     default:
       return state;
   }
+}
+
+function onCreateDocument(state: DocumentsState, action: DocumentsAction.Create): DocumentsState {
+  const {correlationId, data} = action.payload.document;
+  const pendingDocumentData = state.pendingDataUpdates[correlationId];
+  const pendingDataUpdates = {
+    ...state.pendingDataUpdates,
+    [correlationId]: pendingDocumentData ? {...pendingDocumentData, ...data} : {},
+  };
+  return {...state, pendingDataUpdates};
+}
+
+function onPatchData(state: DocumentsState, action: DocumentsAction.PatchData): DocumentsState {
+  const {correlationId} = action.payload.document;
+  const {[correlationId]: _, ...pendingDataUpdates} = state.pendingDataUpdates;
+  return correlationId ? {...state, pendingDataUpdates} : state;
 }
 
 function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
