@@ -295,3 +295,17 @@ div#driver-popover-item {
 .invalid-value {
   text-decoration: underline $danger dashed;
 }
+
+color-picker .color-picker .preset-area {
+  line-height: 1px;
+
+  .preset-color {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 20px;
+    margin: 0px;
+    border: 0px none transparent;
+    border-radius: 0px;
+  }
+}
