@@ -130,7 +130,9 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   private closeColorPicker() {
-    this.colorPicker.closeDialog();
+    if (this.colorPicker) {
+      this.colorPicker.closeDialog();
+    }
   }
 
   @HostListener('keydown', ['$event'])

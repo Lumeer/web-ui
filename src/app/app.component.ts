@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import * as Sentry from '@sentry/browser';
@@ -55,7 +63,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
     private title: Title,
-    private pusher: PusherService
+    private pusher: PusherService, // to make the service initialize and work
+    public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
