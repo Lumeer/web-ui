@@ -35,7 +35,6 @@ import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {KeyCode} from '../../key-code';
 import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
-import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -71,8 +70,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(BsDatepickerDirective)
   public datePicker: BsDatepickerDirective;
-
-  public locale = moment.locale('cz');
 
   private preventSaving: boolean;
 
