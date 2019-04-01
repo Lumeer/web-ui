@@ -941,43 +941,46 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         const blockOutputType = this.getOutputConnectionCheck(block);
         const parentBlock = workspace.getBlockById(changeEvent.oldParentId);
 
-        // document being removed from link
-        if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX)) {
-          if (parentBlock.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) && parentBlock.outputConnection) {
-            parentBlock.setOutput(true, UNKNOWN);
-            this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+        if (!parentBlock) {
+          // document being removed from link
+          if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX)) {
+            if (parentBlock.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) && parentBlock.outputConnection) {
+              parentBlock.setOutput(true, UNKNOWN);
+              this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+            }
           }
-        }
 
-        // document or link being removed from attr getter
-        if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
-          if (parentBlock.type === GET_ATTRIBUTE && parentBlock.outputConnection) {
-            parentBlock.setOutput(true, UNKNOWN);
-            this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+          // document or link being removed from attr getter
+          if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_BLOCK_SUFFIX)) {
+            if (parentBlock.type === GET_ATTRIBUTE && parentBlock.outputConnection) {
+              parentBlock.setOutput(true, UNKNOWN);
+              this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+            }
           }
-        }
 
-        // reset list of attributes upon disconnection
-        if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === GET_LINK_ATTRIBUTE) {
-          this.resetOptions(parentBlock, 'ATTR');
-        }
+          // reset list of attributes upon disconnection
+          if (parentBlock.type === GET_ATTRIBUTE || parentBlock.type === GET_LINK_ATTRIBUTE) {
+            this.resetOptions(parentBlock, 'ATTR');
+          }
 
-        // reset list of attributes upon disconnection
-        if (
-          (parentBlock.type === SET_ATTRIBUTE &&
-            parentBlock.getInput('DOCUMENT').connection.targetConnection === null) ||
-          (parentBlock.type === SET_LINK_ATTRIBUTE && parentBlock.getInput('LINK').connection.targetConnection === null)
-        ) {
-          this.resetOptions(parentBlock, 'ATTR');
-        }
+          // reset list of attributes upon disconnection
+          if (
+            (parentBlock.type === SET_ATTRIBUTE &&
+              parentBlock.getInput('DOCUMENT').connection.targetConnection === null) ||
+            (parentBlock.type === SET_LINK_ATTRIBUTE &&
+              parentBlock.getInput('LINK').connection.targetConnection === null)
+          ) {
+            this.resetOptions(parentBlock, 'ATTR');
+          }
 
-        // reset list of collections upon disconnection
-        if (
-          parentBlock.type === GET_LINK_DOCUMENT &&
-          parentBlock.getInput('COLLECTION').connection.targetConnection === null
-        ) {
-          parentBlock.setOutput(true, UNKNOWN);
-          this.resetOptions(parentBlock, 'COLLECTION');
+          // reset list of collections upon disconnection
+          if (
+            parentBlock.type === GET_LINK_DOCUMENT &&
+            parentBlock.getInput('COLLECTION').connection.targetConnection === null
+          ) {
+            parentBlock.setOutput(true, UNKNOWN);
+            this.resetOptions(parentBlock, 'COLLECTION');
+          }
         }
       }
     }
