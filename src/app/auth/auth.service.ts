@@ -40,6 +40,10 @@ export class AuthService {
   private auth0: WebAuth;
   private loggingIn: boolean;
 
+  private accessToken: string;
+  private idToken: string;
+  private expiresAt: number;
+
   private refreshSubscription: Subscription;
 
   public constructor(private location: Location, private router: Router, private store: Store<AppState>) {
@@ -83,12 +87,16 @@ export class AuthService {
   }
 
   private setSession(authResult: Auth0DecodedHash): void {
+    this.accessToken = authResult.accessToken;
+    this.idToken = authResult.idToken;
     // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
+    this.expiresAt = new Date(authResult.expiresIn * 1000 + new Date().getTime()).getTime();
 
-    localStorage.setItem(ACCESS_TOKEN_KEY, authResult.accessToken);
-    localStorage.setItem(ID_TOKEN_KEY, authResult.idToken);
-    localStorage.setItem(EXPIRES_AT_KEY, expiresAt);
+    if (environment.authPersistence) {
+      localStorage.setItem(ACCESS_TOKEN_KEY, this.accessToken);
+      localStorage.setItem(ID_TOKEN_KEY, this.idToken);
+      localStorage.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
+    }
 
     this.scheduleRenewal();
   }
@@ -99,10 +107,16 @@ export class AuthService {
       return;
     }
 
-    // Remove tokens and expiry time from localStorage
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(ID_TOKEN_KEY);
-    localStorage.removeItem(EXPIRES_AT_KEY);
+    this.accessToken = null;
+    this.idToken = null;
+    this.expiresAt = null;
+
+    if (environment.authPersistence) {
+      // Remove tokens and expiry time from localStorage
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(ID_TOKEN_KEY);
+      localStorage.removeItem(EXPIRES_AT_KEY);
+    }
 
     this.unscheduleRenewal();
 
@@ -121,15 +135,15 @@ export class AuthService {
   }
 
   public getAccessToken(): string {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+    return this.accessToken || localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
   public getIdToken(): string {
-    return localStorage.getItem(ID_TOKEN_KEY);
+    return this.idToken || localStorage.getItem(ID_TOKEN_KEY);
   }
 
   public getExpiresAt(): number {
-    return Number(localStorage.getItem(EXPIRES_AT_KEY));
+    return this.expiresAt || Number(localStorage.getItem(EXPIRES_AT_KEY));
   }
 
   public getUserProfile(): Promise<Auth0UserProfile> {

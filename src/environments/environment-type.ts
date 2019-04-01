@@ -22,6 +22,7 @@ import {EnvironmentVariables} from './environment-variables';
 export interface Environment extends EnvironmentVariables {
   analytics: boolean;
   auth: boolean;
+  authPersistence?: boolean; // keep auth token in local storage
   mapQuestKey: string;
   production: boolean;
   storeDevtools: boolean;
