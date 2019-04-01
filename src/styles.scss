@@ -295,3 +295,45 @@ div#driver-popover-item {
 .invalid-value {
   text-decoration: underline $danger dashed;
 }
+
+color-picker .color-picker .preset-area {
+  line-height: 1px;
+
+  .preset-color {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 20px;
+    margin: 0px;
+    border: 0px none transparent;
+    border-radius: 0px;
+  }
+}
+
+.bs-datepicker-container div.bs-datepicker-head {
+  background-color: $primary;
+}
+
+.bs-datepicker-container div.bs-datepicker-body {
+  font-family: LatoWeb;
+
+  table {
+    td[role='gridcell'] {
+      color: $primary;
+    }
+
+    tr {
+      td.week {
+        span {
+          color: $gray-300;
+        }
+      }
+
+      td:nth-of-type(--first-day-of-week) {
+        span:not(.is-other-month) {
+          color: $danger;
+        }
+      }
+    }
+  }
+}

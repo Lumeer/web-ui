@@ -36,6 +36,7 @@ export enum ConstraintType {
   Select = 'Select',
   Tag = 'Tag',
   User = 'User',
+  Color = 'Color',
 }
 
 export const constraintTypesMap = {
@@ -54,6 +55,7 @@ export const constraintTypesMap = {
   [ConstraintType.Tag]: ConstraintType.Tag,
   [ConstraintType.Text]: ConstraintType.Text,
   [ConstraintType.User]: ConstraintType.User,
+  [ConstraintType.Color]: ConstraintType.Color,
 };
 
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
@@ -63,6 +65,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Number:
     case ConstraintType.Text:
     case ConstraintType.Percentage:
+    case ConstraintType.Color:
       return true;
     default:
       return false;
@@ -158,6 +161,8 @@ export interface UserConstraintConfig {
   name: boolean;
 }
 
+export interface ColorConstraintConfig {}
+
 export type ConstraintConfig =
   | AddressConstraintConfig
   | CoordinatesConstraintConfig
@@ -169,7 +174,8 @@ export type ConstraintConfig =
   | SelectConstraintConfig
   | TagConstraintConfig
   | TextConstraintConfig
-  | UserConstraintConfig;
+  | UserConstraintConfig
+  | ColorConstraintConfig;
 
 export interface Constraint {
   type: ConstraintType;

@@ -102,6 +102,8 @@ export class AttributeTypeFormComponent implements OnChanges {
           maxLength: this.configForm.get('maxLength').value,
           regexp: undefined, // TODO
         };
+      case ConstraintType.Color:
+        return {};
       default:
         return null;
     }
