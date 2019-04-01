@@ -27,10 +27,10 @@ import {
   findTableColumnByIndex,
   findTableRow,
   getTableColumns,
-  isTableRowExpanded,
   splitColumnPath,
   splitRowPath,
 } from './table.utils';
+import {isTableRowExpanded} from './utils/table-row-collapsing.utils';
 
 export interface TableHeaderCursor {
   tableId: string;

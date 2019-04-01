@@ -4,7 +4,7 @@
                         document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async | documentPermissions | async} as permissions">
     <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
       <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
-        <table-data-cell *ngIf="rows.length < 2; else collapsedCell"
+        <table-data-cell *ngIf="!(cursor | cellCollapsed | async); else collapsedCell"
                          [column]="column"
                          [cursor]="cursor | columnCursor:columnIndex"
                          [document]="data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async"

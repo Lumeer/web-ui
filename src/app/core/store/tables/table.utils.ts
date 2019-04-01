@@ -502,21 +502,6 @@ export function createTableRow(document: DocumentModel, linkInstance?: LinkInsta
   };
 }
 
-export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): boolean {
-  if (rowPath.length === 0) {
-    return true;
-  }
-
-  const [index, ...childPath] = rowPath;
-  const row = rows[index];
-
-  if (childPath.length === 0) {
-    return row.expanded || row.linkedRows.length < 2;
-  }
-
-  return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
-}
-
 export function calculateRowHierarchyLevel(
   row: TableConfigRow,
   documentIds: Set<string>,
