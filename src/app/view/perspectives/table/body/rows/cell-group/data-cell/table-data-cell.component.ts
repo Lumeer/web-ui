@@ -36,11 +36,13 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, skip, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {isAttributeEditable} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -53,14 +55,17 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
-import {selectAffected, selectTableById, selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
+import {
+  selectAffected,
+  selectTableById,
+  selectTablePart,
+  selectTableRow,
+} from '../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {isAttributeEditable} from '../../../../../../../core/store/collections/collection.util';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'table-data-cell',
@@ -535,6 +540,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateLinkInstanceData(attributeId: string, attributeName: string, value: any) {
+    if (this.linkInstance && this.linkInstance.id) {
+      this.updateLinkInstance(attributeId, attributeName, value);
+    } else {
+      this.createLinkInstance(attributeId, attributeName, value);
+    }
+  }
+
+  private updateLinkInstance(attributeId: string, attributeName: string, value: any) {
     if (attributeId) {
       this.updateLinkInstanceWithExistingAttribute(attributeId, value);
     } else {
@@ -543,12 +556,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateLinkInstanceWithNewAttribute(attributeName: string, value: any) {
-    this.store$.dispatch(
-      new LinkTypesAction.CreateAttributes({
-        linkTypeId: this.linkInstance.linkTypeId,
-        attributes: [{name: attributeName}],
-        onSuccess: ([attribute]) => this.updateLinkInstanceWithExistingAttribute(attribute.id, value),
-      })
+    this.createLinkTypeAttribute(attributeName, attribute =>
+      this.updateLinkInstanceWithExistingAttribute(attribute.id, value)
     );
   }
 
@@ -560,6 +569,79 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       data: {[attributeId]: value},
     };
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+  }
+
+  private createLinkInstance(attributeId: string, attributeName: string, value: any) {
+    if (attributeId) {
+      this.createLinkInstanceWithExistingAttribute(attributeId, value);
+    } else {
+      this.createLinkInstanceWithNewAttribute(attributeName, value);
+    }
+  }
+
+  private createLinkInstanceWithNewAttribute(attributeName: string, value: any) {
+    this.createLinkTypeAttribute(attributeName, attribute =>
+      this.createLinkInstanceWithExistingAttribute(attribute.id, value)
+    );
+  }
+
+  private createLinkInstanceWithExistingAttribute(attributeId: string, value: any) {
+    combineLatest(
+      this.store$.pipe(
+        select(
+          selectTablePart({
+            ...this.cursor,
+            partIndex: this.cursor.partIndex + 1,
+          })
+        )
+      ),
+      this.store$.pipe(
+        select(
+          selectTableRow({
+            ...this.cursor,
+            partIndex: this.cursor.partIndex + 1,
+          })
+        ),
+        map(row => row && row.correlationId)
+      ),
+      this.store$.pipe(
+        select(
+          selectTableRow({
+            ...this.cursor,
+            partIndex: this.cursor.partIndex - 1,
+            rowPath: this.cursor.rowPath.slice(0, -1),
+          })
+        )
+      )
+    )
+      .pipe(take(1))
+      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}]) =>
+        this.store$.dispatch(
+          new DocumentsAction.Create({
+            document: {
+              collectionId,
+              correlationId,
+              data: {},
+            },
+            callback: documentId =>
+              this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
+          })
+        )
+      );
+  }
+
+  private createLinkInstanceWithData(documentIds: [string, string], data: Record<string, any>) {
+    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: {...this.linkInstance, documentIds, data}}));
+  }
+
+  private createLinkTypeAttribute(attributeName: string, onSuccess: (attribute: Attribute) => void) {
+    this.store$.dispatch(
+      new LinkTypesAction.CreateAttributes({
+        linkTypeId: this.linkInstance.linkTypeId,
+        attributes: [{name: attributeName}],
+        onSuccess: ([attribute]) => onSuccess(attribute),
+      })
+    );
   }
 
   public onEdit() {

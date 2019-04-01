@@ -131,7 +131,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
       map(constraint =>
         values
           .map(value => formatDataValue(value, constraint))
-          .filter(value => !!value)
+          .filter(value => !!value || value === 0)
           .join(', ')
       )
     );
