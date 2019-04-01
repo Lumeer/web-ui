@@ -197,8 +197,8 @@ export const selectAffected = (attribute: EditedAttribute) =>
         attribute &&
         editedAttribute &&
         attribute.attributeId === editedAttribute.attributeId &&
-        (attribute.documentId === editedAttribute.documentId ||
-          attribute.linkInstanceId === editedAttribute.linkInstanceId)
+        ((attribute.documentId && attribute.documentId === editedAttribute.documentId) ||
+          (attribute.linkInstanceId && attribute.linkInstanceId === editedAttribute.linkInstanceId))
       );
     }
   );
