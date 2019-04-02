@@ -58,6 +58,7 @@ import {ResizeEdgesPipe} from './resize-edges.pipe';
 import {ResizeValidatePipe} from './resize-validate.pipe';
 import {RowPositionTopPipe} from './row-position-top.pipe';
 import {DataCellLinkInstancePipe} from './data-cell-link-instance.pipe';
+import {CellCollapsedPipe} from './cell-collapsed.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -101,6 +102,7 @@ import {DataCellLinkInstancePipe} from './data-cell-link-instance.pipe';
     RowPositionTopPipe,
     DataCellDocumentPipe,
     DataCellLinkInstancePipe,
+    CellCollapsedPipe,
   ],
   exports: [
     DataPipe,
@@ -142,6 +144,7 @@ import {DataCellLinkInstancePipe} from './data-cell-link-instance.pipe';
     RowPositionTopPipe,
     DataCellDocumentPipe,
     DataCellLinkInstancePipe,
+    CellCollapsedPipe,
   ],
   providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
 })
