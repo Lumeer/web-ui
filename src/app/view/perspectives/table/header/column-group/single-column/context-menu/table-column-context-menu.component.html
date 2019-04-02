@@ -37,14 +37,14 @@
        aria-hidden="true">
     </i>&nbsp;
     <span data-test="table-column-menu-change-constraint"
-          i18n="@@table.header.menu.changeType">Customize attribute type...</span>
+          i18n="@@table.header.menu.changeType">Attribute type...</span>
   </ng-template>
   <ng-template *ngIf="attribute.id"
                contextMenuItem
                [enabled]="allowedPermissions?.manageWithView"
                (execute)="functionEdit.emit()">
     <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.editFunction">Set column function...</span>
+    <span i18n="@@table.header.menu.editFunction">Edit Function...</span>
   </ng-template>
   <ng-container *ngIf="attribute.id && !defaultAttribute">
     <ng-template contextMenuItem
