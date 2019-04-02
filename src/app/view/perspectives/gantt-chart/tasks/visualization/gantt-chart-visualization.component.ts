@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {GANTT_DATE_FORMAT, GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
@@ -183,12 +183,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
         //start time changed
         if (startAttributeId && !startTimeTask.isSame(startTime)) {
-          changes.push({attributeId: startAttributeId, value: startTime.format(GANTT_DATE_FORMAT)});
+          changes.push({attributeId: startAttributeId, value: startTime.toDate()});
         }
 
         //end time changed
         if (endAttributeId && !endTimeTask.isSame(endTime)) {
-          changes.push({attributeId: endAttributeId, value: endTime.format(GANTT_DATE_FORMAT)});
+          changes.push({attributeId: endAttributeId, value: endTime.toDate()});
         }
 
         if (changes) {
