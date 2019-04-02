@@ -941,7 +941,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         const blockOutputType = this.getOutputConnectionCheck(block);
         const parentBlock = workspace.getBlockById(changeEvent.oldParentId);
 
-        if (!parentBlock) {
+        if (parentBlock) {
           // document being removed from link
           if (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX)) {
             if (parentBlock.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) && parentBlock.outputConnection) {
