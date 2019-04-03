@@ -30,7 +30,7 @@ export class LinkAttributeQueryItem implements QueryItem {
     public linkType: LinkType,
     public attribute: Attribute,
     public condition: string,
-    public conditionValue: string
+    public conditionValue: any
   ) {}
 
   public get icons(): string[] {

@@ -186,7 +186,7 @@ export function formatDataValue(value: any, constraint: Constraint): any {
     case ConstraintType.Text:
       return formatTextDataValue(value, constraint.config as TextConstraintConfig);
     case ConstraintType.Percentage:
-      return formatPercentageDataValue(value, constraint.config as PercentageConstraintConfig);
+      return formatPercentageDataValue(value, constraint.config as PercentageConstraintConfig, '%');
     case ConstraintType.Color:
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Boolean:

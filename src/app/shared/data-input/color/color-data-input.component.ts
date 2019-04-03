@@ -19,7 +19,6 @@
 
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   Output,
@@ -30,23 +29,12 @@ import {
   HostListener,
   OnChanges,
 } from '@angular/core';
-import {ColorConstraintConfig, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
-import {BsDatepickerDirective} from 'ngx-bootstrap';
-import {
-  formatColorDataValue,
-  formatDateTimeDataValue,
-  getDateTimeSaveValue,
-  isColorValid,
-  isNumberValid,
-  parseDateTimeDataValue,
-} from '../../utils/data.utils';
+import {ColorConstraintConfig} from '../../../core/model/data/constraint';
+import {formatColorDataValue, isColorValid} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ColorPickerDirective} from 'ngx-color-picker';
 import {greyscale, palette, saturated} from '../../picker/color-picker/colors';
-
-declare var $: any;
 
 @Component({
   selector: 'color-data-input',
@@ -88,8 +76,6 @@ export class ColorDataInputComponent implements OnChanges {
 
   @ViewChild(ColorPickerDirective)
   private colorPicker: ColorPickerDirective;
-
-  public constructor(private i18n: I18n) {}
 
   private refreshValid(value: any) {
     this.valid = !value || isColorValid(value, this.constraintConfig);
@@ -165,6 +151,7 @@ export class ColorDataInputComponent implements OnChanges {
   public onInput(value: string) {
     this.value = this.transformValue(value);
     this.refreshValid(value);
+    this.valueChange.emit(value);
   }
 
   public onValueChange(color: string) {

@@ -36,6 +36,7 @@ import {KeyCode} from '../../key-code';
 import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {environment} from '../../../../environments/environment';
+import {isDateValid} from '../../utils/common.utils';
 
 @Component({
   selector: 'datetime-data-input',
@@ -130,7 +131,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       return;
     }
 
-    if (date && !(date instanceof Date)) {
+    if (date && !isDateValid(date)) {
       this.cancel.emit();
       return;
     }

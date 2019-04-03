@@ -17,21 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {KeyCode} from '../../../../key-code';
-import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../../utils/html-modifier';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
+import {BehaviorSubject} from 'rxjs';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
+import {formatDataValue} from '../../../../utils/data.utils';
+import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
+import {KeyCode} from '../../../../key-code';
 
 @Component({
   selector: 'attribute-value',
   templateUrl: './attribute-value.component.html',
   styleUrls: ['./attribute-value.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeValueComponent implements OnInit {
+export class AttributeValueComponent implements OnChanges, OnDestroy {
   @Input()
-  public queryItem: AttributeQueryItem;
+  public queryItem: AttributeQueryItem | LinkAttributeQueryItem;
 
   @Input()
   public readonly: boolean;
@@ -48,80 +64,108 @@ export class AttributeValueComponent implements OnInit {
   @Output()
   public change = new EventEmitter();
 
-  private lastCommittedValue: string;
+  public constraintTypeBoolean = ConstraintType.Boolean;
+  public editing$ = new BehaviorSubject(false);
 
-  @ViewChild('conditionValueInput')
-  private conditionValueInput: ElementRef;
+  private tempElement: HTMLElement;
 
-  public ngOnInit() {
-    this.lastCommittedValue = this.queryItem.conditionValue;
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.queryItem && this.queryItem) {
+      this.recalculateWidth(this.queryItem.conditionValue);
+    }
+  }
+
+  public ngOnDestroy() {
+    if (this.tempElement) {
+      document.body.removeChild(this.tempElement);
+      this.tempElement = null;
+    }
   }
 
   public get conditionValueControl(): AbstractControl {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
-  public onBlur() {
-    const trimmedValue = this.queryItem.conditionValue.trim();
-    this.setValue(trimmedValue);
-
-    if (trimmedValue !== this.lastCommittedValue && this.conditionValueControl.valid) {
-      this.change.emit();
-      this.lastCommittedValue = trimmedValue;
-    }
-  }
-
-  public onInput(value: string) {
+  public onSave(value: any) {
     this.setValue(value);
+    this.recalculateWidth(value);
+
+    if (this.conditionValueControl.valid) {
+      this.change.emit();
+    }
+    this.editing$.next(false);
   }
 
-  private setValue(value: string) {
+  public onValueChange(value: any) {
+    this.recalculateWidth(value);
+  }
+
+  private setValue(value: any) {
     this.conditionValueControl.setValue(value);
     this.queryItem.conditionValue = value;
   }
 
-  public onKeyDown(event: KeyboardEvent) {
+  public focusInput() {
+    this.editing$.next(true);
+  }
+
+  private recalculateWidth(value: any) {
+    const formattedValue = formatDataValue(value, this.constraint);
+    const width = this.getWidthOfInput(formattedValue);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
+  }
+
+  private get constraint(): Constraint {
+    return this.queryItem && this.queryItem.attribute && this.queryItem.attribute.constraint;
+  }
+
+  private getWidthOfInput(value: string) {
+    if (!this.tempElement) {
+      this.tempElement = this.createTempElement();
+      document.body.appendChild(this.tempElement);
+    }
+
+    this.tempElement.innerHTML = value;
+    return this.tempElement.getBoundingClientRect().width;
+  }
+
+  private createTempElement(): HTMLElement {
+    const tmp = document.createElement('span');
+    tmp.className = 'px-2 tmp-invisible';
+    tmp.id = generateCorrelationId();
+    return tmp;
+  }
+
+  public dataInputKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.ArrowLeft:
         this.onLeftArrowKeyDown();
-        break;
-      case KeyCode.Enter:
-      case KeyCode.NumpadEnter:
-        event.preventDefault();
         break;
       case KeyCode.Backspace:
         this.onBackspaceKeyDown();
         break;
       case KeyCode.Escape:
-        this.onEscapeKeyDown();
+        this.editing$.next(false);
+        this.recalculateWidth(this.queryItem.conditionValue);
         break;
+      case KeyCode.NumpadEnter:
+      case KeyCode.Enter:
+        if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+          this.onSave(!this.queryItem.conditionValue);
+        } else {
+          this.editing$.next(!this.editing$.getValue());
+        }
+        return;
     }
-  }
-
-  public focusInput() {
-    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionValueInput.nativeElement));
   }
 
   private onLeftArrowKeyDown() {
-    this.moveLeftOnCaretStart();
-  }
-
-  public onEnterKeyUp() {
-    this.enter.emit();
+    // TODO
   }
 
   private onBackspaceKeyDown() {
-    this.moveLeftOnCaretStart();
-  }
-
-  private moveLeftOnCaretStart() {
-    const caretOffset = getCaretCharacterOffsetWithin(this.conditionValueInput.nativeElement);
-    if (caretOffset === 0) {
-      this.moveLeft.emit();
-    }
-  }
-
-  private onEscapeKeyDown() {
-    this.conditionValueInput.nativeElement.blur();
+    // TODO
   }
 }

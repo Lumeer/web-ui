@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 import {Subject} from 'rxjs';
@@ -29,6 +38,7 @@ import {AttributeQueryItem} from '../model/attribute.query-item';
   selector: 'attribute-condition',
   templateUrl: './attribute-condition.component.html',
   styleUrls: ['./attribute-condition.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeConditionComponent implements OnInit {
   @Input()
