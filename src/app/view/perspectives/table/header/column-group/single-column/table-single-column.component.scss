@@ -48,3 +48,10 @@ div[contenteditable='true']:not(.edited) {
     text-shadow: 0 0 0 $body-color;
   }
 }
+
+i {
+  bottom: 1.3rem;
+  right: 0.25rem;
+  font-size: 0.6rem;
+  font-style: italic;
+}
