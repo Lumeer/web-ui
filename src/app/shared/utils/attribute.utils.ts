@@ -18,6 +18,7 @@
  */
 
 import {Attribute} from '../../core/store/collections/collection';
+import {ConstraintType} from '../../core/model/data/constraint';
 
 export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
   return attributes.find(attribute => attribute.id === attributeId);
@@ -144,4 +145,45 @@ export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttrib
   return attributes.filter(
     attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
   );
+}
+
+export function getAttributeConstraintIconName(attribute: Attribute): string {
+  if (attribute.constraint) {
+    switch (attribute.constraint.type) {
+      case ConstraintType.Color:
+        return 'fas fa-palette';
+      case ConstraintType.Boolean:
+        return 'fas fa-check-circle';
+      case ConstraintType.Number:
+        return 'fas fa-pi';
+      case ConstraintType.Percentage:
+        return 'fas fa-percentage';
+      case ConstraintType.Text:
+        return 'fas fa-font';
+      case ConstraintType.DateTime:
+        return 'fas fa-calendar-day';
+      case ConstraintType.Address:
+        return 'fas fa-map-marker-alt';
+      case ConstraintType.Coordinates:
+        return 'fas fa-location-circle';
+      case ConstraintType.Email:
+        return 'fas fa-envelope';
+      case ConstraintType.Link:
+        return 'fas fa-link';
+      case ConstraintType.Rating:
+        return 'fas fa-star';
+      case ConstraintType.Select:
+        return 'fas fa-ballot-check';
+      case ConstraintType.Tag:
+        return 'fas fa-tag';
+      case ConstraintType.User:
+        return 'fas fa-user';
+      case ConstraintType.Image:
+        return 'fas fa-file-image';
+      case ConstraintType.Function:
+        return 'fas fa-function';
+    }
+  }
+
+  return null;
 }

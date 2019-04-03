@@ -16,7 +16,9 @@
      [class.text-default-attribute]="collection ? (attribute | isDefaultAttribute: collection) : null"
      data-test="table-column-input">
 </div>
-<i class="fas fa-font float-right position-relative"></i>
+<i *ngIf="(attribute | attributeTypeIcon) as iconName"
+   [ngClass]="iconName"
+   class="float-right position-relative"></i>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
                              [attributeName]="attribute | attributeName:lastName"
