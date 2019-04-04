@@ -46,14 +46,14 @@
       </div>
     </div>
   </div>
-  <ng-container *ngFor="let row of state.rows$ | async | log; trackBy: getTrackBy; let idx = index">
+  <ng-container *ngFor="let row of state.rows$ | async; trackBy: getTrackBy; let idx = index">
     <key-value *ngIf="!row.remove"
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"
                [constraint]="(collection | collectionAttribute : row.id)?.constraint"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
                [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id)"
-               (change)="submitRowChange(idx, $event)"
+               (keyValueChange)="submitRowChange(idx, $event)"
                (remove)="onRemoveRow(idx)"
                [warning]="row.warning"
                [configurable]="true"

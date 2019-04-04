@@ -45,7 +45,7 @@ export class KeyValueComponent {
   public valueChange = new EventEmitter<any>();
 
   @Output()
-  public change = new EventEmitter<[string, any]>();
+  public keyValueChange = new EventEmitter<[string, any]>();
 
   @Output()
   public remove = new EventEmitter();
@@ -77,13 +77,13 @@ export class KeyValueComponent {
   public onNewKey($event: string) {
     this.key = $event;
     this.keyChange.emit($event);
-    this.change.emit([$event, this.value]);
+    this.keyValueChange.emit([$event, this.value]);
   }
 
   public onNewRowValue(value: any) {
     this.value = value;
     this.valueChange.emit(value);
-    this.change.emit([this.key, value]);
+    this.keyValueChange.emit([this.key, value]);
     this.editing$.next(false);
   }
 
