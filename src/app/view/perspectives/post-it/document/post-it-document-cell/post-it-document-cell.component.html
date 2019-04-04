@@ -10,6 +10,11 @@
             (dblclick)="onDblClick()"
             [ngClass]="additionalClasses">
 </data-input>
+<ng-container *ngIf="constraint && constraint?.type !== constraintTypeBoolean">
+  <i *ngIf="(constraint | constraintTypeIcon) as iconName"
+     [ngClass]="iconName"
+     class="text-muted small"></i>
+</ng-container>
 
 <ng-template #basicInput>
   <input class="w-100 {{additionalClasses}}"
