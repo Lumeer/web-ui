@@ -78,9 +78,9 @@ export class DocumentUiService {
     return key ? (this.state[key] ? this.state[key].favorite$ : null) : null;
   }
 
-  public getTrackBy(collection: Collection, document: DocumentModel): (index: number, row: UiRow) => string {
+  public getTrackBy(collection: Collection, document: DocumentModel, index: number, row: UiRow): string {
     const key = DocumentUiService.getKey(collection, document);
-    return key ? (this.state[key] ? this.state[key].trackRows : null) : null;
+    return key ? (this.state[key] ? this.state[key].trackRows(index, row) : null) : null;
   }
 
   public onAddRow(collection: Collection, document: DocumentModel): void {

@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <ng-container *ngFor="let row of rows$ | async; trackBy: getTrackBy(); let idx = index">
+  <ng-container *ngFor="let row of documentUiService.getRows$(collection, document) | async | log; trackBy: getTrackBy; let idx = index">
     <key-value *ngIf="!row.remove"
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"

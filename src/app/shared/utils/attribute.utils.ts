@@ -18,7 +18,7 @@
  */
 
 import {Attribute} from '../../core/store/collections/collection';
-import {ConstraintType} from '../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../core/model/data/constraint';
 
 export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
   return attributes.find(attribute => attribute.id === attributeId);
@@ -147,9 +147,9 @@ export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttrib
   );
 }
 
-export function getAttributeConstraintIconName(attribute: Attribute): string {
-  if (attribute.constraint) {
-    switch (attribute.constraint.type) {
+export function getAttributeConstraintIconName(constraint: Constraint): string {
+  if (constraint) {
+    switch (constraint.type) {
       case ConstraintType.Color:
         return 'fas fa-palette';
       case ConstraintType.Boolean:

@@ -18,14 +18,19 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {getAttributeConstraintIconName} from '../../../../../shared/utils/attribute.utils';
+import {Attribute} from '../../core/store/collections/collection';
+import {getAttributeConstraintIconName} from '../utils/attribute.utils';
+import {Constraint} from '../../core/model/data/constraint';
 
 @Pipe({
-  name: 'attributeTypeIcon',
+  name: 'constraintTypeIcon',
 })
-export class AttributeTypeIconPipe implements PipeTransform {
-  public transform(attribute: Attribute): string {
-    return getAttributeConstraintIconName(attribute);
+export class ConstraintTypeIconPipe implements PipeTransform {
+  public transform(constraint: Constraint): string {
+    if (!constraint) {
+      return '';
+    }
+
+    return getAttributeConstraintIconName(constraint);
   }
 }
