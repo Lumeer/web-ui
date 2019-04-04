@@ -34,10 +34,14 @@ import {map, tap} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {DocumentUiService} from '../../../../core/ui/document-ui.service';
 import {UiRow} from '../../../../core/ui/ui-row';
 import {KeyCode} from '../../../../shared/key-code';
 import {SelectionHelper} from '../util/selection-helper';
+import {DocumentUi} from '../../../../core/ui/document-ui';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'post-it-document',
@@ -56,14 +60,17 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
 
-  public rows$: Observable<UiRow[]>;
-  public favorite$: Observable<boolean>;
+  public state: DocumentUi;
   public unusedAttributes$: Observable<Attribute[]>;
 
   public initedDocumentKey: string;
   private currentRowsLength: number;
 
-  public constructor(private documentUiService: DocumentUiService) {}
+  public constructor(
+    private store$: Store<AppState>,
+    private i18n: I18n,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     this.initDocumentServiceIfNeeded();
@@ -71,7 +78,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     if (this.collection && this.documentModel) {
-      this.documentUiService.destroy(this.collection, this.documentModel);
+      this.state.destroy();
     }
   }
 
@@ -91,19 +98,27 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onToggleFavorite() {
-    this.documentUiService.onToggleFavorite(this.collection, this.documentModel);
+    if (this.state) {
+      this.state.onToggleFavorite();
+    }
   }
 
   public onUpdateRow(index: number, attribute: string, value: string) {
-    this.documentUiService.onUpdateRow(this.collection, this.documentModel, index, [attribute, value]);
+    if (this.state) {
+      this.state.onUpdateRow(index, [attribute, value]);
+    }
   }
 
   public addAttrRow() {
-    this.documentUiService.onAddRow(this.collection, this.documentModel);
+    if (this.state) {
+      this.state.onAddRow();
+    }
   }
 
   public onRemoveRow(idx: number) {
-    this.documentUiService.onRemoveRow(this.collection, this.documentModel, idx);
+    if (this.state) {
+      this.state.onRemoveRow(idx);
+    }
   }
 
   public getTrackBy(index: number, row: UiRow): string {
@@ -141,18 +156,20 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   private initDocumentServiceIfNeeded(): boolean {
     if (this.collection && this.documentModel && this.initedDocumentKey !== this.getDocumentKey()) {
       this.initedDocumentKey = this.getDocumentKey();
-      if (!this.documentUiService.isInited(this.collection, this.documentModel)) {
-        this.documentUiService.init(this.collection, this.documentModel);
+      if (this.state) {
+        this.state.destroy();
       }
-      this.rows$ = this.documentUiService
-        .getRows$(this.collection, this.documentModel)
-        .asObservable()
-        .pipe(tap(rows => this.checkRowsLength(rows.length)));
-      this.favorite$ = this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
-      this.unusedAttributes$ = this.rows$.pipe(
+      this.state = new DocumentUi(
+        this.collection,
+        this.documentModel,
+        this.store$,
+        this.i18n,
+        this.notificationService
+      );
+      this.state.rows$.pipe(tap(rows => this.checkRowsLength(rows.length)));
+      this.unusedAttributes$ = this.state.rows$.pipe(
         map(rows => this.collection.attributes.filter(attribute => !rows.find(row => row.id === attribute.id)))
       );
-
       return true;
     }
     return false;

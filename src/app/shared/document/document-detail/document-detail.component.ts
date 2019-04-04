@@ -105,19 +105,27 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-    this.state.destroy();
+    if (this.state) {
+      this.state.destroy();
+    }
   }
 
   public addAttrRow() {
-    this.state.onAddRow();
+    if (this.state) {
+      this.state.onAddRow();
+    }
   }
 
   public onRemoveRow(idx: number) {
-    this.state.onRemoveRow(idx);
+    if (this.state) {
+      this.state.onRemoveRow(idx);
+    }
   }
 
   public submitRowChange(idx: number, $event: [string, string]) {
-    this.state.onUpdateRow(idx, $event);
+    if (this.state) {
+      this.state.onUpdateRow(idx, $event);
+    }
   }
 
   public onRemoveDocument() {
@@ -130,11 +138,9 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onToggleFavorite() {
-    this.state.onToggleFavorite();
-  }
-
-  private getRows$(): Observable<UiRow[]> {
-    return this.state.rows$;
+    if (this.state) {
+      this.state.onToggleFavorite();
+    }
   }
 
   public getTrackBy(index: number, row: UiRow): string {

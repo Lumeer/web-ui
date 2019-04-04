@@ -5,7 +5,7 @@
     [collection]="collection"
     [readonly]="!allowedPermissions.writeWithView"
     [directRead]="allowedPermissions.read"
-    [favorite]="favorite$ | async"
+    [favorite]="state.favorite$ | async"
     [initialized]="documentModel.id"
     (remove)="onRemove()"
     (toggleFavorite)="onToggleFavorite()"
@@ -15,7 +15,7 @@
   <div class="card-body p-2">
     <ul class="m-0 p-0"
         (keydown)="onParentKeyDown($event)">
-      <ng-container *ngFor="let row of rows$ | async; trackBy:getTrackBy; let idx = index">
+      <ng-container *ngFor="let row of state.rows$ | async; trackBy:getTrackBy; let idx = index">
 
         <li class="w-100" *ngIf="!row.remove">
           <post-it-document-cell

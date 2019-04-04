@@ -32,7 +32,6 @@ import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {CollectionAttributePipe} from '../../shared/pipes/collection-attribute.pipe';
 import {ConstraintType} from '../model/data/constraint';
 
 export class DocumentUi {
@@ -51,7 +50,7 @@ export class DocumentUi {
 
   constructor(
     private collection: Collection,
-    private document: DocumentModel,
+    public document: DocumentModel,
     private store: Store<AppState>,
     private i18n: I18n,
     private notificationService: NotificationService
