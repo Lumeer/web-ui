@@ -249,6 +249,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
                   (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
                 this.saveData(!data[this.column.attributeIds[0]]);
               }
+            } else if (
+              attribute &&
+              attribute.constraint &&
+              attribute.constraint.type === ConstraintType.Percentage &&
+              !isNaN(+value)
+            ) {
+              this.editedValue = +value / 100;
+              this.hiddenInputValue$.next(+value / 100);
+              this.editing$.next(true);
             } else {
               this.editedValue = value;
               this.hiddenInputValue$.next(value);
