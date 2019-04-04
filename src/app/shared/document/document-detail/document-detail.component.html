@@ -4,8 +4,8 @@
       <div class="align-text-bottom w-100">
         <h4>
           <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
-          <strong *ngIf="summary$ | async">{{summary$ | async}}</strong>
-          <em *ngIf="!(summary$ | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
+          <strong *ngIf="state?.summary$ | async">{{state?.summary$ | async}}</strong>
+          <em *ngIf="!(state?.summary$ | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
             Record</em>
           <!--span i18n="@@document.detail.heading">Document detail</span-->
         </h4>
@@ -18,11 +18,11 @@
              (click)="onRemoveDocument()"
           ></i>
           <ng-container *ngIf="allowedPermissions.read">
-            <i *ngIf="favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
+            <i *ngIf="state?.favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
                title="Remove from favorites"
                i18n-title="@@document.detail.favorite.remove"
                (click)="onToggleFavorite()"></i>
-            <i *ngIf="!(favorite$ | async)"
+            <i *ngIf="!(state?.favorite$ | async)"
                class="far fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
                title="Add to favorites"
                i18n-title="@@document.detail.favorite.add"
@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <ng-container *ngFor="let row of documentUiService.getRows$(collection, document) | async | log; trackBy: getTrackBy; let idx = index">
+  <ng-container *ngFor="let row of state.rows$ | async | log; trackBy: getTrackBy; let idx = index">
     <key-value *ngIf="!row.remove"
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"

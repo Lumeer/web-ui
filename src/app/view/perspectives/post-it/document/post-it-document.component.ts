@@ -107,7 +107,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public getTrackBy(index: number, row: UiRow): string {
-    return this.documentUiService.getTrackBy(this.collection, this.documentModel, index, row);
+    return row.correlationId || row.id;
   }
 
   private checkRowsLength(length: number) {
