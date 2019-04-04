@@ -66,10 +66,13 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public limit = 10;
 
   @Input()
-  public linkedDocumentId;
+  public linkedDocumentId: string;
 
   @Input()
   public linkTypeId: string;
+
+  @Input()
+  public correlationId: string;
 
   @Input()
   public value: string;
@@ -138,6 +141,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
     this.store$.dispatch(
       new LinkInstancesAction.Create({
         linkInstance: {
+          correlationId: this.correlationId,
           linkTypeId: this.linkTypeId,
           documentIds: [this.linkedDocumentId, document.id],
         },

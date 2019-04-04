@@ -668,6 +668,15 @@ export class TablesEffects {
               return this.store$.pipe(
                 select(selectDocumentsByIds(documentIds)),
                 first(),
+                map(documents =>
+                  documents.map(document => {
+                    const linkInstance = linkInstances.find(link => link.documentIds.includes(document.id));
+                    return {
+                      ...document,
+                      correlationId: document.correlationId || (linkInstance && linkInstance.correlationId),
+                    };
+                  })
+                ),
                 mergeMap(documents => {
                   const createdDocuments = filterNewlyCreatedDocuments(linkedRows, documents);
                   const unknownDocuments = filterUnknownDocuments(linkedRows, documents);
