@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -58,7 +58,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public canManageConfig: boolean;
 
   @Output() public remove = new EventEmitter();
-  @Output() public sizeChange = new EventEmitter();
+  @Output() public sizeChange = new EventEmitter<number>();
 
   public state: DocumentUi;
   public unusedAttributes$: Observable<Attribute[]>;
@@ -85,7 +85,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     const changed = this.initDocumentServiceIfNeeded();
     if (changed) {
-      this.sizeChange.emit();
+      this.sizeChange.emit(this.state.rows$.getValue().length);
     }
   }
 
@@ -130,7 +130,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     this.currentRowsLength = length;
 
     if (changed) {
-      this.sizeChange.emit();
+      this.sizeChange.emit(length);
     }
   }
 
@@ -166,10 +166,14 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
         this.i18n,
         this.notificationService
       );
-      this.state.rows$.pipe(tap(rows => this.checkRowsLength(rows.length)));
-      this.unusedAttributes$ = this.state.rows$.pipe(
-        map(rows => this.collection.attributes.filter(attribute => !rows.find(row => row.id === attribute.id)))
-      );
+
+      this.state.length$.subscribe(length => {
+        this.checkRowsLength(length);
+      });
+
+      this.unusedAttributes$ = this.state.rows$
+        .asObservable()
+        .pipe(map(rows => this.collection.attributes.filter(attribute => !rows.find(row => row.id === attribute.id))));
       return true;
     }
     return false;

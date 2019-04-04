@@ -38,6 +38,7 @@ export class DocumentUi {
   public rows$ = new BehaviorSubject<UiRow[]>([]);
   public summary$ = new BehaviorSubject<string>('');
   public favorite$ = new BehaviorSubject<boolean>(false);
+  public length$ = new BehaviorSubject<number>(0);
 
   private rows: UiRow[] = [];
   private addedRows: UiRow[] = [];
@@ -336,7 +337,9 @@ export class DocumentUi {
   }
 
   private rowsChanged(): void {
-    this.rows$.next([...this.rows, ...this.addedRows]);
+    const newRows = [...this.rows, ...this.addedRows];
+    this.rows$.next(newRows);
+    this.length$.next(newRows.length);
   }
 
   public onAddRow(): void {
