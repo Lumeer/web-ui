@@ -58,6 +58,7 @@ import {CollectionByIdPipe} from './collection-by-id.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
 import {CollectionAttributeEditablePipe} from './collection-attribute-editable.pipe';
 import {AttributeEditablePipe} from './attribute-editable.pipe';
+import {ConstraintTypeIconPipe} from './constraint-type-icon.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -99,6 +100,7 @@ import {AttributeEditablePipe} from './attribute-editable.pipe';
     WorkspaceDefaultUrlPipe,
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
+    ConstraintTypeIconPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -140,6 +142,7 @@ import {AttributeEditablePipe} from './attribute-editable.pipe';
     WorkspaceDefaultUrlPipe,
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
+    ConstraintTypeIconPipe,
   ],
 })
 export class PipesModule {}

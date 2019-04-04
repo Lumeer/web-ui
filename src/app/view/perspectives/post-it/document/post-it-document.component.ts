@@ -106,8 +106,8 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     this.documentUiService.onRemoveRow(this.collection, this.documentModel, idx);
   }
 
-  public getTrackBy(): (index: number, row: UiRow) => string {
-    return this.documentUiService.getTrackBy(this.collection, this.documentModel);
+  public getTrackBy(index: number, row: UiRow): string {
+    return this.documentUiService.getTrackBy(this.collection, this.documentModel, index, row);
   }
 
   private checkRowsLength(length: number) {

@@ -147,8 +147,8 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     return this.documentUiService.getSummary$(this.collection, this.document);
   }
 
-  public getTrackBy(): (index: number, row: UiRow) => string {
-    return this.documentUiService.getTrackBy(this.collection, this.document);
+  public getTrackBy(index: number, row: UiRow): string {
+    return row.correlationId || row.id;
   }
 
   public goToTablePerspective(): void {
