@@ -31,7 +31,7 @@
          [value]="value | colorValue: constraintConfig"
          (input)="onTextInput($event)"
          class="border-0 w-100 h-100 px-1"
-         [ngClass]="(valid) ? 'bg-transparent' : 'bg-danger-light'"
+         [ngClass]="(valid || skipValidation) ? 'bg-transparent' : 'bg-danger-light'"
          data-test="color-data-input"
          type="text">
 </ng-template>

@@ -17,8 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  SimpleChanges,
+} from '@angular/core';
 import {Constraint, ConstraintType} from '../../core/model/data/constraint';
+import {formatDataValue} from '../utils/data.utils';
+import {generateCorrelationId} from '../utils/resource.utils';
 
 @Component({
   selector: 'data-input',
@@ -26,7 +39,7 @@ import {Constraint, ConstraintType} from '../../core/model/data/constraint';
   styleUrls: ['./data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataInputComponent {
+export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public constraint: Constraint;
 
@@ -38,6 +51,12 @@ export class DataInputComponent {
 
   @Input()
   public value: any;
+
+  @Input()
+  public skipValidation = false;
+
+  @Input()
+  public resizeToContent = false;
 
   @Output()
   public valueChange = new EventEmitter<any>();
@@ -51,10 +70,69 @@ export class DataInputComponent {
   @Output()
   public onFocus = new EventEmitter<any>();
 
+  private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.value && this.resizeToContent) {
+      this.recalculateWidth(this.value);
+    }
+  }
+
+  private recalculateWidth(value: any) {
+    const width = this.getWidthOfInput(value);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
+  }
+
+  private getWidthOfInput(value: any): number {
+    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+      return 34;
+    }
+
+    if (!this.tempElement) {
+      this.tempElement = this.createTempElement();
+      document.body.appendChild(this.tempElement);
+    }
+
+    this.tempElement.innerHTML = formatDataValue(value, this.constraint);
+    return this.tempElement.getBoundingClientRect().width;
+  }
+
+  private createTempElement(): HTMLElement {
+    const tmp = document.createElement('span');
+    tmp.className = 'px-2 tmp-invisible';
+    tmp.id = generateCorrelationId();
+    return tmp;
+  }
+
+  public ngOnDestroy() {
+    if (this.tempElement) {
+      document.body.removeChild(this.tempElement);
+      this.tempElement = null;
+    }
+  }
+
+  public onSaveValue(value: any) {
+    if (this.resizeToContent) {
+      this.recalculateWidth(value);
+    }
+    this.save.emit(value);
+  }
+
   public onValueChange(value: any) {
+    if (this.resizeToContent) {
+      this.recalculateWidth(value);
+    }
     this.valueChange.emit(value);
+  }
+
+  public onCancel() {
+    if (this.resizeToContent) {
+      this.recalculateWidth(this.value);
+    }
+    this.cancel.emit();
   }
 
   public emitFocus($event: any) {

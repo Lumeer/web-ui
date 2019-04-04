@@ -53,6 +53,9 @@ export class NumberDataInputComponent implements OnChanges {
   @Input()
   public value: any;
 
+  @Input()
+  public skipValidation: boolean;
+
   @Output()
   public valueChange = new EventEmitter<number | string>();
 
@@ -99,7 +102,7 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.numberInput;
 
-        if (!isNumberValid(input.nativeElement.value, this.constraintConfig)) {
+        if (!this.skipValidation && !isNumberValid(input.nativeElement.value, this.constraintConfig)) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;

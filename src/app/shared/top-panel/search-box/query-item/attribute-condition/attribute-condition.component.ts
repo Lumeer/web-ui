@@ -70,7 +70,7 @@ export class AttributeConditionComponent implements OnInit {
 
   public ngOnInit() {
     if (!this.readonly && this.conditionControl && !this.conditionControl.valid) {
-      this.focusInput();
+      this.setEditing();
     }
     this.lastCommittedValue = this.queryItem.condition;
   }
@@ -92,6 +92,10 @@ export class AttributeConditionComponent implements OnInit {
 
   public onFocus() {
     this.focused = true;
+  }
+
+  public blur() {
+    this.conditionInput.nativeElement.blur();
   }
 
   public onBlur() {
@@ -146,7 +150,7 @@ export class AttributeConditionComponent implements OnInit {
     this.enter.emit();
   }
 
-  public focusInput() {
+  public setEditing() {
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionInput.nativeElement));
   }
 

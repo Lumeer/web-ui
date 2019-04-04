@@ -1,9 +1,10 @@
 <data-input
-  [value]="queryItem?.conditionValue || ''"
+  [value]="queryItem?.conditionValue"
   [focus]="true"
   [constraint]="queryItem?.attribute.constraint"
   [readonly]="readonly || !((editing$ | async) || queryItem?.attribute?.constraint?.type === constraintTypeBoolean)"
-  (valueChange)="onValueChange($event)"
+  [skipValidation]="true"
+  [resizeToContent]="true"
   (save)="onSave($event)"
   (click)="editing$.next(true)"
   (onFocus)="editing$.next(true)"

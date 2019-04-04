@@ -17,10 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 import {QueryItem} from './model/query-item';
 import {FormGroup} from '@angular/forms';
+import {AttributeValueComponent} from './attribute-value/attribute-value.component';
+import {AttributeConditionComponent} from './attribute-condition/attribute-condition.component';
+import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
+import {QueryItemType} from './model/query-item-type';
+import {AttributeQueryItem} from './model/attribute.query-item';
+import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 
 @Component({
   selector: 'query-item',
@@ -47,8 +53,37 @@ export class QueryItemComponent {
   @Output()
   public change = new EventEmitter();
 
+  @ViewChild(AttributeValueComponent)
+  public attributeValueComponent: AttributeValueComponent;
+
+  @ViewChild(AttributeConditionComponent)
+  public attributeConditionComponent: AttributeConditionComponent;
+
   public onRemove() {
     this.remove.emit();
+  }
+
+  public focusConditionValue() {
+    this.attributeValueComponent.setEditing();
+  }
+  public focusCondition() {
+    this.attributeConditionComponent.setEditing();
+  }
+
+  public moveFocusToValue() {
+    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+      this.attributeConditionComponent.blur();
+    } else {
+      this.attributeValueComponent.setEditing();
+    }
+  }
+
+  private get constraint(): Constraint {
+    if (this.queryItem.type === QueryItemType.Attribute || this.queryItem.type === QueryItemType.LinkAttribute) {
+      const attributeItem = this.queryItem as AttributeQueryItem | LinkAttributeQueryItem;
+      return attributeItem.attribute && attributeItem.attribute.constraint;
+    }
+    return null;
   }
 
   public onEnter() {

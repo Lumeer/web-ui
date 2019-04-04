@@ -55,6 +55,9 @@ export class ColorDataInputComponent implements OnChanges {
   @Input()
   public value: any;
 
+  @Input()
+  public skipValidation: boolean;
+
   @Output()
   public valueChange = new EventEmitter<string>();
 
@@ -130,7 +133,11 @@ export class ColorDataInputComponent implements OnChanges {
         const input = this.colorInput;
 
         if (input) {
-          if (input.nativeElement.value && !isColorValid(input.nativeElement.value, this.constraintConfig)) {
+          if (
+            !this.skipValidation &&
+            input.nativeElement.value &&
+            !isColorValid(input.nativeElement.value, this.constraintConfig)
+          ) {
             event.stopImmediatePropagation();
             event.preventDefault();
             return;
