@@ -127,6 +127,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public suggesting$ = new BehaviorSubject(false);
 
   public attribute$: Observable<Attribute>;
+  public row$: Observable<TableConfigRow>;
 
   public editedValue: any;
   public hiddenInputValue$ = new BehaviorSubject<any>('');
@@ -221,6 +222,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
     if ((changes.column || changes.canManageConfig) && this.column) {
       this.columnWidth = getTableColumnWidth(this.column, this.canManageConfig);
+    }
+    if (changes.cursor && this.cursor) {
+      this.row$ = this.store$.pipe(select(selectTableRow(this.cursor)));
     }
   }
 
@@ -674,16 +678,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isEntityInitialized()) {
       this.deleteLinkInstance();
     }
-  }
-
-  public createLinkCallback(linkInstanceId: string, documentId: string) {
-    this.store$.dispatch(
-      new TablesAction.ReplaceRows({
-        cursor: this.cursor,
-        deleteCount: 1,
-        rows: [{documentId, linkInstanceId, linkedRows: []}],
-      })
-    );
   }
 
   private deleteLinkInstance() {

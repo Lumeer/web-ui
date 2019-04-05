@@ -81,7 +81,7 @@ export class LinkInstancesEffects {
       const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
       return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
-        map(dto => convertLinkInstanceDtoToModel(dto)),
+        map(dto => convertLinkInstanceDtoToModel(dto, linkInstanceDto.correlationId)),
         tap(linkInstance => {
           const callback = action.payload.callback;
           if (callback) {
