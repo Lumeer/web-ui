@@ -298,7 +298,8 @@ export function createCollectionPart(
 
   const columns = createTableColumnsFromAttributes(collection.attributes, null, columnsConfig);
 
-  if (last) {
+  const lastColumn = columns[columns.length - 1];
+  if (last && (!lastColumn || lastColumn.attributeIds.length > 0)) {
     columns.push(createEmptyColumn(collection.attributes, columns));
   }
 
