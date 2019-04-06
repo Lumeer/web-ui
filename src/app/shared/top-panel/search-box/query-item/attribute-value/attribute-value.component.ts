@@ -61,14 +61,14 @@ export class AttributeValueComponent {
   public onSave(value: any) {
     this.setValue(value);
 
-    if (this.conditionValueControl.valid) {
+    if (this.conditionValueControl && this.conditionValueControl.valid) {
       this.change.emit();
     }
     this.editing$.next(false);
   }
 
   private setValue(value: any) {
-    this.conditionValueControl.setValue(value);
+    this.conditionValueControl && this.conditionValueControl.setValue(value);
     this.queryItem.conditionValue = value;
   }
 

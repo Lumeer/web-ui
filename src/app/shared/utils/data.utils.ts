@@ -57,7 +57,7 @@ export function parseColorValue(value: any, colorConstraint?: ColorConstraintCon
   return value;
 }
 
-function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
+export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
   const formats = [moment.ISO_8601, ...dateFormats];
   if (expectedFormat) {
     formats.splice(1, 0, expectedFormat);
@@ -115,62 +115,6 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
     default:
       return true;
   }
-}
-
-export function compareValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
-  const multiplier = asc ? 1 : -1;
-  if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
-    return 0;
-  } else if (isNullOrUndefined(b)) {
-    return multiplier;
-  } else if (isNullOrUndefined(a)) {
-    return -1 * multiplier;
-  }
-
-  if (!constraint) {
-    return compareAnyValues(a, b, asc);
-  }
-
-  switch (constraint.type) {
-    case ConstraintType.DateTime:
-      return compareDateTimeValues(a, b, constraint.config as DateTimeConstraintConfig, asc);
-    case ConstraintType.Percentage:
-      return comparePercentageValues(a, b, constraint.config as PercentageConstraintConfig, asc);
-    default:
-      return compareAnyValues(a, b, asc);
-  }
-}
-
-function compareAnyValues(a: any, b: any, asc: boolean = true): number {
-  const multiplier = asc ? 1 : -1;
-  const aValue = isNumeric(a) ? toNumber(a) : a;
-  const bValue = isNumeric(b) ? toNumber(b) : b;
-
-  if (aValue > bValue) {
-    return multiplier;
-  } else if (bValue > aValue) {
-    return -1 * multiplier;
-  }
-
-  return 0;
-}
-
-function compareDateTimeValues(a: any, b: any, config: DateTimeConstraintConfig, asc: boolean = true): number {
-  const multiplier = asc ? 1 : -1;
-
-  const aMoment = parseMomentDate(a, config && config.format);
-  const bMoment = parseMomentDate(b, config && config.format);
-
-  return aMoment.isAfter(bMoment) ? multiplier : bMoment.isAfter(aMoment) ? -1 * multiplier : 0;
-}
-
-function comparePercentageValues(a: any, b: any, config: PercentageConstraintConfig, asc: boolean = true): number {
-  const multiplier = asc ? 1 : -1;
-
-  const aValue = getPercentageSaveValue(a);
-  const bValue = getPercentageSaveValue(b);
-
-  return aValue > bValue ? multiplier : bValue > aValue ? -1 * multiplier : 0;
 }
 
 export function formatDataValue(value: any, constraint: Constraint): any {

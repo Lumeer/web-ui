@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from 'util';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {AttributeFilter, ConditionType, Query, QueryStem} from '../navigation/query';
+import {AttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
 import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
-import {Collection} from '../collections/collection';
+import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 import {arrayIntersection} from '../../../shared/utils/array.utils';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {findAttributeConstraint} from '../collections/collection.util';
+import {formatDataValue} from '../../../shared/utils/data.utils';
+import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
 
 export function filterDocumentsByQuery(
   documents: DocumentModel[],
@@ -157,6 +160,7 @@ function filterDocumentsByStem(
 
   for (let i = 0; i < stemsPipeline.length; i++) {
     const linkTypeId = stem.linkTypeIds[i];
+    const linkType = linkTypes.find(lt => lt.id === linkTypeId);
     const currentStageStem = stemsPipeline[i];
 
     const lastStageDocumentIds = new Set(lastStageDocuments.map(doc => doc.id));
@@ -165,7 +169,14 @@ function filterDocumentsByStem(
         li.linkTypeId === linkTypeId &&
         (lastStageDocumentIds.has(li.documentIds[0]) || lastStageDocumentIds.has(li.documentIds[1]))
     );
-    const otherDocumentIds = stageLinkInstances
+    const filteredLinkInstances = filterLinksByFiltersAndFulltexts(
+      stageLinkInstances,
+      linkType,
+      currentStageStem,
+      fulltexts
+    );
+
+    const otherDocumentIds = filteredLinkInstances
       .reduce((ids, li) => [...ids, ...li.documentIds], [])
       .filter(id => !lastStageDocumentIds.has(id));
 
@@ -198,13 +209,22 @@ function filterDocumentsByStem(
 }
 
 function cleanStemForBaseCollection(stem: QueryStem, documents: DocumentModel[]): QueryStem {
-  return cleanStemForCollection(stem, documents, stem.collectionId);
+  return cleanStemForCollectionAndLink(stem, documents, stem.collectionId);
 }
 
-function cleanStemForCollection(stem: QueryStem, documents: DocumentModel[], collectionId: string): QueryStem {
+function cleanStemForCollectionAndLink(
+  stem: QueryStem,
+  documents: DocumentModel[],
+  collectionId: string,
+  linkTypeId?: string
+): QueryStem {
   const filters = getFiltersByCollection(stem.filters, collectionId);
   const documentIds = getDocumentIdsByCollection(stem.documentIds, documents);
-  return {collectionId, filters, documentIds};
+  let linkFilters = null;
+  if (linkTypeId) {
+    linkFilters = getLinkFiltersByLink(stem.linkFilters, linkTypeId);
+  }
+  return {collectionId, filters, documentIds, linkFilters};
 }
 
 function getFiltersByCollection(filters: AttributeFilter[], collectionId: string): AttributeFilter[] {
@@ -213,6 +233,10 @@ function getFiltersByCollection(filters: AttributeFilter[], collectionId: string
 
 function getDocumentIdsByCollection(documentsIds: string[], documentsByCollection: DocumentModel[]) {
   return (documentsIds && documentsIds.filter(id => documentsByCollection.find(document => document.id === id))) || [];
+}
+
+function getLinkFiltersByLink(filters: LinkAttributeFilter[], linkTypeId: string): LinkAttributeFilter[] {
+  return (filters && filters.filter(filter => filter.linkTypeId === linkTypeId)) || [];
 }
 
 function createStemsPipeline(
@@ -239,7 +263,12 @@ function createStemsPipeline(
     }
 
     pipeline.push(
-      cleanStemForCollection(stem, documentsByCollectionMap[currentCollectionId] || [], currentCollectionId)
+      cleanStemForCollectionAndLink(
+        stem,
+        documentsByCollectionMap[currentCollectionId] || [],
+        currentCollectionId,
+        linkType.id
+      )
     );
     lastCollectionId = currentCollectionId;
     stemLinkTypes = stemLinkTypes.filter(lt => lt.id !== linkType.id);
@@ -268,17 +297,38 @@ function filterDocumentsByFiltersAndFulltexts(
   fulltexts: string[]
 ): DocumentModel[] {
   const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
-  const matchedAttributesIds =
-    (fulltextsLowerCase.length > 0 &&
-      collection.attributes
-        .filter(attribute => fulltextsLowerCase.every(fulltext => attribute.name.toLowerCase().includes(fulltext)))
-        .map(attribute => attribute.id)) ||
-    [];
+  const matchedAttributesIds = matchAttributesByFulltexts(collection.attributes, fulltexts).map(attr => attr.id);
 
   return documents.filter(
     document =>
-      documentMeetsFilters(document, filters) &&
-      documentMeetsFulltexts(document, fulltextsLowerCase, matchedAttributesIds)
+      documentMeetsFilters(document, collection, filters) &&
+      dataMeetsFulltexts(document.data, fulltextsLowerCase, matchedAttributesIds)
+  );
+}
+
+function matchAttributesByFulltexts(attributes: Attribute[], fulltexts: string[]): Attribute[] {
+  if (!fulltexts || fulltexts.length === 0) {
+    return [];
+  }
+
+  return (attributes || []).filter(attribute =>
+    fulltexts.every(fulltext => attribute.name.toLowerCase().includes(fulltext))
+  );
+}
+
+function filterLinksByFiltersAndFulltexts(
+  linkInstances: LinkInstance[],
+  linkType: LinkType,
+  stem: QueryStem,
+  fulltexts: string[]
+): LinkInstance[] {
+  const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
+  const matchedAttributesIds = matchAttributesByFulltexts(linkType.attributes, fulltexts).map(attr => attr.id);
+
+  return linkInstances.filter(
+    linkInstance =>
+      linkMeetsFilters(linkInstance, linkType, stem.linkFilters) &&
+      dataMeetsFulltexts(linkInstance.data, fulltextsLowerCase, matchedAttributesIds)
   );
 }
 
@@ -290,18 +340,18 @@ export function filterDocumentsByFulltexts(
   return filterDocumentsByFiltersAndFulltexts(documents, collection, [], fulltexts);
 }
 
-function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: string[], matchedAttributesIds: string[]) {
+function dataMeetsFulltexts(data: Record<string, any>, fulltextsLowerCase: string[], matchedAttributesIds: string[]) {
   if (!fulltextsLowerCase || fulltextsLowerCase.length === 0) {
     return true;
   }
 
-  const documentAttributesIds = Object.keys(document.data);
+  const documentAttributesIds = Object.keys(data);
   if (arrayIntersection(documentAttributesIds, matchedAttributesIds).length > 0) {
     return true;
   }
 
   return fulltextsLowerCase.every(fulltext =>
-    Object.values(document.data).some(value =>
+    Object.values(data).some(value =>
       (value || '')
         .toString()
         .toLowerCase()
@@ -310,34 +360,45 @@ function documentMeetsFulltexts(document: DocumentModel, fulltextsLowerCase: str
   );
 }
 
-function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
+function documentMeetsFilters(document: DocumentModel, collection: Collection, filters: AttributeFilter[]): boolean {
   if (!filters || filters.length === 0) {
     return true;
   }
-  return filters.every(filter => documentMeetFilter(document, filter));
+  return filters.every(filter => documentMeetFilter(document, collection, filter));
 }
 
-function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): boolean {
+function documentMeetFilter(document: DocumentModel, collection: Collection, filter: AttributeFilter): boolean {
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
-  const dataValue = document.data[filter.attributeId];
-  const filterValue = filter.value;
-  switch (conditionFromString(filter.condition || '')) {
-    case ConditionType.Equals:
-      return dataValue === filterValue;
-    case ConditionType.NotEquals:
-      return dataValue !== filterValue;
-    case ConditionType.GreaterThan:
-      return dataValue > filterValue;
-    case ConditionType.GreaterThanEquals:
-      return dataValue >= filterValue;
-    case ConditionType.LowerThan:
-      return dataValue < filterValue;
-    case ConditionType.LowerThanEquals:
-      return dataValue <= filterValue;
+  return dataMeetFilter(document.data, collection.attributes, filter);
+}
+
+function linkMeetsFilters(linkInstance: LinkInstance, linkType: LinkType, filters: LinkAttributeFilter[]): boolean {
+  if (!filters || filters.length === 0) {
+    return true;
   }
-  return true;
+  return filters.every(filter => linkMeetFilter(linkInstance, linkType, filter));
+}
+
+function linkMeetFilter(linkInstance: LinkInstance, linkType: LinkType, filter: LinkAttributeFilter): boolean {
+  if (linkInstance.linkTypeId !== filter.linkTypeId) {
+    return true;
+  }
+  return dataMeetFilter(linkInstance.data, linkType.attributes, filter);
+}
+
+function dataMeetFilter(
+  data: Record<string, any>,
+  attributes: Attribute[],
+  filter: AttributeFilter | LinkAttributeFilter
+) {
+  const constraint = findAttributeConstraint(attributes, filter.attributeId);
+  const dataValue = data[filter.attributeId];
+  const filterValue = filter.value;
+  const conditionType = conditionFromString(filter.condition || '');
+
+  return dataValuesMeetCondition(dataValue, filterValue, conditionType, constraint);
 }
 
 function paginate(documents: DocumentModel[], query: Query) {

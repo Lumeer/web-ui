@@ -19,6 +19,7 @@
 
 import {Attribute, Collection} from './collection';
 import {LinkType} from '../link-types/link.type';
+import {Constraint} from '../../model/data/constraint';
 
 export function isCollectionAttributeEditable(attributeId: string, collection: Collection): boolean {
   const attribute =
@@ -74,4 +75,9 @@ export function createAttributesMap(attributes: Attribute[]): Record<string, Att
     }
     return attributesMap;
   }, {});
+}
+
+export function findAttributeConstraint(attributes: Attribute[], attributeId: string): Constraint {
+  const attribute = (attributes || []).find(attr => attr.id === attributeId);
+  return attributes && attribute.constraint;
 }

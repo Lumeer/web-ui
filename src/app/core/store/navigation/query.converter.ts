@@ -97,7 +97,7 @@ function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkA
 }
 
 export function convertQueryModelToString(query: Query): string {
-  return JSON.stringify(query ? query : {}, (key, value) => {
+  return JSON.stringify(query || {}, (key, value) => {
     if (isNullOrUndefined(value) || (value instanceof Array && value.length === 0)) {
       return undefined;
     }
