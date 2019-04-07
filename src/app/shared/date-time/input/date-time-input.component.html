@@ -1,0 +1,20 @@
+<input #dateTimeInput
+       [id]="id"
+       [readonly]="readonly"
+       [value]="value | formatDate : format"
+       (focus)="onFocus()"
+       (blur)="onBlur()"
+       (clickOutside)="onClickOutside()"
+       autocomplete="off"
+       class="form-control"
+       data-test="date-time-input"
+       type="text">
+
+<date-time-picker *ngIf="!readonly"
+                  [min]="min"
+                  [max]="max"
+                  [options]="options"
+                  [origin]="dateTimeInput"
+                  [value]="value"
+                  (valueChange)="onValueChange($event)">
+</date-time-picker>

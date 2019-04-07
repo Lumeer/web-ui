@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 
 @Component({
@@ -35,7 +35,19 @@ export class DatetimeConstraintConfigFormComponent implements OnChanges {
   @Input()
   public form: FormGroup;
 
-  public predefinedFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY'];
+  public readonly now = new Date().toISOString();
+  public readonly formats = [
+    'DD.MM.YYYY',
+    'DD.MM.YYYY H:mm',
+    'YYYY-MM-DD',
+    'YYYY-MM-DD H:mm',
+    'DD/MM/YYYY',
+    'DD/MM/YYYY h:mm a',
+    'MM/DD/YYYY',
+    'MM/DD/YYYY h:mm a',
+    'H:mm',
+    'h:mm a',
+  ];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -50,14 +62,14 @@ export class DatetimeConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    const format = (this.config && this.config.format) || this.predefinedFormats[0];
+    const format = (this.config && this.config.format) || this.formats[0];
     this.form.addControl('format', new FormControl(format));
 
-    const selectFormat = this.predefinedFormats.includes(format) ? format : '';
+    const selectFormat = this.formats.includes(format) ? format : '';
     this.form.addControl('selectFormat', new FormControl(selectFormat));
 
-    this.form.addControl('minDateTime', new FormControl(this.config && this.config.minDateTime));
-    this.form.addControl('maxDateTime', new FormControl(this.config && this.config.maxDateTime));
+    this.form.addControl('minValue', new FormControl(this.config && this.config.minValue));
+    this.form.addControl('maxValue', new FormControl(this.config && this.config.maxValue));
     // this.form.setValidators(minMaxValidator('minDateTime', 'maxDateTime'));
   }
 
@@ -72,5 +84,13 @@ export class DatetimeConstraintConfigFormComponent implements OnChanges {
 
   public get selectFormatControl(): AbstractControl {
     return this.form.get('selectFormat');
+  }
+
+  public get minValueControl(): AbstractControl {
+    return this.form.get('minValue');
+  }
+
+  public get maxValueControl(): AbstractControl {
+    return this.form.get('maxValue');
   }
 }

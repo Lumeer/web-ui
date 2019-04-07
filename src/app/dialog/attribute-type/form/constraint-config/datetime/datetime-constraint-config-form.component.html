@@ -9,7 +9,7 @@
             formControlName="selectFormat"
             id="dateTimeFormat"
             (change)="onFormatChange($event)">
-      <option *ngFor="let format of predefinedFormats"
+      <option *ngFor="let format of formats"
               [value]="format">
         {{format}}
       </option>
@@ -25,6 +25,9 @@
            formControlName="format"
            type="text">
   </div>
+  <div class="mb-3 text-secondary">
+    Example: {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}
+  </div>
 
   <div *ngIf="form.errors && form.errors['minMaxInvalid']"
        class="alert alert-danger"
@@ -37,12 +40,12 @@
              i18n="@@constraint.dateTime.minValue.label">
         Minimum value
       </label>
-      <input bsDatepicker
-             [bsConfig]="{ dateInputFormat: formatControl.value }"
-             class="form-control"
-             formControlName="minDateTime"
-             id="dateTimeMinValue"
-             type="text">
+      <date-time-input [format]="formatControl.value"
+                       [id]="'dateTimeMinValue'"
+                       [max]="maxValueControl.value"
+                       [value]="minValueControl.value"
+                       (valueChange)="minValueControl.setValue($event)">
+      </date-time-input>
     </div>
 
     <div class="form-group ml-3">
@@ -50,12 +53,12 @@
              i18n="@@constraint.dateTime.maxValue.label">
         Maximum value
       </label>
-      <input bsDatepicker
-             [bsConfig]="{ dateInputFormat: formatControl.value }"
-             class="form-control"
-             formControlName="maxDateTime"
-             id="dateTimeMaxValue"
-             type="text">
+      <date-time-input [format]="formatControl.value"
+                       [id]="'dateTimeMaxValue'"
+                       [min]="minValueControl.value"
+                       [value]="maxValueControl.value"
+                       (valueChange)="maxValueControl.setValue($event)">
+      </date-time-input>
     </div>
   </div>
 </div>

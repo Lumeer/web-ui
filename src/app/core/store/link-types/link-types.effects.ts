@@ -26,7 +26,7 @@ import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} f
 import {LinkTypeDto} from '../../dto';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
-import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/collection.converter';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {CommonAction} from '../common/common.action';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {NavigationAction} from '../navigation/navigation.action';

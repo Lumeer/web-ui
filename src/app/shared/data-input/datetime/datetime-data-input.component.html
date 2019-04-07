@@ -1,23 +1,19 @@
-<input *ngIf="readonly; else datePicker"
-       readonly="true"
+<input #dateTimeInput
+       [readonly]="readonly"
        [title]="value | dateTimeDataValue: constraintConfig"
        [value]="value | dateTimeDataValue: constraintConfig"
-       class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!(value | dateTimeValid:constraintConfig)"
+       (input)="onInput($event)"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       autocomplete="off"
        data-test="datetime-data-input"
        type="text">
 
-<ng-template #datePicker>
-  <input #dateInput
-         bsDatepicker
-         [bsConfig]="{ containerClass: 'theme-default', dateInputFormat: constraintConfig?.format }"
-         [bsValue]="value | parseDate: constraintConfig?.format"
-         [value]="value | dateTimeDataValue: constraintConfig"
-         [minDate]="constraintConfig?.minDateTime | parseDate"
-         [maxDate]="constraintConfig?.maxDateTime | parseDate"
-         (bsValueChange)="onValueChange($event)"
-         (input)="onInput($event)"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         data-test="datetime-data-input"
-         type="text">
-</ng-template>
+<date-time-picker *ngIf="!readonly"
+                  [min]="constraintConfig?.minValue"
+                  [max]="constraintConfig?.maxValue"
+                  [options]="options"
+                  [origin]="element"
+                  [value]="value | parseDate: constraintConfig?.format"
+                  (valueChange)="onValueChange($event)">
+</date-time-picker>

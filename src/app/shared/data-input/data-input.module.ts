@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {DateTimeModule} from '../date-time/date-time.module';
 import {DataInputComponent} from './data-input.component';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {DatetimeDataInputComponent} from './datetime/datetime-data-input.component';
@@ -34,7 +35,7 @@ import {ColorDataInputComponent} from './color/color-data-input.component';
 import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
-  imports: [BsDatepickerModule, CommonModule, PipesModule, DirectivesModule, ColorPickerModule],
+  imports: [BsDatepickerModule, CommonModule, PipesModule, DateTimeModule, DirectivesModule, ColorPickerModule],
   declarations: [
     DataInputComponent,
     TextDataInputComponent,

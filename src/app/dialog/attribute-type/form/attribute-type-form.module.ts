@@ -17,20 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AttributeTypeFormComponent} from './attribute-type-form.component';
-import {SelectModule} from '../../../shared/select/select.module';
-import {NumberConstraintConfigFormComponent} from './constraint-config/number/number-constraint-config-form.component';
-import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
-import {ConstraintConfigFormComponent} from './constraint-config/constraint-config-form.component';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
+import {DateTimeModule} from '../../../shared/date-time/date-time.module';
+import {PipesModule} from '../../../shared/pipes/pipes.module';
+import {SelectModule} from '../../../shared/select/select.module';
+import {AttributeTypeFormComponent} from './attribute-type-form.component';
+import {ConstraintConfigFormComponent} from './constraint-config/constraint-config-form.component';
 import {DatetimeConstraintConfigFormComponent} from './constraint-config/datetime/datetime-constraint-config-form.component';
-import {BsDatepickerModule} from 'ngx-bootstrap';
+import {NumberConstraintConfigFormComponent} from './constraint-config/number/number-constraint-config-form.component';
 import {PercentageConstraintConfigFormComponent} from './constraint-config/percentage/percentage-constraint-config-form.component';
+import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
 
 @NgModule({
-  imports: [BsDatepickerModule, CommonModule, ReactiveFormsModule, SelectModule],
+  imports: [CommonModule, DateTimeModule, PipesModule, ReactiveFormsModule, SelectModule],
   declarations: [
     AttributeTypeFormComponent,
     NumberConstraintConfigFormComponent,
