@@ -32,13 +32,13 @@ import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {CollectionAttributePipe} from '../../shared/pipes/collection-attribute.pipe';
 import {ConstraintType} from '../model/data/constraint';
 
 export class DocumentUi {
   public rows$ = new BehaviorSubject<UiRow[]>([]);
   public summary$ = new BehaviorSubject<string>('');
   public favorite$ = new BehaviorSubject<boolean>(false);
+  public length$ = new BehaviorSubject<number>(0);
 
   private rows: UiRow[] = [];
   private addedRows: UiRow[] = [];
@@ -51,7 +51,7 @@ export class DocumentUi {
 
   constructor(
     private collection: Collection,
-    private document: DocumentModel,
+    public document: DocumentModel,
     private store: Store<AppState>,
     private i18n: I18n,
     private notificationService: NotificationService
@@ -337,7 +337,9 @@ export class DocumentUi {
   }
 
   private rowsChanged(): void {
-    this.rows$.next([...this.rows, ...this.addedRows]);
+    const newRows = [...this.rows, ...this.addedRows];
+    this.rows$.next(newRows);
+    this.length$.next(newRows.length);
   }
 
   public onAddRow(): void {

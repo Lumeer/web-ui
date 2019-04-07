@@ -43,7 +43,6 @@ import {SizeType} from '../../../shared/slider/size-type';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {SelectionHelper} from './util/selection-helper';
-import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfig, View} from '../../../core/store/views/view';
 import {PostItAction} from '../../../core/store/postit/postit.action';
@@ -103,6 +102,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   private subscriptions = new Subscription();
   private documentsSubscription = new Subscription();
+  private lengths: Record<string, number> = {};
 
   private creatingCorrelationsIds: string[] = [];
 
@@ -111,7 +111,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     private zone: NgZone,
     private canManageConfigPipe: CanManageConfigPipe,
     private changeDetector: ChangeDetectorRef,
-    private documentUiService: DocumentUiService,
     private userSettingsService: UserSettingsService
   ) {}
 
@@ -266,8 +265,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private getNumRows(key: string): number {
     const documentModel = this.documents.find(doc => doc.id === key);
     if (documentModel) {
-      const collection = this.collections.find(coll => coll.id === documentModel.collectionId);
-      return this.documentUiService.getRows$(collection, documentModel).getValue().length - 1;
+      return this.lengths[documentModel.correlationId || documentModel.id] - 1 || 0;
     } else {
       return 0;
     }
@@ -375,7 +373,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return this.documents.length >= (this.page + 1) * this.getPageSize();
   }
 
-  public postItChanged() {
+  public postItChanged(id: string, length: number) {
+    this.lengths[id] = length;
+
     if (this.layout) {
       this.layout.refresh();
     }

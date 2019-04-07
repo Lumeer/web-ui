@@ -27,10 +27,8 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
-import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
-import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -38,6 +36,8 @@ import {convertQueryModelToString} from '../../../core/store/navigation/query.co
 import {Query} from '../../../core/store/navigation/query';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 import {DialogService} from '../../../dialog/dialog.service';
+import {DocumentUi} from '../../../core/ui/document-ui';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
 
 @Component({
   selector: 'document-detail',
@@ -52,11 +52,10 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public document: DocumentModel;
 
+  public state: DocumentUi;
+
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
-  public favorite$: Observable<boolean>;
-  public summary$: Observable<string>;
-  public rows$: Observable<UiRow[]>;
 
   private query: Query;
   private subscriptions = new Subscription();
@@ -65,7 +64,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
-    private documentUiService: DocumentUiService,
     private perspective: PerspectiveService,
     private dialogService: DialogService
   ) {}
@@ -85,8 +83,12 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renewSubscriptions(): void {
+    if (this.state) {
+      this.state.destroy();
+    }
+
     if (this.collection && this.document) {
-      this.documentUiService.init(this.collection, this.document);
+      this.state = new DocumentUi(this.collection, this.document, this.store$, this.i18n, this.notificationService);
 
       this.createdBy$ = this.store$.pipe(
         select(selectUserById(this.document.createdBy)),
@@ -98,28 +100,32 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
         filter(user => !!user),
         map(user => user.name || user.email || 'Guest')
       );
-
-      this.summary$ = this.getSummary$();
-      this.favorite$ = this.getFavorite$();
-      this.rows$ = this.getRows$();
     }
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-    this.documentUiService.destroy(this.collection, this.document);
+    if (this.state) {
+      this.state.destroy();
+    }
   }
 
   public addAttrRow() {
-    this.documentUiService.onAddRow(this.collection, this.document);
+    if (this.state) {
+      this.state.onAddRow();
+    }
   }
 
   public onRemoveRow(idx: number) {
-    this.documentUiService.onRemoveRow(this.collection, this.document, idx);
+    if (this.state) {
+      this.state.onRemoveRow(idx);
+    }
   }
 
   public submitRowChange(idx: number, $event: [string, string]) {
-    this.documentUiService.onUpdateRow(this.collection, this.document, idx, $event);
+    if (this.state) {
+      this.state.onUpdateRow(idx, $event);
+    }
   }
 
   public onRemoveDocument() {
@@ -132,23 +138,13 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onToggleFavorite() {
-    this.documentUiService.onToggleFavorite(this.collection, this.document);
+    if (this.state) {
+      this.state.onToggleFavorite();
+    }
   }
 
-  private getRows$(): Observable<UiRow[]> {
-    return this.documentUiService.getRows$(this.collection, this.document);
-  }
-
-  private getFavorite$(): Observable<boolean> {
-    return this.documentUiService.getFavorite$(this.collection, this.document);
-  }
-
-  private getSummary$(): Observable<string> {
-    return this.documentUiService.getSummary$(this.collection, this.document);
-  }
-
-  public getTrackBy(): (index: number, row: UiRow) => string {
-    return this.documentUiService.getTrackBy(this.collection, this.document);
+  public getTrackBy(index: number, row: UiRow): string {
+    return row.correlationId || row.id;
   }
 
   public goToTablePerspective(): void {

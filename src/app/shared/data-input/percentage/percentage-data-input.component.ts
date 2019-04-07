@@ -32,7 +32,7 @@ import {
 import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {isPercentageValid, getPercentageSaveValue} from '../../utils/data.utils';
+import {getPercentageSaveValue, isPercentageValid} from '../../utils/data.utils';
 import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pipe';
 
 @Component({
@@ -93,12 +93,7 @@ export class PercentageDataInputComponent implements OnChanges {
     const input = this.percentageInput;
     setTimeout(() => {
       if (input && input.nativeElement) {
-        // show value entered into hidden input without any changes
-        if (String(this.value).length === 1) {
-          input.nativeElement.value = this.value;
-        } else {
-          input.nativeElement.value = this.percentageDataValue.transform(this.value, this.constraintConfig);
-        }
+        input.nativeElement.value = this.percentageDataValue.transform(this.value, this.constraintConfig);
       }
     });
   }

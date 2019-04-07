@@ -39,7 +39,7 @@
             [perspectiveId]="perspectiveId"
             [selectionHelper]="selectionHelper"
             (remove)="removePostIt(doc)"
-            (sizeChange)="postItChanged()">
+            (sizeChange)="postItChanged(doc.correlationId || doc.id, $event)">
           </post-it-document>
 
         </div>

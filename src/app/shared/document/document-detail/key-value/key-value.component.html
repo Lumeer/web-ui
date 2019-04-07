@@ -28,6 +28,9 @@
                 class="flex-grow-1 h-100 p-1 data-input"
                 [class.read-only]="readOnly">
     </data-input>
+    <i *ngIf="(constraint | constraintTypeIcon) as iconName"
+       [ngClass]="iconName"
+       class="text-muted small"></i>
     <div>
       <i class="fas fa-fw fa-trash text-danger mx-2 clickable clickable-danger button-remove"
          aria-hidden="true"
@@ -36,6 +39,7 @@
          i18n-title="@@remove.row"
          (click)="invokeRemove()"
       ></i>
+      <span *ngIf="readOnly" class="spacer"></span>
       <i class="fa fa-fw fa-shapes mr-1 clickable text-success button-config"
          aria-hidden="true"
          *ngIf="configurable"
