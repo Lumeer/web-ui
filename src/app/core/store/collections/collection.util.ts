@@ -79,5 +79,5 @@ export function createAttributesMap(attributes: Attribute[]): Record<string, Att
 
 export function findAttributeConstraint(attributes: Attribute[], attributeId: string): Constraint {
   const attribute = (attributes || []).find(attr => attr.id === attributeId);
-  return attributes && attribute.constraint;
+  return attribute && attribute.constraint;
 }

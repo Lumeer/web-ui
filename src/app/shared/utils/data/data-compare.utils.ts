@@ -26,6 +26,7 @@ import {
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {convertToBig, formatDataValue, getPercentageSaveValue, parseMomentDate} from '../data.utils';
 import {ConditionType} from '../../../core/store/navigation/query';
+import * as moment from 'moment';
 
 export function compareDataValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
@@ -84,6 +85,10 @@ function comparePercentageValues(a: any, b: any, config: PercentageConstraintCon
 }
 
 export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType, constraint: Constraint): boolean {
+  if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    return condition === ConditionType.Equals;
+  }
+
   if (isNullOrUndefined(a) || isNullOrUndefined(b)) {
     return condition === ConditionType.NotEquals;
   }
@@ -109,8 +114,8 @@ function dataValuesMeetConditionByDateTime(
   config: DateTimeConstraintConfig,
   condition: ConditionType
 ): boolean {
-  const aMoment = parseMomentDate(a, config && config.format);
-  const bMoment = parseMomentDate(b, config && config.format);
+  const aMoment = parseMomentDateConstraintPriority(a, config);
+  const bMoment = parseMomentDateConstraintPriority(b, config);
 
   switch (condition) {
     case ConditionType.Equals:
@@ -130,9 +135,21 @@ function dataValuesMeetConditionByDateTime(
   }
 }
 
+function parseMomentDateConstraintPriority(value: any, config: DateTimeConstraintConfig): moment.Moment {
+  const momentDate = parseMomentDate(value, config && config.format);
+  if (config && config.format && momentDate.isValid()) {
+    return moment(momentDate.format(config.format), config.format);
+  }
+  return momentDate;
+}
+
 function dataValuesMeetConditionByNumber(a: any, b: any, condition: ConditionType): boolean {
   const aBig = convertToBig(a);
   const bBig = convertToBig(b);
+
+  if (!aBig && !bBig) {
+    return condition === ConditionType.Equals;
+  }
 
   if (!aBig || !bBig) {
     return condition === ConditionType.NotEquals;

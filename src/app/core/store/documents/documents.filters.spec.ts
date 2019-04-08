@@ -22,7 +22,7 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
-import {ConditionType, Query} from '../navigation/query';
+import {Query} from '../navigation/query';
 import {ConstraintType} from '../../model/data/constraint';
 
 const documents: DocumentModel[] = [
@@ -138,23 +138,23 @@ const musicUser: User = {
 };
 
 describe('Document filters', () => {
-  fit('should filter empty documents by undefined query', () => {
+  it('should filter empty documents by undefined query', () => {
     expect(filterDocumentsByQuery([], [], [], [], undefined, undefined)).toEqual([]);
   });
 
-  fit('should filter empty documents by empty query', () => {
+  it('should filter empty documents by empty query', () => {
     expect(filterDocumentsByQuery([], [], [], [], {}, undefined)).toEqual([]);
   });
 
-  fit('should not filter documents by empty query', () => {
+  it('should not filter documents by empty query', () => {
     expect(filterDocumentsByQuery(documents, [], [], [], {}, undefined)).toEqual(documents);
   });
 
-  fit('should not filter documents by empty collections', () => {
+  it('should not filter documents by empty collections', () => {
     expect(filterDocumentsByQuery(documents, collections, [], [], {stems: []}, undefined)).toEqual(documents);
   });
 
-  fit('should not filter documents by all collections', () => {
+  it('should not filter documents by all collections', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -167,13 +167,13 @@ describe('Document filters', () => {
     ).toEqual(documents);
   });
 
-  fit('should filter documents by single collection', () => {
+  it('should filter documents by single collection', () => {
     expect(
       filterDocumentsByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, undefined).length
     ).toBe(6);
   });
 
-  fit('should filter document by attribute value', () => {
+  it('should filter document by attribute value', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -193,7 +193,7 @@ describe('Document filters', () => {
     ).toEqual(['d1']);
   });
 
-  fit('should filter by attribute value with userEmail() function and not existing user', () => {
+  it('should filter by attribute value with userEmail() function and not existing user', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -213,7 +213,7 @@ describe('Document filters', () => {
     ).toEqual([]);
   });
 
-  fit('should filter document by attribute value with userEmail() function', () => {
+  it('should filter document by attribute value with userEmail() function', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -233,7 +233,7 @@ describe('Document filters', () => {
     ).toEqual(['d2']);
   });
 
-  fit('should not filter document by attribute value from other collection with userEmail() function', () => {
+  it('should not filter document by attribute value from other collection with userEmail() function', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -253,7 +253,7 @@ describe('Document filters', () => {
     ).toEqual([]);
   });
 
-  fit('should filter two documents by attribute value with userEmail() function', () => {
+  it('should filter two documents by attribute value with userEmail() function', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -273,7 +273,7 @@ describe('Document filters', () => {
     ).toEqual(['d7', 'd8']);
   });
 
-  fit('should filter child documents by attribute value with userEmail() function', () => {
+  it('should filter child documents by attribute value with userEmail() function', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -294,7 +294,7 @@ describe('Document filters', () => {
     ).toEqual(['d2', 'd3']);
   });
 
-  fit('should filter children together with parent document by attribute values', () => {
+  it('should filter children together with parent document by attribute values', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -315,7 +315,7 @@ describe('Document filters', () => {
     ).toEqual(['d1', 'd2', 'd3', 'd4']);
   });
 
-  fit('should filter children together with nested parent document by attribute values', () => {
+  it('should filter children together with nested parent document by attribute values', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -336,7 +336,7 @@ describe('Document filters', () => {
     ).toEqual(['d2', 'd3']);
   });
 
-  fit('should filter documents from both collections by fulltext', () => {
+  it('should filter documents from both collections by fulltext', () => {
     expect(
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['link']}, undefined).map(
         document => document.id
@@ -344,7 +344,7 @@ describe('Document filters', () => {
     ).toEqual(['d6', 'd8']);
   });
 
-  fit('should filter documents from single collection by collection and fulltext', () => {
+  it('should filter documents from single collection by collection and fulltext', () => {
     expect(
       filterDocumentsByQuery(
         documents,
@@ -357,7 +357,7 @@ describe('Document filters', () => {
     ).toEqual(['d6']);
   });
 
-  fit('should filter children together with parent document by fulltext', () => {
+  it('should filter children together with parent document by fulltext', () => {
     expect(
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['IBM']}, undefined, true).map(
         document => document.id
@@ -365,7 +365,7 @@ describe('Document filters', () => {
     ).toEqual(['d1', 'd2', 'd3', 'd4']);
   });
 
-  fit('should filter only matching document without children by fulltext', () => {
+  it('should filter only matching document without children by fulltext', () => {
     expect(
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined).map(
         document => document.id
@@ -373,7 +373,7 @@ describe('Document filters', () => {
     ).toEqual(['d2', 'd7']);
   });
 
-  fit('should filter children together with nested parent document by fulltext', () => {
+  it('should filter children together with nested parent document by fulltext', () => {
     expect(
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined, true).map(
         document => document.id
@@ -381,7 +381,7 @@ describe('Document filters', () => {
     ).toEqual(['d2', 'd3', 'd7']);
   });
 
-  fit('should filter by number constraint', () => {
+  it('should filter by number constraint', () => {
     let query: Query = {
       stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '=', value: '-10'}]}],
     };
@@ -413,7 +413,7 @@ describe('Document filters', () => {
     ).toEqual(['d1', 'd3']);
   });
 
-  fit('should filter by date constraint', () => {
+  it('should filter by date constraint', () => {
     let query: Query = {
       stems: [
         {
