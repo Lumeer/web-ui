@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../../../view/perspectives/perspective';
-import {DocumentModel} from '../documents/document.model';
-import {isTableConfigChanged} from '../tables/table.utils';
-import {isChartConfigChanged} from '../charts/chart.util';
-import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
+import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {isChartConfigChanged} from '../charts/chart.util';
+import {DocumentModel} from '../documents/document.model';
+import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
