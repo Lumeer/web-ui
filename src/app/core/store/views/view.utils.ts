@@ -21,18 +21,22 @@ import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {isChartConfigChanged} from '../charts/chart.util';
+import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
+import {LinkType} from '../link-types/link.type';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
   viewConfig: any,
   perspectiveConfig: any,
-  documentsMap: {[id: string]: DocumentModel}
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
 ): boolean {
   switch (perspective) {
     case Perspective.Table:
-      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap);
+      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap);
     case Perspective.Chart:
       return isChartConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.GanttChart:

@@ -17,34 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Attribute, Collection} from '../../collections/collection';
 import {DocumentModel} from '../../documents/document.model';
+import {LinkType} from '../../link-types/link.type';
 import {TableColumnType, TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow} from '../table.model';
+import {filterTableColumnsByAttributes} from '../table.utils';
 
 export function isTableConfigChanged(
   viewConfig: TableConfig,
   perspectiveConfig: TableConfig,
-  documentsMap: Record<string, DocumentModel>
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
 ): boolean {
-  if (areTableConfigPartsChanged(viewConfig.parts, perspectiveConfig.parts)) {
+  if (areTableConfigPartsChanged(viewConfig.parts, perspectiveConfig.parts, collectionsMap, linkTypesMap)) {
     return true;
   }
 
   return areTableConfigRowsChanged(viewConfig.rows, perspectiveConfig.rows, documentsMap);
 }
 
-export function areTableConfigPartsChanged(savedParts: TableConfigPart[], shownParts: TableConfigPart[]): boolean {
+export function areTableConfigPartsChanged(
+  savedParts: TableConfigPart[],
+  shownParts: TableConfigPart[],
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
   if (!savedParts || !shownParts || savedParts.length !== shownParts.length) {
     return true;
   }
 
-  return savedParts.some((savedPart, index) => isTablePartChanged(savedPart, shownParts[index]));
+  return savedParts.some((savedPart, index) => {
+    const collection = collectionsMap[savedPart.collectionId];
+    const linkType = linkTypesMap[savedPart.linkTypeId];
+    const attributes = (collection && collection.attributes) || (linkType && linkType.attributes) || [];
+
+    return isTablePartChanged(savedPart, shownParts[index], attributes);
+  });
 }
 
-function isTablePartChanged(savedPart: TableConfigPart, shownPart: TableConfigPart): boolean {
+function isTablePartChanged(savedPart: TableConfigPart, shownPart: TableConfigPart, attributes: Attribute[]): boolean {
+  const filteredSavedColumns = filterTableColumnsByAttributes(savedPart.columns, attributes);
+
   return (
     savedPart.collectionId !== shownPart.collectionId ||
     savedPart.linkTypeId !== shownPart.linkTypeId ||
-    areTableColumnsChanged(savedPart.columns, shownPart.columns)
+    areTableColumnsChanged(filteredSavedColumns, shownPart.columns)
   );
 }
 
