@@ -131,7 +131,7 @@
         <source>Remove query item</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit><trans-unit id="tag.remove" datatype="html">
         <source>Remove tag</source>
@@ -672,7 +672,7 @@
         <source>Remove Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
@@ -682,13 +682,13 @@
         <source>Set Attribute Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
         <source>Set Attribute Function</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit><trans-unit id="button.save" datatype="html">
         <source>Save</source>
@@ -4167,7 +4167,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="view.name.exists.message" datatype="html">
-        <source>Do you really want to change view name?</source>
+        <source>Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="60ab130ceeb91bdfeaa4d635fca0a1e07619372d" datatype="html">
+        <source>{VAR_SELECT, select, 0 {change view name} 1 {create view with the same name} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>

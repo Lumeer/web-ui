@@ -171,15 +171,23 @@ export class ViewComponent implements OnInit, OnDestroy {
     const message = this.i18n(
       {
         id: 'view.name.exists.message',
-        value: 'Do you really want to change view name?',
+        value: 'Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?',
       },
-      {name: view.name}
+      {create: !!view.code ? '0' : '1'}
     );
 
     this.notificationService.confirm(message, title, [
       {text: 'No'},
-      {text: 'Yes', action: () => this.updateView(view), bold: false},
+      {text: 'Yes', action: () => this.createOrUpdateView(view), bold: false},
     ]);
+  }
+
+  private createOrUpdateView(view: View) {
+    if (view.code) {
+      this.updateView(view);
+    } else {
+      this.createView(view);
+    }
   }
 
   private askToCloneView(view: View) {
