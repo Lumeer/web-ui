@@ -22,7 +22,7 @@ import {dataValuesMeetCondition} from './data-compare.utils';
 import {ConditionType} from '../../../core/store/navigation/query';
 
 describe('Data values meet condition', () => {
-  fit('should compare by date only year constraint', () => {
+  it('should compare by date only year constraint', () => {
     const constraint = {type: ConstraintType.DateTime, config: {format: 'YYYY'}};
 
     expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, ConditionType.Equals, constraint)).toEqual(
@@ -94,7 +94,7 @@ describe('Data values meet condition', () => {
     ).toEqual(true);
   });
 
-  fit('should compare by date only year and month constraint', () => {
+  it('should compare by date only year and month constraint', () => {
     const formats = ['YYYY/MM', 'MM.YYYY', 'MMM.YYYY', 'MMMM YYYY', 'MM-YYYY', 'YYYY-MM'];
 
     for (const format of formats) {
