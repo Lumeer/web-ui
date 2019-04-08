@@ -37,7 +37,7 @@ import {isViewConfigChanged} from './view.utils';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
-  config: ViewConfig;
+  config: ViewConfig; // TODO remove
   cursor: ViewCursor;
 }
 
@@ -83,13 +83,11 @@ export const selectViewConfig = createSelector(
   selectViewsState,
   views => views.config
 );
+
+// TODO refactor search perspective so this selector is no longer needed
 export const selectViewSearchConfig = createSelector(
   selectViewConfig,
   config => config.search
-);
-export const selectViewTableConfig = createSelector(
-  selectViewConfig,
-  config => config.table
 );
 
 export const selectViewCursor = createSelector(

@@ -18,28 +18,29 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
-import {selectNavigation, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
+import {CommonAction} from '../common/common.action';
+import {NavigationAction} from '../navigation/navigation.action';
+import {selectNavigation, selectPerspective, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {PermissionType} from '../permissions/permissions';
+import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
-import {ViewConverter} from './view.converter';
+import {TablesAction} from '../tables/tables.action';
 import {View} from './view';
+import {ViewConverter} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions';
-import {NavigationAction} from '../navigation/navigation.action';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
-import {Router} from '@angular/router';
-import {CommonAction} from '../common/common.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -228,6 +229,22 @@ export class ViewsEffects {
     map(() => {
       const message = this.i18n({id: 'view.change.permission.fail', value: 'Could not change the view permissions'});
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public changeConfig$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.ChangeConfig>(ViewsActionType.CHANGE_CONFIG),
+    withLatestFrom(this.store$.pipe(select(selectPerspective))),
+    mergeMap(([action, perspective]) => {
+      const config = action.payload.config[perspective];
+
+      switch (perspective) {
+        case Perspective.Table:
+          return [new TablesAction.SetConfig({config})];
+        default:
+          return [];
+      }
     })
   );
 
