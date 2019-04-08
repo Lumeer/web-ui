@@ -31,6 +31,7 @@ const documents: DocumentModel[] = [
     id: 'd1',
     data: {
       a1: 'IBM',
+      a2: 'Lala',
       a100: '40',
       a101: "2019-04-01'T'00:00:00.000Z",
     },
@@ -53,6 +54,7 @@ const documents: DocumentModel[] = [
     id: 'd3',
     data: {
       a1: 'JBoss',
+      a2: 'Lala',
       a100: '-10',
       a101: "2019-04-10'T'00:00:00.000Z",
     },
@@ -65,6 +67,7 @@ const documents: DocumentModel[] = [
     id: 'd4',
     data: {
       a1: 'SoftLayer',
+      a2: 'Lala',
       a100: '55',
     },
     metaData: {
@@ -76,6 +79,7 @@ const documents: DocumentModel[] = [
     id: 'd5',
     data: {
       a1: 'Microsoft',
+      a2: 'Lala',
       a101: "2019-04-06'T'00:00:00.000Z",
     },
   },
@@ -84,6 +88,7 @@ const documents: DocumentModel[] = [
     id: 'd6',
     data: {
       a1: 'LinkedIn',
+      a2: 'Lala',
       a100: '98',
       a101: "2019-04-11'T'00:00:00.000Z",
     },
