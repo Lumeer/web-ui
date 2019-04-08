@@ -50,6 +50,9 @@ export class AuthService {
     if (environment.auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
+
+      // in case the application was refreshed and user has already been authenticated
+      this.scheduleRenewal();
     }
   }
 
@@ -182,16 +185,14 @@ export class AuthService {
 
     const source = of(this.getExpiresAt()).pipe(
       mergeMap(expiresAt => {
+        const oneMinute = 60000;
         // Use the delay in a timer to run the refresh at the proper time
-        return timer(Math.max(1, expiresAt - Date.now()));
+        return timer(Math.max(1, expiresAt - Date.now() - oneMinute));
       })
     );
 
     // Once the delay time from above is reached, get a new JWT and schedule additional refreshes
-    this.refreshSubscription = source.subscribe(() => {
-      this.renewToken();
-      this.scheduleRenewal();
-    });
+    this.refreshSubscription = source.subscribe(() => this.renewToken());
   }
 
   public unscheduleRenewal() {
