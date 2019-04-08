@@ -1,13 +1,14 @@
-<div
-  #conditionValueInput
-  trim
-  class="cursor-text"
-  [attr.contenteditable]="!readonly"
-  [attr.placeholder]="5"
-  [textContent]="queryItem.conditionValue"
-  (input)="onInput(conditionValueInput.textContent)"
-  (keydown)="onKeyDown($event)"
-  (keyup.enter)="onEnterKeyUp()"
-  (blur)="onBlur()"
-  spellcheck="false">
-</div>
+<data-input
+  [value]="queryItem?.conditionValue"
+  [focus]="true"
+  [constraint]="queryItem?.attribute.constraint"
+  [readonly]="readonly || !((editing$ | async) || queryItem?.attribute?.constraint?.type === constraintTypeBoolean)"
+  [skipValidation]="true"
+  [resizeToContent]="true"
+  (save)="onSave($event)"
+  (click)="editing$.next(true)"
+  (onFocus)="editing$.next(true)"
+  (cancel)="editing$.next(false)"
+  (blur)="editing$.next(false)"
+  (keydown)="dataInputKeyDown($event)">
+</data-input>

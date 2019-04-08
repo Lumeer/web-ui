@@ -90,7 +90,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
         select(selectQuery),
         filter(query => !!query),
         flatMap(query => observableCombineLatest(of(query), this.loadData())),
-        tap(([query, data]) => (this.queryData = data)),
+        tap(([, data]) => (this.queryData = data)),
         map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
         filter(queryItems => this.itemsChanged(queryItems))
       )
@@ -122,13 +122,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectLinkTypesLoaded))
     ).pipe(
-      filter(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
-      map(([collections, linkTypes]) => {
-        return {
-          collections: collections.filter(collection => collection && collection.id),
-          linkTypes: linkTypes.filter(linkType => linkType && linkType.id),
-        };
-      })
+      filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
+      map(([collections, linkTypes]) => ({
+        collections: collections.filter(collection => collection && collection.id),
+        linkTypes: linkTypes.filter(linkType => linkType && linkType.id),
+      }))
     );
   }
 

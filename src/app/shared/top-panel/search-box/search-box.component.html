@@ -1,10 +1,12 @@
 <div class="form-control w-100 h-100 p-0" data-tour="search-box">
   <form class="d-flex" *ngIf="form$ | async as form" [formGroup]="form">
-    <div class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1" [style.width.px]="1" formArrayName="queryItems">
+    <div class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1" [style.width.px]="1" formArrayName="queryItems"
+         *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
       <query-item *ngFor="let queryItem of queryItems$ | async; trackBy:trackByTypeAndText; let itemIndex = index;"
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   (enter)="searchInput.focusInput()"
+                  [readonly]="!data.canManageConfig"
                   (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"
                   class="d-inline-flex mt-1 ml-1 align-items-center">

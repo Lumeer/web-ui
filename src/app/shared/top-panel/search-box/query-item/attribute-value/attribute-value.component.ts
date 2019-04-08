@@ -17,21 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {KeyCode} from '../../../../key-code';
-import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../../utils/html-modifier';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
+import {BehaviorSubject} from 'rxjs';
+import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
+import {KeyCode} from '../../../../key-code';
 
 @Component({
   selector: 'attribute-value',
   templateUrl: './attribute-value.component.html',
   styleUrls: ['./attribute-value.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeValueComponent implements OnInit {
+export class AttributeValueComponent {
   @Input()
-  public queryItem: AttributeQueryItem;
+  public queryItem: AttributeQueryItem | LinkAttributeQueryItem;
 
   @Input()
   public readonly: boolean;
@@ -48,80 +51,45 @@ export class AttributeValueComponent implements OnInit {
   @Output()
   public change = new EventEmitter();
 
-  private lastCommittedValue: string;
-
-  @ViewChild('conditionValueInput')
-  private conditionValueInput: ElementRef;
-
-  public ngOnInit() {
-    this.lastCommittedValue = this.queryItem.conditionValue;
-  }
+  public constraintTypeBoolean = ConstraintType.Boolean;
+  public editing$ = new BehaviorSubject(false);
 
   public get conditionValueControl(): AbstractControl {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
-  public onBlur() {
-    const trimmedValue = this.queryItem.conditionValue.trim();
-    this.setValue(trimmedValue);
-
-    if (trimmedValue !== this.lastCommittedValue && this.conditionValueControl.valid) {
-      this.change.emit();
-      this.lastCommittedValue = trimmedValue;
-    }
-  }
-
-  public onInput(value: string) {
+  public onSave(value: any) {
     this.setValue(value);
+
+    if (this.conditionValueControl && this.conditionValueControl.valid) {
+      this.change.emit();
+    }
+    this.editing$.next(false);
   }
 
-  private setValue(value: string) {
-    this.conditionValueControl.setValue(value);
+  private setValue(value: any) {
+    this.conditionValueControl && this.conditionValueControl.setValue(value);
     this.queryItem.conditionValue = value;
   }
 
-  public onKeyDown(event: KeyboardEvent) {
+  public setEditing() {
+    this.editing$.next(true);
+  }
+
+  private get constraint(): Constraint {
+    return this.queryItem && this.queryItem.attribute && this.queryItem.attribute.constraint;
+  }
+
+  public dataInputKeyDown(event: KeyboardEvent) {
     switch (event.code) {
-      case KeyCode.ArrowLeft:
-        this.onLeftArrowKeyDown();
-        break;
-      case KeyCode.Enter:
       case KeyCode.NumpadEnter:
-        event.preventDefault();
-        break;
-      case KeyCode.Backspace:
-        this.onBackspaceKeyDown();
-        break;
-      case KeyCode.Escape:
-        this.onEscapeKeyDown();
-        break;
+      case KeyCode.Enter:
+        if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+          this.onSave(!this.queryItem.conditionValue);
+        } else if (!this.editing$.getValue()) {
+          this.editing$.next(true);
+        }
+        return;
     }
-  }
-
-  public focusInput() {
-    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionValueInput.nativeElement));
-  }
-
-  private onLeftArrowKeyDown() {
-    this.moveLeftOnCaretStart();
-  }
-
-  public onEnterKeyUp() {
-    this.enter.emit();
-  }
-
-  private onBackspaceKeyDown() {
-    this.moveLeftOnCaretStart();
-  }
-
-  private moveLeftOnCaretStart() {
-    const caretOffset = getCaretCharacterOffsetWithin(this.conditionValueInput.nativeElement);
-    if (caretOffset === 0) {
-      this.moveLeft.emit();
-    }
-  }
-
-  private onEscapeKeyDown() {
-    this.conditionValueInput.nativeElement.blur();
   }
 }

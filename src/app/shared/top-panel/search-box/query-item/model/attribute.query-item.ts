@@ -29,7 +29,7 @@ export class AttributeQueryItem implements QueryItem {
     public collection: Collection,
     public attribute: Attribute,
     public condition: string,
-    public conditionValue: string
+    public conditionValue: any
   ) {}
 
   public get text() {

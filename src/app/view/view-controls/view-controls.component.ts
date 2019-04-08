@@ -143,7 +143,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewPerspectiveChanged))
     ).pipe(
       debounceTime(100),
-      tap(([nameChanged, configChanged, queryChanged, perspectiveChanged]) => {
+      tap(([, configChanged, queryChanged]) => {
         this.configChanged = configChanged;
         this.queryChanged = queryChanged;
       }),

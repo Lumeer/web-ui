@@ -15,6 +15,6 @@
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"
-         class="border-0 w-100 h-100 px-1 {{ valid ? 'bg-transparent' : 'bg-danger-light' }}"
+         class="border-0 w-100 h-100 px-1 {{ skipValidation || valid ? 'bg-transparent' : 'bg-danger-light' }}"
          data-test="percentage-data-input">
 </ng-template>

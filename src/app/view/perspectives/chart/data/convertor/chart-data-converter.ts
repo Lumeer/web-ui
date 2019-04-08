@@ -39,7 +39,8 @@ import {Query} from '../../../../../core/store/navigation/query';
 import {ChartData, ChartDataSet, ChartPoint, ChartYAxisType} from './chart-data';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
-import {compareValues, formatData} from '../../../../../shared/utils/data.utils';
+import {formatData} from '../../../../../shared/utils/data.utils';
+import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
 
 // Document or LinkInstance
 interface ObjectData {
@@ -354,7 +355,7 @@ export class ChartDataConverter {
     const asc = sort.type === ChartSortType.Ascending;
     const attribute = this.findAttributeByAxis(sort.axis);
     return dataObjects.sort((a, b) =>
-      compareValues(
+      compareDataValues(
         a.data[sort.axis.attributeId],
         b.data[sort.axis.attributeId],
         attribute && attribute.constraint,

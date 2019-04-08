@@ -22,74 +22,91 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
+import {Query} from '../navigation/query';
+import {ConstraintType} from '../../model/data/constraint';
 
 const documents: DocumentModel[] = [
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'IBM_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd1',
     data: {
       a1: 'IBM',
+      a2: 'Lala',
+      a100: '40',
+      a101: "2019-04-01'T'00:00:00.000Z",
     },
   },
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'REDHAT_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd2',
     data: {
       a1: 'Red Hat',
       a2: 'aturing@lumeer.io',
+      a100: '100',
+      a101: "2019-04-02'T'00:00:00.000Z",
     },
     metaData: {
-      parentId: 'IBM_DOCUMENT',
+      parentId: 'd1',
     },
   },
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'JBOSS_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd3',
     data: {
       a1: 'JBoss',
+      a2: 'Lala',
+      a100: '-10',
+      a101: "2019-04-10'T'00:00:00.000Z",
     },
     metaData: {
-      parentId: 'REDHAT_DOCUMENT',
+      parentId: 'd2',
     },
   },
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'SOFTLAYER_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd4',
     data: {
       a1: 'SoftLayer',
+      a2: 'Lala',
+      a100: '55',
     },
     metaData: {
-      parentId: 'IBM_DOCUMENT',
+      parentId: 'd1',
     },
   },
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'MICROSOFT_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd5',
     data: {
       a1: 'Microsoft',
+      a2: 'Lala',
+      a101: "2019-04-06'T'00:00:00.000Z",
     },
   },
   {
-    collectionId: 'COMPANIES_COLLECTION',
-    id: 'LINKEDIN_DOCUMENT',
+    collectionId: 'c1',
+    id: 'd6',
     data: {
       a1: 'LinkedIn',
+      a2: 'Lala',
+      a100: '98',
+      a101: "2019-04-11'T'00:00:00.000Z",
     },
     metaData: {
-      parentId: 'MICROSOFT_DOCUMENT',
+      parentId: 'd5',
     },
   },
   {
-    collectionId: 'BANDS_COLLECTION',
-    id: 'RHCP_DOCUMENT',
+    collectionId: 'c2',
+    id: 'd7',
     data: {
       a1: 'Red Hot Chili Peppers',
       a2: 'music@lumeer.io',
     },
   },
   {
-    collectionId: 'BANDS_COLLECTION',
-    id: 'LINKIN_PARK_DOCUMENT',
+    collectionId: 'c2',
+    id: 'd8',
     data: {
       a1: 'Linkin Park',
       a2: 'music@lumeer.io',
@@ -99,12 +116,17 @@ const documents: DocumentModel[] = [
 
 const collections: Collection[] = [
   {
-    id: 'COMPANIES_COLLECTION',
+    id: 'c1',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a100', name: 'a100', constraint: {type: ConstraintType.Number, config: {}}},
+      {id: 'a101', name: 'a101', constraint: {type: ConstraintType.DateTime, config: {}}},
+    ],
   },
   {
-    id: 'BANDS_COLLECTION',
+    id: 'c2',
     name: 'collection',
     attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
   },
@@ -144,7 +166,7 @@ describe('Document filters', () => {
         collections,
         [],
         [],
-        {stems: [{collectionId: 'COMPANIES_COLLECTION'}, {collectionId: 'BANDS_COLLECTION'}]},
+        {stems: [{collectionId: 'c1'}, {collectionId: 'c2'}]},
         undefined
       )
     ).toEqual(documents);
@@ -152,14 +174,7 @@ describe('Document filters', () => {
 
   it('should filter documents by single collection', () => {
     expect(
-      filterDocumentsByQuery(
-        documents,
-        collections,
-        [],
-        [],
-        {stems: [{collectionId: 'COMPANIES_COLLECTION'}]},
-        undefined
-      ).length
+      filterDocumentsByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, undefined).length
     ).toBe(6);
   });
 
@@ -173,14 +188,14 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [{collectionId: 'COMPANIES_COLLECTION', attributeId: 'a1', condition: '=', value: 'IBM'}],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'IBM'}],
             },
           ],
         },
         undefined
       ).map(document => document.id)
-    ).toEqual(['IBM_DOCUMENT']);
+    ).toEqual(['d1']);
   });
 
   it('should filter by attribute value with userEmail() function and not existing user', () => {
@@ -193,10 +208,8 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [
-                {collectionId: 'COMPANIES_COLLECTION', attributeId: 'a2', condition: '=', value: 'userEmail()'},
-              ],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
             },
           ],
         },
@@ -215,16 +228,14 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [
-                {collectionId: 'COMPANIES_COLLECTION', attributeId: 'a2', condition: '=', value: 'userEmail()'},
-              ],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
             },
           ],
         },
         turingUser
       ).map(document => document.id)
-    ).toEqual(['REDHAT_DOCUMENT']);
+    ).toEqual(['d2']);
   });
 
   it('should not filter document by attribute value from other collection with userEmail() function', () => {
@@ -237,8 +248,8 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'BANDS_COLLECTION',
-              filters: [{collectionId: 'BANDS_COLLECTION', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              collectionId: 'c2',
+              filters: [{collectionId: 'c2', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
             },
           ],
         },
@@ -257,14 +268,14 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'BANDS_COLLECTION',
-              filters: [{collectionId: 'BANDS_COLLECTION', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              collectionId: 'c2',
+              filters: [{collectionId: 'c2', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
             },
           ],
         },
         musicUser
       ).map(document => document.id)
-    ).toEqual(['RHCP_DOCUMENT', 'LINKIN_PARK_DOCUMENT']);
+    ).toEqual(['d7', 'd8']);
   });
 
   it('should filter child documents by attribute value with userEmail() function', () => {
@@ -277,17 +288,15 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [
-                {collectionId: 'COMPANIES_COLLECTION', attributeId: 'a2', condition: '=', value: 'userEmail()'},
-              ],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
             },
           ],
         },
         turingUser,
         true
       ).map(document => document.id)
-    ).toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT']);
+    ).toEqual(['d2', 'd3']);
   });
 
   it('should filter children together with parent document by attribute values', () => {
@@ -300,15 +309,15 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [{collectionId: 'COMPANIES_COLLECTION', attributeId: 'a1', condition: '=', value: 'IBM'}],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'IBM'}],
             },
           ],
         },
         undefined,
         true
       ).map(document => document.id)
-    ).toEqual(['IBM_DOCUMENT', 'REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'SOFTLAYER_DOCUMENT']);
+    ).toEqual(['d1', 'd2', 'd3', 'd4']);
   });
 
   it('should filter children together with nested parent document by attribute values', () => {
@@ -321,15 +330,15 @@ describe('Document filters', () => {
         {
           stems: [
             {
-              collectionId: 'COMPANIES_COLLECTION',
-              filters: [{collectionId: 'COMPANIES_COLLECTION', attributeId: 'a1', condition: '=', value: 'Red Hat'}],
+              collectionId: 'c1',
+              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'Red Hat'}],
             },
           ],
         },
         undefined,
         true
       ).map(document => document.id)
-    ).toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT']);
+    ).toEqual(['d2', 'd3']);
   });
 
   it('should filter documents from both collections by fulltext', () => {
@@ -337,7 +346,7 @@ describe('Document filters', () => {
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['link']}, undefined).map(
         document => document.id
       )
-    ).toEqual(['LINKEDIN_DOCUMENT', 'LINKIN_PARK_DOCUMENT']);
+    ).toEqual(['d6', 'd8']);
   });
 
   it('should filter documents from single collection by collection and fulltext', () => {
@@ -347,10 +356,10 @@ describe('Document filters', () => {
         collections,
         [],
         [],
-        {stems: [{collectionId: 'COMPANIES_COLLECTION'}], fulltexts: ['link']},
+        {stems: [{collectionId: 'c1'}], fulltexts: ['link']},
         undefined
       ).map(document => document.id)
-    ).toEqual(['LINKEDIN_DOCUMENT']);
+    ).toEqual(['d6']);
   });
 
   it('should filter children together with parent document by fulltext', () => {
@@ -358,7 +367,7 @@ describe('Document filters', () => {
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['IBM']}, undefined, true).map(
         document => document.id
       )
-    ).toEqual(['IBM_DOCUMENT', 'REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'SOFTLAYER_DOCUMENT']);
+    ).toEqual(['d1', 'd2', 'd3', 'd4']);
   });
 
   it('should filter only matching document without children by fulltext', () => {
@@ -366,7 +375,7 @@ describe('Document filters', () => {
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined).map(
         document => document.id
       )
-    ).toEqual(['REDHAT_DOCUMENT', 'RHCP_DOCUMENT']);
+    ).toEqual(['d2', 'd7']);
   });
 
   it('should filter children together with nested parent document by fulltext', () => {
@@ -374,6 +383,100 @@ describe('Document filters', () => {
       filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined, true).map(
         document => document.id
       )
-    ).toEqual(['REDHAT_DOCUMENT', 'JBOSS_DOCUMENT', 'RHCP_DOCUMENT']);
+    ).toEqual(['d2', 'd3', 'd7']);
+  });
+
+  it('should filter by number constraint', () => {
+    let query: Query = {
+      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '=', value: '-10'}]}],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d3']);
+
+    query = {
+      stems: [
+        {collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '!=', value: '-10'}]},
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d1', 'd2', 'd4', 'd5', 'd6']);
+
+    query = {
+      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '>', value: '40'}]}],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d2', 'd4', 'd6']);
+
+    query = {
+      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '<=', value: '40'}]}],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d1', 'd3']);
+  });
+
+  it('should filter by date constraint', () => {
+    let query: Query = {
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '=', value: "2019-04-06'T'00:00:00.000Z"}],
+        },
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d5']);
+
+    query = {
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '!=', value: "2019-04-06'T'00:00:00.000Z"}],
+        },
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d1', 'd2', 'd3', 'd4', 'd6']);
+
+    query = {
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '<', value: "2019-04-06'T'00:00:00.000Z"}],
+        },
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d1', 'd2']);
+
+    query = {
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '>=', value: "2019-04-06'T'00:00:00.000Z"}],
+        },
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual(['d3', 'd5', 'd6']);
+
+    query = {
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '>=', value: 'bla bla bla'}],
+        },
+      ],
+    };
+    expect(
+      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+    ).toEqual([]);
   });
 });

@@ -104,7 +104,7 @@ export class TextDataInputComponent implements OnChanges {
         // needs to be executed after parent event handlers
         const input = this.textInput;
         this.preventSave = true;
-        setTimeout(() => this.saveValue(input));
+        setTimeout(() => input && this.saveValue(input));
         return;
       case KeyCode.Escape:
         this.preventSave = true;

@@ -33,9 +33,18 @@ import {ConditionSuggestionsComponent} from './query-item/condition-suggestions/
 import {SearchBoxPipesModule} from './query-item/pipes/search-box-pipes.module';
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
+import {DataInputModule} from '../../data-input/data-input.module';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, PickerModule, PipesModule, SearchBoxPipesModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    PickerModule,
+    PipesModule,
+    SearchBoxPipesModule,
+    DataInputModule,
+  ],
   declarations: [
     SearchBoxComponent,
     QueryItemComponent,

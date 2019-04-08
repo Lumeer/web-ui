@@ -4,7 +4,7 @@
                       [readonly]="readonly"
                       [value]="value"
                       (valueChange)="onValueChange($event)"
-                      (save)="save.emit($event)"
+                      (save)="onSaveValue($event)"
                       (onFocus)="emitFocus($event)">
   </boolean-data-input>
 
@@ -14,8 +14,8 @@
                        [readonly]="readonly"
                        [value]="value"
                        (valueChange)="onValueChange($event)"
-                       (save)="save.emit($event)"
-                       (cancel)="cancel.emit()"
+                       (save)="onSaveValue($event)"
+                       (cancel)="onCancel()"
                        class="d-block">
   </datetime-data-input>
 
@@ -24,9 +24,10 @@
                      [readonly]="readonly"
                      [constraintConfig]="constraint.config"
                      [value]="value"
+                     [skipValidation]="skipValidation"
                      (valueChange)="onValueChange($event)"
-                     (save)="save.emit($event)"
-                     (cancel)="cancel.emit()"
+                     (save)="onSaveValue($event)"
+                     (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
                      class="d-block">
   </number-data-input>
@@ -36,23 +37,25 @@
                          [readonly]="readonly"
                          [constraintConfig]="constraint.config"
                          [value]="value"
+                         [skipValidation]="skipValidation"
                          (valueChange)="onValueChange($event)"
-                         (save)="save.emit($event)"
-                         (cancel)="cancel.emit()"
+                         (save)="onSaveValue($event)"
+                         (cancel)="onCancel()"
                          (onFocus)="emitFocus($event)"
                          class="d-block">
   </percentage-data-input>
 
   <color-data-input *ngSwitchCase="constraintType.Color"
-                         [focus]="focus"
-                         [readonly]="readonly"
-                         [constraintConfig]="constraint.config"
-                         [value]="value"
-                         (valueChange)="onValueChange($event)"
-                         (save)="save.emit($event)"
-                         (cancel)="cancel.emit()"
-                         (onFocus)="emitFocus($event)"
-                         class="d-block">
+                    [focus]="focus"
+                    [readonly]="readonly"
+                    [constraintConfig]="constraint.config"
+                    [value]="value"
+                    [skipValidation]="skipValidation"
+                    (valueChange)="onValueChange($event)"
+                    (save)="onSaveValue($event)"
+                    (cancel)="onCancel()"
+                    (onFocus)="emitFocus($event)"
+                    class="d-block">
   </color-data-input>
 
   <text-data-input *ngSwitchDefault
@@ -61,8 +64,8 @@
                    [readonly]="readonly"
                    [value]="value"
                    (valueChange)="onValueChange($event)"
-                   (save)="save.emit($event)"
-                   (cancel)="cancel.emit()"
+                   (save)="onSaveValue($event)"
+                   (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
                    class="d-block">
   </text-data-input>
@@ -74,8 +77,8 @@
                    [readonly]="readonly"
                    [value]="value"
                    (valueChange)="onValueChange($event)"
-                   (save)="save.emit($event)"
-                   (cancel)="cancel.emit()"
+                   (save)="onSaveValue($event)"
+                   (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
                    class="d-block">
   </text-data-input>
