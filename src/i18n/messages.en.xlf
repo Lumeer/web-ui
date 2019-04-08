@@ -74,11 +74,8 @@
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="query.item.button.remove" datatype="html">
         <source>Remove query item</source><target state="final">Remove query item</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="tag.remove" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="tag.remove" datatype="html">
         <source>Remove tag</source><target state="final">Remove tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/tag/tag.component.html</context>
@@ -454,19 +451,13 @@
         <source>Remove Row</source><target state="final">Remove Row</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="keyValue.configure.constraint" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="keyValue.configure.constraint" datatype="html">
         <source>Set Attribute Type</source><target state="final">Set Attribute Type</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
         <source>Set Attribute Function</source><target state="final">Set Attribute Function</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="count.of" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source><target state="final">of</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
@@ -3388,7 +3379,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.name.exists.message" datatype="html">
-        <source>Do you really want to change view name?</source><target state="final">Do you really want to change view name?</target>
+        <source>Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</source><target state="final">Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="60ab130ceeb91bdfeaa4d635fca0a1e07619372d" datatype="html">
+        <source>{VAR_SELECT, select, 0 {change view name} 1 {create view with the same name} }</source><target state="final">{VAR_SELECT, select, 0 {change view name} 1 {create view with the same name} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
