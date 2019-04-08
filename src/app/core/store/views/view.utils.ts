@@ -17,22 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../../../view/perspectives/perspective';
-import {DocumentModel} from '../documents/document.model';
-import {isTableConfigChanged} from '../tables/table.utils';
-import {isChartConfigChanged} from '../charts/chart.util';
-import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
+import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {isChartConfigChanged} from '../charts/chart.util';
+import {Collection} from '../collections/collection';
+import {DocumentModel} from '../documents/document.model';
+import {LinkType} from '../link-types/link.type';
+import {TableConfig} from '../tables/table.model';
+import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
+import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
+import {PerspectiveConfig} from './view';
 
 export function isViewConfigChanged(
   perspective: Perspective,
   viewConfig: any,
   perspectiveConfig: any,
-  documentsMap: {[id: string]: DocumentModel}
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
 ): boolean {
   switch (perspective) {
     case Perspective.Table:
-      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap);
+      return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap);
     case Perspective.Chart:
       return isChartConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.GanttChart:
@@ -41,5 +48,17 @@ export function isViewConfigChanged(
       return isCalendarConfigChanged(viewConfig, perspectiveConfig);
     default:
       return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
+  }
+}
+
+/**
+ * Creates perspective config with modifications before saving in a view
+ */
+export function createPerspectiveSaveConfig(perspective: Perspective, config: PerspectiveConfig): PerspectiveConfig {
+  switch (perspective) {
+    case Perspective.Table:
+      return createTableSaveConfig(config as TableConfig);
+    default:
+      return config;
   }
 }

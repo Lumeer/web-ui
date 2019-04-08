@@ -53,10 +53,9 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
 
   private clearPerspective(perspective: Perspective) {
     switch (perspective) {
-      case Perspective.PostIt: {
+      // TODO set post-it config in changeConfig$ effect instead
+      case Perspective.PostIt:
         return this.store$.dispatch(new PostItAction.Clear());
-      }
-      // TODO maybe clear table config as well
       default:
         this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
     }

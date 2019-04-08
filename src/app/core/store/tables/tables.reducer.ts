@@ -22,6 +22,7 @@ import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
 import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.utils';
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {
+  DEFAULT_TABLE_ID,
   TableColumnType,
   TableConfig,
   TableConfigColumn,
@@ -46,6 +47,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return tablesAdapter.addOne(action.payload.table, state);
     case TablesActionType.REMOVE_TABLE:
       return tablesAdapter.removeOne(action.payload.tableId, state);
+    case TablesActionType.SET_CONFIG:
+      return tablesAdapter.updateOne({id: DEFAULT_TABLE_ID, changes: {config: action.payload.config}}, state);
     case TablesActionType.ADD_PART:
       return addPart(state, action);
     case TablesActionType.REPLACE_COLUMNS:

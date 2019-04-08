@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {SizeType} from '../../../shared/slider/size-type';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Resource} from '../../model/resource';
-import {TableConfig} from '../tables/table.model';
-import {SizeType} from '../../../shared/slider/size-type';
-import {ChartConfig} from '../charts/chart';
 import {CalendarConfig} from '../calendars/calendar.model';
-import {Query} from '../navigation/query';
+import {ChartConfig} from '../charts/chart';
 import {GanttChartConfig} from '../gantt-charts/gantt-chart';
+import {Query} from '../navigation/query';
+import {TableConfig} from '../tables/table.model';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -63,3 +63,12 @@ export interface SearchConfig {
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
 }
+
+export type PerspectiveConfig =
+  | DetailConfig
+  | PostItConfig
+  | SearchConfig
+  | TableConfig
+  | GanttChartConfig
+  | CalendarConfig
+  | ChartConfig;

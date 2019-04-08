@@ -33,6 +33,8 @@ export enum TablesActionType {
   DESTROY_TABLE = '[Tables] Destroy Table',
   REMOVE_TABLE = '[Tables] Remove Table',
 
+  SET_CONFIG = '[Tables] Set Config',
+
   CREATE_PART = '[Tables] Create Part',
   ADD_PART = '[Tables] Add Part',
   SWITCH_PARTS = '[Tables] Switch Parts',
@@ -122,6 +124,12 @@ export namespace TablesAction {
     public readonly type = TablesActionType.REMOVE_TABLE;
 
     public constructor(public payload: {tableId: string}) {}
+  }
+
+  export class SetConfig implements Action {
+    public readonly type = TablesActionType.SET_CONFIG;
+
+    public constructor(public payload: {config: TableConfig}) {}
   }
 
   export class CreatePart implements Action {
@@ -393,6 +401,7 @@ export namespace TablesAction {
     | AddTable
     | DestroyTable
     | RemoveTable
+    | SetConfig
     | CreatePart
     | AddPart
     | SwitchParts

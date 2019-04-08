@@ -44,11 +44,7 @@ export enum ViewsActionType {
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
   CHANGE_CONFIG = '[Views] Change Config',
-  CHANGE_DETAIL_CONFIG = '[Views] Change Detail Config',
-  CHANGE_POSTIT_CONFIG = '[Views] Change Post-it Config',
   CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
-  CHANGE_SMARTDOC_CONFIG = '[Views] Change Smart Document Config',
-  CHANGE_TABLE_CONFIG = '[Views] Change Table Config',
 
   SET_CURSOR = '[Views] Set Cursor',
 

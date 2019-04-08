@@ -25,6 +25,7 @@ import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {Workspace} from '../core/store/navigation/workspace';
 import {View} from '../core/store/views/view';
+import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
@@ -137,7 +138,7 @@ export class ViewComponent implements OnInit, OnDestroy {
           ...this.view$.getValue(),
           query: this.query,
           name,
-          config: {[perspective]: config},
+          config: {[perspective]: createPerspectiveSaveConfig(perspective, config)},
           perspective,
         };
 

@@ -21,21 +21,23 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
+import {selectCalendarConfig} from '../calendars/calendars.state';
 import {selectChartConfig} from '../charts/charts.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
+import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
+import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {ViewConfig, ViewCursor, View} from './view';
+import {View, ViewConfig, ViewCursor} from './view';
 import {isViewConfigChanged} from './view.utils';
-import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
-import {selectCalendarConfig} from '../calendars/calendars.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
-  config: ViewConfig;
+  config: ViewConfig; // TODO remove
   cursor: ViewCursor;
 }
 
@@ -81,13 +83,11 @@ export const selectViewConfig = createSelector(
   selectViewsState,
   views => views.config
 );
+
+// TODO refactor search perspective so this selector is no longer needed
 export const selectViewSearchConfig = createSelector(
   selectViewConfig,
   config => config.search
-);
-export const selectViewTableConfig = createSelector(
-  selectViewConfig,
-  config => config.table
 );
 
 export const selectViewCursor = createSelector(
@@ -123,8 +123,12 @@ export const selectViewConfigChanged = createSelector(
   selectPerspectiveConfig,
   selectPerspectiveViewConfig,
   selectDocumentsDictionary,
-  (perspective, perspectiveConfig, viewConfig, documentsMap) =>
-    viewConfig && perspectiveConfig && isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap)
+  selectCollectionsDictionary,
+  selectLinkTypesDictionary,
+  (perspective, perspectiveConfig, viewConfig, documentsMap, collectionsMap, linkTypesMap) =>
+    viewConfig &&
+    perspectiveConfig &&
+    isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)
 );
 
 export const selectViewQueryChanged = createSelector(

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
 import {
   filterDirectAttributeChildren,
@@ -25,6 +26,7 @@ import {
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {Attribute, Collection} from '../collections/collection';
+import {createAttributesMap} from '../collections/collection.util';
 import {DocumentModel} from '../documents/document.model';
 import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -39,7 +41,6 @@ import {
   TableConfigRow,
   TableModel,
 } from './table.model';
-import {createAttributesMap} from '../collections/collection.util';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   const index = getColumnIndex(path);
@@ -594,62 +595,6 @@ export function getRowParentDocumentId(
   const parentDocumentId =
     (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
   return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
-}
-
-export function isTableConfigChanged(
-  viewConfig: TableConfig,
-  perspectiveConfig: TableConfig,
-  documentsMap: Record<string, DocumentModel>
-): boolean {
-  if (areTableConfigPartsChanged(viewConfig.parts, perspectiveConfig.parts)) {
-    return true;
-  }
-
-  return areTableConfigRowsChanged(viewConfig.rows, perspectiveConfig.rows, documentsMap);
-}
-
-export function areTableConfigPartsChanged(savedParts: TableConfigPart[], shownParts: TableConfigPart[]): boolean {
-  return JSON.stringify(savedParts) !== JSON.stringify(shownParts);
-}
-
-export function areTableConfigRowsChanged(
-  savedRows: TableConfigRow[],
-  shownRows: TableConfigRow[],
-  documentsMap: Record<string, DocumentModel>
-): boolean {
-  const validSavedRows = filterValidSavedRows(savedRows, documentsMap);
-  return !areAllSavedRowsPresent(validSavedRows, shownRows);
-}
-
-export function filterValidSavedRows(
-  rows: TableConfigRow[],
-  documentsMap: Record<string, DocumentModel>
-): TableConfigRow[] {
-  return (
-    rows &&
-    rows.filter((row, index) => {
-      // filter out rows with deleted documents and last empty row
-      return !(row.documentId && !documentsMap[row.documentId]) && !(!row.documentId && index === rows.length - 1);
-    })
-  );
-}
-
-export function areAllSavedRowsPresent(savedRows: TableConfigRow[], shownRows: TableConfigRow[]): boolean {
-  if (savedRows.length > shownRows.length) {
-    return false;
-  }
-
-  return savedRows.reduce((present, savedRow, index) => {
-    const shownRow = shownRows[index];
-    return (
-      present &&
-      savedRow.documentId === shownRow.documentId &&
-      savedRow.linkInstanceId === shownRow.linkInstanceId &&
-      savedRow.parentDocumentId === shownRow.parentDocumentId &&
-      (savedRow.linkedRows.length < 2 || Boolean(savedRow.expanded) === Boolean(shownRow.expanded)) &&
-      areAllSavedRowsPresent(savedRow.linkedRows, shownRow.linkedRows)
-    );
-  }, true);
 }
 
 export function filterTableColumnsByAttributes(
