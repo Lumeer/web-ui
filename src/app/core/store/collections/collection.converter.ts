@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeDto, CollectionDto} from '../../dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
-import {Constraint, ConstraintType, constraintTypesMap, NumberConstraintConfig} from '../../model/data/constraint';
-import {AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
-import {Attribute, AttributeFunction, Collection, ImportedCollection} from './collection';
-import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
+import {CollectionDto} from '../../dto';
 import {RuleDto} from '../../dto/collection.dto';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {Rule, RuleTimingMap, RuleTypeMap} from '../../model/rule';
-import {convertToBig} from '../../../shared/utils/data.utils';
+import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
+import {Collection, ImportedCollection} from './collection';
 
 export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
   return {
@@ -64,99 +62,6 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
     rules: convertRulesToDto(model.rules),
   };
-}
-
-export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
-  return {
-    id: dto.id,
-    name: dto.name,
-    constraint: convertAttributeConstraintDtoToModel(dto.constraint),
-    function: convertAttributeFunctionDtoToModel(dto.function),
-    usageCount: dto.usageCount,
-    correlationId: correlationId,
-  };
-}
-
-export function convertAttributeModelToDto(model: Attribute): AttributeDto {
-  return {
-    id: model.id,
-    name: model.name,
-    constraint: convertAttributeConstraintModelToDto(model.constraint),
-    function: convertAttributeFunctionModelToDto(model.function),
-  };
-}
-
-function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
-  if (!dto) {
-    return null;
-  }
-  switch (dto.type) {
-    case ConstraintType.Number:
-      return convertNumberConstraintDtoToModel(dto);
-    default:
-      return convertAnyConstraintDtoToModel(dto);
-  }
-}
-
-function convertNumberConstraintDtoToModel(dto: ConstraintDto): Constraint {
-  return {
-    type: ConstraintType.Number,
-    config: {
-      decimal: dto.config.decimal,
-      format: dto.config.format,
-      precision: dto.config.precision,
-      minValue: convertToBig(dto.config.minValue),
-      maxValue: convertToBig(dto.config.maxValue),
-    },
-  };
-}
-
-function convertAnyConstraintDtoToModel(dto: ConstraintDto): Constraint {
-  return {
-    type: constraintTypesMap[dto.type],
-    config: dto.config,
-  };
-}
-
-function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto {
-  if (!model) {
-    return null;
-  }
-  switch (model.type) {
-    case ConstraintType.Number:
-      return convertNumberConstraintModelToDto(model);
-    default:
-      return convertAnyConstraintModelToDto(model);
-  }
-}
-
-function convertNumberConstraintModelToDto(model: Constraint): ConstraintDto {
-  const config = model.config as NumberConstraintConfig;
-  return {
-    type: ConstraintType.Number,
-    config: {
-      decimal: config.decimal,
-      format: config.format,
-      precision: config.precision,
-      minValue: config.minValue && config.minValue.toFixed(),
-      maxValue: config.maxValue && config.maxValue.toFixed(),
-    },
-  };
-}
-
-function convertAnyConstraintModelToDto(model: Constraint): ConstraintDto {
-  return {
-    type: model.type,
-    config: model.config,
-  };
-}
-
-function convertAttributeFunctionDtoToModel(dto: AttributeFunctionDto): AttributeFunction {
-  return dto && {...dto};
-}
-
-function convertAttributeFunctionModelToDto(model: AttributeFunction): AttributeFunctionDto {
-  return model && {...model};
 }
 
 export function convertImportedCollectionModelToDto(model: ImportedCollection): ImportedCollectionDto {

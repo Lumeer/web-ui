@@ -22,14 +22,17 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {BlocklyModule} from './blockly/blockly.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
 import {CommentsComponent} from './comments/comments.component';
+import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DocumentModule} from './document/document.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
+import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
@@ -43,11 +46,9 @@ import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
 import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
+import {TourComponent} from './tour/tour.component';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
-import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
-import {BlocklyModule} from './blockly/blockly.module';
-import {TourComponent} from './tour/tour.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import {TourComponent} from './tour/tour.component';
     SelectModule,
     CollapsibleSidebarModule,
     BlocklyModule,
+    DateTimeModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -114,6 +116,7 @@ import {TourComponent} from './tour/tour.component';
     CollapsibleSidebarModule,
     LoadingIndicatorComponent,
     BlocklyModule,
+    DateTimeModule,
   ],
 })
 export class SharedModule {}

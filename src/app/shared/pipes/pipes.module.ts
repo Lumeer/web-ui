@@ -19,46 +19,47 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {HighlightTextPipe} from './highlight-text.pipe';
+import {AttributeEditablePipe} from './attribute-editable.pipe';
+import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
+import {CanActivatePagePipe} from './can-activate-page.pipe';
+import {CanChangeRolesPipe} from './can-change-roles.pipe';
+import {CollectionAttributeEditablePipe} from './collection-attribute-editable.pipe';
+import {CollectionAttributePipe} from './collection-attribute.pipe';
+import {CollectionByIdPipe} from './collection-by-id.pipe';
+import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
+import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
 import {ColorsPipe} from './colors.pipe';
+import {ConstraintTypeIconPipe} from './constraint-type-icon.pipe';
+import {ContrastColorPipe} from './contrast-color.pipe';
+import {DataPipesModule} from './data/data-pipes.module';
 import {DefaultAttributePipe} from './default-attribute.pipe';
+import {EmptyQueryPipe} from './empty-query.pipe';
 import {EmptyPipe} from './empty.pipe';
 import {FilterPerspectivesPipe} from './filter-perspectives.pipe';
+import {FormatDatePipe} from './format-date.pipe';
+import {HighlightTextPipe} from './highlight-text.pipe';
 import {IconsPipe} from './icons.pipe';
+import {IncludesPipe} from './includes.pipe';
+import {IsOrganizationTypePipe} from './is-organization-type.pipe';
 import {LengthGreaterThanPipe} from './length-greater-than.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
+import {LinkTypesSelectItemsPipe} from './link-types-select-items.pipe';
+import {LogPipe} from './log.pipe';
 import {NativeDatePipe} from './native-date.pipe';
+import {PageEndIndexPipe} from './page-end-index.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
+import {ParseDatePipe} from './parse-date.pipe';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
-import {WorkspaceSetPipe} from './workspace-set.pipe';
-import {EmptyQueryPipe} from './empty-query.pipe';
-import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
+import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
 import {ResourceRolesPipe} from './resource-roles.pipe';
 import {RoleIconPipe} from './role-icon.pipe';
 import {RoleTitlePipe} from './role-title.pipe';
-import {IncludesPipe} from './includes.pipe';
-import {CanActivatePagePipe} from './can-activate-page.pipe';
-import {PageEndIndexPipe} from './page-end-index.pipe';
-import {LogPipe} from './log.pipe';
-import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
-import {IsOrganizationTypePipe} from './is-organization-type.pipe';
+import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
-import {CanChangeRolesPipe} from './can-change-roles.pipe';
-import {DataPipesModule} from './data/data-pipes.module';
-import {ParseDatePipe} from './parse-date.pipe';
-import {CollectionAttributePipe} from './collection-attribute.pipe';
-import {ContrastColorPipe} from './contrast-color.pipe';
-import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
-import {LinkTypesSelectItemsPipe} from './link-types-select-items.pipe';
-import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
-import {CollectionsSelectItemsPipe} from './collections-select-items.pipe';
-import {CollectionByIdPipe} from './collection-by-id.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
-import {CollectionAttributeEditablePipe} from './collection-attribute-editable.pipe';
-import {AttributeEditablePipe} from './attribute-editable.pipe';
-import {ConstraintTypeIconPipe} from './constraint-type-icon.pipe';
+import {WorkspaceSetPipe} from './workspace-set.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -101,6 +102,7 @@ import {ConstraintTypeIconPipe} from './constraint-type-icon.pipe';
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
+    FormatDatePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -143,6 +145,7 @@ import {ConstraintTypeIconPipe} from './constraint-type-icon.pipe';
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
+    FormatDatePipe,
   ],
 })
 export class PipesModule {}

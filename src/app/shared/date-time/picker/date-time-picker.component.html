@@ -1,0 +1,47 @@
+<ng-template #dateTimePicker>
+  <div class="card"
+       (click)="onClick($event)">
+    <div class="d-flex"
+         [class.flex-column]="!(options | hasTimeOption)"
+         [formGroup]="form">
+      <bs-datepicker-inline *ngIf="options | hasDateOption"
+                            [bsConfig]="datePickerConfig"
+                            [minDate]="min"
+                            [maxDate]="max"
+                            [bsValue]="dateControl.value"
+                            (bsValueChange)="onDateChange($event)">
+      </bs-datepicker-inline>
+      <div class="d-flex flex-column pr-3 pb-3"
+           [class.pl-3]="!((options | hasDateOption) && (options | hasTimeOption))"
+           [class.pt-3]="!(options | hasDateOption)">
+        <div *ngIf="options | hasTimeOption"
+             class="d-flex flex-column flex-grow-1 align-items-center justify-content-center mb-3">
+          <timepicker [formControlName]="'date'"
+                      [min]="min"
+                      [max]="max"
+                      [showMeridian]="options?.meridian"
+                      [showMinutes]="options?.minutes"
+                      [showSeconds]="options?.seconds">
+          </timepicker>
+          <small class="text-secondary mt-3">
+            {{ timeZone }}
+          </small>
+        </div>
+        <div class="d-flex flex-grow-0 justify-content-end">
+          <button class="btn btn-sm btn-outline-secondary"
+                  data-test="date-time-picker-cancel-button"
+                  i18n="@@dateTimePicker.button.cancel"
+                  (click)="onCancelClick()">
+            Cancel
+          </button>
+          <button class="btn btn-sm btn-primary ml-2"
+                  data-test="date-time-picker-save-button"
+                  i18n="@@dateTimePicker.button.save"
+                  (click)="onSaveClick()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -40,10 +40,9 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Attribute, Collection} from './collection';
 import {
-  convertAttributeDtoToModel,
-  convertAttributeModelToDto,
   convertCollectionDtoToModel,
   convertCollectionModelToDto,
   convertImportedCollectionModelToDto,

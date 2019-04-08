@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
-import {formatDateTimeDataValue} from '../../utils/data.utils';
+import {DateTimeOptions, hasTimeOption} from '../date-time-options';
 
 @Pipe({
-  name: 'dateTimeDataValue',
+  name: 'hasTimeOption',
 })
-export class DateTimeDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: Partial<DateTimeConstraintConfig>): string {
-    return formatDateTimeDataValue(value, config);
+export class HasTimeOptionPipe implements PipeTransform {
+  public transform(options: DateTimeOptions): boolean {
+    return hasTimeOption(options);
   }
 }

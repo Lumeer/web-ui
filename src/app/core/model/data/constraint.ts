@@ -96,8 +96,8 @@ export interface CoordinatesConstraintConfig {
 
 export interface DateTimeConstraintConfig {
   format: string;
-  minDateTime: Date;
-  maxDateTime: Date;
+  minValue: Date;
+  maxValue: Date;
   range: boolean;
 }
 

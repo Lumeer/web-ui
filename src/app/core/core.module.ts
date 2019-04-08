@@ -24,11 +24,19 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
+import {defineLocale} from 'ngx-bootstrap/chronos';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {csLocale} from 'ngx-bootstrap/locale';
+import {DeviceDetectorModule} from 'ngx-device-detector';
+import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
+import {VideoService} from './api/video/video.service';
 import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
+import {PusherService} from './pusher/pusher.service';
 import {
   CollectionService,
   DocumentService,
@@ -42,17 +50,16 @@ import {
   UserService,
   ViewService,
 } from './rest';
+import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
+import {UserNotificationsService} from './rest/user-notifications.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
-import {PusherService} from './pusher/pusher.service';
-import {VideoService} from './api/video/video.service';
-import {UserNotificationsService} from './rest/user-notifications.service';
-import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
-import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
-import {DeviceDetectorModule} from 'ngx-device-detector';
-import {BaseService} from './rest/base.service';
+
+if (environment.locale === 'cs') {
+  defineLocale('cs', csLocale);
+}
 
 @NgModule({
   imports: [

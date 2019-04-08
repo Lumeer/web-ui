@@ -30,13 +30,14 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {BsDatepickerDirective} from 'ngx-bootstrap';
+import {environment} from '../../../../environments/environment';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
+import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
+import {isDateValid} from '../../utils/common.utils';
 import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {environment} from '../../../../environments/environment';
-import {isDateValid} from '../../utils/common.utils';
 
 @Component({
   selector: 'datetime-data-input',
@@ -66,36 +67,43 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('dateInput')
-  public dateInput: ElementRef<HTMLInputElement>;
+  @ViewChild('dateTimeInput')
+  public dateTimeInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(BsDatepickerDirective)
-  public datePicker: BsDatepickerDirective;
+  @ViewChild(DateTimePickerComponent)
+  public dateTimePicker: DateTimePickerComponent;
+
+  public options: DateTimeOptions;
 
   private preventSaving: boolean;
+
+  constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
-          this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
+          this.dateTimeInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         }
 
-        HtmlModifier.setCursorAtTextContentEnd(this.dateInput.nativeElement);
-        this.dateInput.nativeElement.focus();
-        this.datePicker.show();
+        HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
+        this.dateTimeInput.nativeElement.focus();
+        this.dateTimePicker.open();
       });
     }
     if (changes.focus && !this.focus) {
-      if (this.datePicker) {
-        this.datePicker.hide();
+      if (this.dateTimePicker) {
+        this.dateTimePicker.close();
       }
     }
     if (changes.value && String(this.value).length === 1) {
       // show value entered into hidden input without any changes
-      const input = this.dateInput;
+      const input = this.dateTimeInput;
       setTimeout(() => input && (input.nativeElement.value = this.value));
+    }
+    if (changes.constraintConfig && this.constraintConfig) {
+      this.options = createDateTimeOptions(this.constraintConfig.format);
     }
   }
 
@@ -105,16 +113,16 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.dateInput) {
+        if (this.dateTimeInput) {
           this.preventSaving = true;
-          const value = this.transformValue(this.dateInput.nativeElement.value);
+          const value = this.transformValue(this.dateTimeInput.nativeElement.value);
           // needs to be executed after parent event handlers
           setTimeout(() => this.save.emit(value));
         }
         return;
       case KeyCode.Escape:
         this.preventSaving = true;
-        this.dateInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
+        this.dateTimeInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
         this.cancel.emit();
         return;
     }

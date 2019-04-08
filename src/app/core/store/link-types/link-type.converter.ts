@@ -18,8 +18,8 @@
  */
 
 import {LinkTypeDto} from '../../dto';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkType} from './link.type';
-import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/collection.converter';
 
 export function convertLinkTypeDtoToModel(dto: LinkTypeDto, correlationId?: string): LinkType {
   return {

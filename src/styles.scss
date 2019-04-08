@@ -55,15 +55,19 @@ ul {
   &.text-primary:hover {
     color: $primary-hover !important;
   }
+
   &.text-secondary:hover {
     color: $secondary-hover !important;
   }
+
   &.text-warning:hover {
     color: $warning-hover !important;
   }
+
   &.text-danger:hover {
     color: $danger-hover !important;
   }
+
   &.text-success:hover {
     color: $success-hover !important;
   }
@@ -341,4 +345,16 @@ color-picker .color-picker .preset-area {
 .tmp-invisible {
   visibility: hidden;
   white-space: pre;
+}
+
+.box-shadow-none {
+  box-shadow: none;
+}
+
+.w-max-content {
+  width: max-content;
+}
+
+.cdk-overlay-container {
+  z-index: 1100 !important; // otherwise date picker shown behind Bootstrap modal
 }

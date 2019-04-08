@@ -40,6 +40,7 @@ export class ConstraintConfigFormComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.type) {
+      this.form.clearValidators();
       removeAllFormControls(this.form);
     }
   }

@@ -485,6 +485,7 @@ describe('Table perspective :: Constraints', () => {
     cy.contains('button.current', 'January').click();
     cy.contains('td[role="gridcell"] > span', 'July').click(); // bug in ngx-bootstrap (June)
     cy.contains('td[role="gridcell"] > span', '4').click();
+    cy.get('[data-test="date-time-picker-save-button"]').click();
 
     cy.wait('@patchDocumentData')
       .its('status')
@@ -506,6 +507,7 @@ describe('Table perspective :: Constraints', () => {
     cy.contains('td[role="gridcell"] > span', '2018').click();
     cy.contains('td[role="gridcell"] > span', 'January').click(); // bug in ngx-bootstrap (February)
     cy.contains('td[role="gridcell"] > span', /^6$/).click();
+    cy.get('[data-test="date-time-picker-save-button"]').click();
 
     cy.wait('@patchDocumentData')
       .its('status')
