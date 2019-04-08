@@ -83,12 +83,6 @@ function isTableColumnChanged(savedColumn: TableConfigColumn, shownColumn: Table
   return JSON.stringify(savedColumn) !== JSON.stringify(shownColumn);
 }
 
-export function filterValidSavedColumns(columns: TableConfigColumn[]): TableConfigColumn[] {
-  // ignore uninitialized columns at the end of the table part
-  const index = [...columns].reverse().findIndex(column => column.attributeIds && column.attributeIds.length > 0);
-  return columns.slice(0, columns.length - index);
-}
-
 export function areTableConfigRowsChanged(
   savedRows: TableConfigRow[],
   shownRows: TableConfigRow[],

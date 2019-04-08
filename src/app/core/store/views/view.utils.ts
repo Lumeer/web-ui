@@ -24,7 +24,10 @@ import {isChartConfigChanged} from '../charts/chart.util';
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {LinkType} from '../link-types/link.type';
+import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
+import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
+import {PerspectiveConfig} from './view';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -45,5 +48,17 @@ export function isViewConfigChanged(
       return isCalendarConfigChanged(viewConfig, perspectiveConfig);
     default:
       return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
+  }
+}
+
+/**
+ * Creates perspective config with modifications before saving in a view
+ */
+export function createPerspectiveSaveConfig(perspective: Perspective, config: PerspectiveConfig): PerspectiveConfig {
+  switch (perspective) {
+    case Perspective.Table:
+      return createTableSaveConfig(config as TableConfig);
+    default:
+      return config;
   }
 }
