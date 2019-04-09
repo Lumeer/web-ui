@@ -1024,5 +1024,25 @@ describe('Chart data converter constraints', () => {
     const chartDataSum = converter.convert(configSum);
     expect(chartDataSum.sets.length).toEqual(1);
     expect(chartDataSum.sets[0].points).toEqual(pointsSum);
+
+    const configMax = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max}};
+    const pointsMax = [
+      {id: null, x: 'Martin', y: '50%'},
+      {id: null, x: 'Kubo', y: '80%'},
+      {id: null, x: 'Tomas', y: '40%'},
+    ];
+    const chartDataMax = converter.convert(configMax);
+    expect(chartDataMax.sets.length).toEqual(1);
+    expect(chartDataMax.sets[0].points).toEqual(pointsMax);
+
+    const configMin = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min}};
+    const pointsMin = [
+      {id: null, x: 'Martin', y: '10%'},
+      {id: null, x: 'Kubo', y: '40%'},
+      {id: null, x: 'Tomas', y: '10%'},
+    ];
+    const chartDataMin = converter.convert(configMin);
+    expect(chartDataMin.sets.length).toEqual(1);
+    expect(chartDataMin.sets[0].points).toEqual(pointsMin);
   });
 });
