@@ -123,6 +123,7 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
         .withFlexibleDimensions(false)
         .withViewportMargin(8)
         .withLockedPosition()
+        .withPush(false)
         .withPositions([
           {
             originX: 'start',
