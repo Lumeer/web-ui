@@ -17,14 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Constraint,
-  ConstraintType,
-  DateTimeConstraintConfig,
-  PercentageConstraintConfig,
-} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
-import {convertToBig, formatDataValue, getPercentageSaveValue, parseMomentDate} from '../data.utils';
+import {convertToBig, formatDataValue, parseMomentDate} from '../data.utils';
 import {ConditionType} from '../../../core/store/navigation/query';
 import * as moment from 'moment';
 
@@ -46,7 +41,8 @@ export function compareDataValues(a: any, b: any, constraint: Constraint, asc: b
     case ConstraintType.DateTime:
       return compareDateTimeValues(a, b, constraint.config as DateTimeConstraintConfig, asc);
     case ConstraintType.Percentage:
-      return comparePercentageValues(a, b, constraint.config as PercentageConstraintConfig, asc);
+    case ConstraintType.Number:
+      return compareNumericValues(a, b, asc);
     default:
       return compareAnyValues(a, b, asc);
   }
@@ -75,13 +71,21 @@ function compareDateTimeValues(a: any, b: any, config: DateTimeConstraintConfig,
   return aMoment.isAfter(bMoment) ? multiplier : bMoment.isAfter(aMoment) ? -1 * multiplier : 0;
 }
 
-function comparePercentageValues(a: any, b: any, config: PercentageConstraintConfig, asc: boolean = true): number {
+function compareNumericValues(a: any, b: any, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
 
-  const aValue = getPercentageSaveValue(a);
-  const bValue = getPercentageSaveValue(b);
+  const aBig = convertToBig(a);
+  const bBig = convertToBig(b);
 
-  return aValue > bValue ? multiplier : bValue > aValue ? -1 * multiplier : 0;
+  if (!aBig && !bBig) {
+    return 0;
+  } else if (!aBig) {
+    return multiplier;
+  } else if (!bBig) {
+    return -1 * multiplier;
+  }
+
+  return multiplier * aBig.cmp(bBig);
 }
 
 export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType, constraint: Constraint): boolean {
