@@ -937,7 +937,7 @@ describe('Chart data converter linked collections', () => {
 });
 
 describe('Chart data converter constraints', () => {
-  fit('should return data with percentage constraint', () => {
+  it('should return data with percentage constraint', () => {
     const collections = [
       {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx'}]},
       {
