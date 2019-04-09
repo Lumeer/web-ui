@@ -938,7 +938,7 @@ describe('Chart data converter linked collections', () => {
 
 describe('Chart data converter constraints', () => {
   it('should return data with percentage constraint', () => {
-    const collections = [
+    const collections3 = [
       {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx'}]},
       {
         id: 'C2',
@@ -947,7 +947,7 @@ describe('Chart data converter constraints', () => {
         attributes: [{id: 'a1', name: 'Lala', constraint: {type: ConstraintType.Percentage, config: {}}}],
       },
     ];
-    const linkTypes: LinkType[] = [{id: 'LT1', name: 'LinkType1', collectionIds: ['C1', 'C2'], attributes: []}];
+    const linkTypes3: LinkType[] = [{id: 'LT1', name: 'LinkType1', collectionIds: ['C1', 'C2'], attributes: []}];
     const documentsC1 = [
       {collectionId: 'C1', id: 'D1', data: {a1: 'Martin'}},
       {collectionId: 'C1', id: 'D2', data: {a1: 'Kubo'}},
@@ -964,7 +964,7 @@ describe('Chart data converter constraints', () => {
       {collectionId: 'C2', id: 'D28', data: {a1: '0.3'}},
       {collectionId: 'C2', id: 'D29', data: {a1: '0.4'}},
     ];
-    const linkInstances: LinkInstance[] = [
+    const linkInstances3: LinkInstance[] = [
       {id: 'l1', linkTypeId: 'LT1', documentIds: ['D1', 'D21'], data: {}},
       {id: 'l2', linkTypeId: 'LT1', documentIds: ['D1', 'D22'], data: {}},
       {id: 'l3', linkTypeId: 'LT1', documentIds: ['D1', 'D23'], data: {}},
@@ -975,8 +975,8 @@ describe('Chart data converter constraints', () => {
       {id: 'l8', linkTypeId: 'LT1', documentIds: ['D3', 'D28'], data: {}},
       {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
     ];
-    const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
-    const permissions: Record<string, AllowedPermissions> = {C1: {writeWithView: true}, C2: {writeWithView: true}};
+    const query3: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
+    const permissions3: Record<string, AllowedPermissions> = {C1: {writeWithView: true}, C2: {writeWithView: true}};
 
     const configAvg: ChartConfig = {
       type: ChartType.Line,
@@ -1003,7 +1003,14 @@ describe('Chart data converter constraints', () => {
       {id: null, x: 'Tomas', y: '25%'},
     ];
     const converter = new ChartDataConverter();
-    converter.updateData(collections, [...documentsC1, ...documentsC2], permissions, query, linkTypes, linkInstances);
+    converter.updateData(
+      collections3,
+      [...documentsC1, ...documentsC2],
+      permissions3,
+      query3,
+      linkTypes3,
+      linkInstances3
+    );
     const chartDataAvg = converter.convert(configAvg);
     expect(chartDataAvg.sets.length).toEqual(1);
     expect(chartDataAvg.sets[0].points).toEqual(pointsAvg);
