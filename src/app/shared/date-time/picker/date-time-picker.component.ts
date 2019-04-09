@@ -123,7 +123,6 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
         .withFlexibleDimensions(false)
         .withViewportMargin(8)
         .withLockedPosition()
-        .withPush(false)
         .withPositions([
           {
             originX: 'start',
@@ -148,6 +147,18 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
             originY: 'top',
             overlayX: 'end',
             overlayY: 'bottom',
+          },
+          {
+            originX: 'end',
+            originY: 'center',
+            overlayX: 'start',
+            overlayY: 'center',
+          },
+          {
+            originX: 'start',
+            originY: 'center',
+            overlayX: 'end',
+            overlayY: 'center',
           },
         ]),
     });
