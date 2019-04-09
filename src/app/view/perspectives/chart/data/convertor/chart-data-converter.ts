@@ -39,8 +39,11 @@ import {Query} from '../../../../../core/store/navigation/query';
 import {ChartData, ChartDataSet, ChartPoint, ChartYAxisType} from './chart-data';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
-import {formatData} from '../../../../../shared/utils/data.utils';
+import {convertToBig, formatDataValue} from '../../../../../shared/utils/data.utils';
 import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
+import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
+import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import Big from 'big.js';
 
 // Document or LinkInstance
 interface ObjectData {
@@ -159,23 +162,17 @@ export class ChartDataConverter {
       (idsMap, axisResource, index) => ({...idsMap, [axisResource.id]: index}),
       {}
     );
-    const collectionsMap = (this.collections || []).reduce(
-      (cMap, collection) => ({...cMap, [collection.id]: collection}),
-      {}
-    );
-    const linkTypesMap = (this.linkTypes || []).reduce((lMap, linkType) => ({...lMap, [linkType.id]: linkType}), {});
     const linkTypeIds = new Set((this.linkTypes || []).map(lt => lt.id));
     const allDocumentsMap: Record<string, DocumentModel> = {};
     const map: ObjectDataMap = {};
 
     for (const document of this.documents) {
       allDocumentsMap[document.id] = document;
-      const collection = collectionsMap[document.collectionId];
       const resourceId = collectionAxisResourceId(document.collectionId);
       !map[resourceId] && (map[resourceId] = {});
       map[resourceId][document.id] = {
         id: document.id,
-        data: formatData(document.data, collection && collection.attributes, true),
+        data: document.data,
         resourceId,
         to: [],
         from: [],
@@ -183,12 +180,11 @@ export class ChartDataConverter {
     }
 
     for (const linkInstance of this.linkInstances || []) {
-      const linkType = linkTypesMap[linkInstance.linkTypeId];
       const resourceId = linkAxisResourceId(linkInstance.linkTypeId);
       !map[resourceId] && (map[resourceId] = {});
       map[resourceId][linkInstance.id] = {
         id: linkInstance.id,
-        data: formatData(linkInstance.data, linkType && linkType.attributes, true),
+        data: linkInstance.data,
         resourceId,
         to: [],
         from: [],
@@ -459,6 +455,9 @@ export class ChartDataConverter {
     let draggable = false;
     const canDragAxis = this.canDragAxis(config, yAxisType);
 
+    const yAxis = config.axes[yAxisType];
+    const constraint = findAttributeConstraint(axisResource.attributes, yAxis && yAxis.attributeId);
+
     for (const key of xEntries) {
       const nestedValue: Record<string, {id: string; value: any}[]> = data[key];
       const nestedKeys = Object.keys(nestedValue);
@@ -472,13 +471,11 @@ export class ChartDataConverter {
           obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
         );
         const values = valueObjects.map(obj => obj.value);
-        let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
+        let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, constraint);
         if (isNotNullOrUndefined(yValue)) {
           const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
+          yValue = formatDataValue(yValue, constraint);
           const isNum = isNumeric(yValue);
-          if (isNum) {
-            yValue = toNumber(yValue);
-          }
 
           isNumericMap[nestedKey] = isNumericMap[nestedKey] && isNum;
           pointsMap[nestedKey].push({id, x: key, y: yValue});
@@ -550,30 +547,32 @@ export class ChartDataConverter {
     const actualValues = new Set();
     const draggable = this.canDragAxis(config, yAxisType);
     const points: ChartPoint[] = [];
+
+    const definedAxis = yAxis || xAxis;
+    const constraint = findAttributeConstraint(axisResource.attributes, definedAxis.attributeId);
+
     for (const dataObject of dataObjects) {
       let xValue = xAxis && dataObject.data[xAxis.attributeId];
       let yValue = yAxis && dataObject.data[yAxis.attributeId];
-      if (isNullOrUndefined(xValue) && isNullOrUndefined(yValue)) {
+      if (isNullOrUndefined(xValue || yValue)) {
         continue;
       }
 
       // we know that x or y is set
-      if (isNotNullOrUndefined(xValue) && actualValues.has(xValue)) {
-        continue;
-      }
-
-      if (isNotNullOrUndefined(yValue) && actualValues.has(yValue)) {
+      if (isNotNullOrUndefined(xValue || yValue) && actualValues.has(xValue || yValue)) {
         continue;
       }
 
       const id = draggable ? dataObject.id : null;
+
+      if (isNotNullOrUndefined(xValue)) {
+        xValue = formatDataValue(xValue, constraint);
+      }
+      if (isNotNullOrUndefined(yValue)) {
+        yValue = formatDataValue(yValue, constraint);
+      }
       isNum = isNum && isNumeric(xValue || yValue);
-      if (isNotNullOrUndefined(xValue) && isNumeric(xValue)) {
-        xValue = toNumber(xValue);
-      }
-      if (isNotNullOrUndefined(yValue) && isNumeric(yValue)) {
-        yValue = toNumber(yValue);
-      }
+
       points.push({id, x: xValue, y: yValue});
       actualValues.add(xValue || yValue);
     }
@@ -681,24 +680,26 @@ export class ChartDataConverter {
     const canDragAxis = this.canDragAxis(config, yAxisType);
     const points: ChartPoint[] = [];
 
+    const yAxis = config.axes && config.axes[yAxisType];
+    const constraint = findAttributeConstraint(axisResource.attributes, yAxis.attributeId);
+
     for (const key of xEntries) {
       const valueObjects: {id: string; value: any}[] = data[key].filter(
         obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
       );
       const values = valueObjects.map(obj => obj.value);
-      let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values);
+
+      let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, constraint);
       if (isNotNullOrUndefined(yValue)) {
         const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
+        yValue = formatDataValue(yValue, constraint);
         isNum = isNum && isNumeric(yValue);
-        if (isNumeric(yValue)) {
-          yValue = toNumber(yValue);
-        }
+
         points.push({id, x: key, y: yValue});
         draggable = draggable || isNotNullOrUndefined(id);
       }
     }
 
-    const yAxis = config.axes && config.axes[yAxisType];
     const name = this.getAttributeNameForAxis(yAxis, axisResource);
 
     const dataSet = {
@@ -826,49 +827,148 @@ function areDataNested(data: DataMap, keys: string[]): boolean {
   return !Array.isArray(value);
 }
 
-function aggregate(aggregation: ChartAggregation, values: any[]): any {
+function aggregate(aggregation: ChartAggregation, values: any[], constraint: Constraint): any {
   if (values.length === 1) {
     return values[0];
   }
 
   switch (aggregation) {
     case ChartAggregation.Sum:
-      return sumValues(values);
+      return sumValues(values, constraint);
     case ChartAggregation.Avg:
-      return avgValues(values);
+      return avgValues(values, constraint);
     case ChartAggregation.Min:
-      return minInValues(values);
+      return minInValues(values, constraint);
     case ChartAggregation.Max:
-      return maxInValues(values);
+      return maxInValues(values, constraint);
     default:
-      return sumValues(values);
+      return sumAnyValues(values);
   }
 }
 
-function sumValues(values: any[]): any {
+function sumValues(values: any[], constraint: Constraint): any {
+  if (!constraint) {
+    return sumAnyValues(values);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+      return sumNumericValues(values);
+    default:
+      return sumAnyValues(values);
+  }
+}
+
+function sumNumericValues(values: any[]): any {
+  const bigValues = transformToBigValues(values);
+  if (bigValues.length === 0) {
+    return values[0];
+  }
+
+  return bigValues.reduce((sum, val) => sum.add(val), new Big(0)).toFixed();
+}
+
+function transformToBigValues(values: any[]): Big[] {
+  return values.map(value => convertToBig(value)).filter(value => !!value);
+}
+
+function sumAnyValues(values: any[]): any {
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return null;
+    return values[0];
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0);
 }
 
-function avgValues(values: any[]): any {
+function avgValues(values: any[], constraint: Constraint): any {
+  if (!constraint) {
+    return avgAnyValues(values);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+      return avgNumericValues(values);
+    default:
+      return avgAnyValues(values);
+  }
+}
+
+function avgNumericValues(values: any[]): any {
+  const bigValues = transformToBigValues(values);
+  if (bigValues.length === 0) {
+    return values[0];
+  }
+
+  return bigValues
+    .reduce((sum, val) => sum.add(val), new Big(0))
+    .div(values.length)
+    .toFixed();
+}
+
+function avgAnyValues(values: any[]): any {
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return null;
+    return values[0];
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0) / numericValues.length;
 }
 
-function minInValues(values: any[]): any {
+function minInValues(values: any[], constraint: Constraint): any {
+  if (!constraint) {
+    return minInAnyValues(values);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+      return minInNumericValues(values);
+    default:
+      return minInAnyValues(values);
+  }
+}
+
+function minInNumericValues(values: any[]): any {
+  const bigValues = transformToBigValues(values);
+  if (bigValues.length === 0) {
+    return values[0];
+  }
+
+  return bigValues.sort((a, b) => a.cmp(b))[0].toFixed();
+}
+
+function minInAnyValues(values: any[]): any {
   const sortedValues = values.sort((a, b) => (a > b ? 1 : -1));
   return sortedValues[0];
 }
 
-function maxInValues(values: any[]): any {
+function maxInValues(values: any[], constraint: Constraint): any {
+  if (!constraint) {
+    return maxInAnyValues(values);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+      return maxInNumericValues(values);
+    default:
+      return maxInAnyValues(values);
+  }
+}
+
+function maxInNumericValues(values: any[]): any {
+  const bigValues = transformToBigValues(values);
+  if (bigValues.length === 0) {
+    return values[0];
+  }
+
+  return bigValues.sort((a, b) => -1 * a.cmp(b))[0].toFixed();
+}
+
+function maxInAnyValues(values: any[]): any {
   const sortedValues = values.sort((a, b) => (a > b ? -1 : 1));
   return sortedValues[0];
 }
