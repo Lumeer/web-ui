@@ -152,16 +152,6 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
   }, []);
 }
 
-export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): AttributeFilter[] {
-  const stems = (query && query.stems) || [];
-  return stems.reduce((filters, stem) => {
-    const newFilters = (stem.linkFilters || []).filter(
-      filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
-    );
-    return [...filters, ...newFilters];
-  }, []);
-}
-
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   return (
     (query &&
@@ -236,20 +226,6 @@ export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTy
   // TODO filter documents once implemented
 
   return stemCopy;
-}
-
-export function filterStemByAttributeIds(stem: QueryStem, collectionId: string, attributeIds: string[]): QueryStem {
-  const filters =
-    stem.filters &&
-    stem.filters.filter(filter => filter.collectionId !== collectionId || !attributeIds.includes(filter.attributeId));
-  return {...stem, filters};
-}
-
-export function filterStemByLinkAttributeIds(stem: QueryStem, linkTypeId: string, attributeIds: string[]): QueryStem {
-  const linkFilters =
-    stem.linkFilters &&
-    stem.linkFilters.filter(filter => filter.linkTypeId !== linkTypeId || !attributeIds.includes(filter.attributeId));
-  return {...stem, linkFilters};
 }
 
 export function findStemIndexForCollection(query: Query, collectionId: string, linkTypes: LinkType[]): number {

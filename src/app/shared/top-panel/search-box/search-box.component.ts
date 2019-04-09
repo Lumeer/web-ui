@@ -20,10 +20,10 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {filter, flatMap, map, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
@@ -34,7 +34,11 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryData} from './util/query-data';
 import {QueryItem} from './query-item/model/query-item';
 import {QueryItemType} from './query-item/model/query-item-type';
-import {convertQueryItemsToString, QueryItemsConverter} from './query-item/query-items.converter';
+import {
+  convertQueryItemsToQueryModel,
+  convertQueryItemsToString,
+  QueryItemsConverter,
+} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
@@ -47,6 +51,7 @@ import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
+import {areQueriesEqual} from '../../../core/store/navigation/query.helper';
 
 const allowAutomaticSubmission = true;
 
@@ -85,18 +90,21 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = this.store$
+    const querySubscription = combineLatest(this.store$.pipe(select(selectQuery)), this.loadData())
       .pipe(
-        select(selectQuery),
-        filter(query => !!query),
-        flatMap(query => observableCombineLatest(of(query), this.loadData())),
+        filter(([query]) => !!query),
         tap(([, data]) => (this.queryData = data)),
-        map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
-        filter(queryItems => this.itemsChanged(queryItems))
+        map(([query, data]) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query})),
+        filter(({queryItems}) => this.itemsChanged(queryItems))
       )
-      .subscribe(queryItems => {
+      .subscribe(({queryItems, query}) => {
         this.queryItems$.next(queryItems);
         this.initForm(queryItems);
+
+        const newQuery = convertQueryItemsToQueryModel(queryItems);
+        if (!areQueriesEqual(query, newQuery)) {
+          this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
+        }
       });
     this.subscriptions.add(querySubscription);
   }
@@ -225,7 +233,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return true;
     }
     for (let i = 0; i < queryItems.length; i++) {
-      if (currentQueryItems[i] !== queryItems[i]) {
+      if (currentQueryItems[i].value !== queryItems[i].value) {
         return true;
       }
     }

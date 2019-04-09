@@ -32,8 +32,6 @@ import {SearchTab} from './search-tab';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Query, QueryStem} from './query';
 import {DialogPath} from '../../../dialog/dialog-path';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {filterStemByAttributeIds, filterStemByLinkAttributeIds, filterStemByLinkIndex} from './query.util';
 
 @Injectable()
 export class NavigationEffects {
@@ -51,50 +49,6 @@ export class NavigationEffects {
   );
 
   @Effect()
-  public removeLinkFromQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveLinkFromQuery>(NavigationActionType.REMOVE_LINK_FROM_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
-    map(([[action, query], linkTypes]) => {
-      const {linkTypeId} = action.payload;
-      const newStems: QueryStem[] = [];
-
-      for (const stem of query.stems || []) {
-        const linkTypeIndex = (stem.linkTypeIds || []).findIndex(id => id === linkTypeId);
-        if (linkTypeIndex >= 0) {
-          newStems.push(filterStemByLinkIndex(stem, linkTypeIndex, linkTypes));
-        } else {
-          newStems.push(stem);
-        }
-      }
-
-      return newQueryAction({...query, stems: newStems});
-    })
-  );
-
-  @Effect()
-  public removeAttributesFromQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveAttributesFromQuery>(NavigationActionType.REMOVE_ATTRIBUTES_FROM_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    map(([action, query]) => {
-      const {collectionId, attributeIds} = action.payload;
-      const newStems = (query.stems || []).map(stem => filterStemByAttributeIds(stem, collectionId, attributeIds));
-      return newQueryAction({...query, stems: newStems});
-    })
-  );
-
-  @Effect()
-  public removeLinkAttributesFromQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveLinkAttributesFromQuery>(NavigationActionType.REMOVE_LINK_ATTRIBUTES_FROM_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    map(([action, query]) => {
-      const {linkTypeId, attributeIds} = action.payload;
-      const newStems = (query.stems || []).map(stem => filterStemByLinkAttributeIds(stem, linkTypeId, attributeIds));
-      return newQueryAction({...query, stems: newStems});
-    })
-  );
-
-  @Effect()
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
@@ -103,32 +57,6 @@ export class NavigationEffects {
       stems.push({collectionId: action.payload.collectionId});
 
       return newQueryAction({...query, stems});
-    })
-  );
-
-  @Effect()
-  public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
-    map(([[action, query], linkTypes]) => {
-      const {collectionId} = action.payload;
-      const newStems: QueryStem[] = [];
-
-      for (const stem of query.stems || []) {
-        if (stem.collectionId !== collectionId) {
-          const linkTypeIndex = (stem.linkTypeIds || [])
-            .map(id => linkTypes.find(lt => lt.id === id))
-            .findIndex(linkType => !linkType || linkType.collectionIds.includes(collectionId));
-          if (linkTypeIndex >= 0) {
-            newStems.push(filterStemByLinkIndex(stem, linkTypeIndex, linkTypes));
-          } else {
-            newStems.push(stem);
-          }
-        }
-      }
-
-      return newQueryAction({...query, stems: newStems});
     })
   );
 
@@ -168,7 +96,7 @@ export class NavigationEffects {
   public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    filter(([action, navigation]) => !!navigation.workspace && !!navigation.perspective),
+    filter(([, navigation]) => !!navigation.workspace && !!navigation.perspective),
     map(([action, navigation]) => {
       const {organizationCode, projectCode} = navigation.workspace;
       const {perspective, searchTab} = navigation;

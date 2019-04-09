@@ -34,7 +34,7 @@ export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements Pipe
     if (!isValid || queryItem.type === QueryItemType.Deleted) {
       return DANGER_COLOR;
     }
-    if (queryItem.type === QueryItemType.Link || queryItem.type === QueryItemType.View) {
+    if ([QueryItemType.Link, QueryItemType.View, QueryItemType.LinkAttribute].includes(queryItem.type)) {
       return LINK_BORDER_COLOR;
     }
     return super.transform(queryItem, isValid);

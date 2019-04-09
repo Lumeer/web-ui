@@ -29,14 +29,12 @@ import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {CommonAction} from '../common/common.action';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
-import {NavigationAction} from '../navigation/navigation.action';
 import {selectQuery} from '../navigation/navigation.state';
-import {getAllLinkTypeIdsFromQuery, getQueryFiltersForLinkType} from '../navigation/query.util';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
-import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';
+import {selectLinkTypeAttributeById, selectLinkTypesLoaded} from './link-types.state';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -124,31 +122,6 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<LinkTypesAction.UpdateSuccess>(LinkTypesActionType.UPDATE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
-    map(([[action, query], linkTypesMap]) => {
-      const linkTypeId = action.payload.linkType.id;
-      const linkType = linkTypesMap[linkTypeId];
-      const linkTypeAttributesIds = ((linkType && linkType.attributes) || []).map(attribute => attribute.id);
-
-      const linkTypeFiltersInQuery = getQueryFiltersForLinkType(query, linkTypeId);
-      const attributeIdsInQuery = linkTypeFiltersInQuery.map(attrFilter => attrFilter.attributeId);
-      const removedAttributeIds = attributeIdsInQuery.filter(
-        attributeId => !linkTypeAttributesIds.find(attrId => attrId === attributeId)
-      );
-
-      if (removedAttributeIds.length > 0) {
-        return new NavigationAction.RemoveLinkAttributesFromQuery({linkTypeId, attributeIds: removedAttributeIds});
-      }
-
-      return null;
-    }),
-    filter(action => !!action)
-  );
-
-  @Effect()
   public updateFailure$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -176,10 +149,7 @@ export class LinkTypesEffects {
     flatMap(([action, query]) => {
       const {linkTypeId} = action.payload;
       const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
-      const linkTypeIdsInQuery = getAllLinkTypeIdsFromQuery(query);
-      if (linkTypeIdsInQuery.includes(action.payload.linkTypeId)) {
-        return [...actions, new NavigationAction.RemoveLinkFromQuery({linkTypeId: action.payload.linkTypeId})];
-      }
+
       return actions;
     })
   );

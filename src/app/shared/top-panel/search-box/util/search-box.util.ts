@@ -163,10 +163,11 @@ export function removeQueryItemWithRelatedItems(
   queryItems: QueryItem[],
   index: number
 ): QueryItem[] {
-  if (queryItems.length < index) {
+  if (queryItems.length <= index) {
     return queryItems;
   }
   const queryItem = queryItems[index];
+
   switch (queryItem.type) {
     case QueryItemType.Collection:
       return removeCollectionStem(queryData, queryItems, queryItem as CollectionQueryItem);
@@ -175,6 +176,7 @@ export function removeQueryItemWithRelatedItems(
     case QueryItemType.Attribute:
     case QueryItemType.LinkAttribute:
     case QueryItemType.Document:
+    case QueryItemType.Deleted:
     case QueryItemType.Fulltext:
       return removeQueryItem(queryItems, index);
   }
