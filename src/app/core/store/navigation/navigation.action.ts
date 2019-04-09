@@ -45,34 +45,10 @@ export namespace NavigationAction {
     public constructor(public payload: {linkTypeId: string}) {}
   }
 
-  export class RemoveLinkFromQuery implements Action {
-    public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
-
-    public constructor(public payload: {linkTypeId: string}) {}
-  }
-
   export class AddCollectionToQuery implements Action {
     public readonly type = NavigationActionType.ADD_COLLECTION_TO_QUERY;
 
     public constructor(public payload: {collectionId: string}) {}
-  }
-
-  export class RemoveCollectionFromQuery implements Action {
-    public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
-
-    public constructor(public payload: {collectionId: string}) {}
-  }
-
-  export class RemoveAttributesFromQuery implements Action {
-    public readonly type = NavigationActionType.REMOVE_ATTRIBUTES_FROM_QUERY;
-
-    public constructor(public payload: {collectionId: string; attributeIds: string[]}) {}
-  }
-
-  export class RemoveLinkAttributesFromQuery implements Action {
-    public readonly type = NavigationActionType.REMOVE_LINK_ATTRIBUTES_FROM_QUERY;
-
-    public constructor(public payload: {linkTypeId: string; attributeIds: string[]}) {}
   }
 
   export class SetQuery implements Action {

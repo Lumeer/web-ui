@@ -34,7 +34,7 @@ import {DocumentsAction, DocumentsActionType} from '../documents/documents.actio
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation, selectQuery} from '../navigation/navigation.state';
-import {getAllCollectionIdsFromQuery, getQueryFiltersForCollection} from '../navigation/query.util';
+import {getQueryFiltersForCollection} from '../navigation/query.util';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionType} from '../permissions/permissions';
@@ -222,31 +222,6 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.UpdateSuccess>(CollectionsActionType.UPDATE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
-    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
-    map(([[action, query], collectionsMap]) => {
-      const collectionId = action.payload.collection.id;
-      const collection = collectionsMap[collectionId];
-      const collectionAttributeIds = ((collection && collection.attributes) || []).map(attribute => attribute.id);
-
-      const collectionFiltersInQuery = getQueryFiltersForCollection(query, collectionId);
-      const attributeIdsInQuery = collectionFiltersInQuery.map(attrFilter => attrFilter.attributeId);
-      const removedAttributeIds = attributeIdsInQuery.filter(
-        attributeId => !collectionAttributeIds.find(attrId => attrId === attributeId)
-      );
-
-      if (removedAttributeIds.length > 0) {
-        return new NavigationAction.RemoveAttributesFromQuery({collectionId, attributeIds: removedAttributeIds});
-      }
-
-      return null;
-    }),
-    filter(action => !!action)
-  );
-
-  @Effect()
   public updateFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -288,12 +263,6 @@ export class CollectionsEffects {
         navigation && navigation.workspace && navigation.workspace.collectionId === collectionId;
       if (isCollectionSettingsPage) {
         return [...actions, new RouterAction.Go({path: ['/']})];
-      }
-
-      const query = navigation.query || {};
-      const collectionIdsFromQuery = getAllCollectionIdsFromQuery(query, linkTypes);
-      if (collectionIdsFromQuery.includes(collectionId)) {
-        return [...actions, new NavigationAction.RemoveCollectionFromQuery({collectionId})];
       }
 
       return actions;
