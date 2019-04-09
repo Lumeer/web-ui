@@ -123,6 +123,13 @@ export class AttributeConditionComponent implements OnInit {
       case KeyCode.NumpadEnter:
       case KeyCode.Space:
         event.preventDefault();
+        event.stopImmediatePropagation();
+        this.checkCaretPositionAndGoRight();
+        break;
+      case KeyCode.Tab:
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.moveRight.emit();
         break;
       case KeyCode.Escape:
         this.onEscapeKeyDown();

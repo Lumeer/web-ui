@@ -63,9 +63,6 @@ export class QueryItemComponent {
     this.remove.emit();
   }
 
-  public focusConditionValue() {
-    this.attributeValueComponent.setEditing();
-  }
   public focusCondition() {
     this.attributeConditionComponent.setEditing();
   }
