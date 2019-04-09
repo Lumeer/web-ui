@@ -60,6 +60,7 @@ import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
+import {ConstraintTypeIconTitlePipe} from './constraint-type-icon-title.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -102,6 +103,7 @@ import {WorkspaceSetPipe} from './workspace-set.pipe';
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
+    ConstraintTypeIconTitlePipe,
     FormatDatePipe,
   ],
   exports: [
@@ -145,6 +147,7 @@ import {WorkspaceSetPipe} from './workspace-set.pipe';
     CollectionAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
+    ConstraintTypeIconTitlePipe,
     FormatDatePipe,
   ],
 })

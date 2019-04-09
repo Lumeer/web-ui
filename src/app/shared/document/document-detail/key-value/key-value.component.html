@@ -30,6 +30,7 @@
     </data-input>
     <i *ngIf="(constraint | constraintTypeIcon) as iconName"
        [ngClass]="iconName"
+       [title]="constraint | constraintTypeIconTitle"
        class="text-muted small"></i>
     <div>
       <i class="fas fa-fw fa-trash text-danger mx-2 clickable clickable-danger button-remove"

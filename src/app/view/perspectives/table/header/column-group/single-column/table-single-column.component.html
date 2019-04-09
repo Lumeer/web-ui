@@ -18,6 +18,8 @@
 </div>
 <i *ngIf="(attribute?.constraint | constraintTypeIcon) as iconName"
    [ngClass]="iconName"
+   [title]="attribute?.constraint | constraintTypeIconTitle"
+   (click)="onContextMenu($event)"
    class="float-right position-relative"></i>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
