@@ -33,6 +33,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {ChartDataConverter} from './chart-data-converter';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 const documents: DocumentModel[] = [
   {
@@ -243,7 +244,11 @@ describe('Chart data converter single collection', () => {
       },
     };
     const points1 = [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}];
-    const points2 = [{id: 'D2', x: 'Dance', y: 'Salt'}, {id: 'D5', x: 'Glass', y: 'Vibes'}];
+    const points2 = [
+      {id: null, x: 'Sport', y: 'Mama'},
+      {id: 'D2', x: 'Dance', y: 'Salt'},
+      {id: 'D5', x: 'Glass', y: 'Vibes'},
+    ];
 
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query);
@@ -254,11 +259,9 @@ describe('Chart data converter single collection', () => {
 
     const config2 = {...config, aggregations: null};
     const chartData2 = converter.convert(config2);
-    const points3 = [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}];
-    const points4 = [{id: 'D2', x: 'Dance', y: 'Salt'}, {id: 'D5', x: 'Glass', y: 'Vibes'}];
     expect(chartData2.sets.length).toEqual(2);
-    expect(chartData2.sets[0].points).toEqual(points3);
-    expect(chartData2.sets[1].points).toEqual(points4);
+    expect(chartData2.sets[0].points).toEqual(points1);
+    expect(chartData2.sets[1].points).toEqual(points2);
   });
 });
 
@@ -742,11 +745,18 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum},
     };
 
+    const points = [
+      {id: null, x: 'Sport', y: 'Zet'},
+      {id: null, x: 'Dance', y: 'Zas'},
+      {id: null, x: 'Glass', y: 'Zlom'},
+      {id: null, x: 'Lmr', y: 'Zet'},
+    ];
+
     const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
-    expect(chartData.sets[0].points).toEqual([]);
+    expect(chartData.sets[0].points).toEqual(points);
   });
 
   it('should return linked data without linked name min aggregation', () => {
@@ -923,5 +933,116 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[2].points).toContain({id: null, x: 'Lpr', y: 131});
     expect(chartData.sets[3].points).toContain({id: null, x: 'Lxx', y: 777});
     expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: 951});
+  });
+});
+
+describe('Chart data converter constraints', () => {
+  it('should return data with percentage constraint', () => {
+    const collections3 = [
+      {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx'}]},
+      {
+        id: 'C2',
+        name: 'C2',
+        color: '',
+        attributes: [{id: 'a1', name: 'Lala', constraint: {type: ConstraintType.Percentage, config: {}}}],
+      },
+    ];
+    const linkTypes3: LinkType[] = [{id: 'LT1', name: 'LinkType1', collectionIds: ['C1', 'C2'], attributes: []}];
+    const documentsC1 = [
+      {collectionId: 'C1', id: 'D1', data: {a1: 'Martin'}},
+      {collectionId: 'C1', id: 'D2', data: {a1: 'Kubo'}},
+      {collectionId: 'C1', id: 'D3', data: {a1: 'Tomas'}},
+    ];
+    const documentsC2 = [
+      {collectionId: 'C2', id: 'D21', data: {a1: '0.1'}},
+      {collectionId: 'C2', id: 'D22', data: {a1: '0.3'}},
+      {collectionId: 'C2', id: 'D23', data: {a1: '0.5'}},
+      {collectionId: 'C2', id: 'D24', data: {a1: '0.4'}},
+      {collectionId: 'C2', id: 'D25', data: {a1: '0.8'}},
+      {collectionId: 'C2', id: 'D26', data: {a1: '0.1'}},
+      {collectionId: 'C2', id: 'D27', data: {a1: '0.2'}},
+      {collectionId: 'C2', id: 'D28', data: {a1: '0.3'}},
+      {collectionId: 'C2', id: 'D29', data: {a1: '0.4'}},
+    ];
+    const linkInstances3: LinkInstance[] = [
+      {id: 'l1', linkTypeId: 'LT1', documentIds: ['D1', 'D21'], data: {}},
+      {id: 'l2', linkTypeId: 'LT1', documentIds: ['D1', 'D22'], data: {}},
+      {id: 'l3', linkTypeId: 'LT1', documentIds: ['D1', 'D23'], data: {}},
+      {id: 'l4', linkTypeId: 'LT1', documentIds: ['D2', 'D24'], data: {}},
+      {id: 'l5', linkTypeId: 'LT1', documentIds: ['D2', 'D25'], data: {}},
+      {id: 'l6', linkTypeId: 'LT1', documentIds: ['D3', 'D26'], data: {}},
+      {id: 'l7', linkTypeId: 'LT1', documentIds: ['D3', 'D27'], data: {}},
+      {id: 'l8', linkTypeId: 'LT1', documentIds: ['D3', 'D28'], data: {}},
+      {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
+    ];
+    const query3: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
+    const permissions3: Record<string, AllowedPermissions> = {C1: {writeWithView: true}, C2: {writeWithView: true}};
+
+    const configAvg: ChartConfig = {
+      type: ChartType.Line,
+      axes: {
+        [ChartAxisType.X]: {
+          resourceId: 'C1',
+          attributeId: 'a1',
+          resourceIndex: 0,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+        [ChartAxisType.Y1]: {
+          resourceId: 'C2',
+          attributeId: 'a1',
+          resourceIndex: 2,
+          axisResourceType: ChartAxisResourceType.Collection,
+        },
+      },
+      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Avg},
+    };
+
+    const pointsAvg = [
+      {id: null, x: 'Martin', y: '30%'},
+      {id: null, x: 'Kubo', y: '60%'},
+      {id: null, x: 'Tomas', y: '25%'},
+    ];
+    const converter = new ChartDataConverter();
+    converter.updateData(
+      collections3,
+      [...documentsC1, ...documentsC2],
+      permissions3,
+      query3,
+      linkTypes3,
+      linkInstances3
+    );
+    const chartDataAvg = converter.convert(configAvg);
+    expect(chartDataAvg.sets.length).toEqual(1);
+    expect(chartDataAvg.sets[0].points).toEqual(pointsAvg);
+
+    const configSum = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum}};
+    const pointsSum = [
+      {id: null, x: 'Martin', y: '90%'},
+      {id: null, x: 'Kubo', y: '120%'},
+      {id: null, x: 'Tomas', y: '100%'},
+    ];
+    const chartDataSum = converter.convert(configSum);
+    expect(chartDataSum.sets.length).toEqual(1);
+    expect(chartDataSum.sets[0].points).toEqual(pointsSum);
+
+    const configMax = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max}};
+    const pointsMax = [
+      {id: null, x: 'Martin', y: '50%'},
+      {id: null, x: 'Kubo', y: '80%'},
+      {id: null, x: 'Tomas', y: '40%'},
+    ];
+    const chartDataMax = converter.convert(configMax);
+    expect(chartDataMax.sets.length).toEqual(1);
+    expect(chartDataMax.sets[0].points).toEqual(pointsMax);
+
+    const configMin = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min}};
+    const pointsMin = [
+      {id: null, x: 'Martin', y: '10%'},
+      {id: null, x: 'Kubo', y: '40%'},
+      {id: null, x: 'Tomas', y: '10%'},
+    ];
+    const chartDataMin = converter.convert(configMin);
+    expect(chartDataMin.sets.length).toEqual(1);
+    expect(chartDataMin.sets[0].points).toEqual(pointsMin);
   });
 });
