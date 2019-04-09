@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {parseDate} from 'ngx-bootstrap';
+import {parseDateTimeDataValue} from '../../utils/data.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 
@@ -84,7 +84,7 @@ export class DateTimeInputComponent implements OnChanges {
 
   public onBlur() {
     if (this.dateTimeInput) {
-      const value = parseDate(this.dateTimeInput.nativeElement.value, this.format);
+      const value = parseDateTimeDataValue(this.dateTimeInput.nativeElement.value, this.format);
       this.valueChange.emit(value);
     }
   }
