@@ -13,6 +13,7 @@
 <ng-container *ngIf="constraint && constraint?.type !== constraintTypeBoolean">
   <i *ngIf="(constraint | constraintTypeIcon) as iconName"
      [ngClass]="iconName"
+     [title]="constraint | constraintTypeIconTitle"
      class="text-muted small"></i>
 </ng-container>
 
