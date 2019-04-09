@@ -89,7 +89,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
         HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
         this.dateTimeInput.nativeElement.focus();
-        this.dateTimePicker.open();
+        this.dateTimePicker && this.dateTimePicker.open();
       });
     }
     if (changes.focus && !this.focus) {

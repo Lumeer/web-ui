@@ -16,7 +16,7 @@
 
 <condition-suggestions *ngIf="!readonly && focused"
                        [attribute]="queryItem.attribute"
-                       [text]="this.queryItem.condition"
+                       [text]="queryItem.condition"
                        [moveSelection$]="moveSuggestionSelection$"
                        [useSelection$]="useSuggestionSelection$"
                        (useSuggestion)="onUseSuggestion($event)">

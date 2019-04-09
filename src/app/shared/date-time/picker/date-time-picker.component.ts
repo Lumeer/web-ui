@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {Overlay, OverlayRef, RepositionScrollStrategy} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
@@ -115,7 +115,8 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
 
     this.overlayRef = this.overlay.create({
       disposeOnNavigation: true,
-      panelClass: ['position-relative', 'w-max-content'],
+      panelClass: ['position-absolute', 'w-max-content'],
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
       positionStrategy: this.overlay
         .position()
         .flexibleConnectedTo(this.origin)
@@ -146,6 +147,18 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
             originY: 'top',
             overlayX: 'end',
             overlayY: 'bottom',
+          },
+          {
+            originX: 'end',
+            originY: 'center',
+            overlayX: 'start',
+            overlayY: 'center',
+          },
+          {
+            originX: 'start',
+            originY: 'center',
+            overlayX: 'end',
+            overlayY: 'center',
           },
         ]),
     });

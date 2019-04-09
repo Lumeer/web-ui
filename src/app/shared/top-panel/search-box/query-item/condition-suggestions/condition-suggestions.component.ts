@@ -96,7 +96,7 @@ export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestr
 
   private filterSuggestions() {
     const textLowerCase = this.text.toLowerCase().trim();
-    this.suggestions = this.allSuggestions.filter(s => s.toLowerCase().includes(textLowerCase)).slice(0, 5);
+    this.suggestions = this.allSuggestions.filter(s => s.toLowerCase().includes(textLowerCase)).slice(0, 6);
 
     if (this.selectedIndex >= this.suggestions.length) {
       this.selectedIndex = this.suggestions.length - 1;
