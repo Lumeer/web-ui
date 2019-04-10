@@ -32,7 +32,7 @@ export class BaseService {
     this.store$
       .pipe(
         select(selectWorkspaceWithIds),
-        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
+        filter(workspace => !!workspace && !!workspace.organizationCode)
       )
       .subscribe(workspace => (this.workspace = workspace));
   }
