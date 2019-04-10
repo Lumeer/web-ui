@@ -72,16 +72,17 @@ export class DocumentsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
-    mergeMap(action =>
-      this.store$.pipe(
-        select(selectPendingDocumentDataUpdatesByCorrelationId(action.payload.document.correlationId)),
+    mergeMap(action => {
+      const {correlationId} = action.payload.document;
+      return this.store$.pipe(
+        select(selectPendingDocumentDataUpdatesByCorrelationId(correlationId)),
         take(1),
         filter(pendingDataUpdates => !pendingDataUpdates || Object.keys(pendingDataUpdates).length === 0),
         mergeMap(() => {
           const documentDto = convertDocumentModelToDto(action.payload.document);
 
           return this.documentService.createDocument(documentDto).pipe(
-            map(dto => convertDocumentDtoToModel(dto, action.payload.document.correlationId)),
+            map(dto => convertDocumentDtoToModel(dto, correlationId)),
             tap(document => {
               const callback = action.payload.callback;
               if (callback) {
@@ -99,8 +100,8 @@ export class DocumentsEffects {
             catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
           );
         })
-      )
-    )
+      );
+    })
   );
 
   @Effect()
