@@ -63,6 +63,10 @@ export function documentsReducer(
 
 function onCreateDocument(state: DocumentsState, action: DocumentsAction.Create): DocumentsState {
   const {correlationId, data} = action.payload.document;
+  if (!correlationId) {
+    return state;
+  }
+
   const pendingDocumentData = state.pendingDataUpdates[correlationId];
   const pendingDataUpdates = {
     ...state.pendingDataUpdates,
