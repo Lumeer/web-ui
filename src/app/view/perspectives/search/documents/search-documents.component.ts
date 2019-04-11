@@ -41,7 +41,6 @@ import {Perspective} from '../../perspective';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
-import {searchDocumentEntriesHtml, searchDocumentValuesHtml} from './search-document-html-helper';
 import {Query} from '../../../../core/store/navigation/query';
 
 const PAGE_SIZE = 40;
@@ -68,9 +67,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documentsMap: {[documentId: string]: DocumentModel};
+  public documentsMap: Record<string, DocumentModel>;
+  public collectionsMap: Record<string, Collection>;
   public expandedDocumentIds: string[] = [];
-  public collectionsMap: {[collectionId: string]: Collection};
   public documentsOrder: string[] = [];
   public loaded$: Observable<boolean>;
   public query: Query;
@@ -148,20 +147,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public switchPerspectiveToTable() {
     this.perspectiveService.switchPerspective(Perspective.Table);
-  }
-
-  public createValuesHtml(document: DocumentModel): string {
-    const collection = this.collectionsMap[document.collectionId];
-    return searchDocumentValuesHtml(document, collection);
-  }
-
-  public createEntriesHtml(document: DocumentModel): string {
-    const collection = this.collectionsMap[document.collectionId];
-    return searchDocumentEntriesHtml(document, collection, this.isDocumentExpanded(document));
-  }
-
-  private isDocumentExpanded(document: DocumentModel): boolean {
-    return this.isDocumentExplicitlyExpanded(document) || this.size === SizeType.XL;
   }
 
   public trackByDocument(index: number, document: DocumentModel): string {

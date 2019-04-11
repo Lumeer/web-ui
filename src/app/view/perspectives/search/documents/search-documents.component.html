@@ -34,11 +34,11 @@
 </ng-template>
 
 <ng-template #mTemplate let-document>
-  <div [innerHTML]="createValuesHtml(document)"></div>
+  <div [innerHTML]="document | createDocumentValuesHtml:collectionsMap | safeHtml"></div>
 </ng-template>
 
 <ng-template #lTemplate let-document>
-  <div [innerHTML]="createEntriesHtml(document)"></div>
+  <div [innerHTML]="document | createDocumentEntriesHtml:collectionsMap:expandedDocumentIds:size | safeHtml"></div>
 </ng-template>
 
 <ng-template #xlTemplate let-document>
