@@ -17,23 +17,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isArray, isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {findAttributeConstraint, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {formatDataValue} from '../../../../shared/utils/data.utils';
+import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 
-export function searchDocumentValuesHtml(document: DocumentModel, collection: Collection): string {
+export function createSearchDocumentValuesHtml(document: DocumentModel, collection: Collection): string {
   if (!document.data || !collection) {
     return '';
   }
 
-  return searchDocumentGetValues(document, collection)
-    .filter(value => value)
-    .map(value => `<span class="search-documents-value">${value}</span>`)
+  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
+  return Object.keys(document.data)
+    .filter(
+      attributeId => collectionAttributesIds.includes(attributeId) && isNotNullOrUndefined(document.data[attributeId])
+    )
+    .map(attributeId =>
+      createSearchDocumentValueHtml(
+        document.data[attributeId],
+        findAttributeConstraint(collection.attributes, attributeId)
+      )
+    )
     .join(', ');
 }
 
-export function searchDocumentEntriesHtml(
+function createSearchDocumentValueHtml(value: any, constraint: Constraint): string {
+  const formattedValue = formatDataValue(value, constraint);
+  if (!constraint) {
+    return createSearchDocumentAnyValueHtml(formattedValue);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Color:
+      return createSearchDocumentColorValueHtml(formattedValue);
+    case ConstraintType.Boolean:
+      return createSearchDocumentBooleanValueHtml(formattedValue);
+    default:
+      return createSearchDocumentAnyValueHtml(formattedValue);
+  }
+}
+
+function createSearchDocumentAnyValueHtml(value: string) {
+  return `<span class="search-documents-value">${value}</span>`;
+}
+
+function createSearchDocumentColorValueHtml(value: string) {
+  return `<div class="d-inline-block search-documents-value"
+          style="width: 60px; background: ${value}">&nbsp;</div>`;
+}
+
+function createSearchDocumentBooleanValueHtml(value: boolean) {
+  const inputId = `search-document-input-${Math.random()
+    .toString(36)
+    .substr(2)}`;
+  return `<div class="d-inline-block custom-control custom-checkbox"><input 
+             id="${inputId}"
+             checked="${value}"
+             style="cursor: unset;"
+             readonly type="checkbox"
+             class="custom-control-input">
+          <label
+             for="${inputId}"
+             style="cursor: unset;"
+             class="custom-control-label">
+          </label></div>`;
+}
+
+export function createSearchDocumentEntriesHtml(
   document: DocumentModel,
   collection: Collection,
   showEmptyValues: boolean
@@ -43,14 +95,19 @@ export function searchDocumentEntriesHtml(
   }
 
   const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
-
   return Object.keys(document.data)
     .filter(
-      attributeId => collectionAttributesIds.includes(attributeId) && (showEmptyValues || document.data[attributeId])
-    )
-    .map(
       attributeId =>
-        `${searchDocumentAttributeHtml(attributeId, collection)}${searchDocumentValueHtml(document.data[attributeId])}`
+        collectionAttributesIds.includes(attributeId) &&
+        (showEmptyValues || isNotNullOrUndefined(document.data[attributeId]))
+    )
+    .map(attributeId => ({attributeId, constraint: findAttributeConstraint(collection.attributes, attributeId)}))
+    .map(
+      ({attributeId, constraint}) =>
+        `${searchDocumentAttributeHtml(attributeId, collection)}${createSearchDocumentValueHtml(
+          document.data[attributeId],
+          constraint
+        )}`
     )
     .join(', ');
 }
@@ -61,33 +118,8 @@ export function searchDocumentDefaultAttributeHtml(document: DocumentModel, coll
   }
 
   const defaultAttributeId = getDefaultAttributeId(collection);
-  const value = document.data[defaultAttributeId] || '';
-
-  return searchDocumentValueHtml(value);
-}
-
-function searchDocumentGetValues(document: DocumentModel, collection: Collection): any[] {
-  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
-  const filteredDocumentValues = Object.entries(document.data)
-    .filter(([key]) => collectionAttributesIds.includes(key))
-    .map(([key, value]) => value);
-
-  return searchDocumentGetValuesFromArray(filteredDocumentValues);
-}
-
-function searchDocumentGetValuesFromAny(value: any): string[] {
-  if (isArray(value)) {
-    return searchDocumentGetValuesFromArray(value as any[]);
-  } else {
-    return [value as string];
-  }
-}
-
-function searchDocumentGetValuesFromArray(array: any[]): string[] {
-  return array.reduce((acc, value) => {
-    acc = [...acc, ...searchDocumentGetValuesFromAny(value)];
-    return acc;
-  }, []);
+  const value = document.data[defaultAttributeId];
+  return formatDataValue(value, findAttributeConstraint(collection.attributes, defaultAttributeId));
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: Collection) {
@@ -108,25 +140,4 @@ function isDefaultAttribute(attributeId: string, collection: Collection): boolea
 function getAttributeName(collection: Collection, attributeId: string): string {
   const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
   return attribute && attribute.name;
-}
-
-function searchDocumentValueHtml(value: any): string {
-  if (isNullOrUndefined(value)) {
-    return '';
-  } else if (isArray(value)) {
-    return `[${searchDocumentArrayHtml(value as any[])}]`;
-  } else {
-    return `<span class="search-documents-value">${value.toString()}</span>`;
-  }
-}
-
-function searchDocumentArrayHtml(array: any[]): string {
-  let html = '';
-  for (let i = 0; i < array.length; i++) {
-    html += searchDocumentValueHtml(array[i]);
-    if (i !== array.length - 1) {
-      html += ', ';
-    }
-  }
-  return html;
 }

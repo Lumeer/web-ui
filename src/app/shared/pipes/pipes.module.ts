@@ -62,6 +62,7 @@ import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
 import {ConstraintTypeIconTitlePipe} from './constraint-type-icon-title.pipe';
 import {JoinPipe} from './join.pipe';
+import {SafeHtmlPipe} from './safe-html.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -107,6 +108,7 @@ import {JoinPipe} from './join.pipe';
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
     JoinPipe,
+    SafeHtmlPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -152,6 +154,7 @@ import {JoinPipe} from './join.pipe';
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
     JoinPipe,
+    SafeHtmlPipe,
   ],
 })
 export class PipesModule {}
