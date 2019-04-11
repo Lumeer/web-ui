@@ -36,7 +36,7 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, filter, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
@@ -66,6 +66,7 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {isValueValid} from '../../../../../../../shared/utils/data.utils';
 
 @Component({
   selector: 'table-data-cell',
@@ -214,7 +215,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
         this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
       } else {
-        this.editing$.next(false);
+        this.attribute$
+          .pipe(
+            filter(attribute => !!attribute && !!attribute.constraint),
+            map(attribute => !isValueValid(this.editedValue, attribute.constraint)),
+            filter(prevent => prevent),
+            first()
+          )
+          .subscribe(prevent => this.editing$.next(false));
       }
     }
     if (changes.document || changes.linkInstace) {
@@ -660,7 +668,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onEdit() {
-    // this.setEditedAttribute();
+    //this.setEditedAttribute();
     this.store$.dispatch(new TablesAction.EditSelectedCell({}));
   }
 

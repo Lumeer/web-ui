@@ -23,6 +23,10 @@
           <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
@@ -56,7 +60,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
@@ -384,6 +388,30 @@
           <context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
+      </trans-unit><trans-unit id="button.save" datatype="html">
+        <source>
+            Save
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.settings.back" datatype="html">
         <source>Back</source>
         <context-group purpose="location">
@@ -672,7 +700,7 @@
         <source>Remove Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
@@ -682,31 +710,13 @@
         <source>Set Attribute Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
         <source>Set Attribute Function</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.save" datatype="html">
-        <source>Save</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source>
@@ -1336,7 +1346,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
@@ -1609,7 +1619,7 @@
         <source>Such an attribute does not exist.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Configure function of</source>
@@ -1673,7 +1683,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
@@ -1763,7 +1773,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
         <source>
@@ -1771,7 +1781,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
         <source>
@@ -3755,6 +3765,13 @@
         <source>Choose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/picker/color-picker/color-picker.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.type.icon.title" datatype="html">
+        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
