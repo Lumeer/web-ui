@@ -461,9 +461,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: any) {
+    // TODO row is probably not needed here
     const document: DocumentModel = {
       ...this.document,
-      correlationId: row && row.correlationId,
+      correlationId: (row && row.correlationId) || (this.document && this.document.correlationId),
       data: {...this.document.data, [attributeId]: value},
       metaData: this.createDocumentMetaData(row),
     };
@@ -489,6 +490,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       const linkInstance: LinkInstance = {
         linkTypeId,
         documentIds: [previousRow.documentId, documentId],
+        correlationId: this.document && this.document.correlationId,
       };
       this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
     };

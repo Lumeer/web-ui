@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {debounceTime, map, tap} from 'rxjs/operators';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
@@ -63,6 +63,7 @@ export class TableLinkedRowsComponent implements OnChanges {
     const linkedRows = rows.reduce((allLinkedRows, row) => allLinkedRows.concat(row.linkedRows), []);
     return this.store$.pipe(
       select(selectLinkInstancesByDocumentIds(documentIds)),
+      debounceTime(100), // otherwise unwanted parallel syncing occurs
       map(linkInstances => filterRowsByExistingLinkInstance(linkedRows, linkInstances)),
       tap(() =>
         this.store$.dispatch(
