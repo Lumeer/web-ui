@@ -1,22 +1,35 @@
 <table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
 
-<ng-container *ngIf="(constraint$ | async)?.type !== 'Boolean'; else checkbox">
-  <div *ngIf="{values: stringValue$ | async} as data"
+<ng-container *ngIf="constraint$ | async; else defaultCollapsedCell"
+              [ngSwitch]="(constraint$ | async)?.type">
+
+  <boolean-data-input *ngSwitchCase="constraintType.Boolean"
+                      [indeterminate]="booleanValue === 'indeterminate'"
+                      [value]="booleanValue === 'true'"
+                      class="h-100">
+  </boolean-data-input>
+
+  <color-collapsed-cell *ngSwitchCase="constraintType.Color"
+                        class="h-100"
+                        [values]="stringValues$ | async">
+  </color-collapsed-cell>
+
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #defaultCollapsedCell>
+  <div *ngIf="{values: stringValues$ | async} as data"
        [contextMenu]="menuComponent?.contextMenu"
        [class.affected]="affected$ | async"
        [class.selected]="selected"
        [style.cursor]="'default'"
-       [title]="data.values"
+       [title]="data.values | join"
        (mousedown)="onMouseDown()"
        class="h-100 p-1 text-nowrap overflow-hidden"
        tabindex="0">
-    {{ data.values || '&nbsp;' }}
+    {{ (data.values | join) || '&nbsp;' }}
   </div>
-</ng-container>
-
-<ng-template #checkbox>
-  <boolean-data-input [indeterminate]="booleanValue === 'indeterminate'"
-                      [value]="booleanValue === 'true'"
-                      class="h-100">
-  </boolean-data-input>
 </ng-template>
