@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {Constraint} from '../../../../../../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -63,8 +63,10 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   public constraint$: Observable<Constraint>;
 
   public values: any[];
-  public stringValue$: Observable<string>;
+  public stringValues$: Observable<string[]>;
   public booleanValue: string;
+
+  public readonly constraintType = ConstraintType;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -89,7 +91,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     if (changes.column || changes.documents || changes.linkInstances) {
       this.constraint$ = this.bindConstraint();
       const values = this.getValues();
-      this.stringValue$ = this.bindStringValue(values, this.constraint$);
+      this.stringValues$ = this.bindStringValue(values, this.constraint$);
       this.booleanValue = this.createBooleanValue(values);
     }
   }
@@ -126,14 +128,9 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     );
   }
 
-  private bindStringValue(values: any[], constraintObservable$: Observable<Constraint>): Observable<string> {
+  private bindStringValue(values: any[], constraintObservable$: Observable<Constraint>): Observable<string[]> {
     return constraintObservable$.pipe(
-      map(constraint =>
-        values
-          .map(value => formatDataValue(value, constraint))
-          .filter(value => !!value || value === 0)
-          .join(', ')
-      )
+      map(constraint => values.map(value => formatDataValue(value, constraint)).filter(value => !!value || value === 0))
     );
   }
 

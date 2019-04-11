@@ -1,0 +1,6 @@
+<div class="d-flex flex-nowrap h-100">
+  <div *ngFor="let value of values | groupColorsByCount"
+    [style.width.%]="(100 / values.length) * value.num"
+    [style.background]="value.color">
+  </div>
+</div>

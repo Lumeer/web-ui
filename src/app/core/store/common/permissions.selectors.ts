@@ -29,7 +29,7 @@ import {selectAllCollections} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
 import {filterDocumentsByQuery} from '../documents/documents.filters';
-import {selectAllDocuments} from '../documents/documents.state';
+import {selectAllDocuments, selectDocumentsDictionary} from '../documents/documents.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {selectCurrentUser} from '../users/users.state';
@@ -109,6 +109,12 @@ export const selectDocumentsByQuery = createSelector(
       filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser)
     )
 );
+
+export const selectDocumentsByQueryAndIds = (ids: string[]) =>
+  createSelector(
+    selectDocumentsByQuery,
+    documents => documents.filter(doc => ids.includes(doc.id))
+  );
 
 export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
   createSelector(

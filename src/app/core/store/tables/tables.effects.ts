@@ -43,7 +43,7 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from '../collections/collections.state';
-import {selectDocumentsByCustomQuery} from '../common/permissions.selectors';
+import {selectDocumentsByCustomQuery, selectDocumentsByQueryAndIds} from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
@@ -163,14 +163,10 @@ export class TablesEffects {
         );
       });
 
-      const rows = filterTableRowsByDepth(
-        (config && config.rows) || [createEmptyTableRow()],
-        Math.round(parts.length / 2)
-      );
       const addTableAction: Action = new TablesAction.AddTable({
         table: {
           id: action.payload.tableId,
-          config: {parts, rows},
+          config: {parts, rows: [createEmptyTableRow()]},
         },
       });
       return [addTableAction].concat(loadDataActions);
@@ -666,7 +662,7 @@ export class TablesEffects {
                 return ids.includes(documentId) ? ids : ids.concat(documentId);
               }, []);
               return this.store$.pipe(
-                select(selectDocumentsByIds(documentIds)),
+                select(selectDocumentsByQueryAndIds(documentIds)),
                 first(),
                 map(documents =>
                   documents.map(document => {

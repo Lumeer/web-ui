@@ -22,7 +22,6 @@
                                 [documents]="data.documents"
                                 [linkInstances]="data.linkInstances"
                                 [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
-                                [style.width.px]="column | columnWidth"
                                 [style.width.px]="column | columnWidth:canManageConfig"
                                 class="d-block table-border-right table-border-bottom">
           </table-collapsed-cell>
