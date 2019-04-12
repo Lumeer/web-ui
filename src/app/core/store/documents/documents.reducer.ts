@@ -38,6 +38,8 @@ export function documentsReducer(
       return onPatchData(state, action);
     case DocumentsActionType.PATCH_DATA_INTERNAL:
       return patchDocument(state, action);
+    case DocumentsActionType.PATCH_DATA_PENDING:
+      return removeEmptyPendingData(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_FAILURE:
@@ -79,6 +81,18 @@ function onPatchData(state: DocumentsState, action: DocumentsAction.PatchData): 
   const {correlationId} = action.payload.document;
   const {[correlationId]: _, ...pendingDataUpdates} = state.pendingDataUpdates;
   return correlationId ? {...state, pendingDataUpdates} : state;
+}
+
+function removeEmptyPendingData(state: DocumentsState, action: DocumentsAction.PatchDataPending): DocumentsState {
+  const {correlationId} = action.payload;
+  const data = state.pendingDataUpdates[correlationId];
+
+  if (data && Object.keys(data).length === 0) {
+    const {[correlationId]: _, ...pendingDataUpdates} = state.pendingDataUpdates;
+    return {...state, pendingDataUpdates};
+  }
+
+  return state;
 }
 
 function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
