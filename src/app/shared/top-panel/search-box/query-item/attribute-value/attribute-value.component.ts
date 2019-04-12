@@ -76,7 +76,7 @@ export class AttributeValueComponent {
     this.editing$.next(true);
   }
 
-  private cancelEditing() {
+  public cancelEditing() {
     this.editing$.next(false);
   }
 
