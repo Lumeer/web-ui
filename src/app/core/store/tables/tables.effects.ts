@@ -43,10 +43,14 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from '../collections/collections.state';
-import {selectDocumentsByCustomQuery, selectDocumentsByQueryAndIds} from '../common/permissions.selectors';
+import {
+  selectDocumentsByCustomQuery,
+  selectDocumentsByQuery,
+  selectDocumentsByQueryAndIds,
+} from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
-import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
@@ -121,9 +125,10 @@ export class TablesEffects {
         filter(loaded => loaded),
         mergeMap(() => this.store$.select(selectLinkTypesDictionary))
       ),
+      this.store$.pipe(select(selectDocumentsByQuery)),
       this.store$.pipe(select(selectViewCode))
     ),
-    mergeMap(([action, collectionsMap, linkTypesMap, viewCode]) => {
+    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
       const {config, query} = action.payload;
 
       const queryStem = query.stems[0];
@@ -163,10 +168,16 @@ export class TablesEffects {
         );
       });
 
+      const documentIds = (documents || []).map(document => document.id);
+      const rows = filterTableRowsByDepth(
+        (config && config.rows) || [createEmptyTableRow()],
+        Math.round(parts.length / 2),
+        documentIds
+      );
       const addTableAction: Action = new TablesAction.AddTable({
         table: {
           id: action.payload.tableId,
-          config: {parts, rows: [createEmptyTableRow()]},
+          config: {parts, rows},
         },
       });
       return [addTableAction].concat(loadDataActions);

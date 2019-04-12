@@ -40,7 +40,7 @@ import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../c
 import {Collection} from '../../../core/store/collections/collection';
 import {UserSettingsService} from '../../../core/service/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
-import {selectNavigation} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {SelectionHelper} from './util/selection-helper';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -50,6 +50,9 @@ import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/
 import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
 import {Query} from '../../../core/store/navigation/query';
 import {deepArrayEquals} from '../../../shared/utils/array.utils';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Component({
   selector: 'post-it-perspective',
@@ -87,15 +90,18 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
-  public collections: Collection[];
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
   public postItsOrder$ = new BehaviorSubject<string[]>([]);
   public query: Query;
-  public loaded$: Observable<boolean>;
   public canManageConfig = false;
   public documents: DocumentModel[];
+
+  public query$: Observable<Query>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public collections$: Observable<Collection[]>;
+  public loaded$: Observable<boolean>;
 
   private postItLayout: ElementRef;
   private page = 0;
@@ -109,6 +115,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private zone: NgZone,
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
     private canManageConfigPipe: CanManageConfigPipe,
     private changeDetector: ChangeDetectorRef,
     private userSettingsService: UserSettingsService
@@ -174,6 +181,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscribeToConfig();
     this.subscribeToView();
     this.loaded$ = this.store$.select(selectCurrentQueryDocumentsLoaded);
+    this.query$ = this.store$.pipe(select(selectQuery));
   }
 
   private initConfig() {
@@ -219,10 +227,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeCollections() {
-    const collectionsSubscription = this.store$
-      .select(selectCollectionsByQuery)
-      .subscribe(collections => (this.collections = collections));
-    this.subscriptions.add(collectionsSubscription);
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
   }
 
   private subscribeNavigation() {
@@ -392,7 +401,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  public trackByDocument(documentModel: DocumentModel): string {
+  public trackByDocument(index: number, documentModel: DocumentModel): string {
     return documentModel.correlationId || documentModel.id;
   }
 

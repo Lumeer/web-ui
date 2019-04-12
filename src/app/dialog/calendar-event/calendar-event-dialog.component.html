@@ -12,6 +12,7 @@
       [document]="document$ | async"
       [query]="query$ | async"
       [currentUser]="currentUser$ | async"
+      [allowedPermissions]="collectionsPermissions$ | async"
       (createEvent)="onCreateEvent($event)"
       (updateEvent)="onUpdateEvent($event)">
     </create-calendar-event-form>

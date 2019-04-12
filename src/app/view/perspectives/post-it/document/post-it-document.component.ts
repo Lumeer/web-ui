@@ -42,6 +42,8 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Query} from '../../../../core/store/navigation/query';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'post-it-document',
@@ -50,12 +52,29 @@ import {NotificationService} from '../../../../core/notifications/notification.s
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() public documentModel: DocumentModel;
-  @Input() public index: number;
-  @Input() public collection: Collection;
-  @Input() public perspectiveId: string;
-  @Input() public selectionHelper: SelectionHelper;
-  @Input() public canManageConfig: boolean;
+  @Input()
+  public documentModel: DocumentModel;
+
+  @Input()
+  public index: number;
+
+  @Input()
+  public collection: Collection;
+
+  @Input()
+  public perspectiveId: string;
+
+  @Input()
+  public selectionHelper: SelectionHelper;
+
+  @Input()
+  public canManageConfig: boolean;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter<number>();

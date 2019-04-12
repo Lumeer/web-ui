@@ -37,6 +37,7 @@ import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {formatData, parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
 import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {Query} from '../../../../core/store/navigation/query';
 
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
@@ -45,7 +46,8 @@ export function createGanttChartTasks(
   config: GanttChartConfig,
   collections: Collection[],
   documents: DocumentModel[],
-  permissions: Record<string, AllowedPermissions>
+  permissions: Record<string, AllowedPermissions>,
+  query?: Query
 ): GanttChartTask[] {
   return collections.reduce(
     (tasks, collection) => [
@@ -69,7 +71,8 @@ function createGanttChartTasksForCollection(
   config: GanttChartConfig,
   collection: Collection,
   documents: DocumentModel[],
-  permissions: AllowedPermissions
+  permissions: AllowedPermissions,
+  query?: Query
 ): GanttChartTask[] {
   const collectionConfig: GanttChartCollectionConfig = config.collections && config.collections[collection.id];
 
@@ -103,8 +106,8 @@ function createGanttChartTasksForCollection(
     const start = startProperty && formattedData[startProperty.attributeId];
     const end = endProperty && formattedData[endProperty.attributeId];
 
-    const startEditable = isCollectionAttributeEditable(startProperty.attributeId, collection);
-    const endEditable = isCollectionAttributeEditable(endProperty.attributeId, collection);
+    const startEditable = isCollectionAttributeEditable(startProperty.attributeId, collection, permissions, query);
+    const endEditable = isCollectionAttributeEditable(endProperty.attributeId, collection, permissions, query);
 
     const interval = createInterval(
       start,
@@ -115,7 +118,9 @@ function createGanttChartTasksForCollection(
     const progress = progressProperty && (formattedData[progressProperty.attributeId] || 0);
     const progressEditable = isCollectionAttributeEditable(
       progressProperty && progressProperty.attributeId,
-      collection
+      collection,
+      permissions,
+      query
     );
 
     tasks.push({

@@ -38,6 +38,7 @@ import {Query} from '../../core/store/navigation/query';
 import {selectQuery} from '../../core/store/navigation/navigation.state';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUser} from '../../core/store/users/users.state';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Component({
   templateUrl: './calendar-event-dialog.component.html',
@@ -55,6 +56,7 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
   public query$: Observable<Query>;
   public currentUser$: Observable<User>;
   public formInvalid$: Observable<boolean>;
+  public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
 
   constructor(
     private dialogService: DialogService,
@@ -67,7 +69,15 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
     this.config$ = this.subscribeConfig();
     this.initialTime$ = this.subscribeInitialTime();
     this.document$ = this.subscribeDocument();
-    this.collections$ = this.subscribeWritableCollections();
+    const configCollections$ = this.config$.pipe(
+      map(config => Object.keys(config.collections)),
+      mergeMap(collectionIds => this.store$.pipe(select(selectCollectionsByIds(collectionIds))))
+    );
+    this.collectionsPermissions$ = configCollections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
+    this.collections$ = this.subscribeWritableCollections(configCollections$);
     this.update$ = this.document$.pipe(map(document => !!document));
     this.query$ = this.store$.pipe(select(selectQuery));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
@@ -91,10 +101,12 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private subscribeWritableCollections(): Observable<Collection[]> {
+  private subscribeWritableCollections(configCollections$: Observable<Collection[]>): Observable<Collection[]> {
     return this.document$.pipe(
       mergeMap(
-        document => (document && this.subscribeCollectionsByDocument(document)) || this.subscribeCollectionsByConfig()
+        document =>
+          (document && this.subscribeCollectionsByDocument(document)) ||
+          this.subscribeCollectionsByConfig(configCollections$)
       )
     );
   }
@@ -103,13 +115,10 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
     return this.store$.pipe(select(selectCollectionById(document.collectionId))).pipe(map(collection => [collection]));
   }
 
-  private subscribeCollectionsByConfig(): Observable<Collection[]> {
-    return this.config$.pipe(
-      map(config => Object.keys(config.collections)),
-      mergeMap(collectionIds => this.store$.pipe(select(selectCollectionsByIds(collectionIds)))),
+  private subscribeCollectionsByConfig(configCollections$: Observable<Collection[]>): Observable<Collection[]> {
+    return configCollections$.pipe(
       mergeMap(collections =>
-        this.collectionsPermissionsPipe.transform(collections).pipe(
-          distinctUntilChanged((x, y) => deepObjectsEquals(x, y)),
+        this.collectionsPermissions$.pipe(
           map(permissions => collections.filter(collection => permissions[collection.id].writeWithView))
         )
       )

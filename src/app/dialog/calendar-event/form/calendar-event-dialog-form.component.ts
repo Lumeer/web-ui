@@ -33,7 +33,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as moment from 'moment';
 import {Collection} from '../../../core/store/collections/collection';
 import {
-  CALENDAR_DATE_FORMAT,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarCollectionConfig,
@@ -42,10 +41,13 @@ import {
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
 import {deepObjectsEquals, isDateValid} from '../../../shared/utils/common.utils';
-import {isCollectionAttributeEditable} from '../../../core/store/collections/collection.util';
+import {findAttributeConstraint, isCollectionAttributeEditable} from '../../../core/store/collections/collection.util';
 import {Query} from '../../../core/store/navigation/query';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {User} from '../../../core/store/users/user';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {getSaveValue} from '../../../shared/utils/data.utils';
+import {Constraint} from '../../../core/model/data/constraint';
 
 export const DEFAULT_EVENT_DURATION = 60;
 
@@ -72,6 +74,9 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public allowedPermissions: Record<string, AllowedPermissions>;
 
   @Output()
   public createEvent = new EventEmitter<DocumentModel>();
@@ -161,6 +166,8 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     }
 
     const collectionConfig = (this.config && this.config.collections[this.document.collectionId]) || {};
+    const collectionPermissions =
+      (this.allowedPermissions && this.allowedPermissions[this.document.collectionId]) || {};
     const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];
     const startProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
     const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
@@ -175,8 +182,18 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
     const allDay = isAllDayEvent(eventStart, eventEnd);
 
-    const startEditable = isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection);
-    const endEditable = isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection);
+    const startEditable = isCollectionAttributeEditable(
+      startProperty && startProperty.attributeId,
+      collection,
+      collectionPermissions,
+      this.query
+    );
+    const endEditable = isCollectionAttributeEditable(
+      endProperty && endProperty.attributeId,
+      collection,
+      collectionPermissions,
+      this.query
+    );
 
     return {collectionId, allDay, title, eventStart, eventEnd, startEditable, endEditable};
   }
@@ -246,6 +263,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     if (!collectionConfig.barsProperties) {
       return;
     }
+    const collectionPermissions = (this.allowedPermissions && this.allowedPermissions[collectionId]) || {};
 
     const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];
     const startProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
@@ -260,16 +278,46 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     if (
       eventStart &&
       startProperty &&
-      isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection)
+      isCollectionAttributeEditable(
+        startProperty && startProperty.attributeId,
+        collection,
+        collectionPermissions,
+        this.query
+      )
     ) {
-      data[startProperty.attributeId] = this.cleanDateWhenAllDay(eventStart, allDay);
+      const cleanedEventStart = this.cleanDateWhenAllDay(eventStart, allDay);
+      data[startProperty.attributeId] = this.getSaveValue(
+        cleanedEventStart,
+        findAttributeConstraint(collection.attributes, startProperty.attributeId)
+      );
     }
 
-    if (eventEnd && endProperty && isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection)) {
-      data[endProperty.attributeId] = this.cleanDateWhenAllDay(eventEnd, allDay);
+    if (
+      eventEnd &&
+      endProperty &&
+      isCollectionAttributeEditable(
+        endProperty && endProperty.attributeId,
+        collection,
+        collectionPermissions,
+        this.query
+      )
+    ) {
+      const cleanedEventEnd = this.cleanDateWhenAllDay(eventEnd, allDay);
+      data[endProperty.attributeId] = this.getSaveValue(
+        cleanedEventEnd,
+        findAttributeConstraint(collection.attributes, endProperty.attributeId)
+      );
     }
 
     return {...this.document, collectionId, data};
+  }
+
+  private getSaveValue(value: Date, constraint: Constraint): string {
+    if (constraint) {
+      return getSaveValue(value, constraint);
+    } else {
+      return moment(value).toISOString();
+    }
   }
 
   private generateDocumentData(collectionId: string): {[attributeId: string]: any} {
@@ -279,18 +327,18 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     return generateDocumentData(collection, filters, this.currentUser);
   }
 
-  private cleanDateWhenAllDay(date: Date, allDay: boolean): string {
+  private cleanDateWhenAllDay(date: Date, allDay: boolean): Date {
     if (allDay) {
       return moment(date)
         .hours(0)
         .minutes(0)
         .seconds(0)
         .milliseconds(0)
-        .format(CALENDAR_DATE_FORMAT);
+        .toDate();
     }
     return moment(date)
       .seconds(0)
       .milliseconds(0)
-      .format(CALENDAR_DATE_FORMAT);
+      .toDate();
   }
 }

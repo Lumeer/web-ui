@@ -85,8 +85,10 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    const value = parseBooleanDataValue(this.value);
-    this.save.emit(!value);
+    if (!this.readonly) {
+      const value = parseBooleanDataValue(this.value);
+      this.save.emit(!value);
+    }
   }
 
   @HostListener('dblclick', ['$event'])

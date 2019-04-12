@@ -101,7 +101,6 @@ export namespace ViewsAction {
       public payload: {
         viewId: string;
         view: View;
-        nextAction?: Action;
         onSuccess?: () => void;
         onFailure?: () => void;
       }
@@ -111,7 +110,7 @@ export namespace ViewsAction {
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {view: View; nextAction?: Action}) {}
+    public constructor(public payload: {view: View}) {}
   }
 
   export class UpdateFailure implements Action {

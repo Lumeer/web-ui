@@ -1,4 +1,4 @@
-<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async} as data">
+<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async, query: query$ | async} as data">
 
   <ng-container *ngIf="{linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0] | linkInstancePermissions | async,
                         document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async | documentPermissions | async} as permissions">
@@ -13,6 +13,7 @@
                          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                          [table]="table$ | async"
                          [allowedPermissions]="data.linkInstances ? permissions.linkInstance : permissions.document"
+                         [query]="data.query"
                          (affect)="onAffect()">
         </table-data-cell>
 

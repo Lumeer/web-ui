@@ -21,7 +21,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {AttributeFilter, Query, QueryStem, ConditionType, LinkAttributeFilter} from './query';
+import {CollectionAttributeFilter, Query, QueryStem, ConditionType, LinkAttributeFilter} from './query';
 import {LinkType} from '../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -142,11 +142,21 @@ export function isOnlyFulltextsQuery(query: Query): boolean {
   return (!query.stems || query.stems.length === 0) && query.fulltexts && query.fulltexts.length > 0;
 }
 
-export function getQueryFiltersForCollection(query: Query, collectionId: string): AttributeFilter[] {
+export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
   const stems = (query && query.stems) || [];
   return stems.reduce((filters, stem) => {
     const newFilters = (stem.filters || []).filter(
       filter => filter.collectionId === collectionId && !filters.find(f => deepObjectsEquals(f, filter))
+    );
+    return [...filters, ...newFilters];
+  }, []);
+}
+
+export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): CollectionAttributeFilter[] {
+  const stems = (query && query.stems) || [];
+  return stems.reduce((filters, stem) => {
+    const newFilters = (stem.linkFilters || []).filter(
+      filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
     );
     return [...filters, ...newFilters];
   }, []);
@@ -201,7 +211,7 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
   );
 }
 
-function isQueryFiltersSubset(superset: AttributeFilter[], subset: AttributeFilter[]): boolean {
+function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: CollectionAttributeFilter[]): boolean {
   return subset.every(sub => !!superset.find(sup => JSON.stringify(sup) === JSON.stringify(sub)));
 }
 

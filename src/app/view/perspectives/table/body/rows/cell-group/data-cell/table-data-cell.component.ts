@@ -42,7 +42,7 @@ import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {isAttributeEditable} from '../../../../../../../core/store/collections/collection.util';
+import {isAttributeEditableWithQuery} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -67,6 +67,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {isValueValid} from '../../../../../../../shared/utils/data.utils';
+import {Query} from '../../../../../../../core/store/navigation/query';
 
 @Component({
   selector: 'table-data-cell',
@@ -99,6 +100,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public allowedPermissions: AllowedPermissions;
+
+  @Input()
+  public query: Query;
 
   @Output()
   public affect = new EventEmitter();
@@ -222,7 +226,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             filter(prevent => prevent),
             first()
           )
-          .subscribe(prevent => this.editing$.next(false));
+          .subscribe(() => this.editing$.next(false));
       }
     }
     if (changes.document || changes.linkInstace) {
@@ -252,32 +256,35 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe(([action, attribute]) => {
         const {value} = action.payload;
-        if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
-          if (isAttributeEditable(attribute)) {
-            if (attribute && attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
-              // switch checkbox only if Enter or Space is pressed
-              if (!value || value === ' ') {
-                const data =
-                  (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
-                this.saveData(!data[this.column.attributeIds[0]]);
-              }
-            } else if (
-              attribute &&
-              attribute.constraint &&
-              attribute.constraint.type === ConstraintType.Percentage &&
-              !isNaN(+value)
-            ) {
-              this.editedValue = +value / 100;
-              this.hiddenInputValue$.next(+value / 100);
-              this.editing$.next(true);
-            } else {
-              this.editedValue = value;
-              this.hiddenInputValue$.next(value);
-              this.editing$.next(true);
+        if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
+          if (attribute && attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
+            // switch checkbox only if Enter or Space is pressed
+            if (!value || value === ' ') {
+              const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
+              this.saveData(!data[this.column.attributeIds[0]]);
             }
+          } else if (
+            attribute &&
+            attribute.constraint &&
+            attribute.constraint.type === ConstraintType.Percentage &&
+            !isNaN(+value)
+          ) {
+            this.editedValue = +value / 100;
+            this.hiddenInputValue$.next(+value / 100);
+            this.editing$.next(true);
+          } else {
+            this.editedValue = value;
+            this.hiddenInputValue$.next(value);
+            this.editing$.next(true);
           }
         }
       });
+  }
+
+  private isAttributeEditable(attribute: Attribute): boolean {
+    const parentId =
+      (this.document && this.document.collectionId) || (this.linkInstance && this.linkInstance.linkTypeId);
+    return isAttributeEditableWithQuery(attribute, parentId, this.allowedPermissions, this.query);
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -326,7 +333,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (isAttributeEditable(attribute)) {
+        if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
           this.editing$.next(true); // TODO maybe set edited attribute?
         }
       });
@@ -668,7 +675,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onEdit() {
-    //this.setEditedAttribute();
     this.store$.dispatch(new TablesAction.EditSelectedCell({}));
   }
 

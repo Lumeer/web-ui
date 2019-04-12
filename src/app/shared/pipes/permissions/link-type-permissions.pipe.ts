@@ -27,6 +27,7 @@ import {selectCollectionsByIds} from '../../../core/store/collections/collection
 import {CollectionPermissionsPipe} from './collection-permissions.pipe';
 import {Collection} from '../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {mergePermissions} from '../../utils/resource.utils';
 
 @Pipe({
   name: 'linkTypePermissions',
@@ -52,18 +53,7 @@ export class LinkTypePermissionsPipe implements PipeTransform {
         return observableCombineLatest(
           this.collectionsPermissionsPipe.transform(collections[0]),
           this.collectionsPermissionsPipe.transform(collections[1])
-        ).pipe(
-          map(([ap1, ap2]) => {
-            return {
-              read: ap1.read && ap2.read,
-              write: ap1.write && ap2.write,
-              manage: ap1.manage && ap2.manage,
-              readWithView: ap1.readWithView && ap2.readWithView,
-              writeWithView: ap1.writeWithView && ap2.writeWithView,
-              manageWithView: ap1.manageWithView && ap2.manageWithView,
-            };
-          })
-        );
+        ).pipe(map(([ap1, ap2]) => mergePermissions(ap1, ap2)));
       })
     );
   }

@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, LOCALE_ID, Output} from '@angular/core';
-import {CALENDAR_DATE_FORMAT, CalendarMode} from '../../../../../core/store/calendars/calendar.model';
+import {CalendarMode} from '../../../../../core/store/calendars/calendar.model';
 import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
@@ -70,16 +70,12 @@ export class CalendarVisualizationComponent {
 
     const changes = [];
 
-    startAttributeId && changes.push({attributeId: startAttributeId, value: this.dateToString(event.start)});
-    endAttributeId && changes.push({attributeId: endAttributeId, value: this.dateToString(event.end)});
+    startAttributeId && changes.push({attributeId: startAttributeId, value: event.start});
+    endAttributeId && changes.push({attributeId: endAttributeId, value: event.end});
 
     if (changes.length) {
       this.timesChange.emit({documentId: event.meta.documentId, changes});
     }
-  }
-
-  private dateToString(date: Date): string {
-    return moment(date).format(CALENDAR_DATE_FORMAT);
   }
 
   public monthDoubleClick(day: MonthViewDay) {

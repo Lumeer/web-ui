@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Overlay, OverlayRef, RepositionScrollStrategy} from '@angular/cdk/overlay';
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,

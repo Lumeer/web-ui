@@ -20,20 +20,86 @@
 import {Attribute, Collection} from './collection';
 import {LinkType} from '../link-types/link.type';
 import {Constraint} from '../../model/data/constraint';
+import {AttributeFilter, ConditionType, Query} from '../navigation/query';
+import {conditionFromString, getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query.util';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 
-export function isCollectionAttributeEditable(attributeId: string, collection: Collection): boolean {
+export function isCollectionAttributeEditable(
+  attributeId: string,
+  collection: Collection,
+  permissions: AllowedPermissions,
+  query?: Query
+): boolean {
   const attribute =
     attributeId && collection && collection.attributes && collection.attributes.find(attr => attr.id === attributeId);
-  return isAttributeEditable(attribute);
+  return (
+    isAttributeEditable(attribute) &&
+    (canManageByPermissions(permissions) || !isCollectionAttributeLockedByQuery(query, collection, attributeId))
+  );
 }
 
-export function isLinkTypeAttributeEditable(attributeId: string, linkType: LinkType): boolean {
+function canManageByPermissions(permissions: AllowedPermissions): boolean {
+  return permissions && (permissions.manageWithView || permissions.manage);
+}
+
+export function isCollectionAttributeLockedByQuery(query: Query, collection: Collection, attributeId: string): boolean {
+  if (!query) {
+    return false;
+  }
+
+  const collectionFilters = getQueryFiltersForCollection(query, collection.id);
+  return isAttributeLockedByFilters(collectionFilters, attributeId);
+}
+
+function isAttributeLockedByFilters(filters: AttributeFilter[], attributeId: string): boolean {
+  return filters
+    .filter(filter => filter.attributeId === attributeId)
+    .some(filter => conditionFromString(filter.condition) === ConditionType.Equals);
+}
+
+export function isLinkTypeAttributeEditable(
+  attributeId: string,
+  linkType: LinkType,
+  permissions: AllowedPermissions,
+  query?: Query
+): boolean {
   const attribute =
     attributeId && linkType && linkType.attributes && linkType.attributes.find(attr => attr.id === attributeId);
-  return isAttributeEditable(attribute);
+  return (
+    isAttributeEditable(attribute) &&
+    (canManageByPermissions(permissions) || !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId))
+  );
 }
 
-export function isAttributeEditable(attribute: Attribute): boolean {
+export function isLinkTypeAttributeLockedByQuery(query: Query, linkType: LinkType, attributeId: string): boolean {
+  if (!query) {
+    return false;
+  }
+
+  const linkFilters = getQueryFiltersForLinkType(query, linkType.id);
+  return isAttributeLockedByFilters(linkFilters, attributeId);
+}
+
+// parentId can be linkTypeId or collectionId
+export function isAttributeEditableWithQuery(
+  attribute: Attribute,
+  parentId: string,
+  permissions: AllowedPermissions,
+  query: Query
+): boolean {
+  const filters = [...getQueryFiltersForCollection(query, parentId), ...getQueryFiltersForLinkType(query, parentId)];
+
+  if (!attribute) {
+    return true;
+  }
+
+  return (
+    isAttributeEditable(attribute) &&
+    (canManageByPermissions(permissions) || !isAttributeLockedByFilters(filters, attribute.id))
+  );
+}
+
+function isAttributeEditable(attribute: Attribute): boolean {
   return !attribute || !attribute.function || !attribute.function.js || attribute.function.editable;
 }
 

@@ -32,6 +32,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {formatData} from '../../../../shared/utils/data.utils';
+import {Query} from '../../../../core/store/navigation/query';
 
 export interface CalendarMetaData {
   documentId: string;
@@ -45,7 +46,8 @@ export function createCalendarEvents(
   config: CalendarConfig,
   collections: Collection[],
   documents: DocumentModel[],
-  permissions: Record<string, AllowedPermissions>
+  permissions: Record<string, AllowedPermissions>,
+  query?: Query
 ): CalendarEvent<CalendarMetaData>[] {
   return collections.reduce(
     (tasks, collection) => [
@@ -69,7 +71,8 @@ export function createCalendarEventsForCollection(
   config: CalendarConfig,
   collection: Collection,
   documents: DocumentModel[],
-  permissisions: AllowedPermissions
+  permissions: AllowedPermissions,
+  query?: Query
 ): CalendarEvent<CalendarMetaData>[] {
   const collectionConfig = config.collections && config.collections[collection.id];
 
@@ -84,10 +87,11 @@ export function createCalendarEventsForCollection(
 
   const endProperty = properties[CalendarBarPropertyOptional.EndDate];
   const draggableStart =
-    permissisions.writeWithView &&
-    isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection);
+    permissions.writeWithView &&
+    isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection, permissions, query);
   const draggableEnd =
-    permissisions.writeWithView && isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection);
+    permissions.writeWithView &&
+    isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection, permissions, query);
   const allDayColor = getColor(true, collection.color);
   const color = getColor(false, collection.color);
 

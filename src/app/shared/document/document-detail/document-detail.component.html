@@ -52,7 +52,7 @@
                [value]="row.newValue || row.value"
                [constraint]="(collection | collectionAttribute : row.id)?.constraint"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
-               [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id)"
+               [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id: permissions: query)"
                (keyValueChange)="submitRowChange(idx, $event)"
                (remove)="onRemoveRow(idx)"
                [warning]="row.warning"

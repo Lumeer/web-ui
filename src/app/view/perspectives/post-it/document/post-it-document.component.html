@@ -41,7 +41,7 @@
             [key]="getDocumentKey()"
             [row]="idx"
             [index]="index"
-            [readonly]="!allowedPermissions.writeWithView  || !(collection | collectionAttributeEditable : row.id)"
+            [readonly]="!allowedPermissions.writeWithView  || !(collection | collectionAttributeEditable : row.id: permissions: query)"
             [column]="1"
             [perspectiveId]="perspectiveId"
             [selectionHelper]="selectionHelper"
