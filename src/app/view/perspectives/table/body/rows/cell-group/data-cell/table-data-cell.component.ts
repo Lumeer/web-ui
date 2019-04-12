@@ -137,6 +137,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editedValue: any;
   public hiddenInputValue$ = new BehaviorSubject<any>('');
 
+  public readonly constraintType = ConstraintType;
+
   private selectedSubscriptions = new Subscription();
   private subscriptions = new Subscription();
 
