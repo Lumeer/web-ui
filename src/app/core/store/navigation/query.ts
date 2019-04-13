@@ -28,22 +28,22 @@ export interface QueryStem {
   collectionId: string;
   linkTypeIds?: string[];
   documentIds?: string[];
-  filters?: AttributeFilter[];
+  filters?: CollectionAttributeFilter[];
   linkFilters?: LinkAttributeFilter[];
 }
 
 export interface AttributeFilter {
-  collectionId: string;
   condition: string;
   attributeId: string;
   value: any;
 }
 
-export interface LinkAttributeFilter {
+export interface CollectionAttributeFilter extends AttributeFilter {
+  collectionId: string;
+}
+
+export interface LinkAttributeFilter extends AttributeFilter {
   linkTypeId: string;
-  condition: string;
-  attributeId: string;
-  value: any;
 }
 
 export enum ConditionType {

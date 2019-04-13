@@ -18,7 +18,7 @@
  */
 
 import {QueryDto} from '../../dto';
-import {AttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
@@ -60,7 +60,7 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
   };
 }
 
-function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
+function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): CollectionAttributeFilter {
   return {
     collectionId: dto.collectionId,
     attributeId: dto.attributeId,
@@ -78,7 +78,7 @@ function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto): Link
   };
 }
 
-function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
+function convertAttributeFilterModelToDto(model: CollectionAttributeFilter): AttributeFilterDto {
   return {
     collectionId: model.collectionId,
     attributeId: model.attributeId,

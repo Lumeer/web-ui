@@ -30,6 +30,8 @@ import {BehaviorSubject} from 'rxjs';
 import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
 import {Collection} from '../../../../core/store/collections/collection';
 import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {Query} from '../../../../core/store/navigation/query';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'calendar-event-dialog-collection-form',
@@ -45,6 +47,12 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   public readonly requiredProperty = CalendarBarPropertyRequired;
   public readonly optionalProperty = CalendarBarPropertyOptional;
@@ -89,7 +97,9 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
   // happens when end attribute is not editable and start is after end
   private eventStartIsNotCorrect(date: Date): boolean {
     const endProperty = this.collectionConfig && this.collectionConfig.barsProperties[this.optionalProperty.EndDate];
-    const isEndEditable = !endProperty || isCollectionAttributeEditable(endProperty.attributeId, this.collection);
+    const isEndEditable =
+      !endProperty ||
+      isCollectionAttributeEditable(endProperty.attributeId, this.collection, this.permissions, this.query);
     const currentEnd = this.currentEnd$.getValue();
 
     return !isEndEditable && date.getTime() >= currentEnd.getTime();
@@ -128,7 +138,9 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
   private eventEndIsNotCorrect(date: Date): boolean {
     const startProperty =
       this.collectionConfig && this.collectionConfig.barsProperties[this.requiredProperty.StartDate];
-    const isStartEditable = !startProperty || isCollectionAttributeEditable(startProperty.attributeId, this.collection);
+    const isStartEditable =
+      !startProperty ||
+      isCollectionAttributeEditable(startProperty.attributeId, this.collection, this.permissions, this.query);
     const currentStart = this.currentStart$.getValue();
 
     return !isStartEditable && date.getTime() <= currentStart.getTime();

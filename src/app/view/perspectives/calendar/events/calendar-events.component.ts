@@ -42,12 +42,17 @@ import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {CalendarMetaData, createCalendarEvents} from '../util/calendar-util';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
+import {Query} from '../../../../core/store/navigation/query';
+import * as moment from 'moment';
+import {isDateValid} from '../../../../shared/utils/common.utils';
+import {Constraint} from '../../../../core/model/data/constraint';
 
 interface Data {
   collections: Collection[];
   documents: DocumentModel[];
   config: CalendarConfig;
   permissions: Record<string, AllowedPermissions>;
+  query: Query;
 }
 
 @Component({
@@ -70,6 +75,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Input()
   public canManageConfig: boolean;
+
+  @Input()
+  public query: Query;
 
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
@@ -99,17 +107,23 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data => createCalendarEvents(data.config, data.collections, data.documents, data.permissions || {}))
+      map(data =>
+        createCalendarEvents(data.config, data.collections, data.documents, data.permissions || {}, data.query)
+      )
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.documents || changes.config || changes.collections || changes.permissions) && this.config) {
+    if (
+      (changes.documents || changes.config || changes.collections || changes.permissions || changes.query) &&
+      this.config
+    ) {
       this.dataSubject.next({
         documents: this.documents,
         collections: this.collections,
         permissions: this.permissions,
         config: this.config,
+        query: this.query,
       });
     }
     if (changes.config && this.config) {
@@ -147,11 +161,19 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     const patchDocument = {...changedDocument};
     changes.forEach(change => {
       const attribute = ((collection && collection.attributes) || []).find(a => a.id === change.attributeId);
-      const saveValue = getSaveValue(change.value, attribute && attribute.constraint);
-
-      patchDocument.data[change.attributeId] = saveValue;
+      patchDocument.data[change.attributeId] = this.getSaveValue(change.value, attribute && attribute.constraint);
     });
     this.patchData.emit(patchDocument);
+  }
+
+  private getSaveValue(value: any, constraint: Constraint): any {
+    if (constraint) {
+      return getSaveValue(value, constraint);
+    } else if (isDateValid(value)) {
+      return moment(value).toISOString();
+    } else {
+      return value;
+    }
   }
 
   public onNewEvent(time: number) {

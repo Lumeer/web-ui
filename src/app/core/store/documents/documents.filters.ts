@@ -20,7 +20,7 @@
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {AttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
+import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
 import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
@@ -100,7 +100,7 @@ function applyFunctionsToFilters(query: Query, currentUser: User): Query {
   return {...query, stems};
 }
 
-function applyFilterFunctions(filter: AttributeFilter, currentUser: User): any {
+function applyFilterFunctions(filter: CollectionAttributeFilter, currentUser: User): any {
   switch (filter.value) {
     case 'userEmail()':
       return currentUser && currentUser.email;
@@ -227,7 +227,10 @@ function cleanStemForCollectionAndLink(
   return {collectionId, filters, documentIds, linkFilters};
 }
 
-function getFiltersByCollection(filters: AttributeFilter[], collectionId: string): AttributeFilter[] {
+function getFiltersByCollection(
+  filters: CollectionAttributeFilter[],
+  collectionId: string
+): CollectionAttributeFilter[] {
   return (filters && filters.filter(filter => filter.collectionId === collectionId)) || [];
 }
 
@@ -293,7 +296,7 @@ function filterDocumentsByAllConditions(
 function filterDocumentsByFiltersAndFulltexts(
   documents: DocumentModel[],
   collection: Collection,
-  filters: AttributeFilter[],
+  filters: CollectionAttributeFilter[],
   fulltexts: string[]
 ): DocumentModel[] {
   const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
@@ -360,14 +363,22 @@ function dataMeetsFulltexts(data: Record<string, any>, fulltextsLowerCase: strin
   );
 }
 
-function documentMeetsFilters(document: DocumentModel, collection: Collection, filters: AttributeFilter[]): boolean {
+function documentMeetsFilters(
+  document: DocumentModel,
+  collection: Collection,
+  filters: CollectionAttributeFilter[]
+): boolean {
   if (!filters || filters.length === 0) {
     return true;
   }
   return filters.every(filter => documentMeetFilter(document, collection, filter));
 }
 
-function documentMeetFilter(document: DocumentModel, collection: Collection, filter: AttributeFilter): boolean {
+function documentMeetFilter(
+  document: DocumentModel,
+  collection: Collection,
+  filter: CollectionAttributeFilter
+): boolean {
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
@@ -391,7 +402,7 @@ function linkMeetFilter(linkInstance: LinkInstance, linkType: LinkType, filter: 
 function dataMeetFilter(
   data: Record<string, any>,
   attributes: Attribute[],
-  filter: AttributeFilter | LinkAttributeFilter
+  filter: CollectionAttributeFilter | LinkAttributeFilter
 ) {
   const constraint = findAttributeConstraint(attributes, filter.attributeId);
   const dataValue = data[filter.attributeId];

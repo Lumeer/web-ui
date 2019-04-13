@@ -18,14 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute, Collection} from '../../core/store/collections/collection';
+import {Collection} from '../../core/store/collections/collection';
 import {isCollectionAttributeEditable} from '../../core/store/collections/collection.util';
+import {Query} from '../../core/store/navigation/query';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'collectionAttributeEditable',
 })
 export class CollectionAttributeEditablePipe implements PipeTransform {
-  public transform(collection: Collection, attributeId: string): boolean {
-    return isCollectionAttributeEditable(attributeId, collection);
+  public transform(
+    collection: Collection,
+    attributeId: string,
+    permissions: AllowedPermissions,
+    query?: Query
+  ): boolean {
+    return isCollectionAttributeEditable(attributeId, collection, permissions, query);
   }
 }

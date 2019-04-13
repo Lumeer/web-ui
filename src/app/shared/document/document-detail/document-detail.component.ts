@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
@@ -31,34 +31,36 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/service/perspective.service';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
 import {Query} from '../../../core/store/navigation/query';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 import {DialogService} from '../../../dialog/dialog.service';
 import {DocumentUi} from '../../../core/ui/document-ui';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'document-detail',
   templateUrl: './document-detail.component.html',
-  styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
+export class DocumentDetailComponent implements OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
   @Input()
   public document: DocumentModel;
 
+  @Input()
+  public query: Query;
+
+  @Input()
+  public permissions: AllowedPermissions;
+
   public state: DocumentUi;
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
-
-  private query: Query;
-  private subscriptions = new Subscription();
 
   constructor(
     private i18n: I18n,
@@ -67,14 +69,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private perspective: PerspectiveService,
     private dialogService: DialogService
   ) {}
-
-  public ngOnInit() {
-    this.subscribeQuery();
-  }
-
-  private subscribeQuery() {
-    this.subscriptions.add(this.store$.pipe(select(selectQuery)).subscribe(query => (this.query = query)));
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document) {
@@ -104,7 +98,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
     if (this.state) {
       this.state.destroy();
     }

@@ -41,9 +41,9 @@ const viewRoutes: Routes = [
     canDeactivate: [ViewConfigCleanUpGuard],
     resolve: {
       collections: CollectionsGuard,
+      views: ViewsGuard,
       documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
-      views: ViewsGuard,
       users: UsersGuard,
     },
     component: ViewComponent,
