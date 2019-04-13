@@ -21,13 +21,17 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Observable, Subscription} from 'rxjs';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter} from 'rxjs/operators';
+import {filter, first, map} from 'rxjs/operators';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLevelType} from '../../../../core/dto/service-level-type';
+import {RouterAction} from '../../../../core/store/router/router.action';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 
 @Component({
   selector: 'collection-rules',
@@ -41,6 +45,7 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
 
   public addingRules: Rule[] = [];
   public editingRules: Record<string, boolean> = {};
+  public rulesCountLimit$: Observable<number>;
 
   public subscriptions = new Subscription();
 
@@ -52,6 +57,10 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
       this.collection$.pipe(filter(collection => !!collection && !!collection.rules)).subscribe(collection => {
         this.ruleNames = collection.rules.map(r => r.name);
       })
+    );
+    this.rulesCountLimit$ = this.store$.pipe(
+      select(selectServiceLimitsByWorkspace),
+      map(serviceLimits => serviceLimits.rulesPerCollection)
     );
   }
 
@@ -134,5 +143,22 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
 
   public trackByRuleName(index: number, rule: Rule): string {
     return rule.name;
+  }
+
+  public openServiceOrder() {
+    this.store$
+      .pipe(
+        select(selectOrganizationByWorkspace),
+        map(organization => organization.code),
+        first()
+      )
+      .subscribe(code => {
+        this.store$.dispatch(
+          new RouterAction.Go({
+            path: ['/organization', code, 'detail'],
+            extras: {fragment: 'orderService'},
+          })
+        );
+      });
   }
 }

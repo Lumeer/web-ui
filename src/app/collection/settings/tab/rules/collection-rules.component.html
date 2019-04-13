@@ -1,29 +1,29 @@
 <div class="row my-4">
   <div class="col">
-    <ul class="list-group" *ngIf="collection$ | async as collection">
+    <ul class="list-group" *ngIf="{collection: collection$ | async, rulesLimit: rulesCountLimit$ | async | log} as data">
       <li
-        *ngIf="!(collection.rules)"
+        *ngIf="!(data.collection.rules)"
         no-rules
         class="list-group-item flex-column align-items-center">
       </li>
 
       <li
-        *ngFor="let rule of collection.rules; let idx = index; trackBy:trackByRuleName"
+        *ngFor="let rule of data.collection.rules; let idx = index; trackBy:trackByRuleName"
         class="list-group-item flex-column align-items-center">
         <add-rule-form
           *ngIf="editingRules[rule.name]"
-          [collection]="collection"
+          [collection]="data.collection"
           [rule]="rule"
           [ruleIndex]="idx"
           [ruleNames]="ruleNames"
           [originalRuleName]="rule.name"
           (onCancelNewRule)="onCancelRuleEdit($event)"
-          (onSaveRule)="onSaveRule(collection, idx, $event, rule.name)">
+          (onSaveRule)="onSaveRule(data.collection, idx, $event, rule.name)">
         </add-rule-form>
         <single-rule
           *ngIf="!editingRules[rule.name]"
           (onEdit)="editingRules[rule.name] = true"
-          (onDelete)="deleteRule(collection, rule)"
+          (onDelete)="deleteRule(data.collection, rule)"
           [rule]="rule">
         </single-rule>
       </li>
@@ -32,16 +32,17 @@
         *ngFor="let newRule of addingRules; let idx = index;"
         class="list-group-item flex-column align-items-center">
         <add-rule-form
-          [collection]="collection"
+          [collection]="data.collection"
           [rule]="newRule"
           [ruleIndex]="idx"
           [ruleNames]="ruleNames"
           (onCancelNewRule)="onCancelNewRule($event)"
-          (onSaveRule)="onSaveRule(collection, idx, $event)">
+          (onSaveRule)="onSaveRule(data.collection, idx, $event)">
         </add-rule-form>
       </li>
 
       <li
+        *ngIf="data.rulesLimit === 0 || data.rulesLimit > data.collection.rules.length; else freePlan"
         add-rule
         (click)="onNewRule()"
         class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
@@ -49,3 +50,17 @@
     </ul>
   </div>
 </div>
+
+<ng-template #freePlan>
+  <li class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
+    <span class="align-middle" i18n="@@collection.config.tab.rules.serviceLimit">
+      There can be only a single rule in the Free Plan.
+    </span>
+    <button
+      class="btn btn-sm btn-success ml-3"
+      i18n="@@collection.config.tab.rules.upgradePlan"
+      (click)="openServiceOrder()">
+      Upgrade to Business Plan!
+    </button>
+  </li>
+</ng-template>
