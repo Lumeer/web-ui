@@ -88,12 +88,26 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         this.store$.dispatch(new TablesAction.EditSelectedCell({}));
         return;
       case KeyCode.Backspace:
+        event.preventDefault();
+        event.stopPropagation();
+        this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
+        return;
       case KeyCode.Delete:
         event.preventDefault();
         event.stopPropagation();
         this.store$.dispatch(new TablesAction.RemoveSelectedCell());
         return;
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowLeft:
+      case KeyCode.ArrowRight:
+      case KeyCode.ArrowUp:
+        event.preventDefault();
+        return;
+      case KeyCode.Tab:
+        return;
     }
+
+    event.stopPropagation();
 
     this.onShortcutKeyDown(event);
   }

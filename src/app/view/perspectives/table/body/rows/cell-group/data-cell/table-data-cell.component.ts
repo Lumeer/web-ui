@@ -68,6 +68,7 @@ import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {isValueValid} from '../../../../../../../shared/utils/data.utils';
 import {Query} from '../../../../../../../core/store/navigation/query';
+import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'table-data-cell',
@@ -136,6 +137,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public editedValue: any;
   public hiddenInputValue$ = new BehaviorSubject<any>('');
+  public clearValue$ = new BehaviorSubject(false);
 
   public readonly constraintType = ConstraintType;
 
@@ -192,6 +194,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           this.editedValue = '';
           this.checkSuggesting();
           this.hiddenInputValue$.next('');
+          this.clearValue$.next(false);
 
           if (this.selected) {
             // sets focus to hidden input
@@ -257,27 +260,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         withLatestFrom(this.attribute$)
       )
       .subscribe(([action, attribute]) => {
-        const {value} = action.payload;
         if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
-          if (attribute && attribute.constraint && attribute.constraint.type === ConstraintType.Boolean) {
-            // switch checkbox only if Enter or Space is pressed
-            if (!value || value === ' ') {
-              const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
-              this.saveData(!data[this.column.attributeIds[0]]);
-            }
-          } else if (
-            attribute &&
-            attribute.constraint &&
-            attribute.constraint.type === ConstraintType.Percentage &&
-            !isNaN(+value)
-          ) {
-            this.editedValue = +value / 100;
-            this.hiddenInputValue$.next(+value / 100);
-            this.editing$.next(true);
+          if (action.payload.clear) {
+            this.startEditingAndClear();
           } else {
-            this.editedValue = value;
-            this.hiddenInputValue$.next(value);
-            this.editing$.next(true);
+            this.changeValue(action.payload.value, attribute);
           }
         }
       });
@@ -289,15 +276,54 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return isAttributeEditableWithQuery(attribute, parentId, this.allowedPermissions, this.query);
   }
 
+  private startEditingAndClear() {
+    this.editedValue = '';
+    this.clearValue$.next(true);
+    this.editing$.next(true);
+  }
+
+  private changeValue(value: string, attribute: Attribute) {
+    if (isAttributeConstraintType(attribute, ConstraintType.Boolean)) {
+      this.switchCheckboxValue(value);
+    } else if (isAttributeConstraintType(attribute, ConstraintType.Percentage) && !isNaN(+value)) {
+      this.startEditingAndChangePercentageValue(value);
+    } else {
+      this.startEditingAndChangeValue(value);
+    }
+  }
+
+  private switchCheckboxValue(value: string) {
+    // switch checkbox only if Enter or Space is pressed
+    if (!value || value === ' ') {
+      const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
+      this.saveData(!data[this.column.attributeIds[0]]);
+    }
+  }
+
+  private startEditingAndChangePercentageValue(value: string) {
+    this.editedValue = +value / 100;
+    this.hiddenInputValue$.next(+value / 100);
+    this.editing$.next(true);
+  }
+
+  private startEditingAndChangeValue(value: string) {
+    this.editedValue = value;
+    this.hiddenInputValue$.next(value);
+    this.editing$.next(true);
+  }
+
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
       .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
-      .subscribe(() => this.deleteCellData());
+      .subscribe(() => this.deleteOrUnlinkDocument());
   }
 
-  private deleteCellData() {
-    if (this.isEntityInitialized() && !!this.getValue()) {
-      this.updateData(null);
+  private deleteOrUnlinkDocument() {
+    // TODO move methods from menu component to this component
+    if (this.cursor.partIndex > 0 && this.isEntityInitialized()) {
+      this.menuComponent.onUnlinkRow();
+    } else {
+      this.menuComponent.onRemoveRow();
     }
   }
 
