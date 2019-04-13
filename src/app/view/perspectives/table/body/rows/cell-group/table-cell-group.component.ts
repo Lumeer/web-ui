@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
@@ -39,6 +39,8 @@ import {
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
+import {Query} from '../../../../../../core/store/navigation/query';
+import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -46,7 +48,7 @@ import {
   styleUrls: ['./table-cell-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableCellGroupComponent implements OnChanges {
+export class TableCellGroupComponent implements OnChanges, OnInit {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -58,6 +60,7 @@ export class TableCellGroupComponent implements OnChanges {
 
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstance[]>;
+  public query$: Observable<Query>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
@@ -68,6 +71,10 @@ export class TableCellGroupComponent implements OnChanges {
   private rowSelected: boolean;
 
   public constructor(private store$: Store<{}>) {}
+
+  public ngOnInit() {
+    this.query$ = this.store$.pipe(select(selectQuery));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {

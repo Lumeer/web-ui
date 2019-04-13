@@ -124,6 +124,7 @@ export class AttributeConditionComponent implements OnInit {
       case KeyCode.Space:
         event.preventDefault();
         event.stopImmediatePropagation();
+        event.code !== KeyCode.Space && this.useSuggestion();
         this.checkCaretPositionAndGoRight();
         break;
       case KeyCode.Tab:
@@ -143,13 +144,9 @@ export class AttributeConditionComponent implements OnInit {
     this.moveSuggestionSelection$.next(direction);
   }
 
-  public onEnterKeyUp() {
+  public useSuggestion() {
     const value = this.queryItem.condition.trim();
     this.useSuggestionSelection$.next(value);
-  }
-
-  public onSpaceKeyUp() {
-    this.checkCaretPositionAndGoRight();
   }
 
   public onUseSuggestion(condition: string) {

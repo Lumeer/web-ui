@@ -42,6 +42,7 @@
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@lumeer/frappe-gantt-lumeer/dist/frappe-gantt.css",
               "node_modules/driver.js/dist/driver.min.css",
+              "node_modules/@angular/cdk/overlay-prebuilt.css",
               "src/styles.scss"
             ],
             "scripts": [

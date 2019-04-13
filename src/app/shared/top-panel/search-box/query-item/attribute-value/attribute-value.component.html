@@ -6,9 +6,9 @@
   [skipValidation]="true"
   [resizeToContent]="true"
   (save)="onSave($event)"
-  (click)="editing$.next(true)"
-  (onFocus)="editing$.next(true)"
-  (cancel)="editing$.next(false)"
-  (blur)="editing$.next(false)"
+  (click)="setEditing()"
+  (onFocus)="setEditing()"
+  (cancel)="cancelEditing()"
+  (blur)="cancelEditing()"
   (keydown)="dataInputKeyDown($event)">
 </data-input>

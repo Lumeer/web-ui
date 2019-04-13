@@ -42,8 +42,13 @@ import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {convertToBig, formatDataValue} from '../../../../../shared/utils/data.utils';
 import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
 import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
-import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+  isLinkTypeAttributeEditable,
+} from '../../../../../core/store/collections/collection.util';
 import Big from 'big.js';
+import {mergePermissions} from '../../../../../shared/utils/resource.utils';
 
 // Document or LinkInstance
 interface ObjectData {
@@ -614,12 +619,7 @@ export class ChartDataConverter {
     }
 
     const collection = this.collections && this.collections.find(c => c.id === collectionId);
-    const attribute = collection && collection.attributes && collection.attributes.find(a => a.id === attributeId);
-    return this.isAttributeEditable(attribute);
-  }
-
-  private isAttributeEditable(attribute: Attribute): boolean {
-    return attribute && (!attribute.function || attribute.function.editable);
+    return isCollectionAttributeEditable(attributeId, collection, this.permissions[collectionId] || {}, this.query);
   }
 
   private canDragLinkAxis(linkTypeId: string, attributeId: string): boolean {
@@ -634,8 +634,9 @@ export class ChartDataConverter {
       return false;
     }
 
-    const attribute = linkType.attributes && linkType.attributes.find(a => a.id === attributeId);
-    return this.isAttributeEditable(attribute);
+    const mergedPermissions = mergePermissions(permission1, permission2);
+
+    return isLinkTypeAttributeEditable(attributeId, linkType, mergedPermissions, this.query);
   }
 
   private getAttributeNameForAxis(axis: ChartAxis, axisResource: AxisResource): string {

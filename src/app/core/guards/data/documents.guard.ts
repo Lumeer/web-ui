@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, first, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
@@ -29,6 +29,7 @@ import {selectCurrentQueryDocumentsLoaded} from '../../store/documents/documents
 import {selectQuery} from '../../store/navigation/navigation.state';
 import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
 import {queryIsEmpty} from '../../store/navigation/query.util';
+import {selectViewsLoaded} from '../../store/views/views.state';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +38,10 @@ export class DocumentsGuard implements Resolve<DocumentModel[]> {
   public constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
-    return this.store$.select(selectQuery).pipe(
+    return this.store$.pipe(
+      select(selectViewsLoaded),
+      filter(loaded => loaded),
+      mergeMap(() => this.store$.pipe(select(selectQuery))),
       mergeMap(query =>
         this.store$.select(selectCurrentQueryDocumentsLoaded).pipe(
           tap(loaded => {

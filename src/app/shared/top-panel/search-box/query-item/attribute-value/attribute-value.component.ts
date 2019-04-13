@@ -64,7 +64,7 @@ export class AttributeValueComponent {
     if (this.conditionValueControl && this.conditionValueControl.valid) {
       this.change.emit();
     }
-    this.editing$.next(false);
+    this.cancelEditing();
   }
 
   private setValue(value: any) {
@@ -74,6 +74,10 @@ export class AttributeValueComponent {
 
   public setEditing() {
     this.editing$.next(true);
+  }
+
+  public cancelEditing() {
+    this.editing$.next(false);
   }
 
   private get constraint(): Constraint {
@@ -87,7 +91,7 @@ export class AttributeValueComponent {
         if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
           this.onSave(!this.queryItem.conditionValue);
         } else if (!this.editing$.getValue()) {
-          this.editing$.next(true);
+          this.setEditing();
         }
         return;
     }

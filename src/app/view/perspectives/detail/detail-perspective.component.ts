@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -25,10 +25,14 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Query} from '../../../core/store/navigation/query';
-import {BehaviorSubject, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {map, mergeMap} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap} from 'rxjs/operators';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Component({
   selector: 'detail-perspective',
@@ -36,15 +40,22 @@ import {selectDocumentById} from '../../../core/store/documents/documents.state'
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailPerspectiveComponent implements OnDestroy {
+export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   @Input()
   public embedded: boolean;
+
+  public query$: Observable<Query>;
+  public collectionPermission$: Observable<AllowedPermissions>;
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
   private selectedCollection: Collection;
   private collectionSubsription = new Subscription();
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+
+  public ngOnInit() {
+    this.query$ = this.store$.pipe(select(selectQuery));
+  }
 
   public ngOnDestroy() {
     this.collectionSubsription.unsubscribe();
@@ -67,6 +78,9 @@ export class DetailPerspectiveComponent implements OnDestroy {
 
   private select(collection: Collection, document?: DocumentModel) {
     this.selectedCollection = collection;
+    this.collectionPermission$ = this.collectionPermissionsPipe
+      .transform(collection)
+      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
 
     this.collectionSubsription.unsubscribe();
     this.collectionSubsription = this.store$

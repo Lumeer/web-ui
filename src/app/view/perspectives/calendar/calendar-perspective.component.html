@@ -19,6 +19,7 @@
       [canManageConfig]="data.canManageConfig"
       [config]="data.config"
       [permissions]="permissions$ | async"
+      [query]="query$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)"
       (newEvent)="onNewEvent($event)"

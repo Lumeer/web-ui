@@ -721,16 +721,22 @@ export function areTableColumnsListsEqual(columns: TableConfigColumn[], otherCol
   });
 }
 
-export function filterTableRowsByDepth(rows: TableConfigRow[], depth: number): TableConfigRow[] {
+export function filterTableRowsByDepth(
+  rows: TableConfigRow[],
+  depth: number,
+  allowedDocumentIds: string[]
+): TableConfigRow[] {
   if (depth === 0) {
     return [];
   }
 
-  return rows.map(row => {
-    if (!row.linkedRows || row.linkedRows.length === 0) {
-      return row;
-    }
+  return rows
+    .filter(row => !row.documentId || allowedDocumentIds.includes(row.documentId))
+    .map(row => {
+      if (!row.linkedRows || row.linkedRows.length === 0) {
+        return row;
+      }
 
-    return {...row, linkedRows: filterTableRowsByDepth(row.linkedRows, depth - 1)};
-  });
+      return {...row, linkedRows: filterTableRowsByDepth(row.linkedRows, depth - 1, allowedDocumentIds)};
+    });
 }

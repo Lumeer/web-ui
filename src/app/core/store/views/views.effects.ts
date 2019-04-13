@@ -41,6 +41,7 @@ import {ViewConverter} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
+import {areQueriesEqual} from '../navigation/query.helper';
 
 @Injectable()
 export class ViewsEffects {
@@ -135,9 +136,7 @@ export class ViewsEffects {
       return this.viewService.updateView(action.payload.viewId, viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
         flatMap(view => {
-          const actions: Action[] = [
-            new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction}),
-          ];
+          const actions: Action[] = [new ViewsAction.UpdateSuccess({view: view})];
           if (onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess()}));
           }
@@ -151,6 +150,20 @@ export class ViewsEffects {
           return of(...actions);
         })
       );
+    })
+  );
+
+  @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectNavigation))),
+    flatMap(([action, navigation]) => {
+      const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
+      const {code, query} = action.payload.view;
+      if (viewCodeInUrl && viewCodeInUrl === code && !areQueriesEqual(query, navigation.query)) {
+        return [new NavigationAction.SetQuery({query})];
+      }
+      return [];
     })
   );
 

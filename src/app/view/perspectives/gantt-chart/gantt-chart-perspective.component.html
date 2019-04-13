@@ -22,6 +22,7 @@
       [permissions]="permissions$ | async"
       [documents]="documents$ | async"
       [config]="data.config"
+      [query]="query$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>

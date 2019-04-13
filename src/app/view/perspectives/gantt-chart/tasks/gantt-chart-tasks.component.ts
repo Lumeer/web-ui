@@ -41,12 +41,14 @@ import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
+import {Query} from '../../../../core/store/navigation/query';
 
 interface Data {
   collections: Collection[];
   documents: DocumentModel[];
   config: GanttChartConfig;
   permissions: Record<string, AllowedPermissions>;
+  query: Query;
 }
 
 @Component({
@@ -73,6 +75,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Input()
   public ganttChartId: string;
 
+  @Input()
+  public query: Query;
+
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
@@ -91,17 +96,23 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data => createGanttChartTasks(data.config, data.collections, data.documents, data.permissions || {}))
+      map(data =>
+        createGanttChartTasks(data.config, data.collections, data.documents, data.permissions || {}, data.query)
+      )
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.documents || changes.config || changes.collections || changes.permissions) && this.config) {
+    if (
+      (changes.documents || changes.config || changes.collections || changes.permissions || changes.query) &&
+      this.config
+    ) {
       this.dataSubject.next({
         documents: this.documents,
         collections: this.collections,
         permissions: this.permissions,
         config: this.config,
+        query: this.query,
       });
     }
     if (changes.config && this.config) {

@@ -20,7 +20,7 @@ import {Dictionary} from 'lodash';
 import {Collection} from '../collections/collection';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
-import {AttributeFilter, Query, ConditionType} from '../navigation/query';
+import {CollectionAttributeFilter, Query, ConditionType} from '../navigation/query';
 import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
@@ -49,7 +49,7 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): {[collec
 
 export function generateDocumentData(
   collection: Collection,
-  collectionFilters: AttributeFilter[],
+  collectionFilters: CollectionAttributeFilter[],
   currentUser?: User
 ): {[attributeId: string]: any} {
   if (!collection) {

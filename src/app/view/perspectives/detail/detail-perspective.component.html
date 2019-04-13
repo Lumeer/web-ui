@@ -8,7 +8,9 @@
     </preview-results>
     <document-detail *ngIf="selected.collection && selected.document"
                      [collection]="selected.collection"
-                     [document]="selected.document">
+                     [document]="selected.document"
+                     [query]="query$ | async"
+                     [permissions]="collectionPermission$ | async">
     </document-detail>
     <links-list
       *ngIf="selected.collection && selected.document"

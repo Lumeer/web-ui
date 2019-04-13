@@ -24,7 +24,7 @@ import {Observable} from 'rxjs';
 import {first, mergeMap} from 'rxjs/operators';
 import {isBackendUrl} from '../../api/api.utils';
 import {AppState} from '../../store/app.state';
-import {selectViewCode} from '../../store/navigation/navigation.state';
+import {selectWorkspaceWithIds} from '../../store/common/common.selectors';
 
 @Injectable()
 export class ViewHttpInterceptor implements HttpInterceptor {
@@ -35,12 +35,12 @@ export class ViewHttpInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    return this.store.select(selectViewCode).pipe(
+    return this.store.select(selectWorkspaceWithIds).pipe(
       first(),
-      mergeMap(viewCode => {
-        if (viewCode) {
+      mergeMap(workspace => {
+        if (workspace && workspace.viewId) {
           const viewRequest = request.clone({
-            setHeaders: {view_code: viewCode},
+            setHeaders: {view_id: workspace.viewId},
           });
           return next.handle(viewRequest);
         }

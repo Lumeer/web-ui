@@ -24,6 +24,7 @@ import {Permission} from '../../core/store/permissions/permissions';
 import {View} from '../../core/store/views/view';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 export function userIsManagerInWorkspace(user: User, organization?: Organization, project?: Project): boolean {
   return (
@@ -97,4 +98,19 @@ function roleWithTransitionRoles(role: string): string[] {
     return [Role.Read, Role.Write, Role.Comment, Role.Share, Role.Clone, Role.Manage];
   }
   return [role];
+}
+
+export function mergePermissions(p1: AllowedPermissions, p2: AllowedPermissions): AllowedPermissions {
+  if (!p1 || !p2) {
+    return p1 || p2 || {};
+  }
+
+  return {
+    read: p1.read && p2.read,
+    write: p1.write && p2.write,
+    manage: p1.manage && p2.manage,
+    readWithView: p1.readWithView && p2.readWithView,
+    writeWithView: p1.writeWithView && p2.writeWithView,
+    manageWithView: p1.manageWithView && p2.manageWithView,
+  };
 }
