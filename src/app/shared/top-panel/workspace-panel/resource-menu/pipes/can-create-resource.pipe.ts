@@ -31,7 +31,7 @@ import {Project} from '../../../../../core/store/projects/project';
 import {selectCurrentUser} from '../../../../../core/store/users/users.state';
 import {PermissionsPipe} from '../../../../pipes/permissions/permissions.pipe';
 
-const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
+const allowedEmails = ['support@lumeer.io', 'mvecera@lumeer.io', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
 
 @Pipe({
   name: 'canCreateResource',
