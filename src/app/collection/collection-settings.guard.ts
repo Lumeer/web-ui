@@ -53,14 +53,26 @@ export class CollectionSettingsGuard implements CanActivate {
     const projectCode = next.paramMap.get('projectCode');
     const collectionId = next.paramMap.get('collectionId');
 
-    return this.selectCollection(collectionId).pipe(
-      mergeMap(collection => {
-        if (!collection) {
-          this.dispatchErrorActionsNotExist();
+    return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
+      mergeMap(({user, organization, project}) => {
+        if (!organization) {
+          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          this.store$.dispatch(new NotificationsAction.Error({message}));
+
+          this.navigateToHome();
+          return of(false);
+        }
+        if (!project) {
+          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          this.store$.dispatch(new NotificationsAction.Error({message}));
+
+          this.navigateToHome();
           return of(false);
         }
 
-        return this.checkCollection(collection, organizationCode, projectCode);
+        return this.selectCollection(collectionId).pipe(
+          map(collection => this.checkCollection(user, collection, organization, project))
+        );
       }),
       take(1),
       catchError(() => of(false))
@@ -84,16 +96,16 @@ export class CollectionSettingsGuard implements CanActivate {
     );
   }
 
-  private checkCollection(collection: Collection, organizationCode: string, projectCode: string): Observable<boolean> {
-    return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
-      map(({user, organization, project}) => {
-        if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
-          this.dispatchErrorActionsNotPermission();
-          return false;
-        }
-        return true;
-      })
-    );
+  private checkCollection(user: User, collection: Collection, organization: Organization, project: Project): boolean {
+    if (!collection) {
+      this.dispatchErrorActionsNotExist();
+      return false;
+    }
+    if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
+      this.dispatchErrorActionsNotPermission();
+      return false;
+    }
+    return true;
   }
 
   private selectUserAndWorkspace(
@@ -147,5 +159,9 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private navigateToHome() {
+    this.router.navigate(['/']);
   }
 }
