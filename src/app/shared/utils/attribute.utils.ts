@@ -187,3 +187,7 @@ export function getAttributeConstraintIconName(constraint: Constraint): string {
 
   return null;
 }
+
+export function isAttributeConstraintType(attribute: Attribute, type: ConstraintType): boolean {
+  return attribute && attribute.constraint && attribute.constraint.type === type;
+}

@@ -190,10 +190,7 @@ export class TableSingleColumnComponent implements OnChanges {
   private subscribeToRemoveSelectedCell(): Subscription {
     return this.actions$
       .pipe(ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL))
-      .subscribe(() => {
-        this.lastName = '';
-        this.editableCellDirective.startEditing(true);
-      });
+      .subscribe(() => this.onRemove());
   }
 
   public ngOnDestroy() {
