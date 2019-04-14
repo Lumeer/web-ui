@@ -35,7 +35,7 @@ import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.co
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/c/:collectionId',
-    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionSettingsGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
     resolve: {
       linkTypes: LinkTypesGuard,
