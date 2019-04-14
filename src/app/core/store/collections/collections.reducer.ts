@@ -147,7 +147,7 @@ function onChangePermission(
   const permissions = PermissionsHelper.changePermission(
     collection.permissions,
     action.payload.type,
-    action.payload.permission
+    action.payload.permissions
   );
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);

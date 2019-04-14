@@ -20,7 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
-import {Organization} from '../organizations/organization';
+import {Workspace} from '../navigation/workspace';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -45,8 +45,6 @@ export enum ProjectsActionType {
   DELETE = '[Projects] Delete',
   DELETE_SUCCESS = '[Projects] Delete :: Success',
   DELETE_FAILURE = '[Projects] Delete :: Failure',
-
-  SELECT = '[Projects] Select',
 
   CHANGE_PERMISSION = '[Projects] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Projects] Change Permission :: Success',
@@ -165,12 +163,6 @@ export namespace ProjectsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class Select implements Action {
-    public readonly type = ProjectsActionType.SELECT;
-
-    public constructor(public payload: {projectId: string}) {}
-  }
-
   export class ChangePermission implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION;
 
@@ -178,8 +170,9 @@ export namespace ProjectsAction {
       public payload: {
         projectId: string;
         type: PermissionType;
-        permission: Permission;
-        currentPermission: Permission;
+        permissions: Permission[];
+        currentPermissions: Permission[];
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -187,13 +180,15 @@ export namespace ProjectsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {projectId: string; type: PermissionType; permission: Permission}) {}
+    public constructor(public payload: {projectId: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_FAILURE;
 
-    public constructor(public payload: {projectId: string; type: PermissionType; permission: Permission; error: any}) {}
+    public constructor(
+      public payload: {projectId: string; type: PermissionType; permissions: Permission[]; error: any}
+    ) {}
   }
 
   export class SwitchWorkspace implements Action {
@@ -207,7 +202,6 @@ export namespace ProjectsAction {
   }
 
   export type All =
-    | Select
     | Get
     | GetSingle
     | GetSuccess
@@ -225,7 +219,6 @@ export namespace ProjectsAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
-    | Select
     | ChangePermission
     | ChangePermissionSuccess
     | ChangePermissionFailure

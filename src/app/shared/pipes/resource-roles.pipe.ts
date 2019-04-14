@@ -29,7 +29,7 @@ import {Role} from '../../core/model/role';
   providedIn: 'root',
 })
 export class ResourceRolesPipe implements PipeTransform {
-  public transform(resourceType: ResourceType): string[] {
+  public transform(resourceType: ResourceType): Role[] {
     switch (resourceType) {
       case ResourceType.Organization:
         return [Role.Read, Role.Write, Role.Manage];

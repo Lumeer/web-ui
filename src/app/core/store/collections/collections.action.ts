@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Attribute, Collection, ImportedCollection} from './collection';
+import {Workspace} from '../navigation/workspace';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
@@ -308,8 +309,9 @@ export namespace CollectionsAction {
       public payload: {
         collectionId: string;
         type: PermissionType;
-        permission: Permission;
-        currentPermission: Permission;
+        permissions: Permission[];
+        currentPermissions: Permission[];
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -317,14 +319,14 @@ export namespace CollectionsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {collectionId: string; type: PermissionType; permission: Permission}) {}
+    public constructor(public payload: {collectionId: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION_FAILURE;
 
     public constructor(
-      public payload: {collectionId: string; type: PermissionType; permission: Permission; error: any}
+      public payload: {collectionId: string; type: PermissionType; permissions: Permission[]; error: any}
     ) {}
   }
 

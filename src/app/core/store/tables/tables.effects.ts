@@ -110,10 +110,7 @@ export class TablesEffects {
   @Effect()
   public createTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
-    filter(action => {
-      const {query} = action.payload;
-      return isSingleCollectionQuery(query);
-    }),
+    filter(action => isSingleCollectionQuery(action.payload.query)),
     withLatestFrom(
       this.store$.pipe(
         select(selectCollectionsLoaded),
@@ -157,15 +154,6 @@ export class TablesEffects {
         lastCollectionId = collectionId;
 
         parts.push(linkTypePart, collectionPart);
-
-        // TODO load in guard instead
-        const dataQuery: Query = {
-          stems: [{collectionId: collection.id, linkTypeIds: [linkTypeId]}],
-        };
-        loadDataActions.push(
-          new DocumentsAction.Get({query: dataQuery}),
-          new LinkInstancesAction.Get({query: dataQuery})
-        );
       });
 
       const documentIds = (documents || []).map(document => document.id);
@@ -180,7 +168,9 @@ export class TablesEffects {
           config: {parts, rows},
         },
       });
-      return [addTableAction].concat(loadDataActions);
+
+      // TODO load in guard instead
+      return [addTableAction, new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query})];
     })
   );
 

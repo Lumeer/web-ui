@@ -28,8 +28,6 @@ import {OrganizationUsersComponent} from './organization/users/organization-user
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {ProjectUsersComponent} from './project/users/project-users.component';
-import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 
 const workspaceRoutes: Routes = [
@@ -74,11 +72,6 @@ const workspaceRoutes: Routes = [
         pathMatch: 'full',
       },
     ],
-  },
-  {
-    path: 'workspace',
-    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceSelectGuard],
-    component: WorkspaceChooserComponent,
   },
 ];
 

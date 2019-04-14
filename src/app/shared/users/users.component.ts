@@ -38,6 +38,7 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Component({
   selector: 'users',
@@ -90,16 +91,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     return organization && organization.id;
   }
 
-  public onUserPermissionChanged(data: {newPermission: Permission; currentPermission: Permission; onlyStore: boolean}) {
-    if (data.onlyStore) {
-      this.changeUserPermissionOnlyStore(data);
-    } else {
-      this.changeUserPermission(data);
-    }
-  }
-
-  public changeUserPermissionOnlyStore(data: {newPermission: Permission}) {
-    const payload = {type: PermissionType.Users, permission: data.newPermission};
+  public changeUsersPermissionsOnlyStore(data: {permissions: Permission[]}) {
+    const payload = {...data, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
         this.store$.dispatch(
@@ -120,12 +113,12 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public changeUserPermission(data: {newPermission: Permission; currentPermission: Permission}) {
-    const payload = {
-      type: PermissionType.Users,
-      permission: data.newPermission,
-      currentPermission: data.currentPermission,
-    };
+  public changeUsersPermissions(data: {
+    permissions: Permission[];
+    currentPermissions: Permission[];
+    workspace?: Workspace;
+  }) {
+    const payload = {...data, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
         this.store$.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));

@@ -41,8 +41,6 @@ export function projectsReducer(
       return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.DELETE_SUCCESS:
       return projectsAdapter.removeOne(action.payload.projectId, state);
-    case ProjectsActionType.SELECT:
-      return {...state, selectedProjectId: action.payload.projectId};
     case ProjectsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermission(state, action);
     case ProjectsActionType.CHANGE_PERMISSION_FAILURE:
@@ -86,7 +84,7 @@ function onChangePermission(
   const permissions = PermissionsHelper.changePermission(
     project.permissions,
     action.payload.type,
-    action.payload.permission
+    action.payload.permissions
   );
 
   return projectsAdapter.updateOne({id: action.payload.projectId, changes: {permissions: permissions}}, state);

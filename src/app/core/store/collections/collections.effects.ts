@@ -23,18 +23,15 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {from, Observable, of} from 'rxjs';
-import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {EMPTY, from, Observable, of} from 'rxjs';
+import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionDto, PermissionDto} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {NavigationAction} from '../navigation/navigation.action';
-import {selectNavigation, selectQuery} from '../navigation/navigation.state';
-import {getQueryFiltersForCollection} from '../navigation/query.util';
+import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionType} from '../permissions/permissions';
@@ -255,8 +252,7 @@ export class CollectionsEffects {
   public deleteSuccess: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    withLatestFrom(this.store$.pipe(select(selectAllLinkTypes))),
-    flatMap(([[action, navigation], linkTypes]) => {
+    flatMap(([action, navigation]) => {
       const {collectionId} = action.payload;
       const actions: Action[] = [new DocumentsAction.ClearByCollection({collectionId})];
       const isCollectionSettingsPage =
@@ -336,12 +332,12 @@ export class CollectionsEffects {
     ofType<CollectionsAction.SetDefaultAttribute>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE),
     tap(action => this.store$.dispatch(new CollectionsAction.SetDefaultAttributeSuccess(action.payload))),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
-    concatMap(([action, collections]) => {
+    mergeMap(([action, collections]) => {
       const {collectionId, attributeId} = action.payload;
       const collection = collections[collectionId];
       const oldDefaultAttributeId = collection.defaultAttributeId;
       return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
-        concatMap(() => of()),
+        mergeMap(() => of()),
         catchError(error =>
           of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId}))
         )
@@ -491,23 +487,23 @@ export class CollectionsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
-    concatMap(action => {
-      const workspace = {collectionId: action.payload.collectionId};
-      const permissionDto: PermissionDto = PermissionsConverter.toPermissionDto(action.payload.permission);
+    mergeMap(action => {
+      const workspace = action.payload.workspace;
+      const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.collectionService.updateUserPermission([permissionDto], workspace);
+        observable = this.collectionService.updateUserPermission(dtos, workspace);
       } else {
-        observable = this.collectionService.updateGroupPermission([permissionDto], workspace);
+        observable = this.collectionService.updateGroupPermission(dtos, workspace);
       }
       return observable.pipe(
-        concatMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error => {
           const payload = {
-            collectionId: action.payload.collectionId,
+            collectionId: workspace.collectionId || action.payload.collectionId,
             type: action.payload.type,
-            permission: action.payload.currentPermission,
+            permissions: action.payload.currentPermissions,
             error,
           };
           return of(new CollectionsAction.ChangePermissionFailure(payload));
