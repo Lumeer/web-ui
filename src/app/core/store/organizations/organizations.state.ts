@@ -24,7 +24,6 @@ import {Organization} from './organization';
 import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface OrganizationsState extends EntityState<Organization> {
-  selectedOrganizationId: string;
   organizationCodes: string[];
   loaded: boolean;
 }
@@ -34,7 +33,6 @@ export const organizationsAdapter = createEntityAdapter<Organization>({
 });
 
 export const initialOrganizationsState: OrganizationsState = organizationsAdapter.getInitialState({
-  selectedOrganizationId: null,
   organizationCodes: undefined,
   loaded: false,
 });
@@ -52,20 +50,9 @@ export const selectOrganizationsLoaded = createSelector(
   selectOrganizationsState,
   organizationState => organizationState.loaded
 );
-export const selectSelectedOrganizationId = createSelector(
-  selectOrganizationsState,
-  organizationsState => organizationsState.selectedOrganizationId
-);
 export const selectOrganizationCodes = createSelector(
   selectOrganizationsState,
   organizationState => organizationState.organizationCodes
-);
-export const selectSelectedOrganization = createSelector(
-  selectOrganizationsDictionary,
-  selectSelectedOrganizationId,
-  (organizations, selectedId) => {
-    return selectedId ? organizations[selectedId] : null;
-  }
 );
 
 export const selectOrganizationByWorkspace = createSelector(

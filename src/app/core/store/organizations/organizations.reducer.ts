@@ -39,8 +39,6 @@ export function organizationsReducer(
       return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.DELETE_SUCCESS:
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
-    case OrganizationsActionType.SELECT:
-      return {...state, selectedOrganizationId: action.payload.organizationId};
     case OrganizationsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermission(state, action);
     case OrganizationsActionType.CHANGE_PERMISSION_FAILURE:
@@ -84,7 +82,7 @@ function onChangePermission(
   const permissions = PermissionsHelper.changePermission(
     organization.permissions,
     action.payload.type,
-    action.payload.permission
+    action.payload.permissions
   );
 
   return organizationsAdapter.updateOne(

@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Organization} from './organization';
 import {Permission, PermissionType} from '../permissions/permissions';
+import {Workspace} from '../navigation/workspace';
 
 export enum OrganizationsActionType {
   GET = '[Organizations] Get',
@@ -44,8 +45,6 @@ export enum OrganizationsActionType {
   DELETE = '[Organizations] Delete',
   DELETE_SUCCESS = '[Organizations] Delete :: Success',
   DELETE_FAILURE = '[Organizations] Delete :: Failure',
-
-  SELECT = '[Organizations] Select',
 
   CHANGE_PERMISSION = '[Organizations] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Organizations] Change Permission :: Success',
@@ -151,12 +150,6 @@ export namespace OrganizationsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class Select implements Action {
-    public readonly type = OrganizationsActionType.SELECT;
-
-    public constructor(public payload: {organizationId: string}) {}
-  }
-
   export class ChangePermission implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION;
 
@@ -164,8 +157,9 @@ export namespace OrganizationsAction {
       public payload: {
         organizationId: string;
         type: PermissionType;
-        permission: Permission;
-        currentPermission: Permission;
+        permissions: Permission[];
+        currentPermissions: Permission[];
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -173,19 +167,18 @@ export namespace OrganizationsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; type: PermissionType; permission: Permission}) {}
+    public constructor(public payload: {organizationId: string; type: PermissionType; permissions: Permission[]}) {}
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_FAILURE;
 
     public constructor(
-      public payload: {organizationId: string; type: PermissionType; permission: Permission; error: any}
+      public payload: {organizationId: string; type: PermissionType; permissions: Permission[]; error: any}
     ) {}
   }
 
   export type All =
-    | Select
     | Get
     | GetSingle
     | GetSuccess
@@ -203,7 +196,6 @@ export namespace OrganizationsAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
-    | Select
     | ChangePermission
     | ChangePermissionSuccess
     | ChangePermissionFailure;

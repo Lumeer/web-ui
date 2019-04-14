@@ -20,14 +20,20 @@
 import {Permission, Permissions, PermissionType} from './permissions';
 
 export class PermissionsHelper {
-  public static changePermission(permissions: Permissions, type: PermissionType, permission: Permission): Permissions {
+  public static changePermission(
+    permissions: Permissions,
+    type: PermissionType,
+    newPermissions: Permission[]
+  ): Permissions {
     const entityPermissions: Permission[] = permissions ? permissions[type].slice() : [];
 
-    const index = entityPermissions.findIndex(p => p.id === permission.id);
-    if (index !== -1) {
-      entityPermissions.splice(index, 1, permission);
-    } else {
-      entityPermissions.push(permission);
+    for (const permission of newPermissions) {
+      const index = entityPermissions.findIndex(p => p.id === permission.id);
+      if (index !== -1) {
+        entityPermissions.splice(index, 1, permission);
+      } else {
+        entityPermissions.push(permission);
+      }
     }
 
     const permissionsCopy: Permissions = {...permissions};
