@@ -58,7 +58,7 @@
                [warning]="row.warning"
                [configurable]="true"
                (onConfigure)="fireConstraintConfig(row.id)"
-               (onFunction)="fireFunctionConfig(row.id)">
+               (onFunction)="fireFunctionConfig(row.id, $event)">
     </key-value>
   </ng-container>
   <div *ngIf="allowedPermissions.writeWithView" class="row border-top mb-5">

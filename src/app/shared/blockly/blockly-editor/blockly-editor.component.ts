@@ -127,6 +127,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   private workspace: any;
   private lumeerVar: string;
+  private destroying = false;
 
   constructor(
     private store$: Store<AppState>,
@@ -146,12 +147,17 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     if (!(window as any).Blockly) {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
-      this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
-      setTimeout(() => {
-        this.onResize();
-        this.loading$.next(false);
-        this.initBlockly();
-      }, 200);
+      // in case the dialog got closed very quickly
+      if (!this.destroying) {
+        this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
+        setTimeout(() => {
+          if (!this.destroying) {
+            this.onResize();
+            this.loading$.next(false);
+            this.initBlockly();
+          }
+        }, 200);
+      }
     }
   }
 
@@ -1423,6 +1429,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.workspace.dispose();
+    // resiliency to quick dialog close
+    this.destroying = true;
+    if (this.workspace) {
+      this.workspace.dispose();
+    }
   }
 }

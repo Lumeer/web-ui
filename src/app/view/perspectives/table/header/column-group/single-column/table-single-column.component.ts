@@ -352,7 +352,9 @@ export class TableSingleColumnComponent implements OnChanges {
   public onFunctionEdit() {
     this.functionsCountLimit$.pipe(first()).subscribe(functionsCountLimit => {
       if (this.collection) {
-        const functions = this.collection.attributes.filter(attribute => !!attribute.function).length;
+        const functions = this.collection.attributes.filter(
+          attribute => attribute.id !== this.attribute.id && !!attribute.function && !!attribute.function.js
+        ).length;
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
@@ -360,7 +362,9 @@ export class TableSingleColumnComponent implements OnChanges {
         }
       }
       if (this.linkType) {
-        const functions = this.linkType.attributes.filter(attribute => !!attribute.function).length;
+        const functions = this.linkType.attributes.filter(
+          attribute => attribute.id !== this.attribute.id && !!attribute.function && !!attribute.function.js
+        ).length;
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {

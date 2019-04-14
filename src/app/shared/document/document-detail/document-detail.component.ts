@@ -161,7 +161,7 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
     this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
   }
 
-  public fireFunctionConfig(id: string) {
+  public fireFunctionConfig(id: string, event: MouseEvent) {
     this.store$
       .pipe(
         select(selectServiceLimitsByWorkspace),
@@ -169,10 +169,14 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
         first()
       )
       .subscribe(functionsCountLimit => {
-        const functions = this.collection.attributes.filter(attribute => !!attribute.function).length;
+        const functions = this.collection.attributes.filter(
+          attribute => attribute.id !== id && !!attribute.function && !!attribute.function.js
+        ).length;
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
+          // the original event closes the dialog immediately when not stopped
+          event.stopPropagation();
           this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
         }
       });
