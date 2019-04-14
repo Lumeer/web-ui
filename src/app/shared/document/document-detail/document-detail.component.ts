@@ -26,7 +26,7 @@ import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
-import {filter, map} from 'rxjs/operators';
+import {filter, first, map} from 'rxjs/operators';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
@@ -38,6 +38,10 @@ import {DialogService} from '../../../dialog/dialog.service';
 import {DocumentUi} from '../../../core/ui/document-ui';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {RouterAction} from '../../../core/store/router/router.action';
+import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'document-detail',
@@ -157,7 +161,52 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
     this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
   }
 
-  public fireFunctionConfig(id: string) {
-    this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
+  public fireFunctionConfig(id: string, event: MouseEvent) {
+    this.store$
+      .pipe(
+        select(selectServiceLimitsByWorkspace),
+        map(serviceLimits => serviceLimits.functionsPerCollection),
+        first()
+      )
+      .subscribe(functionsCountLimit => {
+        const functions = this.collection.attributes.filter(
+          attribute => attribute.id !== id && !!attribute.function && !!attribute.function.js
+        ).length;
+        if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
+          this.notifyFunctionsLimit();
+        } else {
+          // the original event closes the dialog immediately when not stopped
+          event.stopPropagation();
+          this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
+        }
+      });
+  }
+
+  private notifyFunctionsLimit() {
+    this.store$
+      .pipe(
+        select(selectOrganizationByWorkspace),
+        map(organization => organization.code),
+        first()
+      )
+      .subscribe(code => {
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+        const message = this.i18n({
+          id: 'function.create.serviceLimits',
+          value:
+            'You can have only a single function per collection/link type in the Free Plan. Do you want to upgrade to Business now?',
+        });
+        this.store$.dispatch(
+          new NotificationsAction.Confirm({
+            title,
+            message,
+            action: new RouterAction.Go({
+              path: ['/organization', code, 'detail'],
+              extras: {fragment: 'orderService'},
+            }),
+            yesFirst: false,
+          })
+        );
+      });
   }
 }

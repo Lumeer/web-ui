@@ -40,7 +40,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
@@ -437,12 +437,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="workspace.button.apply" datatype="html">
-        <source>Use project</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/workspace-chooser.component.html</context>
-          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="isChrome" datatype="html">
         <source>
@@ -1192,6 +1186,22 @@
           <context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
+        <source>
+      You can have only a single rule in the Free Plan.
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.upgradePlan" datatype="html">
+        <source>
+      Upgrade to Business Plan!
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
     Add a new rule
@@ -1390,7 +1400,7 @@
         <source>{VAR_SELECT, select, 1 {Update} other {Create} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
         <source>Create new linked collection</source>
@@ -2156,53 +2166,6 @@
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.chooser.header" datatype="html">
-        <source>
-    <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"/>
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="902862b308ae9a3676b5cb59e4156a367b7e9b74" datatype="html">
-        <source>{VAR_SELECT, select, Organization {Organizations} Project {Projects} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.chooser.empty" datatype="html">
-        <source>
-      There are no <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"/> and you are not allowed to
-      create new ones.
-    </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="d7e60c96f60d525e490837eeb6776c999f34320b" datatype="html">
-        <source>{VAR_SELECT, select, Organization {organizations} Project {projects} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.postit.settings" datatype="html">
-        <source>Settings</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.postit.picker" datatype="html">
-        <source>Icon picker</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.postit.remove" datatype="html">
-        <source>Delete</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">
         <source>Invoicing Contact</source>
         <context-group purpose="location">
@@ -2625,7 +2588,7 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users and collections</source>
+        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users, collections, rules and functions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">24</context>
@@ -2635,7 +2598,7 @@
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> collections.</source>
+        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> collections, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2890,6 +2853,36 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="organization.not.exist" datatype="html">
+        <source>Organization does not exist</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.not.exist" datatype="html">
+        <source>Project does not exist</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="file.not.exist" datatype="html">
         <source>Collection does not exist</source>
         <context-group purpose="location">
@@ -2974,10 +2967,6 @@
           <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="button.no" datatype="html">
         <source>No</source>
@@ -3011,10 +3000,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -3082,28 +3067,6 @@
         <source>Page not found</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/page-not-found.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="organization.not.exist" datatype="html">
-        <source>Organization does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="project.not.exist" datatype="html">
-        <source>Project does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -3176,6 +3139,14 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/document/document-detail/document-detail.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -3721,10 +3692,6 @@
           <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="dialog.calendar.event.collection" datatype="html">
         <source>Collection</source>
@@ -3751,6 +3718,17 @@
         <source>Could not send feedback.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/dialog/feedback-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="function.create.serviceLimits" datatype="html">
+        <source>You can have only a single function per collection/link type in the Free Plan. Do you want to upgrade to Business now?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/document/document-detail/document-detail.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -3802,10 +3780,6 @@
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source>
@@ -3813,19 +3787,11 @@
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="resource.description" datatype="html">
         <source>Fill in description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4307,41 +4273,6 @@
         <source>You do not have permission to access this project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="resource.delete.dialog.message" datatype="html">
-        <source>Do you really want to delete <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c1dabeb20cd0254d114378e48b6935c201f7bc83" datatype="html">
-        <source>{VAR_SELECT, select, Project {project} Organization {organization} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="resource.already.exist" datatype="html">
-        <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="58775813a58809f3f97252cf82697e494bc913b9" datatype="html">
-        <source>{VAR_SELECT, select, Project {Project} Organization {Organization} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="resource.chooser.serviceLevel" datatype="html">
-        <source>{VAR_SELECT, select, FREE {Free} BASIC {Business} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

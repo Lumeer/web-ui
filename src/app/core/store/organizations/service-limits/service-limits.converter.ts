@@ -32,6 +32,8 @@ export class ServiceLimitsConverter {
       documents: dto.documents,
       dbSizeMb: dto.dbSizeMb,
       validUntil: new Date(dto.validUntil),
+      rulesPerCollection: dto.rulesPerCollection,
+      functionsPerCollection: dto.functionsPerCollection,
     };
   }
 
@@ -44,6 +46,8 @@ export class ServiceLimitsConverter {
       documents: model.documents,
       dbSizeMb: model.dbSizeMb,
       validUntil: model.validUntil.getTime(),
+      rulesPerCollection: model.rulesPerCollection,
+      functionsPerCollection: model.functionsPerCollection,
     };
   }
 }

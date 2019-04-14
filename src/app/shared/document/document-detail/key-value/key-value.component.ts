@@ -63,7 +63,7 @@ export class KeyValueComponent {
   public onConfigure = new EventEmitter();
 
   @Output()
-  public onFunction = new EventEmitter();
+  public onFunction = new EventEmitter<Event>();
 
   @Input()
   public warning: string = '';
@@ -120,7 +120,7 @@ export class KeyValueComponent {
     this.onConfigure.emit();
   }
 
-  public invokeFunctionConfig(): void {
-    this.onFunction.emit();
+  public invokeFunctionConfig(event: Event): void {
+    this.onFunction.emit(event);
   }
 }

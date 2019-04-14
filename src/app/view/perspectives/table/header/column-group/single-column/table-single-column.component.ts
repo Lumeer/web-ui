@@ -32,7 +32,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {Observable, Subscription} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {first, map, tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
@@ -59,6 +59,9 @@ import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe
 import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
+import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
+import {RouterAction} from '../../../../../../core/store/router/router.action';
+import {selectOrganizationByWorkspace} from '../../../../../../core/store/organizations/organizations.state';
 
 @Component({
   selector: 'table-single-column',
@@ -110,6 +113,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public selected$: Observable<boolean>;
   public edited: boolean;
+  public functionsCountLimit$: Observable<number>;
 
   public readonly disabledCharacters = ['.'];
 
@@ -134,6 +138,10 @@ export class TableSingleColumnComponent implements OnChanges {
       this.bindAttribute();
       this.setBackground();
     }
+    this.functionsCountLimit$ = this.store$.pipe(
+      select(selectServiceLimitsByWorkspace),
+      map(serviceLimits => serviceLimits.functionsPerCollection)
+    );
   }
 
   private setBackground() {
@@ -342,12 +350,56 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   public onFunctionEdit() {
-    if (this.collection) {
-      this.dialogService.openCollectionAttributeFunction(this.collection.id, this.attribute.id);
-    }
-    if (this.linkType) {
-      this.dialogService.openLinkTypeAttributeFunction(this.linkType.id, this.attribute.id);
-    }
+    this.functionsCountLimit$.pipe(first()).subscribe(functionsCountLimit => {
+      if (this.collection) {
+        const functions = this.collection.attributes.filter(
+          attribute => attribute.id !== this.attribute.id && !!attribute.function && !!attribute.function.js
+        ).length;
+        if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
+          this.notifyFunctionsLimit();
+        } else {
+          this.dialogService.openCollectionAttributeFunction(this.collection.id, this.attribute.id);
+        }
+      }
+      if (this.linkType) {
+        const functions = this.linkType.attributes.filter(
+          attribute => attribute.id !== this.attribute.id && !!attribute.function && !!attribute.function.js
+        ).length;
+        if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
+          this.notifyFunctionsLimit();
+        } else {
+          this.dialogService.openLinkTypeAttributeFunction(this.linkType.id, this.attribute.id);
+        }
+      }
+    });
+  }
+
+  private notifyFunctionsLimit() {
+    this.store$
+      .pipe(
+        select(selectOrganizationByWorkspace),
+        map(organization => organization.code),
+        first()
+      )
+      .subscribe(code => {
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+        const message = this.i18n({
+          id: 'function.create.serviceLimits',
+          value:
+            'You can have only a single function per collection/link type in the Free Plan. Do you want to upgrade to Business now?',
+        });
+        this.store$.dispatch(
+          new NotificationsAction.Confirm({
+            title,
+            message,
+            action: new RouterAction.Go({
+              path: ['/organization', code, 'detail'],
+              extras: {fragment: 'orderService'},
+            }),
+            yesFirst: false,
+          })
+        );
+      });
   }
 
   public onEdit() {
