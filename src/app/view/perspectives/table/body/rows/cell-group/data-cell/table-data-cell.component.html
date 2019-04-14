@@ -10,7 +10,7 @@
 <data-input [constraint]="(attribute$ | async)?.constraint"
             [focus]="true"
             [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || ((attribute$ | async)?.constraint?.type === constraintType.Boolean))"
-            [value]="(hiddenInputValue$ | async) || (document ? (document | extractValue:column) : (linkInstance | extractValue:column))"
+            [value]="(clearValue$ | async) ? '' : ((hiddenInputValue$ | async) || (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
             (valueChange)="onValueChange($event)"
             (save)="onValueSave($event)"
             (cancel)="onCancelEditing()"

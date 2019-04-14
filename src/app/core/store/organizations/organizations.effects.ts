@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
@@ -33,7 +33,7 @@ import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {OrganizationDto, PermissionDto} from '../../dto';
+import {OrganizationDto} from '../../dto';
 import {PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
@@ -47,7 +47,7 @@ export class OrganizationsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsLoaded))),
-    filter(([action, loaded]) => !loaded),
+    filter(([, loaded]) => !loaded),
     mergeMap(() =>
       this.organizationService.getOrganizations().pipe(
         map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
@@ -83,7 +83,7 @@ export class OrganizationsEffects {
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-    filter(([action, codes]) => isNullOrUndefined(codes)),
+    filter(([, codes]) => isNullOrUndefined(codes)),
     mergeMap(() =>
       this.organizationService.getOrganizationsCodes().pipe(
         map(organizationCodes => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
@@ -271,26 +271,24 @@ export class OrganizationsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
-    withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
-    concatMap(([action, organizations]) => {
-      const organization = organizations[action.payload.organizationId];
-      const workspace = {organizationCode: organization.code};
-      const permissionDto: PermissionDto = PermissionsConverter.toPermissionDto(action.payload.permission);
+    mergeMap(action => {
+      const workspace = action.payload.workspace;
+      const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.organizationService.updateUserPermission([permissionDto], workspace);
+        observable = this.organizationService.updateUserPermission(dtos, workspace);
       } else {
-        observable = this.organizationService.updateGroupPermission([permissionDto], workspace);
+        observable = this.organizationService.updateGroupPermission(dtos, workspace);
       }
 
       return observable.pipe(
-        concatMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error => {
           const payload = {
-            organizationId: action.payload.organizationId,
+            organizationId: workspace.organizationId || action.payload.organizationId,
             type: action.payload.type,
-            permission: action.payload.currentPermission,
+            permissions: action.payload.currentPermissions,
             error,
           };
           return of(new OrganizationsAction.ChangePermissionFailure(payload));

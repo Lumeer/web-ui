@@ -163,23 +163,20 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   public onRemoveRow() {
-    // TODO delete link instance
-    // TODO response from server might be slow and some change can be done to the table in the meantime
-    const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
-    if (this.document && this.document.id) {
+    if (!this.document) {
+      return;
+    }
+
+    if (this.document.id) {
       this.store$.dispatch(
         new DocumentsAction.DeleteConfirm({
           collectionId: this.document.collectionId,
           documentId: this.document.id,
-          nextAction: removeRowAction,
         })
       );
-      return;
+    } else {
+      this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
     }
-    if (this.linkInstance && this.linkInstance.id) {
-      // TODO
-    }
-    this.store$.dispatch(removeRowAction);
   }
 
   public onUnlinkRow() {

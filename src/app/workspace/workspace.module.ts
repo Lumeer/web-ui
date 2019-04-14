@@ -18,17 +18,15 @@
  */
 
 import {NgModule} from '@angular/core';
+import {DatePipe} from '@angular/common';
 
 import {ClickOutsideModule} from 'ng-click-outside';
-import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
-import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
 import {PickerModule} from '../shared/picker/picker.module';
-import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {WorkspaceService} from './workspace.service';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
@@ -42,8 +40,6 @@ import {OrganizationUsersComponent} from './organization/users/organization-user
 import {UsersModule} from '../shared/users/users.module';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
-import {ResourcePostItComponent} from './workspace-chooser/resource-post-it/resource-post-it.component';
-import {DatePipe} from '@angular/common';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, PickerModule, ClickOutsideModule],
@@ -56,16 +52,13 @@ import {DatePipe} from '@angular/common';
     OrganizationGroupsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
-    WorkspaceChooserComponent,
-    ResourceChooserComponent,
-    ResourcePostItComponent,
     ContactFormComponent,
     PaymentsPanelComponent,
     PaymentsOrderComponent,
     PaymentsListComponent,
     PaymentsStateComponent,
   ],
-  exports: [WorkspaceChooserComponent],
-  providers: [WorkspaceService, WorkspaceSelectGuard, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],
+  exports: [],
+  providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],
 })
 export class WorkspaceModule {}

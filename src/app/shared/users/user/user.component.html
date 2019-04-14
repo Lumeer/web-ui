@@ -14,7 +14,7 @@
   <i *ngFor="let role of resourceType | resourceRoles"
      class="fas fa-fw {{role | roleIcon}} mx-1"
      [class.role-clickable]="changeRoles"
-     [class.role-selected]="hasRole(role)"
+     [class.role-selected]="userRoles | includes:role"
      aria-hidden="true"
      [title]="role | roleTitle"
      (click)="toggleRole(role)">

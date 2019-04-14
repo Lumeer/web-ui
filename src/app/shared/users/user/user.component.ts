@@ -17,16 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subject, Subscription} from 'rxjs';
-import {debounceTime, filter} from 'rxjs/operators';
-import {deepArrayEquals} from '../../utils/array.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {isNullOrUndefined} from '../../utils/common.utils';
 
 @Component({
   selector: '[user]',
@@ -34,51 +30,35 @@ import {isNullOrUndefined} from '../../utils/common.utils';
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserComponent implements OnInit, OnDestroy {
-  @Input() public resourceType: ResourceType;
+export class UserComponent {
+  @Input()
+  public resourceType: ResourceType;
 
-  @Input() public editable: boolean;
+  @Input()
+  public editable: boolean;
 
-  @Input() public changeRoles: boolean;
+  @Input()
+  public changeRoles: boolean;
 
-  @Input() public user: User;
+  @Input()
+  public user: User;
 
-  @Input() public userRoles: string[];
+  @Input()
+  public userRoles: string[];
 
-  @Input() public groupRoles: string[];
+  @Input()
+  public groupRoles: string[];
 
-  @Output() public userUpdated = new EventEmitter<User>();
+  @Output()
+  public userUpdated = new EventEmitter<User>();
 
-  @Output() public userDeleted = new EventEmitter<User>();
+  @Output()
+  public userDeleted = new EventEmitter<User>();
 
-  @Output() public rolesUpdate = new EventEmitter<{roles: string[]; onlyStore: boolean}>();
-
-  private lastSyncedUserRoles: string[];
-  private rolesChange$ = new Subject<string[]>();
-  private rolesChangeSubscription: Subscription;
+  @Output()
+  public rolesUpdate = new EventEmitter<string[]>();
 
   constructor(private i18n: I18n, private notificationService: NotificationService) {}
-
-  public ngOnInit() {
-    this.rolesChangeSubscription = this.rolesChange$
-      .pipe(
-        debounceTime(2000),
-        filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
-      )
-      .subscribe(newRoles => {
-        this.lastSyncedUserRoles = null;
-        this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
-      });
-  }
-
-  public ngOnDestroy() {
-    if (this.rolesChangeSubscription) {
-      this.rolesChangeSubscription.unsubscribe();
-    }
-    if (this.lastSyncedUserRoles && !deepArrayEquals(this.userRoles, this.lastSyncedUserRoles)) {
-      this.rolesUpdate.emit({roles: this.userRoles, onlyStore: false});
-    }
-  }
 
   public onDelete() {
     const message = this.i18n({id: 'users.user.delete.message', value: 'Do you want to permanently remove this user?'});
@@ -96,26 +76,18 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userDeleted.emit(this.user);
   }
 
-  public hasRole(role: string): boolean {
-    return this.userRoles.includes(role);
-  }
-
   public toggleRole(role: string) {
     if (!this.changeRoles) {
       return;
     }
 
-    if (isNullOrUndefined(this.lastSyncedUserRoles)) {
-      this.lastSyncedUserRoles = this.userRoles;
+    let roles;
+    if (this.userRoles.includes(role)) {
+      roles = this.userRoles.filter(r => r !== role);
+    } else {
+      roles = [...this.userRoles, role];
     }
 
-    let newRoles;
-    if (this.userRoles.includes(role)) {
-      newRoles = this.userRoles.filter(r => r !== role);
-    } else {
-      newRoles = [...this.userRoles, role];
-    }
-    this.rolesChange$.next(newRoles);
-    this.rolesUpdate.emit({roles: newRoles, onlyStore: true});
+    this.rolesUpdate.emit(roles);
   }
 }

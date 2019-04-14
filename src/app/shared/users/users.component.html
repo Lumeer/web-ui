@@ -9,5 +9,6 @@
   (userCreated)="onNewUser($event)"
   (userUpdated)="onUserUpdated($event)"
   (userDeleted)="onUserDeleted($event)"
-  (userPermissionChange)="onUserPermissionChanged($event)">
+  (usersPermissionsChangeToStore)="changeUsersPermissionsOnlyStore($event)"
+  (usersPermissionsChange)="changeUsersPermissions($event)">
 </user-list>
