@@ -23,6 +23,7 @@ import {BlocklyDebugDisplay} from '../blockly-debugger.component';
 @Component({
   selector: 'blockly-debugger-remote',
   templateUrl: './blockly-debugger-remote.component.html',
+  styleUrls: ['./blockly-debugger-remote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlocklyDebuggerRemoteComponent {

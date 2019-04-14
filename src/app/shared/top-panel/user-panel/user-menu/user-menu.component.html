@@ -48,12 +48,22 @@
     </a>
     <a (click)="onStartTour()"
        class="dropdown-item"
-       title="Application tour"
-       i18n-title="@@menu.appTour">
+       title="Application Tour"
+       i18n-title="@@menu.applicationTour">
       <i class="far fa-fw fa-map-signs"
          data-fa-transform="left-4"
          aria-hidden="true"></i>&nbsp;
       <span i18n="@@menu.applicationTour">Application Tour</span>
+    </a>
+    <a href="https://lumeer.freshdesk.com/support/solutions"
+       target="_blank"
+       class="dropdown-item"
+       title="Solutions and Support"
+       i18n-title="@@menu.solutionsSupport">
+      <i class="fas fa-fw fa-life-ring"
+         data-fa-transform="left-4"
+         aria-hidden="true"></i>&nbsp;
+      <span i18n="@@menu.solutionsSupport">Solutions and Support</span>
     </a>
     <a *ngIf="false"
        class="dropdown-item"
