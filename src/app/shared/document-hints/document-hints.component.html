@@ -1,26 +1,28 @@
-<div *ngIf="documents$ | async as documents"
-     [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
-  <div *ngIf="documents.length"
-       class="dropdown">
-    <div *ngIf="collection$ | async as collection"
-         class="dropdown-menu show"
-         data-test="document-hints">
-      <div *ngFor="let doc of documents; index as documentIndex"
-           [class.selected]="(selectedIndex$ | async) === documentIndex"
-           (mousedown)="onCreateLink(doc)"
-           class="dropdown-item p-0 d-flex">
-        <ng-container *ngFor="let column of columns">
-          <div
-            *ngIf="{value: doc.data[column.attributeId] | dataValue : (collection | collectionAttribute : column.attributeId)?.constraint} as data"
-            [class.font-weight-bold]="column.attributeId === attributeId"
-            [style.width.px]="column.width"
-            [innerHtml]="column.attributeId === attributeId ? (data.value | highlightText: value) : data.value"
-            [title]="doc.data[column.attributeId] || ''"
-            class="text-truncate cursor-default p-1"
-            data-test="document-hint">
-          </div>
-        </ng-container>
+<ng-container *ngIf="linkedDocumentId">
+  <div *ngIf="documents$ | async as documents"
+       [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
+    <div *ngIf="documents.length"
+         class="dropdown">
+      <div *ngIf="collection$ | async as collection"
+           class="dropdown-menu show"
+           data-test="document-hints">
+        <div *ngFor="let doc of documents; index as documentIndex"
+             [class.selected]="(selectedIndex$ | async) === documentIndex"
+             (mousedown)="onCreateLink(doc)"
+             class="dropdown-item p-0 d-flex">
+          <ng-container *ngFor="let column of columns">
+            <div
+              *ngIf="{value: doc.data[column.attributeId] | dataValue : (collection | collectionAttribute : column.attributeId)?.constraint} as data"
+              [class.font-weight-bold]="column.attributeId === attributeId"
+              [style.width.px]="column.width"
+              [innerHtml]="column.attributeId === attributeId ? (data.value | highlightText: value) : data.value"
+              [title]="doc.data[column.attributeId] || ''"
+              class="text-truncate cursor-default p-1"
+              data-test="document-hint">
+            </div>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>
