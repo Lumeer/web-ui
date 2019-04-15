@@ -28,7 +28,7 @@ import {selectDocumentsDictionary} from '../documents/documents.state';
 import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
-import {selectNavigation, selectPerspective, selectQuery} from '../navigation/navigation.state';
+import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
@@ -65,13 +65,9 @@ export const selectViewByCode = (code: string) =>
     views => views && views.find(view => view.code === code)
   );
 export const selectCurrentView = createSelector(
-  selectNavigation,
+  selectViewCode,
   selectAllViews,
-  (navigation, views) => {
-    return navigation.workspace && navigation.workspace.viewCode
-      ? views.find(view => view.code === navigation.workspace.viewCode)
-      : null;
-  }
+  (viewCode, views) => (viewCode ? views.find(view => view.code === viewCode) : null)
 );
 
 export const selectViewsLoaded = createSelector(
