@@ -388,6 +388,12 @@
           <context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
+      </trans-unit><trans-unit id="button.help" datatype="html">
+        <source>Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit><trans-unit id="button.save" datatype="html">
         <source>
             Save
@@ -818,31 +824,39 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
-      </trans-unit><trans-unit id="menu.appTour" datatype="html">
-        <source>Application tour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+        <source>Solutions and Support</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit><trans-unit id="menu.account" datatype="html">
         <source>Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit><trans-unit id="menu.logout" datatype="html">
         <source>Logout</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit><trans-unit id="topPanel.controlsToggle.title" datatype="html">
         <source>Show controls</source>

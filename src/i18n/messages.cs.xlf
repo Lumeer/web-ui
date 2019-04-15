@@ -67,7 +67,7 @@
                 <target>Účet</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
 
             <trans-unit id="search.result.empty" datatype="html">
                 <source>
@@ -2007,7 +2007,13 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+        <source>Help</source><target>Pomoc</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
 
 
 
@@ -2611,15 +2617,16 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
         <source>Application Tour</source><target>Prohlídka aplikace</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+        <source>Solutions and Support</source><target>Řešení a Podpora</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">66</context>
         </context-group>
-      </trans-unit><trans-unit id="menu.appTour" datatype="html">
-        <source>Application tour</source><target>Průvodce aplikací</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
             <trans-unit id="resource.detail.organization.invite" datatype="html">
@@ -3162,7 +3169,7 @@
                 <source>Logout</source>
                 <target>Odhlásit se</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit>
             <trans-unit id="create.new.attribute" datatype="html">
                 <source>Create new attribute
         </source>
