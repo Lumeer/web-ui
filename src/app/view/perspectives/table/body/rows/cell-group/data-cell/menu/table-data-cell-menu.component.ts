@@ -41,10 +41,12 @@ import {selectDocumentsDictionary} from '../../../../../../../../core/store/docu
 import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
 import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableConfigRow} from '../../../../../../../../core/store/tables/table.model';
+import {TableConfigPart, TableConfigRow} from '../../../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
+  selectTablePart,
+  selectTableParts,
   selectTableRow,
   selectTableRowIndentable,
   selectTableRowOutdentable,
@@ -86,6 +88,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
   public tableRow$: Observable<TableConfigRow>;
+  public tableParts$: Observable<TableConfigPart[]>;
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -100,6 +103,7 @@ export class TableDataCellMenuComponent implements OnChanges {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
       this.tableRow$ = this.store$.pipe(select(selectTableRow(this.cursor)));
+      this.tableParts$ = this.store$.pipe(select(selectTableParts(this.cursor)));
     }
   }
 
@@ -208,5 +212,9 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public onOutdent() {
     this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+  }
+
+  public onCloneRow() {
+    this.store$.dispatch(new TablesAction.CloneRow({cursor: this.cursor}));
   }
 }

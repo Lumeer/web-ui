@@ -21,10 +21,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
 import {
   concatMap,
   debounceTime,
+  distinctUntilChanged,
   filter,
   first,
   flatMap,
@@ -54,7 +54,10 @@ import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
-import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
+import {
+  selectLinkInstancesByTypeAndDocuments,
+  selectLinkInstancesDictionary,
+} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
@@ -747,6 +750,72 @@ export class TablesEffects {
         })
       )
     )
+  );
+
+  @Effect()
+  public cloneRow$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.CloneRow>(TablesActionType.CLONE_ROW),
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      return this.store$.pipe(
+        select(selectTableRow(cursor)),
+        take(1),
+        filter(row => row && !!row.documentId),
+        withLatestFrom(
+          this.store$.pipe(select(selectDocumentsDictionary)),
+          this.store$.pipe(select(selectLinkInstancesDictionary))
+        ),
+        mergeMap(([row, documentsMap, linkInstancesMap]) => {
+          const document = documentsMap[row.documentId];
+          if (!document) {
+            return [];
+          }
+
+          const emptyRow = createEmptyTableRow();
+
+          const primaryDocumentCallback = (documentId: string) =>
+            (row.linkedRows || [])
+              .map(linkedRow => ({
+                linkInstance: linkInstancesMap[linkedRow.linkInstanceId],
+                linkedDocument: documentsMap[linkedRow.documentId],
+              }))
+              .filter(({linkInstance, linkedDocument}) => !!linkInstance && !!linkedDocument)
+              .forEach(({linkInstance, linkedDocument}) => {
+                const linkedDocumentCallback = (linkedDocumentId: string) =>
+                  this.store$.dispatch(
+                    new LinkInstancesAction.Create({
+                      linkInstance: {
+                        linkTypeId: linkInstance.linkTypeId,
+                        documentIds: [documentId, linkedDocumentId],
+                        data: {...linkInstance.data},
+                      },
+                    })
+                  );
+                this.store$.dispatch(
+                  new DocumentsAction.Create({
+                    document: {
+                      collectionId: linkedDocument.collectionId,
+                      data: {...linkedDocument.data},
+                    },
+                    callback: linkedDocumentCallback,
+                  })
+                );
+              });
+
+          return [
+            new TablesAction.AddPrimaryRows({cursor: {...cursor, rowPath: [cursor.rowPath[0] + 1]}, rows: [emptyRow]}),
+            new DocumentsAction.Create({
+              document: {
+                correlationId: emptyRow.correlationId,
+                collectionId: document.collectionId,
+                data: {...document.data},
+              },
+              callback: primaryDocumentCallback,
+            }),
+          ];
+        })
+      );
+    })
   );
 
   @Effect()

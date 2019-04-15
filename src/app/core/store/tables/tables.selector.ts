@@ -52,12 +52,16 @@ export const selectHasNextTableParts = (cursor: TableCursor) =>
     }
   );
 
-export const selectTablePart = (cursor: TableCursor) =>
+export const selectTableParts = (cursor: TableCursor) =>
   createSelector(
     selectTableById(cursor && cursor.tableId),
-    table => {
-      return table && table.config && table.config.parts && table.config.parts[cursor.partIndex];
-    }
+    table => table && table.config && table.config.parts
+  );
+
+export const selectTablePart = (cursor: TableCursor) =>
+  createSelector(
+    selectTableParts(cursor),
+    parts => parts && parts[cursor.partIndex]
   );
 
 export const selectTableColumn = (cursor: TableCursor) =>
