@@ -21,6 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
 import {
   concatMap,
   debounceTime,
@@ -104,6 +105,8 @@ import {
   selectTableRows,
   selectTableRowsWithHierarchyLevels,
 } from './tables.selector';
+import {isLastTableRowInitialized} from './utils/table-row.utils';
+import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 
 @Injectable()
 export class TablesEffects {
@@ -600,43 +603,74 @@ export class TablesEffects {
         first(),
         filter(([table]) => !!table),
         mergeMap(([table, documents, moveCursorDown]) => {
-          const {cursor} = action.payload;
-          const {rows} = table.config;
+          const {collectionId} = table.config.parts[0];
+          return this.store$.pipe(
+            select(selectCollectionById(collectionId)),
+            mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
+            map(permissions => permissions.write || permissions.writeWithView),
+            distinctUntilChanged(),
+            mergeMap(canCreateDocuments => {
+              const {cursor} = action.payload;
+              const {rows} = table.config;
 
-          const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
-          const unknownDocuments = filterUnknownDocuments(rows, documents);
+              const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
+              const unknownDocuments = filterUnknownDocuments(rows, documents);
 
-          const actions: Action[] = [];
+              const actions: Action[] = [];
 
-          if (createdDocuments.length > 0) {
-            actions.push(
-              new TablesAction.InitRows({
-                cursor: {...cursor, rowPath: []},
-                documents: createdDocuments,
-                linkInstances: [],
-              })
-            );
-            if (moveCursorDown) {
-              actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
-            }
-          }
+              if (createdDocuments.length > 0) {
+                actions.push(
+                  new TablesAction.InitRows({
+                    cursor: {...cursor, rowPath: []},
+                    documents: createdDocuments,
+                    linkInstances: [],
+                  })
+                );
+                if (moveCursorDown) {
+                  actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
+                }
+              }
 
-          const documentIds = new Set(documents.map(doc => doc.id));
-          if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
-            actions.push(new TablesAction.CleanRows({cursor, documents, linkInstances: []}));
-          }
+              const documentIds = new Set(documents.map(doc => doc.id));
+              if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
+                actions.push(new TablesAction.CleanRows({cursor, documents, linkInstances: []}));
+              }
 
-          if (unknownDocuments.length > 0) {
-            actions.push(
-              new TablesAction.AddPrimaryRows({
-                cursor,
-                rows: unknownDocuments.map(document => createTableRow(document)),
-                append: true,
-              })
-            );
-          }
+              if (unknownDocuments.length > 0) {
+                actions.push(
+                  new TablesAction.AddPrimaryRows({
+                    cursor,
+                    rows: unknownDocuments.map(document => createTableRow(document)),
+                    append: true,
+                  })
+                );
+              }
 
-          return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
+              // add last empty row if user has write permissions
+              if (isLastTableRowInitialized(rows) && canCreateDocuments) {
+                actions.push(
+                  new TablesAction.AddPrimaryRows({
+                    cursor,
+                    rows: [createEmptyTableRow()],
+                    append: true,
+                  })
+                );
+              }
+
+              // remove last empty row when user loses write permissions
+              if (
+                !isLastTableRowInitialized(rows) &&
+                !canCreateDocuments &&
+                rows.length > 0 &&
+                createdDocuments.length === 0 &&
+                unknownDocuments.length === 0
+              ) {
+                actions.push(new TablesAction.RemoveRow({cursor: {...cursor, rowPath: [rows.length - 1]}}));
+              }
+
+              return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
+            })
+          );
         })
       )
     )
@@ -960,7 +994,11 @@ export class TablesEffects {
     })
   );
 
-  public constructor(private actions$: Actions, private store$: Store<AppState>) {}
+  public constructor(
+    private actions$: Actions,
+    private collectionPermissionsPipe: CollectionPermissionsPipe,
+    private store$: Store<AppState>
+  ) {}
 
   private getLatestTable<A extends TablesAction.TableCursorAction>(
     action: A
