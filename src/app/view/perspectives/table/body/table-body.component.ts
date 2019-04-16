@@ -36,6 +36,8 @@ import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
 import {Query} from '../../../../core/store/navigation/query';
 
+export const TABLE_ROW_MIN_HEIGHT = 30;
+
 @Component({
   selector: 'table-body',
   templateUrl: './table-body.component.html',
@@ -57,7 +59,7 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   public cursor: TableBodyCursor;
 
-  public constructor(private element: ElementRef, private store: Store<AppState>) {}
+  public constructor(private element: ElementRef<HTMLElement>, private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tableId && this.tableId) {
@@ -71,6 +73,7 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   public ngAfterViewInit() {
     this.setScrollbarWidth();
+    this.setTableRowMinHeight();
   }
 
   @HostListener('click', ['$event'])
@@ -82,10 +85,14 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
   }
 
   public setScrollbarWidth() {
-    const element = this.element.nativeElement as HTMLElement;
+    const element = this.element.nativeElement;
     const scrollbarWidth = element.offsetWidth - element.clientWidth;
 
     const tableElement = getTableElement(this.tableId);
     tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+  }
+
+  private setTableRowMinHeight() {
+    this.element.nativeElement.style.setProperty('--table-row-min-height', `${TABLE_ROW_MIN_HEIGHT}px`);
   }
 }
