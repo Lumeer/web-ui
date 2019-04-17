@@ -1,4 +1,5 @@
 <data-input *ngIf="constraint; else basicInput"
+            class="d-flex flex-grow-1"
             [constraint]="constraint"
             [readonly]="readonly || !((editing$ | async) || constraint?.type === constraintTypeBoolean)"
             [value]="model"
@@ -10,12 +11,10 @@
             (dblclick)="onDblClick()"
             [ngClass]="additionalClasses">
 </data-input>
-<ng-container *ngIf="constraint && constraint?.type !== constraintTypeBoolean">
-  <i *ngIf="(constraint | constraintTypeIcon) as iconName"
-     [ngClass]="iconName"
-     [title]="constraint | constraintTypeIconTitle"
-     class="text-muted small"></i>
-</ng-container>
+<i *ngIf="(constraint | constraintTypeIcon) as iconName"
+   [ngClass]="iconName"
+   [title]="constraint | constraintTypeIconTitle"
+   class="text-muted small pl-1"></i>
 
 <ng-template #basicInput>
   <input class="w-100 {{additionalClasses}}"

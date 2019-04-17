@@ -79,7 +79,7 @@ export namespace CollectionsAction {
   export class Get implements Action {
     public readonly type = CollectionsActionType.GET;
 
-    public constructor(public payload: {force?: boolean}) {}
+    public constructor(public payload: {workspace?: Workspace; force?: boolean}) {}
   }
 
   export class GetSingle implements Action {

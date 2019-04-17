@@ -20,17 +20,14 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, take} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {Organization} from '../../core/store/organizations/organization';
 import {WorkspaceService} from '../workspace.service';
 import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -45,44 +42,30 @@ export class ProjectSettingsGuard implements CanActivate {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
 
-    return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization => {
-        if (isNullOrUndefined(organization)) {
-          this.dispatchErrorActionsNotExist();
+    return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
+      mergeMap(({user, organization, project}) => {
+        if (!organization) {
+          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          this.dispatchErrorActions(message);
           return of(false);
         }
-        return this.checkProject(organization, projectCode);
-      }),
-      take(1),
-      catchError(() => of(false))
-    );
-  }
 
-  private checkProject(organization: Organization, projectCode: string): Observable<boolean> {
-    return combineLatest(
-      this.workspaceService.getProjectFromStoreOrApi(organization.id, projectCode),
-      this.store$.pipe(select(selectCurrentUserForWorkspace))
-    ).pipe(
-      filter(([project, user]) => !isNullOrUndefined(user)),
-      take(1),
-      map(([project, user]) => {
-        if (isNullOrUndefined(project)) {
-          this.dispatchErrorActionsNotExist();
-          return false;
+        if (!project) {
+          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          this.dispatchErrorActions(message);
+          return of(false);
         }
 
         if (!userIsManagerInWorkspace(user, organization, project)) {
           this.dispatchErrorActionsNotPermission();
-          return false;
+          return of(false);
         }
-        return true;
-      })
-    );
-  }
 
-  private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
-    this.dispatchErrorActions(message);
+        return this.workspaceService.switchWorkspace(organization, project);
+      }),
+      take(1),
+      catchError(() => of(false))
+    );
   }
 
   private dispatchErrorActionsNotPermission() {

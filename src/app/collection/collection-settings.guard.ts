@@ -21,8 +21,8 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {CollectionService} from '../core/rest';
-import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, filter, mergeMap, take, tap} from 'rxjs/operators';
 import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
@@ -32,9 +32,7 @@ import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
-import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
 import {WorkspaceService} from '../workspace/workspace.service';
-import {isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
 import {Project} from '../core/store/projects/project';
 
@@ -53,25 +51,21 @@ export class CollectionSettingsGuard implements CanActivate {
     const projectCode = next.paramMap.get('projectCode');
     const collectionId = next.paramMap.get('collectionId');
 
-    return this.selectUserAndWorkspace(organizationCode, projectCode).pipe(
+    return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
       mergeMap(({user, organization, project}) => {
         if (!organization) {
           const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
-          this.store$.dispatch(new NotificationsAction.Error({message}));
-
-          this.navigateToHome();
+          this.dispatchErrorActions(message);
           return of(false);
         }
         if (!project) {
           const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
-          this.store$.dispatch(new NotificationsAction.Error({message}));
-
-          this.navigateToHome();
+          this.dispatchErrorActions(message);
           return of(false);
         }
 
-        return this.selectCollection(collectionId).pipe(
-          map(collection => this.checkCollection(user, collection, organization, project))
+        return this.selectCollection(organization, project, collectionId).pipe(
+          mergeMap(collection => this.checkCollection(user, collection, organization, project))
         );
       }),
       take(1),
@@ -79,16 +73,19 @@ export class CollectionSettingsGuard implements CanActivate {
     );
   }
 
-  private selectCollection(collectionId: string): Observable<Collection> {
-    return this.loadCollections().pipe(mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId)))));
+  private selectCollection(organization: Organization, project: Project, collectionId: string): Observable<Collection> {
+    return this.loadCollections(organization, project).pipe(
+      mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId))))
+    );
   }
 
-  private loadCollections(): Observable<boolean> {
+  private loadCollections(organization: Organization, project: Project): Observable<boolean> {
     return this.store$.pipe(
       select(selectCollectionsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new CollectionsAction.Get({}));
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new CollectionsAction.Get({workspace}));
         }
       }),
       filter(loaded => loaded),
@@ -96,51 +93,21 @@ export class CollectionSettingsGuard implements CanActivate {
     );
   }
 
-  private checkCollection(user: User, collection: Collection, organization: Organization, project: Project): boolean {
+  private checkCollection(
+    user: User,
+    collection: Collection,
+    organization: Organization,
+    project: Project
+  ): Observable<boolean> {
     if (!collection) {
       this.dispatchErrorActionsNotExist();
-      return false;
+      return of(false);
     }
     if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
       this.dispatchErrorActionsNotPermission();
-      return false;
+      return of(false);
     }
-    return true;
-  }
-
-  private selectUserAndWorkspace(
-    organizationCode: string,
-    projectCode: string
-  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
-    return this.workspaceService
-      .getOrganizationFromStoreOrApi(organizationCode)
-      .pipe(
-        mergeMap(organization =>
-          this.selectUserAndProject(organization, projectCode).pipe(
-            map(({user, project}) => ({user, organization, project}))
-          )
-        )
-      );
-  }
-
-  private selectUserAndProject(
-    organization: Organization,
-    projectCode: string
-  ): Observable<{user?: User; project?: Project}> {
-    if (organization) {
-      return combineLatest(
-        this.selectUser(),
-        this.workspaceService.getProjectFromStoreOrApi(organization.id, projectCode)
-      ).pipe(map(([user, project]) => ({user, project})));
-    }
-    return this.selectUser().pipe(map(user => ({user})));
-  }
-
-  private selectUser(): Observable<User> {
-    return this.store$.pipe(
-      select(selectCurrentUserForWorkspace),
-      filter(user => !isNullOrUndefined(user))
-    );
+    return this.workspaceService.switchWorkspace(organization, project);
   }
 
   private dispatchErrorActionsNotExist() {
@@ -159,9 +126,5 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
-  }
-
-  private navigateToHome() {
-    this.router.navigate(['/']);
   }
 }

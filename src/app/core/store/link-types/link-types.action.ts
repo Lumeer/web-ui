@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Attribute} from '../collections/collection';
 import {LinkType} from './link.type';
+import {Workspace} from '../navigation/workspace';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',
@@ -58,7 +59,7 @@ export namespace LinkTypesAction {
   export class Get implements Action {
     public readonly type = LinkTypesActionType.GET;
 
-    public constructor(public payload: {force?: boolean}) {}
+    public constructor(public payload: {workspace?: Workspace; force?: boolean}) {}
   }
 
   export class GetSingle implements Action {

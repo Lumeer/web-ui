@@ -27,22 +27,31 @@ import {AppState} from '../../store/app.state';
 import {LinkType} from '../../store/link-types/link.type';
 import {LinkTypesAction} from '../../store/link-types/link-types.action';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../store/link-types/link-types.state';
+import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class LinkTypesGuard implements Resolve<LinkType[]> {
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkType[]> {
-    return this.store$.pipe(
-      select(selectLinkTypesLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new LinkTypesAction.Get({}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectAllLinkTypes))),
-      first()
+    const organizationCode = route.paramMap.get('organizationCode');
+    const projectCode = route.paramMap.get('projectCode');
+
+    return this.workspaceService.selectOrGetWorkspace(organizationCode, projectCode).pipe(
+      mergeMap(({organization, project}) => {
+        return this.store$.pipe(
+          select(selectLinkTypesLoaded),
+          tap(loaded => {
+            if (!loaded) {
+              const workspace = {organizationId: organization.id, projectId: project.id};
+              this.store$.dispatch(new LinkTypesAction.Get({workspace}));
+            }
+          }),
+          skipWhile(loaded => !loaded),
+          mergeMap(() => this.store$.pipe(select(selectAllLinkTypes))),
+          first()
+        );
+      })
     );
   }
 }

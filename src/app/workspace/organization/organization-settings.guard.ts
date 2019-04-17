@@ -20,18 +20,16 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, filter, map, take} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {WorkspaceService} from '../workspace.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -45,14 +43,9 @@ export class OrganizationSettingsGuard implements CanActivate {
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const organizationCode = next.paramMap.get('organizationCode');
 
-    return combineLatest(
-      this.workspaceService.getOrganizationFromStoreOrApi(organizationCode),
-      this.store$.pipe(select(selectCurrentUserForWorkspace))
-    ).pipe(
-      filter(([organization, user]) => !isNullOrUndefined(user)),
-      take(1),
-      map(([organization, user]) => {
-        if (isNullOrUndefined(organization)) {
+    return this.workspaceService.selectOrGetUserAndOrganization(organizationCode).pipe(
+      map(({organization, user}) => {
+        if (!organization) {
           this.dispatchErrorActionsNotExist();
           return false;
         }
@@ -61,6 +54,7 @@ export class OrganizationSettingsGuard implements CanActivate {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
+
         this.dispatchDataEvents(organization);
         return true;
       }),

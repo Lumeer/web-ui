@@ -50,8 +50,9 @@ export class ViewsEffects {
     ofType<ViewsAction.Get>(ViewsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectViewsLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
-    mergeMap(() => {
-      return this.viewService.getViews().pipe(
+    map(([action]) => action),
+    mergeMap(action => {
+      return this.viewService.getViews(action.payload.workspace).pipe(
         map((dtos: ViewDto[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
         map((views: View[]) => new ViewsAction.GetSuccess({views})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))

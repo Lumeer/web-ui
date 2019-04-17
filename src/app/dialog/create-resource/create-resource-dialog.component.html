@@ -8,7 +8,7 @@
   </span>
 
   <div class="body">
-    <form [formGroup]="form"
+    <form [formGroup]="form" (ngSubmit)="onSubmit()"
           *ngIf="canShowContent(); else invalidResource">
       <div *ngIf="parentOrganization"
            [ngClass]="isFirstProject ? 'alert alert-warning' : null">
@@ -41,11 +41,13 @@
       </div>
 
       <resource-code-input
-        [form]="form">
+        [form]="form"
+        (keydown.enter)="onEnter($event)">
       </resource-code-input>
 
       <resource-name-input
-        [form]="form">
+        [form]="form"
+        (keydown.enter)="onEnter($event)">
       </resource-name-input>
 
     </form>

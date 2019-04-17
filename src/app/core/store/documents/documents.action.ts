@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {DocumentMetaData, DocumentModel} from './document.model';
 import {Query} from '../navigation/query';
+import {Workspace} from '../navigation/workspace';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -65,7 +66,7 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: Query; workspace?: Workspace}) {}
   }
 
   export class GetSuccess implements Action {

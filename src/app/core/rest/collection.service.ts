@@ -28,7 +28,6 @@ import {AttributeDto, CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
 import {Workspace} from '../store/navigation/workspace';
-import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class CollectionService extends PermissionService {
@@ -62,15 +61,9 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<CollectionDto>(`${this.apiPrefix()}/${collectionId}`);
   }
 
-  public getCollections(pageNumber?: number, pageSize?: number): Observable<CollectionDto[]> {
-    let queryParams = new HttpParams();
-
-    if (isNotNullOrUndefined(pageNumber) && isNotNullOrUndefined(pageSize)) {
-      queryParams = queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
-    }
-    queryParams = queryParams.set('fromViews', 'true');
-
-    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(), {params: queryParams});
+  public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
+    const queryParams = new HttpParams().append('fromViews', 'true');
+    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace), {params: queryParams});
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {

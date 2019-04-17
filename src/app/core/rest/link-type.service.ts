@@ -26,6 +26,7 @@ import {environment} from '../../../environments/environment';
 import {AttributeDto, LinkTypeDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {BaseService} from './base.service';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class LinkTypeService extends BaseService {
@@ -49,9 +50,9 @@ export class LinkTypeService extends BaseService {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
   }
 
-  public getLinkTypes(): Observable<LinkTypeDto[]> {
+  public getLinkTypes(workspace?: Workspace): Observable<LinkTypeDto[]> {
     const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace), {params: queryParams});
   }
 
   public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
@@ -66,9 +67,9 @@ export class LinkTypeService extends BaseService {
     return this.httpClient.delete<void>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`);
   }
 
-  private restApiPrefix(id?: string): string {
-    const organizationId = this.getOrCurrentOrganizationId();
-    const projectId = this.getOrCurrentProjectId();
+  private restApiPrefix(id?: string, workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
     const suffix = id ? `/${id}` : '';
 
     return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;

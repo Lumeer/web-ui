@@ -43,8 +43,9 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkTypesLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
-    mergeMap(() => {
-      return this.linkTypeService.getLinkTypes().pipe(
+    map(([action]) => action),
+    mergeMap(action => {
+      return this.linkTypeService.getLinkTypes(action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertLinkTypeDtoToModel(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
         catchError(error => of(new LinkTypesAction.GetFailure({error: error})))

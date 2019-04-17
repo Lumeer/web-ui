@@ -128,6 +128,9 @@ function updateColumns(
   transformation: (columns: TableConfigColumn[]) => TableConfigColumn[]
 ) {
   const {table, part} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const columns = transformation(part.columns);
   const parts: TableConfigPart[] = copyAndSpliceArray(table.config.parts, cursor.partIndex, 1, {...part, columns});
@@ -139,6 +142,9 @@ function updateColumns(
 function addPrimaryRows(state: TablesState, action: TablesAction.AddPrimaryRows): TablesState {
   const {cursor, rows, append} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   return tablesAdapter.updateOne(
     {
@@ -176,6 +182,9 @@ function insertPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: T
 function addLinkedRows(state: TablesState, action: TablesAction.AddLinkedRows): TablesState {
   const {cursor, linkedRows, append} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const config = {...table.config};
 
@@ -201,6 +210,9 @@ function addLinkedRows(state: TablesState, action: TablesAction.AddLinkedRows): 
 function initRows(state: TablesState, action: TablesAction.InitRows): TablesState {
   const {cursor, documents, linkInstances} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
     const newRows = oldRows.map(row => {
@@ -238,6 +250,9 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
 function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesState {
   const {cursor, documents, linkInstances} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
     return oldRows.reduce((cleanedRows, row) => {
@@ -268,6 +283,10 @@ function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesSt
 function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryRows): TablesState {
   const {cursor, documents} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
+
   const documentsMap = documents.reduce((map, document) => (document.id ? {...map, [document.id]: document} : map), {});
 
   if (isValidHierarchicalRowOrder(table.config.rows, documentsMap)) {
@@ -281,6 +300,9 @@ function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryR
 function replaceRows(state: TablesState, action: TablesAction.ReplaceRows): TablesState {
   const {cursor, rows: addedRows} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
   const rows = updateRows(table.config.rows, parentPath, updatedRows => {
@@ -317,6 +339,9 @@ function updateRows(
 export function removeRow(state: TablesState, action: TablesAction.RemoveRow): TablesState {
   const {cursor} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
 
   const rows = removeLinkedRow(table.config.rows, cursor.rowPath);
   const config = {...table.config, rows};
@@ -352,6 +377,9 @@ function removeLinkedRow(rows: TableConfigRow[], rowPath: number[]): TableConfig
 function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedRows): TablesState {
   const {cursor} = action.payload;
   const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
   const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
 
   const rows = updateRows(table.config.rows, parentPath, updatedRows => {
@@ -362,8 +390,11 @@ function toggleLinkedRows(state: TablesState, action: TablesAction.ToggleLinkedR
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }
 
-function getTablePart(state: TablesState, cursor: TableHeaderCursor): {table: TableModel; part: TableConfigPart} {
+function getTablePart(state: TablesState, cursor: TableHeaderCursor): {table?: TableModel; part?: TableConfigPart} {
   const table = state.entities[cursor.tableId];
-  const part = table.config.parts[cursor.partIndex];
+  if (!table) {
+    return {};
+  }
+  const part = table.config && table.config.parts && table.config.parts[cursor.partIndex];
   return {table, part};
 }

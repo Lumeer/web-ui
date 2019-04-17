@@ -30,14 +30,26 @@ import {selectQuery} from '../../store/navigation/navigation.state';
 import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
 import {queryIsEmpty} from '../../store/navigation/query.util';
 import {selectViewsLoaded} from '../../store/views/views.state';
+import {Project} from '../../store/projects/project';
+import {Organization} from '../../store/organizations/organization';
+import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentsGuard implements Resolve<DocumentModel[]> {
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
+    const organizationCode = route.paramMap.get('organizationCode');
+    const projectCode = route.paramMap.get('projectCode');
+
+    return this.workspaceService
+      .selectOrGetWorkspace(organizationCode, projectCode)
+      .pipe(mergeMap(({organization, project}) => this.resolveDocuments(organization, project)));
+  }
+
+  private resolveDocuments(organization: Organization, project: Project): Observable<DocumentModel[]> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       filter(loaded => loaded),
@@ -46,8 +58,9 @@ export class DocumentsGuard implements Resolve<DocumentModel[]> {
         this.store$.select(selectCurrentQueryDocumentsLoaded).pipe(
           tap(loaded => {
             if (!loaded) {
+              const workspace = {organizationId: organization.id, projectId: project.id};
               const querySingleDocument = {...query, page: 0, pageSize: queryIsEmpty(query) ? 10 : 1000}; // TODO change count
-              this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
+              this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument, workspace}));
             }
           }),
           filter(loaded => loaded)

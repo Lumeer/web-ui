@@ -25,7 +25,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, from, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {CollectionDto, PermissionDto} from '../../dto';
+import {CollectionDto} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -60,8 +60,8 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.pipe(select(selectCollectionsLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
     map(([action]) => action),
-    mergeMap(() => {
-      return this.collectionService.getCollections().pipe(
+    mergeMap(action => {
+      return this.collectionService.getCollections(action.payload.workspace).pipe(
         map((dtos: CollectionDto[]) => dtos.map(dto => convertCollectionDtoToModel(dto))),
         map(collections => new CollectionsAction.GetSuccess({collections: collections})),
         catchError(error => of(new CollectionsAction.GetFailure({error: error})))
