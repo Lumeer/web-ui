@@ -40,7 +40,9 @@ export const selectWorkspaceWithIds = createSelector(
       return {} as Workspace;
     }
     const organization = organizations.find(org => org.code === workspace.organizationCode);
-    const project = projects.find(proj => proj.code === workspace.projectCode);
+    const project =
+      organization &&
+      projects.find(proj => proj.organizationId === organization.id && proj.code === workspace.projectCode);
     const view = views.find(v => v.code === workspace.viewCode);
     return {
       ...workspace,

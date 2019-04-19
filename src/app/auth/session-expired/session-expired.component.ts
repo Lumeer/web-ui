@@ -61,7 +61,7 @@ export class SessionExpiredComponent implements OnInit {
 
   private clearStore() {
     // TODO maybe clear other stores as well
-    this.store$.dispatch(new ProjectsAction.ClearWorkspaceData());
+    this.store$.dispatch(new ProjectsAction.ClearWorkspaceData({}));
   }
 
   private bindRedirectUrl() {

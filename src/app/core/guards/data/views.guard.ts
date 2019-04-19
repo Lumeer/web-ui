@@ -27,29 +27,43 @@ import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
 import {View} from '../../store/views/view';
 import {ViewsAction} from '../../store/views/views.action';
-import {selectViewByCode, selectViewsDictionary, selectViewsLoaded} from '../../store/views/views.state';
+import {selectViewByCode, selectViewsLoaded} from '../../store/views/views.state';
 import {selectViewsByRead} from '../../store/common/permissions.selectors';
+import {Project} from '../../store/projects/project';
+import {Organization} from '../../store/organizations/organization';
+import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class ViewsGuard implements Resolve<View[]> {
   constructor(
     private i18n: I18n,
     private notificationService: NotificationService,
+    private workspaceService: WorkspaceService,
     private router: Router,
     private store$: Store<AppState>
   ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<View[]> {
+    const viewCode = route.paramMap.get('vc');
+    const organizationCode = route.paramMap.get('organizationCode');
+    const projectCode = route.paramMap.get('projectCode');
+
+    return this.workspaceService
+      .selectOrGetWorkspace(organizationCode, projectCode)
+      .pipe(mergeMap(({organization, project}) => this.resolveView(organization, project, viewCode)));
+  }
+
+  private resolveView(organization: Organization, project: Project, viewCode: string): Observable<View[]> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new ViewsAction.Get({}));
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new ViewsAction.Get({workspace}));
         }
       }),
       skipWhile(loaded => !loaded),
       mergeMap(() => {
-        const viewCode = route.paramMap.get('vc');
         if (!viewCode) {
           return this.store$.pipe(select(selectViewsByRead));
         }
@@ -60,9 +74,7 @@ export class ViewsGuard implements Resolve<View[]> {
               return [view];
             }
 
-            const organizationCode = route.paramMap.get('organizationCode');
-            const projectCode = route.paramMap.get('projectCode');
-            this.onViewNotFound(organizationCode, projectCode);
+            this.onViewNotFound(organization.code, project.code);
             return [];
           })
         );

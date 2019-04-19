@@ -64,7 +64,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
     private projectValidators: ProjectValidators,
     private organizationValidators: OrganizationValidators,
     private route: ActivatedRoute,
-    private store: Store<AppState>
+    private store$: Store<AppState>
   ) {
     this.createForm();
   }
@@ -106,7 +106,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
 
     const action = this.createResourceAction();
     if (action) {
-      this.store.dispatch(action);
+      this.store$.dispatch(action);
     }
 
     if (!callback) {
@@ -116,6 +116,12 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
 
   public canShowContent(): Boolean {
     return this.resourceType === ResourceType.Organization || !!this.parentOrganization;
+  }
+
+  public onEnter(event: any) {
+    // enter is somehow propagated to dropdown and throws error
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   private createAsyncValidator(): AsyncValidatorFn {
@@ -172,12 +178,12 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
 
   private selectData() {
     this.subscriptions.add(
-      this.store
+      this.store$
         .select(selectOrganizationById(this.parentId))
         .subscribe(resource => (this.parentOrganization = resource))
     );
     this.subscriptions.add(
-      this.store
+      this.store$
         .select(selectProjectsByOrganizationId(this.parentId))
         .subscribe(projects => (this.isFirstProject = projects.length === 0))
     );

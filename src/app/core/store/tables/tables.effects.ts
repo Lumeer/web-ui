@@ -139,7 +139,6 @@ export class TablesEffects {
       const parts: TableConfigPart[] = [
         createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config),
       ];
-      const loadDataActions: Action[] = [];
 
       linkTypeIds.forEach((linkTypeId, index) => {
         const linkType = linkTypesMap[linkTypeId];
@@ -1015,7 +1014,7 @@ export class TablesEffects {
       return of(null);
     }
 
-    const part = table.config.parts[cursor.partIndex];
+    const part = table.config && table.config.parts && table.config.parts[cursor.partIndex];
     if (!part || !part.collectionId) {
       return of(null);
     }

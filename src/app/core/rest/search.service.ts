@@ -39,12 +39,12 @@ export class SearchService extends BaseService {
     return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
-  public searchLinkInstances(query: QueryDto): Observable<LinkInstanceDto[]> {
-    return this.http.post<LinkInstanceDto[]>(`${this.searchPath()}/linkInstances`, query);
+  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
+    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query);
   }
 
-  public searchDocuments(query: QueryDto): Observable<DocumentDto[]> {
-    return this.http.post<DocumentDto[]>(`${this.searchPath()}/documents`, query);
+  public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
+    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query);
   }
 
   private searchPath(workspace?: Workspace): string {

@@ -37,7 +37,7 @@ import {isNullOrUndefined} from '../../shared/utils/common.utils';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourceType} from '../../core/model/resource-type';
-import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
+import {userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 
 @Component({
@@ -228,7 +228,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         )
         .subscribe(([view, models, users, currentUser]) => {
           this.view = view;
-          this.users = users;
+          this.users = users.filter(user => userCanReadWorkspace(user, models.organization, models.project));
           this.organization = models.organization;
           this.project = models.project;
           this.currentUser = currentUser;

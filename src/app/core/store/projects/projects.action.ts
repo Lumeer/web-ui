@@ -199,6 +199,8 @@ export namespace ProjectsAction {
 
   export class ClearWorkspaceData implements Action {
     public readonly type = ProjectsActionType.CLEAR_WORKSPACE_DATA;
+
+    public constructor(public payload: {nextAction?: Action}) {}
   }
 
   export type All =

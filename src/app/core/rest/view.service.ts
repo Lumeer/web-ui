@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {ViewDto} from '../dto';
 import {PermissionService} from './permission.service';
 import {map} from 'rxjs/operators';
-import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
@@ -45,23 +43,17 @@ export class ViewService extends PermissionService {
     return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
   }
 
-  public getViews(pageNumber?: number, pageSize?: number): Observable<ViewDto[]> {
-    const queryParams = new HttpParams();
-
-    if (isNotNullOrUndefined(pageNumber) && isNotNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString()).set('size', pageSize.toString());
-    }
-
-    return this.httpClient.get<ViewDto[]>(this.apiPrefix(), {params: queryParams});
+  public getViews(workspace?: Workspace): Observable<ViewDto[]> {
+    return this.httpClient.get<ViewDto[]>(this.apiPrefix(null, workspace));
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
-    return this.apiPrefix(this.getOrCurrentViewId(workspace));
+    return this.apiPrefix(this.getOrCurrentViewId(workspace), workspace);
   }
 
-  private apiPrefix(id?: string): string {
-    const organizationId = this.getOrCurrentOrganizationId();
-    const projectId = this.getOrCurrentProjectId();
+  private apiPrefix(id?: string, workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
 
     const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
     return id ? viewsPath.concat('/', id) : viewsPath;

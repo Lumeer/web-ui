@@ -25,7 +25,7 @@
                 (cancel)="editing$.next(false)"
                 (blur)="editing$.next(false)"
                 (keydown)="dataInputKeyDown($event, constraint)"
-                class="flex-grow-1 h-100 p-1 data-input"
+                class="flex-grow-1 h-100 p-1 data-input d-flex"
                 [class.read-only]="readOnly">
     </data-input>
     <i *ngIf="(constraint | constraintTypeIcon) as iconName"

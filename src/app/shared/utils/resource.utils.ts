@@ -26,6 +26,10 @@ import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
+export function userCanReadWorkspace(user: User, organization: Organization, project: Project): boolean {
+  return userHasRoleInResource(user, organization, Role.Read) && userHasRoleInResource(user, project, Role.Read);
+}
+
 export function userIsManagerInWorkspace(user: User, organization?: Organization, project?: Project): boolean {
   return (
     (organization && userHasManageRoleInResource(user, organization)) ||

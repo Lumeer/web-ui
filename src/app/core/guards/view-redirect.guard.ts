@@ -21,37 +21,51 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {map, skipWhile, switchMap, take, tap, mergeMap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
 import {convertQueryModelToString} from '../store/navigation/query.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
+import {WorkspaceService} from '../../workspace/workspace.service';
+import {Organization} from '../store/organizations/organization';
+import {Project} from '../store/projects/project';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
-  public constructor(private router: Router, private store$: Store<AppState>) {}
+  public constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private workspaceService: WorkspaceService
+  ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    const organizationCode = next.paramMap.get('organizationCode');
+    const projectCode = next.paramMap.get('projectCode');
     const viewCode = next.paramMap.get('vc');
 
+    return this.workspaceService
+      .selectOrGetWorkspace(organizationCode, projectCode)
+      .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode)));
+  }
+
+  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<boolean> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new ViewsAction.Get({}));
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new ViewsAction.Get({workspace}));
         }
       }),
       skipWhile(loaded => !loaded),
       switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
       take(1),
-      withLatestFrom(this.store$.pipe(select(selectWorkspace))),
-      map(([view, workspace]) => {
+      map(view => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? convertQueryModelToString(view.query) : null;
 
-        const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
+        const viewPath: any[] = ['w', organization.code, project.code, 'view'];
         if (viewCode) {
           viewPath.push({vc: viewCode});
         }

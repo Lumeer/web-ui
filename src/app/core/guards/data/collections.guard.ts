@@ -27,21 +27,30 @@ import {AppState} from '../../store/app.state';
 import {Collection} from '../../store/collections/collection';
 import {CollectionsAction} from '../../store/collections/collections.action';
 import {selectAllCollections, selectCollectionsLoaded} from '../../store/collections/collections.state';
+import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class CollectionsGuard implements Resolve<Collection[]> {
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Collection[]> {
-    return this.store$.select(selectCollectionsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new CollectionsAction.Get({}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectAllCollections))),
-      first()
+    const organizationCode = route.paramMap.get('organizationCode');
+    const projectCode = route.paramMap.get('projectCode');
+
+    return this.workspaceService.selectOrGetWorkspace(organizationCode, projectCode).pipe(
+      mergeMap(({organization, project}) => {
+        return this.store$.select(selectCollectionsLoaded).pipe(
+          tap(loaded => {
+            if (!loaded) {
+              const workspace = {organizationId: organization.id, projectId: project.id};
+              this.store$.dispatch(new CollectionsAction.Get({workspace}));
+            }
+          }),
+          skipWhile(loaded => !loaded),
+          mergeMap(() => this.store$.pipe(select(selectAllCollections))),
+          first()
+        );
+      })
     );
   }
 }

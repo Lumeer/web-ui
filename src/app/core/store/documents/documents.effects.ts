@@ -51,7 +51,7 @@ export class DocumentsEffects {
     mergeMap(([action]) => {
       const queryDto = convertQueryModelToDto(action.payload.query);
 
-      return this.searchService.searchDocuments(queryDto).pipe(
+      return this.searchService.searchDocuments(queryDto, action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents: documents, query: action.payload.query})),
         catchError(error => of(new DocumentsAction.GetFailure({error: error})))

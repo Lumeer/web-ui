@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {SearchConfig, ViewConfig, ViewCursor, View} from './view';
+import {Workspace} from '../navigation/workspace';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -55,7 +56,7 @@ export namespace ViewsAction {
   export class Get implements Action {
     public readonly type = ViewsActionType.GET;
 
-    public constructor(public payload: {force?: boolean}) {}
+    public constructor(public payload: {workspace?: Workspace; force?: boolean}) {}
   }
 
   export class GetOne implements Action {

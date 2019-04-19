@@ -347,17 +347,13 @@ export class ProjectsEffects {
       const {organizationId, projectId, nextAction} = action.payload;
       const workspace = user.defaultWorkspace;
       if (workspace && workspace.organizationId === organizationId && workspace.projectId === projectId) {
-        return [];
+        return (nextAction && [nextAction]) || [];
       }
 
       const actions: Action[] = [
         new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}),
-        new ProjectsAction.ClearWorkspaceData(),
+        new ProjectsAction.ClearWorkspaceData({nextAction}),
       ];
-
-      if (nextAction) {
-        actions.push(nextAction);
-      }
 
       return actions;
     }),
@@ -367,14 +363,21 @@ export class ProjectsEffects {
   @Effect()
   public clearWorkspaceData$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.ClearWorkspaceData>(ProjectsActionType.CLEAR_WORKSPACE_DATA),
-    mergeMap(() => {
-      return [
+    mergeMap(action => {
+      const {nextAction} = action.payload;
+      const actions: Action[] = [
         new CollectionsAction.Clear(),
         new DocumentsAction.Clear(),
         new LinkInstancesAction.Clear(),
         new LinkTypesAction.Clear(),
         new ViewsAction.Clear(),
       ];
+
+      if (nextAction) {
+        actions.push(nextAction);
+      }
+
+      return actions;
     })
   );
 

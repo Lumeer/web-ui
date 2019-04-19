@@ -19,9 +19,9 @@
 
 import {Injectable} from '@angular/core';
 
-import {of, Observable} from 'rxjs';
+import {of, Observable, combineLatest} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {OrganizationService, ProjectService} from '../core/rest';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
@@ -33,6 +33,9 @@ import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects} from '../core/store/projects/projects.state';
 import {isNullOrUndefined} from '../shared/utils/common.utils';
+import {User} from '../core/store/users/user';
+import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
+import {CommonAction} from '../core/store/common/common.action';
 
 @Injectable()
 export class WorkspaceService {
@@ -42,7 +45,87 @@ export class WorkspaceService {
     private store$: Store<AppState>
   ) {}
 
-  public getOrganizationFromStoreOrApi(code: string): Observable<Organization> {
+  public selectOrGetUserAndOrganization(
+    organizationCode: string
+  ): Observable<{user?: User; organization?: Organization}> {
+    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      mergeMap(organization => {
+        if (organization) {
+          return this.selectUser(organization).pipe(map(user => ({organization, user})));
+        }
+        return of({});
+      })
+    );
+  }
+
+  public selectOrGetUserAndWorkspace(
+    organizationCode: string,
+    projectCode: string
+  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
+    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      mergeMap(organization =>
+        this.selectUserAndProject(organization, projectCode).pipe(
+          map(({user, project}) => ({user, organization, project}))
+        )
+      )
+    );
+  }
+
+  public selectOrGetWorkspace(
+    organizationCode: string,
+    projectCode: string
+  ): Observable<{organization?: Organization; project?: Project}> {
+    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      mergeMap(organization => {
+        if (organization) {
+          return this.getProjectFromStoreOrApi(organization.id, projectCode).pipe(
+            map(project => ({organization, project}))
+          );
+        }
+        return of({});
+      })
+    );
+  }
+
+  public switchWorkspace(organization: Organization, project: Project): Observable<boolean> {
+    return Observable.create(observer => {
+      const callback = () => {
+        observer.next(true);
+        observer.complete();
+      };
+
+      const callbackAction = new CommonAction.ExecuteCallback({callback});
+      this.store$.dispatch(
+        new ProjectsAction.SwitchWorkspace({
+          organizationId: organization.id,
+          projectId: project.id,
+          nextAction: callbackAction,
+        })
+      );
+    });
+  }
+
+  private selectUserAndProject(
+    organization: Organization,
+    projectCode: string
+  ): Observable<{user?: User; project?: Project}> {
+    if (organization) {
+      return combineLatest(
+        this.selectUser(organization),
+        this.getProjectFromStoreOrApi(organization.id, projectCode)
+      ).pipe(map(([user, project]) => ({user, project})));
+    }
+    return of({});
+  }
+
+  private selectUser(organization?: Organization): Observable<User> {
+    return this.store$.pipe(
+      select(selectCurrentUserForOrganization(organization)),
+      filter(user => !isNullOrUndefined(user))
+    );
+  }
+
+  private getOrganizationFromStoreOrApi(code: string): Observable<Organization> {
     return this.getOrganizationFromStore(code).pipe(
       mergeMap(organization => {
         if (!isNullOrUndefined(organization)) {
@@ -71,8 +154,8 @@ export class WorkspaceService {
     );
   }
 
-  public getProjectFromStoreOrApi(orgId: string, projCode: string): Observable<Project> {
-    return this.getProjectFromStore(projCode).pipe(
+  private getProjectFromStoreOrApi(orgId: string, projCode: string): Observable<Project> {
+    return this.getProjectFromStore(orgId, projCode).pipe(
       mergeMap(project => {
         if (!isNullOrUndefined(project)) {
           return of(project);
@@ -82,10 +165,10 @@ export class WorkspaceService {
     );
   }
 
-  private getProjectFromStore(code: string): Observable<Project> {
+  private getProjectFromStore(organizationId: string, code: string): Observable<Project> {
     return this.store$.pipe(
       select(selectAllProjects),
-      map(projects => projects.find(proj => proj.code === code)),
+      map(projects => projects.find(proj => proj.organizationId === organizationId && proj.code === code)),
       take(1)
     );
   }

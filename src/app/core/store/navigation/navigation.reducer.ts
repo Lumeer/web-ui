@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
+import {ROUTER_CANCEL, ROUTER_NAVIGATED, RouterCancelAction, RouterNavigatedAction} from '@ngrx/router-store';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
@@ -25,7 +25,7 @@ import {NavigationState} from './navigation.state';
 import {convertStringToQueryModel} from './query.converter';
 import {SearchTab, searchTabsMap} from './search-tab';
 
-function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
+function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
 
   return {
@@ -83,10 +83,10 @@ function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppSt
 
 export function navigationReducer(
   state: NavigationState,
-  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<AppState>
+  action: RouterNavigatedAction<RouterStateUrl> | RouterCancelAction<AppState>
 ): NavigationState {
   switch (action.type) {
-    case ROUTER_NAVIGATION:
+    case ROUTER_NAVIGATED:
       return onRouterNavigation(state, action);
     case ROUTER_CANCEL:
       return onRouterCancel(state, action);
