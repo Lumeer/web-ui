@@ -31,6 +31,7 @@ import {
 import {parseDateTimeDataValue} from '../../utils/data.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
+import {resetUnusedDatePart} from '../../utils/date.utils';
 
 @Component({
   selector: 'date-time-input',
@@ -90,6 +91,6 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public onValueChange(date: Date) {
-    this.valueChange.emit(date);
+    this.valueChange.emit(resetUnusedDatePart(date, this.format));
   }
 }
