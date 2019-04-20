@@ -73,6 +73,7 @@ export enum TablesActionType {
   UNLINK_ROW = '[Tables] Unlink Row',
   REMOVE_ROW = '[Tables] Remove Row',
   SELECT_ROW = '[Tables] Select Row',
+  CLONE_ROW = '[Tables] Clone Row',
 
   INDENT_ROW = '[Tables] Indent Row',
   OUTDENT_ROW = '[Tables] Outdent Row',
@@ -320,6 +321,12 @@ export namespace TablesAction {
     public constructor(public payload: {cursor: TableBodyCursor}) {}
   }
 
+  export class CloneRow implements Action {
+    public readonly type = TablesActionType.CLONE_ROW;
+
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
+  }
+
   export class MoveRowUp implements Action {
     public readonly type = TablesActionType.MOVE_ROW_UP;
 
@@ -426,6 +433,7 @@ export namespace TablesAction {
     | CleanRows
     | ReplaceRows
     | RemoveRow
+    | CloneRow
     | MoveRowDown
     | MoveRowUp
     | IndentRow

@@ -65,6 +65,21 @@
           <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
         </div>
       </ng-template>
+
+      <ng-container *ngIf="created && (tableParts$ | async)?.length < 4">
+        <ng-template contextMenuItem
+                     divider="true">
+        </ng-template>
+        <ng-template (execute)="onCloneRow()"
+                     contextMenuItem>
+          <div class="d-flex align-items-baseline">
+            <i class="far fa-fw fa-clone mr-1"
+               aria-hidden="true"></i>
+            <span class="flex-grow-1"
+                  i18n="@@table.body.row.clone">Duplicate row</span>
+          </div>
+        </ng-template>
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="created">
