@@ -33,6 +33,7 @@ import Big from 'big.js';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
 import {DocumentData} from '../../core/store/documents/document.model';
 import {Attribute} from '../../core/store/collections/collection';
+import {resetUnusedMomentPart} from './date.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -47,7 +48,11 @@ export function parseDateTimeDataValue(value: any, expectedFormat?: string): Dat
   }
 
   const momentDate = parseMomentDate(value, expectedFormat);
-  return momentDate.isValid() ? momentDate.toDate() : null;
+  if (!momentDate.isValid()) {
+    return null;
+  }
+
+  return resetUnusedMomentPart(momentDate, expectedFormat).toDate();
 }
 
 export function parseColorValue(value: any, colorConstraint?: ColorConstraintConfig): string {
@@ -169,7 +174,7 @@ export function isDateTimeValid(value: any, config?: DateTimeConstraintConfig): 
 }
 
 export function getDateTimeSaveValue(value: any, config: DateTimeConstraintConfig): string {
-  return value ? moment(value, config.format).toISOString() : '';
+  return value ? resetUnusedMomentPart(moment(value, config.format), config.format).toISOString() : '';
 }
 
 export function formatColorDataValue(value: any, config: ColorConstraintConfig, showInvalid = true): string {
