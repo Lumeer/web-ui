@@ -48,7 +48,7 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
     case TablesActionType.REMOVE_TABLE:
       return tablesAdapter.removeOne(action.payload.tableId, state);
     case TablesActionType.SET_CONFIG:
-      return tablesAdapter.updateOne({id: DEFAULT_TABLE_ID, changes: {config: action.payload.config}}, state);
+      return setConfig(state, action);
     case TablesActionType.ADD_PART:
       return addPart(state, action);
     case TablesActionType.REPLACE_COLUMNS:
@@ -86,6 +86,15 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
     default:
       return state;
   }
+}
+
+function setConfig(state: TablesState, action: TablesAction.SetConfig): TablesState {
+  const {config} = action.payload;
+  if (!config) {
+    return state;
+  }
+
+  return tablesAdapter.updateOne({id: DEFAULT_TABLE_ID, changes: {config: action.payload.config}}, state);
 }
 
 function addPart(state: TablesState, action: TablesAction.AddPart): TablesState {

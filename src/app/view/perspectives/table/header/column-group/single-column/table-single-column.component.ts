@@ -166,6 +166,7 @@ export class TableSingleColumnComponent implements OnChanges {
     if (this.linkType) {
       return this.linkType.attributes;
     }
+    return [];
   }
 
   private findAttribute(attributes: Attribute[]) {

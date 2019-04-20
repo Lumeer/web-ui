@@ -646,7 +646,7 @@ export class TablesEffects {
               }
 
               // add last empty row if user has write permissions
-              if (isLastTableRowInitialized(rows) && canCreateDocuments) {
+              if ((isLastTableRowInitialized(rows) || rows.length === 0) && canCreateDocuments) {
                 actions.push(
                   new TablesAction.AddPrimaryRows({
                     cursor,
