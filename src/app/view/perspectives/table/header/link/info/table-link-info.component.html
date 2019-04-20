@@ -5,7 +5,7 @@
   <icons-presenter *ngIf="!hidden; else iconPlaceholder"
                    [colors]="collections | colors"
                    [icons]="collections | icons"
-                   [title]="linkType.name">
+                   [title]="linkType?.name">
   </icons-presenter>
   <ng-template #iconPlaceholder>
     <i class="fa fa-fw fa-expand text-white"></i>
