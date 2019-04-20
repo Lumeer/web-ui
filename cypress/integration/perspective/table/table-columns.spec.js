@@ -4,7 +4,7 @@ describe('Table perspective :: Columns', () => {
     cy.createCollection('columns', 'fas fa-columns', '#0000ff').then(collection => cy.visitTable(collection.id));
 
     // select first column
-    cy.get('[data-test="table-column-input"]')
+    cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .should('contain', 'A')
       .click();
 
@@ -102,7 +102,7 @@ describe('Table perspective :: Columns', () => {
     cy.createCollection('first', 'fas fa-columns', '#00ff00').then(collection => cy.visitTable(collection.id));
 
     // select first column
-    cy.get('[data-test="table-column-input"]')
+    cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .should('contain', 'A')
       .click();
 

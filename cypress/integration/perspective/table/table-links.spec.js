@@ -22,7 +22,7 @@ describe('Table perspective :: Links', () => {
       cy.visitTable(collection.id);
     });
 
-    cy.get('[data-test="table-column-input"]')
+    cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .last()
       .should('contain', 'A');
 
