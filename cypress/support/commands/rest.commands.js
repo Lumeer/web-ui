@@ -85,3 +85,14 @@ Cypress.Commands.add('patchCurrentUser', user => {
     },
   });
 });
+
+Cypress.Commands.add('saveDefaultWorkspace', defaultWorkspace => {
+  cy.request({
+    method: 'PUT',
+    url: `${Cypress.env('engineUrl')}rest/users/workspace`,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+    body: defaultWorkspace,
+  });
+});

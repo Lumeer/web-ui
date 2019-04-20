@@ -4,7 +4,7 @@ describe('Table perspective :: Single cell', () => {
     cy.createCollection('empty', 'fas fa-empty-set', '#cccccc').then(collection => cy.visitTable(collection.id));
 
     // check if there is only a single column called 'A'
-    cy.get('[data-test="table-column-input"]')
+    cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .last()
       .should('contain', 'A');
 

@@ -364,7 +364,7 @@ describe('Table perspective :: Constraints', () => {
 
     // change first column type to text
 
-    cy.get('[data-test="table-column-input"]')
+    cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .first()
       .should('contain', 'Name')
       .trigger('contextmenu');
