@@ -32,7 +32,7 @@ import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects} from '../core/store/projects/projects.state';
-import {isNullOrUndefined} from '../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
 import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
 import {CommonAction} from '../core/store/common/common.action';
@@ -121,14 +121,14 @@ export class WorkspaceService {
   private selectUser(organization?: Organization): Observable<User> {
     return this.store$.pipe(
       select(selectCurrentUserForOrganization(organization)),
-      filter(user => !isNullOrUndefined(user))
+      filter(user => isNotNullOrUndefined(user))
     );
   }
 
   private getOrganizationFromStoreOrApi(code: string): Observable<Organization> {
     return this.getOrganizationFromStore(code).pipe(
       mergeMap(organization => {
-        if (!isNullOrUndefined(organization)) {
+        if (isNotNullOrUndefined(organization)) {
           return of(organization);
         }
         return this.getOrganizationFromApi(code);

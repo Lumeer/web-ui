@@ -20,10 +20,12 @@
 import {Layout} from 'plotly.js';
 import * as d3 from 'd3';
 import {DraggablePlotMaker} from './draggable-plot-maker';
-import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisCategory, ChartDataSet, ChartYAxisType, convertChartDateFormat} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
 import {createRange} from './plot-util';
+import * as moment from 'moment';
+import {ConstraintConfig, DateTimeConstraintConfig} from '../../../../../core/model/data/constraint';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -37,17 +39,31 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPointNewY(point: any, datum: any, event: any): number;
 
   protected yAxis1Layout(): Partial<Layout> {
-    if (this.isAxisCategory(ChartAxisType.Y1)) {
+    const category = this.axisCategory(ChartAxisType.Y1);
+    if (category === ChartAxisCategory.Number) {
       return {
         yaxis: {
-          type: 'category',
-          categoryarray: this.getYAxisCategories(ChartAxisType.Y1),
+          range: this.createRange(),
+        },
+      };
+    } else if (category === ChartAxisCategory.Date) {
+      return {
+        yaxis: {
+          type: 'date',
+        },
+      };
+    } else if (category === ChartAxisCategory.Percentage) {
+      return {
+        yaxis: {
+          ticksuffix: '%',
         },
       };
     }
+
     return {
       yaxis: {
-        range: this.createRange(),
+        type: 'category',
+        categoryarray: this.getYAxisCategories(ChartAxisType.Y1),
       },
     };
   }
@@ -55,8 +71,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   private createRange(): any[] {
     if (
       !this.areBothYAxisPresented() ||
-      this.isAxisCategory(ChartAxisType.Y1) ||
-      this.isAxisCategory(ChartAxisType.Y2)
+      !this.isNumericCategory(this.axisCategory(ChartAxisType.Y1)) ||
+      !this.isNumericCategory(this.axisCategory(ChartAxisType.Y2))
     ) {
       return null;
     }
@@ -72,18 +88,12 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   }
 
   protected yAxis2Layout(): Partial<Layout> {
-    if (this.isY2AxisPresented()) {
-      if (this.isAxisCategory(ChartAxisType.Y2)) {
-        return {
-          yaxis2: {
-            overlaying: 'y',
-            side: 'right',
-            type: 'category',
-            categoryarray: this.getYAxisCategories(ChartAxisType.Y2),
-          },
-        };
-      }
+    if (!this.isY2AxisPresented()) {
+      return {};
+    }
 
+    const category = this.axisCategory(ChartAxisType.Y2);
+    if (category === ChartAxisCategory.Number) {
       return {
         yaxis2: {
           overlaying: 'y',
@@ -91,13 +101,41 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
           range: this.createRange(),
         },
       };
+    } else if (category === ChartAxisCategory.Date) {
+      return {
+        yaxis2: {
+          overlaying: 'y',
+          side: 'right',
+          type: 'date',
+        },
+      };
+    } else if (category === ChartAxisCategory.Percentage) {
+      return {
+        yaxis2: {
+          overlaying: 'y',
+          side: 'right',
+          ticksuffix: '%',
+        },
+      };
     }
-    return {};
+
+    return {
+      yaxis2: {
+        overlaying: 'y',
+        side: 'right',
+        type: 'category',
+        categoryarray: this.getYAxisCategories(ChartAxisType.Y2),
+      },
+    };
   }
 
   protected isAxisCategory(type: ChartYAxisType): boolean {
+    return this.axisCategory(type) === ChartAxisCategory.Text;
+  }
+
+  protected axisCategory(type: ChartYAxisType): ChartAxisCategory {
     const sets = this.getAxisDataSets(type);
-    return sets.length === 1 && sets[0].isNumeric === false;
+    return (sets.length >= 1 && sets[0].category) || ChartAxisCategory.Text;
   }
 
   protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
@@ -123,6 +161,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const yAxisElement = this.getYAxisElementForTrace(setIx);
     if (yAxisElement.type === 'category') {
       return this.createYScaleCategories(yAxisElement);
+    } else if (yAxisElement.type === 'date') {
+      return this.createYScaleTime(yAxisElement);
     }
     return this.createYScaleLinear(yAxisElement);
   }
@@ -132,6 +172,20 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .linear()
       .domain([this.getGridHeight(), 0])
       .range(yAxisElement.range);
+  }
+
+  protected createYScaleTime(yAxisElement: any): d3.scale.Linear<number, number> {
+    const date1 = moment(yAxisElement.range[0])
+      .toDate()
+      .getTime();
+    const date2 = moment(yAxisElement.range[1])
+      .toDate()
+      .getTime();
+
+    return d3.scale
+      .linear()
+      .domain([this.getGridHeight(), 0])
+      .rangeRound([date1, date2]);
   }
 
   protected createYScaleCategories(yAxisElement: any): (val: number) => string {
@@ -210,9 +264,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const yScale = plotMaker.createYScale(setIx);
         const initialValue = plotMaker.getInitialValue(setIx, datum.i);
         const lastValue = initialValue;
-        const isCategory = plotMaker.isTraceCategory(setIx);
+        const axisCategory = plotMaker.traceSet(setIx).category;
+        const config = plotMaker.traceSet(setIx).config;
 
-        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, isCategory};
+        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, axisCategory, config};
 
         if (datum.ct) {
           const initialY = datum.ct[1];
@@ -267,8 +322,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.chartData.sets[setIx].points[index].y;
   }
 
-  private isTraceCategory(setIx: number): boolean {
-    return !this.chartData.sets[setIx].isNumeric;
+  private traceSet(setIx: number): ChartDataSet {
+    return this.chartData.sets[setIx];
   }
 
   private getElementOffset(element: Element) {
@@ -287,7 +342,12 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const newY = this.getPointNewY(point, datum, event);
     const newValue = pointData.yScale(newY);
 
-    if (pointData.isCategory) {
+    if (pointData.axisCategory === ChartAxisCategory.Date) {
+      const config = pointData.config && (pointData.config as DateTimeConstraintConfig);
+      return moment(new Date(newValue)).format(convertChartDateFormat(config && config.format));
+    }
+
+    if (!this.isNumericCategory(pointData.axisCategory)) {
       return newValue.toString();
     }
 
@@ -314,7 +374,8 @@ export interface PointData {
   yScale: (val: number) => string | number;
   initialValue: string | number;
   lastValue: string | number;
-  isCategory: boolean;
+  axisCategory: ChartAxisCategory;
+  config: ConstraintConfig;
   initialY?: number;
   offset?: {top: number; left: number};
   clickedY?: number;

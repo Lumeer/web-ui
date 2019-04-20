@@ -35,7 +35,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {Query} from '../../../../core/store/navigation/query';
 import {ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ChartData} from './convertor/chart-data';
+import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
@@ -43,6 +43,8 @@ import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
+import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../../core/model/data/constraint';
+import * as moment from 'moment';
 
 interface Data {
   collections: Collection[];
@@ -268,10 +270,23 @@ export class ChartDataComponent implements OnInit, OnChanges {
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
     const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
-    const saveValue = getSaveValue(value, attribute && attribute.constraint);
+    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
 
     const patchDocument = {...changedDocument, data: {[attributeId]: saveValue}};
     this.patchData.emit(patchDocument);
+  }
+
+  private convertSaveValue(value: any, constraint: Constraint): any {
+    if (!value || !constraint) {
+      return getSaveValue(value, constraint);
+    }
+
+    if (constraint.type === ConstraintType.DateTime) {
+      const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
+      return moment(value, convertChartDateFormat(config && config.format)).toISOString();
+    }
+
+    return getSaveValue(value, constraint);
   }
 
   private onLinkValueChange(valueChange: ValueChange) {
@@ -285,7 +300,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
     }
     const linkType = (this.linkTypes || []).find(lt => lt.id === changedLinkInstance.linkTypeId);
     const attribute = ((linkType && linkType.attributes) || []).find(a => a.id === attributeId);
-    const saveValue = getSaveValue(value, attribute && attribute.constraint);
+    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
 
     const patchLinkInstance = {...changedLinkInstance, data: {[attributeId]: saveValue}};
     this.patchLinkData.emit(patchLinkInstance);

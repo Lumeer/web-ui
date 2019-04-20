@@ -28,7 +28,7 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {ChartDataSet, ChartYAxisType} from './chart-data';
+import {ChartAxisCategory, ChartDataSet} from './chart-data';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {ChartDataConverter} from './chart-data-converter';
@@ -85,7 +85,7 @@ describe('Chart data converter single collection', () => {
       sets: [
         {
           yAxisType: ChartAxisType.Y1,
-          isNumeric: true,
+          category: ChartAxisCategory.Number,
           name: '',
           draggable: false,
           points: [],
@@ -118,7 +118,8 @@ describe('Chart data converter single collection', () => {
         {id: null, x: 'Glass', y: undefined},
       ],
       color: '#ffffff',
-      isNumeric: false,
+      category: ChartAxisCategory.Text,
+      config: undefined,
       draggable: false,
       name: undefined,
       yAxisType: ChartAxisType.Y1,
@@ -150,7 +151,8 @@ describe('Chart data converter single collection', () => {
         {id: 'D4', x: undefined, y: 0},
       ],
       color: '#ffffff',
-      isNumeric: true,
+      category: ChartAxisCategory.Number,
+      config: undefined,
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
@@ -186,7 +188,8 @@ describe('Chart data converter single collection', () => {
       id: 'a2',
       points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
       color: '#ffffff',
-      isNumeric: true,
+      category: ChartAxisCategory.Number,
+      config: undefined,
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
@@ -638,7 +641,7 @@ describe('Chart data converter linked collections', () => {
       sets: [
         {
           yAxisType: ChartAxisType.Y1,
-          isNumeric: true,
+          category: ChartAxisCategory.Number,
           name: '',
           draggable: false,
           points: [],
@@ -998,9 +1001,9 @@ describe('Chart data converter constraints', () => {
     };
 
     const pointsAvg = [
-      {id: null, x: 'Martin', y: '30%'},
-      {id: null, x: 'Kubo', y: '60%'},
-      {id: null, x: 'Tomas', y: '25%'},
+      {id: null, x: 'Martin', y: '30'},
+      {id: null, x: 'Kubo', y: '60'},
+      {id: null, x: 'Tomas', y: '25'},
     ];
     const converter = new ChartDataConverter();
     converter.updateData(
@@ -1017,9 +1020,9 @@ describe('Chart data converter constraints', () => {
 
     const configSum = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum}};
     const pointsSum = [
-      {id: null, x: 'Martin', y: '90%'},
-      {id: null, x: 'Kubo', y: '120%'},
-      {id: null, x: 'Tomas', y: '100%'},
+      {id: null, x: 'Martin', y: '90'},
+      {id: null, x: 'Kubo', y: '120'},
+      {id: null, x: 'Tomas', y: '100'},
     ];
     const chartDataSum = converter.convert(configSum);
     expect(chartDataSum.sets.length).toEqual(1);
@@ -1027,9 +1030,9 @@ describe('Chart data converter constraints', () => {
 
     const configMax = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max}};
     const pointsMax = [
-      {id: null, x: 'Martin', y: '50%'},
-      {id: null, x: 'Kubo', y: '80%'},
-      {id: null, x: 'Tomas', y: '40%'},
+      {id: null, x: 'Martin', y: '50'},
+      {id: null, x: 'Kubo', y: '80'},
+      {id: null, x: 'Tomas', y: '40'},
     ];
     const chartDataMax = converter.convert(configMax);
     expect(chartDataMax.sets.length).toEqual(1);
@@ -1037,9 +1040,9 @@ describe('Chart data converter constraints', () => {
 
     const configMin = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min}};
     const pointsMin = [
-      {id: null, x: 'Martin', y: '10%'},
-      {id: null, x: 'Kubo', y: '40%'},
-      {id: null, x: 'Tomas', y: '10%'},
+      {id: null, x: 'Martin', y: '10'},
+      {id: null, x: 'Kubo', y: '40'},
+      {id: null, x: 'Tomas', y: '10'},
     ];
     const chartDataMin = converter.convert(configMin);
     expect(chartDataMin.sets.length).toEqual(1);

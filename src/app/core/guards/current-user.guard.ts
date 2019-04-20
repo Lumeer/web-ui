@@ -25,8 +25,8 @@ import {catchError, filter, first, map, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
-import {selectCurrentUserForWorkspace} from '../store/users/users.state';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
+import {selectCurrentUser} from '../store/users/users.state';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
@@ -52,13 +52,13 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
 
   private checkStore(state: RouterStateSnapshot): Observable<boolean> {
     return this.store$.pipe(
-      select(selectCurrentUserForWorkspace),
+      select(selectCurrentUser),
       tap(currentUser => {
         if (isNullOrUndefined(currentUser)) {
           this.store$.dispatch(new UsersAction.GetCurrentUser());
         }
       }),
-      filter(currentUser => !isNullOrUndefined(currentUser)),
+      filter(currentUser => isNotNullOrUndefined(currentUser)),
       first(),
       map(user => {
         if (!user.agreement) {

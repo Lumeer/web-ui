@@ -18,7 +18,7 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisCategory, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
@@ -114,7 +114,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     for (const set of sets) {
       const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
-        if (set.isNumeric) {
+        if (set.category === ChartAxisCategory.Number) {
           return {x: point.x, y: 0};
         }
         return {x: point.x, y: point.y};

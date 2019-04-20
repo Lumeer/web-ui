@@ -70,6 +70,9 @@ export function createSelectItemsForAxisType(
 function createAxisResourceChain(query: Query, collections: Collection[], linkTypes: LinkType[]): AxisResource[] {
   const stem = query.stems[0];
   const baseCollection = collections.find(collection => collection.id === stem.collectionId);
+  if (!baseCollection) {
+    return [];
+  }
   const chain = [baseCollection];
   let previousCollectionId = baseCollection.id;
   for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {

@@ -20,7 +20,7 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {ChartData} from '../../data/convertor/chart-data';
+import {ChartAxisCategory, ChartData} from '../../data/convertor/chart-data';
 import {ChartAxisResourceType} from '../../../../../core/store/charts/chart';
 
 export abstract class PlotMaker {
@@ -47,6 +47,10 @@ export abstract class PlotMaker {
   public abstract createData(): Data[];
 
   public abstract createLayout(): Partial<Layout>;
+
+  protected isNumericCategory(category: ChartAxisCategory) {
+    return category === ChartAxisCategory.Percentage || category === ChartAxisCategory.Number;
+  }
 }
 
 export interface ValueChange {

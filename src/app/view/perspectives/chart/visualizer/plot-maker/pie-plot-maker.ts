@@ -49,7 +49,7 @@ export class PiePlotMaker extends PlotMaker {
     return this.chartData.sets.filter(
       set =>
         set.yAxisType === ChartAxisType.Y1 &&
-        set.isNumeric &&
+        this.isNumericCategory(set.category) &&
         set.points.some(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
     );
   }

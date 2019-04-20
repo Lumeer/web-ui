@@ -118,7 +118,7 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
   }
 }
 
-export function formatDataValue(value: any, constraint: Constraint): any {
+export function formatDataValue(value: any, constraint?: Constraint): any {
   if (!constraint) {
     return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
