@@ -28,6 +28,7 @@
     "no-unused-variable": false,
     "no-use-before-declare": true,
     "no-var-keyword": true,
+    "no-suspicious-comment": true,
     "prefer-const": true,
     "radix": true,
     "rxjs-no-internal": true,
