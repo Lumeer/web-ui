@@ -18,6 +18,8 @@
  */
 
 import {ChartAxisResourceType, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
+import {ConstraintConfig} from '../../../../../core/model/data/constraint';
 
 export interface ChartData {
   sets: ChartDataSet[];
@@ -28,11 +30,12 @@ export interface ChartDataSet {
   id: string;
   points: ChartPoint[];
   color: string;
-  isNumeric: boolean;
   yAxisType: ChartYAxisType;
   name: string;
   draggable: boolean;
   resourceType: ChartAxisResourceType;
+  category: ChartAxisCategory;
+  config?: ConstraintConfig;
 }
 
 export interface ChartPoint {
@@ -42,4 +45,37 @@ export interface ChartPoint {
   isPrediction?: boolean;
 }
 
+export enum ChartAxisCategory {
+  Date = 'date',
+  Percentage = 'percentage',
+  Number = 'number',
+  Text = 'text',
+}
+
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
+
+export function convertChartDateFormat(format: string): string {
+  if (!format) {
+    return 'YYYY-MM-DD';
+  }
+  const options = createDateTimeOptions(format);
+  let chartFormat = 'YYYY-MM';
+
+  if (options.day || hasTimeOption(options)) {
+    chartFormat = `${chartFormat}-DD`;
+  }
+
+  if (hasTimeOption(options)) {
+    chartFormat = `${chartFormat} HH`;
+  }
+
+  if (options.minutes || options.seconds) {
+    chartFormat = `${chartFormat}:mm`;
+  }
+
+  if (options.seconds) {
+    chartFormat = `${chartFormat}:ss`;
+  }
+
+  return chartFormat;
+}

@@ -124,7 +124,7 @@ export class CollectionsPermissionsPipe implements PipeTransform {
     const read = userRoles.includes(Role.Read);
     const write = userRoles.includes(Role.Write);
     const manage = userRoles.includes(Role.Manage);
-    return {read, write, manage};
+    return {read, write, manage, readWithView: read, writeWithView: write, manageWithView: manage};
   }
 
   private userPermissionsInView(user: User, view: View, collection: Collection): AllowedPermissions {

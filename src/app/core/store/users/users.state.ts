@@ -90,9 +90,7 @@ export const selectCurrentUserForOrganization = (organization: Organization) =>
   createSelector(
     selectCurrentUser,
     selectGroupsDictionary,
-    (user, groups) => {
-      return mapGroupsOnUser(user, organization.id, groups);
-    }
+    (user, groups) => user && mapGroupsOnUser(user, organization.id, groups)
   );
 
 export const selectUsersForWorkspace = createSelector(

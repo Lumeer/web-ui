@@ -23,7 +23,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {BehaviorSubject, combineLatest, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, startWith, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
@@ -90,12 +90,14 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest(this.store$.pipe(select(selectQuery)), this.loadData(), this.router.events)
+    const querySubscription = combineLatest(this.store$.pipe(select(selectQuery)), this.loadData())
       .pipe(
         debounceTime(100),
-        filter(([query, , event]) => !!query && event instanceof NavigationEnd),
-        tap(([, data]) => (this.queryData = data)),
-        map(([query, data]) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query})),
+        withLatestFrom(this.router.events.pipe(startWith(null))),
+        map(([[query, data], event]) => ({query, data, event})),
+        filter(({query, event}) => !!query && (!event || event instanceof NavigationEnd)),
+        tap(({data}) => (this.queryData = data)),
+        map(({query, data}) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query})),
         filter(({queryItems}) => this.itemsChanged(queryItems))
       )
       .subscribe(({queryItems, query}) => {

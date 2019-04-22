@@ -29,6 +29,7 @@ import {PiePlotMaker} from './plot-maker/pie-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {createRange} from './plot-maker/plot-util';
 import {environment} from '../../../../../environments/environment';
+import {isNumeric} from '../../../../shared/utils/common.utils';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -95,7 +96,14 @@ export class ChartVisualizer {
 
   private checkLayoutRange() {
     const {yaxis, yaxis2} = this.layout;
-    if (!yaxis || !yaxis.range || !yaxis2 || !yaxis2.range) {
+    if (
+      !yaxis ||
+      !yaxis.range ||
+      !yaxis2 ||
+      !yaxis2.range ||
+      !this.isNumericRange(yaxis.range) ||
+      !this.isNumericRange(yaxis2.range)
+    ) {
       return;
     }
 
@@ -104,6 +112,10 @@ export class ChartVisualizer {
 
     this.layout.yaxis.range = range;
     this.layout.yaxis2.range = range;
+  }
+
+  private isNumericRange(range: any[]): boolean {
+    return (range || []).every(val => isNumeric(val));
   }
 
   private dataValues(data: Data): any[] {
