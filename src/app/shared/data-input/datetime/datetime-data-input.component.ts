@@ -134,6 +134,11 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onValueChange(date: Date) {
+    const value = date && date.toISOString();
+    this.valueChange.emit(value);
+  }
+
+  public onSave(date: Date) {
     if (this.preventSaving) {
       this.preventSaving = false;
       return;
@@ -150,7 +155,13 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
     if (value !== previousValue) {
       this.save.emit(value);
+    } else {
+      this.cancel.emit();
     }
+  }
+
+  public onCancel() {
+    this.cancel.emit();
   }
 
   private transformValue(value: string): string {

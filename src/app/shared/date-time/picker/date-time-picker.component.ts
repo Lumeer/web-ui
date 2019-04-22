@@ -28,6 +28,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -37,6 +38,8 @@ import {
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {BsDatepickerInlineConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
 
@@ -46,7 +49,7 @@ import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
   styleUrls: ['./date-time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -65,6 +68,12 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
   @Output()
   public valueChange = new EventEmitter<Date>();
 
+  @Output()
+  public save = new EventEmitter<Date>();
+
+  @Output()
+  public cancel = new EventEmitter();
+
   @ViewChild('dateTimePicker')
   public dateTimePicker: TemplateRef<any>;
 
@@ -78,6 +87,8 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
 
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
+
+  private subscriptions = new Subscription();
 
   constructor(localeService: BsLocaleService, private overlay: Overlay, private viewContainer: ViewContainerRef) {
     localeService.use(environment.locale);
@@ -95,11 +106,22 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
     }
   }
 
+  public ngOnInit() {
+    this.subscriptions.add(this.subscribeToDateChange());
+  }
+
+  private subscribeToDateChange(): Subscription {
+    return this.dateControl.valueChanges
+      .pipe(filter(value => value !== this.value))
+      .subscribe(value => this.valueChange.emit(value));
+  }
+
   public ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dateTimePicker, this.viewContainer);
   }
 
   public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
     this.close();
   }
 
@@ -173,21 +195,18 @@ export class DateTimePickerComponent implements OnChanges, AfterViewInit, OnDest
     }
   }
 
-  private save() {
-    this.valueChange.emit(this.dateControl.value);
-  }
-
   public onDateChange(date: Date) {
     this.dateControl.setValue(date);
   }
 
   public onCancelClick() {
     this.close();
+    this.cancel.emit();
   }
 
   public onSaveClick() {
     this.close();
-    this.save();
+    this.save.emit(this.dateControl.value);
   }
 
   public get dateControl(): AbstractControl {
