@@ -1,4 +1,5 @@
 {
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
   "extends": ["rxjs-tslint-rules"],
   "rules": {
     "class-name": true,

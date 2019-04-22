@@ -123,6 +123,7 @@
     "rxjs-tslint-rules": "^4.20.0",
     "ts-node": "~8.1.0",
     "tslint": "~5.15.0",
+    "tslint-microsoft-contrib": "^6.1.1",
     "typescript": "~3.2.4"
   },
   "bundlesize": [
