@@ -360,6 +360,9 @@ export function getPercentageSaveValue(value: any): number | string {
       }
     }
   } else {
+    if (text !== undefined && text.length === 0) {
+      return '';
+    }
     if (isNumeric(text)) {
       try {
         return moveDecimalComma(toNumber(text), -2);

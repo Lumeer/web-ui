@@ -224,14 +224,20 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
         this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
       } else {
-        this.attribute$
-          .pipe(
-            filter(attribute => !!attribute && !!attribute.constraint),
-            map(attribute => !isValueValid(this.editedValue, attribute.constraint)),
-            filter(prevent => prevent),
-            first()
-          )
-          .subscribe(() => this.editing$.next(false));
+        if (this.edited) {
+          this.attribute$.pipe(first()).subscribe(attribute => {
+            if (attribute && attribute.constraint) {
+              if (isValueValid(this.editedValue, attribute.constraint)) {
+                this.onValueSave(this.editedValue);
+              }
+            } else {
+              this.onValueSave(this.editedValue);
+            }
+            this.editing$.next(false);
+          });
+        } else {
+          this.editing$.next(false);
+        }
       }
     }
     if (changes.document || changes.linkInstace) {
