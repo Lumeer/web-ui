@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, Vie
 import {Store} from '@ngrx/store';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
@@ -73,10 +73,16 @@ export class TableHiddenColumnComponent implements OnChanges {
 
   public getAttributes(part: TableConfigPart): Observable<Attribute[]> {
     if (part.collectionId) {
-      return this.collection$.pipe(map(collection => collection.attributes));
+      return this.collection$.pipe(
+        filter(collection => !!collection),
+        map(collection => collection.attributes)
+      );
     }
     if (part.linkTypeId) {
-      return this.linkType$.pipe(map(linkType => linkType.attributes));
+      return this.linkType$.pipe(
+        filter(linkType => !!linkType),
+        map(linkType => linkType.attributes)
+      );
     }
   }
 

@@ -1,5 +1,6 @@
 <ng-template #dateTimePicker>
   <div class="card"
+       (dblclick)="onDoubleClick($event)"
        (click)="onClick($event)">
     <div class="d-flex"
          [class.flex-column]="!(options | hasTimeOption)"

@@ -75,6 +75,10 @@ export class UserMenuComponent {
         id: 'button.dismiss',
         value: 'Dismiss',
       }),
+      doneBtnText: this.i18n({
+        id: 'button.onward',
+        value: 'Onward!',
+      }),
       onReset: () => this.dismissWizard(),
     });
 

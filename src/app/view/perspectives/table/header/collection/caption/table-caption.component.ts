@@ -60,11 +60,13 @@ export class TableCaptionComponent implements OnChanges {
 
     const tableElement = getTableElement(this.cursor.tableId);
 
-    const captionHeightValue = tableElement.style.getPropertyValue('--caption-height') || '';
-    const captionHeight = Number(captionHeightValue.split('px')[0] || 0);
+    if (tableElement) {
+      const captionHeightValue = tableElement.style.getPropertyValue('--caption-height') || '';
+      const captionHeight = Number(captionHeightValue.split('px')[0] || 0);
 
-    if (height > captionHeight) {
-      tableElement.style.setProperty('--caption-height', `${height}px`);
+      if (height > captionHeight) {
+        tableElement.style.setProperty('--caption-height', `${height}px`);
+      }
     }
   }
 }

@@ -121,6 +121,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
           this.store$.pipe(
             select(selectTablePart(cursor)),
             take(1),
+            filter(part => !!part),
             switchMap(part => this.collectionPermissions.transform({id: part.collectionId, name: null})),
             take(1),
             filter(() => !!cursor.rowPath),

@@ -1,4 +1,6 @@
 <div class="mt-2" *ngIf="{views: views$ | async, queryData: queryData$ | async} as data">
+  <size-slider class="d-flex justify-content-end mb-2"
+               [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
 
   <ng-container *ngIf="!isLoading() && data.views">
 
@@ -6,6 +8,7 @@
       <view-detail *ngFor="let view of (maxLines > 0 ? (data.views | slice:0:maxLines) : data.views); trackBy:trackByView"
                    [view]="view"
                    [queryData]="data.queryData"
+                   [viewSize]="size"
                    (delete)="onDeleteView(view)"
                    (clicked)="showView(view)">
       </view-detail>

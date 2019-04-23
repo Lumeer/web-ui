@@ -39,6 +39,8 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {Query} from '../../../../core/store/navigation/query';
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
+import {SizeType} from '../../../../shared/slider/size-type';
+import {UserSettingsService} from '../../../../core/service/user-settings.service';
 
 @Component({
   selector: 'search-views',
@@ -52,6 +54,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public queryData$: Observable<QueryData>;
   public query: Query;
 
+  public size: SizeType;
   private subscriptions = new Subscription();
   private viewsLoaded: boolean;
   private workspace: Workspace;
@@ -60,6 +63,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     private router: Router,
     private i18n: I18n,
     private notificationService: NotificationService,
+    private userSettingsService: UserSettingsService,
     private store$: Store<AppState>
   ) {}
 
@@ -67,6 +71,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
     this.subscribeToNavigation();
     this.subscribeToData();
+    this.initSettings();
   }
 
   public ngOnDestroy() {
@@ -137,5 +142,17 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  public onSizeChange(newSize: SizeType) {
+    this.size = newSize;
+    const userSettings = this.userSettingsService.getUserSettings();
+    userSettings.viewSize = newSize;
+    this.userSettingsService.updateUserSettings(userSettings);
+  }
+
+  private initSettings() {
+    const userSettings = this.userSettingsService.getUserSettings();
+    this.size = userSettings.viewSize ? userSettings.viewSize : SizeType.XL;
   }
 }
