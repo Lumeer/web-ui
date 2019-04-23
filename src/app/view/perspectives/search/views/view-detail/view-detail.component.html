@@ -2,43 +2,41 @@
                   clickable: !(queryItems$ | async | containsDeletedQueryItem)} as data">
 
   <div class="card p-2 mb-2 view"
-       [class.mb-2]="viewSize !== sizeS"
-       [class.mb-1]="viewSize === sizeS"
-       [class.pb-3]="viewSize !== sizeS"
+       [class.mb-2]="viewSize !== sizeType.S"
+       [class.mb-1]="viewSize === sizeType.S"
+       [class.pb-3]="viewSize !== sizeType.S"
        [class.view-hover]="data.clickable"
        (click)="data.clickable && onClicked()">
 
     <div class="d-flex flex-row">
       <div class="flex-column align-self-center">
-        <i [ngClass]="(viewSize === sizeXL || viewSize  === sizeL) ? 'fa-3x' : (viewSize === sizeM ? 'fa-2x' : '')"
+        <i [ngClass]="(viewSize === sizeType.XL || viewSize  === sizeType.L) ? 'fa-3x' : (viewSize === sizeType.M ? 'fa-2x' : '')"
            class="fa-fw mr-2 {{getIconForPerspective(view.perspective)}} align-self-center"
            aria-hidden="true"></i>&nbsp;
       </div>
-      <div class="flex-column flex-fill" [class.align-self-center]="viewSize !== sizeXL">
+      <div class="flex-column flex-fill" [class.align-self-center]="viewSize !== sizeType.XL">
         <div class="d-flex flex-row align-items-center">
           <span class="ml-1 text-nowrap text-truncate font-weight-bold"
-                [class.title]="viewSize !== sizeS">
+                [class.title]="viewSize !== sizeType.S">
             {{view.name}}
           </span>
 
-          <div class="flex-grow-1 text-right">
-            <i *ngIf="view | permissions:viewType:'manage' | async"
-               class="fas fa-fw fa-share-alt mr-2 text-success ml-auto cursor-pointer"
+          <span class="flex-grow-1 text-right" *ngIf="view | permissions:viewType:'manage' | async">
+            <i class="fas fa-fw fa-share-alt mr-2 text-success ml-auto cursor-pointer"
                (click)="$event.stopPropagation(); onShareClick()"
                title="Share" i18n-title="@@button.share"
                aria-hidden="true">
             </i>
-            <i *ngIf="view | permissions:viewType:'manage' | async"
-               class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
+            <i class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
                (click)="$event.stopPropagation(); onDelete()"
                title="Delete" i18n-title="@@delete"
                aria-hidden="true">
             </i>
-          </div>
+          </span>
 
         </div>
 
-        <div class="d-flex flex-wrap" *ngIf="viewSize === sizeXL">
+        <div class="d-flex flex-wrap" *ngIf="viewSize === sizeType.XL">
           <query-item *ngFor="let queryItem of data.queryItems; trackBy:trackByQueryItem; let isLast = last"
                       [queryItem]="queryItem"
                       [readonly]="true"

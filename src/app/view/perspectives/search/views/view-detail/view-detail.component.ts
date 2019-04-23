@@ -64,10 +64,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
 
   public readonly viewType = ResourceType.View;
 
-  public sizeXL = SizeType.XL;
-  public sizeL = SizeType.L;
-  public sizeM = SizeType.M;
-  public sizeS = SizeType.S;
+  public readonly sizeType = SizeType;
 
   public constructor(private dialogService: DialogService) {}
 
