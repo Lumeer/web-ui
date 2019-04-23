@@ -27,6 +27,7 @@ export interface DateTimeOptions {
   minutes?: boolean;
   seconds?: boolean;
   meridian?: boolean;
+  milliseconds?: boolean;
 }
 
 export function createDateTimeOptions(format: string): DateTimeOptions {
@@ -39,6 +40,7 @@ export function createDateTimeOptions(format: string): DateTimeOptions {
       minutes: format.includes('m'),
       seconds: format.includes('s'),
       meridian: format.includes('a'),
+      milliseconds: format.includes('S'),
     }
   );
 }
@@ -48,7 +50,7 @@ export function hasDateOption(options: DateTimeOptions): boolean {
 }
 
 export function hasTimeOption(options: DateTimeOptions): boolean {
-  return options && (options.hours || options.minutes || options.seconds);
+  return options && (options.hours || options.minutes || options.seconds || options.milliseconds);
 }
 
 export function detectDatePickerViewMode(options: DateTimeOptions): BsDatepickerViewMode {

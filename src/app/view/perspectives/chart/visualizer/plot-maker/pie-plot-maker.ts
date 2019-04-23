@@ -18,11 +18,14 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartDataSet} from '../../data/convertor/chart-data';
+import {ChartAxisCategory, ChartDataSet, convertChartDateFormat} from '../../data/convertor/chart-data';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
+import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint';
+import * as moment from 'moment';
+import {formatDateTimeDataValue, formatPercentageDataValue} from '../../../../../shared/utils/data.utils';
 
 const MAX_COLUMNS = 3;
 
@@ -49,7 +52,7 @@ export class PiePlotMaker extends PlotMaker {
     return this.chartData.sets.filter(
       set =>
         set.yAxisType === ChartAxisType.Y1 &&
-        this.isNumericCategory(set.category) &&
+        this.isNumericCategory(set.yAxis && set.yAxis.category) &&
         set.points.some(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
     );
   }
@@ -84,7 +87,7 @@ export class PiePlotMaker extends PlotMaker {
     set.points
       .filter(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
       .forEach(point => {
-        traceX.push(point.x);
+        traceX.push(this.mapPointXValue(point.x));
         traceY.push(point.y);
       });
 
@@ -97,6 +100,25 @@ export class PiePlotMaker extends PlotMaker {
     }
 
     return data;
+  }
+
+  private mapPointXValue(value: any): any {
+    if (!value) {
+      return value;
+    }
+
+    const category = this.axisCategory(ChartAxisType.X);
+    const config = this.axisConfig(ChartAxisType.X);
+
+    if (category === ChartAxisCategory.Date) {
+      const dateConfig = config as DateTimeConstraintConfig;
+      const format = convertChartDateFormat(dateConfig && dateConfig.format);
+      return formatDateTimeDataValue(moment(value, format).toDate(), dateConfig);
+    } else if (category === ChartAxisCategory.Percentage) {
+      return value + '%';
+    }
+
+    return value;
   }
 
   public createLayout(): Partial<Layout> {

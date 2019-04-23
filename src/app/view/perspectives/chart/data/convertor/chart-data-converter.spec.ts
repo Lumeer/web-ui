@@ -85,7 +85,9 @@ describe('Chart data converter single collection', () => {
       sets: [
         {
           yAxisType: ChartAxisType.Y1,
-          category: ChartAxisCategory.Number,
+          yAxis: {
+            category: ChartAxisCategory.Number,
+          },
           name: '',
           draggable: false,
           points: [],
@@ -118,8 +120,11 @@ describe('Chart data converter single collection', () => {
         {id: null, x: 'Glass', y: undefined},
       ],
       color: '#ffffff',
-      category: ChartAxisCategory.Text,
-      config: undefined,
+      xAxis: {
+        category: ChartAxisCategory.Text,
+        config: undefined,
+      },
+      yAxis: undefined,
       draggable: false,
       name: undefined,
       yAxisType: ChartAxisType.Y1,
@@ -151,8 +156,11 @@ describe('Chart data converter single collection', () => {
         {id: 'D4', x: undefined, y: 0},
       ],
       color: '#ffffff',
-      category: ChartAxisCategory.Number,
-      config: undefined,
+      yAxis: {
+        category: ChartAxisCategory.Number,
+        config: undefined,
+      },
+      xAxis: undefined,
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
@@ -188,8 +196,14 @@ describe('Chart data converter single collection', () => {
       id: 'a2',
       points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
       color: '#ffffff',
-      category: ChartAxisCategory.Number,
-      config: undefined,
+      yAxis: {
+        category: ChartAxisCategory.Number,
+        config: undefined,
+      },
+      xAxis: {
+        category: ChartAxisCategory.Text,
+        config: undefined,
+      },
       name: 'Kala',
       draggable: true,
       yAxisType: ChartAxisType.Y1,
@@ -641,7 +655,9 @@ describe('Chart data converter linked collections', () => {
       sets: [
         {
           yAxisType: ChartAxisType.Y1,
-          category: ChartAxisCategory.Number,
+          yAxis: {
+            category: ChartAxisCategory.Number,
+          },
           name: '',
           draggable: false,
           points: [],

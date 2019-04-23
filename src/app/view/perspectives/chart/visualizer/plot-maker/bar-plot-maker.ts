@@ -18,7 +18,7 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartAxisCategory, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
@@ -48,7 +48,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     const traceX = [];
     const traceY = [];
 
-    const isYCategory = this.isAxisCategory(set.yAxisType);
+    const isYCategory = this.isAxisCategoryText(set.yAxisType);
     const additionalYValues = [];
     const addedYValues = new Set();
 
@@ -114,7 +114,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     for (const set of sets) {
       const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
-        if (set.category === ChartAxisCategory.Number) {
+        if (this.isNumericCategory(set.yAxis && set.yAxis.category)) {
           return {x: point.x, y: 0};
         }
         return {x: point.x, y: point.y};
@@ -133,7 +133,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    return {...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
+    return {...this.xAxisLayout(), ...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
   }
 
   private otherLayout(): Partial<Layout> {

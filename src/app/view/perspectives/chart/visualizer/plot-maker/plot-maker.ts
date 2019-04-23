@@ -20,8 +20,9 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {ChartAxisCategory, ChartData} from '../../data/convertor/chart-data';
-import {ChartAxisResourceType} from '../../../../../core/store/charts/chart';
+import {ChartAxisCategory, ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisResourceType, ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ConstraintConfig} from '../../../../../core/model/data/constraint';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -50,6 +51,34 @@ export abstract class PlotMaker {
 
   protected isNumericCategory(category: ChartAxisCategory) {
     return category === ChartAxisCategory.Percentage || category === ChartAxisCategory.Number;
+  }
+
+  protected isAxisCategoryText(type: ChartYAxisType): boolean {
+    return this.axisCategory(type) === ChartAxisCategory.Text;
+  }
+
+  protected axisCategory(type: ChartAxisType): ChartAxisCategory {
+    if (type === ChartAxisType.X) {
+      const setWithXAxis = this.chartData.sets.find(set => !!set.xAxis);
+      return (setWithXAxis && setWithXAxis.xAxis.category) || ChartAxisCategory.Text;
+    }
+
+    const sets = this.getAxisDataSets(type);
+    return (sets.length >= 1 && sets[0].yAxis && sets[0].yAxis.category) || ChartAxisCategory.Text;
+  }
+
+  protected axisConfig(type: ChartAxisType): ConstraintConfig {
+    if (type === ChartAxisType.X) {
+      const setWithXAxis = this.chartData.sets.find(set => !!set.xAxis);
+      return (setWithXAxis && setWithXAxis.xAxis.config) || {};
+    }
+
+    const sets = this.getAxisDataSets(type);
+    return (sets.length >= 1 && sets[0].yAxis && sets[0].yAxis.config) || {};
+  }
+
+  protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
+    return this.chartData.sets.filter(set => set.yAxisType === type);
   }
 }
 

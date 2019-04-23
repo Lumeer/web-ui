@@ -34,6 +34,11 @@ export interface ChartDataSet {
   name: string;
   draggable: boolean;
   resourceType: ChartAxisResourceType;
+  xAxis?: ChartDataSetAxis;
+  yAxis?: ChartDataSetAxis;
+}
+
+export interface ChartDataSetAxis {
   category: ChartAxisCategory;
   config?: ConstraintConfig;
 }
