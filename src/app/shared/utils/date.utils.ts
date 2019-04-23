@@ -18,9 +18,7 @@
  */
 
 import * as moment from 'moment';
-
-const dateTokens = ['Y', 'Q', 'D', 'G', 'g', 'W', 'w', 'E', 'e', 'D', 'd', 'L'];
-const timeTokens = ['H', 'h', 'k', 'A', 'a', 'm', 'S', 's', 'X', 'x'];
+import {createDateTimeOptions} from '../date-time/date-time-options';
 
 export function resetUnusedDatePart(date: Date, format: string): Date {
   return resetUnusedMomentPart(moment(date), format).toDate();
@@ -31,21 +29,64 @@ export function resetUnusedMomentPart(date: moment.Moment, format: string): mome
     return date;
   }
 
-  if (dateTokens.every(token => !format.includes(token))) {
-    return resetUnusedDateUnits(date);
+  const dateTimeOptions = createDateTimeOptions(format);
+
+  let dateCopy = date;
+  if (!dateTimeOptions.year) {
+    dateCopy = resetYear(dateCopy);
   }
 
-  if (timeTokens.every(token => !format.includes(token))) {
-    return resetUnusedTimeUnits(date);
+  if (!dateTimeOptions.month) {
+    dateCopy = resetMonth(dateCopy);
   }
 
-  return date;
+  if (!dateTimeOptions.day) {
+    dateCopy = resetDay(dateCopy);
+  }
+
+  if (!dateTimeOptions.hours) {
+    dateCopy = resetHours(dateCopy);
+  }
+
+  if (!dateTimeOptions.minutes) {
+    dateCopy = resetMinutes(dateCopy);
+  }
+
+  if (!dateTimeOptions.seconds) {
+    dateCopy = resetSeconds(dateCopy);
+  }
+
+  if (!dateTimeOptions.milliseconds) {
+    dateCopy = resetMilliseconds(dateCopy);
+  }
+
+  return dateCopy;
 }
 
-function resetUnusedDateUnits(date: moment.Moment): moment.Moment {
-  return date.clone().set({date: 1, month: 0, year: 1970});
+function resetYear(date: moment.Moment): moment.Moment {
+  return date.clone().year(1970);
 }
 
-function resetUnusedTimeUnits(date: moment.Moment): moment.Moment {
-  return date.clone().startOf('day');
+function resetMonth(date: moment.Moment): moment.Moment {
+  return date.clone().month(0);
+}
+
+function resetDay(date: moment.Moment): moment.Moment {
+  return date.clone().date(1);
+}
+
+function resetHours(date: moment.Moment): moment.Moment {
+  return date.clone().hours(0);
+}
+
+function resetMinutes(date: moment.Moment): moment.Moment {
+  return date.clone().minutes(0);
+}
+
+function resetSeconds(date: moment.Moment): moment.Moment {
+  return date.clone().seconds(0);
+}
+
+function resetMilliseconds(date: moment.Moment): moment.Moment {
+  return date.clone().milliseconds(0);
 }

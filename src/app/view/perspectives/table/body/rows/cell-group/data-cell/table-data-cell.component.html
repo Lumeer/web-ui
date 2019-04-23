@@ -7,10 +7,11 @@
                       (edit)="onEdit()">
 </table-data-cell-menu>
 
-<data-input [constraint]="(attribute$ | async)?.constraint"
+<data-input *ngIf="{ hidden: hiddenInputValue$ | async} as inputValue"
+            [constraint]="(attribute$ | async)?.constraint"
             [focus]="true"
             [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || ((attribute$ | async)?.constraint?.type === constraintType.Boolean))"
-            [value]="(clearValue$ | async) ? '' : ((hiddenInputValue$ | async) || (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
+            [value]="(clearValue$ | async) ? '' : (inputValue.hidden || inputValue.hidden === 0 ? inputValue.hidden : (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
             (valueChange)="onValueChange($event)"
             (save)="onValueSave($event)"
             (cancel)="onCancelEditing()"

@@ -15,5 +15,7 @@
                   [options]="options"
                   [origin]="element"
                   [value]="value | parseDate: constraintConfig?.format"
-                  (valueChange)="onValueChange($event)">
+                  (valueChange)="onValueChange($event)"
+                  (save)="onSave($event)"
+                  (cancel)="onCancel()">
 </date-time-picker>

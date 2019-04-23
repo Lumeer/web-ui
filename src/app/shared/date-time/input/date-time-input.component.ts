@@ -91,6 +91,10 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public onValueChange(date: Date) {
+    // TODO
+  }
+
+  public onSave(date: Date) {
     this.valueChange.emit(resetUnusedDatePart(date, this.format));
   }
 }

@@ -39,7 +39,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     const traceX = [];
     const traceY = [];
 
-    const isYCategory = this.isAxisCategory(set.yAxisType);
+    const isYCategory = this.isAxisCategoryText(set.yAxisType);
     const additionalYValues = [];
     const addedYValues = new Set();
 
@@ -94,7 +94,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   }
 
   public createLayout(): Partial<Layout> {
-    return {...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
+    return {...this.xAxisLayout(), ...this.yAxis1Layout(), ...this.yAxis2Layout(), ...this.otherLayout()};
   }
 
   private otherLayout(): Partial<Layout> {
