@@ -66,6 +66,7 @@ import {
 } from '../../../../../core/store/collections/collection.util';
 import Big from 'big.js';
 import {mergePermissions} from '../../../../../shared/utils/resource.utils';
+import {resetUnusedMomentPart} from '../../../../../shared/utils/date.utils';
 
 // Document or LinkInstance
 interface ObjectData {
@@ -482,8 +483,11 @@ export class ChartDataConverter {
     let draggable = false;
     const canDragAxis = this.canDragAxis(config, yAxisType);
 
+    const xAxis = config.axes[ChartAxisType.X];
+    const xConstraint = this.axisConstraint(xAxis);
+
     const yAxis = config.axes[yAxisType];
-    const yConstraint = findAttributeConstraint(axisResource.attributes, yAxis && yAxis.attributeId);
+    const yConstraint = this.axisConstraint(yAxis);
 
     for (const key of xEntries) {
       const nestedValue: Record<string, {id: string; value: any}[]> = data[key];
@@ -524,8 +528,14 @@ export class ChartDataConverter {
         points: pointsMap[name],
         color,
         name,
-        category: this.getAxisCategory(isNumericMap[name], yConstraint),
-        config: yConstraint && yConstraint.config,
+        yAxis: {
+          category: this.getAxisCategory(isNumericMap[name], yConstraint),
+          config: yConstraint && yConstraint.config,
+        },
+        xAxis: {
+          category: this.getAxisCategory(false, xConstraint),
+          config: xConstraint && xConstraint.config,
+        },
         yAxisType,
         draggable,
         resourceType: axisResourceTypeFromResourceId(axisResource.id),
@@ -534,6 +544,17 @@ export class ChartDataConverter {
     }
 
     return sets;
+  }
+
+  private axisConstraint(axis: ChartAxis): Constraint {
+    if (axis.axisResourceType === ChartAxisResourceType.Collection) {
+      const collection = (this.collections || []).find(coll => coll.id === axis.resourceId);
+      return collection && findAttributeConstraint(collection.attributes, axis.attributeId);
+    } else if (axis.axisResourceType === ChartAxisResourceType.LinkType) {
+      const linkType = (this.linkTypes || []).find(lt => lt.id === axis.resourceId);
+      return linkType && findAttributeConstraint(linkType.attributes, axis.attributeId);
+    }
+    return null;
   }
 
   private formatChartValue(value: any, constraint: Constraint): any {
@@ -552,8 +573,10 @@ export class ChartDataConverter {
   }
 
   private formatDateTimeValue(value: any, config: DateTimeConstraintConfig): string {
-    const momentDate = parseMomentDate(value, config && config.format);
-    return momentDate.format(convertChartDateFormat(config && config.format));
+    const format = config && config.format;
+    const momentDate = parseMomentDate(value, format);
+    const resetDate = resetUnusedMomentPart(momentDate, format);
+    return resetDate.format(convertChartDateFormat(format));
   }
 
   private formatPercentageValue(value: any, config: PercentageConstraintConfig): string {
@@ -649,12 +672,17 @@ export class ChartDataConverter {
 
     const name = this.getAttributeNameForAxis(yAxis, axisResource);
 
+    const axis = {
+      category: this.getAxisCategory(isNum, constraint),
+      config: constraint && constraint.config,
+    };
+
     const dataSet: ChartDataSet = {
       id: (yAxis && yAxis.attributeId) || null,
       points,
       color: axisResource.color,
-      category: this.getAxisCategory(isNum, constraint),
-      config: constraint && constraint.config,
+      yAxis: yAxis && axis,
+      xAxis: xAxis && axis,
       yAxisType,
       name,
       draggable,
@@ -749,8 +777,11 @@ export class ChartDataConverter {
     const canDragAxis = this.canDragAxis(config, yAxisType);
     const points: ChartPoint[] = [];
 
-    const yAxis = config.axes && config.axes[yAxisType];
-    const constraint = findAttributeConstraint(axisResource.attributes, yAxis.attributeId);
+    const xAxis = config.axes[ChartAxisType.X];
+    const xConstraint = this.axisConstraint(xAxis);
+
+    const yAxis = config.axes[yAxisType];
+    const yConstraint = this.axisConstraint(yAxis);
 
     for (const key of xEntries) {
       const valueObjects: {id: string; value: any}[] = data[key].filter(
@@ -758,10 +789,10 @@ export class ChartDataConverter {
       );
       const values = valueObjects.map(obj => obj.value);
 
-      let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, constraint);
+      let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, yConstraint);
       if (isNotNullOrUndefined(yValue)) {
         const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
-        yValue = this.formatChartValue(yValue, constraint);
+        yValue = this.formatChartValue(yValue, yConstraint);
         isNum = isNum && isNumeric(yValue);
 
         points.push({id, x: key, y: yValue});
@@ -775,8 +806,14 @@ export class ChartDataConverter {
       id: this.yAxisCollectionId(config, yAxisType),
       points,
       color: axisResource && axisResource.color,
-      category: this.getAxisCategory(isNum, constraint),
-      config: constraint && constraint.config,
+      yAxis: {
+        category: this.getAxisCategory(isNum, yConstraint),
+        config: yConstraint && yConstraint.config,
+      },
+      xAxis: {
+        category: this.getAxisCategory(false, xConstraint),
+        config: xConstraint && xConstraint.config,
+      },
       yAxisType,
       name,
       draggable,
@@ -827,7 +864,9 @@ export class ChartDataConverter {
     const color = this.collections && this.collections[0] && this.collections[0].color;
     const emptySet: ChartDataSet = {
       yAxisType: ChartAxisType.Y1,
-      category: ChartAxisCategory.Number,
+      yAxis: {
+        category: ChartAxisCategory.Number,
+      },
       name: '',
       draggable: false,
       points: [],
