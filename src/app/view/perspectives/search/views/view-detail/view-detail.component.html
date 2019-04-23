@@ -16,12 +16,12 @@
       </div>
       <div class="flex-column flex-fill" [class.align-self-center]="viewSize !== sizeType.XL">
         <div class="d-flex flex-row align-items-center">
-          <span class="ml-1 text-nowrap text-truncate font-weight-bold"
+          <span class="ml-1 text-nowrap text-truncate font-weight-bold flex-grow-1"
                 [class.title]="viewSize !== sizeType.S">
             {{view.name}}
           </span>
 
-          <span class="flex-grow-1 text-right" *ngIf="view | permissions:viewType:'manage' | async">
+          <span class="text-right" *ngIf="view | permissions:viewType:'manage' | async">
             <i class="fas fa-fw fa-share-alt mr-2 text-success ml-auto cursor-pointer"
                (click)="$event.stopPropagation(); onShareClick()"
                title="Share" i18n-title="@@button.share"
