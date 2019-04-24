@@ -35,6 +35,8 @@ import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/m
 import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 import {BehaviorSubject} from 'rxjs';
 import {ResourceType} from '../../../../../core/model/resource-type';
+import {SizeType} from '../../../../../shared/slider/size-type';
+import {DialogService} from '../../../../../dialog/dialog.service';
 
 @Component({
   selector: 'view-detail',
@@ -49,6 +51,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Input()
   public queryData: QueryData;
 
+  @Input()
+  public viewSize: SizeType;
+
   @Output()
   public clicked = new EventEmitter();
 
@@ -58,6 +63,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
 
   public readonly viewType = ResourceType.View;
+
+  public readonly sizeType = SizeType;
+
+  public constructor(private dialogService: DialogService) {}
 
   public ngOnInit() {
     this.createQueryItems();
@@ -88,5 +97,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       return;
     }
     this.queryItems$.next(new QueryItemsConverter(this.queryData).fromQuery(this.view.query));
+  }
+
+  public onShareClick() {
+    this.dialogService.openShareViewDialog(this.view.code);
   }
 }

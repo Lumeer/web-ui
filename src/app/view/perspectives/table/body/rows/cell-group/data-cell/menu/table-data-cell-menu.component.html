@@ -11,6 +11,26 @@
     </div>
   </ng-template>
 
+  <ng-container *ngIf="created">
+    <ng-template contextMenuItem
+                 divider="true">
+    </ng-template>
+    <ng-template (execute)="onAddRow(0)"
+                 [enabled]="allowedPermissions?.writeWithView"
+                 contextMenuItem>
+      <i class="fa fa-fw fa-arrow-to-top mr-1"
+         aria-hidden="true"></i>
+      <span i18n="@@table.body.row.add.above">Add row above</span>
+    </ng-template>
+    <ng-template (execute)="onAddRow(1)"
+                 [enabled]="allowedPermissions?.writeWithView"
+                 contextMenuItem>
+      <i class="fa fa-fw fa-arrow-to-bottom mr-1"
+         aria-hidden="true"></i>
+      <span i18n="@@table.body.row.add.below">Add row below</span>
+    </ng-template>
+  </ng-container>
+
   <ng-container *ngIf="tableRow$ | async">
     <ng-container *ngIf="allowedPermissions?.writeWithView && canManageConfig">
       <ng-template contextMenuItem
@@ -80,26 +100,6 @@
           </div>
         </ng-template>
       </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="created">
-      <ng-template contextMenuItem
-                   divider="true">
-      </ng-template>
-      <ng-template (execute)="onAddRow(0)"
-                   [enabled]="allowedPermissions?.writeWithView"
-                   contextMenuItem>
-        <i class="fa fa-fw fa-arrow-to-top mr-1"
-           aria-hidden="true"></i>
-        <span i18n="@@table.body.row.add.above">Add row above</span>
-      </ng-template>
-      <ng-template (execute)="onAddRow(1)"
-                   [enabled]="allowedPermissions?.writeWithView"
-                   contextMenuItem>
-        <i class="fa fa-fw fa-arrow-to-bottom mr-1"
-           aria-hidden="true"></i>
-        <span i18n="@@table.body.row.add.below">Add row below</span>
-      </ng-template>
     </ng-container>
 
     <ng-template contextMenuItem

@@ -176,17 +176,17 @@
                 <source>Collections</source>
                 <target>Kolekce</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="search.tab.documents" datatype="html">
                 <source>Records</source>
                 <target>Záznamy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
             <trans-unit id="search.tab.views" datatype="html">
                 <source>Views</source>
                 <target>Pohledy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add collections.
   </source><target>Je mi líto, ale nemáte oprávnění přidávat kolekce.</target>
 
@@ -389,16 +389,16 @@
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.body.row.move-up" datatype="html">
         <source>Move up</source><target>Posunout nahoru</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="table.body.row.move-down" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="table.body.row.move-down" datatype="html">
         <source>Move down</source><target>Posunout dolů</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit>
             <trans-unit id="table.body.row.unlink" datatype="html">
                 <source>Unlink row</source>
                 <target>Odpojit řádek</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="table.header.add-button" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.header.add-button" datatype="html">
         <source>Link collection</source><target>Připojit kolekci</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
@@ -1144,7 +1144,7 @@
                 <source>Organization does not exist</source>
                 <target state="final">Organizace neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organization.permission.missing" datatype="html">
                 <source>You do not have permission to access this organization</source>
                 <target state="final">Nemáte přístupové právo k této organizaci</target>
@@ -2023,32 +2023,35 @@
         </source>
                 <target>Záznamy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="search.all.views" datatype="html">
                 <source>
           Views
         </source>
                 <target>Pohledy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
             <trans-unit id="table.body.row.add.above" datatype="html">
                 <source>Add row above</source>
                 <target>Přidat řádek nad</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
             <trans-unit id="table.body.row.add.below" datatype="html">
                 <source>Add row below</source>
                 <target>Přidat řádek pod</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="table.body.row.indent" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="table.body.row.indent" datatype="html">
         <source>Indent</source><target>Odsadit</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="table.body.row.outdent" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="table.body.row.outdent" datatype="html">
         <source>Outdent</source><target>Snížit odsazení</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="table.body.row.clone" datatype="html">
+        <source>Duplicate row</source><target>Zkopírovat řádek</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="file.not.exist" datatype="html">
                 <source>Collection does not exist</source>
                 <target>Kolekce neexistuje</target>
@@ -2497,7 +2500,7 @@
           </source>
                 <target>Zobrazit vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Record</source>
                 <target>Smazat záznam</target>
@@ -2707,12 +2710,12 @@
       </source>
                 <target>Je mi líto, ale něco se porouchalo.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.required" datatype="html">
                 <source>Required</source>
                 <target>Povinné</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.label" datatype="html">
                 <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
@@ -2799,7 +2802,7 @@
         </source>
                 <target>Kolekce</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.defaultAttribute" datatype="html">
                 <source>Set as displayed attribute</source>
                 <target>Nastavit jako hlavní atribut</target>
@@ -2895,7 +2898,13 @@
             </trans-unit><trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source><target>Ukončit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="menu.appTour.invocationError" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="button.onward" datatype="html">
+        <source>Onward!</source><target>Vzhůru do toho!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.appTour.invocationError" datatype="html">
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source><target>Nemohu spustit prohlídku aplikace, protože jsem nenalezl žádný projekt, na kterém by ji bylo možné ukázat. Přejděte na libovolnou stránku s obsahem projektu a zkuste to prosím znovu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
@@ -3112,14 +3121,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>
@@ -3139,7 +3148,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="keyValue.configure.constraint" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="keyValue.configure.constraint" datatype="html">
         <source>Set Attribute Type</source><target>Nastavit typ atributu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
@@ -3324,7 +3333,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="delete" datatype="html">
         <source>Delete</source><target>Odstranit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
         <source>
       You can have only a single rule in the Free Plan.
     </source><target>

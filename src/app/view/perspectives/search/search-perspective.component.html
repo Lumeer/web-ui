@@ -11,6 +11,13 @@
              i18n="@@search.tab.all">All</a>
         </li>
         <li role="presentation" class="nav-item">
+          <a [routerLink]="'views'"
+             [queryParams]="{query: stringifyQuery()}"
+             [class.active]="isLinkActive('views')"
+             class="nav-link"
+             i18n="@@search.tab.views">Views</a>
+        </li>
+        <li role="presentation" class="nav-item">
           <a [routerLink]="'collections'"
              [queryParams]="{query: stringifyQuery()}"
              [class.active]="isLinkActive('collections')"
@@ -31,13 +38,6 @@
              class="nav-link"
              i18n="@@search.tab.links">Links</a>
         </li-->
-        <li role="presentation" class="nav-item">
-          <a [routerLink]="'views'"
-             [queryParams]="{query: stringifyQuery()}"
-             [class.active]="isLinkActive('views')"
-             class="nav-link"
-             i18n="@@search.tab.views">Views</a>
-        </li>
       </ul>
     </div>
     <div class="col"></div>
