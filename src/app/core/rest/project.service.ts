@@ -32,7 +32,7 @@ export class ProjectService extends PermissionService {
   }
 
   public getProjectCodes(organizationId: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix(organizationId)}/info/codes`).pipe();
+    return this.httpClient.get<string[]>(`${this.baseApiPrefix(organizationId)}/info/codes`).pipe();
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
@@ -40,7 +40,7 @@ export class ProjectService extends PermissionService {
   }
 
   public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {
-    return this.httpClient.get<ProjectDto>(`${this.apiPrefix(organizationId)}/code/${projectCode}`);
+    return this.httpClient.get<ProjectDto>(`${this.baseApiPrefix(organizationId)}/code/${projectCode}`);
   }
 
   public deleteProject(organizationId: string, projectId: string): Observable<HttpResponse<any>> {
@@ -54,12 +54,20 @@ export class ProjectService extends PermissionService {
     return this.httpClient.post<ProjectDto>(this.apiPrefix(organizationId), project);
   }
 
+  public applyTemplate(organizationId: string, projectId: string, template: string): Observable<any> {
+    return this.httpClient.post(`${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`, {});
+  }
+
   public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {
     return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
   }
 
   private apiPrefix(organizationId: string, projectId?: string): string {
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects${projectId ? `/${projectId}` : ''}`;
+    return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
+  }
+
+  private baseApiPrefix(organizationId: string): string {
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects`;
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {

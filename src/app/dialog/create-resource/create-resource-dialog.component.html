@@ -1,67 +1,29 @@
-<dialog-wrapper [submitDisabled]="!form.valid"
+<dialog-wrapper [submitDisabled]="!resourceFormComponent || resourceFormComponent.form?.invalid"
                 [type]="'primary'"
-                [width]="350"
-                [showSubmit]="canShowContent()"
+                [fitToScreen]="true"
                 (submit)="onSubmit()">
   <span class="title" i18n="@@resource.new.dialog.title">
   Create new {resourceType, select, organization {Organization} project {Project}}
   </span>
 
-  <div class="body">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()"
-          *ngIf="canShowContent(); else invalidResource">
-      <div *ngIf="parentOrganization"
-           [ngClass]="isFirstProject ? 'alert alert-warning' : null">
-        <span *ngIf="isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle.first">Your organization is missing a project, create one first!</span>
-        <span *ngIf="!isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle">Create project in organization:</span><br/>
-        <i class="fa-fw {{ parentOrganization.icon }}"
-           [style.color]="parentOrganization.color"></i>&nbsp;
-        <span [style.color]="parentOrganization.color">[{{parentOrganization.code}}] {{parentOrganization.name}}</span>
-      </div>
+  <div class="body h-100">
+    <create-resource-dialog-form
+      class="d-block h-100"
+      *ngIf="contentValid$ | async; else contentInvalid"
+      [parentId]="parentId$ | async"
+      [resourceType]="resourceType"
+      (submitResource)="submitResource($event)">
+    </create-resource-dialog-form>
 
-      <hr *ngIf="parentOrganization"/>
-
-      <div class="form-group">
-
-        <label class="col-form-label mb-2">
-          <span i18n="@@resource.new.dialog.icon.label">
-            Icon:
-          </span>
-          <span class="ml-4 text-muted small" i18n="@@resource.new.dialog.icon.label.hint">
-            (click the icon to change it)
-          </span>
-        </label>
-
-        <icon-chooser [(color)]="color"
-                      [(icon)]="icon"
-                      class="d-block mb-3">
-        </icon-chooser>
-      </div>
-
-      <resource-code-input
-        [form]="form"
-        (keydown.enter)="onEnter($event)">
-      </resource-code-input>
-
-      <resource-name-input
-        [form]="form"
-        (keydown.enter)="onEnter($event)">
-      </resource-name-input>
-
-    </form>
-
-    <ng-template #invalidResource>
-      <h4 class="text-danger text-center"
-          i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
-      </h4>
-    </ng-template>
-
-    <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>
   </div>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
   <span class="button-submit" i18n="@@button.create">Create</span>
 
 </dialog-wrapper>
+
+<ng-template #contentInvalid>
+  <h4 class="text-danger text-center"
+      i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
+  </h4>
+</ng-template>

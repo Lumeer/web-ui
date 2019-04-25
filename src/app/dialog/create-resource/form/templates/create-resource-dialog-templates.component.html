@@ -1,0 +1,9 @@
+<h5 i18n="templates.choose">Choose template</h5>
+
+<create-resource-dialog-template *ngFor="let template of templates; let first = first"
+                                 class="d-block"
+                                 [class.mt-2]="!first"
+                                 [template]="template"
+                                 [selected]="selectedTemplate === template.type"
+                                 (templateSelect)="onSelect(template)">
+</create-resource-dialog-template>

@@ -1,0 +1,14 @@
+<ng-container *ngIf="{parent: parent$ | async, isFirst: first$ | async} as data">
+  <div *ngIf="data.parent"
+       [ngClass]="data.isFirst ? 'alert alert-warning' : null">
+        <span *ngIf="data.isFirst" class="mr-2"
+              i18n="@@resource.new.dialog.project.subtitle.first">Your organization is missing a project, create one first!</span>
+    <span *ngIf="!data.isFirst" class="mr-2"
+          i18n="@@resource.new.dialog.project.subtitle">Create project in organization:</span><br/>
+    <i class="fa-fw {{ data.parent.icon }}"
+       [style.color]="data.parent.color"></i>&nbsp;
+    <span [style.color]="data.parent.color">[{{data.parent.code}}] {{data.parent.name}}</span>
+  </div>
+
+  <hr *ngIf="data.parent"/>
+</ng-container>

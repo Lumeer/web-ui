@@ -1,0 +1,44 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/bootstrap_var';
+
+$imageSize: 4rem;
+
+.wrapper {
+  border: $card-border-width solid transparent;
+  transition: box-shadow $animation-duration;
+  cursor: pointer;
+
+  &.selected {
+    border: $card-border-width solid $card-border-color;
+    box-shadow: $shadow-default;
+    background: $gray-200;
+  }
+
+  &:hover {
+    border: $card-border-width solid $card-border-color;
+    box-shadow: $shadow-default;
+  }
+}
+
+.image {
+  width: $imageSize;
+  height: $imageSize;
+  min-width: $imageSize;
+  min-height: $imageSize;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  i {
+    font-size: $imageSize;
+  }
+}
+
+.title {
+  font-size: 1rem;
+  line-height: 1rem;
+  margin-top: -0.1rem;
+  margin-bottom: 0.25rem;
+}
