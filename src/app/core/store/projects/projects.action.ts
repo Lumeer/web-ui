@@ -160,13 +160,7 @@ export namespace ProjectsAction {
   export class Delete implements Action {
     public readonly type = ProjectsActionType.DELETE;
 
-    public constructor(
-      public payload: {
-        organizationId: string;
-        projectId: string;
-        onSuccess?: () => void;
-      }
-    ) {}
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
   }
 
   export class DeleteSuccess implements Action {

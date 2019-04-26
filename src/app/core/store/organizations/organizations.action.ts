@@ -135,7 +135,7 @@ export namespace OrganizationsAction {
   export class Delete implements Action {
     public readonly type = OrganizationsActionType.DELETE;
 
-    public constructor(public payload: {organizationId: string; onSuccess?: () => void}) {}
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class DeleteSuccess implements Action {

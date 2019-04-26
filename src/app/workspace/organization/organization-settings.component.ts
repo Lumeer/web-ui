@@ -168,12 +168,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   private deleteOrganization() {
-    this.store$.dispatch(
-      new OrganizationsAction.Delete({
-        organizationId: this.organization$.getValue().id,
-        onSuccess: () => this.router.navigate(['/']),
-      })
-    );
+    this.store$.dispatch(new OrganizationsAction.Delete({organizationId: this.organization$.getValue().id}));
   }
 
   private updateOrganization(organization: Organization) {
