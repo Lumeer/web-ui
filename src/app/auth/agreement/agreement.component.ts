@@ -30,18 +30,18 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 
 const termsOfServiceLinks = {
-  cs: 'http://www.lumeer.io/cs/vseobecne-obchodni-podminky',
-  en: 'http://www.lumeer.io/terms-of-service',
+  cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',
+  en: 'https://www.lumeer.io/terms-of-service/',
 };
 
 const privacyPolicyLinks = {
-  cs: 'http://www.lumeer.io/cs/zasady-ochrany-osobnich-udaju',
-  en: 'http://www.lumeer.io/privacy-statement',
+  cs: 'https://www.lumeer.io/cs/zasady-ochrany-osobnich-udaju/',
+  en: 'https://www.lumeer.io/privacy-statement/',
 };
 
 const dataProcessingAgreementLinks = {
-  cs: 'http://www.lumeer.io/agree_news_cz.html',
-  en: 'http://www.lumeer.io/agree_news.html',
+  cs: 'https://www.lumeer.io/cs/souhlas-se-zpracovanim-osobnich-udaju-novinky/',
+  en: 'https://www.lumeer.io/agreement-with-personal-information-processing-news/',
 };
 
 @Component({
