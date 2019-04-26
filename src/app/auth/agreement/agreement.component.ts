@@ -30,13 +30,13 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 
 const termsOfServiceLinks = {
-  cs: 'http://www.lumeer.io/terms_service_cz.html',
-  en: 'http://www.lumeer.io/terms_service.html',
+  cs: 'http://www.lumeer.io/cs/vseobecne-obchodni-podminky',
+  en: 'http://www.lumeer.io/terms-of-service',
 };
 
 const privacyPolicyLinks = {
-  cs: 'http://www.lumeer.io/privacy_cz.html',
-  en: 'http://www.lumeer.io/privacy.html',
+  cs: 'http://www.lumeer.io/cs/zasady-ochrany-osobnich-udaju',
+  en: 'http://www.lumeer.io/privacy-statement',
 };
 
 const dataProcessingAgreementLinks = {

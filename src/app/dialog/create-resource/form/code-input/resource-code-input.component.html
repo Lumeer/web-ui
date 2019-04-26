@@ -29,7 +29,11 @@
                 i18n="@@resource.new.dialog.code.error.length.max">
             Code can have 5 characters at most.
           </span>
-    <span *ngIf="codeInput.errors.notUniqueCode"
+          <span *ngIf="codeInput.errors.required"
+          i18n="@@resource.new.dialog.code.error.required">
+            Code is required.
+          </span>
+          <span *ngIf="codeInput.errors.notUniqueCode"
           i18n="@@resource.new.dialog.code.error.duplicity">
             Sorry, this code is already taken. Try another!
           </span>

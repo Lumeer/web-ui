@@ -260,14 +260,7 @@ export class ProjectsEffects {
       const {organizationId, projectId} = action.payload;
       const project = projectsMap[projectId];
       return this.projectService.deleteProject(organizationId, projectId).pipe(
-        flatMap(() => {
-          const actions: Action[] = [new ProjectsAction.DeleteSuccess({...action.payload, projectCode: project.code})];
-
-          if (action.payload.onSuccess) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
-          }
-          return actions;
-        }),
+        map(() => new ProjectsAction.DeleteSuccess({...action.payload, projectCode: project.code})),
         catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
       );
     })
