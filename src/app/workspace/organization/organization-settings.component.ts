@@ -18,10 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -36,7 +37,6 @@ import {
 import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
-import {Router} from '@angular/router';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -100,14 +100,10 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.updateOrganization(organizationCopy);
   }
 
-  public onNewIcon(icon: string) {
-    const organizationCopy = {...this.organization$.getValue(), icon};
-    this.updateOrganization(organizationCopy);
-  }
-
-  public onNewColor(color: string) {
-    const organizationCopy = {...this.organization$.getValue(), color};
-    this.updateOrganization(organizationCopy);
+  public onNewColorOrIcon(event: {color: string; icon: string}) {
+    const {color, icon} = event;
+    const collection = {...this.organization$.getValue(), color, icon};
+    this.updateOrganization(collection);
   }
 
   public onProjectsClick() {

@@ -27,9 +27,6 @@ import {CreateCollectionDialogComponent} from './create-collection/create-collec
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
-import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
-import {ResourceCodeInputComponent} from './create-resource/resource-code-input/resource-code-input.component';
-import {ResourceNameInputComponent} from './create-resource/resource-name-input/resource-name-input.component';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
@@ -40,6 +37,7 @@ import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {CreateResourceDialogModule} from './create-resource/create-resource-dialog.module';
 
 @NgModule({
   imports: [
@@ -53,6 +51,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     AttributeTypeFormModule,
     CalendarEventDialogModule,
     ClickOutsideModule,
+    CreateResourceDialogModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,
@@ -60,16 +59,13 @@ import {ClickOutsideModule} from 'ng-click-outside';
     LinkNameInputComponent,
     CreateLinkDialogComponent,
     DialogBaseComponent,
-    CreateResourceDialogComponent,
-    ResourceCodeInputComponent,
-    ResourceNameInputComponent,
     FeedbackDialogComponent,
     PlayVideoComponent,
     AttributeTypeDialogComponent,
     AttributeFunctionDialogComponent,
     FullscreenDialogComponent,
   ],
-  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent, CreateResourceDialogComponent],
+  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent],
   exports: [DialogBaseComponent, FullscreenDialogComponent],
 })
 export class DialogModule {}

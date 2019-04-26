@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
+import {TemplateType} from '../../model/template';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -49,6 +50,9 @@ export enum ProjectsActionType {
   CHANGE_PERMISSION = '[Projects] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Projects] Change Permission :: Success',
   CHANGE_PERMISSION_FAILURE = '[Projects] Change Permission :: Failure',
+
+  APPLY_TEMPLATE = '[Projects] Apply Template',
+  APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
 
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
@@ -106,7 +110,9 @@ export namespace ProjectsAction {
   export class Create implements Action {
     public readonly type = ProjectsActionType.CREATE;
 
-    public constructor(public payload: {project: Project; callback?: (project: Project) => void}) {}
+    public constructor(
+      public payload: {project: Project; template?: TemplateType; callback?: (project: Project) => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
@@ -135,6 +141,18 @@ export namespace ProjectsAction {
 
   export class UpdateFailure implements Action {
     public readonly type = ProjectsActionType.UPDATE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class ApplyTemplate implements Action {
+    public readonly type = ProjectsActionType.APPLY_TEMPLATE;
+
+    public constructor(public payload: {organizationId: string; projectId: string; template: TemplateType}) {}
+  }
+
+  export class ApplyTemplateFailure implements Action {
+    public readonly type = ProjectsActionType.APPLY_TEMPLATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
@@ -224,6 +242,8 @@ export namespace ProjectsAction {
     | ChangePermission
     | ChangePermissionSuccess
     | ChangePermissionFailure
+    | ApplyTemplate
+    | ApplyTemplateFailure
     | SwitchWorkspace
     | ClearWorkspaceData;
 }

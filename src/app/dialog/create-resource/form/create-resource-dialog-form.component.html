@@ -1,0 +1,49 @@
+<form [formGroup]="form" class="row m-0 h-100" (ngSubmit)="onSubmit()">
+
+  <div class="col-12 p-0" [ngClass]="parentId ? 'col-lg-6 pr-lg-2 pr-0 pb-lg-0 pb-2' : ''">
+
+    <create-resource-dialog-parent
+      *ngIf="parentId"
+      [parentId]="parentId"
+      [resourceType]="resourceType">
+    </create-resource-dialog-parent>
+
+    <div class="form-group">
+
+      <label class="col-form-label mb-2">
+          <span i18n="@@resource.new.dialog.icon.label">
+            Icon:
+          </span>
+        <span class="ml-4 text-muted small" i18n="@@resource.new.dialog.icon.label.hint">
+            (click the icon to change it)
+          </span>
+      </label>
+
+      <icon-chooser [(color)]="color"
+                    [(icon)]="icon"
+                    class="d-block mb-3">
+      </icon-chooser>
+    </div>
+
+    <resource-code-input
+      [form]="form"
+      (keydown.enter)="onEnter($event)">
+    </resource-code-input>
+
+    <resource-name-input
+      [form]="form"
+      (keydown.enter)="onEnter($event)">
+    </resource-name-input>
+
+    <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>
+
+  </div>
+
+  <create-resource-dialog-templates *ngIf="parentId"
+                                    class="col-12 col-lg-6 p-0 pl-lg-2 pl-0 pt-lg-0 pt-2"
+                                    [selectedTemplate]="selectedTemplate$ | async"
+                                    (templateSelect)="onTemplateSelected($event)">
+  </create-resource-dialog-templates>
+
+</form>
+

@@ -105,14 +105,10 @@ export class ProjectSettingsComponent implements OnInit {
     this.updateProject(projectCopy);
   }
 
-  public onNewIcon(icon: string) {
-    const projectCopy = {...this.project$.getValue(), icon};
-    this.updateProject(projectCopy);
-  }
-
-  public onNewColor(color: string) {
-    const projectCopy = {...this.project$.getValue(), color};
-    this.updateProject(projectCopy);
+  public onNewColorOrIcon(event: {color: string; icon: string}) {
+    const {color, icon} = event;
+    const collection = {...this.project$.getValue(), color, icon};
+    this.updateProject(collection);
   }
 
   public goBack(): void {

@@ -7,8 +7,7 @@
       [restrictedValues]="organizationCodes$ | async"
       (back)="goBack()"
       (delete)="onDelete()"
-      (colorChange)="onNewColor($event)"
-      (iconChange)="onNewIcon($event)"
+      (colorIconChange)="onNewColorOrIcon($event)"
       (descriptionChange)="onNewDescription($event)"
       (nameChange)="onNewName($event)"
       (codeChange)="onNewCode($event)">

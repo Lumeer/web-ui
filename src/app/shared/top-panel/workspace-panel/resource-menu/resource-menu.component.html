@@ -7,13 +7,13 @@
 
   <resource-list
     *ngIf="type | isOrganizationType"
-    [currentCode]="resource?.code"
+    [currentId]="resource?.id"
     [organizations]="organizations$ | async"
     (onResourceSelect)="selectResource($event)">
   </resource-list>
   <resource-list
     *ngIf="!(type | isOrganizationType)"
-    [currentCode]="resource?.code"
+    [currentId]="resource?.id"
     [projects]="projects$ | async"
     (onResourceSelect)="selectResource($event)">
   </resource-list>

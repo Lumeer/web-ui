@@ -48,6 +48,8 @@ import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} fro
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
+import ApplyTemplate = ProjectsAction.ApplyTemplate;
+import {TemplateType} from '../../model/template';
 
 @Injectable()
 export class ProjectsEffects {
@@ -117,18 +119,27 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.project.organizationId];
-      const correlationId = action.payload.project.correlationId;
-      const projectDto = ProjectConverter.toDto(action.payload.project);
+      const {project, template, callback} = action.payload;
+      const organization = organizationsEntities[project.organizationId];
+      const projectDto = ProjectConverter.toDto(project);
 
-      return this.projectService.createProject(action.payload.project.organizationId, projectDto).pipe(
-        map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId)),
-        mergeMap(project => {
-          const actions: Action[] = [new ProjectsAction.CreateSuccess({project})];
+      return this.projectService.createProject(project.organizationId, projectDto).pipe(
+        map(dto => ProjectConverter.fromDto(dto, project.organizationId, project.correlationId)),
+        mergeMap(newProject => {
+          const actions: Action[] = [new ProjectsAction.CreateSuccess({project: newProject})];
 
-          const {callback} = action.payload;
+          if (template && template !== TemplateType.Empty) {
+            actions.push(
+              new ApplyTemplate({
+                organizationId: project.organizationId,
+                projectId: newProject.id,
+                template,
+              })
+            );
+          }
+
           if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(project)}));
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(newProject)}));
           }
 
           return actions;
@@ -334,6 +345,31 @@ export class ProjectsEffects {
       const message = this.i18n({
         id: 'project.permission.change.fail',
         value: 'Could not change the project permissions',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public applyTemplate$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.ApplyTemplate>(ProjectsActionType.APPLY_TEMPLATE),
+    mergeMap(action => {
+      const {organizationId, projectId, template} = action.payload;
+      return this.projectService.applyTemplate(organizationId, projectId, template).pipe(
+        mergeMap(() => EMPTY),
+        catchError(error => of(new ProjectsAction.ApplyTemplateFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public applyTemplateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.ApplyTemplateFailure>(ProjectsActionType.APPLY_TEMPLATE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'project.template.apply.fail',
+        value: 'Could not add template to project',
       });
       return new NotificationsAction.Error({message});
     })

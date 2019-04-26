@@ -17,30 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
+import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import {Template, TemplateType} from '../../../../core/model/template';
+import {TemplateService} from '../../../../core/service/template.service';
 
 @Component({
-  selector: 'resource-list',
-  templateUrl: './resource-list.component.html',
-  styleUrls: ['./resource-list.component.scss'],
+  selector: 'create-resource-dialog-templates',
+  templateUrl: './create-resource-dialog-templates.component.html',
+  styleUrls: ['./create-resource-dialog-templates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceListComponent {
+export class CreateResourceDialogTemplatesComponent implements OnInit {
   @Input()
-  public currentId: string;
-
-  @Input()
-  public organizations: Organization[];
-
-  @Input()
-  public projects: Project[];
+  public selectedTemplate: TemplateType;
 
   @Output()
-  public onResourceSelect = new EventEmitter<Project | Organization>();
+  public templateSelect = new EventEmitter<TemplateType>();
 
-  public selectResource(model: Project | Organization) {
-    this.onResourceSelect.emit(model);
+  public templates: Template[];
+
+  constructor(private templateService: TemplateService) {}
+
+  public ngOnInit() {
+    this.templates = this.templateService.getTemplates();
+  }
+
+  public onSelect(template: Template) {
+    this.templateSelect.emit(template.type);
   }
 }

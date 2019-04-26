@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  Output,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import {DialogType} from '../../dialog-type';
 
 @Component({
@@ -26,7 +38,16 @@ import {DialogType} from '../../dialog-type';
   styleUrls: ['./dialog-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogWrapperComponent {
+export class DialogWrapperComponent implements AfterViewInit {
+  @ViewChild('modalHeader')
+  public headerElement: ElementRef;
+
+  @ViewChild('modalFooter')
+  public footerElement: ElementRef;
+
+  @ViewChild('modalBody')
+  public bodyElement: ElementRef;
+
   @Input()
   public submitDisabled: boolean;
 
@@ -40,12 +61,47 @@ export class DialogWrapperComponent {
   @HostBinding('style.max-width.px')
   public width: number;
 
+  @Input()
+  public fitToScreen = false;
+
   @Output()
   public submit = new EventEmitter();
+
+  constructor(private renderer: Renderer2) {}
 
   public onSubmit() {
     if (!this.submitDisabled) {
       this.submit.emit();
+    }
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.recomputeBodyHeightIfNeeded();
+  }
+
+  public ngAfterViewInit() {
+    this.recomputeBodyHeightIfNeeded();
+  }
+
+  public recomputeBodyHeightIfNeeded() {
+    if (!this.fitToScreen) {
+      return;
+    }
+
+    const large = window.matchMedia('(min-width: 992px)').matches;
+
+    if (large) {
+      const headerHeight = this.headerElement.nativeElement.offsetHeight;
+      const footerHeight = this.footerElement.nativeElement.offsetHeight;
+
+      this.renderer.setStyle(
+        this.bodyElement.nativeElement,
+        'max-height',
+        `calc(100% - ${headerHeight + footerHeight}px`
+      );
+    } else {
+      this.renderer.setStyle(this.bodyElement.nativeElement, 'max-height', null);
     }
   }
 }
