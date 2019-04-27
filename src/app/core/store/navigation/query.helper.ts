@@ -18,12 +18,13 @@
  */
 
 import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
-import {convertQueryModelToString} from './query.converter';
+import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
 import {Query} from './query';
 import {getBaseCollectionIdsFromQuery} from './query.util';
+import isEqual from 'lodash/isEqual';
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
-  return convertQueryModelToString(first) === convertQueryModelToString(second);
+  return isEqual(normalizeQueryModel(first), normalizeQueryModel(second));
 }
 
 export function areQueriesEqualExceptPagination(first: Query, second: Query): boolean {

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import isEqual from 'lodash/isEqual';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -24,7 +25,7 @@ export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: nu
 }
 
 export function deepArrayEquals(array1: any[], array2: any[]): boolean {
-  return JSON.stringify(array1) === JSON.stringify(array2);
+  return isEqual(array1, array2);
 }
 
 export function arrayStartsWith(longer: any[], shorter: any[]): boolean {

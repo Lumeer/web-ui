@@ -18,12 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import isEqual from 'lodash/isEqual';
 
 @Pipe({
   name: 'areIdsEqual',
 })
 export class AreIdsEqualPipe implements PipeTransform {
   public transform(firstId: any, secondId: any): boolean {
-    return JSON.stringify(firstId) === JSON.stringify(secondId);
+    return isEqual(firstId, secondId);
   }
 }
