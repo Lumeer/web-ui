@@ -17,28 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Organization} from '../organizations/organization';
-import {isNullOrUndefined} from 'util';
-import {User} from './user';
+import {Pipe, PipeTransform} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
+import {UserConstraintConfig} from '../../../core/model/data/constraint';
+import {selectAllUsers} from '../../../core/store/users/users.state';
+import {formatUserDataValue} from '../../utils/data.utils';
 
-export function filterUserFunctions(users: User[]) {
-  return users.filter(user => typeof user === 'object');
-}
+@Pipe({
+  name: 'userDataValue',
+})
+export class UserDataValuePipe implements PipeTransform {
+  constructor(private store$: Store<{}>) {}
 
-export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
-  if (!organization) {
-    return [];
+  public transform(value: any, config?: UserConstraintConfig): Observable<string> {
+    return this.store$.pipe(
+      select(selectAllUsers),
+      map(users => formatUserDataValue(value, config, users)),
+      distinctUntilChanged()
+    );
   }
-
-  return users.filter(user => user.groupsMap[organization.id]);
-}
-
-export function filterUsersByFilter(users: User[], filter: string): User[] {
-  const filtered = users.slice();
-  if (!filter) {
-    return filtered;
-  }
-
-  const filterTrim = filter.toLowerCase().trim();
-  return filtered.filter(user => user.email.toLowerCase().includes(filterTrim));
 }

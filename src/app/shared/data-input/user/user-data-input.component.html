@@ -1,0 +1,45 @@
+<ng-container *ngIf="{users: users$ | async} as data">
+  <ng-container *ngIf="readonly; else textEditing">
+    <ng-container *ngIf="{user: value | userByEmail : data.users} as state">
+    <img *ngIf="state.user"
+         ngxGravatar
+         [email]="value"
+         [size]="22"
+         class="ml-1 mt-1">
+    <input [readonly]="readonly"
+           [title]="value | userDataValue: constraintConfig | async"
+           [value]="value | userDataValue: constraintConfig | async"
+           (focus)="onFocus.emit($event)"
+           [class.invalid-value]="!state.user"
+           class="border-0 h-100 px-1 bg-transparent"
+           data-test="text-data-input"
+           type="text">
+    </ng-container>
+  </ng-container>
+
+  <ng-template #textEditing>
+    <input #textInput
+           [(ngModel)]="name"
+           [typeahead]="data.users"
+           [typeaheadItemTemplate]="suggestionItem"
+           [typeaheadLatinize]="true"
+           [typeaheadOptionField]="'name'"
+           [adaptivePosition]="true"
+           [container]="'body'"
+           (typeaheadOnSelect)="onSelect($event)"
+           (blur)="onBlur()"
+           class="border-0 w-100 h-100 px-1 bg-transparent"
+           data-test="text-data-input"
+           type="text">
+  </ng-template>
+
+  <ng-template #suggestionItem
+               let-model="item"
+               let-index="index">
+    <img ngxGravatar
+         [email]="model.email"
+         [size]="25"
+         class="mr-2">
+    <span>{{ model.name || model.email }}</span>
+  </ng-template>
+</ng-container>

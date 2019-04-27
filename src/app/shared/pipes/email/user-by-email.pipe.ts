@@ -17,28 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Organization} from '../organizations/organization';
-import {isNullOrUndefined} from 'util';
-import {User} from './user';
+import {Pipe, PipeTransform} from '@angular/core';
+import {User} from '../../../core/store/users/user';
 
-export function filterUserFunctions(users: User[]) {
-  return users.filter(user => typeof user === 'object');
-}
-
-export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
-  if (!organization) {
-    return [];
+@Pipe({
+  name: 'userByEmail',
+})
+export class UserByEmailPipe implements PipeTransform {
+  public transform(email: string, users: User[]): User {
+    return email && users && users.find(user => user.email === email);
   }
-
-  return users.filter(user => user.groupsMap[organization.id]);
-}
-
-export function filterUsersByFilter(users: User[], filter: string): User[] {
-  const filtered = users.slice();
-  if (!filter) {
-    return filtered;
-  }
-
-  const filterTrim = filter.toLowerCase().trim();
-  return filtered.filter(user => user.email.toLowerCase().includes(filterTrim));
 }

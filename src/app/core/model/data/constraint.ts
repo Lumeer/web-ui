@@ -61,11 +61,12 @@ export const constraintTypesMap = {
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
   switch (type) {
     case ConstraintType.Boolean:
+    case ConstraintType.Color:
     case ConstraintType.DateTime:
     case ConstraintType.Number:
-    case ConstraintType.Text:
     case ConstraintType.Percentage:
-    case ConstraintType.Color:
+    case ConstraintType.Text:
+    case ConstraintType.User:
       return true;
     default:
       return false;

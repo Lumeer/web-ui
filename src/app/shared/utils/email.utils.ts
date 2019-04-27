@@ -17,28 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Organization} from '../organizations/organization';
-import {isNullOrUndefined} from 'util';
-import {User} from './user';
+export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export function filterUserFunctions(users: User[]) {
-  return users.filter(user => typeof user === 'object');
-}
-
-export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
-  if (!organization) {
-    return [];
-  }
-
-  return users.filter(user => user.groupsMap[organization.id]);
-}
-
-export function filterUsersByFilter(users: User[], filter: string): User[] {
-  const filtered = users.slice();
-  if (!filter) {
-    return filtered;
-  }
-
-  const filterTrim = filter.toLowerCase().trim();
-  return filtered.filter(user => user.email.toLowerCase().includes(filterTrim));
+export function isEmailValid(email: string): boolean {
+  return email && EMAIL_REGEX.test(email);
 }

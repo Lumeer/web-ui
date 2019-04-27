@@ -17,25 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
+import {ColorPickerModule} from 'ngx-color-picker';
+import {GravatarModule} from 'ngx-gravatar';
 import {DateTimeModule} from '../date-time/date-time.module';
+import {DirectivesModule} from '../directives/directives.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {BooleanDataInputComponent} from './boolean/boolean-data-input.component';
+import {ColorDataInputComponent} from './color/color-data-input.component';
 import {DataInputComponent} from './data-input.component';
-import {TextDataInputComponent} from './text/text-data-input.component';
 import {DatetimeDataInputComponent} from './datetime/datetime-data-input.component';
 import {NumberDataInputComponent} from './number/number-data-input.component';
-import {BooleanDataInputComponent} from './boolean/boolean-data-input.component';
-import {BsDatepickerModule} from 'ngx-bootstrap';
-import {PipesModule} from '../pipes/pipes.module';
+import {NumberValidPipe} from './number/number-valid.pipe';
 import {PercentageDataInputComponent} from './percentage/percentage-data-input.component';
 import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
-import {NumberValidPipe} from './number/number-valid.pipe';
-import {DirectivesModule} from '../directives/directives.module';
-import {ColorDataInputComponent} from './color/color-data-input.component';
-import {ColorPickerModule} from 'ngx-color-picker';
+import {TextDataInputComponent} from './text/text-data-input.component';
+import {UserDataInputComponent} from './user/user-data-input.component';
 
 @NgModule({
-  imports: [BsDatepickerModule, CommonModule, PipesModule, DateTimeModule, DirectivesModule, ColorPickerModule],
+  imports: [
+    BsDatepickerModule,
+    CommonModule,
+    FormsModule,
+    PipesModule,
+    DateTimeModule,
+    DirectivesModule,
+    ColorPickerModule,
+    GravatarModule,
+    TypeaheadModule,
+  ],
   declarations: [
     DataInputComponent,
     TextDataInputComponent,
@@ -46,6 +60,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
     PercentageValidPipe,
     NumberValidPipe,
     ColorDataInputComponent,
+    UserDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent],
 })
