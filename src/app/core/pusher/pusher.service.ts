@@ -24,7 +24,7 @@ import {environment} from '../../../environments/environment';
 import Pusher from 'pusher-js';
 import {selectCurrentUser} from '../store/users/users.state';
 import {User} from '../store/users/user';
-import {catchError, filter, map, take, tap} from 'rxjs/operators';
+import {catchError, filter, first, map, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -60,9 +60,10 @@ import {UsersAction} from '../store/users/users.action';
 import {convertUserDtoToModel} from '../store/users/user.converter';
 import {OrganizationService, ProjectService} from '../rest';
 import {OrganizationDto, ProjectDto} from '../dto';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {View} from '../store/views/view';
-import {selectViewByCode, selectViewsDictionary} from '../store/views/views.state';
+import {selectViewsDictionary} from '../store/views/views.state';
+import {selectLinkTypeById} from '../store/link-types/link-types.state';
 
 @Injectable({
   providedIn: 'root',
@@ -313,6 +314,24 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new CollectionsAction.DeleteSuccess({collectionId: data.id}));
       }
     });
+    this.channel.bind('Collection:import', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new DocumentsAction.Get({
+            query: {stems: [{collectionId: data.object.id}], page: 0, pageSize: 100},
+          })
+        );
+      }
+    });
+    this.channel.bind('Collection:import:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new DocumentsAction.Get({
+            query: {stems: [{collectionId: data.id}], page: 0, pageSize: 100},
+          })
+        );
+      }
+    });
   }
 
   private bindViewEvents() {
@@ -474,6 +493,41 @@ export class PusherService implements OnDestroy {
     this.channel.bind('LinkInstance:remove', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkInstancesAction.DeleteSuccess({linkInstanceId: data.id}));
+      }
+    });
+    this.channel.bind('LinkInstance:import', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$
+          .pipe(
+            select(selectLinkTypeById(data.object.id)),
+            map(linkType => linkType.collectionIds[0]),
+            first()
+          )
+          .subscribe(collectionId => {
+            this.store$.dispatch(
+              new LinkInstancesAction.Get({
+                query: {stems: [{collectionId, linkTypeIds: data.object.id}]},
+              })
+            );
+          });
+      }
+    });
+    this.channel.bind('LinkInstance:import:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$
+          .pipe(
+            select(selectLinkTypeById(data.id)),
+            map(linkType => linkType && linkType.collectionIds[0]),
+            first(),
+            filter(collectionId => !!collectionId)
+          )
+          .subscribe(collectionId => {
+            this.store$.dispatch(
+              new LinkInstancesAction.Get({
+                query: {stems: [{collectionId, linkTypeIds: data.id}]},
+              })
+            );
+          });
       }
     });
   }
