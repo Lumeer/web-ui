@@ -43,6 +43,8 @@ import {KeyCode} from '../../key-code';
 import {formatUserDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
+export const USER_AVATAR_SIZE = 22;
+
 @Component({
   selector: 'user-data-input',
   templateUrl: './user-data-input.component.html',
@@ -76,6 +78,8 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
 
   @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
+
+  public readonly avatarSize = USER_AVATAR_SIZE;
 
   public users$: Observable<User[]>;
   private email$ = new BehaviorSubject('');

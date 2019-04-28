@@ -4,7 +4,7 @@
     <img *ngIf="state.user"
          ngxGravatar
          [email]="value"
-         [size]="22"
+         [size]="avatarSize"
          class="ml-1">
     <input [readonly]="readonly"
            [title]="value | userDataValue: constraintConfig | async"
@@ -38,7 +38,7 @@
                let-index="index">
     <img ngxGravatar
          [email]="model.email"
-         [size]="25"
+         [size]="avatarSize"
          class="mr-2">
     <span>{{ model.name || model.email }}</span>
   </ng-template>
