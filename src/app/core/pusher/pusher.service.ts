@@ -506,7 +506,7 @@ export class PusherService implements OnDestroy {
           .subscribe(collectionId => {
             this.store$.dispatch(
               new LinkInstancesAction.Get({
-                query: {stems: [{collectionId, linkTypeIds: data.object.id}]},
+                query: {stems: [{collectionId, linkTypeIds: [data.object.id]}]},
               })
             );
           });
@@ -524,7 +524,7 @@ export class PusherService implements OnDestroy {
           .subscribe(collectionId => {
             this.store$.dispatch(
               new LinkInstancesAction.Get({
-                query: {stems: [{collectionId, linkTypeIds: data.id}]},
+                query: {stems: [{collectionId, linkTypeIds: [data.id]}]},
               })
             );
           });
