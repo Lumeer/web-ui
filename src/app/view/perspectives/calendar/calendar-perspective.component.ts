@@ -28,6 +28,8 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {User} from '../../../core/store/users/user';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -54,6 +56,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<CalendarConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public users$: Observable<User[]>;
 
   public query$ = new BehaviorSubject<Query>(null);
 
@@ -130,6 +133,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public onConfigChanged(config: CalendarConfig) {

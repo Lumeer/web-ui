@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ColumnFunction} from './column-function';
 import Big from 'big.js';
+import {User} from '../../store/users/user';
+import {ColumnFunction} from './column-function';
 
 export enum ConstraintType {
   Text = 'Text',
@@ -181,4 +182,8 @@ export type ConstraintConfig =
 export interface Constraint {
   type: ConstraintType;
   config: Partial<ConstraintConfig>;
+}
+
+export interface ConstraintData {
+  users: User[];
 }

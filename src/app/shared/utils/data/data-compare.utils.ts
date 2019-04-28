@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as moment from 'moment';
 import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {ConditionType} from '../../../core/store/navigation/query';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {convertToBig, formatDataValue, parseMomentDate} from '../data.utils';
-import {ConditionType} from '../../../core/store/navigation/query';
-import * as moment from 'moment';
 
 export function compareDataValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
@@ -107,6 +107,8 @@ export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType
     case ConstraintType.Number:
     case ConstraintType.Percentage:
       return dataValuesMeetConditionByNumber(a, b, condition);
+    case ConstraintType.User:
+      return dataValuesMeetConditionByUser(a, b, condition);
     default:
       return dataValuesMeetConditionByAny(a, b, condition, constraint);
   }
@@ -172,6 +174,17 @@ function dataValuesMeetConditionByNumber(a: any, b: any, condition: ConditionTyp
       return aBig.lt(bBig);
     case ConditionType.LowerThanEquals:
       return aBig.lte(bBig);
+    default:
+      return true;
+  }
+}
+
+function dataValuesMeetConditionByUser(a: any, b: any, condition: ConditionType): boolean {
+  switch (condition) {
+    case ConditionType.Equals:
+      return a === b;
+    case ConditionType.NotEquals:
+      return a !== b;
     default:
       return true;
   }

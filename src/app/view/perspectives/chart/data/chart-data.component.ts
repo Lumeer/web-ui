@@ -35,6 +35,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {Query} from '../../../../core/store/navigation/query';
 import {ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {User} from '../../../../core/store/users/user';
 import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -55,6 +56,7 @@ interface Data {
   query: Query;
   config: ChartConfig;
   updateType: UpdateType;
+  users: User[];
 }
 
 enum UpdateType {
@@ -88,6 +90,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public users: User[];
 
   @Input()
   public config: ChartConfig;
@@ -140,7 +145,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
       latestData.permissions,
       latestData.query,
       latestData.linkTypes,
-      latestData.linkInstances
+      latestData.linkInstances,
+      latestData.users
     );
   }
 
@@ -167,6 +173,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       permissions: this.permissions,
       query: this.query,
       updateType,
+      users: this.users,
     });
   }
 

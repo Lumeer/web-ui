@@ -22,6 +22,7 @@ import * as moment from 'moment';
 import {
   ColorConstraintConfig,
   Constraint,
+  ConstraintData,
   ConstraintType,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
@@ -94,11 +95,16 @@ export function getSaveValue(value: any, constraint: Constraint): any {
   }
 }
 
-export function formatData(data: DocumentData, attributes: Attribute[], filterInvalid?: boolean): DocumentData {
+export function formatData(
+  data: DocumentData,
+  attributes: Attribute[],
+  constraintData: ConstraintData,
+  filterInvalid?: boolean
+): DocumentData {
   const idsMap: Record<string, Attribute> = (attributes || []).reduce((map, attr) => ({...map, [attr.id]: attr}), {});
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
-    const formattedValue = formatDataValue(data[attributeId], attribute.constraint);
+    const formattedValue = formatDataValue(data[attributeId], attribute.constraint, constraintData);
     if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, true)) {
       newData[attributeId] = formattedValue;
     }
@@ -125,7 +131,7 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
   }
 }
 
-export function formatDataValue(value: any, constraint?: Constraint): any {
+export function formatDataValue(value: any, constraint?: Constraint, constraintData?: ConstraintData): any {
   if (!constraint) {
     return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
@@ -144,7 +150,11 @@ export function formatDataValue(value: any, constraint?: Constraint): any {
     case ConstraintType.Boolean:
       return !!value && value !== '0';
     case ConstraintType.User:
-    // we need to figure out how to format values dependant on external data
+      return formatUserDataValue(
+        value,
+        constraint.config as UserConstraintConfig,
+        constraintData && constraintData.users
+      );
     default:
       return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
@@ -502,7 +512,7 @@ export function formatUserDataValue(value: any, config: UserConstraintConfig, us
   const userNames = String(value)
     .split(',')
     .map(email => email.trim())
-    .map(email => users.find(user => user.email === email))
+    .map(email => (users || []).find(user => user.email === email))
     .filter(user => !!user)
     .map(user => user.name || user.email)
     .join(', ');

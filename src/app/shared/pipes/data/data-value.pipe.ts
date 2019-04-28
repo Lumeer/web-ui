@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
 import {formatDataValue} from '../../utils/data.utils';
 
 @Pipe({
   name: 'dataValue',
 })
 export class DataValuePipe implements PipeTransform {
-  public transform(value: any, constraint?: Constraint): string {
-    return formatDataValue(value, constraint);
+  public transform(value: any, constraint: Constraint, constraintData: ConstraintData): string {
+    return formatDataValue(value, constraint, constraintData);
   }
 }

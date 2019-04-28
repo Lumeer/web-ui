@@ -14,7 +14,7 @@
 <div class="ml-1 flex-grow-1">
   <div class="d-flex flex-row">
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
-    <div class="ml-3" [innerHTML]="createDefaultAttributeHtml()"></div>
+    <div class="ml-3" [innerHTML]="document | documentDefaultAttributeHtml : collection : constraintData"></div>
     <div class="ml-auto">
       <!--span class="clickable" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"></i><span class="ml-1">10</span></span>
       <span class="clickable ml-2" (click)="onCommentClick(document)"><i class="fas fa-comment" aria-hidden="true"></i><span class="ml-1">30</span></span-->

@@ -27,6 +27,7 @@ import {SearchDocumentHeaderComponent} from './header/search-document-header.com
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {CreateDocumentValuesHtmlPipe} from './pipes/create-document-values-html.pipe';
 import {CreateDocumentEntriesHtmlPipe} from './pipes/create-document-entries-html.pipe';
+import {DocumentDefaultAttributeHtmlPipe} from './pipes/document-default-attribute-html.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
@@ -37,6 +38,7 @@ import {CreateDocumentEntriesHtmlPipe} from './pipes/create-document-entries-htm
     IsDocumentOpenedPipe,
     CreateDocumentValuesHtmlPipe,
     CreateDocumentEntriesHtmlPipe,
+    DocumentDefaultAttributeHtmlPipe,
   ],
   exports: [SearchDocumentsComponent],
 })

@@ -27,6 +27,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
@@ -36,7 +37,7 @@ import {
   GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map} from 'rxjs/operators';
+import {debounceTime, filter, map, withLatestFrom} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
@@ -70,6 +71,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public permissions: Record<string, AllowedPermissions>;
 
   @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Input()
@@ -97,7 +101,14 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       filter(data => !!data),
       debounceTime(100),
       map(data =>
-        createGanttChartTasks(data.config, data.collections, data.documents, data.permissions || {}, data.query)
+        createGanttChartTasks(
+          data.config,
+          data.collections,
+          data.documents,
+          data.permissions || {},
+          this.constraintData,
+          data.query
+        )
       )
     );
   }
