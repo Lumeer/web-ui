@@ -10,7 +10,7 @@
 
 <ng-template #textEditing>
   <input #textInput
-         [attr.maxlength]="constraintConfig?.maxLength"
+         [attr.maxlength]="skipValidation ? null : constraintConfig?.maxLength"
          [title]="value | textDataValue: constraintConfig"
          [value]="value | textDataValue: constraintConfig"
          (blur)="onBlur()"
