@@ -28,11 +28,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {KeyCode} from '../../../../../shared/key-code';
 
-import {SelectionHelper} from '../../util/selection-helper';
-import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
+import {SelectionHelper} from '../util/selection-helper';
+import {KeyCode} from '../../../key-code';
+import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 
 @Component({
   selector: 'post-it-document-cell',

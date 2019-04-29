@@ -146,7 +146,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.documents$ = this.store$.pipe(
       select(selectDocumentsByQuery),
-      distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y))
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));

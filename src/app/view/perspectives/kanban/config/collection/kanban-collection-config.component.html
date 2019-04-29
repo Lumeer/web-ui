@@ -1,0 +1,15 @@
+<div class="text-nowrap">
+  <i [style.color]="collection.color" aria-hidden="true" class="{{collection.icon}} fa-fw"></i>&nbsp;
+  <b>{{collection.name}}</b>
+</div>
+
+<select-item class="d-block w-100 mt-2"
+             [emptyValue]="emptyValueString"
+             [placeholderIcon]="collection.icon"
+             [items]="collection | attributesSelectItems"
+             [selectedId]="collectionConfig?.attribute?.attributeId"
+             [removable]="true"
+             [buttonClasses]="buttonClasses"
+             (select)="onAttributeSelected($event)"
+             (remove)="onAttributeRemoved()">
+</select-item>

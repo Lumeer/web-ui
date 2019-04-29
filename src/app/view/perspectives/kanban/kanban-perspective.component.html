@@ -1,0 +1,29 @@
+<ng-container *ngIf="loaded$ | async">
+
+  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
+                canManageConfig: currentView$ | async | canManageConfig | async} as data">
+
+    <collapsible-sidebar *ngIf="data.canManageConfig"
+                         class="h-100"
+                         (toggle)="onSidebarToggle()">
+      <kanban-config
+        class="d-block m-3"
+        [collections]="data.collections"
+        [config]="data.config"
+        (configChange)="onConfigChanged($event)">
+      </kanban-config>
+    </collapsible-sidebar>
+
+    <kanban-columns
+      class="flex-grow-1 h-100"
+      [collections]="data.collections"
+      [config]="data.config"
+      [query]="query$ | async"
+      [documents]="documents$ | async"
+      [permissions]="permissions$ | async">
+
+    </kanban-columns>
+
+  </ng-container>
+
+</ng-container>

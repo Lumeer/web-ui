@@ -1,0 +1,30 @@
+<div class="card" [style.width.px]="column.width">
+
+  <div class="card-header">
+    <kanban-column-header [column]="column">
+    </kanban-column-header>
+  </div>
+
+  <div class="card-body">
+    <post-it-document
+      class="card post-it"
+      *ngFor="let document of documents; trackBy: trackByDocument; let idx = index; let last = last"
+      [class.mb-2]="!last"
+      [documentModel]="document"
+      [collection]="collections | collectionById:document.collectionId"
+      [query]="query"
+      [selectionHelper]="selectionHelper"
+      [perspectiveId]="perspectiveId"
+      [canManageConfig]="canManageConfig"
+      [index]="idx"
+      [permissions]="permissions[document.collectionId] || {}">
+    </post-it-document>
+
+  </div>
+
+  <div class="card-footer">
+    <kanban-column-footer>
+    </kanban-column-footer>
+  </div>
+
+</div>

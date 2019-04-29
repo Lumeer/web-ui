@@ -19,16 +19,17 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DocumentDetailComponent} from './document-detail/document-detail.component';
-import {KeyValueComponent} from './document-detail/key-value/key-value.component';
-import {InputModule} from '../input/input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PostItDocumentModule} from './post-it/post-it-document.module';
+import {FormsModule} from '@angular/forms';
+
+import {PostItDocumentComponent} from './post-it-document.component';
+import {PostItDocumentHeaderComponent} from './post-it-document-header/post-it-document-header.component';
+import {PostItDocumentCellComponent} from './post-it-document-cell/post-it-document-cell.component';
+import {DataInputModule} from '../../data-input/data-input.module';
+import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
-  declarations: [DocumentDetailComponent, KeyValueComponent],
-  exports: [DocumentDetailComponent, PostItDocumentModule],
+  declarations: [PostItDocumentCellComponent, PostItDocumentHeaderComponent, PostItDocumentComponent],
+  imports: [CommonModule, DataInputModule, PipesModule, FormsModule],
+  exports: [PostItDocumentComponent],
 })
-export class DocumentModule {}
+export class PostItDocumentModule {}

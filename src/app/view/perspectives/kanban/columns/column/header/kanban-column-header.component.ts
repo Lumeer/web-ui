@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {DocumentDetailComponent} from './document-detail/document-detail.component';
-import {KeyValueComponent} from './document-detail/key-value/key-value.component';
-import {InputModule} from '../input/input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PostItDocumentModule} from './post-it/post-it-document.module';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
 
-@NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
-  declarations: [DocumentDetailComponent, KeyValueComponent],
-  exports: [DocumentDetailComponent, PostItDocumentModule],
+@Component({
+  selector: 'kanban-column-header',
+  templateUrl: './kanban-column-header.component.html',
+  styleUrls: ['./kanban-column-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentModule {}
+export class KanbanColumnHeaderComponent {
+  @Input()
+  public column: KanbanColumn;
+}

@@ -17,13 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributePropertySelection} from '../document-data/attribute-property-selection';
-import {isNullOrUndefined} from 'util';
 import {BehaviorSubject} from 'rxjs';
+import {isNotNullOrUndefined} from '../../../utils/common.utils';
 
 export const ATTRIBUTE_COLUMN = 0;
 
 export const VALUE_COLUMN = 1;
+
+export interface AttributePropertySelection {
+  row: number;
+  column: number;
+  index: number;
+  key: string;
+}
 
 export class SelectionHelper {
   private selection: AttributePropertySelection = this.emptySelection();
@@ -133,7 +139,7 @@ export class SelectionHelper {
             ATTRIBUTE_COLUMN,
             rect.bottom - (rect.bottom - rect.top) / 2
           );
-          if (element && !isNullOrUndefined(row)) {
+          if (element && isNotNullOrUndefined(row)) {
             this.focusElement(element, row, ATTRIBUTE_COLUMN, key, false);
           }
         }
@@ -171,7 +177,7 @@ export class SelectionHelper {
             VALUE_COLUMN,
             rect.bottom - (rect.bottom - rect.top) / 2
           );
-          if (element && !isNullOrUndefined(row)) {
+          if (element && isNotNullOrUndefined(row)) {
             this.focusElement(element, row, VALUE_COLUMN, key, false);
           }
         }

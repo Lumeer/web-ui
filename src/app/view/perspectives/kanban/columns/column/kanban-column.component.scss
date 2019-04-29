@@ -1,0 +1,17 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  max-height: 100%;
+}
+
+.card {
+  max-height: 100%;
+}
+
+.card-body {
+  overflow-y: scroll;
+}
+
+.post-it:hover {
+  box-shadow: $shadow-default;
+}

@@ -22,24 +22,18 @@ import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../../../shared/shared.module';
 import {PostItAddDocumentComponent} from './add-document/add-document.component';
-import {PostItDocumentComponent} from './document/post-it-document.component';
 import {PostItPerspectiveComponent} from './post-it-perspective.component';
-import {PostItDocumentHeaderComponent} from './document/post-it-document-header/post-it-document-header.component';
-import {PostItDocumentCellComponent} from './document/post-it-document-cell/post-it-document-cell.component';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {PostItColumnStylePipe} from './pipes/post-it-column-style';
 import {DocumentCollectionPipe} from './pipes/document-collection.pipe';
 import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
-import {DataInputModule} from '../../../shared/data-input/data-input.module';
+import {PostItDocumentModule} from '../../../shared/document/post-it/post-it-document.module';
 
 @NgModule({
-  imports: [DataInputModule, SharedModule, RouterModule, InfiniteScrollModule],
+  imports: [SharedModule, RouterModule, InfiniteScrollModule, PostItDocumentModule],
   declarations: [
     PostItAddDocumentComponent,
-    PostItDocumentComponent,
     PostItPerspectiveComponent,
-    PostItDocumentHeaderComponent,
-    PostItDocumentCellComponent,
     PostItColumnStylePipe,
     DocumentCollectionPipe,
     EmptyPostItsComponent,

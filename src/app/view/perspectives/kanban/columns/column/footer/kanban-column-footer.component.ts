@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
-export class PostItDocumentModel {
-  public document: DocumentModel;
-  public order = 0;
+@Component({
+  selector: 'kanban-column-footer',
+  templateUrl: './kanban-column-footer.component.html',
+  styleUrls: ['./kanban-column-footer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class KanbanColumnFooterComponent{
+
 }

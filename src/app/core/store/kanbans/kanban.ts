@@ -17,10 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Direction {
-  Up = 'Up',
-  Down = 'Down',
-  Left = 'Left',
-  Right = 'Right',
-  Self = '',
+export const DEFAULT_KANBAN_ID = 'default';
+
+export interface Kanban {
+  id: string;
+  config?: KanbanConfig;
+}
+
+export interface KanbanConfig {
+  columns: KanbanColumn[];
+  otherColumn?: KanbanColumn[];
+  collections: Record<string, KanbanCollectionConfig>;
+}
+
+export interface KanbanColumn {
+  title: string;
+  width: number;
+  documentsIdsOrder: string[];
+}
+
+export interface KanbanCollectionConfig {
+  attribute: KanbanAttribute;
+}
+
+export interface KanbanAttribute {
+  collectionId: string;
+  attributeId: string;
 }

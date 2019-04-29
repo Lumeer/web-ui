@@ -17,9 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributePropertySelection {
-  row: number;
-  column: number;
-  index: number;
-  key: string;
-}
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {KanbanPerspectiveComponent} from './kanban-perspective.component';
+
+const kanbanRoutes: Routes = [
+  {
+    path: '',
+    component: KanbanPerspectiveComponent,
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(kanbanRoutes)],
+  exports: [RouterModule],
+})
+export class KanbanPerspectiveRoutingModule {}
