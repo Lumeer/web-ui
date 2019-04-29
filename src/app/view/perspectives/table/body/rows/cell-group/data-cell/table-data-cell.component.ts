@@ -370,7 +370,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
         if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
-          this.editing$.next(true); // TODO maybe set edited attribute?
+          this.editing$.next(true);
         }
       });
     }
