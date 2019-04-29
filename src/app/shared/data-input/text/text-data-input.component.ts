@@ -52,6 +52,9 @@ export class TextDataInputComponent implements OnChanges {
   public readonly: boolean;
 
   @Input()
+  public skipValidation: boolean;
+
+  @Input()
   public value: any;
 
   @Output()

@@ -10,8 +10,8 @@
        type="text">
 
 <date-time-picker *ngIf="!readonly"
-                  [min]="constraintConfig?.minValue"
-                  [max]="constraintConfig?.maxValue"
+                  [min]="skipValidation ? null : constraintConfig?.minValue"
+                  [max]="skipValidation ? null : constraintConfig?.maxValue"
                   [options]="options"
                   [origin]="element"
                   [value]="value | parseDate: constraintConfig?.format"
