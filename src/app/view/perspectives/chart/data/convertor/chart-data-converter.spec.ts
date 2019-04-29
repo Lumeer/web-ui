@@ -28,6 +28,7 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
+import {User} from '../../../../../core/store/users/user';
 import {ChartAxisCategory, ChartDataSet} from './chart-data';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';

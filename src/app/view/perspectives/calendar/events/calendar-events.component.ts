@@ -45,7 +45,7 @@ import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {Query} from '../../../../core/store/navigation/query';
 import * as moment from 'moment';
 import {isDateValid} from '../../../../shared/utils/common.utils';
-import {Constraint} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 
 interface Data {
   collections: Collection[];
@@ -72,6 +72,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Input()
   public permissions: Record<string, AllowedPermissions>;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public canManageConfig: boolean;
@@ -108,7 +111,14 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       filter(data => !!data),
       debounceTime(100),
       map(data =>
-        createCalendarEvents(data.config, data.collections, data.documents, data.permissions || {}, data.query)
+        createCalendarEvents(
+          data.config,
+          data.collections,
+          data.documents,
+          data.permissions || {},
+          this.constraintData,
+          data.query
+        )
       )
     );
   }

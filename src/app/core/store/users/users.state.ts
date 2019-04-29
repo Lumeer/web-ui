@@ -20,14 +20,13 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {Dictionary} from '@ngrx/entity/src/models';
 import {createSelector} from '@ngrx/store';
-import {isNullOrUndefined} from 'util';
 import {AppState} from '../app.state';
 import {Group} from '../groups/group';
 import {selectGroupsDictionary} from '../groups/groups.state';
 import {Organization} from '../organizations/organization';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
 import {User} from './user';
+import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
 
 export interface UsersState extends EntityState<User> {
   pending: boolean;
@@ -78,6 +77,12 @@ export const selectUserById = (userId: string) =>
     usersMap => usersMap[userId]
   );
 
+export const selectUserByEmail = (email: string) =>
+  createSelector(
+    selectAllUsers,
+    users => users && users.find(user => user.email === email)
+  );
+
 export const selectCurrentUserForWorkspace = createSelector(
   selectCurrentUser,
   selectGroupsDictionary,
@@ -102,8 +107,8 @@ export const selectUsersForWorkspace = createSelector(
   }
 );
 
-export function mapGroupsOnUser(user: User, organizationId: string, groups: Dictionary<Group>) {
+export function mapGroupsOnUser(user: User, organizationId: string, groupsMap: Dictionary<Group>) {
   const groupIds = (user.groupsMap && user.groupsMap[organizationId]) || [];
-  user.groups = groupIds.map(id => groups[id]).filter(group => !isNullOrUndefined(group));
-  return user;
+  const groups = groupIds.map(id => groupsMap[id]).filter(group => !!group);
+  return {...user, groups};
 }

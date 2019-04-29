@@ -26,7 +26,7 @@ export function filterUserFunctions(users: User[]) {
 }
 
 export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
-  if (isNullOrUndefined(organization)) {
+  if (!organization) {
     return [];
   }
 

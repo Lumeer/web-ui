@@ -23,7 +23,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {AttributeQueryItem} from '../model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
 import {BehaviorSubject} from 'rxjs';
-import {Constraint, ConstraintType} from '../../../../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {KeyCode} from '../../../../key-code';
 
 @Component({
@@ -41,6 +41,9 @@ export class AttributeValueComponent {
 
   @Input()
   public queryItemForm: FormGroup;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public enter = new EventEmitter();

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
@@ -47,6 +48,7 @@ export function createCalendarEvents(
   collections: Collection[],
   documents: DocumentModel[],
   permissions: Record<string, AllowedPermissions>,
+  constraintData: ConstraintData,
   query?: Query
 ): CalendarEvent<CalendarMetaData>[] {
   return collections.reduce(
@@ -56,7 +58,8 @@ export function createCalendarEvents(
         config,
         collection,
         documentsByCollection(documents, collection),
-        permissions[collection.id] || {}
+        permissions[collection.id] || {},
+        constraintData
       ),
     ],
     []
@@ -72,6 +75,7 @@ export function createCalendarEventsForCollection(
   collection: Collection,
   documents: DocumentModel[],
   permissions: AllowedPermissions,
+  constraintData: ConstraintData,
   query?: Query
 ): CalendarEvent<CalendarMetaData>[] {
   const collectionConfig = config.collections && config.collections[collection.id];
@@ -98,7 +102,7 @@ export function createCalendarEventsForCollection(
   const events = [];
 
   for (const document of documents) {
-    const formattedData = formatData(document.data, collection.attributes);
+    const formattedData = formatData(document.data, collection.attributes, constraintData);
 
     const title = nameProperty && formattedData[nameProperty.attributeId];
     const startString = startProperty && formattedData[startProperty.attributeId];

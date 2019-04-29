@@ -31,14 +31,16 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
-import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
-import {Direction} from '../direction';
-import {DocumentHintColumn} from './document-hint-column';
-import {Query} from '../../core/store/navigation/query';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {Query} from '../../core/store/navigation/query';
+import {User} from '../../core/store/users/user';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {Direction} from '../direction';
+import {DocumentHintColumn} from './document-hint-column';
 
 @Component({
   selector: 'document-hints',
@@ -85,6 +87,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
+  public users$: Observable<User[]>;
+
   public selectedIndex$ = new BehaviorSubject<number>(-1);
   private filter$ = new BehaviorSubject<string>('');
 
@@ -94,6 +98,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.bindDocuments();
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

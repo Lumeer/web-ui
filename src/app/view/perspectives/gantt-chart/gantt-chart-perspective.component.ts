@@ -28,6 +28,8 @@ import {
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
+import {User} from '../../../core/store/users/user';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 
@@ -54,6 +56,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public users$: Observable<User[]>;
 
   public query$ = new BehaviorSubject<Query>(null);
   public ganttChartId = DEFAULT_GANTT_CHART_ID;
@@ -128,6 +131,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public ngOnDestroy() {

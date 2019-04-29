@@ -38,6 +38,8 @@ export class ConstraintConfigFormComponent implements OnChanges {
   @Input()
   public type: ConstraintType;
 
+  public readonly constraintTypes = ConstraintType;
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.type) {
       this.form.clearValidators();

@@ -1,20 +1,20 @@
 <ng-container [ngSwitch]="type">
-  <datetime-constraint-config-form *ngSwitchCase="'DateTime'"
+  <datetime-constraint-config-form *ngSwitchCase="constraintTypes.DateTime"
                                    [config]="config"
                                    [form]="form">
   </datetime-constraint-config-form>
 
-  <number-constraint-config-form *ngSwitchCase="'Number'"
+  <number-constraint-config-form *ngSwitchCase="constraintTypes.Number"
                                  [config]="config"
                                  [form]="form">
   </number-constraint-config-form>
 
-  <percentage-constraint-config-form *ngSwitchCase="'Percentage'"
+  <percentage-constraint-config-form *ngSwitchCase="constraintTypes.Percentage"
                                      [config]="config"
                                      [form]="form">
   </percentage-constraint-config-form>
 
-  <text-constraint-config-form *ngSwitchCase="'Text'"
+  <text-constraint-config-form *ngSwitchCase="constraintTypes.Text"
                                [config]="config"
                                [form]="form">
   </text-constraint-config-form>

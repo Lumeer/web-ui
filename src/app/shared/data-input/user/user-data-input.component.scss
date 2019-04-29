@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  align-items: center;
+
+  & > img {
+    flex-shrink: 0;
+  }
+}
+
+input[readonly] {
+  cursor: unset;
+  min-width: 1px; // to keep it within flex container
+}

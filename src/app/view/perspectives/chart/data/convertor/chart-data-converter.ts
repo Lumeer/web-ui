@@ -17,8 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {DocumentData, DocumentModel} from '../../../../../core/store/documents/document.model';
+import {Injectable} from '@angular/core';
+import Big from 'big.js';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {
+  Constraint,
+  ConstraintType,
+  DateTimeConstraintConfig,
+  PercentageConstraintConfig,
+} from '../../../../../core/model/data/constraint';
 import {
   ChartAggregation,
   ChartAxis,
@@ -29,22 +36,18 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
-import {Injectable} from '@angular/core';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {
-  ChartAxisCategory,
-  ChartData,
-  ChartDataSet,
-  ChartPoint,
-  ChartYAxisType,
-  convertChartDateFormat,
-} from './chart-data';
-import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
-import {hex2rgba} from '../../../../../shared/utils/html-modifier';
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+  isLinkTypeAttributeEditable,
+} from '../../../../../core/store/collections/collection.util';
+import {DocumentData, DocumentModel} from '../../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query';
+import {User} from '../../../../../core/store/users/user';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {
   convertToBig,
   decimalUserToStore,
@@ -53,20 +56,18 @@ import {
   parseMomentDate,
 } from '../../../../../shared/utils/data.utils';
 import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
-import {
-  Constraint,
-  ConstraintType,
-  DateTimeConstraintConfig,
-  PercentageConstraintConfig,
-} from '../../../../../core/model/data/constraint';
-import {
-  findAttributeConstraint,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../../core/store/collections/collection.util';
-import Big from 'big.js';
-import {mergePermissions} from '../../../../../shared/utils/resource.utils';
 import {resetUnusedMomentPart} from '../../../../../shared/utils/date.utils';
+import {hex2rgba} from '../../../../../shared/utils/html-modifier';
+import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
+import {mergePermissions} from '../../../../../shared/utils/resource.utils';
+import {
+  ChartAxisCategory,
+  ChartData,
+  ChartDataSet,
+  ChartPoint,
+  ChartYAxisType,
+  convertChartDateFormat,
+} from './chart-data';
 
 // Document or LinkInstance
 interface ObjectData {
@@ -111,6 +112,7 @@ export class ChartDataConverter {
   private linkInstances: LinkInstance[];
   private permissions: Record<string, AllowedPermissions>;
   private query: Query;
+  private users: User[];
 
   private currentConfig: ChartConfig;
   private y1Sets: ChartDataSet[];
@@ -122,7 +124,8 @@ export class ChartDataConverter {
     permissions: Record<string, AllowedPermissions>,
     query: Query,
     linkTypes?: LinkType[],
-    linkInstances?: LinkInstance[]
+    linkInstances?: LinkInstance[],
+    users?: User[]
   ) {
     this.collections = collections;
     this.documents = documents;
@@ -130,6 +133,7 @@ export class ChartDataConverter {
     this.linkInstances = linkInstances;
     this.permissions = permissions;
     this.query = query;
+    this.users = users;
   }
 
   public convertType(type: ChartType): ChartData {
@@ -568,7 +572,7 @@ export class ChartDataConverter {
       case ConstraintType.Percentage:
         return this.formatPercentageValue(value, constraint.config as PercentageConstraintConfig);
       default:
-        return formatDataValue(value, constraint);
+        return formatDataValue(value, constraint, {users: this.users});
     }
   }
 

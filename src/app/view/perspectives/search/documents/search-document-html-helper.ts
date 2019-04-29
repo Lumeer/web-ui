@@ -17,14 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 
-export function createSearchDocumentValuesHtml(document: DocumentModel, collection: Collection): string {
+export function createSearchDocumentValuesHtml(
+  document: DocumentModel,
+  collection: Collection,
+  constraintData: ConstraintData
+): string {
   if (!document.data || !collection) {
     return '';
   }
@@ -37,14 +41,15 @@ export function createSearchDocumentValuesHtml(document: DocumentModel, collecti
     .map(attributeId =>
       createSearchDocumentValueHtml(
         document.data[attributeId],
-        findAttributeConstraint(collection.attributes, attributeId)
+        findAttributeConstraint(collection.attributes, attributeId),
+        constraintData
       )
     )
     .join(', ');
 }
 
-function createSearchDocumentValueHtml(value: any, constraint: Constraint): string {
-  const formattedValue = formatDataValue(value, constraint);
+function createSearchDocumentValueHtml(value: any, constraint: Constraint, constraintData: ConstraintData): string {
+  const formattedValue = formatDataValue(value, constraint, constraintData);
   if (!constraint) {
     return createSearchDocumentAnyValueHtml(formattedValue);
   }
@@ -88,6 +93,7 @@ function createSearchDocumentBooleanValueHtml(value: boolean) {
 export function createSearchDocumentEntriesHtml(
   document: DocumentModel,
   collection: Collection,
+  constraintData: ConstraintData,
   showEmptyValues: boolean
 ): string {
   if (!document.data || !collection) {
@@ -106,20 +112,25 @@ export function createSearchDocumentEntriesHtml(
       ({attributeId, constraint}) =>
         `${searchDocumentAttributeHtml(attributeId, collection)}${createSearchDocumentValueHtml(
           document.data[attributeId],
-          constraint
+          constraint,
+          constraintData
         )}`
     )
     .join(', ');
 }
 
-export function searchDocumentDefaultAttributeHtml(document: DocumentModel, collection: Collection): string {
+export function searchDocumentDefaultAttributeHtml(
+  document: DocumentModel,
+  collection: Collection,
+  constraintData: ConstraintData
+): string {
   if (!document.data || !collection) {
     return '';
   }
 
   const defaultAttributeId = getDefaultAttributeId(collection);
   const value = document.data[defaultAttributeId];
-  return formatDataValue(value, findAttributeConstraint(collection.attributes, defaultAttributeId));
+  return formatDataValue(value, findAttributeConstraint(collection.attributes, defaultAttributeId), constraintData);
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: Collection) {

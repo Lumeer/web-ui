@@ -2,6 +2,7 @@
   [value]="queryItem?.conditionValue"
   [focus]="true"
   [constraint]="queryItem?.attribute.constraint"
+  [constraintData]="constraintData"
   [readonly]="readonly || !((editing$ | async) || queryItem?.attribute?.constraint?.type === constraintTypeBoolean)"
   [skipValidation]="true"
   [resizeToContent]="true"

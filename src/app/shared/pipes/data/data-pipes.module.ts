@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TextDataValuePipe} from './text-data-value.pipe';
-import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
-import {DataValuePipe} from './data-value.pipe';
+import {NgModule} from '@angular/core';
 import {BooleanDataValuePipe} from './boolean-data.pipe';
-import {NumberDataValuePipe} from './number-data-value.pipe';
-import {PercentageDataValuePipe} from './percentage-data-value.pipe';
-import {DateTimeValidPipe} from './datetime-valid.pipe';
 import {ColorValidPipe} from './color-valid.pipe';
 import {ColorValuePipe} from './color-value.pipe';
+import {DataValuePipe} from './data-value.pipe';
+import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
+import {DateTimeValidPipe} from './datetime-valid.pipe';
+import {NumberDataValuePipe} from './number-data-value.pipe';
+import {PercentageDataValuePipe} from './percentage-data-value.pipe';
+import {TextDataValuePipe} from './text-data-value.pipe';
+import {UserDataValuePipe} from './user-data-value.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -41,6 +42,7 @@ import {ColorValuePipe} from './color-value.pipe';
     PercentageDataValuePipe,
     ColorValidPipe,
     ColorValuePipe,
+    UserDataValuePipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -52,6 +54,7 @@ import {ColorValuePipe} from './color-value.pipe';
     PercentageDataValuePipe,
     ColorValidPipe,
     ColorValuePipe,
+    UserDataValuePipe,
   ],
 })
 export class DataPipesModule {}

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
@@ -47,6 +48,7 @@ export function createGanttChartTasks(
   collections: Collection[],
   documents: DocumentModel[],
   permissions: Record<string, AllowedPermissions>,
+  constraintData: ConstraintData,
   query?: Query
 ): GanttChartTask[] {
   return collections.reduce(
@@ -56,7 +58,8 @@ export function createGanttChartTasks(
         config,
         collection,
         documentsByCollection(documents, collection),
-        permissions[collection.id] || {}
+        permissions[collection.id] || {},
+        constraintData
       ),
     ],
     []
@@ -72,6 +75,7 @@ function createGanttChartTasksForCollection(
   collection: Collection,
   documents: DocumentModel[],
   permissions: AllowedPermissions,
+  constraintData: ConstraintData,
   query?: Query
 ): GanttChartTask[] {
   const collectionConfig: GanttChartCollectionConfig = config.collections && config.collections[collection.id];
@@ -100,7 +104,7 @@ function createGanttChartTasksForCollection(
   const tasks = [];
 
   for (const document of Object.values(validDocumentsMap)) {
-    const formattedData = formatData(document.data, collection.attributes);
+    const formattedData = formatData(document.data, collection.attributes, constraintData);
 
     const name = nameProperty && formattedData[nameProperty.attributeId];
     const start = startProperty && formattedData[startProperty.attributeId];

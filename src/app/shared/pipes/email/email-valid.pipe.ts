@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
-import {formatDataValue} from '../../utils/data.utils';
+import {isEmailValid} from '../../utils/email.utils';
 
 @Pipe({
-  name: 'dataValue',
+  name: 'emailValid',
 })
-export class DataValuePipe implements PipeTransform {
-  public transform(value: any, constraint: Constraint, constraintData: ConstraintData): string {
-    return formatDataValue(value, constraint, constraintData);
+export class EmailValidPipe implements PipeTransform {
+  public transform(email: string): boolean {
+    return isEmailValid(email);
   }
 }

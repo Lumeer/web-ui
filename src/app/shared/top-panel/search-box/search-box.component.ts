@@ -41,7 +41,7 @@ import {
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
@@ -66,6 +66,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public form$ = new BehaviorSubject<FormGroup>(null);
   public queryItemsControl: FormArray;
 
+  public users$: Observable<User[]>;
+
   private subscriptions = new Subscription();
 
   private workspace: Workspace;
@@ -82,6 +84,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeViewData();
     this.subscribeToQuery();
     this.subscribeToNavigation();
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   private subscribeViewData() {

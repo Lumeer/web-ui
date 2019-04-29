@@ -1,34 +1,36 @@
-<table-data-cell-menu *ngIf="selected"
-                      [cursor]="cursor"
-                      [document]="document"
-                      [linkInstance]="linkInstance"
-                      [canManageConfig]="canManageConfig"
-                      [allowedPermissions]="allowedPermissions"
-                      (edit)="onEdit()">
-</table-data-cell-menu>
+<ng-container *ngIf="{attribute: attribute$ | async} as data">
+  <table-data-cell-menu *ngIf="selected"
+                        [cursor]="cursor"
+                        [document]="document"
+                        [linkInstance]="linkInstance"
+                        [canManageConfig]="canManageConfig"
+                        [allowedPermissions]="allowedPermissions"
+                        (edit)="onEdit()">
+  </table-data-cell-menu>
 
-<data-input *ngIf="{ hidden: hiddenInputValue$ | async} as inputValue"
-            [constraint]="(attribute$ | async)?.constraint"
-            [focus]="true"
-            [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || ((attribute$ | async)?.constraint?.type === constraintType.Boolean))"
-            [value]="(clearValue$ | async) ? '' : (inputValue.hidden || inputValue.hidden === 0 ? inputValue.hidden : (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
-            (valueChange)="onValueChange($event)"
-            (save)="onValueSave($event)"
-            (cancel)="onCancelEditing()"
-            class="d-block h-100"
-            [class.cursor-default]="!(attribute$ | async | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
-            data-test="table-data-input">
-</data-input>
+  <data-input *ngIf="{ value: hiddenInputValue$ | async} as hiddenInput"
+              [constraint]="data.attribute?.constraint"
+              [focus]="true"
+              [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean))"
+              [value]="(clearValue$ | async) ? '' : (hiddenInput.value || hiddenInput.value === 0 ? hiddenInput.value : (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
+              (valueChange)="onValueChange($event)"
+              (save)="onValueSave($event)"
+              (cancel)="onCancelEditing()"
+              class="d-block h-100"
+              [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
+              data-test="table-data-input">
+  </data-input>
 
-<document-hints
-  *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"
-  [attributeId]="column.attributeIds[0]"
-  [collectionId]="(table | part:cursor)?.collectionId"
-  [columns]="table | documentHintColumns:cursor:canManageConfig"
-  [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
-  [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-  [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
-  [correlationId]="(row$ | async)?.correlationId"
-  [value]="editedValue"
-  (linkCreate)="onLinkCreate()">
-</document-hints>
+  <document-hints
+    *ngIf="selected && data.attribute?.constraint?.type !== constraintType.User && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"
+    [attributeId]="column.attributeIds[0]"
+    [collectionId]="(table | part:cursor)?.collectionId"
+    [columns]="table | documentHintColumns:cursor:canManageConfig"
+    [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
+    [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
+    [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
+    [correlationId]="(row$ | async)?.correlationId"
+    [value]="editedValue"
+    (linkCreate)="onLinkCreate()">
+  </document-hints>
+</ng-container>

@@ -18,6 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {createSearchDocumentValuesHtml} from '../search-document-html-helper';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -26,8 +27,12 @@ import {Collection} from '../../../../../core/store/collections/collection';
   name: 'createDocumentValuesHtml',
 })
 export class CreateDocumentValuesHtmlPipe implements PipeTransform {
-  public transform(document: DocumentModel, collectionsMap: Record<string, Collection>): any {
+  public transform(
+    document: DocumentModel,
+    collectionsMap: Record<string, Collection>,
+    constraintData: ConstraintData
+  ): any {
     const collection = collectionsMap[document.collectionId];
-    return createSearchDocumentValuesHtml(document, collection);
+    return createSearchDocumentValuesHtml(document, collection, constraintData);
   }
 }

@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ColumnFunction} from './column-function';
 import Big from 'big.js';
+import {User} from '../../store/users/user';
+import {ColumnFunction} from './column-function';
 
 export enum ConstraintType {
   Text = 'Text',
@@ -61,11 +62,12 @@ export const constraintTypesMap = {
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
   switch (type) {
     case ConstraintType.Boolean:
+    case ConstraintType.Color:
     case ConstraintType.DateTime:
     case ConstraintType.Number:
-    case ConstraintType.Text:
     case ConstraintType.Percentage:
-    case ConstraintType.Color:
+    case ConstraintType.Text:
+    case ConstraintType.User:
       return true;
     default:
       return false;
@@ -180,4 +182,8 @@ export type ConstraintConfig =
 export interface Constraint {
   type: ConstraintType;
   config: Partial<ConstraintConfig>;
+}
+
+export interface ConstraintData {
+  users: User[];
 }
