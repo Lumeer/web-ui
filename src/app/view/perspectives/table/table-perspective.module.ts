@@ -62,6 +62,7 @@ import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {TableHiddenInputComponent} from './header/hidden-input/table-hidden-input.component';
 import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/color-collapsed-cell.component';
 import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/group-colors-by-count.pipe';
+import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.component';
 
 @NgModule({
   imports: [
@@ -111,6 +112,7 @@ import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/colo
     TableHiddenInputComponent,
     ColorCollapsedCellComponent,
     GroupColorsByCountPipe,
+    TableEmptyRowComponent,
   ],
   entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],
