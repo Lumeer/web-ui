@@ -192,8 +192,7 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     return true;
   }
 
-  const isChanged = ganttConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
-  return isChanged;
+  return ganttConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
 }
 
 function ganttConfigCollectionsChanged(
