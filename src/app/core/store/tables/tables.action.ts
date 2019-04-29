@@ -18,7 +18,6 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Dictionary} from 'lodash';
 import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -270,7 +269,7 @@ export namespace TablesAction {
         cursor: TableBodyCursor;
         rows: TableConfigRow[];
         append?: boolean;
-        documentsMap?: Dictionary<DocumentModel>;
+        documentsMap?: Record<string, DocumentModel>;
         below?: boolean;
       }
     ) {}

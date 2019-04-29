@@ -67,6 +67,12 @@ Basically every visual element should be represented by its own component.
 For example, when you need to display a list of items together with other things in your component, it should probably be done in a separate component.
 Based on how complicated those items are and what actions you need to do with every one of them, it might also be a good practise to use a new component for displaying a single item.
 
+To check the bundle size use:
+
+```
+$ npx source-map-explorer dist/{sth}.bundle.js dist/{sth}.bundle.js.map
+```
+
 ### Reusability
 
 Before you create a new component, you should think about other parts of the application where it could potentially be used.

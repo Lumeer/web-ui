@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Dictionary} from 'lodash';
 import {Collection} from '../collections/collection';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
@@ -104,7 +103,7 @@ export function generateDocumentDataByQuery(query: Query, currentUser: User): {[
 export function calculateDocumentHierarchyLevel(
   documentId: string,
   documentIdsFilter: Set<string>,
-  documentsMap: Dictionary<DocumentModel>
+  documentsMap: Record<string, DocumentModel>
 ): number {
   if (!documentId || !documentIdsFilter.has(documentId)) {
     return 0;
