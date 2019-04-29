@@ -219,15 +219,15 @@ export class ViewsEffects {
   public setPermission$ = this.actions$.pipe(
     ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
     concatMap(action => {
-      const permissionsDto: PermissionDto[] = action.payload.permissions.map(model =>
-        PermissionsConverter.toPermissionDto(model)
-      );
+      const {permissions, type, viewId} = action.payload;
+
+      const permissionsDto: PermissionDto[] = permissions.map(model => PermissionsConverter.toPermissionDto(model));
 
       let observable;
-      if (action.payload.type === PermissionType.Users) {
-        observable = this.viewService.updateUserPermission(permissionsDto);
+      if (type === PermissionType.Users) {
+        observable = this.viewService.updateUserPermission(viewId, permissionsDto);
       } else {
-        observable = this.viewService.updateGroupPermission(permissionsDto);
+        observable = this.viewService.updateGroupPermission(viewId, permissionsDto);
       }
       return observable.pipe(
         concatMap(() => of(new ViewsAction.SetPermissionsSuccess(action.payload))),
