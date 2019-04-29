@@ -19,7 +19,7 @@
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
@@ -27,6 +27,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {User} from '../../../../core/store/users/user';
+import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/service/user-settings.service';
@@ -74,13 +76,15 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public loaded$: Observable<boolean>;
   public query: Query;
 
+  public users$: Observable<User[]>;
+
   private page = 0;
   private workspace: Workspace;
   private subscriptions = new Subscription();
   private documentsSubscription = new Subscription();
 
   constructor(
-    private store: Store<AppState>,
+    private store$: Store<AppState>,
     private router: Router,
     private userSettingsService: UserSettingsService,
     private perspectiveService: PerspectiveService
@@ -89,6 +93,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.initSettings();
     this.subscribeData();
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public ngOnDestroy() {
@@ -133,7 +138,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     const newIds = this.isDocumentExplicitlyExpanded(document)
       ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
-    this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
+    this.store$.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
   }
 
   public onScrollDown(event: any) {
@@ -173,7 +178,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    const navigationSubscription = this.store
+    const navigationSubscription = this.store$
       .select(selectNavigation)
       .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
       .subscribe(navigation => {
@@ -184,14 +189,14 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(navigationSubscription);
 
-    const searchConfigSubscription = this.store
+    const searchConfigSubscription = this.store$
       .select(selectViewSearchConfig)
       .subscribe(config => (this.expandedDocumentIds = (config && config.expandedDocumentIds.slice()) || []));
     this.subscriptions.add(searchConfigSubscription);
 
-    this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
+    this.loaded$ = this.store$.select(selectCurrentQueryDocumentsLoaded);
 
-    const collectionSubscription = this.store.select(selectCollectionsByQuery).subscribe(
+    const collectionSubscription = this.store$.select(selectCollectionsByQuery).subscribe(
       collections =>
         (this.collectionsMap = collections.reduce((acc, coll) => {
           acc[coll.id] = coll;
@@ -208,7 +213,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments() {
-    this.store.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
+    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
     this.subscribeDocuments();
   }
 
@@ -220,7 +225,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.documentsSubscription.unsubscribe();
     const pageSize = PAGE_SIZE * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store
+    this.documentsSubscription = this.store$
       .select(selectDocumentsByCustomQuery(query, true))
       .pipe(filter(documents => !!documents))
       .subscribe(documents => {

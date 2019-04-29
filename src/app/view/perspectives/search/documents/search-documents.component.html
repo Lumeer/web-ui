@@ -1,3 +1,4 @@
+<ng-container *ngIf="{users: users$ | async} as constraintData">
 <ng-container *ngIf="loaded$ | async">
 
   <div class="mt-2" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
@@ -16,7 +17,8 @@
         [size]="size"
         [document]="document"
         [isOpened]="(expandedDocumentIds | isDocumentOpened:document) || size === 'XL'"
-        [collection]="collectionsMap[document.collectionId]">
+        [collection]="collectionsMap[document.collectionId]"
+        [constraintData]="constraintData">
         <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
       </search-document-header>
     </div>
@@ -34,11 +36,11 @@
 </ng-template>
 
 <ng-template #mTemplate let-document>
-  <div [innerHTML]="document | createDocumentValuesHtml:collectionsMap | safeHtml"></div>
+  <div [innerHTML]="document | createDocumentValuesHtml:collectionsMap:constraintData | safeHtml"></div>
 </ng-template>
 
 <ng-template #lTemplate let-document>
-  <div [innerHTML]="document | createDocumentEntriesHtml:collectionsMap:expandedDocumentIds:size | safeHtml"></div>
+  <div [innerHTML]="document | createDocumentEntriesHtml:collectionsMap:constraintData:expandedDocumentIds:size | safeHtml"></div>
 </ng-template>
 
 <ng-template #xlTemplate let-document>
@@ -54,3 +56,4 @@
     [query]="query">
   </empty-documents>
 </ng-template>
+</ng-container>

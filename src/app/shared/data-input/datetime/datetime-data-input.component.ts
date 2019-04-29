@@ -56,6 +56,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public readonly: boolean;
 
   @Input()
+  public skipValidation: boolean;
+
+  @Input()
   public value: any;
 
   @Output()

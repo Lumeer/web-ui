@@ -12,6 +12,7 @@
                        [constraintConfig]="constraint.config"
                        [focus]="focus"
                        [readonly]="readonly"
+                       [skipValidation]="skipValidation"
                        [value]="value"
                        (valueChange)="onValueChange($event)"
                        (save)="onSaveValue($event)"
@@ -58,10 +59,22 @@
                     class="d-block">
   </color-data-input>
 
+  <user-data-input *ngSwitchCase="constraintType.User"
+                    [focus]="focus"
+                    [readonly]="readonly"
+                    [constraintConfig]="constraint.config"
+                    [value]="value"
+                    (valueChange)="onValueChange($event)"
+                    (save)="onSaveValue($event)"
+                    (cancel)="onCancel()"
+                    (onFocus)="emitFocus($event)">
+  </user-data-input>
+
   <text-data-input *ngSwitchDefault
                    [constraintConfig]="constraint?.config"
                    [focus]="focus"
                    [readonly]="readonly"
+                   [skipValidation]="skipValidation"
                    [value]="value"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
@@ -75,6 +88,7 @@
   <text-data-input [constraintConfig]="constraint?.config"
                    [focus]="focus"
                    [readonly]="readonly"
+                   [skipValidation]="skipValidation"
                    [value]="value"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"

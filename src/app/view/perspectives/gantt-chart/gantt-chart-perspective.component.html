@@ -13,7 +13,7 @@
 
     </collapsible-sidebar>
 
-    <gantt-chart-tasks
+    <gantt-chart-tasks *ngIf="{users: users$ | async} as constraintData"
       class="flex-grow-1 mx-3"
       [style.width.px]="1"
       [canManageConfig]="data.canManageConfig"
@@ -22,6 +22,7 @@
       [permissions]="permissions$ | async"
       [documents]="documents$ | async"
       [config]="data.config"
+      [constraintData]="constraintData"
       [query]="query$ | async"
       (patchData)="patchDocumentData($event)"
       (configChange)="onConfigChanged($event)">

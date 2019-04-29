@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
-import {formatDataValue} from '../../utils/data.utils';
+import {User} from '../../../core/store/users/user';
 
 @Pipe({
-  name: 'dataValue',
+  name: 'userByEmail',
 })
-export class DataValuePipe implements PipeTransform {
-  public transform(value: any, constraint: Constraint, constraintData: ConstraintData): string {
-    return formatDataValue(value, constraint, constraintData);
+export class UserByEmailPipe implements PipeTransform {
+  public transform(email: string, users: User[]): User {
+    return email && users && users.find(user => user.email === email);
   }
 }

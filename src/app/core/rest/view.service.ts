@@ -17,43 +17,72 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {ViewDto} from '../dto';
-import {PermissionService} from './permission.service';
 import {map} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
+import {PermissionDto, PermissionsDto, ViewDto} from '../dto';
+import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class ViewService extends PermissionService {
+export class ViewService extends BaseService {
+  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
+  }
+
   public createView(view: ViewDto): Observable<ViewDto> {
-    return this.httpClient.post<ViewDto>(this.apiPrefix(), view);
+    return this.http.post<ViewDto>(this.apiPrefix(), view);
   }
 
   public updateView(id: string, view: ViewDto): Observable<ViewDto> {
-    return this.httpClient.put<ViewDto>(this.apiPrefix(id), view);
+    return this.http.put<ViewDto>(this.apiPrefix(id), view);
   }
 
   public getView(id: string): Observable<ViewDto> {
-    return this.httpClient.get<ViewDto>(this.apiPrefix(id));
+    return this.http.get<ViewDto>(this.apiPrefix(id));
   }
 
   public deleteView(id: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
+    return this.http.delete(this.apiPrefix(id)).pipe(map(() => id));
   }
 
   public getViews(workspace?: Workspace): Observable<ViewDto[]> {
-    return this.httpClient.get<ViewDto[]>(this.apiPrefix(null, workspace));
+    return this.http.get<ViewDto[]>(this.apiPrefix(null, workspace));
   }
 
-  protected actualApiPrefix(workspace?: Workspace): string {
-    return this.apiPrefix(this.getOrCurrentViewId(workspace), workspace);
+  public getPermissions(viewId: string): Observable<PermissionsDto> {
+    return this.http.get<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`);
+  }
+
+  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
+    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/users`, userPermissions);
+  }
+
+  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
+    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/groups`, userPermissions);
+  }
+
+  public removeUserPermission(viewId: string, user: string): Observable<HttpResponse<any>> {
+    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/users/${user}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
+  }
+
+  public removeGroupPermission(viewId: string, group: string): Observable<HttpResponse<any>> {
+    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/groups/${group}`, {
+      observe: 'response',
+      responseType: 'text',
+    });
   }
 
   private apiPrefix(id?: string, workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
+    const organizationId = this.getOrCurrentOrganizationId(workspace || this.workspace);
+    const projectId = this.getOrCurrentProjectId(workspace || this.workspace);
 
     const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
     return id ? viewsPath.concat('/', id) : viewsPath;

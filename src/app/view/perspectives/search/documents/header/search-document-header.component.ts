@@ -18,12 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {searchDocumentDefaultAttributeHtml} from '../search-document-html-helper';
 import {SizeType} from '../../../../../shared/slider/size-type';
-import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'search-document-header',
@@ -39,6 +39,9 @@ export class SearchDocumentHeaderComponent {
   public document: DocumentModel;
 
   @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
   public isOpened: boolean;
 
   @Input()
@@ -52,9 +55,5 @@ export class SearchDocumentHeaderComponent {
 
   public onDetail() {
     this.detail.emit();
-  }
-
-  public createDefaultAttributeHtml(): string {
-    return searchDocumentDefaultAttributeHtml(this.document, this.collection);
   }
 }

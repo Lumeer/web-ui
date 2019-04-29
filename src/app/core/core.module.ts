@@ -28,6 +28,7 @@ import {PopoverModule, TimepickerModule} from 'ngx-bootstrap';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {csLocale} from 'ngx-bootstrap/locale';
+import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
@@ -76,6 +77,7 @@ if (environment.locale === 'cs') {
     BsDatepickerModule.forRoot(),
     PopoverModule.forRoot(),
     TimepickerModule.forRoot(),
+    TypeaheadModule.forRoot(),
     DeviceDetectorModule.forRoot(),
   ],
   declarations: [HomeComponent],

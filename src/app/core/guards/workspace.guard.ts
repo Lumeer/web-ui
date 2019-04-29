@@ -19,14 +19,11 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take} from 'rxjs/operators';
-import {NotificationService} from '../notifications/notification.service';
-import {AppState} from '../store/app.state';
 import {WorkspaceService} from '../../workspace/workspace.service';
-import {NotificationsAction} from '../store/notifications/notifications.action';
+import {NotificationService} from '../notifications/notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,8 +33,7 @@ export class WorkspaceGuard implements CanActivate {
     private i18n: I18n,
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,
-    private router: Router,
-    private store$: Store<AppState>
+    private router: Router
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -48,12 +44,12 @@ export class WorkspaceGuard implements CanActivate {
       mergeMap(({organization, project}) => {
         if (!organization) {
           const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
-          this.dispatchErrorActions(message);
+          this.navigateHomeAndShowErrorMessage(message);
           return of(false);
         }
         if (!project) {
           const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
-          this.dispatchErrorActions(message);
+          this.navigateHomeAndShowErrorMessage(message);
           return of(false);
         }
 
@@ -64,8 +60,10 @@ export class WorkspaceGuard implements CanActivate {
     );
   }
 
-  private dispatchErrorActions(message: string) {
-    this.router.navigate(['/auth']);
-    this.store$.dispatch(new NotificationsAction.Error({message}));
+  private navigateHomeAndShowErrorMessage(message: string) {
+    // users will be redirected to their default workspace
+    this.router.navigate(['/']);
+
+    setTimeout(() => this.notificationService.error(message), 1000);
   }
 }

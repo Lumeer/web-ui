@@ -17,15 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
-import {formatDataValue} from '../../utils/data.utils';
+export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-@Pipe({
-  name: 'dataValue',
-})
-export class DataValuePipe implements PipeTransform {
-  public transform(value: any, constraint: Constraint, constraintData: ConstraintData): string {
-    return formatDataValue(value, constraint, constraintData);
-  }
+export function isEmailValid(email: string): boolean {
+  return email && EMAIL_REGEX.test(email);
 }

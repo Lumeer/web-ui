@@ -20,7 +20,7 @@
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <div class="mr-1 d-inline-block flex-grow-1 overflow-hidden"
+  <div class="mr-1 d-inline-flex flex-grow-1 overflow-hidden"
        *ngIf="queryItem | isAttributeItem">
 
     <attribute-condition class="mr-1"
@@ -35,10 +35,11 @@
     <attribute-value [queryItem]="queryItem"
                      [queryItemForm]="queryItemForm"
                      [readonly]="readonly"
+                     [constraintData]="constraintData"
                      (change)="onQueryItemChanged()"
                      (enter)="onEnter()"
-                     (moveLeft)="focusCondition()">
-
+                     (moveLeft)="focusCondition()"
+                     class="d-inline-flex">
     </attribute-value>
 
   </div>

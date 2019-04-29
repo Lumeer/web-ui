@@ -41,6 +41,8 @@ import {
   DEFAULT_CHART_ID,
 } from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
+import {User} from '../../../core/store/users/user';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
@@ -74,6 +76,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public users$: Observable<User[]>;
 
   public query$ = new BehaviorSubject<Query>(null);
 
@@ -155,6 +158,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
     this.config$ = this.store$.pipe(select(selectChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public ngOnDestroy() {

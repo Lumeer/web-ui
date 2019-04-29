@@ -19,24 +19,15 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {createSearchDocumentEntriesHtml} from '../search-document-html-helper';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {searchDocumentDefaultAttributeHtml} from '../search-document-html-helper';
 
 @Pipe({
-  name: 'createDocumentEntriesHtml',
+  name: 'documentDefaultAttributeHtml',
 })
-export class CreateDocumentEntriesHtmlPipe implements PipeTransform {
-  public transform(
-    document: DocumentModel,
-    collectionsMap: Record<string, Collection>,
-    constraintData: ConstraintData,
-    expandedDocumentIds: string[],
-    size: SizeType
-  ): any {
-    const collection = collectionsMap[document.collectionId];
-    const expanded = size === SizeType.XL || expandedDocumentIds.includes(document.id);
-    return createSearchDocumentEntriesHtml(document, collection, constraintData, expanded);
+export class DocumentDefaultAttributeHtmlPipe implements PipeTransform {
+  public transform(document: DocumentModel, collection: Collection, constraintData: ConstraintData): string {
+    return searchDocumentDefaultAttributeHtml(document, collection, constraintData);
   }
 }

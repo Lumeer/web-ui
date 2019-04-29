@@ -18,14 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
-import {formatDataValue} from '../../utils/data.utils';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
+import {UserConstraintConfig} from '../../../core/model/data/constraint';
+import {selectAllUsers} from '../../../core/store/users/users.state';
+import {formatUserDataValue} from '../../utils/data.utils';
 
 @Pipe({
-  name: 'dataValue',
+  name: 'userDataValue',
 })
-export class DataValuePipe implements PipeTransform {
-  public transform(value: any, constraint: Constraint, constraintData: ConstraintData): string {
-    return formatDataValue(value, constraint, constraintData);
+export class UserDataValuePipe implements PipeTransform {
+  constructor(private store$: Store<{}>) {}
+
+  public transform(value: any, config?: UserConstraintConfig): Observable<string> {
+    return this.store$.pipe(
+      select(selectAllUsers),
+      map(users => formatUserDataValue(value, config, users)),
+      distinctUntilChanged()
+    );
   }
 }

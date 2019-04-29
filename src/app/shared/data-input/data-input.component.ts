@@ -29,9 +29,10 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {Constraint, ConstraintType} from '../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {formatDataValue} from '../utils/data.utils';
 import {generateCorrelationId} from '../utils/resource.utils';
+import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 
 @Component({
   selector: 'data-input',
@@ -42,6 +43,9 @@ import {generateCorrelationId} from '../utils/resource.utils';
 export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public constraint: Constraint;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public focus: boolean;
@@ -96,8 +100,14 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       document.body.appendChild(this.tempElement);
     }
 
-    this.tempElement.innerHTML = formatDataValue(value, this.constraint);
-    return this.tempElement.getBoundingClientRect().width;
+    this.tempElement.innerHTML = formatDataValue(value, this.constraint, this.constraintData);
+    const textWidth = this.tempElement.getBoundingClientRect().width;
+
+    if (this.constraint && this.constraint.type === ConstraintType.User) {
+      return USER_AVATAR_SIZE + textWidth;
+    }
+
+    return textWidth;
   }
 
   private createTempElement(): HTMLElement {

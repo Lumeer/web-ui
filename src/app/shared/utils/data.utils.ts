@@ -17,23 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Big from 'big.js';
+import * as moment from 'moment';
 import {
   ColorConstraintConfig,
   Constraint,
+  ConstraintData,
   ConstraintType,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
   TextConstraintConfig,
+  UserConstraintConfig,
 } from '../../core/model/data/constraint';
-import * as moment from 'moment';
-import {validDataColors} from './data/valid-data-colors';
-import {transformTextBasedOnCaseStyle} from './string.utils';
-import Big from 'big.js';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
-import {DocumentData} from '../../core/store/documents/document.model';
 import {Attribute} from '../../core/store/collections/collection';
+import {DocumentData} from '../../core/store/documents/document.model';
+import {User} from '../../core/store/users/user';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
+import {validDataColors} from './data/valid-data-colors';
 import {resetUnusedMomentPart} from './date.utils';
+import {transformTextBasedOnCaseStyle} from './string.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -92,11 +95,16 @@ export function getSaveValue(value: any, constraint: Constraint): any {
   }
 }
 
-export function formatData(data: DocumentData, attributes: Attribute[], filterInvalid?: boolean): DocumentData {
+export function formatData(
+  data: DocumentData,
+  attributes: Attribute[],
+  constraintData: ConstraintData,
+  filterInvalid?: boolean
+): DocumentData {
   const idsMap: Record<string, Attribute> = (attributes || []).reduce((map, attr) => ({...map, [attr.id]: attr}), {});
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
-    const formattedValue = formatDataValue(data[attributeId], attribute.constraint);
+    const formattedValue = formatDataValue(data[attributeId], attribute.constraint, constraintData);
     if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, true)) {
       newData[attributeId] = formattedValue;
     }
@@ -123,7 +131,7 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
   }
 }
 
-export function formatDataValue(value: any, constraint?: Constraint): any {
+export function formatDataValue(value: any, constraint?: Constraint, constraintData?: ConstraintData): any {
   if (!constraint) {
     return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
@@ -141,6 +149,12 @@ export function formatDataValue(value: any, constraint?: Constraint): any {
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Boolean:
       return !!value && value !== '0';
+    case ConstraintType.User:
+      return formatUserDataValue(
+        value,
+        constraint.config as UserConstraintConfig,
+        constraintData && constraintData.users
+      );
     default:
       return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
@@ -492,4 +506,15 @@ function checkPercentageRange(n: number, config?: PercentageConstraintConfig): b
   }
 
   return passed;
+}
+
+export function formatUserDataValue(value: any, config: UserConstraintConfig, users: User[]): string {
+  const userNames = String(value)
+    .split(',')
+    .map(email => email.trim())
+    .map(email => (users || []).find(user => user.email === email))
+    .filter(user => !!user)
+    .map(user => user.name || user.email)
+    .join(', ');
+  return userNames || formatUnknownDataValue(value);
 }
