@@ -5,7 +5,7 @@
 <div class="d-flex table-border-bottom table-border-right">
   <div [style.width.px]="dataColumnsWidth$ | async"
        class="pl-1"
-       i18n="@@table.row.noResults">No results
+       i18n="@@table.row.noResults">There are no records to display. Try a different query.
   </div>
 
   <div *ngFor="let linkInfoCell of linkInfoCells$ | async"
