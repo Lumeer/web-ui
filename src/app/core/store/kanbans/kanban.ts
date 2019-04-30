@@ -26,12 +26,12 @@ export interface Kanban {
 
 export interface KanbanConfig {
   columns: KanbanColumn[];
-  otherColumn?: KanbanColumn[];
+  otherColumn?: KanbanColumn;
   collections: Record<string, KanbanCollectionConfig>;
 }
 
 export interface KanbanColumn {
-  title: string;
+  title?: string;
   width: number;
   documentsIdsOrder: string[];
 }

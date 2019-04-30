@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
@@ -34,7 +34,7 @@ import {Query} from '../../../../core/store/navigation/query';
   styleUrls: ['./kanban-columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnsComponent implements OnInit {
+export class KanbanColumnsComponent implements OnInit, OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -53,16 +53,18 @@ export class KanbanColumnsComponent implements OnInit {
   @Input()
   public query: Query;
 
-  public columns = [
-    {title: 'Other', width: 300, documentsIdsOrder: []},
-    {title: 'One', width: 300, documentsIdsOrder: []},
-    {title: 'Two', width: 300, documentsIdsOrder: []},
-    {title: 'Three', width: 300, documentsIdsOrder: []},
-    {title: 'Four', width: 300, documentsIdsOrder: []},
-    {title: 'Five', width: 300, documentsIdsOrder: []},
-  ];
   public selectionHelper: SelectionHelper;
   public readonly perspectiveId = generateCorrelationId();
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config || changes.documents) {
+        this.checkConfigColumns();
+    }
+  }
+
+  private checkConfigColumns(){
+      const currentColumns = this.config && this.config.columns || [];
+  }
 
   public drop(event: CdkDragDrop<string[]>) {
     console.log(event);

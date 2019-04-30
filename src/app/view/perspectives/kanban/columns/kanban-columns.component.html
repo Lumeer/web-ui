@@ -1,21 +1,17 @@
-<div class="d-flex flex-row flex-nowrap wrapper h-100"
+<div class="d-flex flex-row flex-nowrap wrapper h-100 align-items-start"
      cdkDropList cdkDropListOrientation="horizontal"
      (cdkDropListDropped)="drop($event)">
-  <div *ngFor="let column of columns; let last = last"
-       class="h-100"
-       [class.mr-4]="!last"
-       [style.width.px]="column.width">
-    <kanban-column
-      cdkDrag
-      class="column"
-      [column]="column"
-      [collections]="collections"
-      [canManageConfig]="canManageConfig"
-      [documents]="documents"
-      [query]="query"
-      [permissions]="permissions"
-      [perspectiveId]="perspectiveId"
-      [selectionHelper]="selectionHelper">
-    </kanban-column>
-  </div>
+  <kanban-column *ngFor="let column of config.columns; let ix = index; let last = last"
+                 cdkDrag
+                 class="column"
+                 [class.mr-4]="!last"
+                 [column]="column"
+                 [collections]="collections"
+                 [canManageConfig]="canManageConfig"
+                 [documents]="ix % 2 === 1 ? [] : documents"
+                 [query]="query"
+                 [permissions]="permissions"
+                 [perspectiveId]="perspectiveId"
+                 [selectionHelper]="selectionHelper">
+  </kanban-column>
 </div>

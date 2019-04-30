@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, AfterViewInit, ElementRef, Renderer2, HostListener, ViewChild} from '@angular/core';
 import {KanbanColumn} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
@@ -31,7 +31,11 @@ import {Collection} from '../../../../../core/store/collections/collection';
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnComponent {
+export class KanbanColumnComponent implements AfterViewInit {
+
+  @ViewChild('cardWrapper')
+  public cardWrapperElement: ElementRef;
+
   @Input()
   public column: KanbanColumn;
 
@@ -56,7 +60,27 @@ export class KanbanColumnComponent {
   @Input()
   public query: Query;
 
+  constructor(private element: ElementRef,
+              private renderer: Renderer2,
+  ) {
+  }
+
   public trackByDocument(inde: number, document: DocumentModel) {
     return document.id;
+  }
+
+  public ngAfterViewInit() {
+    this.computeMaxHeight();
+  }
+
+  @HostListener('window:resize')
+  public onResize(): void {
+    this.computeMaxHeight();
+  }
+
+  private computeMaxHeight() {
+    const element = (this.element.nativeElement.parentElement || this.element.nativeElement);
+    const rootHeight = element.offsetHeight;
+    this.renderer.setStyle(this.cardWrapperElement.nativeElement, 'max-height', `${rootHeight}px`);
   }
 }
