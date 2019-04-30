@@ -28,6 +28,7 @@ import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig} from './view';
+import isEqual from 'lodash/isEqual';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -47,7 +48,7 @@ export function isViewConfigChanged(
     case Perspective.Calendar:
       return isCalendarConfigChanged(viewConfig, perspectiveConfig);
     default:
-      return JSON.stringify(viewConfig) !== JSON.stringify(perspectiveConfig);
+      return !isEqual(viewConfig, perspectiveConfig);
   }
 }
 

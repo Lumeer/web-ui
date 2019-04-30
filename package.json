@@ -72,6 +72,7 @@
     "intersection-observer": "^0.5.1",
     "jssha": "^2.3.1",
     "leaflet": "^1.4.0",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "muuri": "^0.7.1",
     "ng-click-outside": "^4.0.0",

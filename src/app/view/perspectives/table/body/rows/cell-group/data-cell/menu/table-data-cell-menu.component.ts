@@ -28,7 +28,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Dictionary} from 'lodash';
 import {ContextMenuComponent} from 'ngx-contextmenu';
 import {combineLatest, Observable} from 'rxjs';
 import {first, map, take} from 'rxjs/operators';
@@ -142,7 +141,7 @@ export class TableDataCellMenuComponent implements OnChanges {
     row: TableConfigRow,
     nextRow: TableConfigRow,
     below: boolean,
-    documentsMap: Dictionary<DocumentModel>
+    documentsMap: Record<string, DocumentModel>
   ): string {
     const nextRowDocument = documentsMap[nextRow && nextRow.documentId];
     const nextRowParentDocumentId =

@@ -96,13 +96,20 @@ function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkA
   };
 }
 
-export function convertQueryModelToString(query: Query): string {
+export function convertQueryModelToString(query: Query, nullPage = false): string {
   return JSON.stringify(query || {}, (key, value) => {
+    if (nullPage && (key === 'page' || key === 'pageSize') && value === null) {
+      return 0;
+    }
     if (isNullOrUndefined(value) || (value instanceof Array && value.length === 0)) {
       return undefined;
     }
     return value;
   });
+}
+
+export function normalizeQueryModel(query: Query): Query {
+  return JSON.parse(convertQueryModelToString(query, true));
 }
 
 export function convertStringToQueryModel(stringQuery: string): Query {

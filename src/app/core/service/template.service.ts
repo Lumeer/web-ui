@@ -66,9 +66,7 @@ export class TemplateService {
       description: this.i18n({
         id: 'template.okr.description',
         value:
-          'Set your objectives, their measurements,' +
-          ' and initiatives moving you in the right direction. ' +
-          'You can track your progress and see how things are getting done.',
+          'Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.',
       }),
       url: this.createUrlForType(TemplateType.OKR),
     };

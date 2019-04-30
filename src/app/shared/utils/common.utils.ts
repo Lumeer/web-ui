@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import isEqual from 'lodash/isEqual';
 
 export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
@@ -44,7 +45,7 @@ export function toNumber(value: any): number {
 }
 
 export function deepObjectsEquals(object1: any, object2: any): boolean {
-  return JSON.stringify(object1) === JSON.stringify(object2);
+  return isEqual(object1, object2);
 }
 
 export function isArray<T>(input?: any): input is T[] {

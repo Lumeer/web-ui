@@ -39,7 +39,7 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPerspective, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
-import {ViewConfig, View} from '../../core/store/views/view';
+import {View, ViewConfig} from '../../core/store/views/view';
 import {
   selectPerspectiveViewConfig,
   selectViewConfigChanged,
