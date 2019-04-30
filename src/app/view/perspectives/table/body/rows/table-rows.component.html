@@ -8,8 +8,16 @@
                      [style.top.px]="table.rows | rowPositionTop : rowIndex">
   </table-primary-row>
 
+  <table-empty-row *ngIf="!table.rows?.length"
+                   [canManageConfig]="canManageConfig"
+                   [cursor]="cursor"
+                   (click)="unsetCursor()"
+                   class="position-absolute"
+                   [style.top]="0">
+  </table-empty-row>
+
   <div class="position-absolute"
-       [style.top.px]="table.rows | rowPositionTop : table.rows?.length">
+       [style.top.px]="table.rows | rowPositionTop : table.rows?.length || 1">
     &nbsp;
   </div>
 </ng-container>

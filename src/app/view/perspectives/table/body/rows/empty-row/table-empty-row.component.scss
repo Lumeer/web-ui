@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  height: var(--table-row-min-height);
+  line-height: var(--table-row-min-height);
+}
+
+.row-number-cell {
+  min-width: var(--row-number-column-width);
+}
+
+.link-info-cell {
+  border-right: 1px solid transparent;
+
+  & > div {
+    width: var(--link-info-column-width, 0px);
+  }
+}
+
+.add-button-cell {
+  width: var(--table-add-button-column-width, 0px);
+}
