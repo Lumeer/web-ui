@@ -17,27 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Collection} from '../../../../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {KanbanCollectionConfig} from '../../../../core/store/kanbans/kanban';
 
-@Component({
-  selector: 'kanban-column-footer',
-  templateUrl: './kanban-column-footer.component.html',
-  styleUrls: ['./kanban-column-footer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'kanbanPostItDraggable',
 })
-export class KanbanColumnFooterComponent {
-  @Input()
-  public collections: Collection[];
-
-  @Output()
-  public selectCollection = new EventEmitter<Collection>();
-
-  public onCollectionSelected(collection: Collection) {
-    this.selectCollection.emit(collection);
-  }
-
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+export class KanbanPostItDraggablePipe implements PipeTransform {
+  public transform(document: DocumentModel, collectionsConfig: Record<string, KanbanCollectionConfig>): boolean {
+    const collectionConfig = collectionsConfig[document.collectionId];
+    return collectionConfig && !!collectionConfig.attribute;
   }
 }

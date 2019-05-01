@@ -29,12 +29,11 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {map, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View, ViewConfig} from '../../../core/store/views/view';
@@ -46,12 +45,11 @@ import {
   selectCollectionsByCustomQuery,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
+import {User} from '../../../core/store/users/user';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -74,18 +72,13 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public currentView$: Observable<View>;
   public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
-  public loaded$: Observable<boolean>;
   public query$ = new BehaviorSubject<Query>(null);
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public users$: Observable<User[]>;
 
   private subscriptions = new Subscription();
   private kanbanId = DEFAULT_KANBAN_ID;
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private renderer: Renderer2
-  ) {}
+  constructor(private store$: Store<AppState>, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.initKanban();
@@ -114,16 +107,12 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   private subscribeDataByQuery(query: Query) {
     this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
     this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
-    this.loaded$ = this.store$.select(selectQueryDocumentsLoaded(query));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
   }
 
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   private initKanban() {
@@ -180,5 +169,18 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
       const sidebarWidth = (this.sidebarComponent && this.sidebarComponent.nativeElement.offsetWidth) || 0;
       this.renderer.setStyle(this.kanbanColumnsComponent.nativeElement, 'width', `calc(100% - ${sidebarWidth}px)`);
     }
+  }
+
+  public onPatchData(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  public onRemoveDocument(document: DocumentModel) {
+    this.store$.dispatch(
+      new DocumentsAction.DeleteConfirm({
+        collectionId: document.collectionId,
+        documentId: document.id,
+      })
+    );
   }
 }

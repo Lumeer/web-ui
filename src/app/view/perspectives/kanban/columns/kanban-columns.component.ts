@@ -17,16 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../../../shared/document/post-it/util/selection-helper';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query';
+import {User} from '../../../../core/store/users/user';
+import {AppState} from '../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 
 @Component({
   selector: 'kanban-columns',
@@ -48,27 +63,24 @@ export class KanbanColumnsComponent implements OnInit, OnChanges {
   public canManageConfig: boolean;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
-
-  @Input()
   public query: Query;
+
+  @Output()
+  public configChange = new EventEmitter<KanbanConfig>();
+
+  @Output()
+  public patchData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public removeDocument = new EventEmitter<DocumentModel>();
+
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public currentUser$: Observable<User>;
 
   public selectionHelper: SelectionHelper;
   public readonly perspectiveId = generateCorrelationId();
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.config || changes.documents) {
-        this.checkConfigColumns();
-    }
-  }
-
-  private checkConfigColumns(){
-      const currentColumns = this.config && this.config.columns || [];
-  }
-
-  public drop(event: CdkDragDrop<string[]>) {
-    console.log(event);
-  }
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.selectionHelper = new SelectionHelper(
@@ -79,8 +91,45 @@ export class KanbanColumnsComponent implements OnInit, OnChanges {
     );
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections) {
+      this.permissions$ = this.collectionsPermissionsPipe
+        .transform(this.collections)
+        .pipe(distinctUntilChanged((x, y) => deepObjectsEquals(x, y)));
+    }
+  }
+
+  public dropColumn(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    const columns = [...this.config.columns];
+    moveItemInArray(columns, event.previousIndex, event.currentIndex);
+
+    const newConfig = {...this.config, columns};
+    this.configChange.next(newConfig);
+  }
+
   private documentRows(key: string): number {
-    const document = (this.documents || []).find(document => document.id === key);
+    const document = (this.documents || []).find(doc => doc.id === key);
     return (document && Object.keys(document.data).length) || 0;
+  }
+
+  public trackByColumn(index: number, column: KanbanColumn): string {
+    return column.title || '';
+  }
+
+  public onPatchData(document: DocumentModel) {
+    this.patchData.emit(document);
+  }
+
+  public onColumnsChange(data: {columns: KanbanColumn[]; otherColumn: KanbanColumn}) {
+    const config = {...this.config, columns: data.columns, otherColumn: data.otherColumn};
+    this.configChange.next(config);
+  }
+
+  public onRemoveDocument(document: DocumentModel) {
+    this.removeDocument.emit(document);
   }
 }

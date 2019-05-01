@@ -9,6 +9,10 @@
   overflow: auto;
 }
 
+.toggle {
+  opacity: 0.6;
+}
+
 @include media-breakpoint-down(sm) {
   .position-absolute-mobile {
     position: absolute;

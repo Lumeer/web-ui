@@ -1,7 +1,7 @@
 <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
   <post-it-document-header
     class="card-header px-2 py-1 d-flex w-100"
-    [class.cursor-move]="canManageConfig"
+    [class.cursor-move]="canDrag"
     [collection]="collection"
     [readonly]="!allowedPermissions.writeWithView"
     [directRead]="allowedPermissions.read"

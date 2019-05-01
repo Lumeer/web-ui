@@ -27,7 +27,7 @@ export function isNotNullOrUndefined(object: any): boolean {
 }
 
 export function isNumeric(value: any): boolean {
-  if (typeof value === 'boolean') {
+  if (value === '' || typeof value === 'boolean') {
     return false;
   }
   return !isNaN(toNumber(value));

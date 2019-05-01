@@ -34,7 +34,7 @@
             <post-it-document
               *ngIf="{collection: doc | documentCollection:data.collections} as postItData"
               class="card post-it"
-              [canManageConfig]="canManageConfig"
+              [canDrag]="canManageConfig"
               [ngClass]="doc.id ? 'initialized': 'uninitialized'"
               [collection]="postItData.collection"
               [permissions]="data.permissions[postItData.collection?.id]"

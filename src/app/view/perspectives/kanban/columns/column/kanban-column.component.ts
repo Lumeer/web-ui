@@ -17,13 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, AfterViewInit, ElementRef, Renderer2, HostListener, ViewChild} from '@angular/core';
-import {KanbanColumn} from '../../../../../core/store/kanbans/kanban';
+import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, EventEmitter, Output} from '@angular/core';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+
+import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {getSaveValue} from '../../../../../shared/utils/data.utils';
+import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
+import {User} from '../../../../../core/store/users/user';
+import {getQueryFiltersForCollection} from '../../../../../core/store/navigation/query.util';
+import {AppState} from '../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 
 @Component({
   selector: 'kanban-column',
@@ -31,13 +41,21 @@ import {Collection} from '../../../../../core/store/collections/collection';
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnComponent implements AfterViewInit {
-
+export class KanbanColumnComponent {
   @ViewChild('cardWrapper')
   public cardWrapperElement: ElementRef;
 
+  @ViewChild('columnBody')
+  public columnBodyElement: ElementRef;
+
+  @Input()
+  public config: KanbanConfig;
+
   @Input()
   public column: KanbanColumn;
+
+  @Input()
+  public dragColumnsIds: string[];
 
   @Input()
   public collections: Collection[];
@@ -60,27 +78,125 @@ export class KanbanColumnComponent implements AfterViewInit {
   @Input()
   public query: Query;
 
-  constructor(private element: ElementRef,
-              private renderer: Renderer2,
-  ) {
-  }
+  @Input()
+  public currentUser: User;
 
-  public trackByDocument(inde: number, document: DocumentModel) {
+  @Output()
+  public patchData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public removeDocument = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public columnsChange = new EventEmitter<{columns: KanbanColumn[]; otherColumn: KanbanColumn}>();
+
+  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+
+  public trackByDocument(index: number, document: DocumentModel) {
     return document.id;
   }
 
-  public ngAfterViewInit() {
-    this.computeMaxHeight();
+  public onDropPostIt(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
+    if (this.postItPositionChanged(event)) {
+      this.updatePostItsPosition(event);
+
+      if (this.postItContainerChanged(event)) {
+        this.updatePostItValue(event);
+      }
+    }
   }
 
-  @HostListener('window:resize')
-  public onResize(): void {
-    this.computeMaxHeight();
+  private postItPositionChanged(event: CdkDragDrop<KanbanColumn, KanbanColumn>): boolean {
+    return this.postItContainerChanged(event) || event.previousIndex !== event.currentIndex;
   }
 
-  private computeMaxHeight() {
-    const element = (this.element.nativeElement.parentElement || this.element.nativeElement);
-    const rootHeight = element.offsetHeight;
-    this.renderer.setStyle(this.cardWrapperElement.nativeElement, 'max-height', `${rootHeight}px`);
+  private updatePostItsPosition(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
+    const columns = this.config.columns.map(col => ({...col}));
+    const otherColumn = {...this.config.otherColumn};
+    const column = columns.find(col => col.id === event.container.id);
+
+    if (event.container.id === event.previousContainer.id) {
+      moveItemInArray(column.documentsIdsOrder, event.previousIndex, event.currentIndex);
+    } else {
+      if (event.previousContainer.id) {
+        const previousColumn = columns.find(col => col.id === event.previousContainer.id);
+        transferArrayItem(
+          previousColumn.documentsIdsOrder,
+          column.documentsIdsOrder,
+          event.previousIndex,
+          event.currentIndex
+        );
+      } else {
+        // it's Other column
+        transferArrayItem(
+          otherColumn.documentsIdsOrder,
+          column.documentsIdsOrder,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
+    }
+
+    this.columnsChange.emit({columns, otherColumn});
+  }
+
+  private postItContainerChanged(event: CdkDragDrop<KanbanColumn, KanbanColumn>): boolean {
+    return event.container.id !== event.previousContainer.id;
+  }
+
+  private updatePostItValue(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
+    const document = event.item.data as DocumentModel;
+    const newValue = event.container.data.title;
+
+    const collectionConfig = this.config.collections[document.collectionId];
+    const configAttribute = collectionConfig && collectionConfig.attribute;
+    const collection =
+      configAttribute && (this.collections || []).find(coll => coll.id === configAttribute.collectionId);
+    if (collection) {
+      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
+      const patchDocument = {...document};
+      patchDocument.data[collectionConfig.attribute.attributeId] = getSaveValue(newValue, constraint);
+      this.patchData.emit(patchDocument);
+    }
+  }
+
+  public createDocumentInCollection(collection: Collection) {
+    const document = this.createDocumentForCollection(collection);
+    if (document) {
+      this.store$.dispatch(
+        new DocumentsAction.Create({
+          document,
+          callback: documentId => this.onDocumentCreated(documentId),
+        })
+      );
+    }
+  }
+
+  private onDocumentCreated(id: string) {
+    setTimeout(() => {
+      const postIt = document.getElementById(id);
+      // TODO find efficient way
+      if (postIt) {
+        postIt.scrollIntoView();
+      }
+    });
+  }
+
+  private createDocumentForCollection(collection: Collection): DocumentModel {
+    const collectionConfig = this.config.collections[collection.id];
+    const configAttribute = collectionConfig && collectionConfig.attribute;
+    if (configAttribute) {
+      const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
+      const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
+      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
+      data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint);
+
+      return {collectionId: collection.id, data};
+    }
+    return null;
+  }
+
+  public onRemoveDocument(document: DocumentModel) {
+    this.removeDocument.emit(document);
   }
 }

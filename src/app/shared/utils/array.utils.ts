@@ -40,6 +40,12 @@ export function isArraySubset(superset: any[], subset: any[]): boolean {
   return subset.every(item => superset.includes(item));
 }
 
+export function areArraysSame(array1: any[], array2: any[]): boolean {
+  const a1 = array1 || [];
+  const a2 = array2 || [];
+  return a1.length === a2.length && a1.every((value, index) => isEqual(value, a2[index]));
+}
+
 export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
   if (bigArray.length < smallArray.length) {
     return getArrayDifference(smallArray, bigArray);

@@ -68,7 +68,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public selectionHelper: SelectionHelper;
 
   @Input()
-  public canManageConfig: boolean;
+  public canDrag: boolean;
 
   @Input()
   public query: Query;

@@ -1,29 +1,30 @@
-<ng-container *ngIf="loaded$ | async">
+<ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
+                canManageConfig: currentView$ | async | canManageConfig | async, documents: documents$ | async} as data">
 
-  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
-                canManageConfig: currentView$ | async | canManageConfig | async} as data">
-
-    <collapsible-sidebar *ngIf="data.canManageConfig"
-                         class="h-100"
-                         (toggle)="onSidebarToggle()">
-      <kanban-config
-        class="d-block m-3"
-        [collections]="data.collections"
-        [config]="data.config"
-        (configChange)="onConfigChanged($event)">
-      </kanban-config>
-    </collapsible-sidebar>
-
-    <kanban-columns
-      class="flex-grow-1 h-100"
+  <collapsible-sidebar *ngIf="data.canManageConfig"
+                       class="h-100"
+                       (toggle)="onSidebarToggle()">
+    <kanban-config
+      class="d-block m-3"
       [collections]="data.collections"
+      [documents]="data.documents"
       [config]="data.config"
-      [query]="query$ | async"
-      [documents]="documents$ | async"
-      [permissions]="permissions$ | async">
+      (configChange)="onConfigChanged($event)"
+      [constraintData]="{users: users$ | async}">
+    </kanban-config>
+  </collapsible-sidebar>
 
-    </kanban-columns>
+  <kanban-columns
+    class="flex-grow-1 h-100"
+    [collections]="data.collections"
+    [config]="data.config"
+    [query]="query$ | async"
+    [documents]="data.documents"
+    [canManageConfig]="data.canManageConfig"
+    (configChange)="onConfigChanged($event)"
+    (patchData)="onPatchData($event)"
+    (removeDocument)="onRemoveDocument($event)">
 
-  </ng-container>
+  </kanban-columns>
 
 </ng-container>

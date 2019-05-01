@@ -18,6 +18,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {generateId} from '../../utils/resource.utils';
 
 declare let $: any;
 
@@ -60,7 +61,7 @@ export class IconComponent implements AfterViewInit {
   private visible: boolean = false;
 
   public constructor() {
-    this.dropdownId = 'dropdown-' + IconComponent.generateId();
+    this.dropdownId = 'dropdown-' + generateId();
   }
 
   @HostListener('document:click', ['$event'])
@@ -70,10 +71,6 @@ export class IconComponent implements AfterViewInit {
       this.color = this.oldColor || this.color;
       $event.stopPropagation();
     }
-  }
-
-  private static generateId() {
-    return Math.floor((1 + Math.random()) * 1000000000000).toString(16);
   }
 
   public ngAfterViewInit(): void {

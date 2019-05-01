@@ -17,27 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Collection} from '../../../../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-@Component({
-  selector: 'kanban-column-footer',
-  templateUrl: './kanban-column-footer.component.html',
-  styleUrls: ['./kanban-column-footer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'kanbanColumnDocuments',
 })
-export class KanbanColumnFooterComponent {
-  @Input()
-  public collections: Collection[];
+export class KanbanColumnDocumentsPipe implements PipeTransform {
+  public transform(column: KanbanColumn, documents: DocumentModel[]): DocumentModel[] {
+    if (!column || !column.documentsIdsOrder || column.documentsIdsOrder.length === 0) {
+      return [];
+    }
 
-  @Output()
-  public selectCollection = new EventEmitter<Collection>();
-
-  public onCollectionSelected(collection: Collection) {
-    this.selectCollection.emit(collection);
-  }
-
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+    const documentMap = (documents || []).reduce((map, doc) => ({...map, [doc.id]: doc}), {});
+    return column.documentsIdsOrder.map(id => documentMap[id]).filter(document => !!document);
   }
 }

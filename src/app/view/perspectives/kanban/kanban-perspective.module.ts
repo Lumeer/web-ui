@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import {KanbanPerspectiveComponent} from './kanban-perspective.component';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
@@ -30,7 +31,12 @@ import {KanbanCollectionConfigComponent} from './config/collection/kanban-collec
 import {KanbanColumnComponent} from './columns/column/kanban-column.component';
 import {KanbanColumnHeaderComponent} from './columns/column/header/kanban-column-header.component';
 import {KanbanColumnFooterComponent} from './columns/column/footer/kanban-column-footer.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import {KanbanColumnDocumentsPipe} from './pipes/kanban-column-documents.pipe';
+import {KanbanDragColumnsPipe} from './pipes/kanban-drag-columns.pipe';
+import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
+import {BsDropdownModule} from 'ngx-bootstrap';
+import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
+import {PickerModule} from '../../../shared/picker/picker.module';
 
 @NgModule({
   declarations: [
@@ -41,8 +47,20 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     KanbanColumnComponent,
     KanbanColumnHeaderComponent,
     KanbanColumnFooterComponent,
+    KanbanColumnDocumentsPipe,
+    KanbanDragColumnsPipe,
+    KanbanPostItDraggablePipe,
+    FilterWritableCollectionsPipe,
   ],
-  imports: [SharedModule, RouterModule, KanbanPerspectiveRoutingModule, DataInputModule, DragDropModule],
+  imports: [
+    SharedModule,
+    RouterModule,
+    KanbanPerspectiveRoutingModule,
+    DataInputModule,
+    DragDropModule,
+    BsDropdownModule,
+    PickerModule,
+  ],
   entryComponents: [KanbanPerspectiveComponent],
   exports: [KanbanPerspectiveComponent],
 })

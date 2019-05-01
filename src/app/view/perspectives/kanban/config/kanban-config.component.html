@@ -1,6 +1,6 @@
 <kanban-collection-config *ngFor="let collection of collections; trackBy:trackByCollection"
                             class="d-block mt-4"
-                            [collectionConfig]="config?.collections[collection.id] || {}"
+                            [collectionConfig]="config?.collections[collection.id]"
                             [collection]="collection"
                             (configChange)="onCollectionConfigChange(collection, $event)">
 </kanban-collection-config>

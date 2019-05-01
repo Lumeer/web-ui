@@ -34,6 +34,7 @@ import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {View, ViewConfig, ViewCursor} from './view';
 import {isViewConfigChanged} from './view.utils';
+import {selectKanbanConfig} from '../kanbans/kanban.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -99,7 +100,8 @@ export const selectPerspectiveConfig = createSelector(
   selectMapConfig,
   selectGanttChartConfig,
   selectCalendarConfig,
-  (perspective, postItConfig, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig) =>
+  selectKanbanConfig,
+  (perspective, postItConfig, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig) =>
     ({
       [Perspective.Map]: mapConfig,
       [Perspective.PostIt]: postItConfig,
@@ -107,6 +109,7 @@ export const selectPerspectiveConfig = createSelector(
       [Perspective.Chart]: chartConfig,
       [Perspective.GanttChart]: ganttChartConfig,
       [Perspective.Calendar]: calendarConfig,
+      [Perspective.Kanban]: kanbanConfig,
     }[perspective])
 );
 export const selectPerspectiveViewConfig = createSelector(

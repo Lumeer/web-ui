@@ -31,9 +31,11 @@ export interface KanbanConfig {
 }
 
 export interface KanbanColumn {
+  id: string;
   title?: string;
   width: number;
   documentsIdsOrder: string[];
+  createdFromAttributes?: KanbanAttribute[];
 }
 
 export interface KanbanCollectionConfig {
