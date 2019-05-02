@@ -19,6 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'kanban-column-header',
@@ -29,4 +30,6 @@ import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
 export class KanbanColumnHeaderComponent {
   @Input()
   public column: KanbanColumn;
+
+  public readonly constraintTypes = ConstraintType;
 }

@@ -17,23 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {SelectionHelper} from '../../../../shared/document/post-it/util/selection-helper';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
+import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query';
 import {User} from '../../../../core/store/users/user';
@@ -49,7 +38,7 @@ import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/c
   styleUrls: ['./kanban-columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnsComponent implements OnInit, OnChanges {
+export class KanbanColumnsComponent implements OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -77,19 +66,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public currentUser$: Observable<User>;
 
-  public selectionHelper: SelectionHelper;
-  public readonly perspectiveId = generateCorrelationId();
-
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
-
-  public ngOnInit() {
-    this.selectionHelper = new SelectionHelper(
-      new BehaviorSubject<string[]>(this.documents || [].map(d => d.id)),
-      key => this.documentRows(key),
-      () => 1,
-      this.perspectiveId
-    );
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collections) {
@@ -109,11 +86,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges {
 
     const newConfig = {...this.config, columns};
     this.configChange.next(newConfig);
-  }
-
-  private documentRows(key: string): number {
-    const document = (this.documents || []).find(doc => doc.id === key);
-    return (document && Object.keys(document.data).length) || 0;
   }
 
   public trackByColumn(index: number, column: KanbanColumn): string {

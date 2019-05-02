@@ -53,6 +53,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {SelectionHelper} from '../../../shared/document/post-it/util/selection-helper';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'post-it-perspective',
@@ -89,7 +90,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
+  public perspectiveId = generateId();
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());

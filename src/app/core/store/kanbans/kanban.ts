@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintType} from '../../model/data/constraint';
+
 export const DEFAULT_KANBAN_ID = 'default';
 
 export interface Kanban {
@@ -36,6 +38,7 @@ export interface KanbanColumn {
   width: number;
   documentsIdsOrder: string[];
   createdFromAttributes?: KanbanAttribute[];
+  constraintType?: ConstraintType;
 }
 
 export interface KanbanCollectionConfig {

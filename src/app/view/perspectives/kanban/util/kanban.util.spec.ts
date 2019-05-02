@@ -98,19 +98,29 @@ const collections: Collection[] = [
   },
 ];
 
-
 describe('Kanban util', () => {
-
-  fit('should create only other column', () => {
+  it('should create only other column', () => {
     const config: KanbanConfig = {columns: [], collections: {}};
     const buildConfig = buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns).toEqual([]);
     expect(buildConfig.collections).toEqual({});
-    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11']);
+    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual([
+      'D1',
+      'D2',
+      'D3',
+      'D4',
+      'D5',
+      'D6',
+      'D7',
+      'D8',
+      'D9',
+      'D10',
+      'D11',
+    ]);
   });
 
-  fit('should create by selected attribute', () => {
-    const config: KanbanConfig = {columns: [], collections: {'C1': {attribute: {attributeId: 'a1', collectionId: 'C1'}}}};
+  it('should create by selected attribute', () => {
+    const config: KanbanConfig = {columns: [], collections: {C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}}}};
     const buildConfig = buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
     expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D1', 'D4']);
@@ -120,14 +130,13 @@ describe('Kanban util', () => {
     expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D6', 'D7', 'D8', 'D9', 'D10', 'D11']);
   });
 
-  fit('should create by multiple attributes', () => {
+  it('should create by multiple attributes', () => {
     const config: KanbanConfig = {
-      columns: [], collections: {
-        'C1':
-          {attribute: {attributeId: 'a1', collectionId: 'C1'}},
-        'C2':
-          {attribute: {attributeId: 'a1', collectionId: 'C2'}},
-      }
+      columns: [],
+      collections: {
+        C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}},
+        C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
+      },
     };
     const buildConfig = buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
@@ -139,18 +148,17 @@ describe('Kanban util', () => {
     expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D11']);
   });
 
-  fit('should create by previous config', () => {
+  it('should create by previous config', () => {
     const previousConfig: KanbanConfig = {
       columns: [
-        {title: 'LMR', width: 200, documentsIdsOrder: ['D350', 'D10', 'D7']},
-        {title: 'Glass', width: 100, documentsIdsOrder: ['D5', 'D1', 'D3', 'D8']},
-        {title: 'Dance', width: 800, documentsIdsOrder: ['D111', 'D6', 'D3', 'D1', 'D2']},
-      ], collections: {
-        'C1':
-          {attribute: {attributeId: 'a1', collectionId: 'C1'}},
-        'C2':
-          {attribute: {attributeId: 'a1', collectionId: 'C2'}},
-      }
+        {id: '1', title: 'LMR', width: 200, documentsIdsOrder: ['D350', 'D10', 'D7']},
+        {id: '2', title: 'Glass', width: 100, documentsIdsOrder: ['D5', 'D1', 'D3', 'D8']},
+        {id: '3', title: 'Dance', width: 800, documentsIdsOrder: ['D111', 'D6', 'D3', 'D1', 'D2']},
+      ],
+      collections: {
+        C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}},
+        C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
+      },
     };
     const buildConfig = buildKanbanConfig(previousConfig, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
@@ -161,5 +169,4 @@ describe('Kanban util', () => {
     expect(buildConfig.collections).toEqual(previousConfig.collections);
     expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D11']);
   });
-
 });

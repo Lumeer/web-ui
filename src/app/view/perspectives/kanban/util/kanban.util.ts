@@ -26,7 +26,7 @@ import {
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
@@ -70,13 +70,19 @@ function groupDocumentsByCollection(documents: DocumentModel[]): Record<string, 
   }, {});
 }
 
+interface KanbanColumnData {
+  documentsIds: string[];
+  attributes: KanbanAttribute[];
+  constraintTypes: ConstraintType[];
+}
+
 function groupDocumentsByColumns(
   documentsByCollection: Record<string, DocumentModel[]>,
   collectionsConfig: Record<string, KanbanCollectionConfig>,
   collections: Collection[],
   constraintData?: ConstraintData
-): {columnsMap: Record<string, {documentsIds: string[]; attributes: KanbanAttribute[]}>; otherDocumentsIds: string[]} {
-  const columnsMap: Record<string, {documentsIds: string[]; attributes: KanbanAttribute[]}> = {};
+): {columnsMap: Record<string, KanbanColumnData>; otherDocumentsIds: string[]} {
+  const columnsMap: Record<string, KanbanColumnData> = {};
   const otherDocumentsIds = [];
   for (const collection of collections || []) {
     const collectionConfig = collectionsConfig[collection.id];
@@ -87,7 +93,7 @@ function groupDocumentsByColumns(
     if (attribute) {
       for (const document of documents) {
         const value = document.data[attribute.id];
-        const formattedValue = formatDataValue(value, attribute.constraint, constraintData);
+        const formattedValue = formatKanbanColumnValue(value, attribute.constraint, constraintData);
         if (isNotNullOrUndefined(formattedValue) && formattedValue !== '') {
           const createdByAttribute = {collectionId: collection.id, attributeId: attribute.id};
           const stringValue = formattedValue.toString();
@@ -98,8 +104,12 @@ function groupDocumentsByColumns(
             if (!kanbanAttributesContainAttribute(columnData.attributes, createdByAttribute)) {
               columnData.attributes.push(createdByAttribute);
             }
+            if (attribute && attribute.constraint && !columnData.constraintTypes.includes(attribute.constraint.type)) {
+              columnData.constraintTypes.push(attribute.constraint.type);
+            }
           } else {
-            columnsMap[stringValue] = {documentsIds: [document.id], attributes: [createdByAttribute]};
+            const constraintTypes = (attribute.constraint && [attribute.constraint.type]) || [];
+            columnsMap[stringValue] = {documentsIds: [document.id], attributes: [createdByAttribute], constraintTypes};
           }
         } else {
           otherDocumentsIds.push(document.id);
@@ -113,13 +123,23 @@ function groupDocumentsByColumns(
   return {columnsMap, otherDocumentsIds};
 }
 
+function formatKanbanColumnValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
+  if (constraint && constraint.type === ConstraintType.User) {
+    return value;
+  }
+
+  return formatDataValue(value, constraint, constraintData);
+}
+
 function kanbanAttributesContainAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {
-  return attributes.some(attr => deepObjectsEquals(attr, attribute));
+  return attributes.some(
+    attr => attr.attributeId === attribute.attributeId && attr.collectionId === attribute.collectionId
+  );
 }
 
 function createKanbanColumns(
   currentConfig: KanbanConfig,
-  columnsMap: Record<string, {documentsIds: string[]; attributes: KanbanAttribute[]}>
+  columnsMap: Record<string, KanbanColumnData>
 ): KanbanColumn[] {
   let newColumnsTitles = Object.keys(columnsMap);
   const selectedAttributes = Object.values(currentConfig.collections || {})
@@ -133,7 +153,7 @@ function createKanbanColumns(
       newColumnsTitles.includes(title) ||
       kanbanAttributesIntersect(currentColumn.createdFromAttributes, selectedAttributes)
     ) {
-      const {documentsIds = null, attributes = null} = columnsMap[title] || {};
+      const {documentsIds = null, attributes = null, constraintTypes = null} = columnsMap[title] || {};
       const documentsIdsOrder = sortDocumentsIdsByPreviousOrder(documentsIds, currentColumn.documentsIdsOrder);
 
       newColumns.push({
@@ -142,23 +162,37 @@ function createKanbanColumns(
         width: currentColumn.width,
         documentsIdsOrder,
         createdFromAttributes: attributes,
+        constraintType: mergeConstraintType(currentColumn.constraintType, constraintTypes),
       });
       newColumnsTitles = newColumnsTitles.filter(newColumnTitle => newColumnTitle !== title);
     }
   }
 
   for (const title of newColumnsTitles) {
-    const {documentsIds, attributes} = columnsMap[title];
+    const {documentsIds, attributes, constraintTypes} = columnsMap[title];
     newColumns.push({
       id: generateId(),
       title,
       width: COLUMN_WIDTH,
       documentsIdsOrder: documentsIds,
       createdFromAttributes: attributes,
+      constraintType: constraintTypes.length === 1 ? constraintTypes[0] : null,
     });
   }
 
   return newColumns;
+}
+
+function mergeConstraintType(currentConstraint: ConstraintType, newConstrainTypes: ConstraintType[]): ConstraintType {
+  if (currentConstraint) {
+    if (newConstrainTypes && newConstrainTypes.length === 1 && newConstrainTypes[0] === currentConstraint) {
+      return currentConstraint;
+    }
+  } else if (newConstrainTypes && newConstrainTypes.length === 1) {
+    return newConstrainTypes[0];
+  }
+
+  return null;
 }
 
 function kanbanAttributesIntersect(

@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, EventEmitter, Output} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ElementRef,
+  ViewChild,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
@@ -34,6 +45,8 @@ import {getQueryFiltersForCollection} from '../../../../../core/store/navigation
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
+import {generateId} from '../../../../../shared/utils/resource.utils';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'kanban-column',
@@ -41,7 +54,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnComponent {
+export class KanbanColumnComponent implements OnInit, OnChanges {
   @ViewChild('cardWrapper')
   public cardWrapperElement: ElementRef;
 
@@ -67,12 +80,6 @@ export class KanbanColumnComponent {
   public canManageConfig: boolean;
 
   @Input()
-  public perspectiveId: string;
-
-  @Input()
-  public selectionHelper: SelectionHelper;
-
-  @Input()
   public permissions: Record<string, AllowedPermissions>;
 
   @Input()
@@ -90,7 +97,32 @@ export class KanbanColumnComponent {
   @Output()
   public columnsChange = new EventEmitter<{columns: KanbanColumn[]; otherColumn: KanbanColumn}>();
 
+  public selectionHelper: SelectionHelper;
+  public columnSelectionId: string;
+  public documentsIds$ = new BehaviorSubject<string[]>([]);
+
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.columnSelectionId = this.column.id || generateId();
+    this.selectionHelper = new SelectionHelper(
+      this.documentsIds$,
+      key => this.documentRows(key),
+      () => 1,
+      this.columnSelectionId
+    );
+  }
+
+  private documentRows(key: string): number {
+    const document = (this.documents || []).find(doc => doc.id === key);
+    return (document && Object.keys(document.data).length - 1) || 0;
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.documents) {
+      this.documentsIds$.next((this.documents || []).map(document => document.id));
+    }
+  }
 
   public trackByDocument(index: number, document: DocumentModel) {
     return document.id;
@@ -118,8 +150,8 @@ export class KanbanColumnComponent {
     if (event.container.id === event.previousContainer.id) {
       moveItemInArray(column.documentsIdsOrder, event.previousIndex, event.currentIndex);
     } else {
-      if (event.previousContainer.id) {
-        const previousColumn = columns.find(col => col.id === event.previousContainer.id);
+      const previousColumn = columns.find(col => col.id === event.previousContainer.id);
+      if (previousColumn) {
         transferArrayItem(
           previousColumn.documentsIdsOrder,
           column.documentsIdsOrder,
@@ -174,11 +206,8 @@ export class KanbanColumnComponent {
 
   private onDocumentCreated(id: string) {
     setTimeout(() => {
-      const postIt = document.getElementById(id);
-      // TODO find efficient way
-      if (postIt) {
-        postIt.scrollIntoView();
-      }
+      const postIt = document.getElementById(`${this.columnSelectionId}#${id}`);
+      postIt && postIt.scrollIntoView();
     });
   }
 

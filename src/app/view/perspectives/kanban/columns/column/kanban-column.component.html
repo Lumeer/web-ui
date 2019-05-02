@@ -1,6 +1,6 @@
 <div class="card" [style.width.px]="column.width" #cardWrapper>
 
-  <div class="card-header px-3 py-2"
+  <div class="card-header p-0"
        [class.cursor-move]="canManageConfig">
     <kanban-column-header [column]="column">
     </kanban-column-header>
@@ -14,7 +14,7 @@
     <post-it-document
       *ngFor="let document of documents; trackBy: trackByDocument; let idx = index; let last = last"
       cdkDrag
-      id="{{document.id}}"
+      id="{{columnSelectionId}}#{{document.id}}"
       class="card post-it"
       [cdkDragDisabled]="!canManageConfig || !(document | kanbanPostItDraggable:config.collections)"
       [cdkDragData]="document"
@@ -23,7 +23,7 @@
       [collection]="collections | collectionById:document.collectionId"
       [query]="query"
       [selectionHelper]="selectionHelper"
-      [perspectiveId]="perspectiveId"
+      [perspectiveId]="columnSelectionId"
       [canDrag]="canManageConfig && (document | kanbanPostItDraggable:config.collections)"
       [index]="idx"
       [permissions]="permissions[document.collectionId] || {}"

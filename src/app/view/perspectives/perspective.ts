@@ -46,7 +46,7 @@ export const perspectivesMap: {[id: string]: Perspective} = {
 export const perspectiveIconsMap: {[id: string]: string} = {
   [Perspective.Detail]: 'far fa-fw fa-map-marker-alt',
   [Perspective.PostIt]: 'far fa-fw fa-sticky-note',
-  [Perspective.Kanban]: 'far fa-fw fa-sticky-note',
+  [Perspective.Kanban]: 'far fa-fw fa-columns',
   [Perspective.Chart]: 'far fa-fw fa-chart-area',
   [Perspective.Calendar]: 'far fa-fw fa-calendar-alt',
   [Perspective.GanttChart]: 'fas fa-fw fa-stream',

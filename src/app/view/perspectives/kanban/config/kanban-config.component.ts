@@ -24,6 +24,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {buildKanbanConfig} from '../util/kanban.util';
 import isEqual from 'lodash/isEqual';
 import {ConstraintData} from '../../../../core/model/data/constraint';
+import {Query} from '../../../../core/store/navigation/query';
+import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../../core/store/navigation/query.util';
 
 @Component({
   selector: 'kanban-config',
@@ -43,19 +45,42 @@ export class KanbanConfigComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public query: Query;
+
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.collections) {
-      this.checkConfigColumns();
+      this.checkConfigColumns(this.config);
+    }
+    if (changes.query) {
+      this.checkQueryCollections();
     }
   }
 
-  private checkConfigColumns() {
-    const config = buildKanbanConfig(this.config, this.documents, this.collections, this.constraintData);
+  private checkConfigColumns(kanbanConfig: KanbanConfig) {
+    const config = buildKanbanConfig(kanbanConfig, this.documents, this.collections, this.constraintData);
     if (!isEqual(config, this.config)) {
       setTimeout(() => this.configChange.emit(config));
+    }
+  }
+
+  private checkQueryCollections() {
+    const collectionIdsInQuery = getBaseCollectionIdsFromQuery(this.query);
+    if (this.config && collectionIdsInQuery.length > 0) {
+      const collectionsConfig = {...this.config.collections};
+      const collectionIdsToRemove = Object.entries(collectionsConfig)
+        .filter(([, collectionConfig]) => collectionConfig && !!collectionConfig.attribute)
+        .map(([collectionId]) => collectionId)
+        .filter(collectionId => !collectionIdsInQuery.includes(collectionId));
+
+      if (collectionIdsToRemove.length > 0) {
+        collectionIdsToRemove.forEach(collectionId => delete collectionsConfig[collectionId]);
+        const newConfig = {...this.config, collections: collectionsConfig};
+        this.checkConfigColumns(newConfig);
+      }
     }
   }
 

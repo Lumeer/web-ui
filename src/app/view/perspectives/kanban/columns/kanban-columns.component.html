@@ -14,8 +14,6 @@
                    [documents]="column | kanbanColumnDocuments:documents"
                    [query]="query"
                    [permissions]="data.permissions"
-                   [perspectiveId]="perspectiveId"
-                   [selectionHelper]="selectionHelper"
                    [currentUser]="data.currentUser"
                    (patchData)="onPatchData($event)"
                    (columnsChange)="onColumnsChange($event)"
@@ -33,8 +31,6 @@
                    [documents]="config.otherColumn | kanbanColumnDocuments:documents"
                    [query]="query"
                    [currentUser]="data.currentUser"
-                   [perspectiveId]="perspectiveId"
-                   [selectionHelper]="selectionHelper"
                    (patchData)="onPatchData($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
