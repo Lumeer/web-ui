@@ -17,10 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Direction {
-  Up = 'Up',
-  Down = 'Down',
-  Left = 'Left',
-  Right = 'Right',
-  Self = '',
+import {initialKanbansState, kanbansAdapter, KanbansState} from './kanban.state';
+import {KanbansAction, KanbansActionType} from './kanbans.action';
+
+export function kanbansReducer(state: KanbansState = initialKanbansState, action: KanbansAction.All): KanbansState {
+  switch (action.type) {
+    case KanbansActionType.ADD_KANBAN:
+      return kanbansAdapter.addOne(action.payload.kanban, state);
+    case KanbansActionType.REMOVE_KANBAN:
+      return kanbansAdapter.removeOne(action.payload.kanbanId, state);
+    case KanbansActionType.SET_CONFIG:
+      return kanbansAdapter.updateOne({id: action.payload.kanbanId, changes: {config: action.payload.config}}, state);
+    case KanbansActionType.CLEAR:
+      return initialKanbansState;
+    default:
+      return state;
+  }
 }

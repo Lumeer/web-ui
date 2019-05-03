@@ -1,0 +1,37 @@
+<ng-container [ngSwitch]="column.constraintType">
+
+  <ng-container *ngSwitchCase="constraintTypes.Color">
+    <div [style.background]="column.title" class="px-3 py-2 color-title">
+      <div>&nbsp;</div>
+    </div>
+  </ng-container>
+
+  <div *ngSwitchCase="constraintTypes.Boolean" class="d-flex py-1">
+    <boolean-data-input class="px-3 py-1"
+                        [value]="column.title"
+                        [readonly]="true">
+    </boolean-data-input>
+  </div>
+
+  <user-data-input *ngSwitchCase="constraintTypes.User"
+                   class="px-3 py-2"
+                   [value]="column.title"
+                   [readonly]="true"
+                   [focus]="false">
+  </user-data-input>
+
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngIf="column.title; else otherTitle">
+      <div class="px-3 py-2 text-truncate" [title]="column.title">
+        <span class="font-weight-bold">{{column.title}}</span>
+      </div>
+    </ng-container>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #otherTitle>
+  <div class="px-3 py-2">
+    <span class="font-italic" i18n="@@kanban.perspective.header.other">Other</span>
+  </div>
+</ng-template>

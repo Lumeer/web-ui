@@ -29,6 +29,7 @@ import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig} from './view';
 import isEqual from 'lodash/isEqual';
+import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -47,6 +48,8 @@ export function isViewConfigChanged(
       return isGanttConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Calendar:
       return isCalendarConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Kanban:
+      return isKanbanConfigChanged(viewConfig, perspectiveConfig);
     default:
       return !isEqual(viewConfig, perspectiveConfig);
   }

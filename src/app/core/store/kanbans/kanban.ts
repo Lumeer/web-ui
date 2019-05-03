@@ -17,9 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {ConstraintType} from '../../model/data/constraint';
 
-export class PostItDocumentModel {
-  public document: DocumentModel;
-  public order = 0;
+export const DEFAULT_KANBAN_ID = 'default';
+
+export interface Kanban {
+  id: string;
+  config?: KanbanConfig;
+}
+
+export interface KanbanConfig {
+  columns: KanbanColumn[];
+  otherColumn?: KanbanColumn;
+  collections: Record<string, KanbanCollectionConfig>;
+}
+
+export interface KanbanColumn {
+  id: string;
+  title?: string;
+  width: number;
+  documentsIdsOrder: string[];
+  createdFromAttributes?: KanbanAttribute[];
+  constraintType?: ConstraintType;
+}
+
+export interface KanbanCollectionConfig {
+  attribute: KanbanAttribute;
+}
+
+export interface KanbanAttribute {
+  collectionId: string;
+  attributeId: string;
 }

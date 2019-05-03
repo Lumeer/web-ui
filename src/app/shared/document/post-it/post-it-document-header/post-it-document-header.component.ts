@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Collection} from '../../../../core/store/collections/collection';
 
 @Component({
   selector: 'post-it-document-header',

@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {DocumentDetailComponent} from './document-detail/document-detail.component';
-import {KeyValueComponent} from './document-detail/key-value/key-value.component';
-import {InputModule} from '../input/input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PostItDocumentModule} from './post-it/post-it-document.module';
+import {Pipe, PipeTransform} from '@angular/core';
+import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-@NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
-  declarations: [DocumentDetailComponent, KeyValueComponent],
-  exports: [DocumentDetailComponent, PostItDocumentModule],
+@Pipe({
+  name: 'kanbanColumnDocuments',
 })
-export class DocumentModule {}
+export class KanbanColumnDocumentsPipe implements PipeTransform {
+  public transform(column: KanbanColumn, documents: DocumentModel[]): DocumentModel[] {
+    if (!column || !column.documentsIdsOrder || column.documentsIdsOrder.length === 0) {
+      return [];
+    }
+
+    const documentMap = (documents || []).reduce((map, doc) => ({...map, [doc.id]: doc}), {});
+    return column.documentsIdsOrder.map(id => documentMap[id]).filter(document => !!document);
+  }
+}

@@ -42,7 +42,6 @@ import {UserSettingsService} from '../../../core/service/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
 import {selectNavigation, selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {SelectionHelper} from './util/selection-helper';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfig, View} from '../../../core/store/views/view';
 import {PostItAction} from '../../../core/store/postit/postit.action';
@@ -53,6 +52,8 @@ import {deepArrayEquals} from '../../../shared/utils/array.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {SelectionHelper} from '../../../shared/document/post-it/util/selection-helper';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'post-it-perspective',
@@ -89,7 +90,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
+  public perspectiveId = generateId();
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());

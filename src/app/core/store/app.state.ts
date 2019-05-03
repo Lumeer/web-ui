@@ -40,6 +40,7 @@ import {CalendarsState, initialCalendarsState} from './calendars/calendars.state
 import {initialVideosState, VideosState} from './videos/videos.state';
 import {initialUserNotificationsState, UserNotificationsState} from './user-notifications/user-notifications.state';
 import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';
+import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -64,6 +65,7 @@ export interface AppState {
   videos: VideosState;
   userNotifications: UserNotificationsState;
   ganttCharts: GanttChartsState;
+  kanbans: KanbansState;
 }
 
 export function initialAppState(): AppState {
@@ -90,5 +92,6 @@ export function initialAppState(): AppState {
     videos: initialVideosState,
     userNotifications: initialUserNotificationsState,
     ganttCharts: initialGanttChartsState,
+    kanbans: initialKanbansState,
   };
 }

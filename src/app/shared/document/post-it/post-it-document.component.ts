@@ -31,19 +31,19 @@ import {
 
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {UiRow} from '../../../../core/ui/ui-row';
-import {KeyCode} from '../../../../shared/key-code';
-import {SelectionHelper} from '../util/selection-helper';
-import {DocumentUi} from '../../../../core/ui/document-ui';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {Query} from '../../../../core/store/navigation/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {SelectionHelper} from './util/selection-helper';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Query} from '../../../core/store/navigation/query';
+import {DocumentUi} from '../../../core/ui/document-ui';
+import {AppState} from '../../../core/store/app.state';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {KeyCode} from '../../key-code';
+import {UiRow} from '../../../core/ui/ui-row';
+import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'post-it-document',
@@ -68,7 +68,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public selectionHelper: SelectionHelper;
 
   @Input()
-  public canManageConfig: boolean;
+  public canDrag: boolean;
 
   @Input()
   public query: Query;

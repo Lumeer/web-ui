@@ -17,9 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributePropertySelection {
-  row: number;
-  column: number;
-  index: number;
-  key: string;
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Collection} from '../../../../../../core/store/collections/collection';
+
+@Component({
+  selector: 'kanban-column-footer',
+  templateUrl: './kanban-column-footer.component.html',
+  styleUrls: ['./kanban-column-footer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class KanbanColumnFooterComponent {
+  @Input()
+  public collections: Collection[];
+
+  @Output()
+  public selectCollection = new EventEmitter<Collection>();
+
+  public onCollectionSelected(collection: Collection) {
+    this.selectCollection.emit(collection);
+  }
+
+  public trackByCollection(index: number, collection: Collection): string {
+    return collection.id;
+  }
 }

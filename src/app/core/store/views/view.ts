@@ -25,6 +25,7 @@ import {ChartConfig} from '../charts/chart';
 import {GanttChartConfig} from '../gantt-charts/gantt-chart';
 import {Query} from '../navigation/query';
 import {TableConfig} from '../tables/table.model';
+import {KanbanConfig} from '../kanbans/kanban';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -48,6 +49,7 @@ export interface ViewConfig {
   ganttChart?: GanttChartConfig;
   calendar?: CalendarConfig;
   chart?: ChartConfig;
+  kanban?: KanbanConfig;
 }
 
 export interface DetailConfig {

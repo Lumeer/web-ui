@@ -57,6 +57,10 @@ const viewRoutes: Routes = [
         component: PostItPerspectiveComponent,
       },
       {
+        path: Perspective.Kanban,
+        loadChildren: './perspectives/kanban/kanban-perspective.module#KanbanPerspectiveModule',
+      },
+      {
         path: Perspective.Chart,
         loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule',
       },
@@ -74,7 +78,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Search,
-        loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule', // TODO sync
+        loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule',
       },
       {
         path: Perspective.Table,

@@ -17,9 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PostItRow {
-  attributeId?: string;
-  attributeName?: string;
-  value?: string;
-  correlationId?: string;
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
+
+@Component({
+  selector: 'kanban-column-header',
+  templateUrl: './kanban-column-header.component.html',
+  styleUrls: ['./kanban-column-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class KanbanColumnHeaderComponent {
+  @Input()
+  public column: KanbanColumn;
+
+  public readonly constraintTypes = ConstraintType;
 }

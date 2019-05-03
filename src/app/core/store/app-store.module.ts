@@ -64,6 +64,7 @@ import {userNotificationsReducer} from './user-notifications/user-notifications.
 import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {calendarsReducer} from './calendars/calendars.reducer';
+import {kanbansReducer} from './kanbans/kanbans.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -88,6 +89,7 @@ const reducers: ActionReducerMap<AppState> = {
   videos: videosReducer,
   userNotifications: userNotificationsReducer,
   ganttCharts: ganttChartsReducer,
+  kanbans: kanbansReducer,
 };
 
 const effects = [

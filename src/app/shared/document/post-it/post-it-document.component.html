@@ -1,7 +1,7 @@
 <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
   <post-it-document-header
     class="card-header px-2 py-1 d-flex w-100"
-    [class.cursor-move]="canManageConfig"
+    [class.cursor-move]="canDrag"
     [collection]="collection"
     [readonly]="!allowedPermissions.writeWithView"
     [directRead]="allowedPermissions.read"
@@ -32,8 +32,8 @@
             [model]="row.newName || row.name"
             (remove)="onRemoveRow(idx)"
             (update)="onUpdateRow(idx, $event, row.newValue || row.value)"
-            (focus)="selectionHelper.focusCellSpan(idx, 0, getDocumentKey())"
-            (enter)="selectionHelper.moveToNextInput()">
+            (focus)="selectionHelper?.focusCellSpan(idx, 0, getDocumentKey())"
+            (enter)="selectionHelper?.moveToNextInput()">
           </post-it-document-cell>
 
           <post-it-document-cell
@@ -49,8 +49,8 @@
             [constraint]="(collection | collectionAttribute : row.id)?.constraint"
             (remove)="onUpdateRow(idx, row.newName || row.name, '')"
             (update)="onUpdateRow(idx, row.newName || row.name, $event)"
-            (focus)="selectionHelper.focusCellSpan(idx, 1, getDocumentKey())"
-            (enter)="selectionHelper.moveToNextInput()">
+            (focus)="selectionHelper?.focusCellSpan(idx, 1, getDocumentKey())"
+            (enter)="selectionHelper?.moveToNextInput()">
           </post-it-document-cell>
         </li>
 

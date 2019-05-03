@@ -88,6 +88,10 @@ export function generateCorrelationId(): string {
   return Date.now() + ':' + Math.random();
 }
 
+export function generateId() {
+  return Math.floor((1 + Math.random()) * 1000000000000).toString(16);
+}
+
 function rolesWithTransitionRoles(roles: string[]): string[] {
   if (!roles || roles.length === 0) {
     return [];

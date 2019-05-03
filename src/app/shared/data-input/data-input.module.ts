@@ -62,6 +62,6 @@ import {UserDataInputComponent} from './user/user-data-input.component';
     ColorDataInputComponent,
     UserDataInputComponent,
   ],
-  exports: [DataInputComponent, BooleanDataInputComponent],
+  exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
 })
 export class DataInputModule {}
