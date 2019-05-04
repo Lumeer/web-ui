@@ -145,7 +145,7 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   private updatePostItsPosition(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
     const columns = this.config.columns.map(col => ({...col}));
     const otherColumn = {...this.config.otherColumn};
-    const column = columns.find(col => col.id === event.container.id);
+    const column = columns.find(col => col.id === event.container.id) || otherColumn;
 
     if (event.container.id === event.previousContainer.id) {
       moveItemInArray(column.documentsIdsOrder, event.previousIndex, event.currentIndex);
@@ -214,15 +214,13 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   private createDocumentForCollection(collection: Collection): DocumentModel {
     const collectionConfig = this.config.collections[collection.id];
     const configAttribute = collectionConfig && collectionConfig.attribute;
+    const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
+    const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
     if (configAttribute) {
-      const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-      const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
       const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
       data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint);
-
-      return {collectionId: collection.id, data};
     }
-    return null;
+    return {collectionId: collection.id, data};
   }
 
   public onRemoveDocument(document: DocumentModel) {
