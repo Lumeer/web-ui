@@ -1,12 +1,6 @@
-<div *ngIf="!(query | displayable)"
-     class="alert alert-warning m-3"
-     role="alert"
-     i18n="@@table.query.invalid">Table perspective cannot show the results of your query. The query needs to have exactly one collection.
-</div>
-
-<div *ngIf="query | displayable"
+<div *ngIf="query | displayable; else notDisplayable"
      (clickOutside)="onClickOutside($event)"
-     class="flex-grow-1 d-flex flex-column m-0">
+     class="flex-grow-1 d-flex flex-column m-0 h-100">
   <ng-container *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
     <table-header [table]="table$ | async"
                   [canManageConfig]="data.canManageConfig"></table-header>
@@ -19,3 +13,11 @@
     </table-body>
   </ng-container>
 </div>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minCollections]="1"
+                 [maxCollections]="1">
+  </invalid-query>
+</ng-template>
+

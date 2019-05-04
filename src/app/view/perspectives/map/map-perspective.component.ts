@@ -28,7 +28,7 @@ import {MapConfig, MapModel} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
+import {isAnyCollectionQuery} from '../../../core/store/navigation/query.util';
 import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query';
 import {MapContentComponent} from './content/map-content.component';
@@ -89,7 +89,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   private bindValidQuery() {
     this.validQuery$ = this.store$.pipe(
       select(selectQuery),
-      map(query => isSingleCollectionQuery(query))
+      map(query => isAnyCollectionQuery(query))
     );
   }
 
