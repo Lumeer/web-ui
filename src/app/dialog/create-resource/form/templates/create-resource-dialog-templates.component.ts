@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input, AfterViewInit} from '@angular/core';
 import {Template, TemplateType} from '../../../../core/model/template';
 import {TemplateService} from '../../../../core/service/template.service';
+import {generateId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'create-resource-dialog-templates',
@@ -27,7 +28,7 @@ import {TemplateService} from '../../../../core/service/template.service';
   styleUrls: ['./create-resource-dialog-templates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateResourceDialogTemplatesComponent implements OnInit {
+export class CreateResourceDialogTemplatesComponent implements OnInit, AfterViewInit {
   @Input()
   public selectedTemplate: TemplateType;
 
@@ -35,6 +36,7 @@ export class CreateResourceDialogTemplatesComponent implements OnInit {
   public templateSelect = new EventEmitter<TemplateType>();
 
   public templates: Template[];
+  public readonly idPrefix = generateId();
 
   constructor(private templateService: TemplateService) {}
 
@@ -44,5 +46,12 @@ export class CreateResourceDialogTemplatesComponent implements OnInit {
 
   public onSelect(template: Template) {
     this.templateSelect.emit(template.type);
+  }
+
+  public ngAfterViewInit() {
+    const templateElement = document.getElementById(`${this.idPrefix}${this.selectedTemplate}`);
+    setTimeout(() => {
+      templateElement && templateElement.scrollIntoView();
+    }, 500);
   }
 }

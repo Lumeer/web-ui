@@ -30,7 +30,7 @@ export enum Perspective {
   SmartDoc = 'smartdoc',
 }
 
-export const perspectivesMap: {[id: string]: Perspective} = {
+export const perspectivesMap: Record<string, Perspective> = {
   [Perspective.Detail]: Perspective.Detail,
   [Perspective.PostIt]: Perspective.PostIt,
   [Perspective.Kanban]: Perspective.Kanban,
@@ -43,7 +43,7 @@ export const perspectivesMap: {[id: string]: Perspective} = {
   [Perspective.Table]: Perspective.Table,
 };
 
-export const perspectiveIconsMap: {[id: string]: string} = {
+export const perspectiveIconsMap: Record<string, string> = {
   [Perspective.Detail]: 'far fa-fw fa-map-marker-alt',
   [Perspective.PostIt]: 'far fa-fw fa-sticky-note',
   [Perspective.Kanban]: 'far fa-fw fa-columns',

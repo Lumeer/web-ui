@@ -33,7 +33,7 @@ import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-f
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
-import {TemplateType} from '../../core/model/template';
+import {TemplateType, templateTypesMap} from '../../core/model/template';
 
 @Component({
   selector: 'create-resource-dialog',
@@ -46,6 +46,7 @@ export class CreateResourceDialogComponent implements OnInit {
   public resourceFormComponent: CreateResourceDialogFormComponent;
 
   public parentId$: Observable<string>;
+  public initialTemplate$: Observable<TemplateType>;
   public contentValid$: Observable<boolean>;
 
   public resourceType: ResourceType;
@@ -93,6 +94,10 @@ export class CreateResourceDialogComponent implements OnInit {
     this.resourceType = this.getResourceTypeFromRouter();
 
     this.parentId$ = this.route.paramMap.pipe(map(params => params.get('organizationId')));
+    this.initialTemplate$ = this.route.paramMap.pipe(
+      map(params => params.get('templateId')),
+      map(templateId => templateId && templateTypesMap[templateId.toUpperCase()])
+    );
 
     if (this.resourceType === ResourceType.Project) {
       this.contentValid$ = this.parentId$.pipe(

@@ -84,9 +84,11 @@ export class DialogService {
     this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);
   }
 
-  public openCreateProjectDialog(organizationId: string, callback?: (project: Project) => void) {
+  public openCreateProjectDialog(organizationId: string, templateId?: string, callback?: (project: Project) => void) {
     this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_PROJECT, organizationId]);
+    const path = [DialogPath.CREATE_PROJECT, organizationId];
+    templateId && path.push(templateId);
+    this.navigateToDialog(path);
   }
 
   public openCreateCollectionDialog(callback?: (collection: Collection) => void) {

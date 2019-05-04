@@ -2,6 +2,7 @@
 
 <create-resource-dialog-template *ngFor="let template of templates; let first = first"
                                  class="d-block"
+                                 id="{{idPrefix}}{{template.type}}"
                                  [class.mt-2]="!first"
                                  [template]="template"
                                  [selected]="selectedTemplate === template.type"

@@ -25,6 +25,8 @@ import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
+import {RedirectComponent} from './core/redirect.component';
+import {TemplateRedirectGuard} from './core/guards/template-redirect.guard';
 
 const appRoutes: Routes = [
   {
@@ -32,6 +34,11 @@ const appRoutes: Routes = [
     pathMatch: 'full',
     canActivate: [AuthGuard, CurrentUserGuard],
     component: HomeComponent,
+  },
+  {
+    path: 'template/:templateId',
+    canActivate: [AuthGuard, CurrentUserGuard, TemplateRedirectGuard],
+    component: RedirectComponent,
   },
   {
     path: '**',

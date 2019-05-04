@@ -82,7 +82,7 @@ const routes: Routes = [
     outlet: 'dialog',
   },
   {
-    path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
+    path: `${DialogPath.CREATE_PROJECT}/:organizationId/:templateId`,
     component: CreateResourceDialogComponent,
     outlet: 'dialog',
     data: {modalDialogClass: 'modal-lg'},

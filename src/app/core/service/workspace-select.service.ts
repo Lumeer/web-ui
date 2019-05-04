@@ -97,7 +97,9 @@ export class WorkspaceSelectService {
   }
 
   public createNewProject(organization: Organization) {
-    this.dialogService.openCreateProjectDialog(organization.id, project => this.goToProject(organization, project));
+    this.dialogService.openCreateProjectDialog(organization.id, null, project =>
+      this.goToProject(organization, project)
+    );
   }
 
   public selectProject(organization: Organization, project: Project) {
