@@ -29,9 +29,11 @@ export interface Template {
 export enum TemplateType {
   Empty = 'EMPTY',
   OKR = 'OKR',
+  HR = 'HR',
 }
 
 export const templateTypesMap: Record<string, TemplateType> = {
   [TemplateType.Empty]: TemplateType.Empty,
   [TemplateType.OKR]: TemplateType.OKR,
+  [TemplateType.HR]: TemplateType.HR,
 };
