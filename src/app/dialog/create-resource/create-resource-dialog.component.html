@@ -1,6 +1,7 @@
 <dialog-wrapper [submitDisabled]="!resourceFormComponent || resourceFormComponent.form?.invalid"
                 [type]="'primary'"
                 [fitToScreen]="true"
+                [performingAction]="performingAction$ | async"
                 (submit)="onSubmit()">
   <span class="title" i18n="@@resource.new.dialog.title">
   Create new {resourceType, select, organization {Organization} project {Project}}

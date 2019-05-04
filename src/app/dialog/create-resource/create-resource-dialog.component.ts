@@ -27,7 +27,7 @@ import {DialogService} from '../dialog.service';
 import {ResourceType} from '../../core/model/resource-type';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {DialogPath, dialogPathsMap} from '../dialog-path';
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 import {Organization} from '../../core/store/organizations/organization';
@@ -48,6 +48,7 @@ export class CreateResourceDialogComponent implements OnInit {
   public parentId$: Observable<string>;
   public initialTemplate$: Observable<TemplateType>;
   public contentValid$: Observable<boolean>;
+  public performingAction$ = new BehaviorSubject(false);
 
   public resourceType: ResourceType;
 
@@ -62,32 +63,48 @@ export class CreateResourceDialogComponent implements OnInit {
   }
 
   public submitResource(data: {resource: Organization | Project; template?: TemplateType}) {
-    const callback = this.dialogService.callback;
     const {resource, template} = data;
 
     const action = this.createResourceAction(resource, template);
     if (action) {
+      this.performingAction$.next(true);
       this.store$.dispatch(action);
-    }
-
-    if (!callback) {
+    } else {
       this.dialogService.closeDialog();
     }
   }
 
   private createResourceAction(resource: Organization | Project, template?: TemplateType): Action {
     if (this.resourceType === ResourceType.Organization) {
-      return new OrganizationsAction.Create({organization: resource, callback: this.dialogService.callback});
+      return new OrganizationsAction.Create({
+        organization: resource,
+        onSuccess: organization => this.onCreateResourceSuccess(organization),
+        onFailure: () => this.onCreateResourceFailure(),
+      });
     } else if (this.resourceType === ResourceType.Project) {
       const notEmptyTemplate = template !== TemplateType.Empty ? template : null;
       return new ProjectsAction.Create({
         project: resource,
         template: notEmptyTemplate,
-        callback: this.dialogService.callback,
+        onSuccess: project => this.onCreateResourceSuccess(project),
+        onFailure: () => this.onCreateResourceFailure(),
       });
     }
 
     return null;
+  }
+
+  private onCreateResourceSuccess(resource: Organization | Project) {
+    const callback = this.dialogService.callback;
+    if (callback) {
+      callback(resource);
+    } else {
+      this.dialogService.closeDialog();
+    }
+  }
+
+  private onCreateResourceFailure() {
+    this.dialogService.closeDialog();
   }
 
   private parseResourceType() {

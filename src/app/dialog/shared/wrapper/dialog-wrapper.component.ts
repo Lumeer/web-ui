@@ -64,6 +64,9 @@ export class DialogWrapperComponent implements AfterViewInit {
   @Input()
   public fitToScreen = false;
 
+  @Input()
+  public performingAction = false;
+
   @Output()
   public submit = new EventEmitter();
 

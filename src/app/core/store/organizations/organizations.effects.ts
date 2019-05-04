@@ -102,25 +102,30 @@ export class OrganizationsEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.Create>(OrganizationsActionType.CREATE),
     mergeMap(action => {
-      const correlationId = action.payload.organization.correlationId;
+      const {organization, onSuccess, onFailure} = action.payload;
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
 
       return this.organizationService.createOrganization(organizationDto).pipe(
-        map(dto => OrganizationConverter.fromDto(dto, correlationId)),
-        flatMap(organization => {
+        map(dto => OrganizationConverter.fromDto(dto, organization.correlationId)),
+        flatMap(newOrganization => {
           const actions: Action[] = [
-            new OrganizationsAction.CreateSuccess({organization}),
-            new ServiceLimitsAction.GetServiceLimits({organizationId: organization.id}),
+            new OrganizationsAction.CreateSuccess({organization: newOrganization}),
+            new ServiceLimitsAction.GetServiceLimits({organizationId: newOrganization.id}),
           ];
 
-          const {callback} = action.payload;
-          if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(organization)}));
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(newOrganization)}));
           }
 
           return actions;
         }),
-        catchError(error => of(new OrganizationsAction.CreateFailure({error: error})))
+        catchError(error => {
+          const actions: Action[] = [new OrganizationsAction.CreateFailure({error: error})];
+          if (onFailure) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
+          }
+          return of(...actions);
+        })
       );
     })
   );

@@ -106,7 +106,8 @@ export class TemplateRedirectGuard implements CanActivate {
   }
 
   private redirectToWorkspace(organization: Organization, project: Project) {
-    this.router.navigate(['w', organization.code, project.code, 'view', Perspective.Search, 'all']);
+    const path = ['w', organization.code, project.code, 'view', Perspective.Search, 'all'];
+    this.router.navigateByUrl(path.join('/'));
   }
 
   private redirectToHome(): boolean {

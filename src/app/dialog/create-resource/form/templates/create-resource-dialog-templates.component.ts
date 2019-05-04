@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, Input, AfterViewInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Template, TemplateType} from '../../../../core/model/template';
 import {TemplateService} from '../../../../core/service/template.service';
 import {generateId} from '../../../../shared/utils/resource.utils';
@@ -49,9 +49,11 @@ export class CreateResourceDialogTemplatesComponent implements OnInit, AfterView
   }
 
   public ngAfterViewInit() {
-    const templateElement = document.getElementById(`${this.idPrefix}${this.selectedTemplate}`);
-    setTimeout(() => {
-      templateElement && templateElement.scrollIntoView();
-    }, 500);
+    if (this.selectedTemplate !== TemplateType.Empty) {
+      const templateElement = document.getElementById(`${this.idPrefix}${this.selectedTemplate}`);
+      setTimeout(() => {
+        templateElement && templateElement.scrollIntoView();
+      }, 500);
+    }
   }
 }
