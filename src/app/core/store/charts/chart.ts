@@ -73,6 +73,7 @@ export enum ChartAggregation {
   Min = 'min',
   Max = 'max',
   Avg = 'avg',
+  Count = 'count',
 }
 
 export interface ChartSort {

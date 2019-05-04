@@ -913,7 +913,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[2].points).toContain({id: null, x: 'Sport', y: 1002});
     expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 1002});
     expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 320});
-    expect(chartData.sets[5].points).toContain({id: 'D23', x: 'Sport', y: 8});
+    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 8});
   });
   it('should return data with from linked attributes', () => {
     const config: ChartConfig = {
@@ -1064,5 +1064,11 @@ describe('Chart data converter constraints', () => {
     const chartDataMin = converter.convert(configMin);
     expect(chartDataMin.sets.length).toEqual(1);
     expect(chartDataMin.sets[0].points).toEqual(pointsMin);
+
+    const configCount = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Count}};
+    const pointsCount = [{id: null, x: 'Martin', y: 3}, {id: null, x: 'Kubo', y: 2}, {id: null, x: 'Tomas', y: 4}];
+    const chartDataCount = converter.convert(configCount);
+    expect(chartDataCount.sets.length).toEqual(1);
+    expect(chartDataCount.sets[0].points).toEqual(pointsCount);
   });
 });
