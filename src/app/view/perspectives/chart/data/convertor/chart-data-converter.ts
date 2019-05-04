@@ -506,10 +506,12 @@ export class ChartDataConverter {
           obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
         );
         const values = valueObjects.map(obj => obj.value);
-        let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, yConstraint);
+        const aggregation = config.aggregations && config.aggregations[yAxisType];
+        let yValue = aggregate(aggregation, values, yConstraint);
         if (isNotNullOrUndefined(yValue)) {
-          const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
-          yValue = this.formatChartValue(yValue, yConstraint);
+          const id =
+            canDragAxis && valueObjects.length === 1 && !isValueAggregation(aggregation) ? valueObjects[0].id : null;
+          yValue = isValueAggregation(aggregation) ? this.formatChartValue(yValue, yConstraint) : yValue;
           const isNum = isNumeric(yValue);
 
           isNumericMap[nestedKey] = isNumericMap[nestedKey] && isNum;
@@ -792,11 +794,12 @@ export class ChartDataConverter {
         obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
       );
       const values = valueObjects.map(obj => obj.value);
-
-      let yValue = aggregate(config.aggregations && config.aggregations[yAxisType], values, yConstraint);
+      const aggregation = config.aggregations && config.aggregations[yAxisType];
+      let yValue = aggregate(aggregation, values, yConstraint);
       if (isNotNullOrUndefined(yValue)) {
-        const id = canDragAxis && valueObjects.length === 1 ? valueObjects[0].id : null;
-        yValue = this.formatChartValue(yValue, yConstraint);
+        const id =
+          canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
+        yValue = isValueAggregation(aggregation) ? this.formatChartValue(yValue, yConstraint) : yValue;
         isNum = isNum && isNumeric(yValue);
 
         points.push({id, x: key, y: yValue});
@@ -941,10 +944,6 @@ function areDataNested(data: DataMap, keys: string[]): boolean {
 }
 
 function aggregate(aggregation: ChartAggregation, values: any[], constraint: Constraint): any {
-  if (values.length === 1) {
-    return values[0];
-  }
-
   switch (aggregation) {
     case ChartAggregation.Sum:
       return sumValues(values, constraint);
@@ -954,9 +953,15 @@ function aggregate(aggregation: ChartAggregation, values: any[], constraint: Con
       return minInValues(values, constraint);
     case ChartAggregation.Max:
       return maxInValues(values, constraint);
+    case ChartAggregation.Count:
+      return (values || []).length;
     default:
       return sumAnyValues(values);
   }
+}
+
+function isValueAggregation(aggregation: ChartAggregation): boolean {
+  return !aggregation || ![ChartAggregation.Count].includes(aggregation);
 }
 
 function sumValues(values: any[], constraint: Constraint): any {
