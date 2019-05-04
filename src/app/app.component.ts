@@ -141,7 +141,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private showBrowserWarningOutsideChrome() {
     try {
-      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
+      const userAgent = (navigator as any).userAgent as string;
+      this.isChrome = userAgent.toLowerCase().includes('chrome') || userAgent.includes('CriOS'); // Chrome for iOS
     } catch (e) {
       this.isChrome = false;
     }
