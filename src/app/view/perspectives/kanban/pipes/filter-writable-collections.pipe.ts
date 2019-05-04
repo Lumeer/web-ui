@@ -20,24 +20,31 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 
 @Pipe({
   name: 'filterWritableCollections',
 })
 export class FilterWritableCollectionsPipe implements PipeTransform {
   public transform(
+    column: KanbanColumn,
     collections: Collection[],
     permissions: Record<string, AllowedPermissions>,
     config: KanbanConfig
   ): Collection[] {
-    const selectedCollectionsIds = Object.entries(config.collections || {})
-      .filter(([, collectionConfig]) => collectionConfig && !!collectionConfig.attribute)
-      .map(([collectionId]) => collectionId);
+    let allowedCollectionIds: string[];
+    if (column.title) {
+      allowedCollectionIds = Object.entries(config.collections || {})
+        .filter(([, collectionConfig]) => collectionConfig && !!collectionConfig.attribute)
+        .map(([collectionId]) => collectionId);
+    } else {
+      // is other column
+      allowedCollectionIds = (collections || []).map(collection => collection.id);
+    }
 
     return (collections || []).filter(collection => {
       const permission = permissions[collection.id];
-      return permission && permission.writeWithView && selectedCollectionsIds.includes(collection.id);
+      return permission && permission.writeWithView && allowedCollectionIds.includes(collection.id);
     });
   }
 }

@@ -32,8 +32,8 @@
 
   </div>
 
-  <div class="card-footer px-3 py-2" *ngIf="{collections: collections | filterWritableCollections:permissions:config} as footerData">
-    <kanban-column-footer *ngIf="column.title && footerData.collections.length > 0"
+  <div class="card-footer px-3 py-2" *ngIf="{collections: column | filterWritableCollections:collections:permissions:config} as footerData">
+    <kanban-column-footer *ngIf="footerData.collections.length > 0"
                           [collections]="footerData.collections"
                           (selectCollection)="createDocumentInCollection($event)">
     </kanban-column-footer>
