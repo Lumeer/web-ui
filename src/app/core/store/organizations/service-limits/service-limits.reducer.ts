@@ -26,7 +26,7 @@ export function serviceLimitsReducer(
 ): ServiceLimitsState {
   switch (action.type) {
     case ServiceLimitsActionType.GET_ALL_SUCCESS:
-      return serviceLimitsAdapter.addAll(action.payload.allServiceLimits, state);
+      return serviceLimitsAdapter.addAll(action.payload.allServiceLimits, {...state, loaded: true});
     case ServiceLimitsActionType.GET_SERVICE_LIMITS_SUCCESS:
       return serviceLimitsAdapter.upsertOne(action.payload.serviceLimits, state);
     default:

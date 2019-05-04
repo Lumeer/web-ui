@@ -91,13 +91,19 @@ export class ViewsEffects {
 
       return this.viewService.createView(viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
-        map(view => {
-          onSuccess && onSuccess();
-          return new ViewsAction.CreateSuccess({view: view});
+        flatMap(view => {
+          const actions: Action[] = [new ViewsAction.CreateSuccess({view: view})];
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(view)}));
+          }
+          return actions;
         }),
         catchError(error => {
-          onFailure && onFailure();
-          return of(new ViewsAction.CreateFailure({error: error}));
+          const actions: Action[] = [new ViewsAction.CreateFailure({error: error})];
+          if (onFailure) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
+          }
+          return of(...actions);
         })
       );
     })

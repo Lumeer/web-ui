@@ -57,6 +57,7 @@ import {UserNotificationsService} from './rest/user-notifications.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
+import {RedirectComponent} from './redirect.component';
 
 if (environment.locale === 'cs') {
   defineLocale('cs', csLocale);
@@ -81,7 +82,7 @@ if (environment.locale === 'cs') {
     TypeaheadModule.forRoot(),
     DeviceDetectorModule.forRoot(),
   ],
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, RedirectComponent],
   providers: [
     {
       provide: ErrorHandler,
@@ -106,7 +107,7 @@ if (environment.locale === 'cs') {
     VideoService,
     UserNotificationsService,
   ],
-  exports: [HomeComponent, NotificationsModule],
+  exports: [HomeComponent, NotificationsModule, RedirectComponent],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

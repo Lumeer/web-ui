@@ -17,21 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Template {
-  imagePath?: string;
-  icon?: string;
-  title: string;
-  description: string;
-  type: TemplateType;
-  url?: string;
-}
+import {Component} from '@angular/core';
 
-export enum TemplateType {
-  Empty = 'EMPTY',
-  OKR = 'OKR',
-}
-
-export const templateTypesMap: Record<string, TemplateType> = {
-  [TemplateType.Empty]: TemplateType.Empty,
-  [TemplateType.OKR]: TemplateType.OKR,
-};
+@Component({
+  template: '',
+})
+export class RedirectComponent {}

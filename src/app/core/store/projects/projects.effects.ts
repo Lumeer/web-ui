@@ -119,7 +119,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const {project, template, callback} = action.payload;
+      const {project, template, onSuccess, onFailure} = action.payload;
       const organization = organizationsEntities[project.organizationId];
       const projectDto = ProjectConverter.toDto(project);
 
@@ -138,13 +138,19 @@ export class ProjectsEffects {
             );
           }
 
-          if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(newProject)}));
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(newProject)}));
           }
 
           return actions;
         }),
-        catchError(error => of(new ProjectsAction.CreateFailure({error, organizationCode: organization.code})))
+        catchError(error => {
+          const actions: Action[] = [new ProjectsAction.CreateFailure({error, organizationCode: organization.code})];
+          if (onFailure) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
+          }
+          return of(...actions);
+        })
       );
     })
   );

@@ -88,6 +88,12 @@ const routes: Routes = [
     data: {modalDialogClass: 'modal-lg'},
   },
   {
+    path: `${DialogPath.CREATE_PROJECT}/:organizationId/:templateId`,
+    component: CreateResourceDialogComponent,
+    outlet: 'dialog',
+    data: {modalDialogClass: 'modal-lg'},
+  },
+  {
     path: `${DialogPath.PLAY_VIDEO}/:videoId`,
     component: PlayVideoComponent,
     outlet: 'dialog',

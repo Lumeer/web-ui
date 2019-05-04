@@ -99,7 +99,13 @@ export namespace OrganizationsAction {
   export class Create implements Action {
     public readonly type = OrganizationsActionType.CREATE;
 
-    public constructor(public payload: {organization: Organization; callback?: (organization: Organization) => void}) {}
+    public constructor(
+      public payload: {
+        organization: Organization;
+        onSuccess?: (organization: Organization) => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class CreateSuccess implements Action {

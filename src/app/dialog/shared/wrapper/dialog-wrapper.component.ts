@@ -64,6 +64,9 @@ export class DialogWrapperComponent implements AfterViewInit {
   @Input()
   public fitToScreen = false;
 
+  @Input()
+  public performingAction = false;
+
   @Output()
   public submit = new EventEmitter();
 
@@ -89,6 +92,10 @@ export class DialogWrapperComponent implements AfterViewInit {
       return;
     }
 
+    setTimeout(() => this.recomputeBodyHeight());
+  }
+
+  private recomputeBodyHeight() {
     const large = window.matchMedia('(min-width: 992px)').matches;
 
     if (large) {
@@ -98,7 +105,7 @@ export class DialogWrapperComponent implements AfterViewInit {
       this.renderer.setStyle(
         this.bodyElement.nativeElement,
         'max-height',
-        `calc(100% - ${headerHeight + footerHeight}px`
+        `calc(100% - ${headerHeight + footerHeight}px)`
       );
     } else {
       this.renderer.setStyle(this.bodyElement.nativeElement, 'max-height', null);

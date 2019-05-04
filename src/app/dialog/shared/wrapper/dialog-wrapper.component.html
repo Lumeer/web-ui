@@ -18,12 +18,14 @@
   <div class="modal-footer" #modalFooter>
     <button type="button"
             class="btn btn-outline-secondary"
+            [attr.aria-disabled]="performingAction"
+            [disabled]="performingAction"
             data-dismiss="modal">
       <ng-content select=".button-cancel"></ng-content>
     </button>
     <button *ngIf="showSubmit"
-            [attr.aria-disabled]="submitDisabled"
-            [disabled]="submitDisabled"
+            [attr.aria-disabled]="submitDisabled || performingAction"
+            [disabled]="submitDisabled || performingAction"
             (click)="onSubmit()"
             type="button"
             class="btn btn-{{type}}"

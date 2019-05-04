@@ -23,13 +23,17 @@ import {AppState} from '../../app.state';
 import {ServiceLimits} from './service.limits';
 import {selectOrganizationByWorkspace} from '../organizations.state';
 
-export interface ServiceLimitsState extends EntityState<ServiceLimits> {}
+export interface ServiceLimitsState extends EntityState<ServiceLimits> {
+  loaded: boolean;
+}
 
 export const serviceLimitsAdapter = createEntityAdapter<ServiceLimits>({
   selectId: serviceLimits => serviceLimits.organizationId,
 });
 
-export const initialServiceLimitsState: ServiceLimitsState = serviceLimitsAdapter.getInitialState({});
+export const initialServiceLimitsState: ServiceLimitsState = serviceLimitsAdapter.getInitialState({
+  loaded: false,
+});
 
 export const selectServiceLimitsState = (state: AppState) => state.serviceLimits;
 export const selectAllServiceLimits = createSelector(
@@ -49,4 +53,9 @@ export const selectServiceLimitsByWorkspace = createSelector(
   (serviceLimits, organization) => {
     return serviceLimits.find(serviceLimit => organization && serviceLimit.organizationId === organization.id);
   }
+);
+
+export const selectServiceLimitsLoaded = createSelector(
+  selectServiceLimitsState,
+  state => state.loaded
 );

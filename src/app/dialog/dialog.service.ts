@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Collection} from '../core/store/collections/collection';
 import {LinkType} from '../core/store/link-types/link.type';
 import {Organization} from '../core/store/organizations/organization';
@@ -42,20 +42,20 @@ export class DialogService {
   public callback: any;
   private open: boolean;
 
-  public constructor(private router: Router, private store: Store<AppState>) {
+  public constructor(private router: Router, private store: Store<AppState>, private route: ActivatedRoute) {
     if (environment.videoKey) {
       this.store.dispatch(new VideosAction.LoadVideos({videos: getAllVideos(), apiKey: environment.videoKey}));
     }
   }
 
-  public closeDialog() {
+  public closeDialog(): Promise<boolean> {
     this.callback = null;
-    this.navigateToDialog(null);
+    return this.navigateToDialog(null);
   }
 
-  public closeFullscreenDialog() {
+  public closeFullscreenDialog(): Promise<boolean> {
     this.callback = null;
-    this.navigateToFullscreenDialog(null);
+    return this.navigateToFullscreenDialog(null);
   }
 
   public closeAllDialogs() {
@@ -84,9 +84,11 @@ export class DialogService {
     this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);
   }
 
-  public openCreateProjectDialog(organizationId: string, callback?: (project: Project) => void) {
+  public openCreateProjectDialog(organizationId: string, templateId?: string, callback?: (project: Project) => void) {
     this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_PROJECT, organizationId]);
+    const path = [DialogPath.CREATE_PROJECT, organizationId];
+    templateId && path.push(templateId);
+    this.navigateToDialog(path);
   }
 
   public openCreateCollectionDialog(callback?: (collection: Collection) => void) {

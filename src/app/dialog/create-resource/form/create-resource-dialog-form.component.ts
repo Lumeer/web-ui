@@ -44,6 +44,9 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @Input()
   public resourceType: ResourceType;
 
+  @Input()
+  public initialTemplate: TemplateType;
+
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
 
@@ -65,6 +68,10 @@ export class CreateResourceDialogFormComponent implements OnInit {
     this.createForm();
     this.color = this.colors[Math.round(Math.random() * this.colors.length)];
     this.icon = safeGetRandomIcon();
+
+    if (this.initialTemplate) {
+      this.selectedTemplate$.next(this.initialTemplate);
+    }
   }
 
   private createForm() {

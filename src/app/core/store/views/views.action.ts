@@ -80,7 +80,7 @@ export namespace ViewsAction {
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: {view: View; onSuccess?: () => void; onFailure?: () => void}) {}
+    public constructor(public payload: {view: View; onSuccess?: (View) => void; onFailure?: () => void}) {}
   }
 
   export class CreateSuccess implements Action {

@@ -29,7 +29,6 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {Project} from '../store/projects/project';
-import {RouterAction} from '../store/router/router.action';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Role} from '../model/role';
 import {NotificationsAction} from '../store/notifications/notifications.action';
@@ -74,9 +73,14 @@ export class WorkspaceSelectService {
       });
   }
 
-  private goToProject(organization: Organization, project: Project) {
+  private goToProject(organization: Organization, project: Project, fromDialog?: boolean) {
     if (organization && project) {
-      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all']);
+      const path = ['w', organization.code, project.code, 'view', 'search', 'all'];
+      if (fromDialog) {
+        this.router.navigateByUrl(path.join('/'));
+      } else {
+        this.router.navigate(path);
+      }
     }
   }
 
@@ -97,7 +101,9 @@ export class WorkspaceSelectService {
   }
 
   public createNewProject(organization: Organization) {
-    this.dialogService.openCreateProjectDialog(organization.id, project => this.goToProject(organization, project));
+    this.dialogService.openCreateProjectDialog(organization.id, null, project =>
+      this.goToProject(organization, project, true)
+    );
   }
 
   public selectProject(organization: Organization, project: Project) {

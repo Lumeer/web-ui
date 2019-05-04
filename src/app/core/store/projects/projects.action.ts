@@ -111,7 +111,12 @@ export namespace ProjectsAction {
     public readonly type = ProjectsActionType.CREATE;
 
     public constructor(
-      public payload: {project: Project; template?: TemplateType; callback?: (project: Project) => void}
+      public payload: {
+        project: Project;
+        template?: TemplateType;
+        onSuccess?: (project: Project) => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 

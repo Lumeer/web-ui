@@ -1,6 +1,7 @@
 <dialog-wrapper [submitDisabled]="!resourceFormComponent || resourceFormComponent.form?.invalid"
                 [type]="'primary'"
                 [fitToScreen]="true"
+                [performingAction]="performingAction$ | async"
                 (submit)="onSubmit()">
   <span class="title" i18n="@@resource.new.dialog.title">
   Create new {resourceType, select, organization {Organization} project {Project}}
@@ -12,6 +13,7 @@
       *ngIf="contentValid$ | async; else contentInvalid"
       [parentId]="parentId$ | async"
       [resourceType]="resourceType"
+      [initialTemplate]="initialTemplate$ | async"
       (submitResource)="submitResource($event)">
     </create-resource-dialog-form>
 
