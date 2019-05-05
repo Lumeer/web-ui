@@ -43,6 +43,8 @@ export class TemplateService {
         return this.createEmptyTemplate();
       case TemplateType.OKR:
         return this.createOKRTemplate();
+      case TemplateType.HR:
+        return this.createHRTemplate();
       default:
         return null;
     }
@@ -72,12 +74,27 @@ export class TemplateService {
     };
   }
 
+  private createHRTemplate(): Template {
+    return {
+      type: TemplateType.HR,
+      imagePath: 'assets/templates/hr.jpg',
+      title: this.i18n({id: 'template.hr.title', value: 'Candidates Coordination'}),
+      description: this.i18n({
+        id: 'template.hr.description',
+        value: 'Ensure your candidates have the best experience interviewing with your team.',
+      }),
+      url: this.createUrlForType(TemplateType.HR),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
         return null;
       case TemplateType.OKR:
         return this.getOKRUrl();
+      case TemplateType.HR:
+        return this.getHRUrl();
     }
   }
 
@@ -87,6 +104,15 @@ export class TemplateService {
         return this.createUrl('cs/cile-s-okr');
       default:
         return this.createUrl('okr');
+    }
+  }
+
+  private getHRUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/koordinace-kandidatu');
+      default:
+        return this.createUrl('tracking-job-candidates');
     }
   }
 
