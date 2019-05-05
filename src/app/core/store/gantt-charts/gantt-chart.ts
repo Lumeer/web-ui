@@ -42,16 +42,24 @@ export interface GanttChartBarModel {
 export interface GanttChartTask {
   id: string;
   name: string;
-  start: string;
-  startAttributeId: string;
-  end: string;
-  endAttributeId: string;
+  start: Date;
+  end: Date;
   progress: number;
-  progressAttributeId: string;
   dependencies: string;
+  start_drag: boolean;
+  end_drag: boolean;
+  editable: boolean;
+  primary_color: string;
+  secondary_color: string;
+  text_color: string;
+  swimlane?: string;
+  sub_swimlane?: string;
+
+  // custom attributes
+  startAttributeId: string;
+  endAttributeId: string;
+  progressAttributeId: string;
   collectionId?: string;
-  color?: string;
-  disabled?: boolean;
 }
 
 export enum GanttChartMode {
@@ -71,4 +79,6 @@ export enum GanttChartBarPropertyRequired {
 
 export enum GanttChartBarPropertyOptional {
   Progress = 'progress',
+  Category = 'category',
+  SubCategory = 'subCategory',
 }

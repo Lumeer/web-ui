@@ -17,17 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {contrastColor} from '../utils/color.utils';
+import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
 
-@Pipe({
-  name: 'contrastColor',
-})
-@Injectable({
-  providedIn: 'root',
-})
-export class ContrastColorPipe implements PipeTransform {
-  public transform(color: string, returnCodes?: {dark: string; light: string}): string {
-    return contrastColor(color, returnCodes);
+export function contrastColor(color: string, returnCodes?: {dark: string; light: string}): string {
+  const f = parseInt(color.indexOf('#') === 0 ? color.slice(1) : color, 16),
+    R = f >> 16,
+    G = (f >> 8) & 0x00ff,
+    B = f & 0x0000ff;
+
+  const luminance = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
+
+  if (luminance > 0.5) {
+    return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
+  } else {
+    return returnCodes ? returnCodes.light : COLOR_LIGHT;
   }
 }
