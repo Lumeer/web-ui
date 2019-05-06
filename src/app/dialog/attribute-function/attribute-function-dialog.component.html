@@ -1,6 +1,5 @@
 <div class="modal-content"
-     *ngIf="{collection: (collection$ | async), linkType: (linkType$ | async), attribute: (attribute$ | async)} as data"
-     (clickOutside)="onClose($event)">
+     *ngIf="{collection: (collection$ | async), linkType: (linkType$ | async), attribute: (attribute$ | async)} as data">
   <div class="modal-header bg-success text-white rounded-top"
        *ngIf="{icons: data.collection ? [data.collection.icon] : [data.linkType.collections[0]?.icon, data.linkType.collections[1]?.icon],
                colors: data.collection ? [data.collection.color] : [data.linkType.collections[0]?.color, data.linkType.collections[1]?.color] } as resource">

@@ -85,6 +85,18 @@ ul {
   cursor: default;
 }
 
+notifications ng-snotify div.snotify.snotify-leftTop {
+  width: 320px;
+}
+
+div.snotifyToast .snotifyToast__progressBar {
+  background-color: $success-hover;
+}
+
+div.snotifyToast span.snotifyToast__progressBar__percentage {
+  background-color: $success;
+}
+
 // notifications
 .snotifyToast__title,
 .snotifyToast__body,

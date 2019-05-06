@@ -22,6 +22,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
 import {Observable} from 'rxjs';
 import {UserSettingsService} from '../service/user-settings.service';
+import {SnotifyType} from 'ng-snotify/snotify/types/snotify.type';
 
 @Injectable()
 export class NotificationService {
@@ -102,6 +103,22 @@ export class NotificationService {
         buttons: buttons,
         position: SnotifyPosition.centerTop,
         closeOnClick: true,
+      })
+    );
+  }
+
+  public hint(message: string, title: string, buttons: SnotifyButton[]): void {
+    this.zone.runOutsideAngular(() =>
+      this.notifications.success(message, title, {
+        timeout: 5000,
+        icon: 'assets/img/lumeer.svg',
+        iconClass: 'lumeer-logo',
+        pauseOnHover: true,
+        closeOnClick: true,
+        showProgressBar: true,
+        buttons: buttons,
+        type: 'success',
+        position: SnotifyPosition.leftTop,
       })
     );
   }

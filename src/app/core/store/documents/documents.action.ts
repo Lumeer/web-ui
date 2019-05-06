@@ -42,6 +42,8 @@ export enum DocumentsActionType {
   PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
   PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 
+  CHECK_DATA_HINT = '[Documents] Check Data Hint',
+
   UPDATE_META_DATA = '[Documents] Update Meta Data',
   PATCH_META_DATA = '[Documents] Patch Meta Data',
 
@@ -139,6 +141,12 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.PATCH_DATA_INTERNAL;
 
     public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+  }
+
+  export class CheckDataHint implements Action {
+    public readonly type = DocumentsActionType.CHECK_DATA_HINT;
+
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   /**
@@ -258,6 +266,7 @@ export namespace DocumentsAction {
     | PatchData
     | PatchDataInternal
     | PatchDataPending
+    | CheckDataHint
     | UpdateMetaData
     | PatchMetaData
     | UpdateSuccess
