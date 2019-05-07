@@ -3149,13 +3149,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="eefbd9cfa4babe1e90ce68165751dd69cb211cb1" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</source><target state="new">{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</target>
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} progress {Průběh} category {Kategorie} subCategory {Podkategorie} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-Category} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} }</target>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} category {Kategorie} subCategory {Podkategorie} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
