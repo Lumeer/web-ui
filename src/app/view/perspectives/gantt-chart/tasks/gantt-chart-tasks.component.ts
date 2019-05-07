@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   GanttChartBarPropertyOptional,
   GanttChartConfig,
@@ -37,7 +37,7 @@ import {
   GanttChartTask,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map} from 'rxjs/operators';
 import {createGanttChartTasks} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
@@ -50,6 +50,7 @@ interface Data {
   config: GanttChartConfig;
   permissions: Record<string, AllowedPermissions>;
   query: Query;
+  constraintData: ConstraintData;
 }
 
 @Component({
@@ -86,6 +87,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchData = new EventEmitter<DocumentModel>();
 
   @Output()
+  public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
+
+  @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
@@ -106,7 +110,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
           data.collections,
           data.documents,
           data.permissions || {},
-          this.constraintData,
+          data.constraintData,
           data.query
         )
       )
@@ -115,7 +119,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (
-      (changes.documents || changes.config || changes.collections || changes.permissions || changes.query) &&
+      (changes.documents ||
+        changes.config ||
+        changes.collections ||
+        changes.permissions ||
+        changes.query ||
+        changes.constraintData) &&
       this.config
     ) {
       this.dataSubject.next({
@@ -124,6 +133,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         permissions: this.permissions,
         config: this.config,
         query: this.query,
+        constraintData: this.constraintData,
       });
     }
     if (changes.config && this.config) {
@@ -142,7 +152,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onValueChanged(data: {documentId: string; changes: {attributeId: string; value: any}[]}) {
     const {documentId, changes} = data;
-    const changedDocument = this.documents.find(document => document.id === documentId);
+    const changedDocument = (this.documents || []).find(document => document.id === documentId);
     if (!changedDocument) {
       return;
     }
@@ -180,5 +190,27 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const collectionConfig = this.config && this.config.collections && this.config.collections[collectionId];
     const progressAxis = collectionConfig && collectionConfig.barsProperties[GanttChartBarPropertyOptional.Progress];
     return progressAxis && progressAxis.attributeId === attributeId;
+  }
+
+  public onAddDependency(data: {fromId: string; toId: string}) {
+    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
+    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    if (!documentFrom || !documentTo) {
+      return;
+    }
+
+    const metaData = {parentId: documentFrom.id};
+    this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
+  }
+
+  public onRemoveDependency(data: {fromId: string; toId: string}) {
+    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
+    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    if (!documentFrom || !documentTo) {
+      return;
+    }
+
+    const metaData = {parentId: null};
+    this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
   }
 }

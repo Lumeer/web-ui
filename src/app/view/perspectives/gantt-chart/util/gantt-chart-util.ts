@@ -19,6 +19,7 @@
 
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {
+  GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
@@ -44,7 +45,7 @@ import {
 import {Query} from '../../../../core/store/navigation/query';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
-import {createDataValueHtml} from '../../../../shared/utils/data/data-html.utils';
+import * as moment from 'moment';
 
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
@@ -146,7 +147,7 @@ function createGanttChartTasksForCollection(
 
     tasks.push({
       id: document.id,
-      name: createDataValueHtml(name, nameAttribute && nameAttribute.constraint, constraintData),
+      name: formatDataValue(name, nameAttribute && nameAttribute.constraint, constraintData),
       start: interval[0].value,
       end: interval[1].value,
       progress: createProgress(progress),
@@ -207,12 +208,12 @@ function createInterval(
   startAttributeId: string,
   end: string,
   endAttributeId: string
-): [{value: Date; attrId: string}, {value: Date; attrId: string}] {
+): [{value: string; attrId: string}, {value: string; attrId: string}] {
   const startDate = parseDateTimeDataValue(start);
   const endDate = parseDateTimeDataValue(end);
 
-  const startDateObj = {value: startDate, attrId: startAttributeId};
-  const endDateObj = {value: endDate, attrId: endAttributeId};
+  const startDateObj = {value: moment(startDate).format(GANTT_DATE_FORMAT), attrId: startAttributeId};
+  const endDateObj = {value: moment(endDate).format(GANTT_DATE_FORMAT), attrId: endAttributeId};
 
   if (endDate.getTime() > startDate.getTime()) {
     return [startDateObj, endDateObj];

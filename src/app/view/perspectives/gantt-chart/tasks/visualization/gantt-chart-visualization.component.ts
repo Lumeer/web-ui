@@ -22,6 +22,7 @@ import {GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-ch
 import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {environment} from '../../../../../../environments/environment';
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -45,6 +46,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
 
+  @Output()
+  public addDependency = new EventEmitter<{fromId: string; toId: string}>();
+
+  @Output()
+  public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
+
   public ganttChart: frappeGantt;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -56,7 +63,6 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private visualize() {
-    console.log([...this.tasks].map(t => ({...t})));
     if (this.ganttChart) {
       this.refreshChart();
     } else {
@@ -102,8 +108,6 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const endTimeTask = moment(task.end);
         const endTime = moment(end);
 
-        console.log(task, start, end);
-
         const changes = [];
 
         //start time changed
@@ -133,12 +137,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
         }
       },
       on_dependency_added: dependency => {
-        console.log(dependency);
+        this.addDependency.next({fromId: dependency.from, toId: dependency.to});
       },
       on_dependency_deleted: dependency => {
-        console.log(dependency);
+        this.removeDependency.next({fromId: dependency.from, toId: dependency.to});
       },
-      language: 'en',
+      language: environment.locale,
       view_mode: this.currentMode,
     });
   }

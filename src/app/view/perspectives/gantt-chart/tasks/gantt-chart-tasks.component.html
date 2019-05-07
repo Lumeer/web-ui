@@ -2,7 +2,7 @@
   <ng-container *ngIf="{range: data.tasks | tasksInvalidRangeInfo} as invalidInfo">
     <ng-container *ngIf="!invalidInfo.range">
       <gantt-chart-header class="d-flex justify-content-end"
-                          [currentMode]="data.mode" *ngIf="data.tasks?.length"
+                          [currentMode]="data.mode"
                           (modeChange)="onModeChanged($event)">
       </gantt-chart-header>
       <gantt-chart-visualization
@@ -10,7 +10,9 @@
         [ganttChartId]="ganttChartId"
         [currentMode]="data.mode"
         [tasks]="data.tasks"
-        (patchData)="onValueChanged($event)">
+        (patchData)="onValueChanged($event)"
+        (addDependency)="onAddDependency($event)"
+        (removeDependency)="onRemoveDependency($event)">
       </gantt-chart-visualization>
     </ng-container>
 

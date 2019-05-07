@@ -42,8 +42,8 @@ export interface GanttChartBarModel {
 export interface GanttChartTask {
   id: string;
   name: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   progress: number;
   dependencies: string;
   start_drag: boolean;
