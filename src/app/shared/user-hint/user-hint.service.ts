@@ -1,0 +1,103 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../core/store/app.state';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Attribute, Collection} from '../../core/store/collections/collection';
+import {EMPTY, Observable, of} from 'rxjs';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {ConstraintType} from '../../core/model/data/constraint';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UserHintService {
+  public constructor(private store$: Store<AppState>, private i18n: I18n) {}
+
+  public processDataHints(values: any[], entry: [string, any], collection: Collection): Observable<any> {
+    if (values.length === 3) {
+      if (this.checkPercentageValues(values)) {
+        const attribute = collection.attributes.filter(attr => attr.id === entry[0])[0];
+        return of(this.getPercentageHint(collection, attribute));
+      }
+    }
+
+    return EMPTY;
+  }
+
+  private checkPercentageValues(values: any[]): boolean {
+    const filteredCount = this.filterPercentageValues(values).length;
+    return filteredCount === values.length;
+  }
+
+  private getPercentageHint(collection: Collection, attribute: Attribute): NotificationsAction.Hint {
+    const message = this.i18n(
+      {
+        id: 'lumeer.advice.percentage',
+        value: 'I suggest to set the column type of {{attrName}} to percentage. Do you agree?',
+      },
+      {
+        attrName: attribute.name,
+      }
+    );
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+    return new NotificationsAction.Hint({
+      message,
+      buttons: [
+        {
+          text: yesButtonText,
+          action: () => {
+            this.store$.dispatch(
+              new CollectionsAction.ChangeAttribute({
+                collectionId: collection.id,
+                attributeId: attribute.id,
+                attribute: {...attribute, constraint: {type: ConstraintType.Percentage, config: {}}},
+              })
+            );
+          },
+        },
+        {
+          text: noButtonText,
+        },
+      ],
+    });
+  }
+
+  private filterPercentageValues(values: any[]): any[] {
+    return values.filter(val => {
+      if (!!val) {
+        const strVal = String(val);
+
+        if (strVal.endsWith('%')) {
+          const numPart = strVal.substring(0, strVal.length - 1);
+          if (!isNaN(+numPart)) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    });
+  }
+}

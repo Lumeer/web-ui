@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, first, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -40,6 +40,8 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
+import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 
 @Injectable()
 export class DocumentsEffects {
@@ -96,6 +98,7 @@ export class DocumentsEffects {
                 documentId: document.id,
                 correlationId: document.correlationId,
               }),
+              new DocumentsAction.CheckDataHint({document: action.payload.document}),
             ]),
             catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
           );
@@ -251,6 +254,30 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public checkDataHint$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.CheckDataHint>(DocumentsActionType.CHECK_DATA_HINT),
+    withLatestFrom(
+      this.store$.pipe(select(selectDocumentsDictionary)),
+      this.store$.pipe(select(selectCollectionsDictionary))
+    ),
+    mergeMap(([action, documents, collections]) => {
+      const document = action.payload.document;
+      const documentsInCollection = Object.values(documents).filter(d => d.collectionId === document.collectionId);
+      const currentCollection = collections[document.collectionId];
+      const entries = Object.entries(document.data);
+
+      if (entries.length > 0) {
+        const entry = entries[0];
+        const values = documentsInCollection.map(d => d.data[entry[0]]);
+
+        return this.userHints.processDataHints(values, entry, currentCollection);
+      }
+
+      return EMPTY;
+    })
+  );
+
+  @Effect()
   public patchDataInternal$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchDataInternal>(DocumentsActionType.PATCH_DATA_INTERNAL),
     mergeMap(action => {
@@ -258,7 +285,10 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
-        map(document => new DocumentsAction.UpdateSuccess({document})),
+        flatMap(document => [
+          new DocumentsAction.UpdateSuccess({document}),
+          new DocumentsAction.CheckDataHint({document: action.payload.document}),
+        ]),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
       );
     })
@@ -371,6 +401,7 @@ export class DocumentsEffects {
     private collectionService: CollectionService,
     private i18n: I18n,
     private searchService: SearchService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private userHints: UserHintService
   ) {}
 }

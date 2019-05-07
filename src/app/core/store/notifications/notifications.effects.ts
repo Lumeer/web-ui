@@ -82,6 +82,15 @@ export class NotificationsEffects {
   );
 
   @Effect({dispatch: false})
+  public hint$ = this.actions$.pipe(
+    ofType<NotificationsAction.Hint>(NotificationsActionType.HINT),
+    tap(action => {
+      const lumeerAdvice = this.i18n({id: 'lumeer.advice', value: "Lumeer's Advice"});
+      this.notificationService.hint(action.payload.message, lumeerAdvice, action.payload.buttons);
+    })
+  );
+
+  @Effect({dispatch: false})
   public notifyForceRefresh$: Observable<Action> = this.actions$.pipe(
     ofType<NotificationsAction.ForceRefresh>(NotificationsActionType.FORCE_REFRESH),
     tap(() => {
