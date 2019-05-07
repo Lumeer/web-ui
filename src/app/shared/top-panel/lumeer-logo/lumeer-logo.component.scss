@@ -3,7 +3,7 @@
 
 .lumeer-logo {
   position: relative;
-  z-index: $zindex-popover;
+  z-index: $zindex-sticky;
 
   &:hover {
     transform: scale(1.2, 1.2);

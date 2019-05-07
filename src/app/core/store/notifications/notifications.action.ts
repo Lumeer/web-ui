@@ -25,6 +25,7 @@ export enum NotificationsActionType {
   ERROR = '[Notifications] Error',
   SUCCESS = '[Notifications] Success',
   WARNING = '[Notifications] Warning',
+  HINT = '[Notifications] Hint',
 
   FORCE_REFRESH = '[Notifications] Force Refresh',
 }
@@ -60,9 +61,15 @@ export namespace NotificationsAction {
     public constructor(public payload: {message: string}) {}
   }
 
+  export class Hint implements Action {
+    public readonly type = NotificationsActionType.HINT;
+
+    public constructor(public payload: {message: string; buttons: {text: string; action?: () => void}[]}) {}
+  }
+
   export class ForceRefresh implements Action {
     public readonly type = NotificationsActionType.FORCE_REFRESH;
   }
 
-  export type All = Confirm | Error | Success | Warning | ForceRefresh;
+  export type All = Confirm | Error | Success | Warning | Hint | ForceRefresh;
 }
