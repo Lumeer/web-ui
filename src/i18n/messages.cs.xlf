@@ -1927,22 +1927,6 @@
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.empty.title" datatype="html">
-        <source>I could not find any tasks</source><target> Nenalezl jsem žádný úkol</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.empty.subtitle" datatype="html">
-        <source>
-    Please select correct attributes from the side menu
-  </source><target>
-    Prosím vyberte atributy pro zobrazení v nabídce vlevo
-  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/visualization/gantt-chart-visualization.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
       </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source><target>Úkoly jsou naplánované na dlouhou dobu</target>
         <context-group purpose="location">
@@ -3159,19 +3143,19 @@
         <source>View mode</source><target>Styl zobrazení</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></target>
+        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="7a6181759492992ae2262f745b89628d30a5d6fb" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} }</source><target>{VAR_SELECT, select, name {název} start {počáteční datum} end {koncové datum} progress {průběh} }</target>
+      </trans-unit><trans-unit id="eefbd9cfa4babe1e90ce68165751dd69cb211cb1" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} progress {Průběh} category {Kategorie} subCategory {Podkategorie} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} }</target>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} category {Kategorie} subCategory {Podkategorie} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>

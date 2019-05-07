@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
+import {createDataValueHtml} from '../../../../shared/utils/data/data-html.utils';
 
 export function createSearchDocumentValuesHtml(
   document: DocumentModel,
@@ -39,55 +40,14 @@ export function createSearchDocumentValuesHtml(
       attributeId => collectionAttributesIds.includes(attributeId) && isNotNullOrUndefined(document.data[attributeId])
     )
     .map(attributeId =>
-      createSearchDocumentValueHtml(
+      createDataValueHtml(
         document.data[attributeId],
         findAttributeConstraint(collection.attributes, attributeId),
-        constraintData
+        constraintData,
+        'search-documents-value'
       )
     )
     .join(', ');
-}
-
-function createSearchDocumentValueHtml(value: any, constraint: Constraint, constraintData: ConstraintData): string {
-  const formattedValue = formatDataValue(value, constraint, constraintData);
-  if (!constraint) {
-    return createSearchDocumentAnyValueHtml(formattedValue);
-  }
-
-  switch (constraint.type) {
-    case ConstraintType.Color:
-      return createSearchDocumentColorValueHtml(formattedValue);
-    case ConstraintType.Boolean:
-      return createSearchDocumentBooleanValueHtml(formattedValue);
-    default:
-      return createSearchDocumentAnyValueHtml(formattedValue);
-  }
-}
-
-function createSearchDocumentAnyValueHtml(value: string) {
-  return `<span class="search-documents-value">${value}</span>`;
-}
-
-function createSearchDocumentColorValueHtml(value: string) {
-  return `<div class="d-inline-block search-documents-value"
-          style="width: 60px; background: ${value}">&nbsp;</div>`;
-}
-
-function createSearchDocumentBooleanValueHtml(value: boolean) {
-  const inputId = `search-document-input-${Math.random()
-    .toString(36)
-    .substr(2)}`;
-  return `<div class="d-inline-block custom-control custom-checkbox"><input 
-             id="${inputId}"
-             checked="${value}"
-             style="cursor: unset;"
-             readonly type="checkbox"
-             class="custom-control-input">
-          <label
-             for="${inputId}"
-             style="cursor: unset;"
-             class="custom-control-label">
-          </label></div>`;
 }
 
 export function createSearchDocumentEntriesHtml(
@@ -110,10 +70,11 @@ export function createSearchDocumentEntriesHtml(
     .map(attributeId => ({attributeId, constraint: findAttributeConstraint(collection.attributes, attributeId)}))
     .map(
       ({attributeId, constraint}) =>
-        `${searchDocumentAttributeHtml(attributeId, collection)}${createSearchDocumentValueHtml(
+        `${searchDocumentAttributeHtml(attributeId, collection)}${createDataValueHtml(
           document.data[attributeId],
           constraint,
-          constraintData
+          constraintData,
+          'search-documents-value'
         )}`
     )
     .join(', ');

@@ -1,14 +1,2 @@
-<div class="w-100 mt-2" id="ganttChart-{{ganttChartId}}"
-     [class.zero-height]="!ganttChart">
+<div class="w-100 mt-2" id="ganttChart-{{ganttChartId}}">
 </div>
-<empty-state
-  class="w-100"
-  *ngIf="!ganttChart"
-  [icon]="'fal fa-folder-times'">
-
-  <h3 i18n="@@perspective.gantt.empty.title">I could not find any tasks</h3>
-  <div i18n="@@perspective.gantt.empty.subtitle" *ngIf="canManageConfig">
-    Please select correct attributes from the side menu
-  </div>
-
-</empty-state>

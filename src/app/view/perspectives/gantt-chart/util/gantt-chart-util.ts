@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {
+  GANTT_DATE_FORMAT,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
@@ -34,11 +35,17 @@ import {
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {formatData, parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
-import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {formatData, formatDataValue, parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {
+  findAttribute,
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+} from '../../../../core/store/collections/collection.util';
 import {Query} from '../../../../core/store/navigation/query';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {contrastColor} from '../../../../shared/utils/color.utils';
+import * as moment from 'moment';
 
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
@@ -59,7 +66,8 @@ export function createGanttChartTasks(
         collection,
         documentsByCollection(documents, collection),
         permissions[collection.id] || {},
-        constraintData
+        constraintData,
+        query
       ),
     ],
     []
@@ -88,8 +96,8 @@ function createGanttChartTasksForCollection(
   const startProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.Start];
   const endProperty = collectionConfig.barsProperties[GanttChartBarPropertyRequired.End];
   const progressProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.Progress];
-  const disabled = !permissions.writeWithView;
-  const customClass = disabled ? 'gantt-bar-disabled' : null;
+  const swimlaneProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.Category];
+  const subSwimlaneProperty = collectionConfig.barsProperties[GanttChartBarPropertyOptional.SubCategory];
 
   const validDocumentsMap: Record<string, DocumentModel> = documents.reduce((map, document) => {
     const name = nameProperty && document.data[nameProperty.attributeId];
@@ -101,14 +109,16 @@ function createGanttChartTasksForCollection(
     return map;
   }, {});
 
-  const tasks = [];
+  const tasks: GanttChartTask[] = [];
 
   for (const document of Object.values(validDocumentsMap)) {
     const formattedData = formatData(document.data, collection.attributes, constraintData);
 
-    const name = nameProperty && formattedData[nameProperty.attributeId];
-    const start = startProperty && formattedData[startProperty.attributeId];
-    const end = endProperty && formattedData[endProperty.attributeId];
+    const name = nameProperty && document.data[nameProperty.attributeId];
+    const nameAttribute = nameProperty && findAttribute(collection.attributes, nameProperty.attributeId);
+
+    const start = startProperty && document.data[startProperty.attributeId];
+    const end = endProperty && document.data[endProperty.attributeId];
 
     const startEditable = isCollectionAttributeEditable(startProperty.attributeId, collection, permissions, query);
     const endEditable = isCollectionAttributeEditable(endProperty.attributeId, collection, permissions, query);
@@ -127,24 +137,43 @@ function createGanttChartTasksForCollection(
       query
     );
 
+    const swimlaneConstraint =
+      swimlaneProperty && findAttributeConstraint(collection.attributes, swimlaneProperty.attributeId);
+    const swimlaneValue = swimlaneProperty && document.data[swimlaneProperty.attributeId];
+
+    const subSwimlaneConstraint =
+      subSwimlaneProperty && findAttributeConstraint(collection.attributes, subSwimlaneProperty.attributeId);
+    const subSwimlaneValue = subSwimlaneProperty && document.data[subSwimlaneProperty.attributeId];
+
     tasks.push({
       id: document.id,
-      name,
-      dependencies: createDependencies(document, validDocumentsMap),
+      name: formatDataValue(name, nameAttribute && nameAttribute.constraint, constraintData),
       start: interval[0].value,
-      startAttributeId: interval[0].attrId,
       end: interval[1].value,
-      endAttributeId: interval[1].attrId,
       progress: createProgress(progress),
+      dependencies: createDependencies(document, validDocumentsMap),
+      primary_color: shadeColor(collection.color, 0.5),
+      secondary_color: shadeColor(collection.color, 0.3),
+      start_drag: startEditable,
+      end_drag: endEditable,
+      editable: startEditable && endEditable,
+      text_color: contrastColor(collection.color),
+      swimlane: formatSwimlaneValue(swimlaneValue, swimlaneConstraint, constraintData),
+      sub_swimlane: formatSwimlaneValue(subSwimlaneValue, subSwimlaneConstraint, constraintData),
+
+      startAttributeId: interval[0].attrId,
+      endAttributeId: interval[1].attrId,
       progressAttributeId: progressEditable && progressProperty && progressProperty.attributeId,
       collectionId: collection.id,
-      color: collection.color,
-      custom_class: customClass,
-      disabled,
     });
   }
 
   return tasks;
+}
+
+function formatSwimlaneValue(value: any, constraint: Constraint, constraintData: ConstraintData): string | null {
+  const formattedValue = formatDataValue(value, constraint, constraintData);
+  return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
 }
 
 function createDependencies(document: DocumentModel, documentsMap: Record<string, DocumentModel>): string {
@@ -176,16 +205,17 @@ function createProgress(progress: any): number {
 
 function createInterval(
   start: string,
-  startAttributeId,
+  startAttributeId: string,
   end: string,
   endAttributeId: string
-): [{value: Date; attrId: string}, {value: Date; attrId: string}] {
-  const startDate = moment(parseDateTimeDataValue(start));
-  const endDate = moment(parseDateTimeDataValue(end));
-  const startDateObj = {value: startDate.toDate(), attrId: startAttributeId};
-  const endDateObj = {value: endDate.toDate(), attrId: endAttributeId};
+): [{value: string; attrId: string}, {value: string; attrId: string}] {
+  const startDate = parseDateTimeDataValue(start);
+  const endDate = parseDateTimeDataValue(end);
 
-  if (endDate.isAfter(startDate)) {
+  const startDateObj = {value: moment(startDate).format(GANTT_DATE_FORMAT), attrId: startAttributeId};
+  const endDateObj = {value: moment(endDate).format(GANTT_DATE_FORMAT), attrId: endAttributeId};
+
+  if (endDate.getTime() > startDate.getTime()) {
     return [startDateObj, endDateObj];
   }
   return [endDateObj, startDateObj];

@@ -17,28 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  Renderer2,
-  SimpleChanges,
-  ViewEncapsulation,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
 import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
-import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {environment} from '../../../../../../environments/environment';
 
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
   styleUrls: ['./gantt-chart-visualization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
@@ -57,9 +46,13 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
 
-  public ganttChart: frappeGantt;
+  @Output()
+  public addDependency = new EventEmitter<{fromId: string; toId: string}>();
 
-  constructor(private renderer: Renderer2) {}
+  @Output()
+  public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
+
+  public ganttChart: frappeGantt;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tasks && this.tasks) {
@@ -79,22 +72,16 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   private refreshChart() {
     const scrollLeft = this.ganttChart.$svg.parentElement && this.ganttChart.$svg.parentElement.scrollLeft;
-    if (this.tasks.length) {
-      this.ganttChart.refresh(this.tasks);
-      this.ganttChart.change_view_mode(this.currentMode);
-      this.setChartColorsAndListeners();
+    this.ganttChart.refresh(this.tasks);
+    if (this.ganttChart.view_is(this.currentMode)) {
       isNotNullOrUndefined(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
     } else {
-      this.ganttChart.clear();
-      this.ganttChart = null;
+      this.ganttChart.change_view_mode(this.currentMode);
     }
   }
 
   private createChart() {
-    if (this.tasks.length) {
-      this.createChartAndInitListeners(this.tasks);
-      this.setChartColorsAndListeners();
-    }
+    this.createChartAndInitListeners(this.tasks);
   }
 
   private modeChanged(changes: SimpleChanges): boolean {
@@ -103,81 +90,23 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   private refreshMode(mode: GanttChartMode) {
     this.ganttChart.change_view_mode(mode);
-    this.setChartColorsAndListeners();
-  }
-
-  private setChartColorsAndListeners() {
-    const tasksMap = this.ganttChart.tasks.reduce((map, task) => ({...map, [task.id]: task}), {});
-
-    const disabledTaskIds = new Set();
-    const barWrappers = document.querySelectorAll('.gantt .bar-wrapper');
-    barWrappers.forEach(element => {
-      const taskId = element.getAttribute('data-id');
-      const task = tasksMap[taskId];
-      if (!task) {
-        return;
-      }
-
-      const barColor = shadeColor(task.color, 0.5);
-      const progressColor = shadeColor(task.color, 0.3);
-
-      const barElement = element.querySelector('.bar');
-      barElement && this.renderer.setStyle(barElement, 'fill', barColor);
-
-      const progressElement = element.querySelector('.bar-progress');
-      progressElement && this.renderer.setStyle(progressElement, 'fill', progressColor);
-
-      if (task.disabled) {
-        this.removeListeners(element);
-        disabledTaskIds.add(taskId);
-      } else {
-        const handleGroupElement = element.querySelector('.handle-group');
-        if (!task.startAttributeId) {
-          const handleElement = handleGroupElement.querySelector('.handle.left');
-          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
-        }
-        if (!task.endAttributeId) {
-          const handleElement = handleGroupElement.querySelector('.handle.left');
-          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
-        }
-        if (!task.progressAttributeId) {
-          const handleElement = handleGroupElement.querySelector('.handle.progress');
-          handleElement && this.renderer.setStyle(handleElement, 'display', 'none');
-        }
-      }
-    });
-
-    const arrows = document.querySelector('.gantt .arrow');
-    for (let i = 0; i < arrows.children.length; i++) {
-      const arrow = arrows.children.item(i);
-      const idFrom = arrow.getAttribute('data-from');
-      const idTo = arrow.getAttribute('data-to');
-      if (disabledTaskIds.has(idFrom) || disabledTaskIds.has(idTo)) {
-        this.removeListeners(arrow);
-      }
-    }
-  }
-
-  private removeListeners(element: Element) {
-    element && element.parentNode.replaceChild(element.cloneNode(true), element);
   }
 
   private createChartAndInitListeners(tasks: GanttChartTask[]) {
     this.ganttChart = new frappeGantt.default(`#ganttChart-${this.ganttChartId}`, tasks, {
       on_date_change: (task, start, end) => {
-        if (task.disabled) {
+        if (!task.editable) {
           return;
         }
 
         const startAttributeId = task.startAttributeId;
         const endAttributeId = task.endAttributeId;
 
-        // TODO due to frappe bug we need to add 1 hour
-        const startTimeTask = moment(task.start).add(1, 'hours');
-        const startTime = moment(start).add(1, 'hours');
+        const startTimeTask = moment(task.start);
+        const startTime = moment(start);
 
-        const endTimeTask = moment(task.end).add(1, 'hours');
-        const endTime = moment(end).add(1, 'hours');
+        const endTimeTask = moment(task.end);
+        const endTime = moment(end);
 
         const changes = [];
 
@@ -197,7 +126,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
       },
 
       on_progress_change: (task, progress) => {
-        if (task.disabled) {
+        if (!task.editable) {
           return;
         }
 
@@ -207,8 +136,15 @@ export class GanttChartVisualizationComponent implements OnChanges {
           this.onValueChanged(task.id, [{attributeId: progressAttributeId, value: progress}]);
         }
       },
+      on_dependency_added: dependency => {
+        this.addDependency.next({fromId: dependency.from, toId: dependency.to});
+      },
+      on_dependency_deleted: dependency => {
+        this.removeDependency.next({fromId: dependency.from, toId: dependency.to});
+      },
+      language: environment.locale,
+      view_mode: this.currentMode,
     });
-    this.ganttChart.change_view_mode(this.currentMode);
   }
 
   private onValueChanged(documentId: string, changes: {attributeId: string; value: string}[]) {

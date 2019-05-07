@@ -143,7 +143,11 @@ export function createAttributesMap(attributes: Attribute[]): Record<string, Att
   }, {});
 }
 
+export function findAttribute(attributes: Attribute[], attributeId: string): Attribute {
+  return (attributes || []).find(attr => attr.id === attributeId);
+}
+
 export function findAttributeConstraint(attributes: Attribute[], attributeId: string): Constraint {
-  const attribute = (attributes || []).find(attr => attr.id === attributeId);
+  const attribute = findAttribute(attributes, attributeId);
   return attribute && attribute.constraint;
 }

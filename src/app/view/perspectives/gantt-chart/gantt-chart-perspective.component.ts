@@ -25,7 +25,7 @@ import {
   selectCollectionsByCustomQuery,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {User} from '../../../core/store/users/user';
@@ -145,5 +145,9 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  public patchDocumentMetaData(payload: {collectionId: string; documentId: string; metaData: DocumentMetaData}) {
+    this.store$.dispatch(new DocumentsAction.PatchMetaData(payload));
   }
 }
