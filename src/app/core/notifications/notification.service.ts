@@ -110,7 +110,7 @@ export class NotificationService {
   public hint(message: string, title: string, buttons: SnotifyButton[]): void {
     this.zone.runOutsideAngular(() =>
       this.notifications.success(message, title, {
-        timeout: 5000,
+        timeout: 8000,
         icon: 'assets/img/lumeer.svg',
         iconClass: 'lumeer-logo',
         pauseOnHover: true,

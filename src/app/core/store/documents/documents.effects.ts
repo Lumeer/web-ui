@@ -262,16 +262,15 @@ export class DocumentsEffects {
     ),
     mergeMap(([action, documents, collections]) => {
       const document = action.payload.document;
-      const myDocuments = Object.values(documents).filter(d => d.collectionId === document.collectionId);
-      const myCollection = collections[document.collectionId];
-      const docCount = myDocuments.length;
+      const documentsInCollection = Object.values(documents).filter(d => d.collectionId === document.collectionId);
+      const currentCollection = collections[document.collectionId];
       const entries = Object.entries(document.data);
 
       if (entries.length > 0) {
         const entry = entries[0];
-        const values = myDocuments.map(d => d.data[entry[0]]);
+        const values = documentsInCollection.map(d => d.data[entry[0]]);
 
-        return this.userHints.processDataHints(values, entry, myCollection);
+        return this.userHints.processDataHints(values, entry, currentCollection);
       }
 
       return EMPTY;
