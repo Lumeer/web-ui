@@ -25,6 +25,7 @@ export interface Environment extends EnvironmentVariables {
   authPersistence?: boolean; // keep auth token in local storage
   mapQuestKey: string;
   production: boolean;
+  pusherLogDisabled?: boolean;
   storeDevtools: boolean;
   name?: string;
   paymentGw: string;
