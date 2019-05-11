@@ -26,6 +26,7 @@ export const environment: Environment = {
   authPersistence: true,
   mapQuestKey: '04hLAMDKaudroElnGIzKTltIxTaGOjTR',
   production: true,
+  pusherLogDisabled: true,
   storeDevtools: false,
   name: 'production',
   paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
