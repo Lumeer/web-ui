@@ -1,15 +1,16 @@
-<top-panel-wrapper [searchBoxShown]="true">
+<top-panel-wrapper *ngIf="{view: view$ | async} as data"
+                   [searchBoxShown]="true">
 
-  <view-controls *ngIf="view$ | async as view"
+  <view-controls *ngIf="data.view"
                  [novice]="!(viewsExist$ | async)"
-                 [view]="view"
+                 [view]="data.view"
                  (save)="onSave($event)"
                  (saveOrClone)="onSaveOrClone($event)"
                  class="controls">
   </view-controls>
 
   <div class="content flex-grow-1 d-flex flex-column h-100">
-    <div *ngIf="!(view$ | async)"
+    <div *ngIf="!data.view"
          class="d-flex mx-3">
       <div class="d-none d-xl-block side-panel pointer-events-none"></div>
       <div class="flex-grow-1">
