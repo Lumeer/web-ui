@@ -1,0 +1,57 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {DocumentModel} from '../../documents/document.model';
+import {LinkInstance} from '../../link-instances/link.instance';
+import {TableConfigRow} from '../table.model';
+
+export function filterNewlyCreatedDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
+  const rowCorrelationIds = rows.filter(row => row.correlationId && !row.documentId).map(row => row.correlationId);
+  return documents
+    .filter(document => !!document.id && !!document.correlationId)
+    .filter(document => rowCorrelationIds.includes(document.correlationId));
+}
+
+export function filterUnknownDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
+  return documents.filter(
+    document =>
+      !rows.some(row => {
+        return row.documentId === document.id || (row.correlationId && row.correlationId === document.correlationId);
+      })
+  );
+}
+
+export function filterNewlyCreatedLinkInstances(rows: TableConfigRow[], linkInstances: LinkInstance[]): LinkInstance[] {
+  const rowCorrelationIds = rows.filter(row => row.correlationId && !row.linkInstanceId).map(row => row.correlationId);
+  return linkInstances
+    .filter(linkInstance => !!linkInstance.id && !!linkInstance.correlationId)
+    .filter(linkInstance => rowCorrelationIds.includes(linkInstance.correlationId));
+}
+
+export function filterUnknownLinkInstances(rows: TableConfigRow[], linkInstances: LinkInstance[]): LinkInstance[] {
+  return linkInstances.filter(
+    linkInstance =>
+      !rows.some(row => {
+        return (
+          row.linkInstanceId === linkInstance.id ||
+          (row.correlationId && row.correlationId === linkInstance.correlationId)
+        );
+      })
+  );
+}

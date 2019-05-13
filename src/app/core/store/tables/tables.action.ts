@@ -61,6 +61,7 @@ export enum TablesActionType {
   SYNC_LINKED_ROWS = '[Tables] Sync Linked Rows',
   ADD_PRIMARY_ROWS = '[Tables] Add Primary Rows',
   INIT_ROWS = '[Tables] Init Rows',
+  INIT_LINKED_ROWS = '[Tables] Init Linked Rows',
   CLEAN_ROWS = '[Tables] Clean Rows',
   ORDER_PRIMARY_ROWS = '[Tables] Order Primary Rows',
 
@@ -298,6 +299,15 @@ export namespace TablesAction {
   }
 
   /**
+   * Adds linkInstanceId and documentId to the rows that have correlationId matching some of the provided documents.
+   */
+  export class InitLinkedRows implements Action {
+    public readonly type = TablesActionType.INIT_LINKED_ROWS;
+
+    public constructor(public payload: {cursor: TableBodyCursor; linkInstances: LinkInstance[]}) {}
+  }
+
+  /**
    * Remove rows containing documentId (or linkInstanceId) for not existing document (or link instance)
    */
   export class CleanRows implements Action {
@@ -429,6 +439,7 @@ export namespace TablesAction {
     | AddPrimaryRows
     | AddLinkedRows
     | InitRows
+    | InitLinkedRows
     | CleanRows
     | ReplaceRows
     | RemoveRow

@@ -19,7 +19,7 @@
 
 import {Direction} from '../../../shared/direction';
 import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
-import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.utils';
+import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {
   DEFAULT_TABLE_ID,
@@ -32,6 +32,7 @@ import {
 } from './table.model';
 import {
   createEmptyTableRow,
+  findTableRow,
   isValidHierarchicalRowOrder,
   moveTableColumn,
   replaceTableColumns,
@@ -65,6 +66,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return addLinkedRows(state, action);
     case TablesActionType.INIT_ROWS:
       return initRows(state, action);
+    case TablesActionType.INIT_LINKED_ROWS:
+      return initLinkedRows(state, action);
     case TablesActionType.CLEAN_ROWS:
       return cleanRows(state, action);
     case TablesActionType.ORDER_PRIMARY_ROWS:
@@ -251,6 +254,41 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
 
     return newRows;
   });
+
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
+}
+
+function initLinkedRows(state: TablesState, action: TablesAction.InitLinkedRows): TablesState {
+  const {cursor, linkInstances} = action.payload;
+  const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
+
+  const rows = updateRows(table.config.rows, cursor.rowPath, oldRows =>
+    oldRows.map(row => {
+      if (!row.correlationId) {
+        return row;
+      }
+
+      const linkInstance = linkInstances.find(link => link.correlationId === row.correlationId);
+      if (!linkInstance) {
+        return row;
+      }
+
+      const {documentId: linkedDocumentId} = findTableRow(table.config.rows, cursor.rowPath);
+      const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, linkedDocumentId);
+
+      return {
+        ...row,
+        correlationId: null,
+        documentId,
+        linkInstanceId: linkInstance && linkInstance.id,
+        parentDocumentId: null,
+      };
+    })
+  );
 
   const config = {...table.config, rows};
   return tablesAdapter.updateOne({id: cursor.tableId, changes: {config}}, state);
