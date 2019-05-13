@@ -17,22 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take} from 'rxjs/operators';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {combineLatest, Observable, of} from 'rxjs';
+import {filter, first, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
+import {NotificationService} from '../core/notifications/notification.service';
 import {AppState} from '../core/store/app.state';
-import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
-import {Workspace} from '../core/store/navigation/workspace';
+import {selectViewsByRead} from '../core/store/common/permissions.selectors';
+import {selectNavigation, selectPerspective, selectQuery} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
-import {Query} from '../core/store/navigation/query';
-import {NotificationService} from '../core/notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 
 @Component({
@@ -40,16 +38,12 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewComponent implements OnInit, OnDestroy {
+export class ViewComponent implements OnInit {
   @ViewChild(ViewControlsComponent)
   public viewControlsComponent: ViewControlsComponent;
 
-  public view$ = new BehaviorSubject<View>(null);
+  public view$: Observable<View>;
   public viewsExist$: Observable<boolean>;
-
-  private workspace: Workspace;
-  private query: Query;
-  private subscriptions = new Subscription();
 
   constructor(
     private dialogService: DialogService,
@@ -59,67 +53,38 @@ export class ViewComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.subscriptions.add(this.subscribeToNavigation());
-    this.bindToViews();
+    this.view$ = this.bindView();
+    this.viewsExist$ = this.bindViewsExist();
   }
 
-  private subscribeToNavigation(): Subscription {
-    return this.store$
-      .pipe(
-        select(selectNavigation),
-        filter(this.validNavigation)
-      )
-      .subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.query = navigation.query;
-
-        if (navigation.workspace.viewCode) {
-          this.loadView(navigation.workspace.viewCode);
+  private bindView(): Observable<View> {
+    return this.store$.pipe(
+      select(selectNavigation),
+      filter(({workspace, perspective}) =>
+        Boolean(workspace && workspace.organizationCode && workspace.projectCode && perspective)
+      ),
+      startWith(null),
+      pairwise(),
+      mergeMap(([previousNavigation, {workspace, query, viewName}]) => {
+        if (workspace.viewCode) {
+          return this.store$.pipe(
+            filter(() => !previousNavigation || previousNavigation.workspace.viewCode !== workspace.viewCode),
+            select(selectViewByCode(workspace.viewCode)),
+            filter(view => !!view),
+            tap(view => this.store$.dispatch(new ViewsAction.ChangeConfig({config: view.config})))
+          );
         } else {
-          this.loadQuery(navigation.query, navigation.viewName);
+          return of({name: viewName || '', query, perspective: null, config: {}});
         }
-      });
-  }
-
-  private loadView(code: string) {
-    this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectViewByCode(code)),
-          filter(view => !!view)
-        )
-        .subscribe(view => this.setView(view))
+      })
     );
   }
 
-  private setView(view: View) {
-    this.view$.next({...view});
-    this.store$.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
-  }
-
-  private loadQuery(query: Query, name?: string) {
-    const view = {name: name || '', query: query, perspective: null, config: {}};
-    this.view$.next(view);
-  }
-
-  private bindToViews() {
-    this.viewsExist$ = this.store$.pipe(
+  private bindViewsExist(): Observable<boolean> {
+    return this.store$.pipe(
       select(selectViewsByRead),
       map(views => views && views.length > 0)
     );
-  }
-
-  private validNavigation(navigation: NavigationState): boolean {
-    return (
-      !!navigation.workspace &&
-      navigation.workspace.projectCode &&
-      navigation.workspace.organizationCode &&
-      !!navigation.perspective
-    );
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 
   public onSaveOrClone(name: string) {
@@ -130,13 +95,15 @@ export class ViewComponent implements OnInit, OnDestroy {
     combineLatest(
       this.store$.pipe(select(selectPerspectiveConfig)),
       this.store$.pipe(select(selectPerspective)),
-      this.getViewByName(name)
+      this.getViewByName(name),
+      this.store$.pipe(select(selectQuery)),
+      this.view$
     )
       .pipe(take(1))
-      .subscribe(([config, perspective, viewByName]) => {
+      .subscribe(([config, perspective, viewByName, query, currentView]) => {
         const view: View = {
-          ...this.view$.getValue(),
-          query: this.query,
+          ...currentView,
+          query,
           name,
           config: {[perspective]: createPerspectiveSaveConfig(perspective, config)},
           perspective,
