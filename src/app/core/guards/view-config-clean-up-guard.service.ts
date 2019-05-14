@@ -21,10 +21,8 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {Perspective, perspectivesMap} from '../../view/perspectives/perspective';
 import {ViewComponent} from '../../view/view.component';
 import {AppState} from '../store/app.state';
-import {PostItAction} from '../store/postit/postit.action';
 import {ViewsAction} from '../store/views/views.action';
 
 @Injectable({
@@ -46,18 +44,8 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
       currentRoute.firstChild.url[0] &&
       currentRoute.firstChild.url[0].path;
     if (perspective && !nextState.url.includes(perspective) && !viewCode) {
-      this.clearPerspective(perspectivesMap[perspective]);
+      this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
     }
     return true;
-  }
-
-  private clearPerspective(perspective: Perspective) {
-    switch (perspective) {
-      // TODO set post-it config in changeConfig$ effect instead
-      case Perspective.PostIt:
-        return this.store$.dispatch(new PostItAction.Clear());
-      default:
-        this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
-    }
   }
 }

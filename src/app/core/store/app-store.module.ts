@@ -48,7 +48,6 @@ import {PaymentsEffects} from './organizations/payment/payments.effects';
 import {paymentsReducer} from './organizations/payment/payments.reducer';
 import {ServiceLimitsEffects} from './organizations/service-limits/service-limits.effects';
 import {serviceLimitsReducer} from './organizations/service-limits/service-limits.reducer';
-import {postItReducer} from './postit/postit.reducer';
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
@@ -83,7 +82,6 @@ const reducers: ActionReducerMap<AppState> = {
   tables: tablesReducer,
   users: usersReducer,
   views: viewsReducer,
-  postIts: postItReducer,
   charts: chartsReducer,
   calendars: calendarsReducer,
   videos: videosReducer,

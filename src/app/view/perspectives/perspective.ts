@@ -32,7 +32,7 @@ export enum Perspective {
 
 export const perspectivesMap: Record<string, Perspective> = {
   [Perspective.Detail]: Perspective.Detail,
-  [Perspective.PostIt]: Perspective.PostIt,
+  [Perspective.PostIt]: Perspective.Kanban,
   [Perspective.Kanban]: Perspective.Kanban,
   [Perspective.Chart]: Perspective.Chart,
   [Perspective.Calendar]: Perspective.Calendar,
@@ -45,7 +45,7 @@ export const perspectivesMap: Record<string, Perspective> = {
 
 export const perspectiveIconsMap: Record<string, string> = {
   [Perspective.Detail]: 'far fa-fw fa-map-marker-alt',
-  [Perspective.PostIt]: 'far fa-fw fa-sticky-note',
+  [Perspective.PostIt]: 'far fa-fw fa-columns',
   [Perspective.Kanban]: 'far fa-fw fa-columns',
   [Perspective.Chart]: 'far fa-fw fa-chart-area',
   [Perspective.Calendar]: 'far fa-fw fa-calendar-alt',

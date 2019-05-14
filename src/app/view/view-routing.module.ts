@@ -28,7 +28,6 @@ import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';
-import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
@@ -51,10 +50,6 @@ const viewRoutes: Routes = [
       {
         path: Perspective.Detail,
         loadChildren: './perspectives/detail/detail-perspective.module#DetailPerspectiveModule',
-      },
-      {
-        path: Perspective.PostIt,
-        component: PostItPerspectiveComponent,
       },
       {
         path: Perspective.Kanban,
