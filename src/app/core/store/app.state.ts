@@ -40,6 +40,7 @@ import {initialVideosState, VideosState} from './videos/videos.state';
 import {initialUserNotificationsState, UserNotificationsState} from './user-notifications/user-notifications.state';
 import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';
 import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
+import {initialPivotsState, PivotsState} from './pivots/pivots.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -58,6 +59,7 @@ export interface AppState {
   tables: TablesState;
   users: UsersState;
   views: ViewsState;
+  pivots: PivotsState;
   charts: ChartsState;
   calendars: CalendarsState;
   videos: VideosState;
@@ -84,6 +86,7 @@ export function initialAppState(): AppState {
     tables: initialTablesState,
     users: initialUsersState,
     views: initialViewsState,
+    pivots: initialPivotsState,
     charts: initialChartsState,
     calendars: initialCalendarsState,
     videos: initialVideosState,

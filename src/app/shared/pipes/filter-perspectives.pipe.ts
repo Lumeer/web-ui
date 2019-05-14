@@ -35,6 +35,7 @@ function canShowPerspective(perspective: Perspective, query: Query): boolean {
   switch (perspective) {
     case Perspective.Table:
     case Perspective.Chart:
+    case Perspective.Pivot:
       return isSingleCollectionQuery(query);
     case Perspective.Map:
     case Perspective.Calendar:
