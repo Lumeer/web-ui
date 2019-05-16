@@ -26,7 +26,6 @@
     [attributeId]="column.attributeIds[0]"
     [collectionId]="(table | part:cursor)?.collectionId"
     [columns]="table | documentHintColumns:cursor:canManageConfig"
-    [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
     [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
     [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
     [correlationId]="(row$ | async)?.correlationId"

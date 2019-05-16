@@ -35,6 +35,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {Direction} from '../../../shared/direction';
+import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
@@ -49,10 +50,9 @@ import {
   selectDocumentsByQuery,
   selectDocumentsByQueryAndIds,
 } from '../common/permissions.selectors';
-import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
-import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
+import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {
   selectLinkInstancesByTypeAndDocuments,
@@ -108,8 +108,13 @@ import {
   selectTableRows,
   selectTableRowsWithHierarchyLevels,
 } from './tables.selector';
+import {
+  filterNewlyCreatedDocuments,
+  filterNewlyCreatedLinkInstances,
+  filterUnknownDocuments,
+  filterUnknownLinkInstances,
+} from './utils/table-row-sync.utils';
 import {isLastTableRowInitialized} from './utils/table-row.utils';
-import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 
 @Injectable()
 export class TablesEffects {
@@ -711,31 +716,27 @@ export class TablesEffects {
                   })
                 ),
                 mergeMap(documents => {
-                  const createdDocuments = filterNewlyCreatedDocuments(linkedRows, documents);
-                  const unknownDocuments = filterUnknownDocuments(linkedRows, documents);
+                  const createdLinkInstances = filterNewlyCreatedLinkInstances(linkedRows, linkInstances);
+                  const unknownLinkInstances = filterUnknownLinkInstances(linkedRows, linkInstances);
 
                   const actions: Action[] = [];
 
-                  if (createdDocuments.length > 0) {
+                  if (createdLinkInstances.length > 0) {
                     actions.push(
-                      new TablesAction.InitRows({
+                      new TablesAction.InitLinkedRows({
                         cursor: action.payload.cursor,
-                        documents: createdDocuments,
                         linkInstances,
                       })
                     );
                   }
 
-                  if (
-                    unknownDocuments.length > 0 &&
-                    unknownDocuments.some(document => !!findLinkInstanceByDocumentId(linkInstances, document.id))
-                  ) {
+                  if (unknownLinkInstances.length > 0) {
                     actions.push(
                       new TablesAction.AddLinkedRows({
                         cursor: action.payload.cursor,
-                        linkedRows: unknownDocuments.reduce((rows, document) => {
-                          const linkInstance = findLinkInstanceByDocumentId(linkInstances, document.id);
-                          return linkInstance ? rows.concat(createTableRow(document, linkInstance)) : rows;
+                        linkedRows: unknownLinkInstances.reduce((rows, linkInstance) => {
+                          const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
+                          return document ? rows.concat(createTableRow(document, linkInstance)) : rows;
                         }, []),
                         append: true,
                       })
@@ -1183,20 +1184,4 @@ function createFirstChildAttributeAction(
     attribute: {...oldAttribute, id: `${oldAttribute.id}.${name}`, name},
     nextAction,
   });
-}
-
-function filterNewlyCreatedDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
-  const rowCorrelationIds = rows.filter(row => row.correlationId && !row.documentId).map(row => row.correlationId);
-  return documents
-    .filter(document => !!document.id && !!document.correlationId)
-    .filter(document => rowCorrelationIds.includes(document.correlationId));
-}
-
-function filterUnknownDocuments(rows: TableConfigRow[], documents: DocumentModel[]): DocumentModel[] {
-  return documents.filter(
-    document =>
-      !rows.some(row => {
-        return row.documentId === document.id || (row.correlationId && row.correlationId === document.correlationId);
-      })
-  );
 }
