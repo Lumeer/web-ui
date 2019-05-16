@@ -30,7 +30,6 @@ import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
-import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {View, ViewConfig, ViewCursor} from './view';
 import {isViewConfigChanged} from './view.utils';
@@ -94,17 +93,15 @@ export const selectViewCursor = createSelector(
 
 export const selectPerspectiveConfig = createSelector(
   selectPerspective,
-  selectPostItConfig,
   selectTableConfig,
   selectChartConfig,
   selectMapConfig,
   selectGanttChartConfig,
   selectCalendarConfig,
   selectKanbanConfig,
-  (perspective, postItConfig, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig) =>
+  (perspective, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig) =>
     ({
       [Perspective.Map]: mapConfig,
-      [Perspective.PostIt]: postItConfig,
       [Perspective.Table]: tableConfig,
       [Perspective.Chart]: chartConfig,
       [Perspective.GanttChart]: ganttChartConfig,

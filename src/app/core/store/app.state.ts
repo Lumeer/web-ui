@@ -34,7 +34,6 @@ import {initialViewsState, ViewsState} from './views/views.state';
 import {ContactsState, initialContactsState} from './organizations/contact/contacts.state';
 import {initialServiceLimitsState, ServiceLimitsState} from './organizations/service-limits/service-limits.state';
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
-import {initialPostItState, PostItState} from './postit/postit.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
 import {CalendarsState, initialCalendarsState} from './calendars/calendars.state';
 import {initialVideosState, VideosState} from './videos/videos.state';
@@ -59,7 +58,6 @@ export interface AppState {
   tables: TablesState;
   users: UsersState;
   views: ViewsState;
-  postIts: PostItState;
   charts: ChartsState;
   calendars: CalendarsState;
   videos: VideosState;
@@ -86,7 +84,6 @@ export function initialAppState(): AppState {
     tables: initialTablesState,
     users: initialUsersState,
     views: initialViewsState,
-    postIts: initialPostItState,
     charts: initialChartsState,
     calendars: initialCalendarsState,
     videos: initialVideosState,

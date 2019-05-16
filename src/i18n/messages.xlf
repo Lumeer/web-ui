@@ -64,7 +64,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context>
@@ -416,7 +416,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
@@ -663,10 +663,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/add-button/post-it-collection-add-button.component.html</context>
           <context context-type="linenumber">5</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Collection
@@ -1396,7 +1392,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="attribute.type.label" datatype="html">
         <source>
@@ -1609,7 +1605,7 @@
         <source>Configure function of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.attrtibute.function.editable" datatype="html">
         <source>
@@ -1617,7 +1613,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.title" datatype="html">
         <source>Share View</source>
@@ -1918,7 +1914,7 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
+        <source>{VAR_SELECT, select, detail {Detail} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">25</context>
@@ -1960,13 +1956,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.post.it.add" datatype="html">
-        <source>Add Record</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.attribute" datatype="html">
         <source>Create new attribute
@@ -2997,6 +2987,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -3029,6 +3023,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
@@ -3488,6 +3486,13 @@
       </trans-unit>
       <trans-unit id="button.ok" datatype="html">
         <source>OK</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="lumeer.advice" datatype="html">
+        <source>Lumeer&apos;s Advice</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -4047,6 +4052,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="lumeer.advice.percentage" datatype="html">
+        <source>I suggest to set the column type of <x id="INTERPOLATION" equiv-text="{{attrName}}"/> to percentage. Do you agree?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="user.add.placeholder" datatype="html">
         <source>Type email to invite another user</source>
         <context-group purpose="location">
@@ -4093,41 +4105,6 @@
         <source>{VAR_SELECT, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
-        <source>View mode</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.empty.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="eefbd9cfa4babe1e90ce68165751dd69cb211cb1" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4184,6 +4161,41 @@
         <source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
+        <source>View mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.empty.placeholder" datatype="html">
+        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="eefbd9cfa4babe1e90ce68165751dd69cb211cb1" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.bar.placeholder" datatype="html">
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.gantt.config.mode" datatype="html">
+        <source>{VAR_SELECT, select, Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
