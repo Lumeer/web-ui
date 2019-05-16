@@ -494,7 +494,7 @@ export class ChartDataConverter {
     const yConstraint = this.axisConstraint(yAxis);
 
     for (const key of xEntries) {
-      const nestedValue: Record<string, {id: string; value: any}[]> = data[key];
+      const nestedValue: Record<string, { id: string; value: any }[]> = data[key];
       const nestedKeys = Object.keys(nestedValue);
       for (const nestedKey of nestedKeys) {
         if (!pointsMap[nestedKey]) {
@@ -502,7 +502,7 @@ export class ChartDataConverter {
           isNumericMap[nestedKey] = true;
         }
 
-        const valueObjects: {id: string; value: any}[] = nestedValue[nestedKey].filter(
+        const valueObjects: { id: string; value: any }[] = nestedValue[nestedKey].filter(
           obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
         );
         const values = valueObjects.map(obj => obj.value);
@@ -790,7 +790,7 @@ export class ChartDataConverter {
     const yConstraint = this.axisConstraint(yAxis);
 
     for (const key of xEntries) {
-      const valueObjects: {id: string; value: any}[] = data[key].filter(
+      const valueObjects: { id: string; value: any }[] = data[key].filter(
         obj => obj.value !== '' && isNotNullOrUndefined(obj.value)
       );
       const values = valueObjects.map(obj => obj.value);

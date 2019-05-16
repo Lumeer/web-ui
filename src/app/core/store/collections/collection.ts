@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from '../../model/resource';
+import {AttributesResource, Resource} from '../../model/resource';
 import {Constraint} from './../../model/data/constraint';
 import {CollectionDto} from '../../dto';
 import {Rule} from '../../model/rule';
@@ -43,8 +43,7 @@ export interface AttributeFunction {
   editable?: boolean;
 }
 
-export interface Collection extends Resource {
-  attributes?: Attribute[];
+export interface Collection extends Resource, AttributesResource {
   defaultAttributeId?: string;
   lastTimeUsed?: Date;
 

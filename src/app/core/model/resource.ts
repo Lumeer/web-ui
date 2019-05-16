@@ -18,6 +18,8 @@
  */
 
 import {Permissions} from '../store/permissions/permissions';
+import {Attribute} from '../store/collections/collection';
+import {DocumentData} from '../store/documents/document.model';
 
 export interface Resource {
   id?: string;
@@ -31,4 +33,22 @@ export interface Resource {
 
   correlationId?: string;
   nonRemovable?: boolean;
+}
+
+export interface AttributesResource {
+  attributes?: Attribute[];
+  color?: string;
+  id?: string;
+}
+
+export enum AttributeResourceType {
+  Collection = 'collection',
+  LinkType = 'linkType',
+}
+
+export interface DataResource {
+  id?: string;
+  data: DocumentData;
+  collectionId?: string;
+  linkTypeId?: string;
 }

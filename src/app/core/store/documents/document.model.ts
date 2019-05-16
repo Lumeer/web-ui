@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DocumentModel {
-  id?: string;
+import {DataResource} from '../../model/resource';
+
+export interface DocumentModel extends DataResource {
   collectionId: string;
-  data: DocumentData;
   newData?: {[attributeName: string]: {value: any; correlationId?: string}};
 
   metaData?: DocumentMetaData;

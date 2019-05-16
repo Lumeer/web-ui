@@ -21,12 +21,15 @@ import {LinkInstanceDto} from '../../dto';
 import {LinkInstance} from './link.instance';
 
 export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationId?: string): LinkInstance {
+  const data = {...dto.data};
+  delete data['_id'];
+
   return {
     id: dto.id,
     correlationId,
     linkTypeId: dto.linkTypeId,
     documentIds: dto.documentIds,
-    data: dto.data || {},
+    data,
     dataVersion: dto.dataVersion,
     creationDate: new Date(dto.creationDate),
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
