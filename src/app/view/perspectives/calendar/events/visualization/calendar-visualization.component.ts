@@ -17,12 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, LOCALE_ID, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  LOCALE_ID,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import {CalendarMode} from '../../../../../core/store/calendars/calendar.model';
 import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
-import {MonthViewDay, WeekViewHourColumn, DayViewHourSegment} from 'calendar-utils';
+import {DayViewHourSegment, MonthViewDay, WeekViewHourColumn} from 'calendar-utils';
 import {CalendarMetaData} from '../../util/calendar-util';
 
 const DEFAULT_NEW_EVENT_HOUR = 9;
@@ -30,6 +39,8 @@ const DEFAULT_NEW_EVENT_HOUR = 9;
 @Component({
   selector: 'calendar-visualization',
   templateUrl: './calendar-visualization.component.html',
+  styleUrls: ['./calendar-visualization.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarVisualizationComponent {

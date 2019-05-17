@@ -13,7 +13,7 @@
     </collapsible-sidebar>
 
     <calendar-events *ngIf="{users: users$ | async} as constraintData"
-      class="flex-grow-1 mx-3 mb-3 d-block h-100"
+      class="flex-grow-1 mx-3 d-block h-100"
       [collections]="data.collections"
       [documents]="documents$ | async"
       [canManageConfig]="data.canManageConfig"

@@ -9,6 +9,7 @@
   </calendar-header>
 
   <calendar-visualization
+    class="h-100 d-block"
     [events]="(events$ | async) || []"
     [currentMode]="data.mode"
     [currentDate]="data.date"
