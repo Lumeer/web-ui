@@ -93,7 +93,11 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private createChartAndInitListeners(tasks: GanttChartTask[]) {
-    this.ganttChart = new frappeGantt.default(`#ganttChart-${this.ganttChartId}`, tasks, {
+    const ganttElement = document.getElementById(`ganttChart-${this.ganttChartId}`);
+    if (!ganttElement) {
+      return;
+    }
+    this.ganttChart = new frappeGantt.default(ganttElement, tasks, {
       on_date_change: (task, start, end) => {
         if (!task.editable) {
           return;
