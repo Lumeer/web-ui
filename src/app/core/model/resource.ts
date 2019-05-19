@@ -41,7 +41,7 @@ export interface AttributesResource {
   id?: string;
 }
 
-export enum AttributeResourceType {
+export enum AttributesResourceType {
   Collection = 'collection',
   LinkType = 'linkType',
 }

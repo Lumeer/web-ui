@@ -196,7 +196,7 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
-      color: '#ffffff',
+      color: 'rgba(255,255,255,1)',
       yAxis: {
         category: ChartAxisCategory.Number,
         config: undefined,
