@@ -20,14 +20,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Inject,
   Input,
   LOCALE_ID,
   OnChanges,
   OnInit,
   Output,
+  Renderer2,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -46,6 +50,8 @@ import {Query} from '../../../../core/store/navigation/query';
 import * as moment from 'moment';
 import {isDateValid} from '../../../../shared/utils/common.utils';
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {CalendarHeaderComponent} from './header/calendar-header.component';
+import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 
 interface Data {
   collections: Collection[];
@@ -61,6 +67,17 @@ interface Data {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarEventsComponent implements OnInit, OnChanges {
+  @ViewChild(CalendarHeaderComponent, {read: ElementRef})
+  public calendarHeaderElement: ElementRef;
+
+  @ViewChild(CalendarVisualizationComponent, {read: ElementRef})
+  set content(content: ElementRef) {
+    this.calendarVisualizationElement = content;
+    this.computeMaxVisualizationHeight();
+  }
+
+  private calendarVisualizationElement: ElementRef;
+
   @Input()
   public collections: Collection[];
 
@@ -100,7 +117,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public events$: Observable<CalendarEvent<CalendarMetaData>[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
-  constructor(@Inject(LOCALE_ID) public locale: string) {}
+  constructor(@Inject(LOCALE_ID) public locale: string, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.events$ = this.subscribeToEvents();
@@ -212,5 +229,22 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
     this.updateEvent.emit(event.meta.documentId);
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeMaxVisualizationHeight();
+  }
+
+  private computeMaxVisualizationHeight() {
+    if (this.calendarVisualizationElement) {
+      const calendarHeaderHeight =
+        (this.calendarHeaderElement && this.calendarHeaderElement.nativeElement.offsetHeight) || 0;
+      this.renderer.setStyle(
+        this.calendarVisualizationElement.nativeElement,
+        'max-height',
+        `calc(100% - 1rem - ${calendarHeaderHeight}px)`
+      );
+    }
   }
 }
