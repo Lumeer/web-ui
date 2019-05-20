@@ -21,7 +21,8 @@
                       [max]="max"
                       [showMeridian]="options?.meridian"
                       [showMinutes]="options?.minutes"
-                      [showSeconds]="options?.seconds">
+                      [showSeconds]="options?.seconds"
+                      (keydown)="onTimePickerKeyDown($event)">
           </timepicker>
           <small class="text-secondary mt-3">
             {{ timeZone }}
