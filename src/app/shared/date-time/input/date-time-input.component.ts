@@ -29,9 +29,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {parseDateTimeDataValue} from '../../utils/data.utils';
+import {resetUnusedDatePart} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
-import {resetUnusedDatePart} from '../../utils/date.utils';
 
 @Component({
   selector: 'date-time-input',
@@ -88,10 +88,6 @@ export class DateTimeInputComponent implements OnChanges {
       const value = parseDateTimeDataValue(this.dateTimeInput.nativeElement.value, this.format);
       this.valueChange.emit(value);
     }
-  }
-
-  public onValueChange(date: Date) {
-    // TODO
   }
 
   public onSave(date: Date) {

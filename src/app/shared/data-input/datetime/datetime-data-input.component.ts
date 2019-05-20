@@ -37,6 +37,7 @@ import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.c
 import {KeyCode} from '../../key-code';
 import {isDateValid} from '../../utils/common.utils';
 import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
+import {resetUnusedDatePart} from '../../utils/date.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -154,7 +155,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
     const previousDate = parseDateTimeDataValue(this.value, this.constraintConfig.format);
     const previousValue = previousDate && previousDate.toISOString();
-    const value = date && date.toISOString();
+    const value = date && resetUnusedDatePart(date, this.constraintConfig.format).toISOString();
 
     if (value !== previousValue) {
       this.save.emit(value);
