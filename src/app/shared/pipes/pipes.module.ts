@@ -65,6 +65,7 @@ import {JoinPipe} from './join.pipe';
 import {SafeHtmlPipe} from './safe-html.pipe';
 import {EmailValidPipe} from './email/email-valid.pipe';
 import {UserByEmailPipe} from './email/user-by-email.pipe';
+import {UniqueEntitiesPipe} from './unique-entities.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -113,6 +114,7 @@ import {UserByEmailPipe} from './email/user-by-email.pipe';
     SafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,
+    UniqueEntitiesPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -161,6 +163,7 @@ import {UserByEmailPipe} from './email/user-by-email.pipe';
     SafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,
+    UniqueEntitiesPipe,
   ],
 })
 export class PipesModule {}

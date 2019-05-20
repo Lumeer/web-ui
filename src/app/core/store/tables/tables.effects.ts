@@ -114,7 +114,7 @@ import {
   filterUnknownDocuments,
   filterUnknownLinkInstances,
 } from './utils/table-row-sync.utils';
-import {isLastTableRowInitialized} from './utils/table-row.utils';
+import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
 
 @Injectable()
 export class TablesEffects {
@@ -686,26 +686,34 @@ export class TablesEffects {
   @Effect()
   public syncLinkedRows$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
-    mergeMap(action =>
-      combineLatest(
-        this.store$.pipe(select(selectTablePart(action.payload.cursor))),
-        this.store$.pipe(select(selectTableRow(action.payload.cursor)))
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      return combineLatest(
+        this.store$.pipe(select(selectTablePart(cursor))),
+        this.store$.pipe(select(selectTableRows(cursor.tableId)))
       ).pipe(
-        first(),
-        filter(([part, row]) => !!part && !!row),
-        mergeMap(([part, row]) => {
-          const linkedRows = row.linkedRows || [];
+        take(1),
+        filter(([part]) => !!part),
+        mergeMap(([part, rows]) => {
+          const rowDocumentIds = findTableRowsIncludingCollapsed(rows, cursor.rowPath)
+            .map(row => row.documentId)
+            .filter(documentId => !!documentId);
+          if (rowDocumentIds.length === 0) {
+            return [];
+          }
+
+          const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
           return this.store$.pipe(
-            select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, [row.documentId])),
-            first(),
+            select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, rowDocumentIds)),
+            take(1),
             mergeMap(linkInstances => {
               const documentIds = linkInstances.reduce((ids, linkInstance) => {
-                const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, row.documentId);
+                const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
                 return ids.includes(documentId) ? ids : ids.concat(documentId);
               }, []);
               return this.store$.pipe(
                 select(selectDocumentsByQueryAndIds(documentIds)),
-                first(),
+                take(1),
                 map(documents =>
                   documents.map(document => {
                     const linkInstance = linkInstances.find(link => link.documentIds.includes(document.id));
@@ -722,21 +730,16 @@ export class TablesEffects {
                   const actions: Action[] = [];
 
                   if (createdLinkInstances.length > 0) {
-                    actions.push(
-                      new TablesAction.InitLinkedRows({
-                        cursor: action.payload.cursor,
-                        linkInstances,
-                      })
-                    );
+                    actions.push(new TablesAction.InitLinkedRows({cursor, linkInstances}));
                   }
 
                   if (unknownLinkInstances.length > 0) {
                     actions.push(
                       new TablesAction.AddLinkedRows({
                         cursor: action.payload.cursor,
-                        linkedRows: unknownLinkInstances.reduce((rows, linkInstance) => {
+                        linkedRows: unknownLinkInstances.reduce((newRows, linkInstance) => {
                           const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
-                          return document ? rows.concat(createTableRow(document, linkInstance)) : rows;
+                          return document ? newRows.concat(createTableRow(document, linkInstance)) : newRows;
                         }, []),
                         append: true,
                       })
@@ -749,8 +752,8 @@ export class TablesEffects {
             })
           );
         })
-      )
-    )
+      );
+    })
   );
 
   @Effect()

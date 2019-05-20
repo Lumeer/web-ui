@@ -20,8 +20,8 @@
         <ng-template #collapsedCell>
           <table-collapsed-cell [column]="column"
                                 [cursor]="cursor | columnCursor:columnIndex"
-                                [documents]="data.documents"
-                                [linkInstances]="data.linkInstances"
+                                [documents]="data.documents | uniqueEntities"
+                                [linkInstances]="data.linkInstances | uniqueEntities"
                                 [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                                 [style.width.px]="column | columnWidth:canManageConfig"
                                 class="d-block table-border-right table-border-bottom">

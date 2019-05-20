@@ -22,3 +22,67 @@ import {TableConfigRow} from '../table.model';
 export function isLastTableRowInitialized(rows: TableConfigRow[]): boolean {
   return rows && rows.length > 0 && !!rows[rows.length - 1].documentId;
 }
+
+/**
+ * Returns all linked rows for a row specified by rowPath as you would see them in the UI (including rows linked to its
+ * siblings if the parent row is collapsed).
+ */
+export function findLinkedTableRows(rows: TableConfigRow[], rowPath: number[]): TableConfigRow[] {
+  if (rowPath.length === 0) {
+    return rows;
+  }
+
+  const [rowIndex, ...childPath] = rowPath;
+  const row = rows[rowIndex];
+
+  if (!row) {
+    return [];
+  }
+
+  if (row.linkedRows.length > 1 && !row.expanded) {
+    return findAllLinkedTableRowsByLevel(row.linkedRows, childPath.length);
+  }
+
+  return findLinkedTableRows(row.linkedRows, childPath);
+}
+
+function findAllLinkedTableRowsByLevel(rows: TableConfigRow[], level: number): TableConfigRow[] {
+  if (level <= 0) {
+    return rows;
+  }
+
+  return findAllLinkedTableRowsByLevel(
+    rows.reduce((linkedRows, row) => linkedRows.concat(row.linkedRows), []),
+    level - 1
+  );
+}
+
+/**
+ * Returns all rows by the given rowPath as they are seen in the UI (including all collapsed rows).
+ */
+export function findTableRowsIncludingCollapsed(rows: TableConfigRow[], rowPath: number[]): TableConfigRow[] {
+  const [rowIndex, ...childPath] = rowPath;
+  const row = rows[rowIndex];
+
+  if (!row) {
+    return [];
+  }
+
+  if (childPath.length === 0) {
+    return [row];
+  }
+
+  if (row.linkedRows.length > 1 && !row.expanded) {
+    return findAllTableRowsByLevel(row.linkedRows, childPath.length);
+  }
+
+  return findTableRowsIncludingCollapsed(row.linkedRows, childPath);
+}
+
+function findAllTableRowsByLevel(rows: TableConfigRow[], level: number): TableConfigRow[] {
+  if (level <= 1) {
+    return rows;
+  }
+
+  return findAllTableRowsByLevel(rows.reduce((linkedRows, row) => linkedRows.concat(row.linkedRows), []), level - 1);
+}
