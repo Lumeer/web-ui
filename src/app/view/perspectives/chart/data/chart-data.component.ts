@@ -148,6 +148,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       latestData.documents,
       latestData.permissions,
       latestData.query,
+      latestData.config,
       latestData.linkTypes,
       latestData.linkInstances,
       latestData.constraintData

@@ -28,7 +28,6 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {User} from '../../../../../core/store/users/user';
 import {ChartAxisCategory, ChartDataSet} from './chart-data';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
@@ -81,7 +80,7 @@ describe('Chart data converter single collection', () => {
   it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
     const converter = new ChartDataConverter();
-    converter.updateData(collections, documents, permissions, query);
+    converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({
       sets: [
         {
@@ -116,9 +115,9 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: null,
       points: [
-        {id: null, x: 'Sport', y: undefined},
         {id: null, x: 'Dance', y: undefined},
         {id: null, x: 'Glass', y: undefined},
+        {id: null, x: 'Sport', y: undefined},
       ],
       color: '#ffffff',
       xAxis: {
@@ -132,7 +131,7 @@ describe('Chart data converter single collection', () => {
       resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
-    converter.updateData(collections, documents, permissions, query);
+    converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
   });
 
@@ -168,7 +167,7 @@ describe('Chart data converter single collection', () => {
       resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
-    converter.updateData(collections, documents, permissions, query);
+    converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
   });
 
@@ -195,7 +194,7 @@ describe('Chart data converter single collection', () => {
     };
     const set: ChartDataSet = {
       id: 'a2',
-      points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
+      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3},],
       color: 'rgba(255,255,255,1)',
       yAxis: {
         category: ChartAxisCategory.Number,
@@ -211,7 +210,7 @@ describe('Chart data converter single collection', () => {
       resourceType: ChartAxisResourceType.Collection,
     };
     const converter = new ChartDataConverter();
-    converter.updateData(collections, documents, permissions, query);
+    converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
 
     const config2 = {
@@ -222,14 +221,14 @@ describe('Chart data converter single collection', () => {
     };
     const set2 = {
       ...set,
-      points: [{id: null, x: 'Sport', y: 0}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 7}],
+      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 7}, {id: null, x: 'Sport', y: 0},],
     };
     expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line});
 
     const config3 = {...config, aggregations: null};
     const set3 = {
       ...set,
-      points: [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}],
+      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3},],
     };
     expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line});
   });
@@ -261,15 +260,19 @@ describe('Chart data converter single collection', () => {
         [ChartAxisType.Y1]: ChartAggregation.Sum,
       },
     };
-    const points1 = [{id: null, x: 'Sport', y: 3}, {id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}];
+    const points1 = [
+      {id: 'D2', x: 'Dance', y: 7},
+      {id: null, x: 'Glass', y: 51},
+      {id: null, x: 'Sport', y: 3},
+    ];
     const points2 = [
-      {id: null, x: 'Sport', y: 'Mama'},
       {id: 'D2', x: 'Dance', y: 'Salt'},
       {id: 'D5', x: 'Glass', y: 'Vibes'},
+      {id: null, x: 'Sport', y: 'Mama'},
     ];
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections, documents, permissions, query);
+    converter.updateData(collections, documents, permissions, query, config);
     const chartData1 = converter.convert(config);
     expect(chartData1.sets.length).toEqual(2);
     expect(chartData1.sets[0].points).toEqual(points1);
@@ -387,7 +390,7 @@ const collections2 = [
   {
     id: 'C2',
     name: 'collection2',
-    color: '#bcbcbcb',
+    color: '#bcbcbc',
     attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
   },
   {
@@ -651,7 +654,7 @@ describe('Chart data converter linked collections', () => {
   it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     expect(converter.convert(config)).toEqual({
       sets: [
         {
@@ -694,14 +697,14 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Sport', y: 1808},
       {id: null, x: 'Dance', y: 428},
       {id: null, x: 'Glass', y: 1420},
       {id: null, x: 'Lmr', y: 680},
+      {id: null, x: 'Sport', y: 1808},
     ]);
   });
 
@@ -734,7 +737,7 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
@@ -766,14 +769,14 @@ describe('Chart data converter linked collections', () => {
     };
 
     const points = [
-      {id: null, x: 'Sport', y: 'Zet'},
       {id: null, x: 'Dance', y: 'Zas'},
       {id: null, x: 'Glass', y: 'Zlom'},
       {id: null, x: 'Lmr', y: 'Zet'},
+      {id: null, x: 'Sport', y: 'Zet'},
     ];
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual(points);
@@ -800,14 +803,14 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Sport', y: 1},
       {id: null, x: 'Dance', y: 8},
       {id: null, x: 'Glass', y: 1},
       {id: null, x: 'Lmr', y: 1},
+      {id: null, x: 'Sport', y: 1},
     ]);
   });
 
@@ -832,14 +835,14 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Sport', y: 333},
       {id: null, x: 'Dance', y: 312},
       {id: null, x: 'Glass', y: 333},
       {id: null, x: 'Lmr', y: 333},
+      {id: null, x: 'Sport', y: 333},
     ]);
   });
 
@@ -864,14 +867,14 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Sport', y: 1808 / 21},
       {id: null, x: 'Dance', y: 428 / 4},
       {id: null, x: 'Glass', y: 1420 / 14},
       {id: null, x: 'Lmr', y: 680 / 9},
+      {id: null, x: 'Sport', y: 1808 / 21},
     ]);
   });
 
@@ -904,16 +907,16 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(6);
-    expect(chartData.sets.map(set => set.name)).toEqual(['Ask', 'Ant', 'Abc', 'And', 'Ara', 'As']);
-    expect(chartData.sets[0].points).toContain({id: null, x: 'Sport', y: 126});
-    expect(chartData.sets[1].points).toContain({id: null, x: 'Sport', y: 62});
-    expect(chartData.sets[2].points).toContain({id: null, x: 'Sport', y: 1002});
-    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 1002});
-    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 320});
-    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 8});
+    expect(chartData.sets.map(set => set.name)).toEqual(['Ara', 'As', 'Ant', 'Ask', 'Abc', 'And']);
+    expect(chartData.sets[0].points).toContain({id: null, x: 'Sport', y: 320});
+    expect(chartData.sets[1].points).toContain({id: 'D23', x: 'Sport', y: 8});
+    expect(chartData.sets[2].points).toContain({id: null, x: 'Sport', y: 62});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 126});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 1002});
+    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 1002});
   });
   it('should return data with from linked attributes', () => {
     const config: ChartConfig = {
@@ -944,7 +947,7 @@ describe('Chart data converter linked collections', () => {
     };
 
     const converter = new ChartDataConverter();
-    converter.updateData(collections2, documents2, permissions2, query2, linkTypes2, linkInstances2);
+    converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(5);
     expect(chartData.sets.map(set => set.name)).toEqual(['Min', 'Max', 'Avg', 'Sum', 'Lep']);
@@ -1018,8 +1021,8 @@ describe('Chart data converter constraints', () => {
     };
 
     const pointsAvg = [
-      {id: null, x: 'Martin', y: '30'},
       {id: null, x: 'Kubo', y: '60'},
+      {id: null, x: 'Martin', y: '30'},
       {id: null, x: 'Tomas', y: '25'},
     ];
     const converter = new ChartDataConverter();
@@ -1028,6 +1031,7 @@ describe('Chart data converter constraints', () => {
       [...documentsC1, ...documentsC2],
       permissions3,
       query3,
+      configAvg,
       linkTypes3,
       linkInstances3
     );
@@ -1037,8 +1041,8 @@ describe('Chart data converter constraints', () => {
 
     const configSum = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum}};
     const pointsSum = [
-      {id: null, x: 'Martin', y: '90'},
       {id: null, x: 'Kubo', y: '120'},
+      {id: null, x: 'Martin', y: '90'},
       {id: null, x: 'Tomas', y: '100'},
     ];
     const chartDataSum = converter.convert(configSum);
@@ -1047,8 +1051,8 @@ describe('Chart data converter constraints', () => {
 
     const configMax = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Max}};
     const pointsMax = [
-      {id: null, x: 'Martin', y: '50'},
       {id: null, x: 'Kubo', y: '80'},
+      {id: null, x: 'Martin', y: '50'},
       {id: null, x: 'Tomas', y: '40'},
     ];
     const chartDataMax = converter.convert(configMax);
@@ -1057,8 +1061,8 @@ describe('Chart data converter constraints', () => {
 
     const configMin = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Min}};
     const pointsMin = [
-      {id: null, x: 'Martin', y: '10'},
       {id: null, x: 'Kubo', y: '40'},
+      {id: null, x: 'Martin', y: '10'},
       {id: null, x: 'Tomas', y: '10'},
     ];
     const chartDataMin = converter.convert(configMin);
@@ -1066,7 +1070,11 @@ describe('Chart data converter constraints', () => {
     expect(chartDataMin.sets[0].points).toEqual(pointsMin);
 
     const configCount = {...configAvg, aggregations: {[ChartAxisType.Y1]: ChartAggregation.Count}};
-    const pointsCount = [{id: null, x: 'Martin', y: 3}, {id: null, x: 'Kubo', y: 2}, {id: null, x: 'Tomas', y: 4}];
+    const pointsCount = [
+      {id: null, x: 'Kubo', y: 2},
+      {id: null, x: 'Martin', y: 3},
+      {id: null, x: 'Tomas', y: 4}
+    ];
     const chartDataCount = converter.convert(configCount);
     expect(chartDataCount.sets.length).toEqual(1);
     expect(chartDataCount.sets[0].points).toEqual(pointsCount);

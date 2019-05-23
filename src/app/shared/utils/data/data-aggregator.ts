@@ -74,7 +74,8 @@ export class DataAggregator {
   private attributesResourcesOrder: AttributesResource[];
   private dataMap: DataResourceMap = {};
 
-  constructor(private formatValue?: (value: any, constraint: Constraint, data?: ConstraintData) => any) {}
+  constructor(private formatValue?: (value: any, constraint: Constraint, data?: ConstraintData) => any) {
+  }
 
   public updateData(
     collections: Collection[],
@@ -94,6 +95,13 @@ export class DataAggregator {
     const resourceId = this.attributesResourceIdForIndex(index);
     const dataResourcesMap = this.dataMap[resourceId];
     return Object.values(dataResourcesMap);
+  }
+
+  public getNextCollectionResource(index: number): AttributesResource {
+    if (this.attributesResourceTypeForIndex(index) === AttributesResourceType.LinkType) {
+      return this.attributesResourcesOrder[index + 1];
+    }
+    return this.attributesResourcesOrder[index];
   }
 
   public aggregate(
@@ -123,7 +131,7 @@ export class DataAggregator {
       valueAttributes,
       this.attributesResourcesOrder
     );
-    const map = this.iterate(chain, valuesChains, this.dataMap);
+    const map = this.iterate(chain, valuesChains);
     return {map, rowLevels: rowAttributes.length, columnLevels: columnAttributes.length};
   }
 
@@ -132,7 +140,7 @@ export class DataAggregator {
     columnAttributes: DataAggregationAttribute[],
     valueAttributes: DataAggregationAttribute[],
     attributesResourcesOrder: AttributesResource[]
-  ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
+  ): { chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][] } {
     const chain: AttributesResourceChain[] = [];
 
     let index = -1;
@@ -249,12 +257,11 @@ export class DataAggregator {
   private iterate(
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
-    dataMap: DataResourceMap
   ): DataAggregationMap {
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
-    const dataObjects = Object.values(dataMap[resourceId] || {});
+    const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const data = {};
-    this.iterateRecursive(dataObjects, data, chain, valuesChains, 0, dataMap);
+    this.iterateRecursive(dataObjects, data, chain, valuesChains, 0);
     return data;
   }
 
@@ -264,7 +271,6 @@ export class DataAggregator {
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
     index: number,
-    dataMap: DataResourceMap
   ) {
     const stage = chain[index];
     const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
@@ -274,8 +280,7 @@ export class DataAggregator {
         object,
         stage,
         chain[index + 1],
-        dataMap,
-        objectData
+        object
       );
 
       if (stage.isRow || stage.isColumn) {
@@ -293,8 +298,7 @@ export class DataAggregator {
                 object,
                 stage,
                 valueChain[0],
-                dataMap,
-                objectData
+                object
               );
               const lastStage = valueChain[valueChain.length - 1];
               let dataAggregationValues: DataAggregationValues = {
@@ -315,17 +319,17 @@ export class DataAggregator {
                 data[formattedValue] = [dataAggregationValues];
               }
 
-              this.iterateThroughValues(linkedObjectDataWithLinks, dataAggregationValues, valueChain, 0, dataMap);
+              this.iterateThroughValues(linkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
             }
           } else {
             if (!data[formattedValue]) {
               data[formattedValue] = {};
             }
-            this.iterateRecursive(linkedObjectDataWithLinks, data[value], chain, valuesChains, index + 1, dataMap);
+            this.iterateRecursive(linkedObjectDataWithLinks, data[formattedValue], chain, valuesChains, index + 1);
           }
         }
       } else {
-        this.iterateRecursive(linkedObjectDataWithLinks, data, chain, valuesChains, index + 1, dataMap);
+        this.iterateRecursive(linkedObjectDataWithLinks, data, chain, valuesChains, index + 1);
       }
     }
   }
@@ -334,17 +338,16 @@ export class DataAggregator {
     object: DataResourceWithLinks,
     stage: AttributesResourceChain,
     nextStage: AttributesResourceChain,
-    dataMap: DataResourceMap,
-    currentData: DataResourceWithLinks[]
+    currentData: DataResourceWithLinks
   ): DataResourceWithLinks[] {
     if (!nextStage || nextStage.index === stage.index) {
-      return currentData;
+      return [currentData];
     } else {
       const nextStageType = this.attributesResourceTypeForIndex(nextStage.index);
-      const linkedObjectData = nextStage.index < stage.index ? object.from : object.to;
+      const linkedObjectData = stage.index < nextStage.index ? object.from : object.to;
 
       const resourceId = this.attributesResourceIdForIndex(nextStage.index);
-      const nextStageObjectData = dataMap[resourceId] || {};
+      const nextStageObjectData = this.dataMap[resourceId] || {};
 
       return linkedObjectData
         .filter(
@@ -361,8 +364,9 @@ export class DataAggregator {
   }
 
   private attributesResourceIdForIndex(index: number): string {
+    const type = this.attributesResourceTypeForIndex(index);
     const resource = this.attributesResourcesOrder[index];
-    return resource.id;
+    return attributesResourceId(type, resource.id);
   }
 
   private iterateThroughValues(
@@ -370,7 +374,6 @@ export class DataAggregator {
     values: DataAggregationValues,
     valueChain: AttributesResourceChain[],
     index: number,
-    dataMap: DataResourceMap
   ) {
     if (index === valueChain.length - 1) {
       const objects = objectData.map(object => ({...object, from: null, to: null}));
@@ -382,10 +385,9 @@ export class DataAggregator {
           object,
           stage,
           valueChain[index + 1],
-          dataMap,
-          objectData
+          object
         );
-        this.iterateThroughValues(linkedObjectDataWithLinks, values, valueChain, index + 1, dataMap);
+        this.iterateThroughValues(linkedObjectDataWithLinks, values, valueChain, index + 1);
       }
     }
   }
@@ -414,13 +416,7 @@ function createAttributeResourcesOrder(
 ): AttributesResource[] {
   const stem = query.stems[0];
   const baseCollection = collections.find(collection => collection.id === stem.collectionId);
-  const chain: AttributesResource[] = [
-    {
-      id: collectionResourceId(baseCollection.id),
-      attributes: baseCollection.attributes,
-      color: baseCollection.color,
-    },
-  ];
+  const chain: AttributesResource[] = [{...baseCollection}];
   let previousCollectionId = baseCollection.id;
   for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
     const linkType = linkTypes.find(lt => lt.id === stem.linkTypeIds[i]);
@@ -428,12 +424,8 @@ function createAttributeResourcesOrder(
     const otherCollection = collections.find(collection => collection.id === otherCollectionId);
 
     if (otherCollection && linkType) {
-      chain.push({id: linkTypeResourceId(linkType.id), attributes: linkType.attributes, color: otherCollection.color});
-      chain.push({
-        id: collectionResourceId(otherCollection.id),
-        attributes: otherCollection.attributes,
-        color: otherCollection.color,
-      });
+      chain.push({id: linkType.id, attributes: linkType.attributes, color: otherCollection.color});
+      chain.push({...otherCollection});
       previousCollectionId = otherCollection.id;
     } else {
       break;

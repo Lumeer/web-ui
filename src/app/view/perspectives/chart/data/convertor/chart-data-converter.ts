@@ -94,6 +94,7 @@ export class ChartDataConverter {
     documents: DocumentModel[],
     permissions: Record<string, AllowedPermissions>,
     query: Query,
+    config: ChartConfig,
     linkTypes?: LinkType[],
     linkInstances?: LinkInstance[],
     constraintData?: ConstraintData
@@ -104,7 +105,33 @@ export class ChartDataConverter {
     this.query = query;
     this.constraintData = constraintData;
 
-    this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, query, constraintData);
+    const sortedDocuments = this.sortDocuments(documents, config);
+    this.dataAggregator.updateData(collections, sortedDocuments, linkTypes, linkInstances, query, constraintData);
+  }
+
+  private sortDocuments(documents: DocumentModel[], config: ChartConfig): DocumentModel[] {
+    const sort = config.sort;
+    const xAxis = config.axes[ChartAxisType.X];
+    const sortAxis = (sort && sort.axis) || xAxis;
+    if (!sortAxis) {
+      return [...documents];
+    }
+
+    const asc = !sort || sort.type === ChartSortType.Ascending;
+    const constraint = this.constraintForAxis(sortAxis);
+    return [...documents].sort((a, b) => {
+        if (a.collectionId !== b.collectionId || a.collectionId !== sortAxis.resourceId) {
+          return 0;
+        }
+
+        return compareDataValues(
+          a.data[sortAxis.attributeId],
+          b.data[sortAxis.attributeId],
+          constraint,
+          asc
+        )
+      }
+    );
   }
 
   public convertType(type: ChartType): ChartData {
@@ -157,7 +184,7 @@ export class ChartDataConverter {
     const yAxis = config.axes[yAxisType];
 
     if (!xAxis || !yAxis) {
-      return this.convertAxisSimple(yAxisType, config, xAxis, yAxis);
+      return this.convertAxisSimple(yAxisType, xAxis, yAxis);
     }
 
     return this.convertAxisWithAggregation(config, yAxisType);
@@ -165,7 +192,6 @@ export class ChartDataConverter {
 
   private convertAxisSimple(
     yAxisType: ChartYAxisType,
-    config: ChartConfig,
     xAxis: ChartAxis,
     yAxis: ChartAxis
   ): ChartDataSet[] {
@@ -183,9 +209,8 @@ export class ChartDataConverter {
     const constraint = this.constraintForAxis(definedAxis);
 
     const dataResources = this.dataAggregator.getDataResources(definedAxis.resourceIndex);
-    const sortedDataResources = this.sortDataResources(dataResources, config);
 
-    for (const dataObject of sortedDataResources) {
+    for (const dataObject of dataResources) {
       let xValue = xAxis && dataObject.data[xAxis.attributeId];
       let yValue = yAxis && dataObject.data[yAxis.attributeId];
       if (isNullOrUndefined(xValue || yValue)) {
@@ -232,32 +257,6 @@ export class ChartDataConverter {
     return [dataSet];
   }
 
-  private sortDataResources(dataResources: DataResource[], config: ChartConfig): DataResource[] {
-    const sort = config.sort;
-    const xAxis = config.axes[ChartAxisType.X];
-    const sortAxis = (sort && sort.axis) || xAxis;
-    if (
-      !dataResources ||
-      dataResources.length === 0 ||
-      !sort ||
-      !sortAxis ||
-      !this.isSameResource(dataResources[0], sortAxis)
-    ) {
-      return dataResources || [];
-    }
-
-    const asc = sort.type === ChartSortType.Ascending;
-    const attribute = this.attributeForAxis(sortAxis);
-    return dataResources.sort((a, b) =>
-      compareDataValues(
-        a.data[sortAxis.attributeId],
-        b.data[sortAxis.attributeId],
-        attribute && attribute.constraint,
-        asc
-      )
-    );
-  }
-
   private isSameResource(dataResource: DataResource, axis: ChartAxis): boolean {
     return (
       (dataResource.collectionId &&
@@ -298,7 +297,6 @@ export class ChartDataConverter {
       .map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
     const valueAttributes = [{attributeId: yAxis.attributeId, resourceIndex: yAxis.resourceIndex}];
 
-    // TODO sort data somehow????
     const aggregatedData = this.dataAggregator.aggregate(rowAttributes, [], valueAttributes);
 
     return this.convertAggregatedData(aggregatedData, config, yAxisType);
@@ -328,9 +326,9 @@ export class ChartDataConverter {
 
     const isNestedMap = aggregatedData.rowLevels > 1;
 
-    for (const key of xEntries) {
-      const map = isNestedMap ? aggregatedData.map[key] : aggregatedData.map;
-      const keys = isNestedMap ? Object.keys(map) : [key];
+    for (const xEntry of xEntries) {
+      const map = isNestedMap ? aggregatedData.map[xEntry] : aggregatedData.map;
+      const keys = isNestedMap ? Object.keys(map) : [xEntry];
       const helperMapKeys = isNestedMap ? keys : [yAxisName];
 
       for (let i = 0; i < keys.length; i++) {
@@ -357,12 +355,12 @@ export class ChartDataConverter {
         let yValue = aggregate(aggregation, values, yConstraint);
         if (isNotNullOrUndefined(yValue)) {
           const id =
-            canDragAxis && valueObjects.length === 1 && !isValueAggregation(aggregation) ? valueObjects[0].id : null;
+            canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
           yValue = isValueAggregation(aggregation) ? this.formatChartValue(yValue, yConstraint) : yValue;
           const isNum = isNumeric(yValue);
 
           isNumericMap[helperMapKey] = isNumericMap[helperMapKey] && isNum;
-          pointsMap[helperMapKey].push({id, x: key, y: yValue});
+          pointsMap[helperMapKey].push({id, x: xEntry, y: yValue});
           draggable = draggable || isNotNullOrUndefined(id);
         }
       }
@@ -373,10 +371,10 @@ export class ChartDataConverter {
     let colorAlpha = 100;
     const colorAlphaStep = 70 / Math.max(1, legendEntriesNames.length - 1); // min alpha is 30
 
-    const attributesResource = this.attributesResourceForAxis(yAxis);
+    const axisColor = this.getAxisColor(yAxis);
     for (let i = 0; i < legendEntriesNames.length; i++) {
       const name = legendEntriesNames[i];
-      const color = hex2rgba(attributesResource.color, colorAlpha / 100);
+      const color = hex2rgba(axisColor, colorAlpha / 100);
       sets.push({
         id: this.yAxisCollectionId(config, yAxisType),
         points: pointsMap[name],
@@ -398,6 +396,11 @@ export class ChartDataConverter {
     }
 
     return sets;
+  }
+
+  private getAxisColor(axis: ChartAxis): string {
+    const collectionResource = this.dataAggregator.getNextCollectionResource(axis.resourceIndex);
+    return collectionResource && collectionResource.color;
   }
 
   private formatChartValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
