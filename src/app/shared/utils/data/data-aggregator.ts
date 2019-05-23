@@ -74,8 +74,7 @@ export class DataAggregator {
   private attributesResourcesOrder: AttributesResource[];
   private dataMap: DataResourceMap = {};
 
-  constructor(private formatValue?: (value: any, constraint: Constraint, data?: ConstraintData) => any) {
-  }
+  constructor(private formatValue?: (value: any, constraint: Constraint, data?: ConstraintData) => any) {}
 
   public updateData(
     collections: Collection[],
@@ -140,7 +139,7 @@ export class DataAggregator {
     columnAttributes: DataAggregationAttribute[],
     valueAttributes: DataAggregationAttribute[],
     attributesResourcesOrder: AttributesResource[]
-  ): { chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][] } {
+  ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
     const chain: AttributesResourceChain[] = [];
 
     let index = -1;
@@ -254,10 +253,7 @@ export class DataAggregator {
     return AttributesResourceType.LinkType;
   }
 
-  private iterate(
-    chain: AttributesResourceChain[],
-    valuesChains: AttributesResourceChain[][],
-  ): DataAggregationMap {
+  private iterate(chain: AttributesResourceChain[], valuesChains: AttributesResourceChain[][]): DataAggregationMap {
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
     const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const data = {};
@@ -270,18 +266,13 @@ export class DataAggregator {
     data: DataAggregationMap,
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
-    index: number,
+    index: number
   ) {
     const stage = chain[index];
     const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
 
     for (const object of objectData) {
-      const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
-        object,
-        stage,
-        chain[index + 1],
-        object
-      );
+      const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, stage, chain[index + 1], object);
 
       if (stage.isRow || stage.isColumn) {
         const values = this.getValues(object, stage.attributeId);
@@ -293,33 +284,20 @@ export class DataAggregator {
           const formattedValue = this.formatAggregationValue(value, constraint);
 
           if (index === chain.length - 1) {
-            for (const valueChain of valuesChains) {
-              const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
-                object,
-                stage,
-                valueChain[0],
-                object
-              );
-              const lastStage = valueChain[valueChain.length - 1];
-              let dataAggregationValues: DataAggregationValues = {
-                resourceId: lastStage.resource.id,
-                type: this.attributesResourceTypeForIndex(lastStage.index),
-                objects: [],
-              };
-              if (data[formattedValue]) {
-                const existingAggregationValues = data[formattedValue].find(
-                  v => v.resourceId === dataAggregationValues.resourceId && v.type === dataAggregationValues.type
+            if (valuesChains.length > 0) {
+              for (const valueChain of valuesChains) {
+                const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
+                  object,
+                  stage,
+                  valueChain[0],
+                  object
                 );
-                if (existingAggregationValues) {
-                  dataAggregationValues = existingAggregationValues;
-                } else {
-                  data[formattedValue].push(dataAggregationValues);
-                }
-              } else {
-                data[formattedValue] = [dataAggregationValues];
+                const lastStage = valueChain[valueChain.length - 1];
+                const dataAggregationValues = this.processLastStage(lastStage, data, formattedValue);
+                this.iterateThroughValues(linkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
               }
-
-              this.iterateThroughValues(linkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
+            } else {
+              this.processLastStage(stage, data, formattedValue);
             }
           } else {
             if (!data[formattedValue]) {
@@ -332,6 +310,32 @@ export class DataAggregator {
         this.iterateRecursive(linkedObjectDataWithLinks, data, chain, valuesChains, index + 1);
       }
     }
+  }
+
+  private processLastStage(
+    lastStage: AttributesResourceChain,
+    data: DataAggregationMap,
+    formattedValue: string
+  ): DataAggregationValues {
+    let dataAggregationValues: DataAggregationValues = {
+      resourceId: lastStage.resource.id,
+      type: this.attributesResourceTypeForIndex(lastStage.index),
+      objects: [],
+    };
+    if (data[formattedValue]) {
+      const existingAggregationValues = data[formattedValue].find(
+        v => v.resourceId === dataAggregationValues.resourceId && v.type === dataAggregationValues.type
+      );
+      if (existingAggregationValues) {
+        dataAggregationValues = existingAggregationValues;
+      } else {
+        data[formattedValue].push(dataAggregationValues);
+      }
+    } else {
+      data[formattedValue] = [dataAggregationValues];
+    }
+
+    return dataAggregationValues;
   }
 
   private getLinkedObjectDataWithLinks(
@@ -373,7 +377,7 @@ export class DataAggregator {
     objectData: DataResourceWithLinks[],
     values: DataAggregationValues,
     valueChain: AttributesResourceChain[],
-    index: number,
+    index: number
   ) {
     if (index === valueChain.length - 1) {
       const objects = objectData.map(object => ({...object, from: null, to: null}));

@@ -67,7 +67,7 @@ import {
   convertChartDateFormat,
 } from './chart-data';
 import {DataAggregation, DataAggregationValues, DataAggregator} from '../../../../../shared/utils/data/data-aggregator';
-import {AttributesResource, DataResource} from '../../../../../core/model/resource';
+import {AttributesResource} from '../../../../../core/model/resource';
 
 @Injectable()
 export class ChartDataConverter {
@@ -120,18 +120,12 @@ export class ChartDataConverter {
     const asc = !sort || sort.type === ChartSortType.Ascending;
     const constraint = this.constraintForAxis(sortAxis);
     return [...documents].sort((a, b) => {
-        if (a.collectionId !== b.collectionId || a.collectionId !== sortAxis.resourceId) {
-          return 0;
-        }
-
-        return compareDataValues(
-          a.data[sortAxis.attributeId],
-          b.data[sortAxis.attributeId],
-          constraint,
-          asc
-        )
+      if (a.collectionId !== b.collectionId || a.collectionId !== sortAxis.resourceId) {
+        return 0;
       }
-    );
+
+      return compareDataValues(a.data[sortAxis.attributeId], b.data[sortAxis.attributeId], constraint, asc);
+    });
   }
 
   public convertType(type: ChartType): ChartData {
@@ -190,11 +184,7 @@ export class ChartDataConverter {
     return this.convertAxisWithAggregation(config, yAxisType);
   }
 
-  private convertAxisSimple(
-    yAxisType: ChartYAxisType,
-    xAxis: ChartAxis,
-    yAxis: ChartAxis
-  ): ChartDataSet[] {
+  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis): ChartDataSet[] {
     const definedAxis = yAxis || xAxis;
     if (!definedAxis) {
       return [];
@@ -255,17 +245,6 @@ export class ChartDataConverter {
       resourceType: definedAxis.axisResourceType,
     };
     return [dataSet];
-  }
-
-  private isSameResource(dataResource: DataResource, axis: ChartAxis): boolean {
-    return (
-      (dataResource.collectionId &&
-        axis.axisResourceType === ChartAxisResourceType.Collection &&
-        dataResource.collectionId === axis.resourceId) ||
-      (dataResource.linkTypeId &&
-        axis.axisResourceType === ChartAxisResourceType.LinkType &&
-        dataResource.linkTypeId === axis.resourceId)
-    );
   }
 
   private attributesResourceForAxis(axis: ChartAxis): AttributesResource {
