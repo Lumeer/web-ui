@@ -41,6 +41,7 @@ import {BsDatepickerInlineConfig, BsLocaleService} from 'ngx-bootstrap/datepicke
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
+import {KeyCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
 
 @Component({
@@ -192,6 +193,12 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
       this.overlayRef.detach();
       this.overlayRef.dispose();
       this.overlayRef = null;
+    }
+  }
+
+  public onTimePickerKeyDown(event: KeyboardEvent) {
+    if (([KeyCode.Backspace, KeyCode.Delete] as string[]).includes(event.code)) {
+      event.stopPropagation();
     }
   }
 
