@@ -17,17 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstance} from './link.instance';
+import {Pipe, PipeTransform} from '@angular/core';
 
-export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId: string): boolean {
-  return linkInstance.documentIds.some(id => id === documentId);
-}
-
-export function findLinkInstanceByDocumentId(linkInstances: LinkInstance[], documentId: string): LinkInstance {
-  return linkInstances.find(linkInstance => isDocumentInLinkInstance(linkInstance, documentId));
-}
-
-export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstance, ...otherDocumentIds: string[]): string {
-  const {documentIds} = linkInstance;
-  return otherDocumentIds.includes(documentIds[0]) ? documentIds[1] : documentIds[0];
+@Pipe({
+  name: 'uniqueEntities',
+})
+export class UniqueEntitiesPipe implements PipeTransform {
+  public transform(entities: {id?: string; correlationId?: string}[]): any[] {
+    return (
+      entities &&
+      entities.reduce(
+        (uniqueEntities, entity) =>
+          uniqueEntities.some(usedEntity =>
+            entity.id ? usedEntity.id === entity.id : usedEntity.correlationId === entity.correlationId
+          )
+            ? uniqueEntities
+            : uniqueEntities.concat(entity),
+        []
+      )
+    );
+  }
 }
