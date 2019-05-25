@@ -23,6 +23,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {UserService} from '../../core/rest';
 import {DialogService} from '../dialog.service';
+import {Angulartics2} from 'angulartics2';
 
 const FEEDBACK_KEY = 'feedback_message';
 
@@ -40,7 +41,8 @@ export class FeedbackDialogComponent implements OnInit {
     private dialogService: DialogService,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private userService: UserService
+    private userService: UserService,
+    private angulartics2: Angulartics2
   ) {}
 
   public ngOnInit() {
@@ -61,6 +63,13 @@ export class FeedbackDialogComponent implements OnInit {
   private sendFeedback(message: string) {
     this.userService.sendFeedback(message).subscribe(
       () => {
+        this.angulartics2.eventTrack.next({
+          action: 'Feedback send',
+          properties: {
+            category: 'Feedback',
+          },
+        });
+
         this.notifyOnSuccess();
         localStorage.removeItem(FEEDBACK_KEY);
       },

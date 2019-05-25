@@ -31,7 +31,7 @@ import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {selectNavigation} from '../navigation/navigation.state';
+import {selectNavigation, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionType} from '../permissions/permissions';
@@ -51,6 +51,8 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
+import {selectViewsDictionary} from '../views/views.state';
+import {Angulartics2} from 'angulartics2';
 
 @Injectable()
 export class CollectionsEffects {
@@ -139,6 +141,19 @@ export class CollectionsEffects {
       }
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create collection'});
       return new NotificationsAction.Error({message: errorMessage});
+    })
+  );
+
+  @Effect()
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.CreateSuccess>(CollectionsActionType.CREATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+    mergeMap(([, collections]) => {
+      this.angulartics2.eventTrack.next({
+        action: 'Collection create',
+        properties: {category: 'Application Resources', label: 'count', value: Object.keys(collections).length + 1},
+      });
+      return of(null);
     })
   );
 
@@ -530,7 +545,8 @@ export class CollectionsEffects {
     private store$: Store<AppState>,
     private collectionService: CollectionService,
     private i18n: I18n,
-    private importService: ImportService
+    private importService: ImportService,
+    private angulartics2: Angulartics2
   ) {}
 }
 

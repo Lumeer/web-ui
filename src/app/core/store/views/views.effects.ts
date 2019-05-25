@@ -42,6 +42,7 @@ import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {areQueriesEqual} from '../navigation/query.helper';
+import {Angulartics2} from 'angulartics2';
 
 @Injectable()
 export class ViewsEffects {
@@ -112,13 +113,21 @@ export class ViewsEffects {
   @Effect()
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectWorkspace)), this.store$.pipe(select(selectSearchTab))),
-    map(([action, workspace, searchTab]) => {
+    withLatestFrom(
+      this.store$.pipe(select(selectWorkspace)),
+      this.store$.pipe(select(selectSearchTab)),
+      this.store$.pipe(select(selectViewsDictionary))
+    ),
+    map(([action, workspace, searchTab, views]) => {
       const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
       if (searchTab) {
         paths.push(Perspective.Search);
         paths.push(searchTab);
       }
+      this.angulartics2.eventTrack.next({
+        action: 'View create',
+        properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
+      });
       return new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}});
     })
   );
@@ -273,6 +282,7 @@ export class ViewsEffects {
     private i18n: I18n,
     private router: Router,
     private store$: Store<AppState>,
-    private viewService: ViewService
+    private viewService: ViewService,
+    private angulartics2: Angulartics2
   ) {}
 }

@@ -27,12 +27,12 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
-import {filter, first} from 'rxjs/operators';
+import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
 import {AppState} from './core/store/app.state';
@@ -40,6 +40,9 @@ import {selectCurrentUser} from './core/store/users/users.state';
 import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {PusherService} from './core/pusher/pusher.service';
+import * as moment from 'moment';
+import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
+import {ServiceLevelType} from './core/dto/service-level-type';
 
 declare let $: any;
 
@@ -89,14 +92,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private setUpExternalServicesUserContext() {
     this.store$
-      .select(selectCurrentUser)
       .pipe(
+        select(selectCurrentUser),
         filter(user => !!user),
+        withLatestFrom(this.store$.pipe(select(selectServiceLimitsByWorkspace))),
         first()
       )
-      .subscribe(user => {
+      .subscribe(([user, limits]) => {
         const userIdHash = hashUserId(user.id);
+        const signUpDate = dateToMonthYear(user.agreementDate);
+        const serviceLevel: string = limits ? limits.serviceLevel : ServiceLevelType.FREE;
+
         this.setGoogleAnalyticsUsername(userIdHash);
+        this.setGoogleAnalyticsDimensions(serviceLevel, signUpDate);
+
         this.configureSentryUserScope(userIdHash);
       });
   }
@@ -107,6 +116,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     this.angulartics2GoogleAnalytics.setUsername(userIdHash);
+  }
+
+  private setGoogleAnalyticsDimensions(serviceLevel: string, monthYear?: string) {
+    if (!environment.analytics) {
+      return;
+    }
+
+    const dimensions: {dimension1?: string; dimension2: string} = {dimension2: serviceLevel};
+    if (monthYear) {
+      dimensions.dimension1 = monthYear;
+    }
+
+    this.angulartics2GoogleAnalytics.setUserProperties(dimensions);
   }
 
   private configureSentryUserScope(userIdHash: string) {
@@ -188,4 +210,12 @@ function hashUserId(userId: string): string {
   }
 
   return 'unknown';
+}
+
+function dateToMonthYear(d: Date): string {
+  if (d) {
+    return moment(d).format('YYYY/MM');
+  }
+
+  return null;
 }
