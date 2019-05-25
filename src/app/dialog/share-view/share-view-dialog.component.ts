@@ -39,6 +39,7 @@ import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourceType} from '../../core/model/resource-type';
 import {userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
+import {Angulartics2} from 'angulartics2';
 
 @Component({
   selector: 'share-view-dialog',
@@ -70,7 +71,8 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     private clipboardService: ClipboardService,
     private userRolesInResourcePipe: UserRolesInResourcePipe,
     private route: ActivatedRoute,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private angulartics2: Angulartics2
   ) {}
 
   public ngOnInit() {
@@ -201,6 +203,15 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new ViewsAction.SetPermissions({viewId: this.view.id, type: PermissionType.Users, permissions})
     );
+
+    this.angulartics2.eventTrack.next({
+      action: 'View share',
+      properties: {
+        category: 'Collaboration',
+        label: 'view',
+        value: this.view.id,
+      },
+    });
   }
 
   private getUserPermissionsInView(user: User): Permission {
