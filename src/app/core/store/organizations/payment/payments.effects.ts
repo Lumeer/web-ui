@@ -31,7 +31,8 @@ import {PaymentsAction, PaymentsActionType} from './payments.action';
 import {PaymentConverter} from './payment.converter';
 import {PlatformLocation} from '@angular/common';
 import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/location/browser_platform_location';
-import {Angulartics2} from 'angulartics2';
+import {Angulartics2, GoogleAnalyticsSettings, UserTimings} from 'angulartics2';
+import {environment} from '../../../../../environments/environment';
 
 @Injectable()
 export class PaymentsEffects {
@@ -64,7 +65,7 @@ export class PaymentsEffects {
   public getPaymentSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
     mergeMap(action => {
-      if (action.payload.payment.state === 'PAID') {
+      if (environment.analytics && action.payload.payment.state === 'PAID') {
         this.angulartics2.eventTrack.next({
           action: 'Payment paid',
           properties: {
@@ -73,6 +74,23 @@ export class PaymentsEffects {
             value: action.payload.payment.state,
           },
         });
+        const ga = (window as any).ga;
+        if (ga) {
+          let price = action.payload.payment.amount;
+          if (action.payload.payment.currency === 'EUR') {
+            price = price * 26.1;
+          } else if (action.payload.payment.currency === 'USD') {
+            price = price * 22.84;
+          }
+          ga('ecommerce:addTransaction', {
+            id: action.payload.payment.paymentId,
+            affiliation: 'plans',
+            revenue: price,
+            shipping: '0',
+            tax: price * 0.15,
+          });
+          ga('ecommerce:send');
+        }
       }
       return of(null);
     })
@@ -142,14 +160,16 @@ export class PaymentsEffects {
   public createPaymentSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
     mergeMap(action => {
-      this.angulartics2.eventTrack.next({
-        action: 'Payment create',
-        properties: {
-          category: 'Payments',
-          label: action.payload.payment.currency,
-          value: action.payload.payment.amount,
-        },
-      });
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'Payment create',
+          properties: {
+            category: 'Payments',
+            label: action.payload.payment.currency,
+            value: action.payload.payment.amount,
+          },
+        });
+      }
       return of(null);
     })
   );

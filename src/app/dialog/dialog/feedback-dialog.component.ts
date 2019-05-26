@@ -24,6 +24,7 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {UserService} from '../../core/rest';
 import {DialogService} from '../dialog.service';
 import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../environments/environment';
 
 const FEEDBACK_KEY = 'feedback_message';
 
@@ -63,13 +64,14 @@ export class FeedbackDialogComponent implements OnInit {
   private sendFeedback(message: string) {
     this.userService.sendFeedback(message).subscribe(
       () => {
-        this.angulartics2.eventTrack.next({
-          action: 'Feedback send',
-          properties: {
-            category: 'Feedback',
-          },
-        });
-
+        if (environment.analytics) {
+          this.angulartics2.eventTrack.next({
+            action: 'Feedback send',
+            properties: {
+              category: 'Feedback',
+            },
+          });
+        }
         this.notifyOnSuccess();
         localStorage.removeItem(FEEDBACK_KEY);
       },

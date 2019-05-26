@@ -40,6 +40,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'share-view-dialog',
@@ -204,14 +205,16 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
       new ViewsAction.SetPermissions({viewId: this.view.id, type: PermissionType.Users, permissions})
     );
 
-    this.angulartics2.eventTrack.next({
-      action: 'View share',
-      properties: {
-        category: 'Collaboration',
-        label: 'view',
-        value: this.view.id,
-      },
-    });
+    if (environment.analytics) {
+      this.angulartics2.eventTrack.next({
+        action: 'View share',
+        properties: {
+          category: 'Collaboration',
+          label: 'view',
+          value: this.view.id,
+        },
+      });
+    }
   }
 
   private getUserPermissionsInView(user: User): Permission {

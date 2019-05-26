@@ -43,6 +43,7 @@ import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {areQueriesEqual} from '../navigation/query.helper';
 import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class ViewsEffects {
@@ -124,10 +125,12 @@ export class ViewsEffects {
         paths.push(Perspective.Search);
         paths.push(searchTab);
       }
-      this.angulartics2.eventTrack.next({
-        action: 'View create',
-        properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
-      });
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'View create',
+          properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
+        });
+      }
       return new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}});
     })
   );

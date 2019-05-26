@@ -35,6 +35,7 @@ import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserMod
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class UsersEffects {
@@ -126,13 +127,14 @@ export class UsersEffects {
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
     mergeMap(action => {
-      this.angulartics2.eventTrack.next({
-        action: 'User add',
-        properties: {
-          category: 'Collaboration',
-        },
-      });
-
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'User add',
+          properties: {
+            category: 'Collaboration',
+          },
+        });
+      }
       return of(null);
     })
   );
