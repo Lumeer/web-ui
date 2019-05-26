@@ -144,19 +144,19 @@ export class CollectionsEffects {
     })
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateSuccess>(CollectionsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
-    mergeMap(([, collections]) => {
+    tap(([, collections]) => {
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
           action: 'Collection create',
           properties: {category: 'Application Resources', label: 'count', value: Object.keys(collections).length + 1},
         });
       }
-      return of(null);
-    })
+    }),
+    map(([action]) => action)
   );
 
   @Effect()

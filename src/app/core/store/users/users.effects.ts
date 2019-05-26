@@ -123,10 +123,10 @@ export class UsersEffects {
     })
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
-    mergeMap(action => {
+    tap(action => {
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
           action: 'User add',
@@ -135,7 +135,6 @@ export class UsersEffects {
           },
         });
       }
-      return of(null);
     })
   );
 

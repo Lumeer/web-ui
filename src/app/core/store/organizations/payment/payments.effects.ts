@@ -61,10 +61,10 @@ export class PaymentsEffects {
     })
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   public getPaymentSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
-    mergeMap(action => {
+    tap((action: PaymentsAction.GetPaymentSuccess) => {
       if (environment.analytics && action.payload.payment.state === 'PAID') {
         this.angulartics2.eventTrack.next({
           action: 'Payment paid',
@@ -92,7 +92,6 @@ export class PaymentsEffects {
           ga('ecommerce:send');
         }
       }
-      return of(null);
     })
   );
 
@@ -156,10 +155,10 @@ export class PaymentsEffects {
     })
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   public createPaymentSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
-    mergeMap(action => {
+    tap((action: PaymentsAction.CreatePaymentSuccess) => {
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
           action: 'Payment create',
@@ -170,7 +169,6 @@ export class PaymentsEffects {
           },
         });
       }
-      return of(null);
     })
   );
 
