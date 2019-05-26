@@ -204,9 +204,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 function hashUserId(userId: string): string {
   if (userId) {
-    const sha3 = new jsSHA('SHA3-512', 'TEXT');
-    sha3.update(userId);
-    return sha3.getHash('HEX');
+    const sha = new jsSHA('SHA-1', 'TEXT');
+    sha.update(userId);
+    return sha.getHash('B64', {});
   }
 
   return 'unknown';
