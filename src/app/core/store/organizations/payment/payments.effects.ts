@@ -31,6 +31,8 @@ import {PaymentsAction, PaymentsActionType} from './payments.action';
 import {PaymentConverter} from './payment.converter';
 import {PlatformLocation} from '@angular/common';
 import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/location/browser_platform_location';
+import {Angulartics2, GoogleAnalyticsSettings, UserTimings} from 'angulartics2';
+import {environment} from '../../../../../environments/environment';
 
 @Injectable()
 export class PaymentsEffects {
@@ -56,6 +58,40 @@ export class PaymentsEffects {
         value: 'Could not read information about your previous service orders',
       });
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect({dispatch: false})
+  public getPaymentSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
+    tap((action: PaymentsAction.GetPaymentSuccess) => {
+      if (environment.analytics && action.payload.payment.state === 'PAID') {
+        this.angulartics2.eventTrack.next({
+          action: 'Payment paid',
+          properties: {
+            category: 'Payments',
+            label: action.payload.payment.currency,
+            value: action.payload.payment.state,
+          },
+        });
+        const ga = (window as any).ga;
+        if (ga) {
+          let price = action.payload.payment.amount;
+          if (action.payload.payment.currency === 'EUR') {
+            price = price * 26.1;
+          } else if (action.payload.payment.currency === 'USD') {
+            price = price * 22.84;
+          }
+          ga('ecommerce:addTransaction', {
+            id: action.payload.payment.paymentId,
+            affiliation: 'plans',
+            revenue: price,
+            shipping: '0',
+            tax: price * 0.15,
+          });
+          ga('ecommerce:send');
+        }
+      }
     })
   );
 
@@ -119,12 +155,30 @@ export class PaymentsEffects {
     })
   );
 
+  @Effect({dispatch: false})
+  public createPaymentSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
+    tap((action: PaymentsAction.CreatePaymentSuccess) => {
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'Payment create',
+          properties: {
+            category: 'Payments',
+            label: action.payload.payment.currency,
+            value: action.payload.payment.amount,
+          },
+        });
+      }
+    })
+  );
+
   constructor(
     private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,
     private organizationService: OrganizationService,
-    private location: PlatformLocation
+    private location: PlatformLocation,
+    private angulartics2: Angulartics2
   ) {}
 }

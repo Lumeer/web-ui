@@ -34,6 +34,8 @@ import {RouterAction} from '../router/router.action';
 import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserModelToDto} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
+import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class UsersEffects {
@@ -118,6 +120,21 @@ export class UsersEffects {
         map(user => new UsersAction.CreateSuccess({user: user})),
         catchError(error => of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
       );
+    })
+  );
+
+  @Effect({dispatch: false})
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
+    tap(action => {
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'User add',
+          properties: {
+            category: 'Collaboration',
+          },
+        });
+      }
     })
   );
 
@@ -228,6 +245,7 @@ export class UsersEffects {
     private actions$: Actions,
     private i18n: I18n,
     private store$: Store<AppState>,
-    private userService: UserService
+    private userService: UserService,
+    private angulartics2: Angulartics2
   ) {}
 }

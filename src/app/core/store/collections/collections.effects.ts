@@ -51,6 +51,8 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
+import {Angulartics2} from 'angulartics2';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class CollectionsEffects {
@@ -140,6 +142,21 @@ export class CollectionsEffects {
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create collection'});
       return new NotificationsAction.Error({message: errorMessage});
     })
+  );
+
+  @Effect({dispatch: false})
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.CreateSuccess>(CollectionsActionType.CREATE_SUCCESS),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+    tap(([, collections]) => {
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'Collection create',
+          properties: {category: 'Application Resources', label: 'count', value: Object.keys(collections).length + 1},
+        });
+      }
+    }),
+    map(([action]) => action)
   );
 
   @Effect()
@@ -530,7 +547,8 @@ export class CollectionsEffects {
     private store$: Store<AppState>,
     private collectionService: CollectionService,
     private i18n: I18n,
-    private importService: ImportService
+    private importService: ImportService,
+    private angulartics2: Angulartics2
   ) {}
 }
 
