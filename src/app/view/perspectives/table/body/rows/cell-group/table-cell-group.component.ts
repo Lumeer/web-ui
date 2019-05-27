@@ -16,14 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {filter, first} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {filter, mergeMap} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
+import {Query} from '../../../../../../core/store/navigation/query';
 import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
   TableColumnType,
@@ -32,15 +35,12 @@ import {
   TableConfigRow,
   TableModel,
 } from '../../../../../../core/store/tables/table.model';
-import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {
   selectTableById,
   selectTableCursor,
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
-import {Query} from '../../../../../../core/store/navigation/query';
-import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -68,73 +68,95 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
 
   public table$: Observable<TableModel>;
 
+  private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
+  private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
+
   private rowSelected: boolean;
 
   public constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
+
+    // const cursor$ = this.cursor$.pipe(filter(cursor => !!cursor));
+    this.columns$ = this.bindColumns();
+    this.documents$ = this.bindDocuments();
+    this.linkInstances$ = this.bindLinkInstances();
+    this.selectedCursor$ = this.bindSelectedCursor();
+    this.part$ = this.bindPart();
+    this.table$ = this.bindTable();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
-      this.bindColumns();
-      this.bindSelectedCursor();
-      this.bindData();
-      this.bindPart();
-      this.table$ = this.store$.pipe(select(selectTableById(this.cursor.tableId)));
+      this.cursor$.next(this.cursor);
+    }
+    if (changes.rows && this.rows) {
+      this.rows$.next(this.rows);
     }
   }
 
-  private bindColumns() {
-    this.columns$ = this.store$.pipe(select(selectTablePartLeafColumns(this.cursor)));
+  private bindColumns(): Observable<TableConfigColumn[]> {
+    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTablePartLeafColumns(cursor)))));
   }
 
-  private bindSelectedCursor() {
-    this.selectedCursor$ = this.store$.pipe(
-      select(selectTableCursor),
-      filter(selectedCursor => {
-        const rowBeingSelected = areTableRowCursorsEqual(this.cursor, selectedCursor);
-        if (!this.rowSelected && !rowBeingSelected) {
-          return false;
-        }
-
-        this.rowSelected = rowBeingSelected;
-        return true;
-      })
+  private bindDocuments(): Observable<DocumentModel[]> {
+    return combineLatest(this.cursor$, this.rows$).pipe(
+      filter(([cursor, rows]) => !!cursor && !!rows),
+      mergeMap(([cursor, rows]) =>
+        this.store$.pipe(
+          select(selectTablePart(cursor)),
+          filter(part => part && !!part.collectionId),
+          mergeMap(() => {
+            const documentIds = rows.map(row => row.documentId);
+            return this.store$.pipe(select(selectDocumentsByIds(documentIds)));
+          })
+        )
+      )
     );
   }
 
-  private bindData() {
-    this.store$
-      .pipe(
-        select(selectTablePart(this.cursor)),
-        filter(part => !!part),
-        first()
+  private bindLinkInstances(): Observable<LinkInstance[]> {
+    return combineLatest(this.cursor$, this.rows$).pipe(
+      filter(([cursor, rows]) => !!cursor && !!rows),
+      mergeMap(([cursor, rows]) =>
+        this.store$.pipe(
+          select(selectTablePart(cursor)),
+          filter(part => part && !!part.linkTypeId),
+          mergeMap(() => {
+            const linkInstanceIds = rows.map(row => row.linkInstanceId);
+            return this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));
+          })
+        )
       )
-      .subscribe(part => {
-        if (part.collectionId) {
-          const documentIds = this.rows.map(row => row.documentId);
-          this.bindDocuments(part.collectionId, documentIds);
-        }
-        if (part.linkTypeId) {
-          const linkInstanceIds = this.rows.map(row => row.linkInstanceId);
-          this.bindLinkInstances(part.linkTypeId, linkInstanceIds);
-        }
-      });
+    );
   }
 
-  private bindPart() {
-    this.part$ = this.store$.pipe(select(selectTablePart(this.cursor)));
+  private bindSelectedCursor(): Observable<TableCursor> {
+    return this.cursor$.pipe(
+      mergeMap(cursor =>
+        this.store$.pipe(
+          select(selectTableCursor),
+          filter(selectedCursor => {
+            const rowBeingSelected = areTableRowCursorsEqual(cursor, selectedCursor);
+            if (!this.rowSelected && !rowBeingSelected) {
+              return false;
+            }
+
+            this.rowSelected = rowBeingSelected;
+            return true;
+          })
+        )
+      )
+    );
   }
 
-  private bindDocuments(collectionId: string, documentIds: string[]) {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByIds(documentIds)));
+  private bindPart(): Observable<TableConfigPart> {
+    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTablePart(cursor)))));
   }
 
-  private bindLinkInstances(linkTypeId: string, linkInstanceIds: string[]) {
-    // TODO what if it does not exist?
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));
+  private bindTable(): Observable<TableModel> {
+    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTableById(cursor && cursor.tableId)))));
   }
 
   public trackByAttributeIds(index: number, column: TableConfigColumn): string {
@@ -144,12 +166,6 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
     if (column.type === TableColumnType.HIDDEN) {
       return column.attributeIds.join('-');
     }
-  }
-
-  public onMouseDown(event: MouseEvent, columnIndex: number) {
-    const cursor: TableBodyCursor = {...this.cursor, columnIndex};
-    this.store$.dispatch(new TablesAction.SetCursor({cursor}));
-    event.stopPropagation();
   }
 
   public onAffect() {

@@ -30,9 +30,13 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
+import {Store} from '@ngrx/store';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {distinctUntilChanged, mergeMap} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
+import {TableRowNumberService} from '../../../../shared/services/table-row-number.service';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -52,19 +56,40 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
   @ViewChildren('rowNumber')
   public rowNumberElements: QueryList<ElementRef>;
 
+  public firstNumber$: Observable<number>;
   public rowIndexes: number[] = [];
+
+  private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
 
   private resizeObserver: ResizeObserver;
 
-  constructor(private element: ElementRef) {}
+  constructor(
+    private element: ElementRef,
+    private store$: Store<{}>,
+    private tableRowsService: TableRowNumberService
+  ) {}
 
   public ngOnInit() {
     if (window['ResizeObserver']) {
       this.resizeObserver = new ResizeObserver(entries => this.onElementResize(entries));
     }
+
+    this.firstNumber$ = this.bindFirstNumber();
+  }
+
+  private bindFirstNumber(): Observable<number> {
+    return this.cursor$.pipe(
+      distinctUntilChanged(
+        (a: TableBodyCursor, b: TableBodyCursor) => a.rowPath && b.rowPath && a.rowPath[0] === b.rowPath[0]
+      ),
+      mergeMap(cursor => this.tableRowsService.observeRowNumber(cursor.tableId, cursor.rowPath[0]))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.cursor && this.cursor) {
+      this.cursor$.next(this.cursor);
+    }
     if (changes.row && this.row) {
       this.rowIndexes = createRowIndexes(this.row);
     }

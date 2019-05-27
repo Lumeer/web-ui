@@ -5,6 +5,7 @@
     <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
       <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
         <table-data-cell *ngIf="!(cursor | cellCollapsed | async); else collapsedCell"
+                         tableCellScroll
                          [column]="column"
                          [cursor]="cursor | columnCursor:columnIndex"
                          [document]="data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async"
@@ -18,7 +19,8 @@
         </table-data-cell>
 
         <ng-template #collapsedCell>
-          <table-collapsed-cell [column]="column"
+          <table-collapsed-cell tableCellScroll
+                                [column]="column"
                                 [cursor]="cursor | columnCursor:columnIndex"
                                 [documents]="data.documents | uniqueEntities"
                                 [linkInstances]="data.linkInstances | uniqueEntities"

@@ -1,4 +1,5 @@
-<ng-container *ngIf="{linkedAttributes: linkedAttributes$ | async, allAttributes: allAttributes$ | async, selectedIndex: (selectedIndex$ | async)} as suggestions">
+<ng-template *ngIf="{linkedAttributes: linkedAttributes$ | async, allAttributes: allAttributes$ | async, selectedIndex: (selectedIndex$ | async)} as suggestions"
+             #attributeSuggestions>
   <div *ngIf="lastName && (!(collection | attributeExist:attributeName) || !(suggestions.linkedAttributes | empty) || !(suggestions.allAttributes | empty))"
        class="dropdown">
     <div class="dropdown-menu show"
@@ -63,4 +64,4 @@
       </ng-container>
     </div>
   </div>
-</ng-container>
+</ng-template>

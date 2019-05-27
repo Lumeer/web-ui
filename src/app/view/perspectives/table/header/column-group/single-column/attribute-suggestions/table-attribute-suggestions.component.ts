@@ -17,7 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {Portal, TemplatePortal} from '@angular/cdk/portal';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {filter, first, map, take, tap} from 'rxjs/operators';
@@ -56,7 +70,7 @@ const MAX_SUGGESTIONS_COUNT = 5;
   styleUrls: ['./table-attribute-suggestions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableAttributeSuggestionsComponent implements OnChanges {
+export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public table: TableModel;
 
@@ -72,6 +86,12 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   @Input()
   public linkType: LinkType;
 
+  @Input()
+  public origin: ElementRef | HTMLElement;
+
+  @ViewChild('attributeSuggestions')
+  public attributeSuggestions: TemplateRef<any>;
+
   public lastName: string;
 
   public linkedAttributes$: Observable<LinkedAttribute[]>;
@@ -83,7 +103,15 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  public constructor(private dialogService: DialogService, private store$: Store<AppState>) {}
+  private overlayRef: OverlayRef;
+  private portal: Portal<any>;
+
+  public constructor(
+    private dialogService: DialogService,
+    private overlay: Overlay,
+    private store$: Store<AppState>,
+    private viewContainer: ViewContainerRef
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attributeName) {
@@ -93,6 +121,80 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
       this.newCount = Number(!findAttributeByName(this.collection.attributes, this.attributeName)); // TODO add support for nested attributes
       this.linkedAttributes$ = this.suggestLinkedAttributes();
       this.allAttributes$ = this.suggestAllAttributes();
+    }
+  }
+
+  public ngAfterViewInit() {
+    this.portal = new TemplatePortal(this.attributeSuggestions, this.viewContainer);
+    this.open();
+  }
+
+  public open() {
+    if (this.overlayRef) {
+      return;
+    }
+
+    this.overlayRef = this.overlay.create({
+      disposeOnNavigation: true,
+      panelClass: ['position-absolute', 'w-max-content'],
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(this.origin)
+        .withFlexibleDimensions(false)
+        .withViewportMargin(8)
+        .withLockedPosition()
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+          },
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top',
+          },
+          {
+            originX: 'end',
+            originY: 'top',
+            overlayX: 'end',
+            overlayY: 'bottom',
+          },
+          {
+            originX: 'end',
+            originY: 'center',
+            overlayX: 'start',
+            overlayY: 'center',
+          },
+          {
+            originX: 'start',
+            originY: 'center',
+            overlayX: 'end',
+            overlayY: 'center',
+          },
+        ]),
+    });
+    this.overlayRef.attach(this.portal);
+  }
+
+  public ngOnDestroy() {
+    this.close();
+  }
+
+  public close() {
+    if (this.overlayRef) {
+      this.overlayRef.detach();
+      this.overlayRef.dispose();
+      this.overlayRef = null;
     }
   }
 

@@ -22,11 +22,6 @@ body {
   margin: 0;
 }
 
-.row-number::before {
-  counter-increment: row-number;
-  content: counter(row-number);
-}
-
 a {
   cursor: pointer;
   transition: color $animation-color-duration;

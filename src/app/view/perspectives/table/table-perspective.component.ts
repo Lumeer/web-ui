@@ -35,6 +35,7 @@ import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
@@ -46,8 +47,9 @@ import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
-import {Query} from '../../../core/store/navigation/query';
+import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
+import {TableRowNumberService} from './shared/services/table-row-number.service';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
 
@@ -58,6 +60,7 @@ export const EDITABLE_EVENT = 'editableEvent';
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TableRowNumberService],
 })
 export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -78,10 +81,15 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(TableHeaderComponent)
   public tableHeader: TableHeaderComponent;
 
+  @ViewChild(TableBodyComponent)
+  public tableBody: TableBodyComponent;
+
   public currentView$: Observable<View>;
   public table$ = new BehaviorSubject<TableModel>(null);
 
   private selectedCursor: TableCursor;
+
+  private lastHeaderScroll: number;
 
   private subscriptions = new Subscription();
 
@@ -292,10 +300,20 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     event.preventDefault();
   }
 
-  public onBodyScroll(event: Event) {
-    if (this.tableHeader) {
-      const scrollLeft: number = event.target['scrollLeft'];
+  public onHeaderScroll(event: Event) {
+    this.lastHeaderScroll = Date.now();
+    const scrollLeft = event.target['scrollLeft'];
+    this.tableBody.scroll(scrollLeft);
+  }
+
+  public onBodyHorizontalScroll(scrollLeft: number) {
+    // need to check if header was not directly scrolled recently, otherwise infinite scroll loop might occur
+    if (this.tableHeader && !this.hasHeaderScrolledRecently()) {
       this.tableHeader.scroll(-scrollLeft);
     }
+  }
+
+  private hasHeaderScrolledRecently(): boolean {
+    return this.lastHeaderScroll && Date.now() - this.lastHeaderScroll < 50;
   }
 }

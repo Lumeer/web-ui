@@ -36,7 +36,7 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
@@ -51,6 +51,7 @@ import {LinkInstancesAction} from '../../../../../../../core/store/link-instance
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
+import {Query} from '../../../../../../../core/store/navigation/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
@@ -64,11 +65,10 @@ import {
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
+import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
+import {isValueValid} from '../../../../../../../shared/utils/data.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {isValueValid} from '../../../../../../../shared/utils/data.utils';
-import {Query} from '../../../../../../../core/store/navigation/query';
-import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'table-data-cell',
@@ -217,7 +217,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
     }
-    if (changes.selected) {
+    if (
+      changes.selected &&
+      (changes.selected.firstChange || !changes.selected.previousValue !== !changes.selected.currentValue)
+    ) {
       this.selectedSubscriptions.unsubscribe();
       if (this.selected) {
         this.selectedSubscriptions = new Subscription();
