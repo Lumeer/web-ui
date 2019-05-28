@@ -38,6 +38,7 @@ import {
   COLOR_GRAY300,
   COLOR_GRAY400,
   COLOR_GREEN,
+  COLOR_PINK,
   COLOR_PRIMARY,
   COLOR_RED,
 } from '../../../core/constants';
@@ -174,6 +175,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     this.workspace.registerToolboxCategoryCallback('DOCUMENT_VARIABLES', this.registerDocumentVariables.bind(this));
     this.workspace.registerToolboxCategoryCallback('LINKS', this.registerLinks.bind(this));
+    this.workspace.registerToolboxCategoryCallback('DATES', this.registerDates.bind(this));
 
     if (this.xml) {
       // initiate from previously stored XML
@@ -632,6 +634,66 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       }
 
       const code = this_.lumeerVar + '.getLinkDocument(' + argument0 + ", '" + collectionId + "'" + ')';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks['date_to_ms'] = {
+      init: function() {
+        this.jsonInit({
+          type: 'date_to_ms',
+          message0: '%{BKY_BLOCK_DATE_TO_MS}', // date to ms %1
+          args0: [
+            {
+              type: 'input_value',
+              name: 'DATE',
+            },
+          ],
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript['date_to_ms'] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = argument0 + '.getTime()';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks['ms_to_date'] = {
+      init: function() {
+        this.jsonInit({
+          type: 'ms_to_date',
+          message0: '%{BKY_BLOCK_MS_TO_DATE}', // ms to date %1
+          args0: [
+            {
+              type: 'input_value',
+              name: 'MS',
+            },
+          ],
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript['ms_to_date'] = function(block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = '(new Date(' + argument0 + ')).toISOString()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
@@ -1242,6 +1304,15 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     });
 
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+
+    return xmlList;
+  }
+
+  private registerDates(workspace): any[] {
+    const xmlList = [];
+
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
 
     return xmlList;
   }
