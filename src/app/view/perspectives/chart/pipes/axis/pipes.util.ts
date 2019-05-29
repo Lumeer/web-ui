@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 type AxisResource = Collection | LinkType;
 
@@ -119,7 +120,7 @@ export function collectionAttributeToItem(
   const axis: ChartAxis = {
     resourceId: collection.id,
     attributeId: attribute.id,
-    axisResourceType: ChartAxisResourceType.Collection,
+    resourceType: AttributesResourceType.Collection,
     resourceIndex: index,
   };
   return {id: axis, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
@@ -134,7 +135,7 @@ export function linkTypeAttributeToItem(
   const axis: ChartAxis = {
     resourceId: linkType.id,
     attributeId: attribute.id,
-    axisResourceType: ChartAxisResourceType.LinkType,
+    resourceType: AttributesResourceType.LinkType,
     resourceIndex: index,
   };
   return {

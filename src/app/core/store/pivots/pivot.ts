@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributesResourceType} from '../../model/resource';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+
 export const DEFAULT_PIVOT_ID = 'default';
 
 export interface Pivot {
@@ -25,5 +28,27 @@ export interface Pivot {
 }
 
 export interface PivotConfig {
+  rowAttributes: PivotRowAttribute[];
+  columnAttributes: PivotColumnAttribute[];
+  valueAttributes: PivotValueAttribute[];
+}
 
+export interface PivotAttribute {
+  resourceId: string;
+  attributeId: string;
+  resourceIndex?: number;
+  resourceType: AttributesResourceType;
+}
+
+export interface PivotRowAttribute extends PivotAttribute {
+  // TODO sort, show sums
+}
+
+export interface PivotColumnAttribute extends PivotAttribute {
+  // TODO sort, show sums
+}
+
+export interface PivotValueAttribute extends PivotAttribute {
+  // TODO show as
+  aggregation: DataAggregationType;
 }

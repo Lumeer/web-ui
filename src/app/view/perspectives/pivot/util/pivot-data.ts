@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {PivotPerspectiveComponent} from './pivot-perspective.component';
-import {SharedModule} from '../../../shared/shared.module';
-import {RouterModule} from '@angular/router';
-import {PivotPerspectiveRoutingModule} from './pivot-perspective-routing.module';
-import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrapper.component';
+export interface PivotData {
+  columnHeaders: PivotDataHeader[];
+  rowHeaders: PivotDataHeader[];
+  values: number[][];
+}
 
-@NgModule({
-  declarations: [PivotPerspectiveComponent, PivotPerspectiveWrapperComponent],
-  imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule],
-})
-export class PivotPerspectiveModule {}
+export interface PivotDataHeader {
+  title: string;
+  children?: PivotDataHeader[];
+  targetIndex?: number;
+}

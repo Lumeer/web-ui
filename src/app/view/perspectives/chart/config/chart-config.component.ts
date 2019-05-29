@@ -19,18 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  ChartAggregation,
-  ChartAxis,
-  ChartAxisType,
-  ChartConfig,
-  ChartSortType,
-  ChartType,
-} from '../../../../core/store/charts/chart';
+import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../core/store/charts/chart';
 import {Perspective} from '../../perspective';
 import {Query} from '../../../../core/store/navigation/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
 @Component({
   selector: 'chart-config',
@@ -55,7 +49,7 @@ export class ChartConfigComponent {
 
   public readonly chartTypes = Object.values(ChartType);
   public readonly chartPerspective = Perspective.Chart;
-  public readonly chartAggregations = Object.values(ChartAggregation);
+  public readonly chartAggregations = Object.values(DataAggregationType);
   public readonly chartSortTypes = Object.values(ChartSortType);
 
   public readonly xAxisType = ChartAxisType.X;
@@ -94,7 +88,7 @@ export class ChartConfigComponent {
     this.onSortSelect(null);
   }
 
-  public onAggregationSelect(type: ChartAxisType, aggregation: ChartAggregation) {
+  public onAggregationSelect(type: ChartAxisType, aggregation: DataAggregationType) {
     const aggregations = {...(this.config.aggregations || {}), [type]: aggregation};
     const newConfig = {...this.config, aggregations};
     this.configChange.emit(newConfig);

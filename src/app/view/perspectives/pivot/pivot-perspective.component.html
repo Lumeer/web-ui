@@ -1,3 +1,8 @@
-<p>
-  pivot-perspective works!
-</p>
+<pivot-perspective-wrapper [collections]="collections$ | async"
+                           [documents]="documents$ | async"
+                           [linkTypes]="linkTypes$ | async"
+                           [linkInstances]="linkInstances$ | async"
+                           [query]="query$ | async"
+                           [constraintData]="{users: users$ | async}"
+                           [config]="config$ | async">
+</pivot-perspective-wrapper>

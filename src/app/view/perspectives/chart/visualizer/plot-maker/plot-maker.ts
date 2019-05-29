@@ -21,8 +21,9 @@ import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
 import {ChartAxisCategory, ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
-import {ChartAxisResourceType, ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ConstraintConfig} from '../../../../../core/model/data/constraint';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -86,7 +87,7 @@ export interface ValueChange {
   setId: string;
   pointId: string;
   value: string;
-  resourceType: ChartAxisResourceType;
+  resourceType: AttributesResourceType;
 }
 
 export interface DataChange {

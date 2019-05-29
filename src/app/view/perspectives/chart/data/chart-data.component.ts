@@ -33,7 +33,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query';
-import {ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -50,6 +50,7 @@ import {
   DateTimeConstraintConfig,
 } from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 interface Data {
   collections: Collection[];
@@ -110,8 +111,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
   @ViewChild(ChartVisualizerComponent)
   public chartVisualizerComponent: ChartVisualizerComponent;
 
+  private dataSubject = new BehaviorSubject<Data>(null);
   public chartData$: Observable<ChartData>;
-  public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(private chartDataConverter: ChartDataConverter) {}
 
@@ -264,9 +265,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
   }
 
   public onValueChange(valueChange: ValueChange) {
-    if (valueChange.resourceType === ChartAxisResourceType.Collection) {
+    if (valueChange.resourceType === AttributesResourceType.Collection) {
       this.onDocumentValueChange(valueChange);
-    } else if (valueChange.resourceType === ChartAxisResourceType.LinkType) {
+    } else if (valueChange.resourceType === AttributesResourceType.LinkType) {
       this.onLinkValueChange(valueChange);
     }
   }

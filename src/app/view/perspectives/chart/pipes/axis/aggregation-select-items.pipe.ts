@@ -18,9 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAggregation} from '../../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 
 @Pipe({
   name: 'aggregationSelectItems',
@@ -28,11 +28,11 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class AggregationSelectItemsPipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
-  public transform(aggregations: ChartAggregation[]): SelectItemModel[] {
+  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
     return aggregations.map(aggregation => ({id: aggregation, value: this.chartAggregationName(aggregation)}));
   }
 
-  private chartAggregationName(type: ChartAggregation): string {
+  private chartAggregationName(type: DataAggregationType): string {
     return this.i18n(
       {
         id: 'perspective.chart.config.aggregation.name',

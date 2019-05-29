@@ -46,24 +46,23 @@ interface AttributesResourceChain {
 // <resourceId, <docId/linkId, DataResourceWithLinks>>
 type DataResourceMap = Record<string, Record<string, DataResourceWithLinks>>;
 
-export interface DataAggregation {
-  map: DataAggregationMap;
+export interface AggregatedData {
+  map: AggregatedDataMap;
+  columnsMap: Record<string, any>;
   rowLevels: number;
   columnLevels: number;
-  rowDistinctKeys?: any[][];
-  columnDistinctKeys?: any[][];
 }
 
-// any represents DataAggregationMap
-export type DataAggregationMap = Record<string, any | DataAggregationValues[]>;
+// any represents AggregatedDataMap
+export type AggregatedDataMap = Record<string, any | AggregatedDataValues[]>;
 
-export interface DataAggregationValues {
+export interface AggregatedDataValues {
   resourceId: string;
   type: AttributesResourceType;
   objects: DataResource[];
 }
 
-export interface DataAggregationAttribute {
+export interface DataAggregatorAttribute {
   attributeId: string;
   resourceIndex: number;
 }
@@ -104,9 +103,9 @@ export class DataAggregator {
   }
 
   public aggregate(
-    rowAttributes: DataAggregationAttribute[],
-    columnAttributes: DataAggregationAttribute[],
-    valueAttributes: DataAggregationAttribute[]
+    rowAttributes: DataAggregatorAttribute[],
+    columnAttributes: DataAggregatorAttribute[],
+    valueAttributes: DataAggregatorAttribute[]
   ) {
     if ((rowAttributes || []).length === 0 && (columnAttributes || []).length === 0) {
       return this.emptyAggregate();
@@ -115,15 +114,15 @@ export class DataAggregator {
     return this.aggregateByRowsAndColumns(rowAttributes || [], columnAttributes || [], valueAttributes || []);
   }
 
-  private emptyAggregate(): DataAggregation {
-    return {map: {}, rowLevels: 0, columnLevels: 0};
+  private emptyAggregate(): AggregatedData {
+    return {map: {}, columnsMap: {}, rowLevels: 0, columnLevels: 0};
   }
 
   private aggregateByRowsAndColumns(
-    rowAttributes: DataAggregationAttribute[],
-    columnAttributes: DataAggregationAttribute[],
-    valueAttributes: DataAggregationAttribute[]
-  ): DataAggregation {
+    rowAttributes: DataAggregatorAttribute[],
+    columnAttributes: DataAggregatorAttribute[],
+    valueAttributes: DataAggregatorAttribute[]
+  ): AggregatedData {
     const {chain, valuesChains} = this.createAttributesResourceChain(
       rowAttributes,
       columnAttributes,
@@ -131,13 +130,48 @@ export class DataAggregator {
       this.attributesResourcesOrder
     );
     const map = this.iterate(chain, valuesChains);
-    return {map, rowLevels: rowAttributes.length, columnLevels: columnAttributes.length};
+    const columnsMap = this.createColumnsMap(map, rowAttributes.length, columnAttributes.length);
+    return {map, columnsMap, rowLevels: rowAttributes.length, columnLevels: columnAttributes.length};
+  }
+
+  private createColumnsMap(fullMap: Record<string, any>, rowLevels: number, columnLevels: number): Record<string, any> {
+    if (rowLevels === 0 || columnLevels === 0) {
+      return {};
+    }
+
+    const map = {};
+    const keys = Object.keys(fullMap);
+    keys.forEach(key => this.iterateThroughColumnMap(fullMap[key], map, 1, rowLevels, rowLevels + columnLevels));
+    return map;
+  }
+
+  private iterateThroughColumnMap(
+    currentMap: Record<string, any>,
+    columnMap: Record<string, any>,
+    level: number,
+    columnLevel: number,
+    maxLevel: number
+  ) {
+    if (level >= maxLevel) {
+      return;
+    }
+
+    Object.keys(currentMap).forEach(key => {
+      if (level >= columnLevel) {
+        if (!columnMap[key]) {
+          columnMap[key] = {};
+        }
+        this.iterateThroughColumnMap(currentMap[key], columnMap[key], level + 1, columnLevel, maxLevel);
+      } else {
+        this.iterateThroughColumnMap(currentMap[key], columnMap, level + 1, columnLevel, maxLevel);
+      }
+    });
   }
 
   private createAttributesResourceChain(
-    rowAttributes: DataAggregationAttribute[],
-    columnAttributes: DataAggregationAttribute[],
-    valueAttributes: DataAggregationAttribute[],
+    rowAttributes: DataAggregatorAttribute[],
+    columnAttributes: DataAggregatorAttribute[],
+    valueAttributes: DataAggregatorAttribute[],
     attributesResourcesOrder: AttributesResource[]
   ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
     const chain: AttributesResourceChain[] = [];
@@ -180,7 +214,7 @@ export class DataAggregator {
   }
 
   private createValueAttributeChain(
-    valueAttribute: DataAggregationAttribute,
+    valueAttribute: DataAggregatorAttribute,
     startIndex: number,
     attributesResourcesOrder: AttributesResource[]
   ): AttributesResourceChain[] {
@@ -198,7 +232,7 @@ export class DataAggregator {
   }
 
   private createRowOrColumnAttributesChain(
-    aggregationAttributes: DataAggregationAttribute[],
+    aggregationAttributes: DataAggregatorAttribute[],
     attributesResourcesOrder: AttributesResource[],
     isRow: boolean,
     isColumn: boolean
@@ -253,7 +287,7 @@ export class DataAggregator {
     return AttributesResourceType.LinkType;
   }
 
-  private iterate(chain: AttributesResourceChain[], valuesChains: AttributesResourceChain[][]): DataAggregationMap {
+  private iterate(chain: AttributesResourceChain[], valuesChains: AttributesResourceChain[][]): AggregatedDataMap {
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
     const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const data = {};
@@ -263,7 +297,7 @@ export class DataAggregator {
 
   private iterateRecursive(
     objectData: DataResourceWithLinks[],
-    data: DataAggregationMap,
+    data: AggregatedDataMap,
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
     index: number
@@ -286,7 +320,7 @@ export class DataAggregator {
           if (index === chain.length - 1) {
             if (valuesChains.length > 0) {
               for (const valueChain of valuesChains) {
-                const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
+                const valueLinkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
                   object,
                   stage,
                   valueChain[0],
@@ -294,7 +328,7 @@ export class DataAggregator {
                 );
                 const lastStage = valueChain[valueChain.length - 1];
                 const dataAggregationValues = this.processLastStage(lastStage, data, formattedValue);
-                this.iterateThroughValues(linkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
+                this.iterateThroughValues(valueLinkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
               }
             } else {
               this.processLastStage(stage, data, formattedValue);
@@ -314,10 +348,10 @@ export class DataAggregator {
 
   private processLastStage(
     lastStage: AttributesResourceChain,
-    data: DataAggregationMap,
+    data: AggregatedDataMap,
     formattedValue: string
-  ): DataAggregationValues {
-    let dataAggregationValues: DataAggregationValues = {
+  ): AggregatedDataValues {
+    let dataAggregationValues: AggregatedDataValues = {
       resourceId: lastStage.resource.id,
       type: this.attributesResourceTypeForIndex(lastStage.index),
       objects: [],
@@ -375,7 +409,7 @@ export class DataAggregator {
 
   private iterateThroughValues(
     objectData: DataResourceWithLinks[],
-    values: DataAggregationValues,
+    values: AggregatedDataValues,
     valueChain: AttributesResourceChain[],
     index: number
   ) {

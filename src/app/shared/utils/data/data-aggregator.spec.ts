@@ -22,7 +22,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {Query} from '../../../core/store/navigation/query';
-import {DataAggregationAttribute, DataAggregator} from './data-aggregator';
+import {DataAggregatorAttribute, DataAggregator} from './data-aggregator';
 
 const documents: DocumentModel[] = [
   {
@@ -234,7 +234,7 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const valueAttributes: DataAggregationAttribute[] = [
+    const valueAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
       {attributeId: 'a2', resourceIndex: 1},
     ];
@@ -248,7 +248,7 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const aggregationAttributes: DataAggregationAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
+    const aggregationAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
     const aggregatedData = aggregator.aggregate(aggregationAttributes, [], []);
     expect(Object.keys(aggregatedData.map)).toEqual(['Abc', 'Ara', 'Aka']);
 
@@ -262,7 +262,7 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const aggregationAttributes: DataAggregationAttribute[] = [
+    const aggregationAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
       {attributeId: 'a1', resourceIndex: 4},
     ];
@@ -281,7 +281,7 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const aggregationAttributes: DataAggregationAttribute[] = [{attributeId: 'a1', resourceIndex: 1}];
+    const aggregationAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 1}];
     const aggregatedData = aggregator.aggregate([], aggregationAttributes, []);
     expect(Object.keys(aggregatedData.map)).toEqual(['La', 'Lb', 'Lc', 'Ld', 'Le', 'Lf']);
 
@@ -295,7 +295,7 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const aggregationAttributes: DataAggregationAttribute[] = [
+    const aggregationAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 2},
       {attributeId: 'a2', resourceIndex: 2},
     ];
@@ -317,11 +317,11 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const rowAttributes: DataAggregationAttribute[] = [
+    const rowAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
       {attributeId: 'a1', resourceIndex: 2},
     ];
-    const columnAttributes: DataAggregationAttribute[] = [
+    const columnAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a2', resourceIndex: 4},
       {attributeId: 'a1', resourceIndex: 4},
     ];
@@ -347,6 +347,11 @@ describe('Data aggregator', () => {
     expect(Object.keys(aggregatedData.map['Aka']['Bbf']['Yyc'])).toEqual(['Cce']);
     expect(Object.keys(aggregatedData.map['Aka']['Bbf']['Yya'])).toEqual(['Ccf']);
 
+    expect(Object.keys(aggregatedData.columnsMap)).toEqual(['Yya', 'Yyb', 'Yyc']);
+    expect(Object.keys(aggregatedData.columnsMap['Yya'])).toEqual(['Cca', 'Ccc', 'Ccf']);
+    expect(Object.keys(aggregatedData.columnsMap['Yyb'])).toEqual(['Ccb', 'Ccd']);
+    expect(Object.keys(aggregatedData.columnsMap['Yyc'])).toEqual(['Cce']);
+
     expect(aggregatedData.rowLevels).toEqual(2);
     expect(aggregatedData.columnLevels).toEqual(2);
   });
@@ -355,8 +360,8 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const rowAttributes: DataAggregationAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
-    const valuesAttributes: DataAggregationAttribute[] = [
+    const rowAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
+    const valuesAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 2},
       {attributeId: 'a1', resourceIndex: 4},
     ];
@@ -381,9 +386,9 @@ describe('Data aggregator', () => {
     const aggregator = new DataAggregator();
     aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
 
-    const rowAttributes: DataAggregationAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
-    const columnAttributes: DataAggregationAttribute[] = [{attributeId: 'a1', resourceIndex: 2}];
-    const valuesAttributes: DataAggregationAttribute[] = [
+    const rowAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
+    const columnAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 2}];
+    const valuesAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 4},
       {attributeId: 'a1', resourceIndex: 4},
     ];

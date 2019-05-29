@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisResourceType, ChartConfig, ChartSort} from './chart';
+import {ChartAxis, ChartConfig, ChartSort} from './chart';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../shared/utils/array.utils';
 import {LinkType} from '../link-types/link.type';
+import {AttributesResourceType} from '../../model/resource';
 
 export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
   if (viewConfig.type !== currentConfig.type || viewConfig.prediction !== currentConfig.prediction) {
@@ -71,9 +72,9 @@ export function chartConfigCollectionIds(config: ChartConfig, linkTypes: LinkTyp
 }
 
 function axisCollectionIds(axis: ChartAxis, linkTypes: LinkType[]): string[] {
-  if (axis.axisResourceType === ChartAxisResourceType.Collection) {
+  if (axis.resourceType === AttributesResourceType.Collection) {
     return [axis.resourceId];
-  } else if (axis.axisResourceType === ChartAxisResourceType.LinkType) {
+  } else if (axis.resourceType === AttributesResourceType.LinkType) {
     const linkType = linkTypes && linkTypes.find(lt => lt.id === axis.resourceId);
     if (linkType) {
       return linkType.collectionIds;
