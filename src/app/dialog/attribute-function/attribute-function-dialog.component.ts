@@ -24,7 +24,11 @@ import {ActivatedRoute} from '@angular/router';
 import {DialogService} from '../dialog.service';
 import {select, Store} from '@ngrx/store';
 import {filter, first, map, mergeMap} from 'rxjs/operators';
-import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionById,
+  selectCollectionsByLinkType,
+} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {RuleVariable} from '../../collection/settings/tab/rules/rule-variable-type';
@@ -52,6 +56,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
   public attribute$: Observable<Attribute>;
   public linkTypes$: Observable<LinkType[]>;
   public linkType$: Observable<LinkType>;
+  public linkTypeCollections$: Observable<Collection[]>;
 
   public displayDebug: BlocklyDebugDisplay;
   public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
@@ -72,6 +77,7 @@ export class AttributeFunctionDialogComponent implements OnInit {
     this.collections$ = this.store$.select(selectAllCollections);
     this.collection$ = this.selectCollection();
     this.linkType$ = this.selectLinkType();
+    this.linkTypeCollections$ = this.selectLinkTypeCollections();
 
     this.attribute$ = this.selectAttribute(this.selectAttributes(this.collection$, this.linkType$));
     this.linkTypes$ = this.selectLinkTypes(this.collection$, this.linkType$); // this.store$.select(selectAllLinkTypes);
@@ -109,6 +115,15 @@ export class AttributeFunctionDialogComponent implements OnInit {
     return this.activatedRoute.paramMap.pipe(
       map(params => params.get('linkTypeId')),
       mergeMap(linkTypeId => (linkTypeId ? this.store$.pipe(select(selectLinkTypeById(linkTypeId))) : of(null)))
+    );
+  }
+
+  private selectLinkTypeCollections(): Observable<Collection[]> {
+    return this.activatedRoute.paramMap.pipe(
+      map(params => params.get('linkTypeId')),
+      mergeMap(linkTypeId =>
+        linkTypeId ? this.store$.pipe(select(selectCollectionsByLinkType(linkTypeId))) : of(null)
+      )
     );
   }
 
