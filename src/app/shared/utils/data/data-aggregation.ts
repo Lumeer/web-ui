@@ -68,7 +68,7 @@ export function aggregateDataValues(
     case DataAggregationType.Max:
       return maxInValues(values, constraint, onlyNumeric);
     case DataAggregationType.Count:
-      return (values || []).length;
+      return countValues(values, onlyNumeric);
     default:
       return sumAnyValues(values);
   }
@@ -201,4 +201,9 @@ function maxInAnyValues(values: any[], onlyNumeric: boolean): any {
   const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
   const sortedValues = filteredValues.sort((a, b) => (a > b ? -1 : 1));
   return sortedValues[0];
+}
+
+function countValues(values: any[], onlyNumeric: boolean) {
+  const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
+  return filteredValues.length;
 }

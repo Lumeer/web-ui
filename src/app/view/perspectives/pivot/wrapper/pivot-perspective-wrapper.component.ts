@@ -29,6 +29,8 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
 interface Data {
   collections: Collection[];
@@ -68,10 +70,24 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   @Input()
   public config: PivotConfig;
 
-  private pivotTransformer = new PivotDataConverter();
+  private readonly pivotTransformer: PivotDataConverter;
   private dataSubject = new BehaviorSubject<Data>(null);
 
   public pivotData$: Observable<PivotData>;
+
+  constructor(private i18n: I18n) {
+    this.pivotTransformer = new PivotDataConverter(type => this.createValueAggregationTitle(type));
+  }
+
+  private createValueAggregationTitle(aggregation: DataAggregationType): string {
+    return this.i18n(
+      {
+        id: 'pivot.data.aggregation',
+        value: '{select, aggregation, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of}}',
+      },
+      {aggregation}
+    );
+  }
 
   public ngOnInit() {
     this.pivotData$ = this.dataSubject.pipe(

@@ -32,10 +32,9 @@ import {
   AggregatedDataValues,
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader} from './pivot-data';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 export class PivotDataConverter {
   private collections: Collection[];
@@ -45,7 +44,7 @@ export class PivotDataConverter {
 
   private dataAggregator: DataAggregator;
 
-  constructor(private i18n: I18n) {
+  constructor(private translateAggregation: (type: DataAggregationType) => string) {
     this.dataAggregator = new DataAggregator();
   }
 
@@ -98,7 +97,7 @@ export class PivotDataConverter {
       return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     });
 
-    return {columnHeaders: headers, rowHeaders: [], values};
+    return {columnHeaders: headers, rowHeaders: [], values: [values]};
   }
 
   private findDataResourcesByPivotAttribute(pivotAttribute: PivotAttribute): DataResource[] {
@@ -115,7 +114,7 @@ export class PivotDataConverter {
 
     const valueTitles = this.createValueTitles(valueAttributes);
     const columnData = this.convertMapToPivotDataHeader(
-      aggregatedData.columnsMap,
+      aggregatedData.rowLevels > 0 ? aggregatedData.columnsMap : aggregatedData.map,
       aggregatedData.columnLevels,
       valueTitles
     );
@@ -137,7 +136,7 @@ export class PivotDataConverter {
       if ((valueTitles || []).length > 0) {
         return {
           headers: valueTitles.map((title, index) => ({title, targetIndex: index})),
-          maxIndex: valueTitles.length,
+          maxIndex: valueTitles.length - 1,
         };
       }
       return {headers: [], maxIndex: 0};
@@ -146,7 +145,13 @@ export class PivotDataConverter {
     const headers = [];
     const data = {maxIndex: 0};
     Object.keys(map).forEach((title, index) => {
-      headers.push({title, targetIndex: levels === 1 && (valueTitles || []).length <= 1 ? index : undefined});
+      if (levels === 1 && (valueTitles || []).length <= 1) {
+        headers.push({title, targetIndex: index});
+        data.maxIndex = Math.max(data.maxIndex, index);
+      } else {
+        headers.push({title});
+      }
+
       this.iterateThroughPivotDataHeader(map[title], headers, index, 1, levels, valueTitles, data);
     });
 
@@ -164,9 +169,9 @@ export class PivotDataConverter {
   ) {
     if (level === maxLevels) {
       if ((valueTitles || []).length > 1) {
-        const maxIndex = this.maxPreviousHeaderIndex(headers, headerIndex);
-        headers[headerIndex].children = valueTitles.map((title, index) => ({title, targetIndex: maxIndex + index}));
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, maxIndex + valueTitles.length - 1);
+        const nextIndex = this.nextHeaderIndex(headers, headerIndex);
+        headers[headerIndex].children = valueTitles.map((title, index) => ({title, targetIndex: nextIndex + index}));
+        additionalData.maxIndex = Math.max(additionalData.maxIndex, nextIndex + valueTitles.length - 1);
       }
       return;
     }
@@ -174,9 +179,9 @@ export class PivotDataConverter {
     headers[headerIndex].children = [];
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
-        const maxIndex = this.maxPreviousHeaderIndex(headers, headerIndex);
-        headers[headerIndex].children.push({title, targetIndex: maxIndex + index});
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, maxIndex + index);
+        const nextIndex = this.nextHeaderIndex(headers, headerIndex);
+        headers[headerIndex].children.push({title, targetIndex: nextIndex + index});
+        additionalData.maxIndex = Math.max(additionalData.maxIndex, nextIndex + index);
       } else {
         headers[headerIndex].children.push({title});
       }
@@ -193,22 +198,26 @@ export class PivotDataConverter {
     });
   }
 
-  private maxPreviousHeaderIndex(headers: PivotDataHeader[], headerIndex: number): number {
+  private nextHeaderIndex(headers: PivotDataHeader[], headerIndex: number): number {
     const previousHeader = headers[headerIndex - 1];
     const previousChildren = (previousHeader && previousHeader.children) || [];
     if (previousChildren.length === 0) {
-      return -1;
+      return 0;
     }
 
-    return previousChildren[previousChildren.length - 1].targetIndex;
+    return previousChildren[previousChildren.length - 1].targetIndex + 1;
   }
 
   private createValueTitles(valueAttributes: PivotValueAttribute[]): string[] {
     return (valueAttributes || []).map(pivotAttribute => {
       const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-      const valueAggregationTitle = this.createValueAggregationTitle(pivotAttribute.aggregation);
-      return `${valueAggregationTitle} ${(attribute && attribute.name) || ''}`.trim();
+      return this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
     });
+  }
+
+  public createValueTitle(aggregation: DataAggregationType, attributeName: string): string {
+    const valueAggregationTitle = this.translateAggregation(aggregation);
+    return `${valueAggregationTitle} ${attributeName || ''}`.trim();
   }
 
   private initValues(rows: number, columns: number): number[][] {
@@ -272,9 +281,9 @@ export class PivotDataConverter {
           currentMap[columnHeader.title] || {}
         );
       } else if (isNotNullOrUndefined(columnHeader.targetIndex)) {
-        const aggregatedDataValues = (valueAttributes.length === 1
-          ? currentMap[columnHeader.title]
-          : currentMap) as AggregatedDataValues[];
+        const aggregatedDataValues = isArray(currentMap)
+          ? currentMap
+          : (currentMap[columnHeader.title] as AggregatedDataValues[]);
         for (const valueAttribute of valueAttributes) {
           values[rowIndex][columnHeader.targetIndex] = this.aggregateValue(valueAttribute, aggregatedDataValues);
         }
@@ -308,15 +317,5 @@ export class PivotDataConverter {
     }
 
     return null;
-  }
-
-  private createValueAggregationTitle(aggregation: DataAggregationType): string {
-    return this.i18n(
-      {
-        id: 'pivot.data.aggregation',
-        value: '{select, aggregation, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of}}',
-      },
-      {aggregation}
-    );
   }
 }
