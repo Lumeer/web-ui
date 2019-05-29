@@ -1176,7 +1176,13 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   private getLinkType(id: string): LinkType {
-    return this.linkTypes.find(linkType => linkType.id === id);
+    const currentLinkType = this.linkTypes.find(linkType => linkType.id === id);
+    const collections = this.collections.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
+    if (collections.length === 2) {
+      currentLinkType.collections = [collections[0], collections[1]];
+    }
+
+    return currentLinkType;
   }
 
   private ensureVariableTypeBlock(type: string): void {
