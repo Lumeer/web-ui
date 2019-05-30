@@ -35,12 +35,14 @@ import {PivotData, PivotDataHeader} from './pivot-data';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {formatDataValue} from '../../../../shared/utils/data.utils';
 
 export class PivotDataConverter {
   private collections: Collection[];
   private documents: DocumentModel[];
   private linkTypes: LinkType[];
   private linkInstances: LinkInstance[];
+  private constraintData?: ConstraintData;
 
   private dataAggregator: DataAggregator;
 
@@ -52,12 +54,14 @@ export class PivotDataConverter {
     collections: Collection[],
     documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[]
+    linkInstances: LinkInstance[],
+    constraintData?: ConstraintData,
   ) {
     this.collections = collections;
     this.documents = documents;
     this.linkTypes = linkTypes;
     this.linkInstances = linkInstances;
+    this.constraintData = constraintData;
   }
 
   public transform(
@@ -69,7 +73,7 @@ export class PivotDataConverter {
     query: Query,
     constraintData?: ConstraintData
   ): PivotData {
-    this.updateData(collections, documents, linkTypes, linkInstances);
+    this.updateData(collections, documents, linkTypes, linkInstances, constraintData);
 
     const rowAttributes = (config.rowAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
     const columnAttributes = (config.columnAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
@@ -131,7 +135,7 @@ export class PivotDataConverter {
     map: Record<string, any>,
     levels: number,
     valueTitles?: string[]
-  ): {headers: PivotDataHeader[]; maxIndex: number} {
+  ): { headers: PivotDataHeader[]; maxIndex: number } {
     if (levels === 0) {
       if ((valueTitles || []).length > 0) {
         return {
@@ -165,7 +169,7 @@ export class PivotDataConverter {
     level: number,
     maxLevels: number,
     valueTitles: string[],
-    additionalData: {maxIndex: number}
+    additionalData: { maxIndex: number }
   ) {
     if (level === maxLevels) {
       if ((valueTitles || []).length > 1) {
@@ -291,14 +295,18 @@ export class PivotDataConverter {
     }
   }
 
-  private aggregateValue(valueAttribute: PivotValueAttribute, aggregatedDataValues: AggregatedDataValues[]): number {
+  private aggregateValue(valueAttribute: PivotValueAttribute, aggregatedDataValues: AggregatedDataValues[]): any {
     const aggregatedDataValue = (aggregatedDataValues || []).find(
       agg => agg.resourceId === valueAttribute.resourceId && agg.type === valueAttribute.resourceType
     );
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      if (attribute && attribute.constraint) {
+        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
+      }
+      return aggregatedValue;
     }
 
     return null;

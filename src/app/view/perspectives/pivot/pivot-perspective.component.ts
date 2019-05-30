@@ -27,16 +27,12 @@ import {User} from '../../../core/store/users/user';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {map, withLatestFrom} from 'rxjs/operators';
-import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
+import {withLatestFrom} from 'rxjs/operators';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  selectCollectionsByCustomQuery,
-  selectDocumentsByCustomQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {selectCollectionsByQuery, selectDocumentsByQuery, selectLinkTypesByQuery,} from '../../../core/store/common/permissions.selectors';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -60,7 +56,8 @@ export class PivotPerspectiveComponent implements OnInit {
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.initPivot();
@@ -97,19 +94,15 @@ export class PivotPerspectiveComponent implements OnInit {
   }
 
   private createDefaultConfig(): PivotConfig {
-    return {};
+    return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
   }
 
   private subscribeToQuery() {
     const subscription = this.store$
-      .pipe(
-        select(selectQuery),
-        map(query => query && queryWithoutLinks(query))
-      )
+      .pipe(select(selectQuery))
       .subscribe(query => {
         this.query$.next(query);
         this.fetchData(query);
-        this.subscribeDataByQuery(query);
       });
     this.subscriptions.add(subscription);
   }
@@ -118,14 +111,16 @@ export class PivotPerspectiveComponent implements OnInit {
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
-  private subscribeDataByQuery(query: Query) {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
-  }
-
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+  }
+
+  public onConfigChange(config: PivotConfig) {
+    this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.pivotId, config}));
   }
 }

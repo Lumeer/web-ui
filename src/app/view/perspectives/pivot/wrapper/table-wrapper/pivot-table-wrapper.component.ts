@@ -17,14 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PivotData {
-  columnHeaders: PivotDataHeader[];
-  rowHeaders: PivotDataHeader[];
-  values: any[][];
-}
+import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {PivotConfig} from '../../../../../core/store/pivots/pivot';
+import {PivotData} from '../../util/pivot-data';
 
-export interface PivotDataHeader {
-  title: string;
-  children?: PivotDataHeader[];
-  targetIndex?: number;
+@Component({
+  selector: 'pivot-table-wrapper',
+  templateUrl: './pivot-table-wrapper.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PivotTableWrapperComponent implements OnInit {
+
+  @Input()
+  public config: PivotConfig;
+
+  @Input()
+  public pivotData: PivotData;
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
 }

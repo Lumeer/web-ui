@@ -18,9 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {SelectItemModel} from '../../select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {DataAggregationType} from '../../utils/data/data-aggregation';
 
 @Pipe({
   name: 'aggregationSelectItems',

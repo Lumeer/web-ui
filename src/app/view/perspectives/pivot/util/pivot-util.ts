@@ -17,14 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PivotData {
-  columnHeaders: PivotDataHeader[];
-  rowHeaders: PivotDataHeader[];
-  values: any[][];
-}
+import {PivotAttribute} from '../../../../core/store/pivots/pivot';
 
-export interface PivotDataHeader {
-  title: string;
-  children?: PivotDataHeader[];
-  targetIndex?: number;
+export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
+  return a1.resourceId === a2.resourceId &&
+    a1.resourceIndex === a2.resourceIndex &&
+    a1.attributeId === a2.attributeId &&
+    a1.resourceType === a2.resourceType;
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -31,6 +31,7 @@ import {debounceTime, filter, map} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -70,6 +71,12 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   @Input()
   public config: PivotConfig;
 
+  @Input()
+  public currentView: View;
+
+  @Output()
+  public configChange = new EventEmitter<PivotConfig>();
+
   private readonly pivotTransformer: PivotDataConverter;
   private dataSubject = new BehaviorSubject<Data>(null);
 
@@ -82,8 +89,8 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   private createValueAggregationTitle(aggregation: DataAggregationType): string {
     return this.i18n(
       {
-        id: 'pivot.data.aggregation',
-        value: '{select, aggregation, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of}}',
+        id: 'perspective.pivot.data.aggregation',
+        value: '{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of}}',
       },
       {aggregation}
     );
@@ -125,5 +132,9 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   private shouldConvertData(changes: SimpleChanges): boolean {
     return true; // TODO check if only sort changes
+  }
+
+  public onConfigChange(config: PivotConfig) {
+    this.configChange.emit(config);
   }
 }

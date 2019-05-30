@@ -41,14 +41,23 @@ export interface PivotAttribute {
 }
 
 export interface PivotRowAttribute extends PivotAttribute {
-  // TODO sort, show sums
+  showSums?: boolean;
+  sort?: {
+    attribute?: PivotAttribute;
+    columnValue?: string;
+  }
 }
 
 export interface PivotColumnAttribute extends PivotAttribute {
-  // TODO sort, show sums
+  showSums?: boolean;
+  sort?: {
+    attribute?: PivotAttribute;
+    rowValue?: string;
+  }
 }
 
 export interface PivotValueAttribute extends PivotAttribute {
-  // TODO show as
   aggregation: DataAggregationType;
 }
+
+export type PivotAnyAttribute = PivotRowAttribute | PivotColumnAttribute | PivotValueAttribute;

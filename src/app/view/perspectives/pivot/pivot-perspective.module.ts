@@ -18,14 +18,38 @@
  */
 
 import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {PivotPerspectiveComponent} from './pivot-perspective.component';
 import {SharedModule} from '../../../shared/shared.module';
-import {RouterModule} from '@angular/router';
 import {PivotPerspectiveRoutingModule} from './pivot-perspective-routing.module';
 import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrapper.component';
+import {PivotConfigComponent} from './wrapper/config/pivot-config.component';
+import {PivotTableWrapperComponent} from './wrapper/table-wrapper/pivot-table-wrapper.component';
+import {PivotTableComponent} from './wrapper/table-wrapper/table/pivot-table.component';
+import {PivotAttributeConfigComponent} from './wrapper/config/attribute/pivot-attribute-config.component';
+import { PivotHeaderSelectItemsPipe } from './pipe/pivot-header-select-items.pipe';
+import { PivotSelectItemsPipe } from './pipe/pivot-select-items.pipe';
+import { PivotClearAttributePipe } from './pipe/pivot-clear-attribute.pipe';
 
 @NgModule({
-  declarations: [PivotPerspectiveComponent, PivotPerspectiveWrapperComponent],
-  imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule],
+  declarations: [
+    PivotPerspectiveComponent,
+    PivotPerspectiveWrapperComponent,
+    PivotConfigComponent,
+    PivotTableWrapperComponent,
+    PivotTableComponent,
+    PivotAttributeConfigComponent,
+    PivotHeaderSelectItemsPipe,
+    PivotSelectItemsPipe,
+    PivotClearAttributePipe,
+  ],
+  imports: [
+    SharedModule,
+    RouterModule,
+    PivotPerspectiveRoutingModule,
+    DragDropModule,
+  ],
 })
-export class PivotPerspectiveModule {}
+export class PivotPerspectiveModule {
+}

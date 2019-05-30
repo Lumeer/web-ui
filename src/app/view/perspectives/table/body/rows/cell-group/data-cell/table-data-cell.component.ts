@@ -36,7 +36,7 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
@@ -542,6 +542,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         linkTypeId,
         documentIds: [previousRow.documentId, documentId],
         correlationId: this.document && this.document.correlationId,
+        data: {}
       };
       this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
     };

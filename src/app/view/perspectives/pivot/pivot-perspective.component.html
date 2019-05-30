@@ -4,5 +4,7 @@
                            [linkInstances]="linkInstances$ | async"
                            [query]="query$ | async"
                            [constraintData]="{users: users$ | async}"
-                           [config]="config$ | async">
+                           [config]="config$ | async"
+                           [currentView]="currentView$ | async"
+                           (configChange)="onConfigChange($event)">
 </pivot-perspective-wrapper>

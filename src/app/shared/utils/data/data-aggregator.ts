@@ -24,11 +24,11 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {Query} from '../../../core/store/navigation/query';
-import {getOtherLinkedCollectionId} from '../link-type.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {isNullOrUndefined} from '../common.utils';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
 import {formatDataValue} from '../data.utils';
+import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query.util';
 
 interface DataResourceWithLinks extends DataResource {
   from: DataResource[];
@@ -85,7 +85,7 @@ export class DataAggregator {
   ) {
     this.constraintData = constraintData;
 
-    this.attributesResourcesOrder = createAttributeResourcesOrder(query, collections, linkTypes);
+    this.attributesResourcesOrder = queryStemAttributesResourcesOrder(query.stems && query.stems[0], collections, linkTypes);
     this.dataMap = createDataMap(this.attributesResourcesOrder, documents, linkTypes, linkInstances);
   }
 
@@ -445,32 +445,6 @@ export class DataAggregator {
     }
     return formatDataValue(value, constraint, this.constraintData);
   }
-}
-
-function createAttributeResourcesOrder(
-  query: Query,
-  collections: Collection[],
-  linkTypes: LinkType[]
-): AttributesResource[] {
-  const stem = query.stems[0];
-  const baseCollection = collections.find(collection => collection.id === stem.collectionId);
-  const chain: AttributesResource[] = [{...baseCollection}];
-  let previousCollectionId = baseCollection.id;
-  for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
-    const linkType = linkTypes.find(lt => lt.id === stem.linkTypeIds[i]);
-    const otherCollectionId = getOtherLinkedCollectionId(linkType, previousCollectionId);
-    const otherCollection = collections.find(collection => collection.id === otherCollectionId);
-
-    if (otherCollection && linkType) {
-      chain.push({id: linkType.id, attributes: linkType.attributes, color: otherCollection.color});
-      chain.push({...otherCollection});
-      previousCollectionId = otherCollection.id;
-    } else {
-      break;
-    }
-  }
-
-  return chain;
 }
 
 function createDataMap(
