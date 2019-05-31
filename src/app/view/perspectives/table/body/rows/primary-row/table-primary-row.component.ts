@@ -18,19 +18,17 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableConfigRow} from '../../../../../../core/store/tables/table.model';
@@ -53,7 +51,7 @@ import {
     '[class.bg-white]': '!striped',
   },
 })
-export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class TablePrimaryRowComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -65,9 +63,6 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
 
   @Output()
   public unsetCursor = new EventEmitter();
-
-  public visible$ = new BehaviorSubject(false);
-  private intersectionObserver: IntersectionObserver;
 
   public hasNextParts$: Observable<boolean>;
   public hierarchyLevel$: Observable<number>;
@@ -83,11 +78,6 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
       this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(this.cursor)));
       this.part$ = this.store$.pipe(select(selectTablePart(this.cursor)));
       this.bindHierarchy(this.cursor);
-
-      if (!changes.cursor.firstChange) {
-        this.destroyIntersectionObserver();
-        this.initIntersectionObserver();
-      }
     }
   }
 
@@ -101,37 +91,6 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
       map(row => row && row.level),
       distinctUntilChanged()
     );
-  }
-
-  public ngAfterViewInit() {
-    this.initIntersectionObserver();
-  }
-
-  private initIntersectionObserver() {
-    const tableBodyElement = document.querySelector(`#table-${this.cursor.tableId} table-body`);
-
-    this.intersectionObserver = new IntersectionObserver(entries => this.detectVisibility(entries), {
-      root: tableBodyElement,
-      rootMargin: '100px',
-    });
-    this.intersectionObserver.observe(this.element.nativeElement);
-  }
-
-  private detectVisibility(entries: IntersectionObserverEntry[]) {
-    const visible = entries && entries[0] && entries[0].isIntersecting;
-    if (visible !== this.visible$.getValue()) {
-      this.visible$.next(visible);
-    }
-  }
-
-  private destroyIntersectionObserver() {
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
-    }
-  }
-
-  public ngOnDestroy() {
-    this.destroyIntersectionObserver();
   }
 
   public onHierarchyToggle() {

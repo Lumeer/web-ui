@@ -193,8 +193,6 @@ export class TableEditableCellDirective implements OnChanges {
       const value = element.textContent;
       this.editEnd.emit(value);
     }
-
-    element.scrollLeft = 0;
   }
 
   private isCharacterDisabled(character: string): boolean {

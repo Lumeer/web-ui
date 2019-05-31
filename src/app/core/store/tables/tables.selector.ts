@@ -19,10 +19,17 @@
 
 import {createSelector} from '@ngrx/store';
 import {selectDocumentsDictionary} from '../documents/documents.state';
-import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
+import {
+  areTableBodyCursorsEqual,
+  areTableCursorsEqual,
+  areTableHeaderCursorsEqual,
+  TableBodyCursor,
+  TableCursor,
+} from './table-cursor';
 import {DEFAULT_TABLE_ID} from './table.model';
 import {
   calculateRowHierarchyLevel,
+  countLinkedRows,
   filterLeafColumns,
   findTableColumn,
   findTableRow,
@@ -172,13 +179,7 @@ export const selectTableCursor = createSelector(
 export const selectTableCursorSelected = (cursor: TableCursor) =>
   createSelector(
     selectTableCursor,
-    selectedCursor => {
-      if (cursor.columnPath) {
-        return areTableHeaderCursorsEqual(selectedCursor, cursor);
-      } else {
-        return areTableBodyCursorsEqual(selectedCursor, cursor);
-      }
-    }
+    selectedCursor => areTableCursorsEqual(selectedCursor, cursor)
   );
 
 export const selectTableBySelectedCursor = createSelector(
@@ -216,4 +217,10 @@ export const selectTableRowStriped = (cursor: TableBodyCursor) =>
   createSelector(
     selectTableRows(cursor.tableId),
     rows => isTableRowStriped(rows, cursor.rowPath)
+  );
+
+export const selectTableLinkedRowsCount = (cursor: TableBodyCursor) =>
+  createSelector(
+    selectTableRow(cursor),
+    row => countLinkedRows(row)
   );

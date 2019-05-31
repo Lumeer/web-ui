@@ -1,23 +1,21 @@
 <ng-container *ngIf="{rows: rows$ | async} as table">
-  <table-primary-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
-                     [cursor]="cursor | nextRowCursor : rowIndex"
-                     [row]="row"
-                     [canManageConfig]="canManageConfig"
-                     (unsetCursor)="unsetCursor()"
-                     class="position-absolute"
-                     [style.top.px]="table.rows | rowPositionTop : rowIndex">
-  </table-primary-row>
+  <cdk-virtual-scroll-viewport [itemSize]="31"
+                               (scroll)="onScroll($event)"
+                               class="h-100">
+    <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
+                       [cursor]="cursor | nextRowCursor : rowIndex"
+                       [row]="row"
+                       [canManageConfig]="canManageConfig"
+                       (unsetCursor)="unsetCursor()">
+    </table-primary-row>
+
+    <div>&nbsp;</div>
+
+  </cdk-virtual-scroll-viewport>
 
   <table-empty-row *ngIf="!table.rows?.length"
                    [canManageConfig]="canManageConfig"
                    [cursor]="cursor"
-                   (click)="unsetCursor()"
-                   class="position-absolute"
-                   [style.top]="0">
+                   (click)="unsetCursor()">
   </table-empty-row>
-
-  <div class="position-absolute"
-       [style.top.px]="table.rows | rowPositionTop : table.rows?.length || 1">
-    &nbsp;
-  </div>
 </ng-container>
