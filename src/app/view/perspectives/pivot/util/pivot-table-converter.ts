@@ -43,8 +43,16 @@ export class PivotTableConverter {
   constructor(private headerSummaryString: string, private summaryString: string) {}
 
   public transform(data: PivotData, config: PivotConfig): PivotTable {
+    if (!data || !config || this.dataAreEmpty(data)) {
+      return {cells: []};
+    }
+
     this.updateData(data, config);
     return this.transformData();
+  }
+
+  private dataAreEmpty(data: PivotData): boolean {
+    return (data.rowHeaders || []).length === 0 && (data.columnHeaders || []).length === 0;
   }
 
   private updateData(data: PivotData, config: PivotConfig) {

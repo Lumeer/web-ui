@@ -67,7 +67,7 @@ export function aggregateDataValues(
     case DataAggregationType.Max:
       return maxInValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Count:
-      return countValues(nonNullValues, onlyNumeric);
+      return countValues(nonNullValues);
     default:
       return sumAnyValues(nonNullValues, onlyNumeric);
   }
@@ -81,16 +81,16 @@ function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
-      return sumNumericValues(values);
+      return sumNumericValues(values, onlyNumeric);
     default:
       return sumAnyValues(values, onlyNumeric);
   }
 }
 
-function sumNumericValues(values: any[]): any {
+function sumNumericValues(values: any[], onlyNumeric: boolean): any {
   const bigValues = transformToBigValues(values);
   if (bigValues.length === 0) {
-    return values[0];
+    return onlyNumeric ? null : values[0];
   }
 
   return bigValues.reduce((sum, val) => sum.add(val), new Big(0)).toFixed();
@@ -110,7 +110,7 @@ function sumAnyValues(values: any[], onlyNumeric): any {
 
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return values[0] || 0;
+    return onlyNumeric ? null : values[0] || 0;
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0);
@@ -137,16 +137,16 @@ function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
-      return avgNumericValues(values);
+      return avgNumericValues(values, onlyNumeric);
     default:
       return avgAnyValues(values, onlyNumeric);
   }
 }
 
-function avgNumericValues(values: any[]): any {
+function avgNumericValues(values: any[], onlyNumeric: boolean): any {
   const bigValues = transformToBigValues(values);
   if (bigValues.length === 0) {
-    return values[0];
+    return onlyNumeric ? null : values[0];
   }
 
   return bigValues
@@ -166,7 +166,7 @@ function avgAnyValues(values: any[], onlyNumeric): any {
 
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return values[0] || 0;
+    return onlyNumeric ? null : values[0] || 0;
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0) / numericValues.length;
@@ -180,16 +180,16 @@ function minInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
-      return minInNumericValues(values);
+      return minInNumericValues(values, onlyNumeric);
     default:
       return minInAnyValues(values, onlyNumeric);
   }
 }
 
-function minInNumericValues(values: any[]): any {
+function minInNumericValues(values: any[], onlyNumeric: boolean): any {
   const bigValues = transformToBigValues(values);
   if (bigValues.length === 0) {
-    return values[0];
+    return onlyNumeric ? null : values[0];
   }
 
   return bigValues.sort((a, b) => a.cmp(b))[0].toFixed();
@@ -209,16 +209,16 @@ function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
-      return maxInNumericValues(values);
+      return maxInNumericValues(values, onlyNumeric);
     default:
       return maxInAnyValues(values, onlyNumeric);
   }
 }
 
-function maxInNumericValues(values: any[]): any {
+function maxInNumericValues(values: any[], onlyNumeric: boolean): any {
   const bigValues = transformToBigValues(values);
   if (bigValues.length === 0) {
-    return values[0];
+    return onlyNumeric ? null : values[0];
   }
 
   return bigValues.sort((a, b) => -1 * a.cmp(b))[0].toFixed();
@@ -230,7 +230,7 @@ function maxInAnyValues(values: any[], onlyNumeric: boolean): any {
   return sortedValues[0];
 }
 
-function countValues(values: any[], onlyNumeric: boolean) {
+function countValues(values: any[], onlyNumeric?: boolean) {
   const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
   return filteredValues.length;
 }

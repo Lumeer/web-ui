@@ -99,7 +99,7 @@ export class PivotDataConverter {
       const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
       const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (attribute && attribute.constraint) {
+      if (aggregatedValue && attribute && attribute.constraint) {
         return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
       }
       return aggregatedValue;
@@ -307,7 +307,7 @@ export class PivotDataConverter {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
       const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (attribute && attribute.constraint) {
+      if (aggregatedValue && attribute && attribute.constraint) {
         return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
       }
       return aggregatedValue;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -32,18 +32,25 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCollectionsByQuery, selectDocumentsByQuery, selectLinkTypesByQuery,} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectDocumentsByQuery,
+  selectLinkInstancesByQuery,
+  selectLinkTypesByQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   selector: 'pivot-perspective',
   templateUrl: './pivot-perspective.component.html',
+  styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotPerspectiveComponent implements OnInit {
+export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<PivotConfig>;
   public currentView$: Observable<View>;
   public documents$: Observable<DocumentModel[]>;
@@ -56,8 +63,7 @@ export class PivotPerspectiveComponent implements OnInit {
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initPivot();
@@ -98,17 +104,16 @@ export class PivotPerspectiveComponent implements OnInit {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$
-      .pipe(select(selectQuery))
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchData(query);
-      });
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchData(query);
+    });
     this.subscriptions.add(subscription);
   }
 
   private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private subscribeData() {
@@ -118,9 +123,15 @@ export class PivotPerspectiveComponent implements OnInit {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
   }
 
   public onConfigChange(config: PivotConfig) {
     this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.pivotId, config}));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+    this.store$.dispatch(new PivotsAction.RemovePivot({pivotId: this.pivotId}));
   }
 }

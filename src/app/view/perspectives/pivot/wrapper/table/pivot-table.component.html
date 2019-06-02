@@ -1,0 +1,14 @@
+<table *ngIf="pivotTable$ | async as pivotTable"
+       class="table table-bordered">
+  <tr *ngFor="let row of pivotTable.cells">
+
+    <ng-container *ngFor="let cell of row">
+      <td *ngIf="cell"
+          [rowSpan]="cell.rowSpan"
+          [colSpan]="cell.colSpan"
+          [ngClass]="cell.cssClass">
+        {{cell.value}}
+      </td>
+    </ng-container>
+  </tr>
+</table>
