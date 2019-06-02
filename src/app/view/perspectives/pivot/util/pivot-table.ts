@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PivotData {
-  columnHeaders: PivotDataHeader[];
-  rowHeaders: PivotDataHeader[];
-  valueTitles: string[];
-  values: any[][];
+export interface PivotTable {
+  cells: PivotTableCell[][];
 }
 
-export interface PivotDataHeader {
-  title: string;
-  children?: PivotDataHeader[];
-  targetIndex?: number;
+export interface PivotTableCell {
+  value: string;
+  rowSpan: number;
+  colSpan: number;
+  cssClass: string;
+  isHeader: boolean;
 }

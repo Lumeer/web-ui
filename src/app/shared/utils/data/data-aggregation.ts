@@ -46,37 +46,36 @@ export function aggregateDataResources(
     return null;
   }
 
-  const values = (dataResources || [])
-    .map(resource => resource.data[attribute.id])
-    .filter(value => isNotNullOrUndefined(value));
+  const values = (dataResources || []).map(resource => resource.data[attribute.id]);
   return aggregateDataValues(aggregation, values, attribute.constraint, onlyNumeric);
 }
 
 export function aggregateDataValues(
   aggregation: DataAggregationType,
   values: any[],
-  constraint: Constraint,
+  constraint?: Constraint,
   onlyNumeric?: boolean
 ): any {
+  const nonNullValues = (values || []).filter(value => isNotNullOrUndefined(value));
   switch (aggregation) {
     case DataAggregationType.Sum:
-      return sumValues(values, constraint);
+      return sumValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Avg:
-      return avgValues(values, constraint);
+      return avgValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Min:
-      return minInValues(values, constraint, onlyNumeric);
+      return minInValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Max:
-      return maxInValues(values, constraint, onlyNumeric);
+      return maxInValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Count:
-      return countValues(values, onlyNumeric);
+      return countValues(nonNullValues, onlyNumeric);
     default:
-      return sumAnyValues(values);
+      return sumAnyValues(nonNullValues, onlyNumeric);
   }
 }
 
-function sumValues(values: any[], constraint: Constraint): any {
+function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
   if (!constraint) {
-    return sumAnyValues(values);
+    return sumAnyValues(values, onlyNumeric);
   }
 
   switch (constraint.type) {
@@ -84,7 +83,7 @@ function sumValues(values: any[], constraint: Constraint): any {
     case ConstraintType.Percentage:
       return sumNumericValues(values);
     default:
-      return sumAnyValues(values);
+      return sumAnyValues(values, onlyNumeric);
   }
 }
 
@@ -101,18 +100,38 @@ function transformToBigValues(values: any[]): Big[] {
   return values.map(value => convertToBig(value)).filter(value => !!value);
 }
 
-function sumAnyValues(values: any[]): any {
+function sumAnyValues(values: any[], onlyNumeric): any {
+  const containsOnlyPercentValues = values.length > 0 && values.every(val => isPercentageValue(val));
+  if (containsOnlyPercentValues && !onlyNumeric) {
+    const percentageNumericValues = mapPercentageValues(values);
+    const sum = percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0);
+    return `${sum}%`;
+  }
+
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return values[0];
+    return values[0] || 0;
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0);
 }
 
-function avgValues(values: any[], constraint: Constraint): any {
+function isPercentageValue(value: any): boolean {
+  if (!value) {
+    return false;
+  }
+
+  const parts = String(value).split('%', 2);
+  return isNumeric(parts[0]) && parts[1] && parts[1].length > 0;
+}
+
+function mapPercentageValues(values: any[]): number[] {
+  return values.map(value => toNumber(String(value).split('%', 2)[0]));
+}
+
+function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
   if (!constraint) {
-    return avgAnyValues(values);
+    return avgAnyValues(values, onlyNumeric);
   }
 
   switch (constraint.type) {
@@ -120,7 +139,7 @@ function avgValues(values: any[], constraint: Constraint): any {
     case ConstraintType.Percentage:
       return avgNumericValues(values);
     default:
-      return avgAnyValues(values);
+      return avgAnyValues(values, onlyNumeric);
   }
 }
 
@@ -136,10 +155,18 @@ function avgNumericValues(values: any[]): any {
     .toFixed();
 }
 
-function avgAnyValues(values: any[]): any {
+function avgAnyValues(values: any[], onlyNumeric): any {
+  const containsOnlyPercentValues = values.every(val => isPercentageValue(val));
+  if (containsOnlyPercentValues && !onlyNumeric) {
+    const percentageNumericValues = mapPercentageValues(values);
+    const avg =
+      percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0) / percentageNumericValues.length;
+    return `${avg}%`;
+  }
+
   const numericValues = values.filter(value => isNumeric(value));
   if (numericValues.length === 0) {
-    return values[0];
+    return values[0] || 0;
   }
 
   return numericValues.reduce((sum, value) => sum + toNumber(value), 0) / numericValues.length;

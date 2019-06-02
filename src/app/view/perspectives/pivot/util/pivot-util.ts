@@ -17,11 +17,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PivotAttribute} from '../../../../core/store/pivots/pivot';
+import {PivotAttribute, PivotConfig} from '../../../../core/store/pivots/pivot';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
-  return a1.resourceId === a2.resourceId &&
+  return (
+    a1.resourceId === a2.resourceId &&
     a1.resourceIndex === a2.resourceIndex &&
     a1.attributeId === a2.attributeId &&
-    a1.resourceType === a2.resourceType;
+    a1.resourceType === a2.resourceType
+  );
+}
+
+export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConfig): boolean {
+  if (!c1 && !c2) {
+    return false;
+  }
+  if ((!c1 && c2) || (c1 && !c2)) {
+    return true;
+  }
+
+  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanAttribute(a));
+  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanAttribute(a));
+  if (JSON.stringify(c1RowAttributes) !== JSON.stringify(c2RowAttributes)) {
+    return true;
+  }
+
+  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanAttribute(a));
+  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanAttribute(a));
+  if (JSON.stringify(c1ColumnAttributes) !== JSON.stringify(c2ColumnAttributes)) {
+    return true;
+  }
+
+  return JSON.stringify(c1.valueAttributes) !== JSON.stringify(c2.valueAttributes);
+}
+
+function cleanAttribute(attribute: PivotAttribute): PivotAttribute {
+  return {
+    resourceIndex: attribute.resourceIndex,
+    attributeId: attribute.attributeId,
+    resourceId: attribute.resourceId,
+    resourceType: attribute.resourceType,
+  };
+}
+
+export function pivotConfigHasAdditionalValueLevel(config: PivotConfig): boolean {
+  const columnsNum = (config.columnAttributes || []).length;
+  const valuesNum = (config.valueAttributes || []).length;
+  return (columnsNum === 0 && valuesNum > 0) || (columnsNum > 0 && valuesNum > 1);
 }

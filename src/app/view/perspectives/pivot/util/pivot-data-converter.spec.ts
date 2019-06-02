@@ -257,7 +257,7 @@ const linkTypes: LinkType[] = [
 
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
-fdescribe('Pivot data converter', () => {
+describe('Pivot data converter', () => {
   const dataConverter: PivotDataConverter = new PivotDataConverter(type => type.toString());
 
   it('should return empty data', () => {
@@ -424,21 +424,26 @@ fdescribe('Pivot data converter', () => {
         children: [{title: 'c', targetIndex: 3}],
       },
     ]);
+    const valueTitles = [
+      dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'),
+      dataConverter.createValueTitle(DataAggregationType.Max, 'Ddd'),
+      dataConverter.createValueTitle(DataAggregationType.Count, 'Eee'),
+    ];
     expect(pivotData.columnHeaders).toEqual([
       {
         title: 'xyz',
         children: [
-          {title: dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'), targetIndex: 0},
-          {title: dataConverter.createValueTitle(DataAggregationType.Max, 'Ddd'), targetIndex: 1},
-          {title: dataConverter.createValueTitle(DataAggregationType.Count, 'Eee'), targetIndex: 2},
+          {title: valueTitles[0], targetIndex: 0},
+          {title: valueTitles[1], targetIndex: 1},
+          {title: valueTitles[2], targetIndex: 2},
         ],
       },
       {
         title: 'vuw',
         children: [
-          {title: dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'), targetIndex: 3},
-          {title: dataConverter.createValueTitle(DataAggregationType.Max, 'Ddd'), targetIndex: 4},
-          {title: dataConverter.createValueTitle(DataAggregationType.Count, 'Eee'), targetIndex: 5},
+          {title: valueTitles[0], targetIndex: 3},
+          {title: valueTitles[1], targetIndex: 4},
+          {title: valueTitles[2], targetIndex: 5},
         ],
       },
     ]);
@@ -448,5 +453,6 @@ fdescribe('Pivot data converter', () => {
       [null, null, null, 5, 5, 5],
       [2, 2, 2, null, null, null],
     ]);
+    expect(pivotData.valueTitles).toEqual(valueTitles);
   });
 });

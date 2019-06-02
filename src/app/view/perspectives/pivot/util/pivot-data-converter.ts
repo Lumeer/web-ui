@@ -55,7 +55,7 @@ export class PivotDataConverter {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    constraintData?: ConstraintData,
+    constraintData?: ConstraintData
   ) {
     this.collections = collections;
     this.documents = documents;
@@ -98,10 +98,14 @@ export class PivotDataConverter {
     const values = (valueAttributes || []).map(valueAttribute => {
       const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      if (attribute && attribute.constraint) {
+        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
+      }
+      return aggregatedValue;
     });
 
-    return {columnHeaders: headers, rowHeaders: [], values: [values]};
+    return {columnHeaders: headers, rowHeaders: [], valueTitles, values: [values]};
   }
 
   private findDataResourcesByPivotAttribute(pivotAttribute: PivotAttribute): DataResource[] {
@@ -128,14 +132,14 @@ export class PivotDataConverter {
       this.fillValues(values, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
     }
 
-    return {rowHeaders: rowData.headers, columnHeaders: columnData.headers, values};
+    return {rowHeaders: rowData.headers, columnHeaders: columnData.headers, valueTitles, values};
   }
 
   private convertMapToPivotDataHeader(
     map: Record<string, any>,
     levels: number,
     valueTitles?: string[]
-  ): { headers: PivotDataHeader[]; maxIndex: number } {
+  ): {headers: PivotDataHeader[]; maxIndex: number} {
     if (levels === 0) {
       if ((valueTitles || []).length > 0) {
         return {
@@ -169,7 +173,7 @@ export class PivotDataConverter {
     level: number,
     maxLevels: number,
     valueTitles: string[],
-    additionalData: { maxIndex: number }
+    additionalData: {maxIndex: number}
   ) {
     if (level === maxLevels) {
       if ((valueTitles || []).length > 1) {
