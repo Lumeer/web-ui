@@ -82,18 +82,22 @@ export class PivotTableConverter {
 
   private transformData(): PivotTable {
     const cells = this.initCells();
-    this.fillCellsByRows(cells);
-    this.fillCellsByColumns(cells);
+    const rowGroups = this.fillCellsByRows(cells);
+    const columnGroups = this.fillCellsByColumns(cells);
+    this.fillCellsByGroupIntersection(cells, rowGroups, columnGroups);
 
     return {cells};
   }
 
-  private fillCellsByRows(cells: PivotTableCell[][]) {
-    this.iterateAndFillCellsByRows(cells, this.data.rowHeaders, this.columnLevels, this.rowShowSums, 0);
+  private fillCellsByRows(cells: PivotTableCell[][]): number[][] {
+    const rowGroups = [];
+    this.iterateAndFillCellsByRows(cells, rowGroups, this.data.rowHeaders, this.columnLevels, this.rowShowSums, 0);
+    return rowGroups;
   }
 
   private iterateAndFillCellsByRows(
     cells: PivotTableCell[][],
+    rowGroups: number[][],
     headers: PivotDataHeader[],
     startIndex: number,
     showSums: boolean[],
@@ -102,7 +106,7 @@ export class PivotTableConverter {
   ) {
     let currentIndex = startIndex;
     for (const header of headers) {
-      const rowSpan = getHeaderChildCount(header, level, [false, ...showSums.slice(1)]);
+      const rowSpan = getDirectHeaderChildCount(header, level, showSums);
       cells[currentIndex][level] = {
         value: header.title,
         cssClass: PivotTableConverter.rowHeaderClass,
@@ -112,7 +116,15 @@ export class PivotTableConverter {
       };
 
       if (header.children) {
-        this.iterateAndFillCellsByRows(cells, header.children, currentIndex, showSums, level + 1, header.title);
+        this.iterateAndFillCellsByRows(
+          cells,
+          rowGroups,
+          header.children,
+          currentIndex,
+          showSums,
+          level + 1,
+          header.title
+        );
       } else if (isNotNullOrUndefined(header.targetIndex)) {
         this.fillCellsForRow(cells, header.targetIndex);
       }
@@ -130,7 +142,12 @@ export class PivotTableConverter {
         rowSpan: 1,
         colSpan: this.rowLevels - columnIndex,
       };
-      this.fillCellsForGroupedRow(cells, this.getIndexesForHeaders(headers), currentIndex);
+
+      const rowIndexes = this.getIndexesForHeaders(headers);
+      rowGroups[currentIndex] = rowIndexes
+        .map(v => this.rowsTransformationArray[v])
+        .filter(v => isNotNullOrUndefined(v));
+      this.fillCellsForGroupedRow(cells, rowIndexes, currentIndex);
     }
   }
 
@@ -145,7 +162,7 @@ export class PivotTableConverter {
         const columnIndexInCells = this.columnsTransformationArray[column];
         if (isNotNullOrUndefined(columnIndexInCells)) {
           const value = this.data.values[row][column];
-          const stringValue = isNotNullOrUndefined(value) ? String(value) : value;
+          const stringValue = isNotNullOrUndefined(value) ? String(value) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
             rowSpan: 1,
@@ -186,8 +203,8 @@ export class PivotTableConverter {
   }
 
   private getIndexesForHeaders(headers: PivotDataHeader[]): number[] {
-    const rows = (headers || []).reduce((rows, header) => [...rows, ...this.getIndexesForHeader(header)], []);
-    return uniqueValues<number>(rows);
+    const allRows = (headers || []).reduce((rows, header) => [...rows, ...this.getIndexesForHeader(header)], []);
+    return uniqueValues<number>(allRows);
   }
 
   private getIndexesForHeader(pivotDataHeader: PivotDataHeader): number[] {
@@ -197,12 +214,22 @@ export class PivotTableConverter {
     return [pivotDataHeader.targetIndex];
   }
 
-  private fillCellsByColumns(cells: PivotTableCell[][]) {
-    this.iterateAndFillCellsByColumns(cells, this.data.columnHeaders, this.rowLevels, this.columnShowSums, 0);
+  private fillCellsByColumns(cells: PivotTableCell[][]): number[][] {
+    const columnGroups = [];
+    this.iterateAndFillCellsByColumns(
+      cells,
+      columnGroups,
+      this.data.columnHeaders,
+      this.rowLevels,
+      this.columnShowSums,
+      0
+    );
+    return columnGroups;
   }
 
   private iterateAndFillCellsByColumns(
     cells: PivotTableCell[][],
+    columnGroups: number[][],
     headers: PivotDataHeader[],
     startIndex: number,
     showSums: boolean[],
@@ -211,7 +238,7 @@ export class PivotTableConverter {
   ) {
     let currentIndex = startIndex;
     for (const header of headers) {
-      const colSpan = getHeaderChildCount(header, level, [false, ...showSums.slice(1)]);
+      const colSpan = getDirectHeaderChildCount(header, level, showSums);
       cells[level][currentIndex] = {
         value: header.title,
         cssClass: PivotTableConverter.columnHeaderClass,
@@ -221,7 +248,15 @@ export class PivotTableConverter {
       };
 
       if (header.children) {
-        this.iterateAndFillCellsByColumns(cells, header.children, currentIndex, showSums, level + 1, header.title);
+        this.iterateAndFillCellsByColumns(
+          cells,
+          columnGroups,
+          header.children,
+          currentIndex,
+          showSums,
+          level + 1,
+          header.title
+        );
       } else if (isNotNullOrUndefined(header.targetIndex)) {
         this.fillCellsForColumn(cells, header.targetIndex);
       }
@@ -258,6 +293,9 @@ export class PivotTableConverter {
 
         const columnsIndexes = this.getIndexesForHeaders(headers);
         const valueColumnsIndexes = columnsIndexes.filter(index => index % numberOfValues === i);
+        columnGroups[columnIndexInCells] = valueColumnsIndexes
+          .map(v => this.columnsTransformationArray[v])
+          .filter(v => isNotNullOrUndefined(v));
         this.fillCellsForGroupedColumn(cells, valueColumnsIndexes, columnIndexInCells);
       }
     }
@@ -287,7 +325,7 @@ export class PivotTableConverter {
         const rowIndexInCells = this.rowsTransformationArray[row];
         if (isNotNullOrUndefined(rowIndexInCells)) {
           const value = this.data.values[row][column];
-          const stringValue = isNotNullOrUndefined(value) ? String(value) : value;
+          const stringValue = isNotNullOrUndefined(value) ? String(value) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
             rowSpan: 1,
@@ -298,6 +336,39 @@ export class PivotTableConverter {
         }
       }
     }
+  }
+
+  private fillCellsByGroupIntersection(cells: PivotTableCell[][], rowGroups: number[][], columnGroups: number[][]) {
+    for (let j = 0; j < columnGroups.length; j++) {
+      const columnIndexes = columnGroups[j] || [];
+      if (columnIndexes.length) {
+        for (let i = 0; i < rowGroups.length; i++) {
+          const rowIndexes = rowGroups[i] || [];
+          if (rowIndexes.length) {
+            // it's enough to fill group values only from row side
+            const values = this.getValuesFromCells(cells, rowIndexes, [j]);
+            const aggregatedValue = aggregateDataValues(DataAggregationType.Sum, values);
+            cells[i][j] = {
+              value: String(aggregatedValue),
+              colSpan: 1,
+              rowSpan: 1,
+              cssClass: PivotTableConverter.groupDataClass,
+              isHeader: false,
+            };
+          }
+        }
+      }
+    }
+  }
+
+  private getValuesFromCells(cells: PivotTableCell[][], rows: number[], columns: number[]): string[] {
+    const values = [];
+    for (const row of rows) {
+      for (const column of columns) {
+        values.push(cells[row][column].value);
+      }
+    }
+    return values;
   }
 
   private initCells(): PivotTableCell[][] {
@@ -364,7 +435,7 @@ function iterateThroughTransformationMap(
   for (const header of headers) {
     if (header.children) {
       iterateThroughTransformationMap(header.children, additional, array, level + 1, showSums, numberOfSums);
-      additional += showSums[level] ? numberOfSums : 0;
+      additional += showSums[level + 1] ? numberOfSums : 0;
     } else if (isNotNullOrUndefined(header.targetIndex)) {
       array[header.targetIndex] = header.targetIndex + additional;
     }
@@ -373,7 +444,7 @@ function iterateThroughTransformationMap(
 
 function getHeadersChildCount(headers: PivotDataHeader[], showSums: boolean[], numberOfSums = 1): number {
   return (headers || []).reduce(
-    (sum, header) => sum + getHeaderChildCount(header, 1, showSums, numberOfSums),
+    (sum, header) => sum + getHeaderChildCount(header, 0, showSums, numberOfSums),
     showSums[0] ? numberOfSums : 0
   );
 }
@@ -387,7 +458,22 @@ function getHeaderChildCount(
   if (pivotDataHeader.children) {
     return pivotDataHeader.children.reduce(
       (sum, header) => sum + getHeaderChildCount(header, level + 1, showSums, numberOfSums),
-      showSums[level] ? numberOfSums : 0
+      showSums[level + 1] ? numberOfSums : 0
+    );
+  }
+  return 1;
+}
+
+function getDirectHeaderChildCount(
+  pivotDataHeader: PivotDataHeader,
+  level: number,
+  showSums: boolean[],
+  numberOfSums = 1
+): number {
+  if (pivotDataHeader.children) {
+    return pivotDataHeader.children.reduce(
+      (sum, header) => sum + getHeaderChildCount(header, level + 1, showSums, numberOfSums),
+      0
     );
   }
   return 1;

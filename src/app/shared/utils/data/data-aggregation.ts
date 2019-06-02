@@ -104,8 +104,8 @@ function sumAnyValues(values: any[], onlyNumeric): any {
   const containsOnlyPercentValues = values.length > 0 && values.every(val => isPercentageValue(val));
   if (containsOnlyPercentValues && !onlyNumeric) {
     const percentageNumericValues = mapPercentageValues(values);
-    const sum = percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0);
-    return `${sum}%`;
+    const percentSum = percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0);
+    return `${percentSum}%`;
   }
 
   const numericValues = values.filter(value => isNumeric(value));
@@ -122,7 +122,7 @@ function isPercentageValue(value: any): boolean {
   }
 
   const parts = String(value).split('%', 2);
-  return isNumeric(parts[0]) && parts[1] && parts[1].length > 0;
+  return parts.length === 2 && isNumeric(parts[0]) && parts[1].length === 0;
 }
 
 function mapPercentageValues(values: any[]): number[] {
