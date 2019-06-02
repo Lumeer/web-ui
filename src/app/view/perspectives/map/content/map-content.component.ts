@@ -29,8 +29,8 @@ import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
-import {createMapMarker, parseCoordinates} from './render/map.utils';
 import {MapRenderComponent} from './render/map-render.component';
+import {createMapMarker, parseCoordinates} from './render/map.utils';
 
 @Component({
   selector: 'map-content',
@@ -118,14 +118,10 @@ function createMarkerPropertiesList(
   return documents.reduce((propertiesList, document) => {
     const attributeIds = attributeIdsMap[document.collectionId] || [];
     const attributeId = attributeIds.find(id => !!document.data[id]);
+    const collection = collectionsMap[document.collectionId];
 
-    if (attributeId) {
-      const properties: MapMarkerProperties = {
-        collection: collectionsMap[document.collectionId],
-        document,
-        attributeId,
-      };
-      return propertiesList.concat(properties);
+    if (collection && attributeId) {
+      return propertiesList.concat({collection, document, attributeId});
     }
     return propertiesList;
   }, []);
