@@ -21,7 +21,7 @@ import {Environment} from './environment-type';
 import {environmentVariables} from './environment-variables';
 
 export const environment: Environment = {
-  analytics: false,
+  analytics: true,
   auth: true,
   authPersistence: true,
   mapQuestKey: 'LSnxyU8MAt1Apnl0y7bM6e4Kg6NlPBhb',
