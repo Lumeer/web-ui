@@ -22,19 +22,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
+import {Query} from '../../../../core/store/navigation/query';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
-import {Query} from '../../../../core/store/navigation/query';
 
 export const TABLE_ROW_MIN_HEIGHT = 30;
 
@@ -53,6 +55,9 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public canManageConfig: boolean;
+
+  @Output()
+  public horizontalScroll = new EventEmitter<number>();
 
   @ViewChild(TableRowsComponent)
   public rowsComponent: TableRowsComponent;
@@ -94,5 +99,11 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   private setTableRowMinHeight() {
     this.element.nativeElement.style.setProperty('--table-row-min-height', `${TABLE_ROW_MIN_HEIGHT}px`);
+  }
+
+  public scroll(scrollLeft: number) {
+    if (this.rowsComponent) {
+      this.rowsComponent.scroll(scrollLeft);
+    }
   }
 }

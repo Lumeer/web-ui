@@ -18,22 +18,26 @@
  */
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {NgModule} from '@angular/core';
 import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {ContextMenuModule} from 'ngx-contextmenu';
-import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
 import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
+import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/color-collapsed-cell.component';
+import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/group-colors-by-count.pipe';
 import {TableCollapsedCellMenuComponent} from './body/rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
 import {TableCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/table-collapsed-cell.component';
 import {TableDataCellMenuComponent} from './body/rows/cell-group/data-cell/menu/table-data-cell-menu.component';
 import {TableDataCellComponent} from './body/rows/cell-group/data-cell/table-data-cell.component';
 import {TableCellGroupComponent} from './body/rows/cell-group/table-cell-group.component';
+import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.component';
 import {TableLinkCellComponent} from './body/rows/linked-rows/link-cell/table-link-cell.component';
 import {TableLinkedRowComponent} from './body/rows/linked-rows/linked-row/table-linked-row.component';
 import {TableLinkedRowsComponent} from './body/rows/linked-rows/table-linked-rows.component';
@@ -51,6 +55,7 @@ import {TableAttributeSuggestionsComponent} from './header/column-group/single-c
 import {TableColumnContextMenuComponent} from './header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableSingleColumnComponent} from './header/column-group/single-column/table-single-column.component';
 import {TableColumnGroupComponent} from './header/column-group/table-column-group.component';
+import {TableHiddenInputComponent} from './header/hidden-input/table-hidden-input.component';
 import {TableHierarchyColumnComponent} from './header/hierarchy-column/table-hierarchy-column.component';
 import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
@@ -58,11 +63,7 @@ import {TableHeaderComponent} from './header/table-header.component';
 import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
-import {DataInputModule} from '../../../shared/data-input/data-input.module';
-import {TableHiddenInputComponent} from './header/hidden-input/table-hidden-input.component';
-import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/color-collapsed-cell.component';
-import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/group-colors-by-count.pipe';
-import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.component';
+import {TableCellScrollDirective} from './shared/directives/table-cell-scroll.directive';
 
 @NgModule({
   imports: [
@@ -72,10 +73,10 @@ import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.comp
     ContextMenuModule,
     ClickOutsideModule,
     ResizableModule,
-    InfiniteScrollModule,
     TablePipesModule,
     DragDropModule,
     DataInputModule,
+    ScrollingModule,
   ],
   declarations: [
     TablePerspectiveComponent,
@@ -113,6 +114,7 @@ import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.comp
     ColorCollapsedCellComponent,
     GroupColorsByCountPipe,
     TableEmptyRowComponent,
+    TableCellScrollDirective,
   ],
   entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],

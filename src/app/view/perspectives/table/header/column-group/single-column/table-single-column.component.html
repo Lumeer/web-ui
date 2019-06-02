@@ -1,4 +1,5 @@
-<div tableEditableCell
+<div #editableCell
+     tableEditableCell
      [cancelOnBlur]="!(attribute | entityCreated)"
      [disabledCharacters]="disabledCharacters"
      [readonly]="!allowedPermissions?.writeWithView"
@@ -27,7 +28,8 @@
                              [collection]="collection"
                              [linkType]="linkType"
                              [cursor]="cursor"
-                             [table]="table">
+                             [table]="table"
+                             [origin]="editableCell">
 </table-attribute-suggestions>
 
 <table-column-context-menu *ngIf="attribute && cursor"

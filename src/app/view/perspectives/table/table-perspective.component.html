@@ -3,12 +3,14 @@
      class="flex-grow-1 d-flex flex-column m-0 h-100">
   <ng-container *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
     <table-header [table]="table$ | async"
-                  [canManageConfig]="data.canManageConfig"></table-header>
+                  [canManageConfig]="data.canManageConfig"
+                  (scroll)="onHeaderScroll($event)">
+    </table-header>
     <table-body [tableId]="tableId"
                 [query]="query"
                 [canManageConfig]="data.canManageConfig"
-                (scroll)="onBodyScroll($event)"
-                class="flex-grow-1 pl-3"
+                (horizontalScroll)="onBodyHorizontalScroll($event)"
+                class="flex-grow-1"
                 [style.height.px]="((table$ | async)?.config?.rows | rowPositionTop: (table$ | async)?.config?.rows?.length) + 40">
     </table-body>
   </ng-container>
@@ -20,4 +22,3 @@
                  [maxCollections]="1">
   </invalid-query>
 </ng-template>
-

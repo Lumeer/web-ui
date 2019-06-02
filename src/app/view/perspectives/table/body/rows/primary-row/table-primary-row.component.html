@@ -1,36 +1,34 @@
 <table-row-numbers [cursor]="cursor"
                    [row]="row"
                    (click)="unsetCursor.emit()"
-                   class="table-border-right bg-white">
+                   class="table-border-right bg-white pl-3">
 </table-row-numbers>
 
-<ng-container *ngIf="visible$ | async">
-  <table-hierarchy-cell *ngIf="hierarchyMaxLevel$ | async as maxLevel"
-                        [cursor]="cursor"
-                        [level]="hierarchyLevel$ | async"
-                        [maxLevel]="maxLevel"
-                        (toggle)="onHierarchyToggle()"
-                        (click)="unsetCursor.emit()"
-                        class="table-border-right table-border-bottom px-1">
-  </table-hierarchy-cell>
+<table-hierarchy-cell *ngIf="hierarchyMaxLevel$ | async as maxLevel"
+                      [cursor]="cursor"
+                      [level]="hierarchyLevel$ | async"
+                      [maxLevel]="maxLevel"
+                      (toggle)="onHierarchyToggle()"
+                      (click)="unsetCursor.emit()"
+                      class="table-border-right table-border-bottom px-1">
+</table-hierarchy-cell>
 
-  <table-cell-group [cursor]="cursor"
-                    [rows]="[row]"
-                    [canManageConfig]="canManageConfig"
-                    [style.width.px]="part$ | async | partWidth:canManageConfig">
-  </table-cell-group>
+<table-cell-group [cursor]="cursor"
+                  [rows]="[row]"
+                  [canManageConfig]="canManageConfig"
+                  [style.width.px]="part$ | async | partWidth:canManageConfig">
+</table-cell-group>
 
-  <table-linked-rows *ngIf="hasNextParts$ | async"
-                     [cursor]="cursor"
-                     [rows]="[row]"
-                     [canManageConfig]="canManageConfig"
-                     [striped]="striped">
-  </table-linked-rows>
+<table-linked-rows *ngIf="hasNextParts$ | async"
+                   [cursor]="cursor"
+                   [rows]="[row]"
+                   [canManageConfig]="canManageConfig"
+                   [striped]="striped">
+</table-linked-rows>
 
-  <div (click)="unsetCursor.emit()"
-       class="add-button-cell bg-white"></div>
+<div (click)="unsetCursor.emit()"
+     class="add-button-cell bg-white"></div>
 
-  <div (click)="unsetCursor.emit()"
-       class="px-2 bg-white">
-  </div>
-</ng-container>
+<div (click)="unsetCursor.emit()"
+     class="flex-grow-1 px-2 bg-white">
+</div>
