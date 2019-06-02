@@ -43,6 +43,7 @@ import {PusherService} from './core/pusher/pusher.service';
 import * as moment from 'moment';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from './core/dto/service-level-type';
+import smartlookClient from 'smartlook-client';
 
 declare let $: any;
 
@@ -171,6 +172,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
+    this.initSmartlook();
     this.bindBrowserWarningCloseCallback();
     this.subscribeToRouterEvents();
   }
@@ -199,6 +201,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public onHideLoadingIndicator() {
     this.lazyLoading$.next(false);
+  }
+
+  private initSmartlook() {
+    if (environment.smartlookKey) {
+      smartlookClient.init(environment.smartlookKey);
+    }
   }
 }
 
