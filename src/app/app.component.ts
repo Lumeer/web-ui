@@ -44,7 +44,7 @@ import * as moment from 'moment';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from './core/dto/service-level-type';
 import smartlookClient from 'smartlook-client';
-import {allowedEmails} from './shared/top-panel/workspace-panel/resource-menu/pipes/can-create-resource.pipe';
+import {superUserEmails} from './auth/super-user-emails';
 
 declare let $: any;
 
@@ -210,7 +210,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         .pipe(
           select(selectCurrentUser),
           first(),
-          filter(user => !allowedEmails.includes(user.email))
+          filter(user => user && !superUserEmails.includes(user.email))
         )
         .subscribe(() => {
           smartlookClient.init(environment.smartlookKey);

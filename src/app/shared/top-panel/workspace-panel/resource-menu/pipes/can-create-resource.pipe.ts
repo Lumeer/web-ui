@@ -30,8 +30,7 @@ import {selectServiceLimitsByOrganizationId} from '../../../../../core/store/org
 import {Project} from '../../../../../core/store/projects/project';
 import {selectCurrentUser} from '../../../../../core/store/users/users.state';
 import {PermissionsPipe} from '../../../../pipes/permissions/permissions.pipe';
-
-export const allowedEmails = ['support@lumeer.io', 'mvecera@lumeer.io', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
+import {superUserEmails} from '../../../../../auth/super-user-emails';
 
 @Pipe({
   name: 'canCreateResource',
@@ -47,7 +46,7 @@ export class CanCreateResourcePipe implements PipeTransform {
     if (type === ResourceType.Organization) {
       return this.store$.pipe(
         select(selectCurrentUser),
-        map(user => allowedEmails.includes(user.email))
+        map(user => superUserEmails.includes(user.email))
       );
     } else if (type === ResourceType.Project) {
       const project = resource as Project;
