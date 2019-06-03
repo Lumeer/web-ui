@@ -33,5 +33,4 @@ const pivotRoutes: Routes = [
   imports: [RouterModule.forChild(pivotRoutes)],
   exports: [RouterModule],
 })
-export class PivotPerspectiveRoutingModule {
-}
+export class PivotPerspectiveRoutingModule {}

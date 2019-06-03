@@ -54,4 +54,3 @@ export namespace PivotsAction {
 
   export type All = AddPivot | RemovePivot | SetConfig | Clear;
 }
-

@@ -87,7 +87,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   }
 }
 
-export function conditionValidator(input: FormControl): { [key: string]: any } {
+export function conditionValidator(input: FormControl): {[key: string]: any} {
   const value = input.value.toString().trim();
   const isCondition = conditionFromString(value) != null;
   return !isCondition ? {invalidCondition: value} : null;
@@ -302,7 +302,8 @@ export function queryStemAttributesResourcesOrder(
   for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
     const linkType = (linkTypes || []).find(lt => lt.id === stem.linkTypeIds[i]);
     const otherCollectionId = linkType && getOtherLinkedCollectionId(linkType, previousCollectionId);
-    const otherCollection = otherCollectionId && (collections || []).find(collection => collection.id === otherCollectionId);
+    const otherCollection =
+      otherCollectionId && (collections || []).find(collection => collection.id === otherCollectionId);
 
     if (otherCollection && linkType) {
       chain.push({id: linkType.id, attributes: linkType.attributes, color: otherCollection.color});

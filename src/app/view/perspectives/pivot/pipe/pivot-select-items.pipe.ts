@@ -38,10 +38,19 @@ export class PivotSelectItemsPipe implements PipeTransform {
     const resources = queryStemAttributesResourcesOrder(query.stems[0], collections, linkTypes);
     const items = [];
     for (let i = 0; i < resources.length; i++) {
-      if (i % 2 === 0) {// collection
-        items.push(...this.collectionSelectItem(resources[i] as Collection, i))
-      } else { // linkType
-        items.push(...this.linkTypeSelectItem(resources[i] as LinkType, resources[i - 1] as Collection, resources[i + 1] as Collection, i))
+      if (i % 2 === 0) {
+        // collection
+        items.push(...this.collectionSelectItem(resources[i] as Collection, i));
+      } else {
+        // linkType
+        items.push(
+          ...this.linkTypeSelectItem(
+            resources[i] as LinkType,
+            resources[i - 1] as Collection,
+            resources[i + 1] as Collection,
+            i
+          )
+        );
       }
     }
 
@@ -50,16 +59,40 @@ export class PivotSelectItemsPipe implements PipeTransform {
 
   private collectionSelectItem(collection: Collection, index: number): SelectItemModel[] {
     return (collection.attributes || []).map(attribute => {
-      const id: PivotAttribute = {resourceType: AttributesResourceType.Collection, resourceId: collection.id, resourceIndex: index, attributeId: attribute.id};
-      return {id, value: attribute.name, icons: [collection.icon] as [string], iconColors: [collection.color] as [string]};
+      const id: PivotAttribute = {
+        resourceType: AttributesResourceType.Collection,
+        resourceId: collection.id,
+        resourceIndex: index,
+        attributeId: attribute.id,
+      };
+      return {
+        id,
+        value: attribute.name,
+        icons: [collection.icon] as [string],
+        iconColors: [collection.color] as [string],
+      };
     });
-
   }
 
-  private linkTypeSelectItem(linkType: LinkType, previousCollection: Collection, nextCollection: Collection, index: number): SelectItemModel[] {
+  private linkTypeSelectItem(
+    linkType: LinkType,
+    previousCollection: Collection,
+    nextCollection: Collection,
+    index: number
+  ): SelectItemModel[] {
     return (linkType.attributes || []).map(attribute => {
-      const id: PivotAttribute = {resourceType: AttributesResourceType.LinkType, resourceId: linkType.id, resourceIndex: index, attributeId: attribute.id};
-      return {id, value: attribute.name, icons: [previousCollection.icon, nextCollection.icon] as [string, string], iconColors: [previousCollection.color, nextCollection.color] as [string, string]};
+      const id: PivotAttribute = {
+        resourceType: AttributesResourceType.LinkType,
+        resourceId: linkType.id,
+        resourceIndex: index,
+        attributeId: attribute.id,
+      };
+      return {
+        id,
+        value: attribute.name,
+        icons: [previousCollection.icon, nextCollection.icon] as [string, string],
+        iconColors: [previousCollection.color, nextCollection.color] as [string, string],
+      };
     });
   }
 }
