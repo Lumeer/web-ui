@@ -26,6 +26,8 @@ import {LinkType} from '../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
+import {Collection} from '../collections/collection';
+import {AttributesResource} from '../../model/resource';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -281,6 +283,35 @@ export function collectionIdsChainForStem(stem: QueryStem, linkTypes: LinkType[]
 
     const otherCollectionId = getOtherLinkedCollectionId(linkType, chain[chain.length - 1]);
     chain.push(otherCollectionId);
+  }
+
+  return chain;
+}
+
+export function queryStemAttributesResourcesOrder(
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): AttributesResource[] {
+  if (!stem) {
+    return [];
+  }
+  const baseCollection = (collections || []).find(collection => collection.id === stem.collectionId);
+  const chain: AttributesResource[] = [{...baseCollection}];
+  let previousCollectionId = baseCollection.id;
+  for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
+    const linkType = (linkTypes || []).find(lt => lt.id === stem.linkTypeIds[i]);
+    const otherCollectionId = linkType && getOtherLinkedCollectionId(linkType, previousCollectionId);
+    const otherCollection =
+      otherCollectionId && (collections || []).find(collection => collection.id === otherCollectionId);
+
+    if (otherCollection && linkType) {
+      chain.push({id: linkType.id, attributes: linkType.attributes, color: otherCollection.color});
+      chain.push({...otherCollection});
+      previousCollectionId = otherCollection.id;
+    } else {
+      break;
+    }
   }
 
   return chain;

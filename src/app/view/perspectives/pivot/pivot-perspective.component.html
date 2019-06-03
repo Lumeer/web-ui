@@ -1,0 +1,11 @@
+<pivot-perspective-wrapper class="mr-3"
+                           [collections]="collections$ | async"
+                           [documents]="documents$ | async"
+                           [linkTypes]="linkTypes$ | async"
+                           [linkInstances]="linkInstances$ | async"
+                           [query]="query$ | async"
+                           [constraintData]="{users: users$ | async}"
+                           [config]="config$ | async"
+                           [currentView]="currentView$ | async"
+                           (configChange)="onConfigChange($event)">
+</pivot-perspective-wrapper>

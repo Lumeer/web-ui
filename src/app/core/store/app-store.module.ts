@@ -64,6 +64,7 @@ import {UserNotificationsEffects} from './user-notifications/user-notifications.
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {calendarsReducer} from './calendars/calendars.reducer';
 import {kanbansReducer} from './kanbans/kanbans.reducer';
+import {pivotsReducer} from './pivots/pivots.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -82,6 +83,7 @@ const reducers: ActionReducerMap<AppState> = {
   tables: tablesReducer,
   users: usersReducer,
   views: viewsReducer,
+  pivots: pivotsReducer,
   charts: chartsReducer,
   calendars: calendarsReducer,
   videos: videosReducer,

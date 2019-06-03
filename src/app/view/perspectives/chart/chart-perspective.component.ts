@@ -32,14 +32,7 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {
-  ChartAggregation,
-  ChartAxisType,
-  ChartConfig,
-  ChartSortType,
-  ChartType,
-  DEFAULT_CHART_ID,
-} from '../../../core/store/charts/chart';
+import {ChartAxisType, ChartConfig, ChartSortType, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
@@ -58,6 +51,7 @@ import {ChartDataComponent} from './data/chart-data.component';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 
 @Component({
   selector: 'chart-perspective',
@@ -138,7 +132,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     return {
       type: ChartType.Line,
       axes: {},
-      aggregations: {[ChartAxisType.Y1]: ChartAggregation.Sum, [ChartAxisType.Y2]: ChartAggregation.Sum},
+      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum, [ChartAxisType.Y2]: DataAggregationType.Sum},
       sort: {type: ChartSortType.Ascending},
     };
   }

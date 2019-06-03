@@ -20,7 +20,7 @@
       [linkInstances]="linkInstances$ | async"
       [query]="data.query"
       [permissions]="permissions$ | async"
-      [users]="users$ | async"
+      [constraintData]="{users: users$ | async}"
       [config]="data.config"
       (patchData)="patchDocumentData($event)"
       (patchLinkData)="patchLinkInstanceData($event)">

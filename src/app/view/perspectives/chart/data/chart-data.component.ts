@@ -33,9 +33,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query';
-import {ChartAxisResourceType, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {User} from '../../../../core/store/users/user';
 import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -44,8 +43,14 @@ import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../../core/model/data/constraint';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraintConfig,
+} from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 interface Data {
   collections: Collection[];
@@ -56,7 +61,7 @@ interface Data {
   query: Query;
   config: ChartConfig;
   updateType: UpdateType;
-  users: User[];
+  constraintData: ConstraintData;
 }
 
 enum UpdateType {
@@ -92,7 +97,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public query: Query;
 
   @Input()
-  public users: User[];
+  public constraintData: ConstraintData;
 
   @Input()
   public config: ChartConfig;
@@ -106,8 +111,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
   @ViewChild(ChartVisualizerComponent)
   public chartVisualizerComponent: ChartVisualizerComponent;
 
+  private dataSubject = new BehaviorSubject<Data>(null);
   public chartData$: Observable<ChartData>;
-  public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(private chartDataConverter: ChartDataConverter) {}
 
@@ -144,9 +149,10 @@ export class ChartDataComponent implements OnInit, OnChanges {
       latestData.documents,
       latestData.permissions,
       latestData.query,
+      latestData.config,
       latestData.linkTypes,
       latestData.linkInstances,
-      latestData.users
+      latestData.constraintData
     );
   }
 
@@ -173,7 +179,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       permissions: this.permissions,
       query: this.query,
       updateType,
-      users: this.users,
+      constraintData: this.constraintData,
     });
   }
 
@@ -259,9 +265,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
   }
 
   public onValueChange(valueChange: ValueChange) {
-    if (valueChange.resourceType === ChartAxisResourceType.Collection) {
+    if (valueChange.resourceType === AttributesResourceType.Collection) {
       this.onDocumentValueChange(valueChange);
-    } else if (valueChange.resourceType === ChartAxisResourceType.LinkType) {
+    } else if (valueChange.resourceType === AttributesResourceType.LinkType) {
       this.onLinkValueChange(valueChange);
     }
   }

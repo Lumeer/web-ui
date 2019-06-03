@@ -27,7 +27,7 @@ export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: stri
   return {
     id: dto.id,
     collectionId: dto.collectionId,
-    data: data, // TODO convert values
+    data,
     metaData: dto.metaData,
     favorite: dto.favorite,
     creationDate: new Date(dto.creationDate),
@@ -35,7 +35,7 @@ export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: stri
     createdBy: dto.createdBy,
     updatedBy: dto.updatedBy,
     dataVersion: dto.dataVersion,
-    correlationId: correlationId,
+    correlationId,
   };
 }
 
@@ -44,7 +44,7 @@ export function convertDocumentModelToDto(model: DocumentModel | Partial<Documen
     id: model.id,
     correlationId: model.correlationId,
     collectionId: model.collectionId,
-    data: model.data, // TODO convert values
+    data: model.data,
     metaData: model.metaData,
     favorite: model.favorite,
   };

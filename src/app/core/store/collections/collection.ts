@@ -19,7 +19,6 @@
 
 import {Resource} from '../../model/resource';
 import {Constraint} from './../../model/data/constraint';
-import {CollectionDto} from '../../dto';
 import {Rule} from '../../model/rule';
 
 export interface Attribute {

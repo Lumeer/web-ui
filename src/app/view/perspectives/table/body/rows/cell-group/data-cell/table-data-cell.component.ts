@@ -545,6 +545,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         linkTypeId,
         documentIds: [previousRow.documentId, documentId],
         correlationId: this.document && this.document.correlationId,
+        data: {},
       };
       this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
     };

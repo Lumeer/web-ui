@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributesResourceType} from '../../model/resource';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+
 export const DEFAULT_CHART_ID = 'default';
 
 export interface Chart {
@@ -28,7 +31,7 @@ export interface ChartConfig {
   type: ChartType;
   axes: Record<string, ChartAxis>;
   names?: Record<string, ChartAxis>;
-  aggregations?: Record<string, ChartAggregation>;
+  aggregations?: Record<string, DataAggregationType>;
   prediction?: boolean;
   sort?: ChartSort;
 }
@@ -37,7 +40,7 @@ export interface ChartAxis {
   resourceId: string;
   attributeId: string;
   resourceIndex?: number;
-  axisResourceType: ChartAxisResourceType;
+  resourceType: AttributesResourceType;
 }
 
 export enum ChartType {
@@ -52,28 +55,10 @@ export const chartTypesIconsMap: Record<string, string> = {
   [ChartType.Pie]: 'far fa-chart-pie',
 };
 
-export enum ChartAxisResourceType {
-  Collection = 'collection',
-  LinkType = 'linkType',
-}
-
-export const chartAxisResourceTypesMap: Record<string, ChartAxisResourceType> = {
-  [ChartAxisResourceType.Collection]: ChartAxisResourceType.Collection,
-  [ChartAxisResourceType.LinkType]: ChartAxisResourceType.LinkType,
-};
-
 export enum ChartAxisType {
   X = 'x',
   Y1 = 'y1',
   Y2 = 'y2',
-}
-
-export enum ChartAggregation {
-  Sum = 'sum',
-  Min = 'min',
-  Max = 'max',
-  Avg = 'avg',
-  Count = 'count',
 }
 
 export interface ChartSort {

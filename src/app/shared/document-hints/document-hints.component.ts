@@ -149,6 +149,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
           correlationId: this.correlationId,
           linkTypeId: this.linkTypeId,
           documentIds: [this.linkedDocumentId, document.id],
+          data: {},
         },
         callback: this.createLinkCallback
           ? linkInstanceId => this.createLinkCallback(linkInstanceId, document.id)

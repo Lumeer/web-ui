@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisResourceType, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
 import {ConstraintConfig} from '../../../../../core/model/data/constraint';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 export interface ChartData {
   sets: ChartDataSet[];
@@ -33,7 +34,7 @@ export interface ChartDataSet {
   yAxisType: ChartYAxisType;
   name: string;
   draggable: boolean;
-  resourceType: ChartAxisResourceType;
+  resourceType: AttributesResourceType;
   xAxis?: ChartDataSetAxis;
   yAxis?: ChartDataSetAxis;
 }

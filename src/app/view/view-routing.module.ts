@@ -56,6 +56,10 @@ const viewRoutes: Routes = [
         loadChildren: './perspectives/kanban/kanban-perspective.module#KanbanPerspectiveModule',
       },
       {
+        path: Perspective.Pivot,
+        loadChildren: './perspectives/pivot/pivot-perspective.module#PivotPerspectiveModule',
+      },
+      {
         path: Perspective.Chart,
         loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule',
       },

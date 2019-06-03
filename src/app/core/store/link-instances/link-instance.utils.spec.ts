@@ -24,6 +24,7 @@ describe('getOtherDocumentIdFromLinkInstance()', () => {
   const linkInstance: LinkInstance = {
     documentIds: ['a', 'b'],
     linkTypeId: 'c',
+    data: {},
   };
 
   it('should get first documentId', () => {

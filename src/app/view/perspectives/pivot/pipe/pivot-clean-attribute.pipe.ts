@@ -18,27 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAggregation} from '../../../../../core/store/charts/chart';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PivotAttribute} from '../../../../core/store/pivots/pivot';
+import {cleanPivotAttribute} from '../util/pivot-util';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'pivotCleanAttribute',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(aggregations: ChartAggregation[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: this.chartAggregationName(aggregation)}));
-  }
-
-  private chartAggregationName(type: ChartAggregation): string {
-    return this.i18n(
-      {
-        id: 'perspective.chart.config.aggregation.name',
-        value: '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count}}',
-      },
-      {type}
-    );
+export class PivotCleanAttributePipe implements PipeTransform {
+  public transform(attribute: PivotAttribute): PivotAttribute {
+    return attribute && cleanPivotAttribute(attribute);
   }
 }

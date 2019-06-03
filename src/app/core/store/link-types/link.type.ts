@@ -26,7 +26,6 @@ export interface LinkType {
 
   collectionIds: [string, string];
   collections?: [Collection, Collection];
-
   attributes?: Attribute[];
 
   correlationId?: string;
