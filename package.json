@@ -86,6 +86,7 @@
     "plotly.js": "^1.47.1",
     "pusher-js": "^4.4.0",
     "rxjs": "~6.3.3",
+    "smartlook-client": "^4.0.0",
     "zone.js": "~0.8.29"
   },
   "devDependencies": {

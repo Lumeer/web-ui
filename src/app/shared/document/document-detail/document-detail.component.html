@@ -10,7 +10,7 @@
           <!--span i18n="@@document.detail.heading">Document detail</span-->
         </h4>
         <div class="toolbar">
-          <i class="fas fa-fw fa-trash text-danger clickable clickable-danger"
+          <i class="fas fa-fw fa-trash text-danger clickable text-danger"
              aria-hidden="true"
              *ngIf="allowedPermissions.writeWithView"
              title="Remove Record"
@@ -18,12 +18,12 @@
              (click)="onRemoveDocument()"
           ></i>
           <ng-container *ngIf="allowedPermissions.read">
-            <i *ngIf="state?.favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
+            <i *ngIf="state?.favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable"
                title="Remove from favorites"
                i18n-title="@@document.detail.favorite.remove"
                (click)="onToggleFavorite()"></i>
             <i *ngIf="!(state?.favorite$ | async)"
-               class="far fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
+               class="far fa-fw fa-star ml-2 mr-4 text-warning clickable"
                title="Add to favorites"
                i18n-title="@@document.detail.favorite.add"
                (click)="onToggleFavorite()"></i>

@@ -32,7 +32,7 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
-import {filter, first, withLatestFrom} from 'rxjs/operators';
+import {filter, first, map, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
 import {AppState} from './core/store/app.state';
@@ -43,6 +43,8 @@ import {PusherService} from './core/pusher/pusher.service';
 import * as moment from 'moment';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from './core/dto/service-level-type';
+import smartlookClient from 'smartlook-client';
+import {allowedEmails} from './shared/top-panel/workspace-panel/resource-menu/pipes/can-create-resource.pipe';
 
 declare let $: any;
 
@@ -171,6 +173,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
+    this.initSmartlook();
     this.bindBrowserWarningCloseCallback();
     this.subscribeToRouterEvents();
   }
@@ -199,6 +202,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public onHideLoadingIndicator() {
     this.lazyLoading$.next(false);
+  }
+
+  private initSmartlook() {
+    if (environment.smartlookKey) {
+      this.store$
+        .pipe(
+          select(selectCurrentUser),
+          first(),
+          filter(user => !allowedEmails.includes(user.email))
+        )
+        .subscribe(() => {
+          smartlookClient.init(environment.smartlookKey);
+        });
+    }
   }
 }
 
