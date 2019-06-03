@@ -227,7 +227,7 @@ export class ChartDataConverter {
     const dataSet: ChartDataSet = {
       id: (yAxis && yAxis.attributeId) || null,
       points,
-      color: attributesResource.color,
+      color: (<Collection>attributesResource).color,
       yAxis: yAxis && axis,
       xAxis: xAxis && axis,
       yAxisType,
@@ -369,7 +369,7 @@ export class ChartDataConverter {
   }
 
   private getAxisColor(axis: ChartAxis): string {
-    const collectionResource = this.dataAggregator.getNextCollectionResource(axis.resourceIndex);
+    const collectionResource = this.dataAggregator.getNextCollectionResource(axis.resourceIndex) as Collection;
     return collectionResource && collectionResource.color;
   }
 

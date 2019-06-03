@@ -30,10 +30,7 @@ import {findAttributeConstraint} from '../../../core/store/collections/collectio
 import {formatDataValue} from '../data.utils';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query.util';
 
-interface DataResourceWithLinks extends DataResource {
-  from: DataResource[];
-  to: DataResource[];
-}
+type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
 interface AttributesResourceChain {
   resource: AttributesResource;
@@ -85,7 +82,11 @@ export class DataAggregator {
   ) {
     this.constraintData = constraintData;
 
-    this.attributesResourcesOrder = queryStemAttributesResourcesOrder(query.stems && query.stems[0], collections, linkTypes);
+    this.attributesResourcesOrder = queryStemAttributesResourcesOrder(
+      query.stems && query.stems[0],
+      collections,
+      linkTypes
+    );
     this.dataMap = createDataMap(this.attributesResourcesOrder, documents, linkTypes, linkInstances);
   }
 
@@ -386,15 +387,14 @@ export class DataAggregator {
 
       const resourceId = this.attributesResourceIdForIndex(nextStage.index);
       const nextStageObjectData = this.dataMap[resourceId] || {};
-
       return linkedObjectData
         .filter(
           d =>
-            (d.linkTypeId &&
-              d.linkTypeId === nextStage.resource.id &&
+            ((<LinkInstance>d).linkTypeId &&
+              (<LinkInstance>d).linkTypeId === nextStage.resource.id &&
               nextStageType === AttributesResourceType.LinkType) ||
-            (d.collectionId &&
-              d.collectionId === nextStage.resource.id &&
+            ((<DocumentModel>d).collectionId &&
+              (<DocumentModel>d).collectionId === nextStage.resource.id &&
               nextStageType === AttributesResourceType.Collection)
         )
         .map(d => nextStageObjectData[d.id]);

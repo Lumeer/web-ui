@@ -18,40 +18,47 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute} from '../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PivotAttribute, PivotColumnAttribute, PivotRowAttribute} from '../../../../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
 
 @Component({
-  selector: 'pivot-attribute-config',
-  templateUrl: './pivot-attribute-config.component.html',
+  selector: 'pivot-header-attribute-config',
+  templateUrl: './pivot-header-attribute-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotAttributeConfigComponent {
+export class PivotHeaderAttributeConfigComponent {
   @Input()
-  public pivotAttribute: PivotAttribute;
+  public pivotAttribute: PivotRowAttribute | PivotColumnAttribute;
 
   @Input()
   public availableAttributes: SelectItemModel[];
 
   @Input()
-  public icon: string;
+  public isRow: boolean;
 
   @Output()
-  public attributeSelect = new EventEmitter<PivotAttribute>();
+  public attributeSelect = new EventEmitter<PivotRowAttribute | PivotColumnAttribute>();
+
+  @Output()
+  public attributeChange = new EventEmitter<PivotRowAttribute | PivotColumnAttribute>();
 
   @Output()
   public attributeRemove = new EventEmitter();
 
-  public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly emptyValueString: string;
+  public readonly showSumsId =
+    'pivot-show-sums-' +
+    Math.random()
+      .toString(36)
+      .substr(2);
 
-  constructor(private i18n: I18n) {
-    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
+  public onShowSumsChange(checked: boolean) {
+    const newAttribute = {...this.pivotAttribute, showSums: checked};
+    this.attributeChange.emit(newAttribute);
   }
 
   public onAttributeSelected(attribute: PivotAttribute) {
-    this.attributeSelect.emit(attribute);
+    const headerAttribute = {...attribute, showSums: true};
+    this.attributeSelect.emit(headerAttribute);
   }
 
   public onAttributeRemoved() {

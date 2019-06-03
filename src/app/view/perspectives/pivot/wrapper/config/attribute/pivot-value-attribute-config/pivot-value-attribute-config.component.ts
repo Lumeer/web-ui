@@ -18,40 +18,48 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute} from '../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
+import {PivotAttribute, PivotValueAttribute} from '../../../../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
+import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
-  selector: 'pivot-attribute-config',
-  templateUrl: './pivot-attribute-config.component.html',
+  selector: 'pivot-value-attribute-config',
+  templateUrl: './pivot-value-attribute-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotAttributeConfigComponent {
+export class PivotValueAttributeConfigComponent {
   @Input()
-  public pivotAttribute: PivotAttribute;
+  public pivotAttribute: PivotValueAttribute;
 
   @Input()
   public availableAttributes: SelectItemModel[];
 
-  @Input()
-  public icon: string;
+  @Output()
+  public attributeSelect = new EventEmitter<PivotValueAttribute>();
 
   @Output()
-  public attributeSelect = new EventEmitter<PivotAttribute>();
+  public attributeChange = new EventEmitter<PivotValueAttribute>();
 
   @Output()
   public attributeRemove = new EventEmitter();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly emptyValueString: string;
+  public readonly aggregationPlaceholder: string;
+  public readonly aggregations = Object.values(DataAggregationType);
 
   constructor(private i18n: I18n) {
-    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
+    this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
+  }
+
+  public onAggregationSelect(aggregation: DataAggregationType) {
+    const newAttribute = {...this.pivotAttribute, aggregation};
+    this.attributeChange.emit(newAttribute);
   }
 
   public onAttributeSelected(attribute: PivotAttribute) {
-    this.attributeSelect.emit(attribute);
+    const valueAttribute = {...attribute, aggregation: DataAggregationType.Sum};
+    this.attributeSelect.emit(valueAttribute);
   }
 
   public onAttributeRemoved() {

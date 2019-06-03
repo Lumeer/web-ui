@@ -4,71 +4,67 @@
     Rows
   </h6>
 
-  <pivot-attribute-config *ngFor="let attribute of config?.rowAttributes; trackBy: trackByAttribute; let first = first"
+  <pivot-header-attribute-config *ngFor="let attribute of config?.rowAttributes; trackBy: trackByAttribute; let first = first; let index = index"
                           class="d-block"
                           [class.pt-3]="!first"
                           [pivotAttribute]="attribute"
                           [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
                           [isRow]="true"
                           (attributeSelect)="onRowAttributeSelect($event, attribute)"
-                          (attributeRemove)="onRowAttributeRemove(attribute)"
+                          (attributeRemove)="onRowAttributeRemove(index)"
                           (attributeChange)="onRowAttributeChange($event)">
-  </pivot-attribute-config>
+  </pivot-header-attribute-config>
 
-  <pivot-attribute-config class="d-block"
+  <pivot-header-attribute-config class="d-block"
                           [class.pt-3]="config?.rowAttributes?.length > 0"
                           [pivotAttribute]="null"
                           [availableAttributes]="data.items | pivotHeaderSelectItems:config"
                           [isRow]="true"
                           (attributeSelect)="onRowAttributeSelect($event)">
-  </pivot-attribute-config>
+  </pivot-header-attribute-config>
 
 
   <h6 class="font-weight-bold mt-4" i18n="@@perspective.pivot.config.column.header">
     Columns
   </h6>
 
-  <pivot-attribute-config *ngFor="let attribute of config?.columnAttributes trackBy: trackByAttribute; let first = first"
+  <pivot-header-attribute-config *ngFor="let attribute of config?.columnAttributes; trackBy: trackByAttribute; let first = first; let index = index"
                           class="d-block"
                           [class.pt-3]="!first"
                           [pivotAttribute]="attribute"
                           [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
-                          [isColumn]="true"
                           (attributeSelect)="onColumnAttributeSelect($event, attribute)"
-                          (attributeRemove)="onColumnAttributeRemove(attribute)"
+                          (attributeRemove)="onColumnAttributeRemove(index)"
                           (attributeChange)="onColumnAttributeChange($event)">
-  </pivot-attribute-config>
+  </pivot-header-attribute-config>
 
-  <pivot-attribute-config class="d-block"
+  <pivot-header-attribute-config class="d-block"
                           [class.pt-3]="config?.columnAttributes?.length > 0"
                           [pivotAttribute]="null"
                           [availableAttributes]="data.items | pivotHeaderSelectItems:config"
-                          [isColumn]="true"
                           (attributeSelect)="onColumnAttributeSelect($event)">
-  </pivot-attribute-config>
+  </pivot-header-attribute-config>
 
 
   <h6 class="font-weight-bold mt-4" i18n="@@perspective.pivot.config.value.header">
     Values
   </h6>
 
-  <pivot-attribute-config *ngFor="let attribute of config?.valueAttributes; trackBy: trackByAttribute; let first = first"
+  <pivot-value-attribute-config *ngFor="let attribute of config?.valueAttributes; trackBy: trackByAttribute; let first = first; let index = index"
                           class="d-block"
                           [class.pt-3]="!first"
                           [pivotAttribute]="attribute"
                           [availableAttributes]="data.items"
-                          [isValue]="true"
                           (attributeSelect)="onValueAttributeSelect($event, attribute)"
-                          (attributeRemove)="onValueAttributeRemove(attribute)"
+                          (attributeRemove)="onValueAttributeRemove(index)"
                           (attributeChange)="onValueAttributeChange($event)">
-  </pivot-attribute-config>
+  </pivot-value-attribute-config>
 
-  <pivot-attribute-config class="d-block"
+  <pivot-value-attribute-config class="d-block"
                           [class.pt-3]="config?.valueAttributes?.length > 0"
                           [pivotAttribute]="null"
                           [availableAttributes]="data.items"
-                          [isValue]="true"
                           (attributeSelect)="onValueAttributeSelect($event)">
-  </pivot-attribute-config>
+  </pivot-value-attribute-config>
 
 </ng-container>

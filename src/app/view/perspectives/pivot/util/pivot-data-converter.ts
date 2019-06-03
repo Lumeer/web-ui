@@ -292,8 +292,13 @@ export class PivotDataConverter {
         const aggregatedDataValues = isArray(currentMap)
           ? currentMap
           : (currentMap[columnHeader.title] as AggregatedDataValues[]);
-        for (const valueAttribute of valueAttributes) {
-          values[rowIndex][columnHeader.targetIndex] = this.aggregateValue(valueAttribute, aggregatedDataValues);
+
+        if (valueAttributes.length) {
+          const valueIndex = columnHeader.targetIndex % valueAttributes.length;
+          values[rowIndex][columnHeader.targetIndex] = this.aggregateValue(
+            valueAttributes[valueIndex],
+            aggregatedDataValues
+          );
         }
       }
     }

@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../collections/collection';
-import {AttributesResource} from '../../model/resource';
+import {Attribute, Collection} from '../collections/collection';
 
-export interface LinkType extends AttributesResource{
+export interface LinkType {
+  id?: string;
   name: string;
   version?: number;
 
   collectionIds: [string, string];
   collections?: [Collection, Collection];
+  attributes?: Attribute[];
 
   correlationId?: string;
 }

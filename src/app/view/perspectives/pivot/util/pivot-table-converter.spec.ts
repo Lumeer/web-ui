@@ -23,7 +23,7 @@ import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
-fdescribe('Pivot table converter', () => {
+describe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
 
   function createDummyAttribute(): PivotAttribute {

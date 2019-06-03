@@ -18,21 +18,25 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {PivotAttribute, PivotColumnAttribute, PivotConfig, PivotRowAttribute, PivotValueAttribute} from '../../../../../core/store/pivots/pivot';
+import {
+  PivotAttribute,
+  PivotColumnAttribute,
+  PivotConfig,
+  PivotRowAttribute,
+  PivotValueAttribute,
+} from '../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../util/pivot-data';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query';
 import {pivotAttributesAreSame} from '../../util/pivot-util';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 
 @Component({
   selector: 'pivot-config',
   templateUrl: './pivot-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotConfigComponent {
-
   @Input()
   public config: PivotConfig;
 
@@ -51,39 +55,36 @@ export class PivotConfigComponent {
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
 
-  public onRowAttributeSelect(attribute: PivotAttribute, previousAttribute?: PivotRowAttribute) {
-    const rowAttribute = {...attribute, showSums: true};
-    this.onAttributeChange(rowAttribute, previousAttribute, 'rowAttributes');
+  public onRowAttributeSelect(attribute: PivotRowAttribute, previousAttribute?: PivotRowAttribute) {
+    this.onAttributeChange(attribute, previousAttribute, 'rowAttributes');
   }
 
-  public onRowAttributeRemove(attribute: PivotRowAttribute) {
-    this.onAttributeRemove(attribute, 'rowAttributes');
+  public onRowAttributeRemove(index: number) {
+    this.onAttributeRemove(index, 'rowAttributes');
   }
 
   public onRowAttributeChange(attribute: PivotRowAttribute) {
     this.onAttributeChange(attribute, attribute, 'rowAttributes');
   }
 
-  public onColumnAttributeSelect(attribute: PivotAttribute, previousAttribute?: PivotColumnAttribute) {
-    const columnAttribute = {...attribute, showSums: true};
-    this.onAttributeChange(columnAttribute, previousAttribute, 'columnAttributes');
+  public onColumnAttributeSelect(attribute: PivotColumnAttribute, previousAttribute?: PivotColumnAttribute) {
+    this.onAttributeChange(attribute, previousAttribute, 'columnAttributes');
   }
 
-  public onColumnAttributeRemove(attribute: PivotColumnAttribute) {
-    this.onAttributeRemove(attribute, 'columnAttributes');
+  public onColumnAttributeRemove(index: number) {
+    this.onAttributeRemove(index, 'columnAttributes');
   }
 
   public onColumnAttributeChange(attribute: PivotColumnAttribute) {
     this.onAttributeChange(attribute, attribute, 'columnAttributes');
   }
 
-  public onValueAttributeSelect(attribute: PivotAttribute, previousAttribute?: PivotValueAttribute) {
-    const valueAttribute = {...attribute, aggregation: DataAggregationType.Sum};
-    this.onAttributeChange(valueAttribute, previousAttribute, 'valueAttributes');
+  public onValueAttributeSelect(attribute: PivotValueAttribute, previousAttribute?: PivotValueAttribute) {
+    this.onAttributeChange(attribute, previousAttribute, 'valueAttributes');
   }
 
-  public onValueAttributeRemove(attribute: PivotValueAttribute) {
-    this.onAttributeRemove(attribute, 'valueAttributes');
+  public onValueAttributeRemove(index: number) {
+    this.onAttributeRemove(index, 'valueAttributes');
   }
 
   public onValueAttributeChange(attribute: PivotValueAttribute) {
@@ -91,8 +92,9 @@ export class PivotConfigComponent {
   }
 
   private onAttributeChange(attribute: PivotAttribute, previousAttribute: PivotAttribute, parameterName: string) {
-    const previousIndex = previousAttribute && (this.config[parameterName] || [])
-      .findIndex(attr => pivotAttributesAreSame(attr, previousAttribute));
+    const previousIndex =
+      previousAttribute &&
+      (this.config[parameterName] || []).findIndex(attr => pivotAttributesAreSame(attr, previousAttribute));
 
     const newAttributes = [...(this.config[parameterName] || [])];
     if (previousIndex >= 0) {
@@ -104,10 +106,12 @@ export class PivotConfigComponent {
     this.configChange.emit({...this.config, [parameterName]: newAttributes});
   }
 
-  private onAttributeRemove(attribute: PivotAttribute, parameterName: string) {
-    const newAttributes = (this.config[parameterName] || [])
-      .filter(attr => !pivotAttributesAreSame(attr, attribute));
-    this.configChange.emit({...this.config, [parameterName]: newAttributes});
+  private onAttributeRemove(index: number, parameterName: string) {
+    const newAttributes = [...(this.config[parameterName] || [])];
+    if (index >= 0) {
+      newAttributes.splice(index, 1);
+      this.configChange.emit({...this.config, [parameterName]: newAttributes});
+    }
   }
 
   public trackByAttribute(index: number, attribute: PivotAttribute): string {

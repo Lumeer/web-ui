@@ -18,8 +18,10 @@
  */
 
 import {Permissions} from '../store/permissions/permissions';
-import {Attribute} from '../store/collections/collection';
-import {DocumentData} from '../store/documents/document.model';
+import {Collection} from '../store/collections/collection';
+import {DocumentModel} from '../store/documents/document.model';
+import {LinkInstance} from '../store/link-instances/link.instance';
+import {LinkType} from '../store/link-types/link.type';
 
 export interface Resource {
   id?: string;
@@ -35,20 +37,13 @@ export interface Resource {
   nonRemovable?: boolean;
 }
 
-export interface AttributesResource {
-  attributes?: Attribute[];
-  color?: string;
-  id?: string;
-}
-
 export enum AttributesResourceType {
   Collection = 'collection',
   LinkType = 'linkType',
 }
 
-export interface DataResource {
-  id?: string;
-  data: DocumentData;
-  collectionId?: string;
-  linkTypeId?: string;
-}
+export type DataResource =
+  | Pick<DocumentModel, 'id' | 'data' | 'collectionId'>
+  | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId'>;
+
+export type AttributesResource = Pick<Collection, 'id' | 'attributes' | 'color'> | Pick<LinkType, 'id' | 'attributes'>;

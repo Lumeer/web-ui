@@ -36,14 +36,14 @@ export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConf
     return true;
   }
 
-  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanAttribute(a));
-  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanAttribute(a));
+  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanPivotAttribute(a));
+  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanPivotAttribute(a));
   if (JSON.stringify(c1RowAttributes) !== JSON.stringify(c2RowAttributes)) {
     return true;
   }
 
-  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanAttribute(a));
-  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanAttribute(a));
+  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanPivotAttribute(a));
+  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanPivotAttribute(a));
   if (JSON.stringify(c1ColumnAttributes) !== JSON.stringify(c2ColumnAttributes)) {
     return true;
   }
@@ -51,7 +51,7 @@ export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConf
   return JSON.stringify(c1.valueAttributes) !== JSON.stringify(c2.valueAttributes);
 }
 
-function cleanAttribute(attribute: PivotAttribute): PivotAttribute {
+export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
   return {
     resourceIndex: attribute.resourceIndex,
     attributeId: attribute.attributeId,

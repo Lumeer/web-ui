@@ -44,16 +44,16 @@ export interface PivotRowAttribute extends PivotAttribute {
   showSums?: boolean;
   sort?: {
     attribute?: PivotAttribute;
-    columnValue?: string;
-  }
+    value?: string;
+  };
 }
 
 export interface PivotColumnAttribute extends PivotAttribute {
   showSums?: boolean;
   sort?: {
     attribute?: PivotAttribute;
-    rowValue?: string;
-  }
+    value?: string;
+  };
 }
 
 export interface PivotValueAttribute extends PivotAttribute {

@@ -29,7 +29,9 @@ import {PivotTableComponent} from './wrapper/table/pivot-table.component';
 import {PivotAttributeConfigComponent} from './wrapper/config/attribute/pivot-attribute-config.component';
 import {PivotHeaderSelectItemsPipe} from './pipe/pivot-header-select-items.pipe';
 import {PivotSelectItemsPipe} from './pipe/pivot-select-items.pipe';
-import {PivotClearAttributePipe} from './pipe/pivot-clear-attribute.pipe';
+import {PivotCleanAttributePipe} from './pipe/pivot-clean-attribute.pipe';
+import {PivotValueAttributeConfigComponent} from './wrapper/config/attribute/pivot-value-attribute-config/pivot-value-attribute-config.component';
+import {PivotHeaderAttributeConfigComponent} from './wrapper/config/attribute/pivot-header-attribute-config/pivot-header-attribute-config.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import {PivotClearAttributePipe} from './pipe/pivot-clear-attribute.pipe';
     PivotAttributeConfigComponent,
     PivotHeaderSelectItemsPipe,
     PivotSelectItemsPipe,
-    PivotClearAttributePipe,
+    PivotCleanAttributePipe,
+    PivotValueAttributeConfigComponent,
+    PivotHeaderAttributeConfigComponent,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
 })

@@ -192,13 +192,12 @@ function minInNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues.sort((a, b) => a.cmp(b))[0].toFixed();
+  return bigValues.reduce((minValue, value) => (value.cmp(minValue) < 0 ? value : minValue), bigValues[0]).toFixed();
 }
 
 function minInAnyValues(values: any[], onlyNumeric: boolean): any {
   const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
-  const sortedValues = filteredValues.sort((a, b) => (a > b ? 1 : -1));
-  return sortedValues[0];
+  return filteredValues.reduce((minValue, value) => (value < minValue ? value : minValue), filteredValues[0]);
 }
 
 function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean): any {
@@ -221,13 +220,12 @@ function maxInNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues.sort((a, b) => -1 * a.cmp(b))[0].toFixed();
+  return bigValues.reduce((minValue, value) => (value.cmp(minValue) > 0 ? value : minValue), bigValues[0]).toFixed();
 }
 
 function maxInAnyValues(values: any[], onlyNumeric: boolean): any {
   const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
-  const sortedValues = filteredValues.sort((a, b) => (a > b ? -1 : 1));
-  return sortedValues[0];
+  return filteredValues.reduce((maxValue, value) => (value > maxValue ? value : maxValue), filteredValues[0]);
 }
 
 function countValues(values: any[], onlyNumeric?: boolean) {

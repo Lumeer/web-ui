@@ -448,10 +448,10 @@ describe('Pivot data converter', () => {
       },
     ]);
     expect(pivotData.values).toEqual([
-      [1, 1, 1, 2, 2, 2],
-      [2, 2, 2, 1, 1, 1],
-      [null, null, null, 5, 5, 5],
-      [2, 2, 2, null, null, null],
+      [2, 2, 1, 7, 6, 2],
+      [6, 4, 2, 6, 6, 1],
+      [null, null, null, 16, 6, 5],
+      [31, 20, 2, null, null, null],
     ]);
     expect(pivotData.valueTitles).toEqual(valueTitles);
   });

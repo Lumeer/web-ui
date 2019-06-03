@@ -17,44 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from '../../model/resource';
-import {Constraint} from './../../model/data/constraint';
-import {Rule} from '../../model/rule';
+import {Pipe, PipeTransform} from '@angular/core';
+import {PivotAttribute} from '../../../../core/store/pivots/pivot';
+import {cleanPivotAttribute} from '../util/pivot-util';
 
-export interface Attribute {
-  id?: string;
-  name: string;
-
-  constraint?: Constraint;
-  function?: AttributeFunction;
-
-  usageCount?: number;
-  intermediate?: boolean;
-
-  correlationId?: string;
-}
-
-export interface AttributeFunction {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-  editable?: boolean;
-}
-
-export interface Collection extends Resource {
-  attributes?: Attribute[];
-  defaultAttributeId?: string;
-  lastTimeUsed?: Date;
-
-  documentsCount?: number;
-
-  favorite?: boolean;
-
-  rules?: Rule[];
-}
-
-export interface ImportedCollection {
-  collection: Collection;
-  data: string;
+@Pipe({
+  name: 'pivotCleanAttribute',
+})
+export class PivotCleanAttributePipe implements PipeTransform {
+  public transform(attribute: PivotAttribute): PivotAttribute {
+    return attribute && cleanPivotAttribute(attribute);
+  }
 }

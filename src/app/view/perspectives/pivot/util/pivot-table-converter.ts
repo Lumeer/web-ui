@@ -387,7 +387,18 @@ export class PivotTableConverter {
     for (let i = 0; i < rows; i++) {
       matrix[i] = [];
       for (let j = 0; j < columns; j++) {
-        matrix[i][j] = undefined;
+        if (i >= this.columnLevels && j >= this.rowLevels) {
+          const isDataClass = this.rowsTransformationArray.includes(i) && this.columnsTransformationArray.includes(j);
+          matrix[i][j] = {
+            value: '',
+            cssClass: isDataClass ? PivotTableConverter.dataClass : PivotTableConverter.groupDataClass,
+            rowSpan: 1,
+            colSpan: 1,
+            isHeader: false,
+          };
+        } else {
+          matrix[i][j] = undefined;
+        }
       }
     }
 

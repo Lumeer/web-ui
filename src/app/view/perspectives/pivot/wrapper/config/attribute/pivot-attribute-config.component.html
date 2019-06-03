@@ -1,38 +1,12 @@
 <select-item class="d-block w-100 mt-2"
              [emptyValue]="emptyValueString"
-             [placeholderIcon]="isRow ? 'far fa-arrow-right' : isColumn ? 'far fa-arrow-down' : 'far fa-function'"
+             [placeholderIcon]="icon"
              [items]="availableAttributes"
-             [selectedId]="pivotAttribute | pivotClearAttribute"
+             [selectedId]="pivotAttribute | pivotCleanAttribute"
              [removable]="!!pivotAttribute"
              [buttonClasses]="buttonClasses"
              (select)="onAttributeSelected($event)"
              (remove)="onAttributeRemoved()">
 </select-item>
 
-<ng-container *ngIf="(isRow || isColumn) && pivotAttribute">
-
-  <div class="custom-control custom-checkbox mt-1">
-    <input [id]="showSumsId"
-           [attr.checked]="pivotAttribute.showSums"
-           [checked]="pivotAttribute.showSums"
-           (change)="onShowSumsChange($event.target.checked)"
-           type="checkbox"
-           class="custom-control-input">
-    <label [for]="showSumsId"
-           class="custom-control-label">
-    </label>
-    <span i18n="@@perspective.pivot.config.attribute.sums">Show sums</span>
-  </div>
-
-</ng-container>
-
-<ng-container *ngIf="isValue && pivotAttribute">
-  <select-item class="d-block w-100 mt-1"
-               [items]="aggregations | aggregationSelectItems"
-               [placeholderText]="aggregationPlaceholder"
-               [buttonClasses]="buttonClasses"
-               [removable]="false"
-               [selectedId]="pivotAttribute.aggregation"
-               (select)="onAggregationSelect($event)">
-  </select-item>
-</ng-container>
+<ng-content></ng-content>
