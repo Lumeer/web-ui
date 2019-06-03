@@ -164,7 +164,7 @@ div.snotifyToast span.snotifyToast__progressBar__percentage {
   cursor: pointer;
   transition: all 0.2s ease-in;
 
-  &.clickable-primary {
+  &.text-primary {
     color: $primary !important;
 
     &:hover {
@@ -172,7 +172,7 @@ div.snotifyToast span.snotifyToast__progressBar__percentage {
     }
   }
 
-  &.clickable-danger {
+  &.text-danger {
     color: $danger !important;
 
     &:hover {
@@ -180,7 +180,7 @@ div.snotifyToast span.snotifyToast__progressBar__percentage {
     }
   }
 
-  &.clickable-warning {
+  &.text-warning {
     color: $warning !important;
 
     &:hover {
@@ -188,7 +188,7 @@ div.snotifyToast span.snotifyToast__progressBar__percentage {
     }
   }
 
-  &:not(.clickable-primary):not(.clickable-danger):not(.clickable-warning) {
+  &:not(.text-primary):not(.text-danger):not(.text-warning) {
     color: $success;
 
     &:hover {

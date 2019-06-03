@@ -38,6 +38,7 @@ export interface EnvironmentVariables {
   videoKey: string;
   blocklyCdn: string;
   logzioKey: string;
+  smartlookKey: string;
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
@@ -53,6 +54,7 @@ const pusherKey = env['PUSHER_KEY'] || '';
 const videoKey = env['VIDEO_KEY'] || '';
 const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v3/blockly.${locale}.min.js`;
 const logzioKey = env['LOGZIO_KEY'] || '';
+const smartlookKey = env['SMARTLOOK_KEY'] || '';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
@@ -68,4 +70,5 @@ export const environmentVariables: EnvironmentVariables = {
   videoKey,
   blocklyCdn,
   logzioKey,
+  smartlookKey,
 };

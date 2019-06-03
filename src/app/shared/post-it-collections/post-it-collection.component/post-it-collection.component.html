@@ -80,7 +80,7 @@
     </div>
 
     <div *ngIf="collection.id && allowedPermissions.read"
-         class="toggle-favorite opacity-content clickable clickable-warning"
+         class="toggle-favorite opacity-content clickable text-warning"
          [ngClass]="{'panel-visible' : focused}"
          [class.always-visible]="collection.favorite">
       <a *ngIf="collection.favorite"
