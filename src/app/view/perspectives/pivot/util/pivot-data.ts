@@ -28,4 +28,5 @@ export interface PivotDataHeader {
   title: string;
   children?: PivotDataHeader[];
   targetIndex?: number;
+  color: string;
 }

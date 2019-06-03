@@ -27,4 +27,5 @@ export interface PivotTableCell {
   colSpan: number;
   cssClass: string;
   isHeader: boolean;
+  background?: string;
 }

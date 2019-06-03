@@ -22,6 +22,7 @@ import {PivotData} from './pivot-data';
 import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {COLOR_GRAY700, COLOR_GRAY800} from '../../../../core/constants';
 
 describe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
@@ -46,11 +47,15 @@ describe('Pivot table converter', () => {
     expect(converter.transform(data, config)).toEqual({cells: []});
   });
 
-  it('should return rows by only values', () => {
+  it('should return table by only values', () => {
     const data: PivotData = {
       valueTitles: ['A', 'B', 'C'],
       rowHeaders: [],
-      columnHeaders: [{title: 'A', targetIndex: 0}, {title: 'B', targetIndex: 1}, {title: 'C', targetIndex: 2}],
+      columnHeaders: [
+        {title: 'A', targetIndex: 0, color: undefined},
+        {title: 'B', targetIndex: 1, color: undefined},
+        {title: 'C', targetIndex: 2, color: undefined},
+      ],
       values: [[10, 20, 30]],
     };
     const config: PivotConfig = {
@@ -69,6 +74,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'B',
@@ -76,6 +82,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][2]).toEqual({
       value: 'C',
@@ -83,6 +90,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: '10',
@@ -107,15 +115,24 @@ describe('Pivot table converter', () => {
     });
   });
 
-  it('should return rows by only rows', () => {
+  it('should return table by only rows', () => {
     const data: PivotData = {
       valueTitles: [],
       rowHeaders: [
-        {title: 'A', children: [{title: 'a1', targetIndex: 0}, {title: 'a2', targetIndex: 1}]},
-        {title: 'B', children: [{title: 'a1', targetIndex: 2}]},
+        {
+          title: 'A',
+          children: [{title: 'a1', targetIndex: 0, color: undefined}, {title: 'a2', targetIndex: 1, color: undefined}],
+          color: undefined,
+        },
+        {title: 'B', children: [{title: 'a1', targetIndex: 2, color: undefined}], color: undefined},
         {
           title: 'C',
-          children: [{title: 'a2', targetIndex: 3}, {title: 'a3', targetIndex: 4}, {title: 'a4', targetIndex: 5}],
+          children: [
+            {title: 'a2', targetIndex: 3, color: undefined},
+            {title: 'a3', targetIndex: 4, color: undefined},
+            {title: 'a4', targetIndex: 5, color: undefined},
+          ],
+          color: undefined,
         },
       ],
       columnHeaders: [],
@@ -134,6 +151,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'a1',
@@ -141,6 +159,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual(undefined);
     expect(pivotTable.cells[1][1]).toEqual({
@@ -149,6 +168,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[2][0]).toEqual({
       value: converter.createHeaderTitle('A'),
@@ -156,6 +176,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[2][1]).toEqual(undefined);
 
@@ -165,6 +186,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[3][1]).toEqual({
       value: 'a1',
@@ -172,6 +194,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[4][0]).toEqual({
       value: converter.createHeaderTitle('B'),
@@ -179,6 +202,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[4][1]).toEqual(undefined);
 
@@ -188,6 +212,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[5][1]).toEqual({
       value: 'a2',
@@ -195,6 +220,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[6][0]).toEqual(undefined);
     expect(pivotTable.cells[6][1]).toEqual({
@@ -203,6 +229,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[7][0]).toEqual(undefined);
     expect(pivotTable.cells[7][1]).toEqual({
@@ -211,6 +238,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: converter.createHeaderTitle('C'),
@@ -218,6 +246,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[8][1]).toEqual(undefined);
     expect(pivotTable.cells[9][0]).toEqual({
@@ -226,6 +255,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
     expect(pivotTable.cells[9][1]).toEqual(undefined);
 
@@ -238,14 +268,22 @@ describe('Pivot table converter', () => {
     expect(pivotTableWithoutSums.cells.length).toEqual(6);
   });
 
-  it('should return rows by only columns', () => {
+  it('should return table by only columns', () => {
     const data: PivotData = {
       valueTitles: [],
       rowHeaders: [],
       columnHeaders: [
-        {title: 'X', children: [{title: 'a1', targetIndex: 0}]},
-        {title: 'Y', children: [{title: 'a1', targetIndex: 1}, {title: 'a2', targetIndex: 2}]},
-        {title: 'Z', children: [{title: 'a2', targetIndex: 3}, {title: 'a3', targetIndex: 4}]},
+        {title: 'X', children: [{title: 'a1', targetIndex: 0, color: undefined}], color: undefined},
+        {
+          title: 'Y',
+          children: [{title: 'a1', targetIndex: 1, color: undefined}, {title: 'a2', targetIndex: 2, color: undefined}],
+          color: undefined,
+        },
+        {
+          title: 'Z',
+          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
+          color: undefined,
+        },
       ],
       values: [],
     };
@@ -263,6 +301,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: 'a1',
@@ -270,6 +309,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: converter.createHeaderTitle('X'),
@@ -277,6 +317,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[1][1]).toEqual(undefined);
 
@@ -286,6 +327,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual(undefined);
     expect(pivotTable.cells[1][2]).toEqual({
@@ -294,6 +336,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[1][3]).toEqual({
       value: 'a2',
@@ -301,6 +344,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: converter.createHeaderTitle('Y'),
@@ -308,6 +352,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[1][4]).toEqual(undefined);
 
@@ -317,6 +362,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual(undefined);
     expect(pivotTable.cells[1][5]).toEqual({
@@ -325,6 +371,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[1][6]).toEqual({
       value: 'a3',
@@ -332,6 +379,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][7]).toEqual({
       value: converter.createHeaderTitle('Z'),
@@ -339,6 +387,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[1][7]).toEqual(undefined);
     expect(pivotTable.cells[0][8]).toEqual({
@@ -347,6 +396,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
     expect(pivotTable.cells[1][8]).toEqual(undefined);
 
@@ -360,18 +410,27 @@ describe('Pivot table converter', () => {
     expect(pivotTableWithoutSums.cells[0].length).toEqual(5);
   });
 
-  it('should return rows by row and values', () => {
+  it('should return table by row and values', () => {
     const data: PivotData = {
       valueTitles: ['X', 'Y'],
       rowHeaders: [
         {
           title: 'A',
-          children: [{title: 'a1', targetIndex: 0}, {title: 'a2', targetIndex: 1}, {title: 'a3', targetIndex: 2}],
+          children: [
+            {title: 'a1', targetIndex: 0, color: undefined},
+            {title: 'a2', targetIndex: 1, color: undefined},
+            {title: 'a3', targetIndex: 2, color: undefined},
+          ],
+          color: undefined,
         },
-        {title: 'B', children: [{title: 'a2', targetIndex: 3}, {title: 'a3', targetIndex: 4}]},
-        {title: 'C', children: [{title: 'a1', targetIndex: 5}]},
+        {
+          title: 'B',
+          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
+          color: undefined,
+        },
+        {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
       ],
-      columnHeaders: [{title: 'X', targetIndex: 0}, {title: 'Y', targetIndex: 1}],
+      columnHeaders: [{title: 'X', targetIndex: 0, color: undefined}, {title: 'Y', targetIndex: 1, color: undefined}],
       values: [[1, 2], [2, null], [3, 5], [8, 9], [1, 9], [null, 4]],
     };
     const config: PivotConfig = {
@@ -396,6 +455,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'Y',
@@ -403,6 +463,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
 
     expect(pivotTable.cells[1][2].value).toEqual('1');
@@ -424,18 +485,27 @@ describe('Pivot table converter', () => {
     expect(pivotTable.cells[10][3].value).toEqual('29');
   });
 
-  it('should return rows by column and values percentage', () => {
+  it('should return table by column and values percentage', () => {
     const data: PivotData = {
       valueTitles: ['X', 'Y'],
       rowHeaders: [
         {
           title: 'A',
-          children: [{title: 'a1', targetIndex: 0}, {title: 'a2', targetIndex: 1}, {title: 'a3', targetIndex: 2}],
+          children: [
+            {title: 'a1', targetIndex: 0, color: undefined},
+            {title: 'a2', targetIndex: 1, color: undefined},
+            {title: 'a3', targetIndex: 2, color: undefined},
+          ],
+          color: undefined,
         },
-        {title: 'B', children: [{title: 'a2', targetIndex: 3}, {title: 'a3', targetIndex: 4}]},
-        {title: 'C', children: [{title: 'a1', targetIndex: 5}]},
+        {
+          title: 'B',
+          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
+          color: undefined,
+        },
+        {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
       ],
-      columnHeaders: [{title: 'X', targetIndex: 0}, {title: 'Y', targetIndex: 1}],
+      columnHeaders: [{title: 'X', targetIndex: 0, color: undefined}, {title: 'Y', targetIndex: 1, color: undefined}],
       values: [['10%', '20%'], ['20%', null], ['30%', '50%'], ['80%', '90%'], ['10%', '90%'], [null, '40%']],
     };
     const config: PivotConfig = {
@@ -465,22 +535,37 @@ describe('Pivot table converter', () => {
     expect(pivotTable.cells[10][3].value).toEqual('290%');
   });
 
-  it('should return rows by column and values', () => {
+  it('should return table by column and values', () => {
     const data: PivotData = {
       valueTitles: ['X', 'Y', 'Z'],
       rowHeaders: [],
       columnHeaders: [
         {
           title: 'A',
-          children: [{title: 'X', targetIndex: 0}, {title: 'Y', targetIndex: 1}, {title: 'Z', targetIndex: 2}],
+          children: [
+            {title: 'X', targetIndex: 0, color: undefined},
+            {title: 'Y', targetIndex: 1, color: undefined},
+            {title: 'Z', targetIndex: 2, color: undefined},
+          ],
+          color: undefined,
         },
         {
           title: 'B',
-          children: [{title: 'X', targetIndex: 3}, {title: 'Y', targetIndex: 4}, {title: 'Z', targetIndex: 5}],
+          children: [
+            {title: 'X', targetIndex: 3, color: undefined},
+            {title: 'Y', targetIndex: 4, color: undefined},
+            {title: 'Z', targetIndex: 5, color: undefined},
+          ],
+          color: undefined,
         },
         {
           title: 'C',
-          children: [{title: 'X', targetIndex: 6}, {title: 'Y', targetIndex: 7}, {title: 'Z', targetIndex: 8}],
+          children: [
+            {title: 'X', targetIndex: 6, color: undefined},
+            {title: 'Y', targetIndex: 7, color: undefined},
+            {title: 'Z', targetIndex: 8, color: undefined},
+          ],
+          color: undefined,
         },
       ],
       values: [[1, 5, 6, 2, null, 1, 4, 5, null]],
@@ -498,6 +583,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'B',
@@ -505,6 +591,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual({
       value: 'C',
@@ -512,6 +599,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: 'S',
@@ -519,6 +607,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
 
     expect(pivotTable.cells[1][9]).toEqual({
@@ -527,6 +616,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
     expect(pivotTable.cells[1][10]).toEqual({
       value: 'Y',
@@ -534,6 +624,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
     expect(pivotTable.cells[1][11]).toEqual({
       value: 'Z',
@@ -541,6 +632,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
 
     expect(pivotTable.cells[2][0].value).toEqual('1');
@@ -557,21 +649,39 @@ describe('Pivot table converter', () => {
     expect(pivotTable.cells[2][11].value).toEqual('7');
   });
 
-  it('should return rows by rows and columns and values', () => {
+  it('should return table by rows and columns and values', () => {
     const data: PivotData = {
       valueTitles: ['V'],
       rowHeaders: [
         {
           title: 'A',
-          children: [{title: 'a1', targetIndex: 0}, {title: 'a2', targetIndex: 1}, {title: 'a3', targetIndex: 2}],
+          children: [
+            {title: 'a1', targetIndex: 0, color: undefined},
+            {title: 'a2', targetIndex: 1, color: undefined},
+            {title: 'a3', targetIndex: 2, color: undefined},
+          ],
+          color: undefined,
         },
-        {title: 'B', children: [{title: 'a2', targetIndex: 3}, {title: 'a3', targetIndex: 4}]},
+        {
+          title: 'B',
+          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
+          color: undefined,
+        },
       ],
       columnHeaders: [
-        {title: 'X', children: [{title: 'x1', targetIndex: 0}, {title: 'x2', targetIndex: 1}]},
+        {
+          title: 'X',
+          children: [{title: 'x1', targetIndex: 0, color: undefined}, {title: 'x2', targetIndex: 1, color: undefined}],
+          color: undefined,
+        },
         {
           title: 'Y',
-          children: [{title: 'x2', targetIndex: 2}, {title: 'x3', targetIndex: 3}, {title: 'x4', targetIndex: 4}],
+          children: [
+            {title: 'x2', targetIndex: 2, color: undefined},
+            {title: 'x3', targetIndex: 3, color: undefined},
+            {title: 'x4', targetIndex: 4, color: undefined},
+          ],
+          color: undefined,
         },
       ],
       values: [[1, 2, 4, 1, 2], [4, 3, 3, 3, 3], [5, 0, 1, 2, 2], [2, 4, 7, 1, 3], [1, 0, 1, 1, 2]],
@@ -597,6 +707,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[6][0]).toEqual({
       value: 'B',
@@ -604,6 +715,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: converter.createHeaderTitle('B'),
@@ -611,6 +723,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
 
     expect(pivotTable.cells[0][2]).toEqual({
@@ -619,6 +732,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][5]).toEqual({
       value: 'Y',
@@ -626,6 +740,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
+      background: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: converter.createHeaderTitle('X'),
@@ -633,6 +748,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[0][8]).toEqual({
       value: converter.createHeaderTitle('Y'),
@@ -640,6 +756,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY700,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: 'S',
@@ -647,6 +764,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
+      background: COLOR_GRAY800,
     });
 
     expect(pivotTable.cells[2].slice(2).map(v => v.value)).toEqual(['1', '2', '3', '4', '1', '2', '7', '10']);

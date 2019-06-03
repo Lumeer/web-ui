@@ -6,7 +6,9 @@
       <td *ngIf="cell"
           [rowSpan]="cell.rowSpan"
           [colSpan]="cell.colSpan"
-          [ngClass]="cell.cssClass">
+          [ngClass]="cell.cssClass"
+          [style.background]="cell.background"
+          [style.color]="cell.background && (cell.background | contrastColor)">
         {{cell.value}}
       </td>
     </ng-container>
