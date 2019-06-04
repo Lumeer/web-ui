@@ -293,10 +293,10 @@ export function queryStemAttributesResourcesOrder(
   collections: Collection[],
   linkTypes: LinkType[]
 ): AttributesResource[] {
-  if (!stem) {
+  const baseCollection = stem && (collections || []).find(collection => collection.id === stem.collectionId);
+  if (!baseCollection) {
     return [];
   }
-  const baseCollection = (collections || []).find(collection => collection.id === stem.collectionId);
   const chain: AttributesResource[] = [{...baseCollection}];
   let previousCollectionId = baseCollection.id;
   for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {

@@ -46,6 +46,7 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
     if (perspective && !nextState.url.includes(perspective) && !viewCode) {
       this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
     }
+    this.store$.dispatch(new ViewsAction.ResetViewGlobalConfig());
     return true;
   }
 }

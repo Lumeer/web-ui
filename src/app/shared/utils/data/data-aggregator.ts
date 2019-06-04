@@ -124,12 +124,7 @@ export class DataAggregator {
     columnAttributes: DataAggregatorAttribute[],
     valueAttributes: DataAggregatorAttribute[]
   ): AggregatedData {
-    const {chain, valuesChains} = this.createAttributesResourceChain(
-      rowAttributes,
-      columnAttributes,
-      valueAttributes,
-      this.attributesResourcesOrder
-    );
+    const {chain, valuesChains} = this.createAttributesResourceChain(rowAttributes, columnAttributes, valueAttributes);
     const map = this.iterate(chain, valuesChains);
     const columnsMap = this.createColumnsMap(map, rowAttributes.length, columnAttributes.length);
     return {map, columnsMap, rowLevels: rowAttributes.length, columnLevels: columnAttributes.length};
@@ -172,28 +167,25 @@ export class DataAggregator {
   private createAttributesResourceChain(
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],
-    valueAttributes: DataAggregatorAttribute[],
-    attributesResourcesOrder: AttributesResource[]
+    valueAttributes: DataAggregatorAttribute[]
   ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
+    if ((this.attributesResourcesOrder || []).length === 0) {
+      return {chain: [], valuesChains: []};
+    }
+
     const chain: AttributesResourceChain[] = [];
 
     let index = -1;
     if (rowAttributes.length > 0) {
-      chain.push(...this.createRowOrColumnAttributesChain(rowAttributes, attributesResourcesOrder, true, false));
+      chain.push(...this.createRowOrColumnAttributesChain(rowAttributes, true, false));
       index = rowAttributes[rowAttributes.length - 1].resourceIndex;
     }
 
     if (columnAttributes.length > 0) {
       if (index >= 0) {
-        chain.push(
-          ...this.createAttributesResourceChainForRange(
-            attributesResourcesOrder,
-            index,
-            columnAttributes[0].resourceIndex
-          )
-        );
+        chain.push(...this.createAttributesResourceChainForRange(index, columnAttributes[0].resourceIndex));
       }
-      chain.push(...this.createRowOrColumnAttributesChain(columnAttributes, attributesResourcesOrder, false, true));
+      chain.push(...this.createRowOrColumnAttributesChain(columnAttributes, false, true));
       index = columnAttributes[columnAttributes.length - 1].resourceIndex;
     }
 
@@ -205,7 +197,7 @@ export class DataAggregator {
         if (usedResourcesIndexes.has(valueAttribute.resourceIndex)) {
           continue;
         }
-        valuesChains.push(this.createValueAttributeChain(valueAttribute, index, attributesResourcesOrder));
+        valuesChains.push(this.createValueAttributeChain(valueAttribute, index));
 
         usedResourcesIndexes.add(valueAttribute.resourceIndex);
       }
@@ -216,17 +208,12 @@ export class DataAggregator {
 
   private createValueAttributeChain(
     valueAttribute: DataAggregatorAttribute,
-    startIndex: number,
-    attributesResourcesOrder: AttributesResource[]
+    startIndex: number
   ): AttributesResourceChain[] {
-    const chain = this.createAttributesResourceChainForRange(
-      attributesResourcesOrder,
-      startIndex,
-      valueAttribute.resourceIndex
-    );
+    const chain = this.createAttributesResourceChainForRange(startIndex, valueAttribute.resourceIndex);
     chain.push({
       index: valueAttribute.resourceIndex,
-      resource: attributesResourcesOrder[valueAttribute.resourceIndex],
+      resource: this.attributesResourcesOrder[valueAttribute.resourceIndex],
       attributeId: valueAttribute.attributeId,
     });
     return chain;
@@ -234,7 +221,6 @@ export class DataAggregator {
 
   private createRowOrColumnAttributesChain(
     aggregationAttributes: DataAggregatorAttribute[],
-    attributesResourcesOrder: AttributesResource[],
     isRow: boolean,
     isColumn: boolean
   ): AttributesResourceChain[] {
@@ -244,7 +230,7 @@ export class DataAggregator {
       const aggregationAttribute = aggregationAttributes[i];
       index = aggregationAttribute.resourceIndex;
       chain.push({
-        resource: attributesResourcesOrder[index],
+        resource: this.attributesResourcesOrder[index],
         attributeId: aggregationAttribute.attributeId,
         index,
         isRow,
@@ -253,28 +239,22 @@ export class DataAggregator {
 
       const nextRowAttribute = aggregationAttributes[i + 1];
       if (nextRowAttribute) {
-        chain.push(
-          ...this.createAttributesResourceChainForRange(attributesResourcesOrder, index, nextRowAttribute.resourceIndex)
-        );
+        chain.push(...this.createAttributesResourceChainForRange(index, nextRowAttribute.resourceIndex));
       }
     }
 
     return chain;
   }
 
-  private createAttributesResourceChainForRange(
-    attributesResourcesOrder: AttributesResource[],
-    startIndex: number,
-    endIndex: number
-  ): AttributesResourceChain[] {
+  private createAttributesResourceChainForRange(startIndex: number, endIndex: number): AttributesResourceChain[] {
     const chain: AttributesResourceChain[] = [];
     if (startIndex > endIndex) {
       for (let i = startIndex - 1; i > endIndex; i--) {
-        chain.push({index: i, resource: attributesResourcesOrder[i]});
+        chain.push({index: i, resource: this.attributesResourcesOrder[i]});
       }
     } else {
       for (let i = startIndex + 1; i < endIndex; i++) {
-        chain.push({index: i, resource: attributesResourcesOrder[i]});
+        chain.push({index: i, resource: this.attributesResourcesOrder[i]});
       }
     }
     return chain;
@@ -289,6 +269,9 @@ export class DataAggregator {
   }
 
   private iterate(chain: AttributesResourceChain[], valuesChains: AttributesResourceChain[][]): AggregatedDataMap {
+    if (chain.length === 0) {
+      return {};
+    }
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
     const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const data = {};

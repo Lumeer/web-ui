@@ -1,7 +1,9 @@
 <ng-container *ngIf="{pivotData: pivotData$ | async,
                       canManageConfig: currentView | canManageConfig | async} as data">
 
-  <collapsible-sidebar *ngIf="data.canManageConfig">
+  <collapsible-sidebar *ngIf="data.canManageConfig"
+                       [collapsed]="!sidebarOpened"
+                       (toggle)="onSidebarToggle()">
 
     <pivot-config class="d-block m-3"
                   [config]="config"

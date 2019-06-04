@@ -3,7 +3,9 @@
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
   canManageConfig: currentView$ | async | canManageConfig | async} as data">
 
-    <collapsible-sidebar *ngIf="data.canManageConfig">
+    <collapsible-sidebar *ngIf="data.canManageConfig"
+                         [collapsed]="!(sidebarOpened$ | async)"
+                         (toggle)="onSidebarToggle()">
       <gantt-chart-config
         class="d-block m-3"
         [collections]="data.collections"

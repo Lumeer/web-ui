@@ -327,28 +327,32 @@ export class PivotTableConverter {
         background,
       };
 
-      for (let i = 0; i < numberOfValues; i++) {
-        const columnIndexInCells = currentIndex + i;
-        if (shouldAddValueHeaders) {
-          const valueTitle = this.data.valueTitles[i];
-          cells[this.columnLevels - 1][columnIndexInCells] = {
-            value: valueTitle,
-            cssClass: PivotTableConverter.groupHeaderClass,
-            isHeader: true,
-            rowSpan: 1,
-            colSpan: 1,
-            background,
-          };
+      if (numberOfValues > 0) {
+        for (let i = 0; i < numberOfValues; i++) {
+          const columnIndexInCells = currentIndex + i;
+          if (shouldAddValueHeaders) {
+            const valueTitle = this.data.valueTitles[i];
+            cells[this.columnLevels - 1][columnIndexInCells] = {
+              value: valueTitle,
+              cssClass: PivotTableConverter.groupHeaderClass,
+              isHeader: true,
+              rowSpan: 1,
+              colSpan: 1,
+              background,
+            };
+          }
+
+          const columnsIndexes = this.getIndexesForHeaders(headers);
+          const valueColumnsIndexes = columnsIndexes.filter(index => index % numberOfValues === i);
+          const transformedColumnIndexes = valueColumnsIndexes
+            .map(v => this.columnsTransformationArray[v])
+            .filter(v => isNotNullOrUndefined(v));
+          columnGroupsInfo[columnIndexInCells] = {background, indexes: transformedColumnIndexes, level};
+
+          this.fillCellsForGroupedColumn(cells, valueColumnsIndexes, columnIndexInCells, background);
         }
-
-        const columnsIndexes = this.getIndexesForHeaders(headers);
-        const valueColumnsIndexes = columnsIndexes.filter(index => index % numberOfValues === i);
-        const transformedColumnIndexes = valueColumnsIndexes
-          .map(v => this.columnsTransformationArray[v])
-          .filter(v => isNotNullOrUndefined(v));
-        columnGroupsInfo[columnIndexInCells] = {background, indexes: transformedColumnIndexes, level};
-
-        this.fillCellsForGroupedColumn(cells, valueColumnsIndexes, columnIndexInCells, background);
+      } else {
+        columnGroupsInfo[currentIndex] = {background, indexes: [], level};
       }
     }
   }

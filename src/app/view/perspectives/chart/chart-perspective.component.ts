@@ -37,7 +37,7 @@ import {selectChartById, selectChartConfig} from '../../../core/store/charts/cha
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -52,6 +52,7 @@ import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.stat
 import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   selector: 'chart-perspective',
@@ -72,6 +73,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
 
+  public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
 
   private chartId = DEFAULT_CHART_ID;
@@ -104,13 +106,15 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectChartById(this.chartId))))
+        withLatestFrom(this.store$.pipe(select(selectChartById(this.chartId)))),
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
       )
-      .subscribe(([view, chart]) => {
+      .subscribe(([[view, chart], sidebarOpened]) => {
         if (chart) {
           this.refreshChart(view && view.config);
         } else {
           this.createChart(view && view.config);
+          this.setupSidebar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -135,6 +139,14 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum, [ChartAxisType.Y2]: DataAggregationType.Sum},
       sort: {type: ChartSortType.Ascending},
     };
+  }
+
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 
   private subscribeData() {
@@ -196,5 +208,9 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public onSidebarToggle() {
     this.chartDataComponent && this.chartDataComponent.resize();
+
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 }

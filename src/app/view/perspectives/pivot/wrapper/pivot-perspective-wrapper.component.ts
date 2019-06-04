@@ -84,8 +84,14 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   @Input()
   public currentView: View;
 
+  @Input()
+  public sidebarOpened: boolean;
+
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
+
+  @Output()
+  public sidebarToggle = new EventEmitter();
 
   private readonly pivotTransformer: PivotDataConverter;
   private dataSubject = new BehaviorSubject<Data>(null);
@@ -157,5 +163,9 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public onConfigChange(config: PivotConfig) {
     this.configChange.emit(config);
+  }
+
+  public onSidebarToggle() {
+    this.sidebarToggle.emit();
   }
 }

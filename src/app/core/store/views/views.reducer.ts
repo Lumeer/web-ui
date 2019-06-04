@@ -40,6 +40,10 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return {...state, config: {...state.config, search: action.payload.config}};
     case ViewsActionType.SET_CURSOR:
       return {...state, cursor: action.payload.cursor};
+    case ViewsActionType.RESET_VIEW_GLOBAL_CONFIG:
+      return {...state, globalConfig: {}};
+    case ViewsActionType.SET_SIDEBAR_OPENED:
+      return {...state, globalConfig: {...state.globalConfig, sidebarOpened: action.payload.opened}};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:

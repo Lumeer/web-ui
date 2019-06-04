@@ -1,6 +1,7 @@
 <ng-container *ngIf="validQuery$ | async; else invalidQuery">
   <ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async, map: map$ | async} as data">
-    <collapsible-sidebar (toggle)="onSidebarToggle()">
+    <collapsible-sidebar [collapsed]="!(sidebarOpened$ | async)"
+                         (toggle)="onSidebarToggle()">
       <map-panel [collections]="data.collections"
                  [map]="data.map"
                  class="mx-3 mb-3">

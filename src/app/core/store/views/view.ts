@@ -75,4 +75,10 @@ export type PerspectiveConfig =
   | TableConfig
   | GanttChartConfig
   | CalendarConfig
-  | ChartConfig;
+  | ChartConfig
+  | KanbanConfig
+  | PivotConfig;
+
+export interface ViewGlobalConfig {
+  sidebarOpened?: boolean;
+}
