@@ -24,15 +24,8 @@ import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {pivotConfigHasAdditionalValueLevel} from './pivot-util';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {
-  COLOR_GRAY300,
-  COLOR_GRAY400,
-  COLOR_GRAY500,
-  COLOR_GRAY600,
-  COLOR_GRAY700,
-  COLOR_GRAY800,
-} from '../../../../core/constants';
-import {hex2rgba} from '../../../../shared/utils/html-modifier';
+import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
+import {hex2rgba, shadeColor} from '../../../../shared/utils/html-modifier';
 
 interface HeaderGroupInfo {
   background: string;
@@ -48,14 +41,7 @@ export class PivotTableConverter {
   public static readonly columnHeaderClass = 'pivot-column-header-cell';
   public static readonly groupHeaderClass = 'pivot-group-header-cell';
 
-  private readonly groupColors = [
-    COLOR_GRAY800,
-    COLOR_GRAY700,
-    COLOR_GRAY600,
-    COLOR_GRAY500,
-    COLOR_GRAY400,
-    COLOR_GRAY300,
-  ];
+  private readonly groupColors = [COLOR_GRAY500, COLOR_GRAY400, COLOR_GRAY300, COLOR_GRAY200, COLOR_GRAY100];
 
   private config: PivotConfig;
   private data: PivotData;
@@ -137,7 +123,6 @@ export class PivotTableConverter {
     parentTitle?: string
   ) {
     let currentIndex = startIndex;
-    const headersBackground = this.getRowBackground(level);
     for (const header of headers) {
       const rowSpan = getDirectHeaderChildCount(header, level, showSums);
       cells[currentIndex][level] = {
@@ -146,7 +131,7 @@ export class PivotTableConverter {
         isHeader: true,
         rowSpan,
         colSpan: 1,
-        background: headersBackground,
+        background: this.getHeaderBackground(header, level),
       };
 
       if (header.children) {
@@ -189,26 +174,16 @@ export class PivotTableConverter {
     }
   }
 
-  private getRowBackground(level: number): string {
-    const header = this.data.rowHeaders[level];
-    return this.getHeaderBackground(header, level);
-  }
-
   private getHeaderBackground(header: PivotDataHeader, level: number): string {
     if (header && header.color) {
-      return hex2rgba(header.color, this.getLevelOpacity(level));
+      return shadeColor(header.color, this.getLevelOpacity(level));
     }
 
     return undefined;
   }
 
   private getLevelOpacity(level: number): number {
-    return Math.max(50, 100 - level * 10) / 100;
-  }
-
-  private getColumnBackground(level: number): string {
-    const header = this.data.columnHeaders[level];
-    return this.getHeaderBackground(header, level);
+    return Math.min(80, 50 + level * 5) / 100;
   }
 
   private getSummaryBackground(level: number): string {
@@ -308,7 +283,6 @@ export class PivotTableConverter {
     parentTitle?: string
   ) {
     let currentIndex = startIndex;
-    const headersBackground = this.getColumnBackground(level);
     for (const header of headers) {
       const colSpan = getDirectHeaderChildCount(header, level, showSums);
       cells[level][currentIndex] = {
@@ -317,7 +291,7 @@ export class PivotTableConverter {
         isHeader: true,
         rowSpan: 1,
         colSpan,
-        background: headersBackground,
+        background: this.getHeaderBackground(header, level),
       };
 
       if (header.children) {
