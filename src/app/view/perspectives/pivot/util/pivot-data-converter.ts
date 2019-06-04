@@ -218,10 +218,10 @@ export class PivotDataConverter {
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
         const nextIndex = this.nextHeaderIndex(headers, headerIndex);
-        headers[headerIndex].children.push({title, targetIndex: nextIndex + index, color: colors[index]});
+        headers[headerIndex].children.push({title, targetIndex: nextIndex + index, color: colors[level]});
         additionalData.maxIndex = Math.max(additionalData.maxIndex, nextIndex + index);
       } else {
-        headers[headerIndex].children.push({title, color: colors[index]});
+        headers[headerIndex].children.push({title, color: colors[level]});
       }
 
       this.iterateThroughPivotDataHeader(

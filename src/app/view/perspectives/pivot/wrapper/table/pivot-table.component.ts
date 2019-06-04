@@ -24,6 +24,7 @@ import {BehaviorSubject} from 'rxjs';
 import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {pivotConfigHasDataTransformChange} from '../../util/pivot-util';
 
 @Component({
   selector: 'pivot-table',
@@ -49,6 +50,11 @@ export class PivotTableComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.pivotTable$.next(this.pivotTableConverter.transform(this.pivotData, this.config));
+    if (
+      changes.pivotData ||
+      (changes.config && !pivotConfigHasDataTransformChange(changes.config.previousValue, changes.config.currentValue))
+    ) {
+      this.pivotTable$.next(this.pivotTableConverter.transform(this.pivotData, this.config));
+    }
   }
 }
