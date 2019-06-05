@@ -31,7 +31,7 @@ import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operator
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
@@ -43,6 +43,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {DialogService} from '../../../dialog/dialog.service';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   selector: 'calendar',
@@ -58,6 +59,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
 
+  public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
 
   private subscriptions = new Subscription();
@@ -79,13 +81,15 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectCalendarById(this.calendarId))))
+        withLatestFrom(this.store$.pipe(select(selectCalendarById(this.calendarId)))),
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
       )
-      .subscribe(([view, calendar]) => {
+      .subscribe(([[view, calendar], sidebarOpened]) => {
         if (calendar) {
           this.refreshCalendar(view && view.config);
         } else {
           this.createCalendar(view && view.config);
+          this.setupSidebar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -105,6 +109,14 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   private createDefaultConfig(): CalendarConfig {
     return {collections: {}, date: new Date(), mode: CalendarMode.Month};
+  }
+
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 
   private subscribeToQuery() {
@@ -155,5 +167,11 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   public onUpdateEvent(documentId: string) {
     this.dialogService.openCalendarEventDialog(this.calendarId, 0, documentId);
+  }
+
+  public onSidebarToggle() {
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 }

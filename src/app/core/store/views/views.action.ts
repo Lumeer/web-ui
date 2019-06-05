@@ -49,6 +49,9 @@ export enum ViewsActionType {
 
   SET_CURSOR = '[Views] Set Cursor',
 
+  RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
+  SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
+
   CLEAR = '[Views] Clear',
 }
 
@@ -174,6 +177,16 @@ export namespace ViewsAction {
     public constructor(public payload: {cursor: ViewCursor}) {}
   }
 
+  export class ResetViewGlobalConfig implements Action {
+    public readonly type = ViewsActionType.RESET_VIEW_GLOBAL_CONFIG;
+  }
+
+  export class SetSidebarOpened implements Action {
+    public readonly type = ViewsActionType.SET_SIDEBAR_OPENED;
+
+    public constructor(public payload: {opened: boolean}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -197,5 +210,7 @@ export namespace ViewsAction {
     | ChangeConfig
     | ChangeSearchConfig
     | SetCursor
+    | ResetViewGlobalConfig
+    | SetSidebarOpened
     | Clear;
 }

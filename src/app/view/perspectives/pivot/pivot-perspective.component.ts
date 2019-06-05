@@ -28,7 +28,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {withLatestFrom} from 'rxjs/operators';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -43,6 +43,7 @@ import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   selector: 'pivot-perspective',
@@ -60,6 +61,8 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public query$ = new BehaviorSubject<Query>(null);
   public users$: Observable<User[]>;
 
+  public sidebarOpened$ = new BehaviorSubject(false);
+
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
@@ -75,13 +78,15 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectPivotById(this.pivotId))))
+        withLatestFrom(this.store$.pipe(select(selectPivotById(this.pivotId)))),
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
       )
-      .subscribe(([view, pivot]) => {
+      .subscribe(([[view, pivot], sidebarOpened]) => {
         if (pivot) {
           this.refreshPivot(view && view.config);
         } else {
           this.createPivot(view && view.config);
+          this.setupSidebar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -101,6 +106,14 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
 
   private createDefaultConfig(): PivotConfig {
     return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
+  }
+
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 
   private subscribeToQuery() {
@@ -133,5 +146,11 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new PivotsAction.RemovePivot({pivotId: this.pivotId}));
+  }
+
+  public onSidebarToggle() {
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 }

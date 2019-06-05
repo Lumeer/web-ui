@@ -31,7 +31,7 @@ import {selectMapConfig} from '../maps/maps.state';
 import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectTableConfig} from '../tables/tables.selector';
-import {View, ViewConfig, ViewCursor} from './view';
+import {ViewGlobalConfig, View, ViewConfig, ViewCursor} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectKanbanConfig} from '../kanbans/kanban.state';
 import {selectPivotConfig} from '../pivots/pivots.state';
@@ -40,6 +40,7 @@ export interface ViewsState extends EntityState<View> {
   loaded: boolean;
   config: ViewConfig; // TODO remove
   cursor: ViewCursor;
+  globalConfig: ViewGlobalConfig;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -48,6 +49,7 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
   config: {},
   cursor: null,
+  globalConfig: {},
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -140,4 +142,14 @@ export const selectViewPerspectiveChanged = createSelector(
   selectCurrentView,
   selectPerspective,
   (view, perspective) => view && perspective && view.perspective !== perspective
+);
+
+const selectViewGlobalConfig = createSelector(
+  selectViewsState,
+  state => state.globalConfig
+);
+
+export const selectSidebarOpened = createSelector(
+  selectViewGlobalConfig,
+  config => config.sidebarOpened
 );

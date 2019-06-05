@@ -172,21 +172,24 @@ export class PivotDataConverter {
   }
 
   private getRowColors(): string[] {
-    return (this.config.rowAttributes || []).map(
-      attribute => (<Collection>this.dataAggregator.getNextCollectionResource(attribute.resourceIndex)).color
-    );
+    return (this.config.rowAttributes || []).map(attribute => {
+      const resource = this.dataAggregator.getNextCollectionResource(attribute.resourceIndex);
+      return resource && (<Collection>resource).color;
+    });
   }
 
   private getColumnColors(): string[] {
-    return (this.config.columnAttributes || []).map(
-      attribute => (<Collection>this.dataAggregator.getNextCollectionResource(attribute.resourceIndex)).color
-    );
+    return (this.config.columnAttributes || []).map(attribute => {
+      const resource = this.dataAggregator.getNextCollectionResource(attribute.resourceIndex);
+      return resource && (<Collection>resource).color;
+    });
   }
 
   private getValueColor(index: number): string {
     const valueAttribute = this.config.valueAttributes[index];
     if (valueAttribute) {
-      return (<Collection>this.dataAggregator.getNextCollectionResource(valueAttribute.resourceIndex)).color;
+      const resource = this.dataAggregator.getNextCollectionResource(valueAttribute.resourceIndex);
+      return resource && (<Collection>resource).color;
     }
     return undefined;
   }

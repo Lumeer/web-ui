@@ -3,7 +3,9 @@
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
                 canManageConfig: currentView$ | async | canManageConfig | async} as data">
     <collapsible-sidebar *ngIf="data.canManageConfig"
-                         class="h-100">
+                         class="h-100"
+                         [collapsed]="!(sidebarOpened$ | async)"
+                         (toggle)="onSidebarToggle()">
       <calendar-config
         class="d-block m-3"
         [collections]="data.collections"
@@ -13,18 +15,18 @@
     </collapsible-sidebar>
 
     <calendar-events *ngIf="{users: users$ | async} as constraintData"
-      class="flex-grow-1 mx-3 d-block h-100"
-      [collections]="data.collections"
-      [documents]="documents$ | async"
-      [canManageConfig]="data.canManageConfig"
-      [config]="data.config"
-      [permissions]="permissions$ | async"
-      [constraintData]="constraintData"
-      [query]="query$ | async"
-      (patchData)="patchDocumentData($event)"
-      (configChange)="onConfigChanged($event)"
-      (newEvent)="onNewEvent($event)"
-      (updateEvent)="onUpdateEvent($event)">
+                     class="flex-grow-1 mx-3 d-block h-100"
+                     [collections]="data.collections"
+                     [documents]="documents$ | async"
+                     [canManageConfig]="data.canManageConfig"
+                     [config]="data.config"
+                     [permissions]="permissions$ | async"
+                     [constraintData]="constraintData"
+                     [query]="query$ | async"
+                     (patchData)="patchDocumentData($event)"
+                     (configChange)="onConfigChanged($event)"
+                     (newEvent)="onNewEvent($event)"
+                     (updateEvent)="onUpdateEvent($event)">
     </calendar-events>
   </ng-container>
 

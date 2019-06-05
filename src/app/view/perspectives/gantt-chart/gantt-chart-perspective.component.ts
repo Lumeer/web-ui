@@ -30,7 +30,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 
 import {View, ViewConfig} from '../../../core/store/views/view';
@@ -43,6 +43,7 @@ import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -58,6 +59,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
 
+  public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
   public ganttChartId = DEFAULT_GANTT_CHART_ID;
 
@@ -75,13 +77,15 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectGanttChartById(this.ganttChartId))))
+        withLatestFrom(this.store$.pipe(select(selectGanttChartById(this.ganttChartId)))),
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
       )
-      .subscribe(([view, ganttChart]) => {
+      .subscribe(([[view, ganttChart], sidebarOpened]) => {
         if (ganttChart) {
           this.refreshGanttChart(view && view.config);
         } else {
           this.createGanttChart(view && view.config);
+          this.setupSidebar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -103,6 +107,14 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private createDefaultConfig(): GanttChartConfig {
     return {mode: GanttChartMode.Month, collections: {}};
+  }
+
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 
   private subscribeToQuery() {
@@ -149,5 +161,11 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchDocumentMetaData(payload: {collectionId: string; documentId: string; metaData: DocumentMetaData}) {
     this.store$.dispatch(new DocumentsAction.PatchMetaData(payload));
+  }
+
+  public onSidebarToggle() {
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 }

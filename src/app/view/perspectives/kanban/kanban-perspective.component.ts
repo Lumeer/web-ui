@@ -32,7 +32,7 @@ import {AppState} from '../../../core/store/app.state';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {map, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
@@ -50,6 +50,7 @@ import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/c
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -74,6 +75,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public collections$: Observable<Collection[]>;
   public query$ = new BehaviorSubject<Query>(null);
   public users$: Observable<User[]>;
+
+  public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
   private kanbanId = DEFAULT_KANBAN_ID;
@@ -119,13 +122,15 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectKanbanById(this.kanbanId))))
+        withLatestFrom(this.store$.pipe(select(selectKanbanById(this.kanbanId)))),
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
       )
-      .subscribe(([view, kanban]) => {
+      .subscribe(([[view, kanban], sidebarOpened]) => {
         if (kanban) {
           this.refreshKanban(view && view.config);
         } else {
           this.createKanban(view && view.config);
+          this.setupSidebar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -147,6 +152,14 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     return {columns: [], collections: {}};
   }
 
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
+  }
+
   public ngAfterViewInit() {
     this.computeKanbansWidth();
   }
@@ -162,6 +175,10 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
 
   public onSidebarToggle() {
     setTimeout(() => this.computeKanbansWidth());
+
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 
   private computeKanbansWidth() {

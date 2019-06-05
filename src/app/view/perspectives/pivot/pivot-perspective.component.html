@@ -7,5 +7,7 @@
                            [constraintData]="{users: users$ | async}"
                            [config]="config$ | async"
                            [currentView]="currentView$ | async"
-                           (configChange)="onConfigChange($event)">
+                           [sidebarOpened]="sidebarOpened$ | async"
+                           (configChange)="onConfigChange($event)"
+                           (sidebarToggle)="onSidebarToggle()">
 </pivot-perspective-wrapper>

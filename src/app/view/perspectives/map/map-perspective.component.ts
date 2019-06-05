@@ -19,8 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {first, map} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {first, map, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -29,9 +29,15 @@ import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {isAnyCollectionQuery} from '../../../core/store/navigation/query.util';
-import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectPerspectiveViewConfig,
+  selectSidebarOpened,
+} from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query';
 import {MapContentComponent} from './content/map-content.component';
+import {ViewsAction} from '../../../core/store/views/views.action';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'map-perspective',
@@ -50,6 +56,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public documents$: Observable<DocumentModel[]>;
   public map$: Observable<MapModel>;
   public validQuery$: Observable<boolean>;
+  public sidebarOpened$ = new BehaviorSubject(false);
 
   private mapId = DEFAULT_MAP_ID;
 
@@ -62,6 +69,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.bindMap(this.mapId);
+    this.subscribeSidebar();
   }
 
   private bindMap(mapId: string) {
@@ -86,6 +94,24 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
+  private subscribeSidebar() {
+    this.store$
+      .pipe(select(selectCurrentView))
+      .pipe(
+        withLatestFrom(this.store$.pipe(select(selectSidebarOpened))),
+        take(1)
+      )
+      .subscribe(([currentView, sidebarOpened]) => this.setupSidebar(currentView, sidebarOpened));
+  }
+
+  private setupSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
+  }
+
   private bindValidQuery() {
     this.validQuery$ = this.store$.pipe(
       select(selectQuery),
@@ -102,5 +128,9 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     if (this.mapContentComponent) {
       setTimeout(() => this.mapContentComponent.refreshMapSize());
     }
+
+    const opened = !this.sidebarOpened$.getValue();
+    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
+    this.sidebarOpened$.next(opened);
   }
 }
