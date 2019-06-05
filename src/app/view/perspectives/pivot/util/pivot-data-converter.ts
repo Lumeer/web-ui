@@ -157,15 +157,26 @@ export class PivotDataConverter {
 
     const headers = [];
     const data = {maxIndex: 0};
+    let currentIndex = 0;
     Object.keys(map).forEach((title, index) => {
       if (levels === 1 && (valueTitles || []).length <= 1) {
-        headers.push({title, targetIndex: index, color: colors[0]});
-        data.maxIndex = Math.max(data.maxIndex, index);
+        headers.push({title, targetIndex: currentIndex, color: colors[0]});
+        data.maxIndex = Math.max(data.maxIndex, currentIndex);
       } else {
         headers.push({title, color: colors[0]});
       }
 
-      this.iterateThroughPivotDataHeader(map[title], headers, index, 1, levels, colors, valueTitles, data);
+      this.iterateThroughPivotDataHeader(
+        map[title],
+        headers[index],
+        currentIndex,
+        1,
+        levels,
+        colors,
+        valueTitles,
+        data
+      );
+      currentIndex += this.numChildren(map[title], levels - 1, valueTitles);
     });
 
     return {headers, maxIndex: data.maxIndex};
@@ -196,7 +207,7 @@ export class PivotDataConverter {
 
   private iterateThroughPivotDataHeader(
     currentMap: Record<string, any>,
-    headers: PivotDataHeader[],
+    header: PivotDataHeader,
     headerIndex: number,
     level: number,
     maxLevels: number,
@@ -206,48 +217,63 @@ export class PivotDataConverter {
   ) {
     if (level === maxLevels) {
       if ((valueTitles || []).length > 1) {
-        const nextIndex = this.nextHeaderIndex(headers, headerIndex);
-        headers[headerIndex].children = valueTitles.map((title, index) => ({
+        header.children = valueTitles.map((title, index) => ({
           title,
-          targetIndex: nextIndex + index,
+          targetIndex: headerIndex + index,
           color: this.getValueColor(index),
         }));
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, nextIndex + valueTitles.length - 1);
+        additionalData.maxIndex = Math.max(additionalData.maxIndex, headerIndex + valueTitles.length - 1);
       }
       return;
     }
 
-    headers[headerIndex].children = [];
+    header.children = [];
+    let currentIndex = headerIndex;
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
-        const nextIndex = this.nextHeaderIndex(headers, headerIndex);
-        headers[headerIndex].children.push({title, targetIndex: nextIndex + index, color: colors[level]});
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, nextIndex + index);
+        header.children.push({title, targetIndex: currentIndex, color: colors[level]});
+        additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
-        headers[headerIndex].children.push({title, color: colors[level]});
+        header.children.push({title, color: colors[level]});
       }
 
       this.iterateThroughPivotDataHeader(
         currentMap[title],
-        headers[headerIndex].children,
-        index,
+        header.children[index],
+        currentIndex,
         level + 1,
         maxLevels,
         colors,
         valueTitles,
         additionalData
       );
+
+      currentIndex += this.numChildren(currentMap[title], maxLevels - (level + 1), valueTitles);
     });
   }
 
-  private nextHeaderIndex(headers: PivotDataHeader[], headerIndex: number): number {
-    const previousHeader = headers[headerIndex - 1];
-    const previousChildren = (previousHeader && previousHeader.children) || [];
-    if (previousChildren.length === 0) {
+  private numChildren(map: Record<string, any>, maxLevels: number, valueTitles: string[]): number {
+    const numTitles = (valueTitles && valueTitles.length) || 1;
+    if (maxLevels === 0) {
+      return numTitles;
+    }
+
+    const keys = Object.keys(map || {});
+    const count = keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], 1, maxLevels), keys.length);
+    return count * numTitles;
+  }
+
+  private numChildrenRecursive(map: Record<string, any>, level: number, maxLevels: number): number {
+    if (level >= maxLevels) {
       return 0;
     }
 
-    return previousChildren[previousChildren.length - 1].targetIndex + 1;
+    const keys = Object.keys(map || {});
+    if (level + 1 === maxLevels) {
+      return keys.length;
+    }
+
+    return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), keys.length);
   }
 
   private createValueTitles(valueAttributes: PivotValueAttribute[]): string[] {
