@@ -4,7 +4,7 @@
   <div class="card-body p-0 d-flex flex-row">
 
     <div class="image mr-3">
-      <img [src]="template.imagePath" *ngIf="template.imagePath">
+      <div [style.background-image]="'url( ' + template.imagePath + ')'" *ngIf="template.imagePath"></div>
       <i class="{{template.icon}}" *ngIf="template.icon"></i>
     </div>
 
