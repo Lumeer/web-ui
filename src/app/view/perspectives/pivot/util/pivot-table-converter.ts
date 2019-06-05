@@ -20,12 +20,13 @@
 import {PivotData, PivotDataHeader} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {pivotConfigHasAdditionalValueLevel} from './pivot-util';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
-import {hex2rgba, shadeColor} from '../../../../shared/utils/html-modifier';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+import Big from 'big.js';
 
 interface HeaderGroupInfo {
   background: string;
@@ -103,6 +104,7 @@ export class PivotTableConverter {
     const rowGroups = this.fillCellsByRows(cells);
     const columnGroups = this.fillCellsByColumns(cells);
     this.fillCellsByGroupIntersection(cells, rowGroups, columnGroups);
+    this.formatCellsValues(cells);
 
     return {cells};
   }
@@ -471,6 +473,54 @@ export class PivotTableConverter {
       }
     }
     return values;
+  }
+
+  private formatCellsValues(cells: PivotTableCell[][]) {
+    const rowsCount = cells.length;
+    const columnsCount = (cells[0] && cells[0].length) || 0;
+    for (let j = this.rowLevels; j < columnsCount; j++) {
+      let columnContainsPercentage = false;
+      for (let i = this.columnLevels; i < rowsCount; i++) {
+        if (cells[i][j] && this.isValueDecimal(cells[i][j].value)) {
+          columnContainsPercentage = true;
+          break;
+        }
+      }
+
+      if (columnContainsPercentage) {
+        for (let i = this.columnLevels; i < rowsCount; i++) {
+          cells[i][j] && (cells[i][j].value = this.formatDecimalValue(cells[i][j].value));
+        }
+      }
+    }
+  }
+
+  private isValueDecimal(value: string): boolean {
+    if (isNullOrUndefined(value)) {
+      return false;
+    }
+
+    if (isNumeric(value)) {
+      return toNumber(value) % 1 !== 0;
+    } else if (value.endsWith('%')) {
+      return toNumber(value.substring(0, value.length - 1)) % 1 !== 0;
+    }
+
+    return false;
+  }
+
+  private formatDecimalValue(value: string): string {
+    if (isNullOrUndefined(value)) {
+      return value;
+    }
+
+    if (isNumeric(value)) {
+      return new Big(toNumber(value)).toFixed(2);
+    } else if (value.endsWith('%')) {
+      return new Big(toNumber(value.substring(0, value.length - 1))).toFixed(2) + '%';
+    }
+
+    return '';
   }
 
   private initCells(): PivotTableCell[][] {

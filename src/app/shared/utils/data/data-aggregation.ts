@@ -101,9 +101,10 @@ function transformToBigValues(values: any[]): Big[] {
 }
 
 function sumAnyValues(values: any[], onlyNumeric): any {
-  const containsOnlyPercentValues = values.length > 0 && values.every(val => isPercentageValue(val));
+  const nonZeroValues = values.filter(val => val !== 0 && val !== '0');
+  const containsOnlyPercentValues = nonZeroValues.length > 0 && nonZeroValues.every(val => isPercentageValue(val));
   if (containsOnlyPercentValues && !onlyNumeric) {
-    const percentageNumericValues = mapPercentageValues(values);
+    const percentageNumericValues = mapPercentageValues(nonZeroValues);
     const percentSum = percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0);
     return `${percentSum}%`;
   }
@@ -156,9 +157,10 @@ function avgNumericValues(values: any[], onlyNumeric: boolean): any {
 }
 
 function avgAnyValues(values: any[], onlyNumeric): any {
-  const containsOnlyPercentValues = values.every(val => isPercentageValue(val));
+  const nonZeroValues = values.filter(val => val !== 0 && val !== '0');
+  const containsOnlyPercentValues = nonZeroValues.length > 0 && nonZeroValues.every(val => isPercentageValue(val));
   if (containsOnlyPercentValues && !onlyNumeric) {
-    const percentageNumericValues = mapPercentageValues(values);
+    const percentageNumericValues = mapPercentageValues(nonZeroValues);
     const avg =
       percentageNumericValues.reduce((sum, value) => sum + toNumber(value), 0) / percentageNumericValues.length;
     return `${avg}%`;
