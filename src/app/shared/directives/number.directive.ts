@@ -41,7 +41,9 @@ export class NumberDirective extends DefaultValueAccessor {
 
   @HostListener('input', ['$event'])
   public onInput(event: Event) {
-    const displayValue = (<HTMLInputElement>event.currentTarget).value.replace(/[^0-9,.eE\s]/g, '');
+    const displayValue = (<HTMLInputElement>event.currentTarget).value
+      .replace(/[^0-9,.eE\s-]/g, '')
+      .replace(/-/g, (str, index) => (index > 0 ? '' : str));
     this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', displayValue);
   }
 }
