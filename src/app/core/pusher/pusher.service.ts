@@ -17,53 +17,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
 import {Injectable, OnDestroy} from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
-import {selectCurrentUser} from '../store/users/users.state';
-import {User} from '../store/users/user';
+import {of} from 'rxjs';
 import {catchError, filter, first, map, take, tap} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {OrganizationConverter} from '../store/organizations/organization.converter';
-import {DocumentsAction} from '../store/documents/documents.action';
-import {convertDocumentDtoToModel} from '../store/documents/document.converter';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {ProjectConverter} from '../store/projects/project.converter';
-import {ViewsAction} from '../store/views/views.action';
-import {ViewConverter} from '../store/views/view.converter';
-import {CollectionsAction} from '../store/collections/collections.action';
+import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {OrganizationDto, ProjectDto} from '../dto';
+import {ResourceType} from '../model/resource-type';
+import {OrganizationService, ProjectService} from '../rest';
+import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
-import {ContactsAction} from '../store/organizations/contact/contacts.action';
+import {CollectionsAction} from '../store/collections/collections.action';
+import {selectWorkspaceModels} from '../store/common/common.selectors';
+import {convertDocumentDtoToModel} from '../store/documents/document.converter';
+import {DocumentsAction} from '../store/documents/documents.action';
+import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instance.converter';
+import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
+import {LinkTypesAction} from '../store/link-types/link-types.action';
+import {selectLinkTypeById} from '../store/link-types/link-types.state';
+import {NotificationsAction} from '../store/notifications/notifications.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
+import {ContactsAction} from '../store/organizations/contact/contacts.action';
+import {Organization} from '../store/organizations/organization';
+import {OrganizationConverter} from '../store/organizations/organization.converter';
+import {OrganizationsAction} from '../store/organizations/organizations.action';
+import {selectOrganizationsDictionary} from '../store/organizations/organizations.state';
+import {PaymentConverter} from '../store/organizations/payment/payment.converter';
+import {PaymentsAction} from '../store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
 import {ServiceLimitsConverter} from '../store/organizations/service-limits/service-limits.converter';
-import {PaymentsAction} from '../store/organizations/payment/payments.action';
-import {PaymentConverter} from '../store/organizations/payment/payment.converter';
-import {UserNotificationsAction} from '../store/user-notifications/user-notifications.action';
-import {UserNotificationConverter} from '../store/user-notifications/user-notification.converter';
-import {selectWorkspaceModels} from '../store/common/common.selectors';
-import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
-import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instance.converter';
-import {LinkTypesAction} from '../store/link-types/link-types.action';
-import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
-import {selectOrganizationsDictionary} from '../store/organizations/organizations.state';
-import {selectProjectsDictionary} from '../store/projects/projects.state';
 import {Project} from '../store/projects/project';
-import {Organization} from '../store/organizations/organization';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
-import {ResourceType} from '../model/resource-type';
-import {NotificationsAction} from '../store/notifications/notifications.action';
-import {UsersAction} from '../store/users/users.action';
+import {ProjectConverter} from '../store/projects/project.converter';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {selectProjectsDictionary} from '../store/projects/projects.state';
+import {UserNotificationConverter} from '../store/user-notifications/user-notification.converter';
+import {UserNotificationsAction} from '../store/user-notifications/user-notifications.action';
+import {User} from '../store/users/user';
 import {convertUserDtoToModel} from '../store/users/user.converter';
-import {OrganizationService, ProjectService} from '../rest';
-import {OrganizationDto, ProjectDto} from '../dto';
-import {of} from 'rxjs';
+import {UsersAction} from '../store/users/users.action';
+import {selectCurrentUser} from '../store/users/users.state';
 import {View} from '../store/views/view';
+import {ViewConverter} from '../store/views/view.converter';
+import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
-import {selectLinkTypeById} from '../store/link-types/link-types.state';
 
 @Injectable({
   providedIn: 'root',
@@ -80,11 +80,7 @@ export class PusherService implements OnDestroy {
     private authService: AuthService,
     private organizationService: OrganizationService,
     private projectService: ProjectService
-  ) {
-    if (environment.pusherKey) {
-      this.init();
-    }
-  }
+  ) {}
 
   public init(): void {
     this.subscribeToUser();

@@ -1,0 +1,35 @@
+<input *ngIf="readonly; else textEditing"
+       [readonly]="readonly"
+       [title]="value | selectDataValue: constraintConfig"
+       [value]="value | selectDataValue: constraintConfig"
+       (focus)="onFocus.emit($event)"
+       [class.invalid-value]="!valid"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="select-data-input"
+       type="text">
+
+<ng-template #textEditing>
+  <input #textInput
+         [(ngModel)]="text"
+         [typeahead]="options"
+         [typeaheadItemTemplate]="suggestionItem"
+         [typeaheadLatinize]="true"
+         [typeaheadMinLength]="0"
+         [typeaheadOptionField]="'displayValue'"
+         [typeaheadIsFirstItemActive]="text?.length > 0"
+         [typeaheadScrollable]="true"
+         [typeaheadOptionsInScrollableView]="10"
+         [adaptivePosition]="true"
+         [container]="'body'"
+         (typeaheadOnSelect)="onSelect($event)"
+         (typeaheadOnBlur)="onBlur()"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="select-data-input"
+         type="text">
+</ng-template>
+
+<ng-template #suggestionItem
+             let-model="item"
+             let-index="index">
+  {{ model.displayValue }}
+</ng-template>

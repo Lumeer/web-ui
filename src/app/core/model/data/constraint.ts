@@ -66,6 +66,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.DateTime:
     case ConstraintType.Number:
     case ConstraintType.Percentage:
+    case ConstraintType.Select:
     case ConstraintType.Text:
     case ConstraintType.User:
       return true;
@@ -129,14 +130,15 @@ export interface RatingConstraintConfig {
   maxValue: number;
 }
 
-export interface SelectOption {
-  text: string;
-  icon: string;
+export interface SelectConstraintOption {
+  displayValue?: string;
+  icon?: string;
+  value: string;
 }
 
 export interface SelectConstraintConfig {
-  defaultOptionIndex: number;
-  options: SelectOption[];
+  displayValues: boolean;
+  options: SelectConstraintOption[];
 }
 
 export interface TagConstraintConfig {

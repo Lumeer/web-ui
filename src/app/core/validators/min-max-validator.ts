@@ -30,10 +30,3 @@ export function minMaxValidator(minControlName: string, maxControlName: string):
     return !isNaN(min) && !isNaN(max) && min > max ? {minMaxInvalid: true} : null;
   };
 }
-
-export function someRequiredValidator(...controlNames: string[]): ValidatorFn {
-  return (form: FormGroup): ValidationErrors | null => {
-    const valid = controlNames.some(controlName => form.get(controlName) && form.get(controlName).value);
-    return !valid ? {someRequired: true} : null;
-  };
-}

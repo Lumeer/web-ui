@@ -1,0 +1,45 @@
+@import '../variables';
+
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-help {
+  cursor: help;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+
+  &.text-primary:hover {
+    color: $primary-hover !important;
+  }
+
+  &.text-secondary:hover {
+    color: $secondary-hover !important;
+  }
+
+  &.text-warning:hover {
+    color: $warning-hover !important;
+  }
+
+  &.text-danger:hover {
+    color: $danger-hover !important;
+  }
+
+  &.text-success:hover {
+    color: $success-hover !important;
+  }
+}
+
+.cursor-text {
+  cursor: text;
+}

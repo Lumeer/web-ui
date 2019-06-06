@@ -96,9 +96,12 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     });
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
 
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
     this.notificationService.confirm(message, title, [
-      {text: 'No'},
-      {text: 'Yes', action: () => this.removeCollection(), bold: false},
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.removeCollection(), bold: false},
     ]);
   }
 

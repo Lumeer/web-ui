@@ -12,7 +12,7 @@
            (focus)="onFocus.emit($event)"
            [class.invalid-value]="!state.user"
            class="border-0 h-100 px-1 bg-transparent"
-           data-test="text-data-input"
+           data-test="user-data-input"
            type="text">
     </ng-container>
   </ng-container>
@@ -24,12 +24,14 @@
            [typeaheadItemTemplate]="suggestionItem"
            [typeaheadLatinize]="true"
            [typeaheadOptionField]="'name'"
+           [typeaheadScrollable]="true"
+           [typeaheadOptionsInScrollableView]="10"
            [adaptivePosition]="true"
            [container]="'body'"
            (typeaheadOnSelect)="onSelect($event)"
            (blur)="onBlur()"
            class="border-0 w-100 h-100 px-1 bg-transparent"
-           data-test="text-data-input"
+           data-test="user-data-input"
            type="text">
   </ng-template>
 

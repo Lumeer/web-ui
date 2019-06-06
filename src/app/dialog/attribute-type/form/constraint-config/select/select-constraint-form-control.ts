@@ -17,21 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
-
-export function removeAllFormControls(formGroup: FormGroup) {
-  Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
+export enum SelectConstraintFormControl {
+  DisplayValues = 'displayValues',
+  Options = 'options',
 }
 
-export function removeAllFormArrayControls(formArray: FormArray) {
-  formArray.controls
-    .map((control, index) => index)
-    .reverse()
-    .forEach(index => formArray.removeAt(index));
-}
-
-export function moveFormArrayItem(formArray: FormArray, previousIndex: number, nextIndex: number) {
-  const item = formArray.at(previousIndex);
-  formArray.removeAt(previousIndex);
-  formArray.insert(nextIndex, item);
+export enum SelectConstraintOptionsFormControl {
+  Value = 'value',
+  DisplayValue = 'displayValue',
 }

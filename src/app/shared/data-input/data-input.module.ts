@@ -37,6 +37,7 @@ import {PercentageDataInputComponent} from './percentage/percentage-data-input.c
 import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
+import {SelectDataInputComponent} from './select/select-data-input.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import {UserDataInputComponent} from './user/user-data-input.component';
     NumberValidPipe,
     ColorDataInputComponent,
     UserDataInputComponent,
+    SelectDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
 })

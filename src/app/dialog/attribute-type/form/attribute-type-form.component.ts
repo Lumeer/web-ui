@@ -19,15 +19,23 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {
   Constraint,
   ConstraintConfig,
   ConstraintType,
   constraintTypesMap,
   isConstraintTypeEnabled,
+  SelectConstraintConfig,
 } from '../../../core/model/data/constraint';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {Attribute} from '../../../core/store/collections/collection';
 import {convertToBig} from '../../../shared/utils/data.utils';
+import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
+import {
+  isSelectConstraintOptionValueRemoved,
+  isUsedSelectConstraintAttribute,
+} from './constraint-config/select/select-constraint.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -49,6 +57,8 @@ export class AttributeTypeFormComponent implements OnChanges {
     config: new FormGroup({}),
   });
 
+  constructor(private i18n: I18n, private notificationService: NotificationService) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {
       const type = this.attribute.constraint && this.attribute.constraint.type;
@@ -62,7 +72,7 @@ export class AttributeTypeFormComponent implements OnChanges {
     }
 
     const attribute = this.createModifiedAttribute();
-    this.attributeChange.emit(attribute);
+    this.confirmAndSave(attribute);
   }
 
   private createModifiedAttribute(): Attribute {
@@ -95,6 +105,11 @@ export class AttributeTypeFormComponent implements OnChanges {
           minValue: this.configForm.get('minValue').value,
           maxValue: this.configForm.get('maxValue').value,
         };
+      case ConstraintType.Select:
+        return {
+          displayValues: this.configForm.get(SelectConstraintFormControl.DisplayValues).value,
+          options: this.configForm.get(SelectConstraintFormControl.Options).value,
+        };
       case ConstraintType.Text:
         return {
           caseStyle: this.configForm.get('caseStyle').value,
@@ -107,6 +122,47 @@ export class AttributeTypeFormComponent implements OnChanges {
       default:
         return null;
     }
+  }
+
+  private confirmAndSave(attribute: Attribute) {
+    if (attribute.constraint && attribute.constraint.type === ConstraintType.Select) {
+      this.confirmAndSaveSelect(attribute);
+      return;
+    }
+
+    this.attributeChange.emit(attribute);
+  }
+
+  private confirmAndSaveSelect(attribute: Attribute) {
+    if (!isUsedSelectConstraintAttribute(this.attribute)) {
+      this.attributeChange.emit(attribute);
+      return;
+    }
+
+    const previousConfig = this.attribute.constraint.config as SelectConstraintConfig;
+    const nextConfig = attribute.constraint.config as SelectConstraintConfig;
+
+    if (isSelectConstraintOptionValueRemoved(previousConfig, nextConfig)) {
+      this.showSelectValueChangePrompt(attribute);
+    } else {
+      this.attributeChange.emit(attribute);
+    }
+  }
+
+  private showSelectValueChangePrompt(attribute: Attribute) {
+    const title = this.i18n({id: 'constraint.select.modify.value.title', value: 'Remove options?'});
+    const message = this.i18n({
+      id: 'constraint.select.modify.value.message',
+      value:
+        'You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?',
+    });
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.attributeChange.emit(attribute), bold: false},
+    ]);
   }
 
   public get typeControl(): AbstractControl {

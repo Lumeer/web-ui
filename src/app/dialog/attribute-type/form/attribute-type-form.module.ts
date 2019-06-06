@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -28,10 +29,12 @@ import {ConstraintConfigFormComponent} from './constraint-config/constraint-conf
 import {DatetimeConstraintConfigFormComponent} from './constraint-config/datetime/datetime-constraint-config-form.component';
 import {NumberConstraintConfigFormComponent} from './constraint-config/number/number-constraint-config-form.component';
 import {PercentageConstraintConfigFormComponent} from './constraint-config/percentage/percentage-constraint-config-form.component';
+import {SelectConstraintOptionsFormComponent} from './constraint-config/select/options/select-constraint-options-form.component';
+import {SelectConstraintConfigFormComponent} from './constraint-config/select/select-constraint-config-form.component';
 import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
 
 @NgModule({
-  imports: [CommonModule, DateTimeModule, PipesModule, ReactiveFormsModule, SelectModule],
+  imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
   declarations: [
     AttributeTypeFormComponent,
     NumberConstraintConfigFormComponent,
@@ -39,6 +42,8 @@ import {TextConstraintConfigFormComponent} from './constraint-config/text/text-c
     ConstraintConfigFormComponent,
     DatetimeConstraintConfigFormComponent,
     PercentageConstraintConfigFormComponent,
+    SelectConstraintConfigFormComponent,
+    SelectConstraintOptionsFormComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })
