@@ -32,7 +32,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
@@ -587,26 +587,30 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         .filter(([k]) => k !== attributeId)
         .some(([, v]) => v)
     ) {
-      this.deleteDocument();
+      this.deleteDocumentAndRemoveRow();
     } else {
       const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
       this.store$.dispatch(new DocumentsAction.PatchData({document}));
     }
   }
 
-  private deleteDocument() {
+  private deleteDocumentAndRemoveRow() {
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
     if (this.document && this.document.id) {
-      this.store$.dispatch(
-        new DocumentsAction.Delete({
-          collectionId: this.document.collectionId,
-          documentId: this.document.id,
-          nextAction: removeRowAction,
-        })
-      );
+      this.deleteDocument(removeRowAction);
       return;
     }
     this.store$.dispatch(removeRowAction);
+  }
+
+  private deleteDocument(nextAction?: Action) {
+    this.store$.dispatch(
+      new DocumentsAction.Delete({
+        collectionId: this.document.collectionId,
+        documentId: this.document.id,
+        nextAction,
+      })
+    );
   }
 
   private updateLinkInstanceData(attributeId: string, attributeName: string, value: any) {
@@ -737,11 +741,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.editing$.next(false);
   }
 
-  public onLinkCreate() {
+  public onUseDocumentHint() {
     this.disableSaving();
 
     if (this.isEntityInitialized()) {
       this.deleteLinkInstance();
+      this.deleteDocumentIfEmpty();
     }
   }
 
@@ -755,6 +760,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
         this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: row.linkInstanceId, callback}));
       });
+  }
+
+  private deleteDocumentIfEmpty() {
+    if (Object.keys((this.document && this.document.data) || {}).length === 0) {
+      this.deleteDocument();
+    }
   }
 
   @HostListener('keydown', ['$event'])

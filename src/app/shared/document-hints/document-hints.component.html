@@ -8,7 +8,7 @@
            data-test="document-hints">
         <div *ngFor="let doc of documents; index as documentIndex"
              [class.selected]="(selectedIndex$ | async) === documentIndex"
-             (mousedown)="onCreateLink(doc)"
+             (mousedown)="onUseDocument(doc)"
              class="dropdown-item p-0 d-flex">
           <ng-container *ngFor="let column of columns">
             <div
