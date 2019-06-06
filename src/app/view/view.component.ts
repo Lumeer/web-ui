@@ -142,10 +142,12 @@ export class ViewComponent implements OnInit {
       },
       {create: !!view.code ? '0' : '1'}
     );
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
     this.notificationService.confirm(message, title, [
-      {text: 'No'},
-      {text: 'Yes', action: () => this.createOrUpdateView(view), bold: false},
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.createOrUpdateView(view), bold: false},
     ]);
   }
 

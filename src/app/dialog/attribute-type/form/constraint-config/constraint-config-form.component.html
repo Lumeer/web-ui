@@ -14,6 +14,11 @@
                                      [form]="form">
   </percentage-constraint-config-form>
 
+  <select-constraint-config-form *ngSwitchCase="constraintTypes.Select"
+                                 [config]="config"
+                                 [form]="form">
+  </select-constraint-config-form>
+
   <text-constraint-config-form *ngSwitchCase="constraintTypes.Text"
                                [config]="config"
                                [form]="form">

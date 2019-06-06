@@ -17,21 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
+import {ConstraintType, SelectConstraintConfig} from '../../../../../core/model/data/constraint';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
-export function removeAllFormControls(formGroup: FormGroup) {
-  Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
+export function isUsedSelectConstraintAttribute(attribute: Attribute): boolean {
+  return (
+    attribute && attribute.usageCount > 0 && attribute.constraint && attribute.constraint.type === ConstraintType.Select
+  );
 }
 
-export function removeAllFormArrayControls(formArray: FormArray) {
-  formArray.controls
-    .map((control, index) => index)
-    .reverse()
-    .forEach(index => formArray.removeAt(index));
-}
+export function isSelectConstraintOptionValueRemoved(
+  previousConfig: SelectConstraintConfig,
+  nextConfig: SelectConstraintConfig
+): boolean {
+  const previousValues = previousConfig.options.map(option => option.value);
+  const nextValues = nextConfig.options.map(option => option.value);
 
-export function moveFormArrayItem(formArray: FormArray, previousIndex: number, nextIndex: number) {
-  const item = formArray.at(previousIndex);
-  formArray.removeAt(previousIndex);
-  formArray.insert(nextIndex, item);
+  return previousValues.some(value => !nextValues.includes(value));
 }

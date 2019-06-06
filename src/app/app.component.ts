@@ -68,14 +68,21 @@ export class AppComponent implements OnInit, AfterViewInit {
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
     private title: Title,
-    private pusher: PusherService, // to make the service initialize and work
+    private pusherService: PusherService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
+    this.initPushNotifications();
     this.handleAuthentication();
     this.startGoogleAnalyticsTracking();
     this.setUpExternalServicesUserContext();
+  }
+
+  private initPushNotifications() {
+    if (environment.pusherKey) {
+      this.pusherService.init();
+    }
   }
 
   private handleAuthentication() {

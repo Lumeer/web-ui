@@ -1,0 +1,28 @@
+<div [formGroup]="form">
+  <p class="text-muted"
+     i18n="@@constraint.select.options.description">
+    Let users select a single value from a pre-defined set of at least two options.
+  </p>
+
+  <div class="form-group">
+    <div class="form-check">
+      <input [formControlName]="formControlName.DisplayValues"
+             class="form-check-input"
+             type="checkbox"
+             id="displayValues">
+      <label class="form-check-label"
+             for="displayValues">
+        Distinguish display values
+      </label>
+      <i class="fas fa-question-circle ml-1 cursor-help"
+         title="Show different values to users than the ones that are being stored and used as inputs for functions."
+         i18n-title="@@constraint.select.displayValues.help">
+      </i>
+    </div>
+  </div>
+
+  <select-constraint-options-form [displayValues]="displayValuesControl.value"
+                                  [form]="optionsForm"
+                                  [options]="config?.options">
+  </select-constraint-options-form>
+</div>

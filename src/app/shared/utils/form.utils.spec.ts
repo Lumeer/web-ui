@@ -17,21 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
+import {FormArray, FormControl} from '@angular/forms';
+import {moveFormArrayItem} from './form.utils';
 
-export function removeAllFormControls(formGroup: FormGroup) {
-  Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
-}
+describe('moveFormArrayItem', () => {
+  it('should move item down', () => {
+    const formArray = createFormArray(4);
+    moveFormArrayItem(formArray, 0, 1);
+    expect(formArray.value).toEqual([2, 1, 3, 4]);
+  });
 
-export function removeAllFormArrayControls(formArray: FormArray) {
-  formArray.controls
-    .map((control, index) => index)
-    .reverse()
-    .forEach(index => formArray.removeAt(index));
-}
+  it('should move item up', () => {
+    const formArray = createFormArray(4);
+    moveFormArrayItem(formArray, 2, 1);
+    expect(formArray.value).toEqual([1, 3, 2, 4]);
+  });
+});
 
-export function moveFormArrayItem(formArray: FormArray, previousIndex: number, nextIndex: number) {
-  const item = formArray.at(previousIndex);
-  formArray.removeAt(previousIndex);
-  formArray.insert(nextIndex, item);
+function createFormArray(controls: number): FormArray {
+  return new FormArray(
+    new Array(controls)
+      .fill(0)
+      .map((value, index) => index + 1)
+      .map(index => new FormControl(index))
+  );
 }

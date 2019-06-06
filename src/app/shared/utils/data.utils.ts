@@ -27,6 +27,7 @@ import {
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
+  SelectConstraintConfig,
   TextConstraintConfig,
   UserConstraintConfig,
 } from '../../core/model/data/constraint';
@@ -126,6 +127,8 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
       return isPercentageValid(value, !withoutConfig ? (constraint.config as PercentageConstraintConfig) : null);
     case ConstraintType.Color:
       return isColorValid(value, !withoutConfig ? (constraint.config as ColorConstraintConfig) : null);
+    case ConstraintType.Select:
+      return isSelectDataValueValid(value, !withoutConfig ? (constraint.config as SelectConstraintConfig) : null);
     default:
       return true;
   }
@@ -149,6 +152,8 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Boolean:
       return !!value && value !== '0';
+    case ConstraintType.Select:
+      return formatSelectDataValue(value, constraint.config as SelectConstraintConfig);
     case ConstraintType.User:
       return formatUserDataValue(
         value,
@@ -517,4 +522,16 @@ export function formatUserDataValue(value: any, config: UserConstraintConfig, us
     .map(user => user.name || user.email)
     .join(', ');
   return userNames || formatUnknownDataValue(value);
+}
+
+export function formatSelectDataValue(value: any, config: SelectConstraintConfig): string {
+  const option = config.options.find(opt => opt.value === value);
+  if (option) {
+    return (config.displayValues && option.displayValue) || option.value;
+  }
+  return value || '';
+}
+
+export function isSelectDataValueValid(value: any, config: SelectConstraintConfig): boolean {
+  return config && config.options.some(option => option.value === value);
 }

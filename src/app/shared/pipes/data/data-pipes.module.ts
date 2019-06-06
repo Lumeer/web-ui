@@ -29,6 +29,8 @@ import {NumberDataValuePipe} from './number-data-value.pipe';
 import {PercentageDataValuePipe} from './percentage-data-value.pipe';
 import {TextDataValuePipe} from './text-data-value.pipe';
 import {UserDataValuePipe} from './user-data-value.pipe';
+import {SelectDataValuePipe} from './select-data-value.pipe';
+import {IsSelectDataValueValidPipe} from './is-select-data-value-valid.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -43,6 +45,8 @@ import {UserDataValuePipe} from './user-data-value.pipe';
     ColorValidPipe,
     ColorValuePipe,
     UserDataValuePipe,
+    SelectDataValuePipe,
+    IsSelectDataValueValidPipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -55,6 +59,8 @@ import {UserDataValuePipe} from './user-data-value.pipe';
     ColorValidPipe,
     ColorValuePipe,
     UserDataValuePipe,
+    SelectDataValuePipe,
+    IsSelectDataValueValidPipe,
   ],
 })
 export class DataPipesModule {}

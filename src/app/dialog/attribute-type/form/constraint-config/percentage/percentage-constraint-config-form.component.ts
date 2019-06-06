@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint';
 import {FormControl, FormGroup} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
-import {minMaxValidator} from '../../../../../core/validators/validators';
+import {minMaxValidator} from '../../../../../core/validators/min-max-validator';
 
 @Component({
   selector: 'percentage-constraint-config-form',

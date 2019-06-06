@@ -59,15 +59,27 @@
                     class="d-block">
   </color-data-input>
 
+  <select-data-input *ngSwitchCase="constraintType.Select"
+                     [focus]="focus"
+                     [readonly]="readonly"
+                     [constraintConfig]="constraint.config"
+                     [value]="value"
+                     (valueChange)="onValueChange($event)"
+                     (save)="onSaveValue($event)"
+                     (cancel)="onCancel()"
+                     (onFocus)="emitFocus($event)"
+                     class="d-block">
+  </select-data-input>
+
   <user-data-input *ngSwitchCase="constraintType.User"
-                    [focus]="focus"
-                    [readonly]="readonly"
-                    [constraintConfig]="constraint.config"
-                    [value]="value"
-                    (valueChange)="onValueChange($event)"
-                    (save)="onSaveValue($event)"
-                    (cancel)="onCancel()"
-                    (onFocus)="emitFocus($event)">
+                   [focus]="focus"
+                   [readonly]="readonly"
+                   [constraintConfig]="constraint.config"
+                   [value]="value"
+                   (valueChange)="onValueChange($event)"
+                   (save)="onSaveValue($event)"
+                   (cancel)="onCancel()"
+                   (onFocus)="emitFocus($event)">
   </user-data-input>
 
   <text-data-input *ngSwitchDefault

@@ -18,23 +18,26 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {NumberConstraintConfig} from '../../../../../core/model/data/constraint';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {SelectConstraintConfig} from '../../../../../core/model/data/constraint';
+import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
-import {minMaxValidator} from '../../../../../core/validators/min-max-validator';
+import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 
 @Component({
-  selector: 'number-constraint-config-form',
-  templateUrl: './number-constraint-config-form.component.html',
-  styleUrls: ['./number-constraint-config-form.component.scss'],
+  selector: 'select-constraint-config-form',
+  templateUrl: './select-constraint-config-form.component.html',
+  styleUrls: ['./select-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NumberConstraintConfigFormComponent implements OnChanges {
+export class SelectConstraintConfigFormComponent implements OnChanges {
   @Input()
-  public config: NumberConstraintConfig;
+  public config: SelectConstraintConfig;
 
   @Input()
   public form: FormGroup;
+
+  public readonly formControlName = SelectConstraintFormControl;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -49,15 +52,21 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl('decimal', new FormControl(this.config && this.config.decimal));
     this.form.addControl(
-      'minValue',
-      new FormControl(this.config && this.config.minValue && this.config.minValue.toFixed())
+      SelectConstraintFormControl.DisplayValues,
+      new FormControl(this.config && this.config.displayValues)
     );
     this.form.addControl(
-      'maxValue',
-      new FormControl(this.config && this.config.maxValue && this.config.maxValue.toFixed())
+      SelectConstraintFormControl.Options,
+      new FormArray([], uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true))
     );
-    this.form.setValidators(minMaxValidator('minValue', 'maxValue'));
+  }
+
+  public get displayValuesControl(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.DisplayValues);
+  }
+
+  public get optionsForm(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.Options);
   }
 }

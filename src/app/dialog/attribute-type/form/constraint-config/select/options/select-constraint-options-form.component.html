@@ -1,0 +1,71 @@
+<div cdkDropList
+     (cdkDropListDropped)="onDrop($event)"
+     class="d-flex flex-column">
+  <div *ngFor="let group of form?.controls; index as optionIndex"
+       cdkDrag
+       cdkDragLockAxis="y"
+       cdkDragBoundary=".cdk-drop-list"
+       class="my-1">
+    <div [formGroup]="group"
+         class="d-flex">
+      <div class="flex-grow-0 mr-1 mt-2">
+        <i cdkDragHandle
+           class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
+           title="Reorder options"
+           i18n="@@constraint.select.options.reorder">
+        </i>
+      </div>
+      <div *ngIf="group.get(formControlNames.Value) as control"
+           class="flex-grow-1 mx-1">
+        <input #valueInput
+               [formControlName]="formControlNames.Value"
+               [class.is-invalid]="control.touched && control.errors"
+               (keydown.enter)="onEnterKeyDown($event, optionIndex)"
+               type="text"
+               class="form-control"
+               placeholder="Value"
+               i18n-placeholder="@@constraint.select.option.value">
+        <div *ngIf="control.touched && control.errors?.required"
+             class="invalid-feedback"
+             i18n="@@constraint.select.option.required">
+          You need to provide a value.
+        </div>
+      </div>
+      <div *ngIf="displayValues"
+           class="flex-grow-1 mx-1">
+        <input [formControlName]="formControlNames.DisplayValue"
+               type="text"
+               class="form-control"
+               placeholder="Display as..."
+               i18n-placeholder="@@constraint.select.option.displayValue">
+      </div>
+      <div class="flex-grow-0 ml-2 mt-2">
+        <a *ngIf="form.controls?.length > 2; else disabledRemoveButton"
+           title="Remove option"
+           i18n-title="@@constraint.select.option.remove"
+           (click)="onRemoveOption(optionIndex)">
+          <i class="fas fa-fw fa-trash text-danger"></i>
+        </a>
+        <ng-template #disabledRemoveButton>
+          <i class="fas fa-fw fa-trash text-secondary cursor-not-allowed"
+             title="Cannot remove option"
+             i18n-title="@@constraint.select.option.remove.disabled"></i>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-end mt-2">
+  <a title="Add option"
+     i18n-title="@@constraint.select.add.option"
+     (click)="onAddOption()">
+    <i class="fas fa-fw fa-plus-circle text-success"></i>
+  </a>
+</div>
+
+<div *ngIf="form?.errors?.uniqueValues"
+     class="text-danger"
+     i18n="@@constraint.select.options.unique">
+  Values must be unique!
+</div>

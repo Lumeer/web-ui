@@ -17,21 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
+import {Pipe, PipeTransform} from '@angular/core';
+import {SelectConstraintConfig} from '../../../core/model/data/constraint';
+import {formatSelectDataValue} from '../../utils/data.utils';
 
-export function removeAllFormControls(formGroup: FormGroup) {
-  Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
-}
-
-export function removeAllFormArrayControls(formArray: FormArray) {
-  formArray.controls
-    .map((control, index) => index)
-    .reverse()
-    .forEach(index => formArray.removeAt(index));
-}
-
-export function moveFormArrayItem(formArray: FormArray, previousIndex: number, nextIndex: number) {
-  const item = formArray.at(previousIndex);
-  formArray.removeAt(previousIndex);
-  formArray.insert(nextIndex, item);
+@Pipe({
+  name: 'selectDataValue',
+})
+export class SelectDataValuePipe implements PipeTransform {
+  public transform(value: any, config?: SelectConstraintConfig): string {
+    return formatSelectDataValue(value, config);
+  }
 }

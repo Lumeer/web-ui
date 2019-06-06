@@ -18,7 +18,7 @@
  */
 
 import {FormControl, FormGroup} from '@angular/forms';
-import {minMaxValidator} from './validators';
+import {minMaxValidator} from './min-max-validator';
 
 describe('minMaxValidator', () => {
   beforeEach(() => {

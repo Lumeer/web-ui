@@ -1,0 +1,43 @@
+@import '~bootstrap/scss/variables';
+@import '../variables';
+
+div#driver-popover-item {
+  font-family: $font-family-base;
+  color: $primary;
+
+  .driver-popover-title {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  .driver-popover-description {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  .driver-popover-footer {
+    margin-top: 1rem;
+
+    button {
+      font-family: $btn-font-family;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-sm;
+      color: $white;
+      user-select: none;
+      background-color: $primary;
+      text-shadow: none;
+      border: $btn-border-width solid $primary;
+      border-radius: $border-radius-sm;
+      line-height: 1.5rem;
+
+      &.driver-disabled {
+        color: $gray-500;
+      }
+
+      &:hover {
+        border-color: $primary-hover;
+        background-color: $primary-hover;
+      }
+    }
+  }
+}

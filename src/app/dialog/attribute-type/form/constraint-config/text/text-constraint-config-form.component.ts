@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {FormControl, FormGroup} from '@angular/forms';
 import {CaseStyle, TextConstraintConfig} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
-import {minMaxValidator} from '../../../../../core/validators/validators';
+import {minMaxValidator} from '../../../../../core/validators/min-max-validator';
 
 @Component({
   selector: 'text-constraint-config-form',
