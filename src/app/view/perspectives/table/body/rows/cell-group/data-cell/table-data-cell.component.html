@@ -21,15 +21,17 @@
               data-test="table-data-input">
   </data-input>
 
-  <document-hints
-    *ngIf="selected && data.attribute?.constraint?.type !== constraintType.User && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (suggesting$ | async) && editedValue"
-    [attributeId]="column.attributeIds[0]"
-    [collectionId]="(table | part:cursor)?.collectionId"
-    [columns]="table | documentHintColumns:cursor:canManageConfig"
-    [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-    [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
-    [correlationId]="(row$ | async)?.correlationId"
-    [value]="editedValue"
-    (linkCreate)="onLinkCreate()">
-  </document-hints>
+  <ng-container *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
+    <document-hints *ngIf="{row: row$ | async} as hintsData"
+                    [attributeId]="column.attributeIds[0]"
+                    [collectionId]="(table | part:cursor)?.collectionId"
+                    [columns]="table | documentHintColumns:cursor:canManageConfig"
+                    [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
+                    [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
+                    [linkInstanceId]="hintsData.row?.linkInstanceId"
+                    [correlationId]="hintsData.row?.correlationId"
+                    [value]="editedValue"
+                    (useHint)="onUseDocumentHint()">
+    </document-hints>
+  </ng-container>
 </ng-container>

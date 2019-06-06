@@ -17,16 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {PipesModule} from '../pipes/pipes.module';
-import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
-import {DocumentHintColumnOffsetPipe} from './document-hint-column-offset.pipe';
-import {DocumentHintsComponent} from './document-hints.component';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ConstraintType} from '../../core/model/data/constraint';
+import {Attribute} from '../../core/store/collections/collection';
 
-@NgModule({
-  imports: [CommonModule, PipesModule],
-  declarations: [DocumentHintsComponent, DocumentHintColumnOffsetPipe, CanShowAttributeHintsPipe],
-  exports: [DocumentHintsComponent, CanShowAttributeHintsPipe],
+const NO_HINTS_CONSTRAINT_TYPES = [ConstraintType.Select, ConstraintType.User];
+
+@Pipe({
+  name: 'canShowAttributeHints',
 })
-export class DocumentHintsModule {}
+export class CanShowAttributeHintsPipe implements PipeTransform {
+  public transform(attribute: Attribute): boolean {
+    const constraintType = attribute && attribute.constraint && attribute.constraint.type;
+    return !NO_HINTS_CONSTRAINT_TYPES.includes(constraintType);
+  }
+}

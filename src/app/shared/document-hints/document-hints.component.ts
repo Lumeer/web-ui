@@ -29,13 +29,14 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {Query} from '../../core/store/navigation/query';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers} from '../../core/store/users/users.state';
@@ -59,9 +60,6 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public columns: DocumentHintColumn[];
 
   @Input()
-  public createLinkCallback: (linkInstanceId: string, documentId: string) => void;
-
-  @Input()
   public excludedDocumentIds: string[] = [];
 
   @Input()
@@ -74,6 +72,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public linkTypeId: string;
 
   @Input()
+  public linkInstanceId: string;
+
+  @Input()
   public correlationId: string;
 
   @Input()
@@ -83,7 +84,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   public calculatePosition: boolean = true;
 
   @Output()
-  public linkCreate = new EventEmitter();
+  public useHint = new EventEmitter();
 
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
@@ -140,20 +141,15 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
     );
   }
 
-  public onCreateLink(document: DocumentModel) {
-    this.linkCreate.emit();
-
+  public createLink(document: DocumentModel, data: Record<string, any> = {}) {
     this.store$.dispatch(
       new LinkInstancesAction.Create({
         linkInstance: {
           correlationId: this.correlationId,
           linkTypeId: this.linkTypeId,
           documentIds: [this.linkedDocumentId, document.id],
-          data: {},
+          data,
         },
-        callback: this.createLinkCallback
-          ? linkInstanceId => this.createLinkCallback(linkInstanceId, document.id)
-          : null,
       })
     );
   }
@@ -177,11 +173,31 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
     this.documents$
       .pipe(
-        first(),
+        take(1),
         map(documents => documents[index]),
         filter(document => !!document)
       )
-      .subscribe(document => this.onCreateLink(document));
+      .subscribe(document => this.onUseDocument(document));
+  }
+
+  public onUseDocument(document: DocumentModel) {
+    this.useHint.emit();
+
+    if (this.linkInstanceId) {
+      this.createLinkWithExistingLinkData(document);
+    } else {
+      this.createLink(document);
+    }
+  }
+
+  private createLinkWithExistingLinkData(document: DocumentModel) {
+    this.store$
+      .pipe(
+        select(selectLinkInstanceById(this.linkInstanceId)),
+        take(1),
+        filter(linkInstance => !!linkInstance)
+      )
+      .subscribe(linkInstance => this.createLink(document, linkInstance.data));
   }
 
   public clearSelection() {
