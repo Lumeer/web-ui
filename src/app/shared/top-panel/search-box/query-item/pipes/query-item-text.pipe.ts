@@ -52,7 +52,7 @@ export class QueryItemTextPipe implements PipeTransform {
   private deletedCollectionText(): string {
     return this.i18n({
       id: 'query.item.deleted.file',
-      value: 'Deleted file',
+      value: 'Deleted table',
     });
   }
 

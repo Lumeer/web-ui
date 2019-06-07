@@ -194,7 +194,7 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
         const message = this.i18n({
           id: 'function.create.serviceLimits',
           value:
-            'You can have only a single function per collection/link type in the Free Plan. Do you want to upgrade to Business now?',
+            'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
         });
         this.store$.dispatch(
           new NotificationsAction.Confirm({

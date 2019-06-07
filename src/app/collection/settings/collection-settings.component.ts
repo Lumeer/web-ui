@@ -92,7 +92,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public onDelete(): void {
     const message = this.i18n({
       id: 'collection.delete.dialog.message',
-      value: 'Do you really want to delete this collection?',
+      value: 'Do you really want to delete this table?',
     });
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
 
