@@ -152,7 +152,7 @@ export class PivotDataConverter {
           maxIndex: valueTitles.length - 1,
         };
       }
-      return {headers: [], maxIndex: -1};
+      return {headers: [], maxIndex: 0};
     }
 
     const headers = [];
