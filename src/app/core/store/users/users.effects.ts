@@ -84,6 +84,22 @@ export class UsersEffects {
   );
 
   @Effect()
+  public getCurrentUserWithLastLogin$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.GetCurrentUserWithLastLogin>(UsersActionType.GET_CURRENT_USER_WITH_LAST_LOGIN),
+    tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
+    mergeMap(() =>
+      this.userService.getCurrentUserWithLastLogin().pipe(
+        map(user => convertUserDtoToModel(user)),
+        mergeMap(user => [new UsersAction.GetCurrentUserSuccess({user}), new UsersAction.SetPending({pending: false})]),
+        catchError(() => {
+          const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+          return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
+        })
+      )
+    )
+  );
+
+  @Effect()
   public patchCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.PatchCurrentUser>(UsersActionType.PATCH_CURRENT_USER),
     mergeMap(action => {

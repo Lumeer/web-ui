@@ -697,6 +697,24 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
+
+    Blockly.Blocks['date_now'] = {
+      init: function() {
+        this.jsonInit({
+          type: 'date_now',
+          message0: '%{BKY_BLOCK_DATE_NOW}', // ms to date %1
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript['date_now'] = function(block) {
+      const code = '(+(new Date()))';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
   }
 
   private getLinkParts(linkBlockType: string): string[] {
@@ -1319,6 +1337,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
 
     return xmlList;
   }

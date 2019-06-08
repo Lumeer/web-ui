@@ -30,6 +30,7 @@ export interface User {
   agreementDate?: Date;
   newsletter?: boolean;
   wizardDismissed?: boolean;
+  lastLoggedIn?: Date;
 }
 
 export interface DefaultWorkspace {
