@@ -17,28 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {
+  CalendarBarModel,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarCollectionConfig,
 } from '../../../../core/store/calendars/calendar.model';
-import {isDateValid} from '../../../../shared/utils/common.utils';
-import * as moment from 'moment';
-import {BehaviorSubject} from 'rxjs';
-import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
 import {Collection} from '../../../../core/store/collections/collection';
-import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {Query} from '../../../../core/store/navigation/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
+import * as moment from 'moment';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {ConstraintType, DateTimeConstraintConfig} from '../../../../core/model/data/constraint';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'calendar-event-dialog-collection-form',
   templateUrl: './calendar-event-dialog-collection-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarEventDialogCollectionFormComponent implements OnInit {
+export class CalendarEventDialogCollectionFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public form: FormGroup;
 
@@ -54,139 +55,107 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit {
   @Input()
   public permissions: AllowedPermissions;
 
+  private subscriptions = new Subscription();
+
   public readonly requiredProperty = CalendarBarPropertyRequired;
   public readonly optionalProperty = CalendarBarPropertyOptional;
 
-  public currentStart$: BehaviorSubject<Date>;
-  public currentEnd$: BehaviorSubject<Date>;
+  public eventStartFormat: string;
+  public eventEndFormat: string;
+
+  public get allDayControl(): AbstractControl {
+    return this.form.get('allDay');
+  }
+
+  public get eventStartControl(): AbstractControl {
+    return this.form.get('eventStart');
+  }
+
+  public get eventEndControl(): AbstractControl {
+    return this.form.get('eventEnd');
+  }
 
   public ngOnInit() {
-    this.currentStart$ = new BehaviorSubject<Date>(this.form.controls.eventStart.value);
-    this.currentEnd$ = new BehaviorSubject<Date>(this.form.controls.eventEnd.value);
+    if (this.allDayControl) {
+      this.subscriptions.add(this.allDayControl.valueChanges.subscribe(() => this.initFormats()));
+    }
   }
 
-  public onStartChange(date: Date) {
-    if (!isDateValid(date)) {
-      this.refreshEventStart();
-      return;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collectionConfig && this.collectionConfig) {
+      this.initFormats();
     }
-
-    const newStart = this.checkDateChangeByTimes(this.currentStart$.getValue(), date);
-    if (this.eventStartIsNotCorrect(newStart)) {
-      this.refreshEventStart();
-      return;
-    }
-
-    if (this.datesChanged(newStart, date)) {
-      this.form.controls.eventStart.setValue(newStart);
-    }
-    const newEnd = this.checkDateEndBeforeStart(newStart);
-    if (this.datesChanged(newEnd, this.currentEnd$.getValue())) {
-      this.form.controls.eventEnd.setValue(newEnd);
-    }
-
-    this.currentStart$.next(newStart);
   }
 
-  private refreshEventStart() {
-    const currentStart = this.currentStart$.getValue();
-    this.form.controls.eventStart.setValue(currentStart);
-    this.currentStart$.next(new Date(currentStart.getTime()));
+  private initFormats() {
+    const startProperty = this.collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
+    const endProperty = this.collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
+    const isAllDay = this.allDayControl.value;
+
+    this.eventStartFormat = this.createPropertyFormat(startProperty, isAllDay);
+    this.eventEndFormat = this.createPropertyFormat(endProperty, isAllDay);
   }
 
-  // happens when end attribute is not editable and start is after end
-  private eventStartIsNotCorrect(date: Date): boolean {
-    const endProperty = this.collectionConfig && this.collectionConfig.barsProperties[this.optionalProperty.EndDate];
-    const isEndEditable =
-      !endProperty ||
-      isCollectionAttributeEditable(endProperty.attributeId, this.collection, this.permissions, this.query);
-    const currentEnd = this.currentEnd$.getValue();
+  private createPropertyFormat(property: CalendarBarModel, allDay: boolean): string {
+    if (property) {
+      const constraint = findAttributeConstraint(this.collection.attributes, property.attributeId);
+      if (constraint && constraint.type === ConstraintType.DateTime && constraint.config) {
+        return (constraint.config as DateTimeConstraintConfig).format;
+      }
+    }
 
-    return !isEndEditable && date.getTime() >= currentEnd.getTime();
+    return this.createDefaultFormat(allDay);
   }
 
-  public onEndChange(date: Date) {
-    if (!isDateValid(date)) {
-      this.refreshEventEnd();
-      return;
-    }
-
-    const newEnd = this.checkDateChangeByTimes(this.currentEnd$.getValue(), date);
-    if (this.eventEndIsNotCorrect(newEnd)) {
-      this.refreshEventEnd();
-      return;
-    }
-
-    if (this.datesChanged(newEnd, date)) {
-      this.form.controls.eventEnd.setValue(newEnd);
-    }
-    const newStart = this.checkDateStartAfterEnd(newEnd);
-    if (this.datesChanged(newStart, this.currentStart$.getValue())) {
-      this.form.controls.eventStart.setValue(newStart);
-    }
-
-    this.currentEnd$.next(newEnd);
+  private createDefaultFormat(allDay: boolean): string {
+    return allDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
   }
 
-  private refreshEventEnd() {
-    const currentEnd = this.currentEnd$.getValue();
-    this.form.controls.eventEnd.setValue(currentEnd);
-    this.currentEnd$.next(new Date(currentEnd.getTime()));
+  public eventStartValueChange(date: Date) {
+    this.eventStartControl.setValue(date);
+
+    if (this.eventEndControl) {
+      const newEnd = this.checkDateEndBeforeStart(date);
+      if (this.datesChanged(newEnd, this.eventEndControl.value)) {
+        this.eventEndControl.setValue(newEnd);
+      }
+    }
   }
 
-  // happens when start attribute is not editable and end is before start
-  private eventEndIsNotCorrect(date: Date): boolean {
-    const startProperty =
-      this.collectionConfig && this.collectionConfig.barsProperties[this.requiredProperty.StartDate];
-    const isStartEditable =
-      !startProperty ||
-      isCollectionAttributeEditable(startProperty.attributeId, this.collection, this.permissions, this.query);
-    const currentStart = this.currentStart$.getValue();
+  public eventEndValueChange(date: Date) {
+    this.eventEndControl.setValue(date);
 
-    return !isStartEditable && date.getTime() <= currentStart.getTime();
-  }
-
-  private checkDateChangeByTimes(dateBefore: Date, dateAfter: Date): Date {
-    if (dateBefore.getDate() !== dateAfter.getDate()) {
-      return dateAfter;
+    if (this.eventStartControl) {
+      const newStart = this.checkDateStartAfterEnd(date);
+      if (this.datesChanged(newStart, this.eventStartControl.value)) {
+        this.form.controls.eventStart.setValue(newStart);
+      }
     }
-
-    const hourBefore = dateBefore.getHours();
-    const hourAfter = dateAfter.getHours();
-
-    if (hourBefore === 23 && hourAfter === 0) {
-      return moment(dateAfter)
-        .add(1, 'days')
-        .toDate();
-    }
-    if (hourBefore === 0 && hourAfter === 23) {
-      return moment(dateAfter)
-        .subtract(1, 'days')
-        .toDate();
-    }
-
-    return dateAfter;
   }
 
   private checkDateEndBeforeStart(start: Date): Date {
-    if (moment(this.currentEnd$.getValue()).isSameOrBefore(start)) {
+    if (moment(this.eventEndControl.value).isSameOrBefore(start)) {
       return moment(start)
         .add(DEFAULT_EVENT_DURATION, 'minutes')
         .toDate();
     }
-    return this.currentEnd$.getValue();
+    return this.eventEndControl.value;
   }
 
   private checkDateStartAfterEnd(end: Date): Date {
-    if (moment(this.currentStart$.getValue()).isSameOrAfter(end)) {
+    if (moment(this.eventStartControl.value).isSameOrAfter(end)) {
       return moment(end)
         .subtract(DEFAULT_EVENT_DURATION, 'minutes')
         .toDate();
     }
-    return this.currentStart$.getValue();
+    return this.eventStartControl.value;
   }
 
   private datesChanged(date1: Date, date2: Date): boolean {
     return date1.getTime() !== date2.getTime();
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

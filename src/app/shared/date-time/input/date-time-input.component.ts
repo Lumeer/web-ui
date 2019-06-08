@@ -67,6 +67,8 @@ export class DateTimeInputComponent implements OnChanges {
   @ViewChild(DateTimePickerComponent)
   public dateTimePicker: DateTimePickerComponent;
 
+  private shouldSaveOnBlur = false;
+
   public options: DateTimeOptions;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -79,18 +81,24 @@ export class DateTimeInputComponent implements OnChanges {
     this.dateTimePicker.open();
   }
 
-  public onClickOutside() {
+  public onClickOutside(event: Event) {
     this.dateTimePicker.close();
   }
 
   public onBlur() {
-    if (this.dateTimeInput) {
+    if (this.dateTimeInput && this.shouldSaveOnBlur) {
       const value = parseDateTimeDataValue(this.dateTimeInput.nativeElement.value, this.format);
       this.valueChange.emit(value);
     }
+
+    this.shouldSaveOnBlur = false;
   }
 
   public onSave(date: Date) {
     this.valueChange.emit(resetUnusedDatePart(date, this.format));
+  }
+
+  public onInput() {
+    this.shouldSaveOnBlur = true;
   }
 }

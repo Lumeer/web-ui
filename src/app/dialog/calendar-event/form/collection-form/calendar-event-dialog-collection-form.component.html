@@ -24,22 +24,11 @@
            i18n="@@dialog.create.calendar.event.label.start">
       Event start
     </label>
-    <div class="d-flex flex-nowrap align-items-center">
-      <input bsDatepicker
-             class="form-control flex-grow-1"
-             formControlName="eventStart"
-             [value]="currentStart$ | async | date:'mediumDate'"
-             (ngModelChange)="onStartChange($event)"
-             id="eventStart"
-             type="text">
-
-      <timepicker class="ml-3" *ngIf="!form.value.allDay"
-                  formControlName="eventStart"
-                  [showMeridian]="false"
-                  (ngModelChange)="onStartChange($event)"
-                  [showSpinners]="false">
-      </timepicker>
-    </div>
+    <date-time-input  [format]="eventStartFormat"
+                      [id]="'eventStart'"
+                      [value]="eventStartControl.value"
+                      (valueChange)="eventStartValueChange($event)">
+    </date-time-input>
   </div>
 
   <div class="form-group mb-0" *ngIf="collectionConfig | propertiesDefined:[optionalProperty.EndDate, requiredProperty.StartDate]">
@@ -47,22 +36,10 @@
            i18n="@@dialog.create.calendar.event.label.end">
       Event end
     </label>
-    <div class="d-flex flex-nowrap align-items-center">
-      <input bsDatepicker
-             class="form-control flex-grow-1"
-             formControlName="eventEnd"
-             [value]="currentEnd$ | async | date:'mediumDate'"
-             [placement]="'top'"
-             (ngModelChange)="onEndChange($event)"
-             id="eventEnd"
-             type="text">
-
-      <timepicker class="ml-3" *ngIf="!form.value.allDay"
-                  formControlName="eventEnd"
-                  [showMeridian]="false"
-                  (ngModelChange)="onEndChange($event)"
-                  [showSpinners]="false">
-      </timepicker>
-    </div>
+    <date-time-input  [format]="eventEndFormat"
+                      [id]="'eventEnd'"
+                      [value]="eventEndControl.value"
+                      (valueChange)="eventEndValueChange($event)">
+    </date-time-input>
   </div>
 </div>

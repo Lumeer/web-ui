@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   CalendarBarModel,
   CalendarBarProperty,
@@ -55,7 +55,15 @@ export class CalendarCollectionConfigComponent {
   public onBarPropertyRemoved(type: CalendarBarProperty) {
     const bars = {...this.config.barsProperties};
     delete bars[type];
+    this.removeOptionalProperties(bars, type);
+
     const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
+  }
+
+  private removeOptionalProperties(bars: Record<string, CalendarBarModel>, type: CalendarBarProperty) {
+    if (type === CalendarBarPropertyRequired.StartDate) {
+      delete bars[CalendarBarPropertyOptional.EndDate];
+    }
   }
 }

@@ -15,9 +15,9 @@
              (remove)="onBarPropertyRemoved(propertyRequired)">
 </select-item>
 
-<ng-container *ngIf="config | calendarRequiredPropertiesSet">
+<ng-container *ngFor="let propertyOptional of calendarBarsPropertiesOptional">
   <select-item class="d-block w-100 mt-2"
-               *ngFor="let propertyOptional of calendarBarsPropertiesOptional"
+               *ngIf="config | calendarRequiredPropertiesSet:propertyOptional"
                [items]="collection | calendarPropertyItems:propertyOptional:config "
                [selectedId]="config.barsProperties && config.barsProperties[propertyOptional]"
                [placeholderText]="propertyOptional | calendarPropertyPlaceholder"
