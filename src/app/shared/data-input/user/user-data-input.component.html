@@ -10,7 +10,7 @@
            [title]="value | userDataValue: constraintConfig | async"
            [value]="value | userDataValue: constraintConfig | async"
            (focus)="onFocus.emit($event)"
-           [class.invalid-value]="!state.user"
+           [class.invalid-value]="!skipValidation && !state.user"
            class="border-0 h-100 px-1 bg-transparent"
            data-test="user-data-input"
            type="text">
@@ -30,6 +30,7 @@
            [container]="'body'"
            (typeaheadOnSelect)="onSelect($event)"
            (blur)="onBlur()"
+           (ngModelChange)="onInputChange()"
            class="border-0 w-100 h-100 px-1 bg-transparent"
            data-test="user-data-input"
            type="text">

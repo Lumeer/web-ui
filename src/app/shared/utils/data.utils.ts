@@ -524,6 +524,16 @@ export function formatUserDataValue(value: any, config: UserConstraintConfig, us
   return userNames || formatUnknownDataValue(value);
 }
 
+export function checkValidUser(value: any, users: User[]): boolean {
+  return (
+    String(value)
+      .split(',')
+      .map(email => email.trim())
+      .map(email => (users || []).find(user => user.email === email))
+      .filter(user => !!user).length > 0
+  );
+}
+
 export function formatSelectDataValue(value: any, config: SelectConstraintConfig): string {
   const option = config.options.find(opt => opt.value === value);
   if (option) {

@@ -62,6 +62,9 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   public readonly: boolean;
 
   @Input()
+  public skipValidation: boolean;
+
+  @Input()
   public value: any;
 
   @Output()
@@ -192,6 +195,8 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
       const user = users.find(u => u.name === this.name);
       if (user || !this.name) {
         this.save.emit(user ? user.email : '');
+      } else if (this.skipValidation) {
+        this.save.emit(this.name);
       } else {
         this.resetSearchInput(users);
       }
@@ -205,5 +210,9 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   public onSelect(event: TypeaheadMatch) {
     this.preventSave = true;
     this.save.emit(event.item.email);
+  }
+
+  public onInputChange() {
+    this.valueChange.emit(this.name);
   }
 }
