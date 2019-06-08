@@ -27,6 +27,7 @@ import {mergeMap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {AppState} from '../core/store/app.state';
 import {UsersAction} from '../core/store/users/users.action';
+import {Angulartics2} from 'angulartics2';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -46,7 +47,12 @@ export class AuthService {
 
   private refreshSubscription: Subscription;
 
-  public constructor(private location: Location, private router: Router, private store: Store<AppState>) {
+  public constructor(
+    private location: Location,
+    private router: Router,
+    private store: Store<AppState>,
+    private angulartics2: Angulartics2
+  ) {
     if (environment.auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
