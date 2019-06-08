@@ -94,8 +94,8 @@ export class AuthService {
             .pipe(
               select(selectCurrentUser),
               filter(user => !!user && !!user.lastLoggedIn),
-              first(),
-              timeout(10000)
+              timeout(10000),
+              first()
             )
             .subscribe(user => {
               const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
