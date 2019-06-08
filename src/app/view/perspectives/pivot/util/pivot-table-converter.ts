@@ -285,8 +285,9 @@ export class PivotTableConverter {
     parentTitle?: string
   ) {
     let currentIndex = startIndex;
+    const numberOfSums = Math.max(1, this.data.valueTitles.length);
     for (const header of headers) {
-      const colSpan = getDirectHeaderChildCount(header, level, showSums);
+      const colSpan = getDirectHeaderChildCount(header, level, showSums, numberOfSums);
       cells[level][currentIndex] = {
         value: header.title,
         cssClass: PivotTableConverter.columnHeaderClass,
@@ -310,7 +311,7 @@ export class PivotTableConverter {
         this.fillCellsForColumn(cells, header.targetIndex);
       }
 
-      currentIndex += getHeaderChildCount(header, level, showSums, Math.max(1, this.data.valueTitles.length));
+      currentIndex += getHeaderChildCount(header, level, showSums, numberOfSums);
     }
 
     if (showSums[level]) {
@@ -325,7 +326,7 @@ export class PivotTableConverter {
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
-        colSpan: Math.max(1, numberOfValues),
+        colSpan: numberOfSums,
         background,
       };
 
@@ -598,7 +599,7 @@ function iterateThroughTransformationMap(
   for (const header of headers) {
     if (header.children) {
       iterateThroughTransformationMap(header.children, additional, array, level + 1, showSums, numberOfSums);
-      additional += showSums[level + 1] ? numberOfSums : 0;
+      additional += getHeaderChildCount(header, level, showSums, numberOfSums, false);
     } else if (isNotNullOrUndefined(header.targetIndex)) {
       array[header.targetIndex] = header.targetIndex + additional;
     }
@@ -616,15 +617,16 @@ function getHeaderChildCount(
   pivotDataHeader: PivotDataHeader,
   level: number,
   showSums: boolean[],
-  numberOfSums = 1
+  numberOfSums = 1,
+  includeChild = true
 ): number {
   if (pivotDataHeader.children) {
     return pivotDataHeader.children.reduce(
-      (sum, header) => sum + getHeaderChildCount(header, level + 1, showSums, numberOfSums),
+      (sum, header) => sum + getHeaderChildCount(header, level + 1, showSums, numberOfSums, includeChild),
       showSums[level + 1] ? numberOfSums : 0
     );
   }
-  return 1;
+  return includeChild ? 1 : 0;
 }
 
 function getDirectHeaderChildCount(

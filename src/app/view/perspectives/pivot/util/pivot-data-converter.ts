@@ -152,7 +152,7 @@ export class PivotDataConverter {
           maxIndex: valueTitles.length - 1,
         };
       }
-      return {headers: [], maxIndex: 0};
+      return {headers: [], maxIndex: -1};
     }
 
     const headers = [];
@@ -176,7 +176,7 @@ export class PivotDataConverter {
         valueTitles,
         data
       );
-      currentIndex += this.numChildren(map[title], levels - 1, valueTitles);
+      currentIndex += this.numChildren(map[title], levels - 1, (valueTitles && valueTitles.length) || 1);
     });
 
     return {headers, maxIndex: data.maxIndex};
@@ -248,18 +248,25 @@ export class PivotDataConverter {
         additionalData
       );
 
-      currentIndex += this.numChildren(currentMap[title], maxLevels - (level + 1), valueTitles);
+      currentIndex += this.numChildren(
+        currentMap[title],
+        maxLevels - (level + 1),
+        (valueTitles && valueTitles.length) || 1
+      );
     });
   }
 
-  private numChildren(map: Record<string, any>, maxLevels: number, valueTitles: string[]): number {
-    const numTitles = (valueTitles && valueTitles.length) || 1;
+  private numChildren(map: Record<string, any>, maxLevels: number, numTitles: number): number {
     if (maxLevels === 0) {
       return numTitles;
     }
 
     const keys = Object.keys(map || {});
-    const count = keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], 1, maxLevels), keys.length);
+    if (maxLevels === 1) {
+      return keys.length * numTitles;
+    }
+
+    const count = keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], 1, maxLevels), 0);
     return count * numTitles;
   }
 
@@ -273,7 +280,7 @@ export class PivotDataConverter {
       return keys.length;
     }
 
-    return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), keys.length);
+    return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), 0);
   }
 
   private createValueTitles(valueAttributes: PivotValueAttribute[]): string[] {
