@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {distinctUntilChanged, filter, map, mergeMap} from 'rxjs/operators';
 import {DialogService} from '../dialog.service';
 import {CalendarConfig} from '../../core/store/calendars/calendar.model';
-import {concat, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {AppState} from '../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -44,7 +44,7 @@ import {AllowedPermissions} from '../../core/model/allowed-permissions';
   templateUrl: './calendar-event-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
+export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(CalendarEventDialogFormComponent)
   public formComponent: CalendarEventDialogFormComponent;
 
@@ -55,8 +55,10 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
   public update$: Observable<boolean>;
   public query$: Observable<Query>;
   public currentUser$: Observable<User>;
-  public formInvalid$: Observable<boolean>;
+  public formInvalid$ = new BehaviorSubject(true);
   public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
+
+  private subscriptions = new Subscription();
 
   constructor(
     private dialogService: DialogService,
@@ -141,7 +143,12 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     const form = this.formComponent.form;
-    this.formInvalid$ = concat(of(form.invalid), form.statusChanges.pipe(map(() => form.invalid)));
+    setTimeout(() => this.formInvalid$.next(form.invalid));
+    this.subscriptions.add(form.statusChanges.subscribe(() => this.formInvalid$.next(form.invalid)));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   public onSubmit() {

@@ -168,9 +168,12 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     const collectionConfig = (this.config && this.config.collections[this.document.collectionId]) || {};
     const collectionPermissions =
       (this.allowedPermissions && this.allowedPermissions[this.document.collectionId]) || {};
-    const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];
-    const startProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
-    const endProperty = collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
+    const titleProperty =
+      collectionConfig.barsProperties && collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];
+    const startProperty =
+      collectionConfig.barsProperties && collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate];
+    const endProperty =
+      collectionConfig.barsProperties && collectionConfig.barsProperties[CalendarBarPropertyOptional.EndDate];
 
     const collectionId = this.document.collectionId;
     const collection = this.collections && this.collections.find(coll => coll.id === collectionId);

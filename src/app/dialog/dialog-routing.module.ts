@@ -103,13 +103,11 @@ const routes: Routes = [
     path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time`,
     component: CalendarEventDialogComponent,
     outlet: 'dialog',
-    data: {modalDialogClass: 'modal-lg'},
   },
   {
     path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time/:documentId`,
     component: CalendarEventDialogComponent,
     outlet: 'dialog',
-    data: {modalDialogClass: 'modal-lg'},
   },
 ];
 
