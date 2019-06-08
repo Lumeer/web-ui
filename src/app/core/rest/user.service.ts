@@ -57,6 +57,10 @@ export class UserService {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
   }
 
+  public getCurrentUserWithLastLogin(): Observable<UserDto> {
+    return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/currentWithLastLogin`);
+  }
+
   public patchCurrentUser(user: Partial<UserDto>): Observable<UserDto> {
     return this.httpClient.patch<UserDto>(`${this.usersApiPrefix()}/current`, user);
   }

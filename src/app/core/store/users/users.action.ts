@@ -26,6 +26,7 @@ export enum UsersActionType {
   GET_FAILURE = '[Users] Get :: Failure',
 
   GET_CURRENT_USER = '[Users] Get current user',
+  GET_CURRENT_USER_WITH_LAST_LOGIN = '[Users] Get current user with last login',
   GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
 
   PATCH_CURRENT_USER = '[Users] Patch Current',
@@ -66,6 +67,10 @@ export namespace UsersAction {
 
   export class GetCurrentUser implements Action {
     public readonly type = UsersActionType.GET_CURRENT_USER;
+  }
+
+  export class GetCurrentUserWithLastLogin implements Action {
+    public readonly type = UsersActionType.GET_CURRENT_USER_WITH_LAST_LOGIN;
   }
 
   export class GetCurrentUserSuccess implements Action {
@@ -173,6 +178,7 @@ export namespace UsersAction {
     | GetSuccess
     | GetFailure
     | GetCurrentUser
+    | GetCurrentUserWithLastLogin
     | GetCurrentUserSuccess
     | PatchCurrentUser
     | Create

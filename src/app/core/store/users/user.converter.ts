@@ -50,6 +50,7 @@ export function convertUserDtoToModel(dto: UserDto): User {
     agreementDate: dto.agreementDate ? new Date(dto.agreementDate) : undefined,
     newsletter: dto.newsletter,
     wizardDismissed: dto.wizardDismissed,
+    lastLoggedIn: dto.lastLoggedIn ? new Date(dto.lastLoggedIn) : undefined,
   };
 }
 

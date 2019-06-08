@@ -29,4 +29,5 @@ export interface UserDto {
   agreementDate?: number;
   newsletter?: boolean;
   wizardDismissed?: boolean;
+  lastLoggedIn?: number;
 }
