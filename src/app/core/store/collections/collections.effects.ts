@@ -88,7 +88,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collections.get.fail', value: 'Could not get collections'});
+      const message = this.i18n({id: 'collections.get.fail', value: 'Could not get tables'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -127,7 +127,7 @@ export class CollectionsEffects {
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
           value:
-            'You are currently on the Free plan which allows you to have only limited number of collections. Do you want to upgrade to Business now?',
+            'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
         });
         return new NotificationsAction.Confirm({
           title,
@@ -139,7 +139,7 @@ export class CollectionsEffects {
           yesFirst: false,
         });
       }
-      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create collection'});
+      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create table'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -192,7 +192,7 @@ export class CollectionsEffects {
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
           value:
-            'You are currently on the Free plan which allows you to have only limited number of collections. Do you want to upgrade to Business now?',
+            'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
         });
         return new NotificationsAction.Confirm({
           title,
@@ -204,7 +204,7 @@ export class CollectionsEffects {
           yesFirst: false,
         });
       }
-      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import collection'});
+      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import table'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -240,7 +240,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.update.fail', value: 'Could not update collection'});
+      const message = this.i18n({id: 'collection.update.fail', value: 'Could not update table'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -287,7 +287,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.delete.fail', value: 'Could not delete collection'});
+      const message = this.i18n({id: 'collection.delete.fail', value: 'Could not delete table'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -312,7 +312,7 @@ export class CollectionsEffects {
     map(() => {
       const message = this.i18n({
         id: 'collection.add.favorite.fail',
-        value: 'Could not add the collection to favorites',
+        value: 'Could not add the table to favorites',
       });
       return new NotificationsAction.Error({message});
     })
@@ -338,7 +338,7 @@ export class CollectionsEffects {
     map(() => {
       const message = this.i18n({
         id: 'collection.remove.favorite.fail',
-        value: 'Could not remove the collection from favorites',
+        value: 'Could not remove the table from favorites',
       });
       return new NotificationsAction.Error({message});
     })
@@ -536,7 +536,7 @@ export class CollectionsEffects {
     map(() => {
       const message = this.i18n({
         id: 'collection.change.permission.fail',
-        value: 'Could not change the collection permissions',
+        value: 'Could not change the table permissions',
       });
       return new NotificationsAction.Error({message});
     })

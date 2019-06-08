@@ -213,7 +213,7 @@ export class UserMenuComponent {
     const welcomeDescription = this.i18n({
       id: 'appTour.description.welcome',
       value:
-        '(1/7) Lumeer organizes your information in collections (i.e. categories) of similar records. Later, you can use this button to add your first collection. Then you can open the collection by simply clicking on it.',
+        '(1/7) Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.',
     });
 
     this.driver.defineSteps([
@@ -273,7 +273,7 @@ export class UserMenuComponent {
           description: this.i18n({
             id: 'appTour.description.perspectives',
             value:
-              '(4/7) When you open your collection or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.',
+              '(4/7) When you open your table or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.',
           }),
           position: 'right',
         },
@@ -288,7 +288,7 @@ export class UserMenuComponent {
           description: this.i18n({
             id: 'appTour.description.views',
             value:
-              "(5/7) You might connect multiple collections in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.",
+              "(5/7) You might connect multiple tables in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.",
           }),
           position: 'bottom',
         },

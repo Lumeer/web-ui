@@ -24,7 +24,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
@@ -110,7 +110,7 @@
           <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit><trans-unit id="collection.button.remove" datatype="html">
-        <source>Delete Collection</source>
+        <source>Delete Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context>
           <context context-type="linenumber">124</context>
@@ -277,7 +277,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
-        <source>Open a collection by clicking on it and add your first record.</source>
+        <source>Open a table by clicking on it and add your first record.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context>
           <context context-type="linenumber">20</context>
@@ -287,13 +287,13 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="invalid-query.at-least-one-collection" datatype="html">
-        <source>You need to select at least one collection.</source>
+        <source>You need to select at least one table.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="invalid-query.exactly-one-collection" datatype="html">
-        <source>You need to select exactly one collection.</source>
+        <source>You need to select exactly one table.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
           <context context-type="linenumber">9</context>
@@ -404,7 +404,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context>
@@ -645,7 +645,7 @@
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.collection" datatype="html">
-        <source>Create New Collection</source>
+        <source>Create New Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/add-button/post-it-collection-add-button.component.html</context>
           <context context-type="linenumber">10</context>
@@ -659,39 +659,39 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.create.title" datatype="html">
-        <source>Add collection</source>
+        <source>Add table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/add-button/post-it-collection-add-button.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
-        <source>Import Collection
+        <source>Import Table
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import.title" datatype="html">
-        <source>Import collection</source>
+        <source>Import table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="search.collections.empty.title" datatype="html">
-        <source>There are no Collections yet!</source>
+        <source>There are no tables yet!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="search.collections.empty.subtitle.norights" datatype="html">
-        <source>I am sorry but you do not have permissions to add collections.
+        <source>I am sorry but you do not have permissions to add tables.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="search.collections.empty.subtitle" datatype="html">
-        <source>Add your first collection or import one.</source>
+        <source>Add your first table or import one.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.html</context>
           <context context-type="linenumber">11</context>
@@ -772,7 +772,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
@@ -910,6 +910,18 @@
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
+      </trans-unit><trans-unit id="collection" datatype="html">
+        <source>Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="records" datatype="html">
+        <source>Records</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
       </trans-unit><trans-unit id="search.input.placeholder" datatype="html">
         <source>
     <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
@@ -942,8 +954,8 @@
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="401d7eff2a6b697831e6b4043f2729b3725ed15a" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Collection} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source>
+      </trans-unit><trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11</context>
@@ -1037,7 +1049,7 @@
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.collectionShared" datatype="html">
-        <source>A new collection has been shared with you.</source>
+        <source>A new table has been shared with you.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/notifications-menu-wrapper/notification-collection/notification-collection.component.html</context>
           <context context-type="linenumber">1</context>
@@ -1404,14 +1416,14 @@
         </context-group>
       </trans-unit><trans-unit id="attribute.type.value" datatype="html">
         <source>
-        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} DateTime {...} None {...} Number {...} Percentage {...} Text {...} User {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-      </trans-unit><trans-unit id="006efe1d908cc37338da5295395467bf0ec91f25" datatype="html">
-        <source>{VAR_SELECT, select, Boolean {Checkbox} Color {Color} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Text {Text} User {User} }</source>
+      </trans-unit><trans-unit id="899cb85e08a5b4ae454b1afc48bd86127cea4f6c" datatype="html">
+        <source>{VAR_SELECT, select, Boolean {Checkbox} Color {Color} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1492,20 +1504,20 @@
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
-        <source>Create new linked collection</source>
+        <source>Create new linked table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.file.name.placeholder" datatype="html">
-        <source>Enter collection name...</source>
+        <source>Enter table name...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="validation.collection.name.empty" datatype="html">
         <source>
-      Collection name cannot be empty.
+      Table name cannot be empty.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.html</context>
@@ -1513,7 +1525,7 @@
         </context-group>
       </trans-unit><trans-unit id="validation.collection.name.short" datatype="html">
         <source>
-      Collection name must have at least <x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"/> characters.
+      Table name must have at least <x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"/> characters.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.html</context>
@@ -1521,7 +1533,7 @@
         </context-group>
       </trans-unit><trans-unit id="validation.collection.name.unique" datatype="html">
         <source>
-      You cannot have two collections with the same name.
+      You cannot have two tables with the same name.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.html</context>
@@ -1792,6 +1804,73 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
+        <source>
+    Keeps a predefined set of valid values from which one can be selected. At least two values must be configured.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
+        <source>Show different values to users than the ones that are being stored and used as inputs for functions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
+        <source>
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.option.value" datatype="html">
+        <source>Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.option.required" datatype="html">
+        <source>
+          You need to provide a value.
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.option.displayValue" datatype="html">
+        <source>Display as...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.option.remove" datatype="html">
+        <source>Remove option</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.option.remove.disabled" datatype="html">
+        <source>Cannot remove option</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.add.option" datatype="html">
+        <source>Add option</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.select.options.unique" datatype="html">
+        <source>
+  Values must be unique!
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
       </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>
       All day
@@ -1914,7 +1993,7 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
+        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">25</context>
@@ -1963,14 +2042,14 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.suggestion.link.existing" datatype="html">
         <source>Use existing link
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
@@ -2049,13 +2128,13 @@
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.switch.parts" datatype="html">
-        <source>Switch collections order</source>
+        <source>Switch tables order</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.remove.part" datatype="html">
-        <source>Disconnect collection</source>
+        <source>Disconnect table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context>
           <context context-type="linenumber">36</context>
@@ -2151,7 +2230,7 @@
           <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.add-button" datatype="html">
-        <source>Link collection</source>
+        <source>Link table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
           <context context-type="linenumber">4</context>
@@ -2194,7 +2273,7 @@
           <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.collections.count" datatype="html">
-        <source>Number of collections</source>
+        <source>Number of tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
           <context context-type="linenumber">24</context>
@@ -2627,7 +2706,7 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users, collections, rules and functions</source>
+        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users, tables, rules and functions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">24</context>
@@ -2637,7 +2716,7 @@
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> collections, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source>
+        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2804,6 +2883,36 @@
           <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.row.header" datatype="html">
+        <source>
+    Rows
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
+        <source>
+    Columns
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
+        <source>
+    Values
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
+        <source>Show summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/pivot-header-attribute-config/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
           Views
@@ -2814,7 +2923,7 @@
         </context-group>
       </trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
-          Collections
+          Tables
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
@@ -2841,7 +2950,7 @@
           <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="search.tab.collections" datatype="html">
-        <source>Collections</source>
+        <source>Tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2853,7 +2962,7 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
-        <source>I am sorry but you do not have permissions to add collections.
+        <source>I am sorry but you do not have permissions to add tables.
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context>
@@ -2872,13 +2981,13 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
-        <source>Open this collection in Table</source>
+        <source>Open as Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
-        <source>Open collection</source>
+        <source>Open table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
           <context context-type="linenumber">7</context>
@@ -2919,21 +3028,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="file.not.exist" datatype="html">
-        <source>Collection does not exist</source>
+        <source>Table does not exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="file.permission.missing" datatype="html">
-        <source>You do not have permission to access this collection</source>
+        <source>You do not have permission to access this table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.message" datatype="html">
-        <source>Do you really want to delete this collection?</source>
+        <source>Do you really want to delete this table?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2954,22 +3063,12 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collection.tab.attributes.delete.title" datatype="html">
-        <source>Delete attribute?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
-        <source>Do you really want to delete attribute &quot;<x id="INTERPOLATION" equiv-text="{{name}}"/>&quot;?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="button.yes" datatype="html">
         <source>Yes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2987,6 +3086,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -2996,6 +3099,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
@@ -3010,6 +3117,10 @@
       <trans-unit id="button.no" datatype="html">
         <source>No</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -3026,6 +3137,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -3038,11 +3153,29 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.tab.attributes.delete.title" datatype="html">
+        <source>Delete attribute?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
+        <source>Do you really want to delete attribute &quot;<x id="INTERPOLATION" equiv-text="{{name}}"/>&quot;?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -3198,7 +3331,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collections.get.fail" datatype="html">
-        <source>Could not get collections</source>
+        <source>Could not get tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -3236,7 +3369,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.serviceLimits" datatype="html">
-        <source>You are currently on the Free plan which allows you to have only limited number of collections. Do you want to upgrade to Business now?</source>
+        <source>You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -3247,42 +3380,42 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.fail" datatype="html">
-        <source>Could not create collection</source>
+        <source>Could not create table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.import.fail" datatype="html">
-        <source>Could not import collection</source>
+        <source>Could not import table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.update.fail" datatype="html">
-        <source>Could not update collection</source>
+        <source>Could not update table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.fail" datatype="html">
-        <source>Could not delete collection</source>
+        <source>Could not delete table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.add.favorite.fail" datatype="html">
-        <source>Could not add the collection to favorites</source>
+        <source>Could not add the table to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.favorite.fail" datatype="html">
-        <source>Could not remove the collection from favorites</source>
+        <source>Could not remove the table from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -3317,7 +3450,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.permission.fail" datatype="html">
-        <source>Could not change the collection permissions</source>
+        <source>Could not change the table permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -3792,8 +3925,22 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="constraint.select.modify.value.title" datatype="html">
+        <source>Remove options?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.select.modify.value.message" datatype="html">
+        <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="dialog.calendar.event.collection" datatype="html">
-        <source>Collection</source>
+        <source>Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/calendar-event/form/calendar-event-dialog-form.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3821,7 +3968,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="function.create.serviceLimits" datatype="html">
-        <source>You can have only a single function per collection/link type in the Free Plan. Do you want to upgrade to Business now?</source>
+        <source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/document/document-detail/document-detail.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3852,6 +3999,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="user.permission.icon" datatype="html">
         <source>{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source>
         <context-group purpose="location">
@@ -3867,7 +4021,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collections.postit.empty.info" datatype="html">
-        <source>Looks like you have lot of empty collections. Is it okay? I would suggest to fill in their names or delete them.</source>
+        <source>Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3895,7 +4049,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
-        <source>Deleted file</source>
+        <source>Deleted table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/pipes/query-item-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -3962,7 +4116,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
-        <source>(1/7) Lumeer organizes your information in collections (i.e. categories) of similar records. Later, you can use this button to add your first collection. Then you can open the collection by simply clicking on it.</source>
+        <source>(1/7) Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4004,7 +4158,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.perspectives" datatype="html">
-        <source>(4/7) When you open your collection or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.</source>
+        <source>(4/7) When you open your table or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4018,7 +4172,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.views" datatype="html">
-        <source>(5/7) You might connect multiple collections in relations, select the Table perspective and hide some columns for example. You don&apos;t need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
+        <source>(5/7) You might connect multiple tables in relations, select the Table perspective and hide some columns for example. You don&apos;t need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4129,13 +4283,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/aggregation-select-items.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="perspective.chart.config.aggregation.placeholder" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source>
         <context-group purpose="location">
@@ -4203,6 +4350,41 @@
         <source>Select attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/config/collection/kanban-collection-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pivot.config.attribute.empty" datatype="html">
+        <source>Select attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-attribute-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="aggregation" datatype="html">
+        <source>Aggregation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-value-attribute-config/pivot-value-attribute-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.data.aggregation" datatype="html">
+        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.table.summary.header" datatype="html">
+        <source>Summary of</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.table.summary.total" datatype="html">
+        <source>Sum total</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

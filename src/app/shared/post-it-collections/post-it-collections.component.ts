@@ -361,7 +361,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
     const message = this.i18n({
       id: 'collection.delete.dialog.message',
-      value: 'Do you really want to delete this collection?',
+      value: 'Do you really want to delete this table?',
     });
 
     this.store$.dispatch(
@@ -391,7 +391,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
       const message = this.i18n({
         id: 'collections.postit.empty.info',
         value:
-          'Looks like you have lot of empty collections. Is it okay? I would suggest to fill in their names or delete them.',
+          'Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.',
       });
 
       this.notificationService.info(message);

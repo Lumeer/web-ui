@@ -40,7 +40,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   private isAuthenticated(state: RouterStateSnapshot): boolean {
     if (environment.auth && !this.authService.isAuthenticated()) {
       if (environment.analytics) {
-        this.angulartics2.eventTrack.next({action: 'arrival'});
+        this.angulartics2.eventTrack.next({
+          action: 'User login',
+          properties: {category: 'User Actions'},
+        });
       }
       this.authService.login(state.url);
       return false;

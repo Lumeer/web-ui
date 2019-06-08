@@ -5,19 +5,19 @@
          formControlName="collectionName"
          type="text"
          class="form-control"
-         placeholder="Enter collection name..." i18n-placeholder="@@collection.new.dialog.file.name.placeholder">
+         placeholder="Enter table name..." i18n-placeholder="@@collection.new.dialog.file.name.placeholder">
   <div class="invalid-feedback">
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.required"
          i18n="@@validation.collection.name.empty">
-      Collection name cannot be empty.
+      Table name cannot be empty.
     </div>
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.minlength"
          i18n="@@validation.collection.name.short">
-      Collection name must have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
+      Table name must have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
     </div>
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.uniqueName"
          i18n="@@validation.collection.name.unique">
-      You cannot have two collections with the same name.
+      You cannot have two tables with the same name.
     </div>
   </div>
 </div>

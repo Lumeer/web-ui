@@ -89,7 +89,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
   public form: FormGroup;
 
   public constructor(private fb: FormBuilder, private i18n: I18n) {
-    this.collectionPlaceholder = i18n({id: 'dialog.calendar.event.collection', value: 'Collection'});
+    this.collectionPlaceholder = i18n({id: 'dialog.calendar.event.collection', value: 'Table'});
   }
 
   public get collectionIdControl(): AbstractControl {

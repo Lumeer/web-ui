@@ -2,13 +2,13 @@
 <empty-state *ngIf="query | emptyQuery"
              [icon]="'far fa-times-square'">
   <ng-container *ngIf="{write : project | permissions:projectType:'write' | async} as projectPermissions">
-    <h3 i18n="@@search.collections.empty.title">There are no Collections yet!</h3>
+    <h3 i18n="@@search.collections.empty.title">There are no tables yet!</h3>
     <div i18n="@@search.collections.empty.subtitle.norights"
-         *ngIf="!projectPermissions.write">I am sorry but you do not have permissions to add collections.
+         *ngIf="!projectPermissions.write">I am sorry but you do not have permissions to add tables.
     </div>
 
     <div *ngIf="projectPermissions.write">
-      <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first collection or import one.</div>
+      <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first table or import one.</div>
       <post-it-collection-add-button [disabled]="false"
                                      (clicked)="onNewCollection()">
       </post-it-collection-add-button>
