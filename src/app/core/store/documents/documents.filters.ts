@@ -20,7 +20,7 @@
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
 import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
@@ -29,7 +29,6 @@ import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils'
 import {arrayIntersection} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint} from '../collections/collection.util';
-import {formatDataValue} from '../../../shared/utils/data.utils';
 import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
 
 export function filterDocumentsByQuery(
