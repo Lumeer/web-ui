@@ -30,7 +30,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
-import {formatDataValue} from '../utils/data.utils';
+import {checkValidUser, formatDataValue} from '../utils/data.utils';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 
@@ -104,7 +104,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     const textWidth = this.tempElement.getBoundingClientRect().width;
 
     if (this.constraint && this.constraint.type === ConstraintType.User) {
-      return USER_AVATAR_SIZE + textWidth;
+      return (
+        textWidth + (checkValidUser(value, this.constraintData && this.constraintData.users) ? USER_AVATAR_SIZE : 0)
+      );
     }
 
     return textWidth;
