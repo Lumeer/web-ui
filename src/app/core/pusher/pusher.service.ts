@@ -61,7 +61,7 @@ import {convertUserDtoToModel} from '../store/users/user.converter';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUser} from '../store/users/users.state';
 import {View} from '../store/views/view';
-import {ViewConverter} from '../store/views/view.converter';
+import {convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
 
@@ -333,7 +333,7 @@ export class PusherService implements OnDestroy {
   private bindViewEvents() {
     this.channel.bind('View:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
+        this.store$.dispatch(new ViewsAction.UpdateSuccess({view: convertViewDtoToModel(data.object)}));
       }
     });
     this.channel.bind('View:create:ALT', data => {
@@ -343,7 +343,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('View:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(new ViewsAction.UpdateSuccess({view: ViewConverter.convertToModel(data.object)}));
+        this.store$.dispatch(new ViewsAction.UpdateSuccess({view: convertViewDtoToModel(data.object)}));
       }
     });
     this.channel.bind('View:update:ALT', data => {

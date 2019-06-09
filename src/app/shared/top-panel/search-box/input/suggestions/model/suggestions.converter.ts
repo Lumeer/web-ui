@@ -22,7 +22,7 @@ import {convertCollectionDtoToModel} from '../../../../../../core/store/collecti
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {convertLinkTypeDtoToModel} from '../../../../../../core/store/link-types/link-type.converter';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {ViewConverter} from '../../../../../../core/store/views/view.converter';
+import {convertViewDtoToModel} from '../../../../../../core/store/views/view.converter';
 import {View} from '../../../../../../core/store/views/view';
 import {Suggestions} from './suggestions';
 
@@ -32,7 +32,7 @@ export function convertSuggestionsDtoToModel(suggestions: SuggestionsDto, allCol
   }
   const attributes: Collection[] = suggestions.attributes.map(collection => convertCollectionDtoToModel(collection));
   const collections: Collection[] = suggestions.collections.map(collection => convertCollectionDtoToModel(collection));
-  const views: View[] = suggestions.views.map(view => ViewConverter.convertToModel(view));
+  const views: View[] = suggestions.views.map(view => convertViewDtoToModel(view));
   const linkTypes: LinkType[] = suggestions.linkTypes.map(link => convertLinkType(link, allCollections));
   const linkAttributes: LinkType[] = suggestions.linkAttributes.map(dto => convertLinkType(dto, allCollections));
 

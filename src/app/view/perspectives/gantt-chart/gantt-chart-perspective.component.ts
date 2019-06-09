@@ -22,8 +22,10 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
-  selectCollectionsByCustomQuery,
+  selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
+  selectLinkInstancesByQuery,
+  selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -31,7 +33,7 @@ import {Query} from '../../../core/store/navigation/query';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
 
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
@@ -39,11 +41,13 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from '../../../core/store/gantt-charts/gantt-chart';
 import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
-import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -52,8 +56,10 @@ import {ViewsAction} from '../../../core/store/views/views.action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
-  public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
+  public documents$: Observable<DocumentModel[]>;
+  public linkTypes$: Observable<LinkType[]>;
+  public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -118,25 +124,23 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$
-      .pipe(
-        select(selectQuery),
-        map(query => query && queryWithoutLinks(query))
-      )
-      .subscribe(query => {
-        this.fetchDocuments(query);
-        this.query$.next(query);
-        this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query, false, true)));
-        this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
-      });
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.fetchDocuments(query);
+      this.query$.next(query);
+      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query, false, true)));
+    });
     this.subscriptions.add(subscription);
   }
 
   private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.permissions$ = this.collections$.pipe(
@@ -167,5 +171,9 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const opened = !this.sidebarOpened$.getValue();
     this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
     this.sidebarOpened$.next(opened);
+  }
+
+  public patchLinkInstanceData(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
   }
 }

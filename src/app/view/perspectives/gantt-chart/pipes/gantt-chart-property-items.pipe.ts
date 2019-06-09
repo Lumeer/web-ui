@@ -21,46 +21,77 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {
   GanttChartBarModel,
   GanttChartBarProperty,
+  GanttChartBarPropertyOptional,
+  GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+
+const sameCollectionProperties = [
+  GanttChartBarPropertyRequired.Start.toString(),
+  GanttChartBarPropertyRequired.End.toString(),
+  GanttChartBarPropertyRequired.Name.toString(),
+  GanttChartBarPropertyOptional.Color.toString(),
+  GanttChartBarPropertyOptional.Progress.toString(),
+];
 
 @Pipe({
   name: 'ganttChartPropertyItems',
 })
 export class GanttChartPropertyItemsPipe implements PipeTransform {
   public transform(
-    collections: Collection[],
-    bar: GanttChartBarProperty,
+    selectItems: SelectItemModel[],
+    property: GanttChartBarProperty,
     config: GanttChartCollectionConfig
   ): SelectItemModel[] {
-    const selectedAttributesIdsInsteadBar = this.getSelectedAttributesIdsInsteadBar(bar, config);
-    return collections
-      .filter(collection => !!collection)
-      .reduce((items, collection) => {
-        const itemsForCollection = this.getItemsForCollection(collection, selectedAttributesIdsInsteadBar);
-        return [...items, ...itemsForCollection];
-      }, []);
+    if (sameCollectionProperties.includes(property)) {
+      return this.filterSameResourceItems(selectItems, property, config);
+    }
+
+    return this.filterAnyResourceItems(selectItems, property, config);
   }
 
-  public getSelectedAttributesIdsInsteadBar(
-    barProperty: GanttChartBarProperty,
+  private filterSameResourceItems(
+    selectItems: SelectItemModel[],
+    property: GanttChartBarProperty,
     config: GanttChartCollectionConfig
-  ): string[] {
-    return Object.entries(config.barsProperties || {})
-      .filter(entry => entry[0] !== barProperty)
-      .map(entry => entry[1].attributeId);
+  ): SelectItemModel[] {
+    const sameCollectionModels = Object.entries(config.barsProperties || {})
+      .filter(([prop]) => sameCollectionProperties.includes(prop) && prop !== property)
+      .map(([, model]) => model);
+
+    if (sameCollectionModels.length > 0) {
+      const definedModels = Object.entries(config.barsProperties || {})
+        .filter(([prop]) => prop !== property)
+        .map(([, model]) => model);
+
+      return selectItems.filter(item => {
+        const model = item.id as GanttChartBarModel;
+        return (
+          model.resourceIndex === sameCollectionModels[0].resourceIndex &&
+          model.resourceId === sameCollectionModels[0].resourceId &&
+          !definedModels.some(definedModel => deepObjectsEquals(definedModel, item.id))
+        );
+      });
+    }
+
+    return this.filterAnyResourceItems(selectItems, property, config);
   }
 
-  public getItemsForCollection(collection: Collection, restrictedIds: string[]): SelectItemModel[] {
-    return collection.attributes
-      .filter(attribute => !restrictedIds.includes(attribute.id))
-      .map(attribute => this.attributeToItem(collection, attribute));
-  }
+  private filterAnyResourceItems(
+    selectItems: SelectItemModel[],
+    property: GanttChartBarProperty,
+    config: GanttChartCollectionConfig
+  ): SelectItemModel[] {
+    const definedModels = Object.entries(config.barsProperties || {})
+      .filter(([prop]) => prop !== property)
+      .map(([, model]) => model);
 
-  public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const bar: GanttChartBarModel = {collectionId: collection.id, attributeId: attribute.id};
-    return {id: bar, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
+    if (definedModels.length > 0) {
+      return selectItems.filter(item => !definedModels.some(model => deepObjectsEquals(model, item.id)));
+    }
+
+    return selectItems;
   }
 }

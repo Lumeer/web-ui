@@ -93,7 +93,7 @@ export class DataAggregator {
   public getDataResources(index: number): DataResource[] {
     const resourceId = this.attributesResourceIdForIndex(index);
     const dataResourcesMap = this.dataMap[resourceId];
-    return Object.values(dataResourcesMap);
+    return Object.values(dataResourcesMap || {});
   }
 
   public getNextCollectionResource(index: number): AttributesResource {

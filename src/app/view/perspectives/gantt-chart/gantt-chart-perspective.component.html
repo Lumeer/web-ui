@@ -1,7 +1,8 @@
 <ng-container *ngIf="query$ | async | displayable; else notDisplayable">
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
-  canManageConfig: currentView$ | async | canManageConfig | async} as data">
+  canManageConfig: currentView$ | async | canManageConfig | async, linkTypes: linkTypes$ | async,
+  query: query$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig"
                          [collapsed]="!(sidebarOpened$ | async)"
@@ -9,6 +10,8 @@
       <gantt-chart-config
         class="d-block m-3"
         [collections]="data.collections"
+        [linkTypes]="data.linkTypes"
+        [query]="data.query"
         [config]="data.config"
         (configChange)="onConfigChanged($event)">
       </gantt-chart-config>
@@ -23,10 +26,13 @@
                        [ganttChartId]="ganttChartId"
                        [permissions]="permissions$ | async"
                        [documents]="documents$ | async"
+                       [linkTypes]="data.linkTypes"
+                       [linkInstances]="linkInstances$ | async"
                        [config]="data.config"
                        [constraintData]="constraintData"
-                       [query]="query$ | async"
-                       (patchData)="patchDocumentData($event)"
+                       [query]="data.query"
+                       (patchDocumentData)="patchDocumentData($event)"
+                       (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"
                        (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>

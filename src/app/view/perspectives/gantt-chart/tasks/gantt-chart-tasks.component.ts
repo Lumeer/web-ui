@@ -18,14 +18,14 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Output,
+  Component,
   EventEmitter,
-  OnChanges,
-  SimpleChanges,
   Input,
+  OnChanges,
   OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -38,15 +38,21 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {createGanttChartTasks} from '../util/gantt-chart-util';
+import {GanttChartConverter} from '../util/gantt-chart-util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {Query} from '../../../../core/store/navigation/query';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 
 interface Data {
   collections: Collection[];
   documents: DocumentModel[];
+  linkTypes: LinkType[];
+  linkInstances: LinkInstance[];
   config: GanttChartConfig;
   permissions: Record<string, AllowedPermissions>;
   query: Query;
@@ -64,6 +70,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public documents: DocumentModel[];
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
 
   @Input()
   public config: GanttChartConfig;
@@ -84,13 +96,18 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public query: Query;
 
   @Output()
-  public patchData = new EventEmitter<DocumentModel>();
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
   public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
 
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
+
+  private converter = new GanttChartConverter();
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public tasks$: Observable<GanttChartTask[]>;
@@ -105,10 +122,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       filter(data => !!data),
       debounceTime(100),
       map(data =>
-        createGanttChartTasks(
+        this.converter.convert(
           data.config,
           data.collections,
           data.documents,
+          data.linkTypes,
+          data.linkInstances,
           data.permissions || {},
           data.constraintData,
           data.query
@@ -123,13 +142,17 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         changes.config ||
         changes.collections ||
         changes.permissions ||
+        changes.linkTypes ||
+        changes.linkInstances ||
         changes.query ||
         changes.constraintData) &&
       this.config
     ) {
       this.dataSubject.next({
-        documents: this.documents,
         collections: this.collections,
+        documents: this.documents,
+        linkTypes: this.linkTypes,
+        linkInstances: this.linkInstances,
         permissions: this.permissions,
         config: this.config,
         query: this.query,
@@ -150,35 +173,64 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onValueChanged(data: {documentId: string; changes: {attributeId: string; value: any}[]}) {
-    const {documentId, changes} = data;
-    const changedDocument = (this.documents || []).find(document => document.id === documentId);
-    if (!changedDocument) {
+  public onValueChanged(data: {
+    dataResourceId: string;
+    collectionConfigId: string;
+    type: AttributesResourceType;
+    changes: {attributeId: string; value: any}[];
+  }) {
+    const {dataResourceId, collectionConfigId, type, changes} = data;
+    const dataResource = this.getDataResource(dataResourceId, type);
+    if (!dataResource) {
       return;
     }
 
-    const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
+    const resource = this.getResource(dataResource, type);
 
     const patchData = {};
     for (const {attributeId, value} of changes) {
-      const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
-      const saveValue = getSaveValue(value, attribute && attribute.constraint);
+      const constraint = findAttributeConstraint(resource && resource.attributes, attributeId);
+      const saveValue = constraint
+        ? getSaveValue(value, constraint)
+        : this.formatNewValue(dataResource, collectionConfigId, attributeId, value);
 
-      const changed = (changedDocument.data && changedDocument.data[attributeId] !== saveValue) || false;
+      const changed = (dataResource.data && dataResource.data[attributeId] !== saveValue) || false;
       if (changed) {
-        patchData[attributeId] =
-          attribute && attribute.constraint ? saveValue : this.formatNewValue(changedDocument, attributeId, value);
+        patchData[attributeId] = saveValue;
       }
     }
 
     if (Object.keys(patchData).length > 0) {
-      this.patchData.emit({...changedDocument, data: patchData});
+      if (type === AttributesResourceType.Collection) {
+        this.patchDocumentData.emit({...(<DocumentModel>dataResource), data: patchData});
+      } else if (type === AttributesResourceType.LinkType) {
+        this.patchLinkData.emit({...(<LinkInstance>dataResource), data: patchData});
+      }
     }
   }
 
-  private formatNewValue(document: DocumentModel, attributeId: string, value: any): any {
-    if (this.isProgressAttribute(document.collectionId, attributeId)) {
-      const currentProgress = document.data[attributeId];
+  private getDataResource(id: string, type: AttributesResourceType): DataResource {
+    if (type === AttributesResourceType.Collection) {
+      return (this.documents || []).find(document => document.id === id);
+    } else if (type === AttributesResourceType.LinkType) {
+      return (this.linkInstances || []).find(linkInstanec => linkInstanec.id === id);
+    }
+
+    return null;
+  }
+
+  private getResource(dataResource: DataResource, type: AttributesResourceType): AttributesResource {
+    if (type === AttributesResourceType.Collection) {
+      return (this.collections || []).find(c => c.id === (dataResource as DocumentModel).collectionId);
+    } else if (type === AttributesResourceType.LinkType) {
+      return (this.linkTypes || []).find(lt => lt.id === (dataResource as LinkInstance).linkTypeId);
+    }
+    return null;
+  }
+
+  private formatNewValue(dataResource: DataResource, collectionConfigId: string, attributeId: string, value: any): any {
+    if (this.isProgressAttribute(collectionConfigId, attributeId)) {
+      const currentProgress = dataResource.data[attributeId];
       if (isNotNullOrUndefined(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
         return `${value}%`;
       }

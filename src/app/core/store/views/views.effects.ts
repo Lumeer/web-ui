@@ -37,7 +37,7 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {TablesAction} from '../tables/tables.action';
 import {View} from './view';
-import {ViewConverter} from './view.converter';
+import {convertViewDtoToModel, convertViewModelToDto} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
@@ -55,7 +55,7 @@ export class ViewsEffects {
     map(([action]) => action),
     mergeMap(action => {
       return this.viewService.getViews(action.payload.workspace).pipe(
-        map((dtos: ViewDto[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
+        map((dtos: ViewDto[]) => dtos.map(dto => convertViewDtoToModel(dto))),
         map((views: View[]) => new ViewsAction.GetSuccess({views})),
         catchError(error => of(new ViewsAction.GetFailure({error: error})))
       );
@@ -67,7 +67,7 @@ export class ViewsEffects {
     ofType<ViewsAction.GetOne>(ViewsActionType.GET_BY_CODE),
     mergeMap(action =>
       this.viewService.getView(action.payload.viewId).pipe(
-        map((dto: ViewDto) => ViewConverter.convertToModel(dto)),
+        map((dto: ViewDto) => convertViewDtoToModel(dto)),
         map((view: View) => new ViewsAction.GetSuccess({views: [view]})),
         catchError(error => of(new ViewsAction.GetFailure({error})))
       )
@@ -88,11 +88,11 @@ export class ViewsEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Create>(ViewsActionType.CREATE),
     mergeMap(action => {
-      const viewDto = ViewConverter.convertToDto(action.payload.view);
+      const viewDto = convertViewModelToDto(action.payload.view);
       const {onSuccess, onFailure} = action.payload;
 
       return this.viewService.createView(viewDto).pipe(
-        map(dto => ViewConverter.convertToModel(dto)),
+        map(dto => convertViewDtoToModel(dto)),
         flatMap(view => {
           const actions: Action[] = [new ViewsAction.CreateSuccess({view: view})];
           if (onSuccess) {
@@ -149,11 +149,11 @@ export class ViewsEffects {
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Update>(ViewsActionType.UPDATE),
     mergeMap(action => {
-      const viewDto = ViewConverter.convertToDto(action.payload.view);
+      const viewDto = convertViewModelToDto(action.payload.view);
       const {onSuccess, onFailure} = action.payload;
 
       return this.viewService.updateView(action.payload.viewId, viewDto).pipe(
-        map(dto => ViewConverter.convertToModel(dto)),
+        map(dto => convertViewDtoToModel(dto)),
         flatMap(view => {
           const actions: Action[] = [new ViewsAction.UpdateSuccess({view: view})];
           if (onSuccess) {

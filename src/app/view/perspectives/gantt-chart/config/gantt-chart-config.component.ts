@@ -19,16 +19,10 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  GanttChartBarModel,
-  GanttChartBarProperty,
-  GanttChartBarPropertyOptional,
-  GanttChartBarPropertyRequired,
-  GanttChartCollectionConfig,
-  GanttChartConfig,
-  GanttChartMode,
-} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartCollectionConfig, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -38,6 +32,12 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class GanttChartConfigComponent {
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public query: Query;
 
   @Input()
   public config: GanttChartConfig;
@@ -51,13 +51,13 @@ export class GanttChartConfigComponent {
     this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
   }
 
-  public onCollectionConfigChange(collection: Collection, collectionConfig: GanttChartCollectionConfig) {
+  public onConfigChange(stem: QueryStem, collectionConfig: GanttChartCollectionConfig) {
     const collectionsConfig = {...(this.config.collections || {})};
-    collectionsConfig[collection.id] = collectionConfig;
+    collectionsConfig[stem.collectionId] = collectionConfig;
     this.configChange.emit({...this.config, collections: collectionsConfig});
   }
 
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+  public trackByCollection(index: number, stem: QueryStem): string {
+    return stem.collectionId;
   }
 }
