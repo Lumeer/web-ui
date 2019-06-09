@@ -24,8 +24,8 @@ import {GanttChartModeTextPipe} from './gantt-chart-mode-text.pipe';
 import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
 import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
-import {GanttChartRequiredPropertiesSetPipe} from './gantt-chart-required-properties-set.pipe';
 import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
+import {GanttChartSelectItemsPipe} from './gantt-chart-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -35,8 +35,8 @@ import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
-    GanttChartRequiredPropertiesSetPipe,
     TasksInvalidRangeInfoPipe,
+    GanttChartSelectItemsPipe,
   ],
   exports: [
     DisplayablePipe,
@@ -44,8 +44,8 @@ import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
-    GanttChartRequiredPropertiesSetPipe,
     TasksInvalidRangeInfoPipe,
+    GanttChartSelectItemsPipe,
   ],
 })
 export class GanttChartPipesModule {}

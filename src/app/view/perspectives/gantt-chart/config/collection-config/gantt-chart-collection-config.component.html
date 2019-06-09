@@ -1,11 +1,11 @@
-<div class="text-nowrap">
+<div class="text-nowrap" *ngIf="collections | collectionById:stem.collectionId as collection">
   <i [style.color]="collection.color" aria-hidden="true" class="{{collection.icon}} fa-fw"></i>&nbsp;
   <b>{{collection.name}}</b>
 </div>
 
 <select-item *ngFor="let propertyRequired of ganttChartBarsPropertiesRequired"
              class="d-block w-100 mt-2"
-             [items]="[collection] | ganttChartPropertyItems:propertyRequired:config"
+             [items]="selectItems | ganttChartPropertyItems:propertyRequired:config"
              [selectedId]="config.barsProperties && config.barsProperties[propertyRequired]"
              [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
              [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
@@ -16,16 +16,14 @@
 </select-item>
 
 
-<ng-container *ngIf="config | ganttChartRequiredPropertiesSet">
-  <select-item class="d-block w-100 mt-2"
-               *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional"
-               [items]="[collection] | ganttChartPropertyItems:propertyOptional:config"
-               [selectedId]="config.barsProperties && config.barsProperties[propertyOptional]"
-               [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
-               [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
-               [buttonClasses]="buttonClasses"
-               [removable]="true"
-               (select)="onBarPropertySelect(propertyOptional, $event)"
-               (remove)="onBarPropertyRemoved(propertyOptional)">
-  </select-item>
-</ng-container>
+<select-item class="d-block w-100 mt-2"
+             *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional"
+             [items]="selectItems | ganttChartPropertyItems:propertyOptional:config"
+             [selectedId]="config.barsProperties && config.barsProperties[propertyOptional]"
+             [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
+             [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
+             [buttonClasses]="buttonClasses"
+             [removable]="true"
+             (select)="onBarPropertySelect(propertyOptional, $event)"
+             (remove)="onBarPropertyRemoved(propertyOptional)">
+</select-item>

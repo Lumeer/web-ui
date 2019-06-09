@@ -17,36 +17,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {perspectivesMap} from '../../../view/perspectives/perspective';
-import {ViewDto} from '../../dto/view.dto';
+import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
+import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
 import {View} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart';
 
-export class ViewConverter {
-  public static convertToModel(dto: ViewDto): View {
-    return {
-      id: dto.id,
-      code: dto.code,
-      name: dto.name,
-      description: dto.description,
-      query: convertQueryDtoToModel(dto.query),
-      perspective: perspectivesMap[dto.perspective],
-      config: dto.config,
-      permissions: PermissionsConverter.fromDto(dto.permissions),
-      authorRights: dto.authorRights,
-      version: dto.version,
-    };
-  }
+export function convertViewDtoToModel(dto: ViewDto): View {
+  return {
+    id: dto.id,
+    code: dto.code,
+    name: dto.name,
+    description: dto.description,
+    query: convertQueryDtoToModel(dto.query),
+    perspective: perspectivesMap[dto.perspective],
+    config: convertViewConfigDtoToModel(perspectivesMap[dto.perspective], dto.config),
+    permissions: PermissionsConverter.fromDto(dto.permissions),
+    authorRights: dto.authorRights,
+    version: dto.version,
+  };
+}
 
-  public static convertToDto(model: View): ViewDto {
-    return {
-      code: model.code,
-      name: model.name,
-      query: convertQueryModelToDto(model.query),
-      perspective: model.perspective,
-      config: model.config,
-      description: model.description,
-    };
+export function convertViewModelToDto(model: View): ViewDto {
+  return {
+    code: model.code,
+    name: model.name,
+    query: convertQueryModelToDto(model.query),
+    perspective: model.perspective,
+    config: model.config,
+    description: model.description,
+  };
+}
+
+function convertViewConfigDtoToModel(perspective: Perspective, config: any): any {
+  switch (perspective) {
+    case Perspective.GanttChart:
+      return {...config, ganttChart: convertGanttChartDtoConfigToModel(config && config.ganttChart)};
+    default:
+      return config;
   }
 }

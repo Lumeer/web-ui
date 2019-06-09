@@ -1,8 +1,11 @@
-<gantt-chart-collection-config *ngFor="let collection of collections; trackBy:trackByCollection"
+<gantt-chart-collection-config *ngFor="let stem of query?.stems; trackBy:trackByCollection"
                                class="d-block mt-4"
-                               [config]="config?.collections[collection.id] || {}"
-                               [collection]="collection"
-                               (configChange)="onCollectionConfigChange(collection, $event)">
+                               [config]="config?.collections[stem.collectionId] || {}"
+                               [stem]="stem"
+                               [collections]="collections"
+                               [linkTypes]="linkTypes"
+                               [selectItems]="stem | ganttChartSelectItems:collections:linkTypes"
+                               (configChange)="onConfigChange(stem, $event)">
 </gantt-chart-collection-config>
 
 

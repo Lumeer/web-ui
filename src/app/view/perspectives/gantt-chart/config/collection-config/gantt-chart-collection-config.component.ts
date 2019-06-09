@@ -26,6 +26,9 @@ import {
   GanttChartBarPropertyRequired,
   GanttChartCollectionConfig,
 } from '../../../../../core/store/gantt-charts/gantt-chart';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../core/store/navigation/query';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'gantt-chart-collection-config',
@@ -34,7 +37,16 @@ import {
 })
 export class GanttChartCollectionConfigComponent {
   @Input()
-  public collection: Collection;
+  public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public stem: QueryStem;
+
+  @Input()
+  public selectItems: SelectItemModel[];
 
   @Input()
   public config: GanttChartCollectionConfig;

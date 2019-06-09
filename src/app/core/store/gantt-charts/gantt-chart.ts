@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributesResourceType} from '../../model/resource';
+
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD';
 
@@ -35,8 +37,10 @@ export interface GanttChartCollectionConfig {
 }
 
 export interface GanttChartBarModel {
-  collectionId: string;
+  resourceId: string;
   attributeId: string;
+  resourceIndex?: number;
+  resourceType: AttributesResourceType;
 }
 
 export interface GanttChartTask {
@@ -56,10 +60,13 @@ export interface GanttChartTask {
   sub_swimlane?: string;
 
   // custom attributes
+  dataResourceId: string;
+  collectionConfigId: string;
   startAttributeId: string;
   endAttributeId: string;
   progressAttributeId: string;
-  collectionId?: string;
+  resourceId?: string;
+  resourceType: AttributesResourceType;
 }
 
 export enum GanttChartMode {
@@ -79,6 +86,30 @@ export enum GanttChartBarPropertyRequired {
 
 export enum GanttChartBarPropertyOptional {
   Progress = 'progress',
+  Color = 'color',
   Category = 'category',
   SubCategory = 'subCategory',
+}
+
+export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
+  if (!config || !config.collections) {
+    return config;
+  }
+
+  const collections: Record<string, GanttChartCollectionConfig> = {};
+  for (const [collectionId, collectionConfig] of Object.entries<GanttChartCollectionConfig>(config.collections)) {
+    const barsProperties: Record<string, GanttChartBarModel> = {};
+
+    for (const [key, model] of Object.entries(collectionConfig.barsProperties || {})) {
+      barsProperties[key] = {
+        resourceId: model.resourceId || (model as any).collectionId,
+        attributeId: model.attributeId,
+        resourceIndex: model.resourceIndex || 0,
+        resourceType: model.resourceType || AttributesResourceType.Collection,
+      };
+    }
+    collections[collectionId] = {barsProperties};
+  }
+
+  return {mode: config.mode, collections};
 }

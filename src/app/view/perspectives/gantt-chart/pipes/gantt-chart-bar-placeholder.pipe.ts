@@ -32,7 +32,7 @@ export class GanttChartBarPlaceholderPipe implements PipeTransform {
       {
         id: 'ganttChart.bar.placeholder',
         value:
-          '{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category}}',
+          '{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color}}',
       },
       {
         barProperty,

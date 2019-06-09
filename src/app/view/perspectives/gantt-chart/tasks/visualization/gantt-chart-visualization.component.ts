@@ -23,6 +23,7 @@ import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
 import * as moment from 'moment';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {environment} from '../../../../../../environments/environment';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -44,7 +45,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public currentMode: GanttChartMode;
 
   @Output()
-  public patchData = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
+  public patchData = new EventEmitter<{
+    dataResourceId: string;
+    type: AttributesResourceType;
+    collectionConfigId: string;
+    changes: {attributeId: string; value: any}[];
+  }>();
 
   @Output()
   public addDependency = new EventEmitter<{fromId: string; toId: string}>();
@@ -125,7 +131,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
         }
 
         if (changes) {
-          this.onValueChanged(task.id, changes);
+          this.onValueChanged(task.dataResourceId, task.collectionConfigId, task.resourceType, changes);
         }
       },
 
@@ -137,21 +143,40 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const progressAttributeId = task.progressAttributeId;
         if (progressAttributeId) {
           task.progress = progress;
-          this.onValueChanged(task.id, [{attributeId: progressAttributeId, value: progress}]);
+          this.onValueChanged(task.dataResourceId, task.collectionConfigId, task.resourceType, [
+            {attributeId: progressAttributeId, value: progress},
+          ]);
         }
       },
-      on_dependency_added: dependency => {
-        this.addDependency.next({fromId: dependency.from, toId: dependency.to});
+      on_dependency_added: (fromTask, toTask) => {
+        if (this.canEditDependency(fromTask, toTask)) {
+          this.addDependency.next({fromId: fromTask.dataResourceId, toId: toTask.dataResourceId});
+        }
       },
-      on_dependency_deleted: dependency => {
-        this.removeDependency.next({fromId: dependency.from, toId: dependency.to});
+      on_dependency_deleted: (fromTask, toTask) => {
+        if (this.canEditDependency(fromTask, toTask)) {
+          this.removeDependency.next({fromId: fromTask.dataResourceId, toId: toTask.dataResourceId});
+        }
       },
       language: environment.locale,
       view_mode: this.currentMode,
     });
   }
 
-  private onValueChanged(documentId: string, changes: {attributeId: string; value: string}[]) {
-    this.patchData.emit({documentId, changes});
+  private canEditDependency(fromTask: GanttChartTask, toTask: GanttChartTask): boolean {
+    return (
+      fromTask.resourceType === AttributesResourceType.Collection &&
+      fromTask.resourceType === toTask.resourceType &&
+      fromTask.resourceId === toTask.resourceId
+    );
+  }
+
+  private onValueChanged(
+    dataResourceId: string,
+    collectionConfigId: string,
+    type: AttributesResourceType,
+    changes: {attributeId: string; value: string}[]
+  ) {
+    this.patchData.emit({dataResourceId, collectionConfigId, type, changes});
   }
 }
