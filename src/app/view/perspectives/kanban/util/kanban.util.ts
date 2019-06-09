@@ -25,8 +25,13 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {formatDataValue, isSelectDataValueValid} from '../../../../shared/utils/data.utils';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  SelectConstraintConfig,
+} from '../../../../core/model/data/constraint';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
@@ -124,8 +129,15 @@ function groupDocumentsByColumns(
 }
 
 function formatKanbanColumnValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
-  if (constraint && constraint.type === ConstraintType.User) {
-    return value;
+  if (constraint) {
+    if (constraint.type === ConstraintType.User) {
+      return value;
+    } else if (
+      constraint.type === ConstraintType.Select &&
+      !isSelectDataValueValid(value, constraint.config as SelectConstraintConfig)
+    ) {
+      return null;
+    }
   }
 
   return formatDataValue(value, constraint, constraintData);
