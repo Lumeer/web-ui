@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, withLatestFrom} from 'rxjs/operators';
@@ -65,7 +74,6 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public values: any[];
   public stringValues$: Observable<string[]>;
-  public booleanValue: string;
 
   public readonly constraintType = ConstraintType;
 
@@ -91,9 +99,8 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.column || changes.documents || changes.linkInstances) {
       this.constraint$ = this.bindConstraint();
-      const values = this.getValues();
-      this.stringValues$ = this.bindStringValue(values, this.constraint$);
-      this.booleanValue = this.createBooleanValue(values);
+      this.values = this.getValues();
+      this.stringValues$ = this.bindStringValue(this.values, this.constraint$);
     }
   }
 
@@ -136,17 +143,6 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
         values.map(value => formatDataValue(value, constraint, {users})).filter(value => !!value || value === 0)
       )
     );
-  }
-
-  private createBooleanValue(values: any[]): string {
-    if (values.every(value => !!value)) {
-      return 'true';
-    }
-
-    if (values.every(value => !value)) {
-      return 'false';
-    }
-    return 'indeterminate';
   }
 
   private getValues(): any[] {

@@ -23,6 +23,7 @@ import {NgModule} from '@angular/core';
 import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {ContextMenuModule} from 'ngx-contextmenu';
+import {GravatarModule} from 'ngx-gravatar';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
@@ -30,8 +31,8 @@ import {SharedModule} from '../../../shared/shared.module';
 import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
 import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
-import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/color-collapsed-cell.component';
-import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color-collapsed-cell/group-colors-by-count.pipe';
+import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color/color-collapsed-cell.component';
+import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color/group-colors-by-count.pipe';
 import {TableCollapsedCellMenuComponent} from './body/rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
 import {TableCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/table-collapsed-cell.component';
 import {TableDataCellMenuComponent} from './body/rows/cell-group/data-cell/menu/table-data-cell-menu.component';
@@ -64,6 +65,8 @@ import {TableEditableCellDirective} from './shared/directives/table-editable-cel
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
 import {TableCellScrollDirective} from './shared/directives/table-cell-scroll.directive';
+import {UserCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/user/user-collapsed-cell.component';
+import {BooleanCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/boolean/boolean-collapsed-cell.component';
 
 @NgModule({
   imports: [
@@ -77,6 +80,7 @@ import {TableCellScrollDirective} from './shared/directives/table-cell-scroll.di
     DragDropModule,
     DataInputModule,
     ScrollingModule,
+    GravatarModule,
   ],
   declarations: [
     TablePerspectiveComponent,
@@ -115,6 +119,8 @@ import {TableCellScrollDirective} from './shared/directives/table-cell-scroll.di
     GroupColorsByCountPipe,
     TableEmptyRowComponent,
     TableCellScrollDirective,
+    UserCollapsedCellComponent,
+    BooleanCollapsedCellComponent,
   ],
   entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],

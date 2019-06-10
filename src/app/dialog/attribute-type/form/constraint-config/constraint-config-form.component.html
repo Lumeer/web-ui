@@ -23,4 +23,9 @@
                                [config]="config"
                                [form]="form">
   </text-constraint-config-form>
+
+  <user-constraint-config-form *ngSwitchCase="constraintTypes.User"
+                               [config]="config"
+                               [form]="form">
+  </user-constraint-config-form>
 </ng-container>

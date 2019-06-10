@@ -32,6 +32,7 @@ import {PercentageConstraintConfigFormComponent} from './constraint-config/perce
 import {SelectConstraintOptionsFormComponent} from './constraint-config/select/options/select-constraint-options-form.component';
 import {SelectConstraintConfigFormComponent} from './constraint-config/select/select-constraint-config-form.component';
 import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
+import {UserConstraintConfigFormComponent} from './constraint-config/user/user-constraint-config-form.component';
 
 @NgModule({
   imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
@@ -44,6 +45,7 @@ import {TextConstraintConfigFormComponent} from './constraint-config/text/text-c
     PercentageConstraintConfigFormComponent,
     SelectConstraintConfigFormComponent,
     SelectConstraintOptionsFormComponent,
+    UserConstraintConfigFormComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })

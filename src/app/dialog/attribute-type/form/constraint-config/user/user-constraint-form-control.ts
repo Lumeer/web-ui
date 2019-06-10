@@ -17,13 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-
-@Pipe({
-  name: 'join',
-})
-export class JoinPipe implements PipeTransform {
-  public transform(values: any[], separator: string = ', '): string {
-    return (values || []).map(value => String(value)).join(separator);
-  }
+export enum UserConstraintFormControl {
+  ExternalUsers = 'externalUsers',
 }

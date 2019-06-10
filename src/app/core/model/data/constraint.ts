@@ -180,8 +180,7 @@ export interface TextConstraintConfig {
 }
 
 export interface UserConstraintConfig {
-  email: boolean;
-  name: boolean;
+  externalUsers: boolean;
 }
 
 export interface ColorConstraintConfig {}

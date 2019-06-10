@@ -36,6 +36,7 @@ import {
   isSelectConstraintOptionValueRemoved,
   isUsedSelectConstraintAttribute,
 } from './constraint-config/select/select-constraint.utils';
+import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
 
 @Component({
   selector: 'attribute-type-form',
@@ -83,6 +84,8 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   private createConstraintConfig(type: ConstraintType): ConstraintConfig {
     switch (type) {
+      case ConstraintType.Color:
+        return {};
       case ConstraintType.DateTime:
         return {
           format: this.configForm.get('format').value,
@@ -119,8 +122,10 @@ export class AttributeTypeFormComponent implements OnChanges {
           maxLength: this.configForm.get('maxLength').value,
           regexp: undefined, // TODO
         };
-      case ConstraintType.Color:
-        return {};
+      case ConstraintType.User:
+        return {
+          externalUsers: this.configForm.get(UserConstraintFormControl.ExternalUsers).value,
+        };
       default:
         return null;
     }
