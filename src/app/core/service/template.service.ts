@@ -61,7 +61,7 @@ export class TemplateService {
   private createEmptyTemplate(): Template {
     return {
       type: TemplateType.Empty,
-      icon: 'fal fa-empty-set',
+      imagePath: 'assets/templates/empty.jpg',
       title: this.i18n({id: 'template.empty.title', value: 'Empty'}),
       description: this.i18n({id: 'template.empty.description', value: 'Build your project from scratch'}),
       url: this.createUrlForType(TemplateType.Empty),
@@ -203,12 +203,7 @@ export class TemplateService {
   }
 
   private getTIMEUrl(): string {
-    switch (environment.locale) {
-      case 'cs':
-        return this.createUrl('cs/rizeni-casu');
-      default:
-        return this.createUrl('time-management');
-    }
+    return null;
   }
 
   private getBUGUrl(): string {
