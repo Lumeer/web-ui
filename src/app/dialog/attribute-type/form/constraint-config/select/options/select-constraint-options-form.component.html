@@ -15,17 +15,17 @@
            i18n="@@constraint.select.options.reorder">
         </i>
       </div>
-      <div *ngIf="group.get(formControlNames.Value) as control"
-           class="flex-grow-1 mx-1">
+      <div class="flex-grow-1 mx-1">
         <input #valueInput
                [formControlName]="formControlNames.Value"
-               [class.is-invalid]="control.touched && control.errors"
-               (keydown.enter)="onEnterKeyDown($event, optionIndex)"
+               [class.is-invalid]="group.touched && group.errors"
+               (input)="onValueInput($event, optionIndex)"
+               (keydown.enter)="onValueEnterKeyDown($event, optionIndex)"
                type="text"
                class="form-control"
                placeholder="Value"
                i18n-placeholder="@@constraint.select.option.value">
-        <div *ngIf="control.touched && control.errors?.required"
+        <div *ngIf="group.touched && group.errors?.required"
              class="invalid-feedback"
              i18n="@@constraint.select.option.required">
           You need to provide a value.
@@ -33,7 +33,9 @@
       </div>
       <div *ngIf="displayValues"
            class="flex-grow-1 mx-1">
-        <input [formControlName]="formControlNames.DisplayValue"
+        <input #displayValueInput
+               [formControlName]="formControlNames.DisplayValue"
+               (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
                type="text"
                class="form-control"
                placeholder="Display as..."
@@ -68,4 +70,10 @@
      class="text-danger"
      i18n="@@constraint.select.options.unique">
   Values must be unique!
+</div>
+
+<div *ngIf="form?.touched && form?.errors?.minimumValuesCount"
+     class="text-danger"
+     i18n="@@constraint.select.options.twoValues">
+  You need to enter at least two values!
 </div>

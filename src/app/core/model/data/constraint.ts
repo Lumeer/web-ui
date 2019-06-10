@@ -59,6 +59,25 @@ export const constraintTypesMap = {
   [ConstraintType.Color]: ConstraintType.Color,
 };
 
+export const constraintIconsMap = {
+  [ConstraintType.Address]: 'fas fa-map-marker-alt',
+  [ConstraintType.Boolean]: 'fas fa-check-circle',
+  [ConstraintType.Color]: 'fas fa-palette',
+  [ConstraintType.Coordinates]: 'fas fa-location-circle',
+  [ConstraintType.DateTime]: 'fas fa-calendar-day',
+  [ConstraintType.Email]: 'fas fa-envelope',
+  [ConstraintType.Function]: 'fas fa-function',
+  [ConstraintType.Image]: 'fas fa-file-image',
+  [ConstraintType.Link]: 'fas fa-link',
+  [ConstraintType.Number]: 'fas fa-pi',
+  [ConstraintType.Percentage]: 'fas fa-percentage',
+  [ConstraintType.Rating]: 'fas fa-star',
+  [ConstraintType.Select]: 'fas fa-caret-square-down',
+  [ConstraintType.Tag]: 'fas fa-tag',
+  [ConstraintType.Text]: 'fas fa-font',
+  [ConstraintType.User]: 'fas fa-user',
+};
+
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
   switch (type) {
     case ConstraintType.Boolean:

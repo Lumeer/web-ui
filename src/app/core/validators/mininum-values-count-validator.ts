@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, constraintIconsMap} from '../../core/model/data/constraint';
+import {FormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 
-@Pipe({
-  name: 'constraintTypeIcon',
-})
-export class ConstraintTypeIconPipe implements PipeTransform {
-  public transform(constraint: Constraint): string {
-    if (!constraint) {
-      return '';
-    }
-
-    return constraintIconsMap[constraint.type];
-  }
+export function minimumValuesCountValidator(valueControlName: string, minimumCount: number): ValidatorFn {
+  return (formArray: FormArray): ValidationErrors | null => {
+    const values = formArray.controls
+      .map(form => form.get(valueControlName))
+      .filter(control => !!control)
+      .map(control => control.value)
+      .filter(value => value || value === 0);
+    return values.length < minimumCount ? {minimumValuesCount: minimumCount} : null;
+  };
 }
