@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UserConstraintConfig} from '../../../../../../../../core/model/data/constraint';
 import {USER_AVATAR_SIZE} from '../../../../../../../../shared/data-input/user/user-data-input.component';
+import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {isEmailValid} from '../../../../../../../../shared/utils/email.utils';
 
 @Component({
@@ -49,7 +50,6 @@ export class UserCollapsedCellComponent implements OnChanges {
   }
 
   private extractValidValues(values: any[]): string[] {
-    const validEmailValues = values.filter(value => isEmailValid(value));
-    return Array.from(new Set(validEmailValues));
+    return uniqueValues(values.filter(value => isEmailValid(value)));
   }
 }

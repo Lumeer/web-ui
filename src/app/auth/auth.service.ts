@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
