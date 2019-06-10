@@ -28,6 +28,7 @@ import {
   NumberConstraintConfig,
   PercentageConstraintConfig,
   SelectConstraintConfig,
+  SelectConstraintOption,
   TextConstraintConfig,
   UserConstraintConfig,
 } from '../../core/model/data/constraint';
@@ -535,7 +536,7 @@ export function checkValidUser(value: any, users: User[]): boolean {
 }
 
 export function formatSelectDataValue(value: any, config: SelectConstraintConfig): string {
-  const option = config.options.find(opt => opt.value === value);
+  const option = config.options.find(opt => String(opt.value) === String(value));
   if (option) {
     return (config.displayValues && option.displayValue) || option.value;
   }
@@ -543,5 +544,5 @@ export function formatSelectDataValue(value: any, config: SelectConstraintConfig
 }
 
 export function isSelectDataValueValid(value: any, config: SelectConstraintConfig): boolean {
-  return config && config.options.some(option => option.value === value);
+  return config && config.options.some(option => String(option.value) === String(value));
 }
