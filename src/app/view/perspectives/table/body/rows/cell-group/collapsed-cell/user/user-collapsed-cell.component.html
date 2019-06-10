@@ -1,0 +1,23 @@
+<ng-container [ngSwitch]="validValues.length">
+  <ng-container *ngSwitchCase="0">
+    {{ stringValues | join }}
+  </ng-container>
+
+  <user-data-input *ngSwitchCase="1"
+                   [constraintConfig]="constraintConfig"
+                   [readonly]="true"
+                   [value]="validValues[0]"
+                   class="h-100">
+  </user-data-input>
+
+  <ng-container *ngSwitchDefault>
+    <img *ngFor="let value of validValues; index as valueIndex"
+         ngxGravatar
+         [email]="value"
+         [size]="avatarSize"
+         [style.margin-left.rem]="valueIndex ? -0.5 : 0.25">
+    <span class="px-1">
+      {{ stringValues | join }}
+    </span>
+  </ng-container>
+</ng-container>

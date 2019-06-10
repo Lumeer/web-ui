@@ -23,7 +23,7 @@ import {Pipe, PipeTransform} from '@angular/core';
   name: 'join',
 })
 export class JoinPipe implements PipeTransform {
-  public transform(values: string[], separator: string = ', '): string {
-    return (values || []).join(separator);
+  public transform(values: any[], separator: string = ', '): string {
+    return (values || []).map(value => String(value)).join(separator);
   }
 }
