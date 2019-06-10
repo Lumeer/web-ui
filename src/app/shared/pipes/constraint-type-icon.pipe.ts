@@ -18,9 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {getAttributeConstraintIconName} from '../utils/attribute.utils';
-import {Constraint} from '../../core/model/data/constraint';
+import {Constraint, constraintIconsMap} from '../../core/model/data/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',
@@ -31,6 +29,6 @@ export class ConstraintTypeIconPipe implements PipeTransform {
       return '';
     }
 
-    return getAttributeConstraintIconName(constraint);
+    return constraintIconsMap[constraint.type];
   }
 }
