@@ -663,7 +663,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         return '';
       }
 
-      const code = argument0 + '.getTime()';
+      const code = '((' + argument0 + ') ? (' + argument0 + ').getTime() : 0)';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
