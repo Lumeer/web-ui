@@ -1031,13 +1031,20 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
-        <source>Show different values to users than the ones that are being stored and used as inputs for functions.</source><target state="final">Show different values to users than the ones that are being stored and used as inputs for functions.</target>
+      </trans-unit><trans-unit id="constraint.select.displayValues.label" datatype="html">
+        <source>
+        Distinguish display values
+      </source><target state="final">
+        Distinguish display values
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">15</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
+      </trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
+        <source>Use different values for users and for computations in functions (e.g. High Priority = 3).</source><target state="final">Use different values for users and for computations in functions (e.g. High Priority = 3).</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
         <source>
         </source><target state="final">
         </target>
@@ -1063,37 +1070,52 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.select.option.displayValue" datatype="html">
         <source>Display as...</source><target state="final">Display as...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.option.remove" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="constraint.select.option.remove" datatype="html">
         <source>Remove option</source><target state="final">Remove option</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.option.remove.disabled" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="constraint.select.option.remove.disabled" datatype="html">
         <source>Cannot remove option</source><target state="final">Cannot remove option</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.add.option" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="constraint.select.add.option" datatype="html">
         <source>Add option</source><target state="final">Add option</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.options.unique" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="constraint.select.options.unique" datatype="html">
         <source>
   Values must be unique!
 </source><target state="final">
   Values must be unique!
 </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="constraint.select.options.twoValues" datatype="html">
+        <source>
+  Please enter at least two values.
+</source><target state="final">
+  Please enter at least two values.
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.user.description" datatype="html">
+        <source>
+    Allows you to specify an user by email. The user might be either registered within the organization or an external user.
+  </source><target state="final">
+    Allows you to specify an user by email. The user might be either registered within the organization or an external user.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.user.externalUsers.label" datatype="html">
+        <source>
+        Enable external users
+      </source><target state="final">
+        Enable external users
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="button.share" datatype="html">
         <source>Share</source><target state="final">Share</target>
@@ -2469,6 +2491,54 @@
         </context-group>
       </trans-unit><trans-unit id="template.okr.description" datatype="html">
         <source>Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.</source><target state="final">Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.proj.title" datatype="html">
+        <source>Project Tracker</source><target state="final">Project Tracker</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.proj.description" datatype="html">
+        <source>Manage all your projects like a pro in no time.</source><target state="final">Manage all your projects like a pro in no time.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.work.title" datatype="html">
+        <source>Work Tracker</source><target state="final">Work Tracker</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.work.description" datatype="html">
+        <source>Do you have too many balls in the air at the same time? Make their management an easy task.</source><target state="final">Do you have too many balls in the air at the same time? Make their management an easy task.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.time.title" datatype="html">
+        <source>Time Management</source><target state="final">Time Management</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.time.description" datatype="html">
+        <source>Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.</source><target state="final">Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.bug.title" datatype="html">
+        <source>Issue Tracker</source><target state="final">Issue Tracker</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.bug.description" datatype="html">
+        <source>No more bugs will ever escape when tracked and organized in this tracker.</source><target state="final">No more bugs will ever escape when tracked and organized in this tracker.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>

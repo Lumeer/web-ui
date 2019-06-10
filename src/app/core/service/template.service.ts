@@ -45,6 +45,14 @@ export class TemplateService {
         return this.createOKRTemplate();
       case TemplateType.HR:
         return this.createHRTemplate();
+      case TemplateType.PROJ:
+        return this.createPROJTemplate();
+      case TemplateType.WORK:
+        return this.createWORKTemplate();
+      case TemplateType.BUG:
+        return this.createBUGTemplate();
+      case TemplateType.TIME:
+        return this.createTIMETemplate();
       default:
         return null;
     }
@@ -53,7 +61,7 @@ export class TemplateService {
   private createEmptyTemplate(): Template {
     return {
       type: TemplateType.Empty,
-      icon: 'fal fa-empty-set',
+      imagePath: 'assets/templates/empty.jpg',
       title: this.i18n({id: 'template.empty.title', value: 'Empty'}),
       description: this.i18n({id: 'template.empty.description', value: 'Build your project from scratch'}),
       url: this.createUrlForType(TemplateType.Empty),
@@ -71,6 +79,58 @@ export class TemplateService {
           'Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.',
       }),
       url: this.createUrlForType(TemplateType.OKR),
+    };
+  }
+
+  private createPROJTemplate(): Template {
+    return {
+      type: TemplateType.PROJ,
+      imagePath: 'assets/templates/proj.jpg',
+      title: this.i18n({id: 'template.proj.title', value: 'Project Tracker'}),
+      description: this.i18n({
+        id: 'template.proj.description',
+        value: 'Manage all your projects like a pro in no time.',
+      }),
+      url: this.createUrlForType(TemplateType.PROJ),
+    };
+  }
+
+  private createWORKTemplate(): Template {
+    return {
+      type: TemplateType.WORK,
+      imagePath: 'assets/templates/work.jpg',
+      title: this.i18n({id: 'template.work.title', value: 'Work Tracker'}),
+      description: this.i18n({
+        id: 'template.work.description',
+        value: 'Do you have too many balls in the air at the same time? Make their management an easy task.',
+      }),
+      url: this.createUrlForType(TemplateType.WORK),
+    };
+  }
+
+  private createTIMETemplate(): Template {
+    return {
+      type: TemplateType.TIME,
+      imagePath: 'assets/templates/time.jpg',
+      title: this.i18n({id: 'template.time.title', value: 'Time Management'}),
+      description: this.i18n({
+        id: 'template.time.description',
+        value: 'Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.',
+      }),
+      url: this.createUrlForType(TemplateType.TIME),
+    };
+  }
+
+  private createBUGTemplate(): Template {
+    return {
+      type: TemplateType.BUG,
+      imagePath: 'assets/templates/bug.jpg',
+      title: this.i18n({id: 'template.bug.title', value: 'Issue Tracker'}),
+      description: this.i18n({
+        id: 'template.bug.description',
+        value: 'No more bugs will ever escape when tracked and organized in this tracker.',
+      }),
+      url: this.createUrlForType(TemplateType.BUG),
     };
   }
 
@@ -95,6 +155,14 @@ export class TemplateService {
         return this.getOKRUrl();
       case TemplateType.HR:
         return this.getHRUrl();
+      case TemplateType.PROJ:
+        return this.getPROJUrl();
+      case TemplateType.WORK:
+        return this.getWORKUrl();
+      case TemplateType.TIME:
+        return this.getTIMEUrl();
+      case TemplateType.BUG:
+        return this.getBUGUrl();
     }
   }
 
@@ -113,6 +181,37 @@ export class TemplateService {
         return this.createUrl('cs/koordinace-kandidatu');
       default:
         return this.createUrl('tracking-job-candidates');
+    }
+  }
+
+  private getPROJUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/rizeni-projektu');
+      default:
+        return this.createUrl('project-tracker');
+    }
+  }
+
+  private getWORKUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/vykazy-prace');
+      default:
+        return this.createUrl('work-tracker');
+    }
+  }
+
+  private getTIMEUrl(): string {
+    return null;
+  }
+
+  private getBUGUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/system-hlaseni-chyb');
+      default:
+        return this.createUrl('issue-tracker');
     }
   }
 

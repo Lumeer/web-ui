@@ -342,13 +342,20 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
-        <source>Show different values to users than the ones that are being stored and used as inputs for functions.</source><target state="new">Show different values to users than the ones that are being stored and used as inputs for functions.</target>
+      </trans-unit><trans-unit id="constraint.select.displayValues.label" datatype="html">
+        <source>
+        Distinguish display values
+      </source><target>
+        Rozlišit mezi výpočetní a zobrazenou hodnotou
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">15</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
+      </trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
+        <source>Use different values for users and for computations in functions (e.g. High Priority = 3).</source><target>Používat dvojice hodnot, kde jedna bude zobrazována uživatelům a druhá odpovídající bude použita pro výpočty ve funkcích (např. Vysoká Priorita = 3).</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
         <source>
         </source><target>
         </target>
@@ -374,37 +381,52 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.select.option.displayValue" datatype="html">
         <source>Display as...</source><target>Zobrazit jako...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.option.remove" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="constraint.select.option.remove" datatype="html">
         <source>Remove option</source><target>Odstranit možnost</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.option.remove.disabled" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="constraint.select.option.remove.disabled" datatype="html">
         <source>Cannot remove option</source><target>Možnost nelze odstranit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.add.option" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="constraint.select.add.option" datatype="html">
         <source>Add option</source><target>Přidat možnost</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.options.unique" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="constraint.select.options.unique" datatype="html">
         <source>
   Values must be unique!
 </source><target>
   Jednotlivé hodnoty nesmí být stejné!
 </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="constraint.select.options.twoValues" datatype="html">
+        <source>
+  Please enter at least two values.
+</source><target>
+  Prosím zadejte alespoň dva řádky.
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.user.description" datatype="html">
+        <source>
+    Allows you to specify an user by email. The user might be either registered within the organization or an external user.
+  </source><target>
+    Umožňí zadat uživatele pomocí emailu. Uživatel může být buď přímo registrovaný v organizaci, nebo úplně mimo ni (externí).
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.user.externalUsers.label" datatype="html">
+        <source>
+        Enable external users
+      </source><target>
+        Povolit externí uživatele
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
@@ -415,7 +437,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/view/view.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
             <trans-unit id="view.perspective.name" datatype="html">
                 <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
-                <target>{VAR_SELECT, select, detail {Detail} kanban {Kartičky} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
+                <target>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kartičky} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
@@ -2262,6 +2284,54 @@
         </context-group>
       </trans-unit><trans-unit id="template.okr.description" datatype="html">
         <source>Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.</source><target>Nastavte si svoje cíle, jejich měření a iniciativy vedoucí k jejich naplnění. Můžete sledovat váš postup a vidět, jak se cíle plní.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.proj.title" datatype="html">
+        <source>Project Tracker</source><target>Řízení projektů</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.proj.description" datatype="html">
+        <source>Manage all your projects like a pro in no time.</source><target>Řiďte všechny vaše projekty v prakticky nulovém čase.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.work.title" datatype="html">
+        <source>Work Tracker</source><target>Výkazy práce</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.work.description" datatype="html">
+        <source>Do you have too many balls in the air at the same time? Make their management an easy task.</source><target>Máte příliš mnoho rozpracovaných projektů? Učiňte jejich řízení zábavnou hrou!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.time.title" datatype="html">
+        <source>Time Management</source><target>Řízení času</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.time.description" datatype="html">
+        <source>Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.</source><target>Mějte věci hotové. Nenechte se neustále vyrušovat urgentními věcmi od těch důležitých a spravujte svůj čas efektivně.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.bug.title" datatype="html">
+        <source>Issue Tracker</source><target>Systém hlášení chyb</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.bug.description" datatype="html">
+        <source>No more bugs will ever escape when tracked and organized in this tracker.</source><target>Žádné chyby vám již neutečou, pokud je budete evidovat a organizovat v tomto systému.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
