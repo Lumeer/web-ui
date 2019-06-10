@@ -108,7 +108,9 @@ export class AttributeTypeFormComponent implements OnChanges {
       case ConstraintType.Select:
         return {
           displayValues: this.configForm.get(SelectConstraintFormControl.DisplayValues).value,
-          options: this.configForm.get(SelectConstraintFormControl.Options).value,
+          options: this.configForm
+            .get(SelectConstraintFormControl.Options)
+            .value.filter(option => option.value || option.value === 0),
         };
       case ConstraintType.Text:
         return {

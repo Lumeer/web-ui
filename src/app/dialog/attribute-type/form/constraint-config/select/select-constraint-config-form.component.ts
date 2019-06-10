@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectConstraintConfig} from '../../../../../core/model/data/constraint';
+import {minimumValuesCountValidator} from '../../../../../core/validators/mininum-values-count-validator';
 import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
@@ -52,13 +53,27 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
+    this.addDisplayValuesFormControl();
+    this.addOptionsFormArray();
+  }
+
+  private addDisplayValuesFormControl() {
     this.form.addControl(
       SelectConstraintFormControl.DisplayValues,
       new FormControl(this.config && this.config.displayValues)
     );
+  }
+
+  private addOptionsFormArray() {
     this.form.addControl(
       SelectConstraintFormControl.Options,
-      new FormArray([], uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true))
+      new FormArray(
+        [],
+        [
+          uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
+          minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 2),
+        ]
+      )
     );
   }
 
