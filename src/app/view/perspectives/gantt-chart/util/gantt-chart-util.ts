@@ -231,6 +231,10 @@ export class GanttChartConverter {
       const end = endProperty && dataResource.data[endProperty.attributeId];
       const endEditable = this.isPropertyEditable(endProperty);
 
+      if (!isTaskValid(name, start, end)) {
+        continue;
+      }
+
       const interval = createInterval(
         start,
         startEditable && startProperty.attributeId,
