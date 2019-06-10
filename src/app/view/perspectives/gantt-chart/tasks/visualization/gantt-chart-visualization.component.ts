@@ -167,7 +167,8 @@ export class GanttChartVisualizationComponent implements OnChanges {
     return (
       fromTask.resourceType === AttributesResourceType.Collection &&
       fromTask.resourceType === toTask.resourceType &&
-      fromTask.resourceId === toTask.resourceId
+      fromTask.resourceId === toTask.resourceId &&
+      fromTask.dataResourceId !== toTask.dataResourceId
     );
   }
 

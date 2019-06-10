@@ -69,6 +69,8 @@ import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
 
+type DataResourceSwimlanes = DataResource & {swimlane?: string; subSwimlane?: string};
+
 export class GanttChartConverter {
   private collections: Collection[];
   private documents: DocumentModel[];
@@ -148,7 +150,8 @@ export class GanttChartConverter {
     const valueAttributes = [this.convertGanttProperty(startProperty)];
     const aggregatedData = this.dataAggregator.aggregate(rowAttributes, [], valueAttributes);
 
-    const tasks = [];
+    const dataResourcesSwimlanes: DataResourceSwimlanes[] = [];
+
     for (const swimlaneValue of Object.keys(aggregatedData.map)) {
       const swimlaneMapOrValues = aggregatedData.map[swimlaneValue];
       const swimlane = formatSwimlaneValue(swimlaneValue, categoryConstraint, this.constraintData);
@@ -156,31 +159,19 @@ export class GanttChartConverter {
       if (isArray(swimlaneMapOrValues)) {
         const aggregatedDataValues = swimlaneMapOrValues as AggregatedDataValues[];
         const dataResources = aggregatedDataValues[0].objects;
-        tasks.push(
-          ...this.createGanttChartTasksForResource(properties, resource, dataResources, collectionConfigId, swimlane)
-        );
+        dataResourcesSwimlanes.push(...dataResources.map(dr => ({...dr, swimlane})));
       } else {
         for (const sumSwimlaneValue of Object.keys(swimlaneMapOrValues)) {
           const subSwimlane = formatSwimlaneValue(sumSwimlaneValue, subCategoryConstraint, this.constraintData);
 
           const aggregatedDataValues = swimlaneMapOrValues[sumSwimlaneValue] as AggregatedDataValues[];
           const dataResources = aggregatedDataValues[0].objects;
-
-          tasks.push(
-            ...this.createGanttChartTasksForResource(
-              properties,
-              resource,
-              dataResources,
-              collectionConfigId,
-              swimlane,
-              subSwimlane
-            )
-          );
+          dataResourcesSwimlanes.push(...dataResources.map(dr => ({...dr, swimlane, subSwimlane})));
         }
       }
     }
 
-    return tasks;
+    return this.createGanttChartTasksForResource(properties, resource, dataResourcesSwimlanes, collectionConfigId);
   }
 
   private convertGanttProperty(property: GanttChartBarModel): DataAggregatorAttribute {
@@ -198,10 +189,8 @@ export class GanttChartConverter {
   private createGanttChartTasksForResource(
     properties: Record<string, GanttChartBarModel>,
     resource: AttributesResource,
-    dataResources: DataResource[],
-    collectionConfigId: string,
-    swimlane?: string,
-    subSwimlane?: string
+    dataResources: DataResourceSwimlanes[],
+    collectionConfigId: string
   ): GanttChartTask[] {
     if (!properties) {
       return [];
@@ -213,19 +202,24 @@ export class GanttChartConverter {
     const progressProperty = properties[GanttChartBarPropertyOptional.Progress];
     const colorProperty = properties[GanttChartBarPropertyOptional.Color];
 
-    const validDataResourcesMap: Record<string, DataResource> = dataResources.reduce((map, dataResource) => {
+    const validTaskIdsMap: Record<string, string[]> = dataResources.reduce((map, dataResource) => {
       const name = nameProperty && dataResource.data[nameProperty.attributeId];
       const start = startProperty && dataResource.data[startProperty.attributeId];
       const end = endProperty && dataResource.data[endProperty.attributeId];
-      if (!map[dataResource.id] && isTaskValid(name, start, end)) {
-        map[dataResource.id] = dataResource;
+      if (isTaskValid(name, start, end)) {
+        const taskId = createGanttChartTaskId(dataResource.id, dataResource.swimlane, dataResource.subSwimlane);
+        if (map[dataResource.id]) {
+          map[dataResource.id].push(taskId);
+        } else {
+          map[dataResource.id] = [taskId];
+        }
       }
       return map;
     }, {});
 
     const tasks: GanttChartTask[] = [];
 
-    for (const dataResource of Object.values(validDataResourcesMap)) {
+    for (const dataResource of dataResources) {
       const formattedData = formatData(dataResource.data, resource.attributes, this.constraintData);
 
       const name = nameProperty && dataResource.data[nameProperty.attributeId];
@@ -258,20 +252,20 @@ export class GanttChartConverter {
           : resourceColor;
 
       tasks.push({
-        id: createGanttChartTaskId(dataResource.id, swimlane, subSwimlane),
+        id: createGanttChartTaskId(dataResource.id, dataResource.swimlane, dataResource.subSwimlane),
         name: formatDataValue(name, nameAttribute && nameAttribute.constraint, this.constraintData),
         start: interval[0].value,
         end: interval[1].value,
         progress: createProgress(progress),
-        dependencies: createDependencies(dataResource, validDataResourcesMap),
+        dependencies: createDependencies(dataResource, validTaskIdsMap),
         primary_color: shadeColor(taskColor, 0.5),
         secondary_color: shadeColor(taskColor, 0.3),
         start_drag: startEditable,
         end_drag: endEditable,
         editable: startEditable && endEditable,
         text_color: contrastColor(taskColor),
-        swimlane,
-        sub_swimlane: subSwimlane,
+        swimlane: dataResource.swimlane,
+        sub_swimlane: dataResource.subSwimlane,
 
         dataResourceId: dataResource.id,
         collectionConfigId,
@@ -336,13 +330,10 @@ function formatSwimlaneValue(value: any, constraint: Constraint, constraintData:
   return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
 }
 
-function createDependencies(dataResource: DataResource, dataResourcesMap: Record<string, DataResource>): string {
-  if (
-    (<DocumentModel>dataResource).metaData &&
-    (<DocumentModel>dataResource).metaData.parentId &&
-    dataResourcesMap[(<DocumentModel>dataResource).metaData.parentId]
-  ) {
-    return (<DocumentModel>dataResource).metaData.parentId;
+function createDependencies(dataResource: DataResource, validTaskIdsMap: Record<string, string[]>): string {
+  const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
+  if (parentId && validTaskIdsMap[parentId]) {
+    return validTaskIdsMap[parentId].join(',');
   }
   return '';
 }
