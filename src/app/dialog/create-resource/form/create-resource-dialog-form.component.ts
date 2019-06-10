@@ -50,7 +50,7 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
 
-  public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.Empty);
+  public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.PROJ);
 
   public form: FormGroup;
   public color = DEFAULT_COLOR;

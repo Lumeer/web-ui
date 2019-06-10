@@ -125,7 +125,7 @@ export class TemplateService {
     return {
       type: TemplateType.BUG,
       imagePath: 'assets/templates/bug.jpg',
-      title: this.i18n({id: 'template.okr.title', value: 'Issue Tracker'}),
+      title: this.i18n({id: 'template.bug.title', value: 'Issue Tracker'}),
       description: this.i18n({
         id: 'template.bug.description',
         value: 'No more bugs will ever escape when tracked and organized in this tracker.',
