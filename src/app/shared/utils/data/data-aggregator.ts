@@ -437,7 +437,7 @@ function createDataMap(
   linkInstances: LinkInstance[]
 ): DataResourceMap {
   const idsOrderMap = attributeResourcesOrder.reduce(
-    (idsMap, axisResource, index) => ({...idsMap, [axisResource.id]: index}),
+    (idsMap, axisResource, index) => ({...idsMap, [attributesResourceIdByIndex(axisResource, index)]: index}),
     {}
   );
   const linkTypeIds = new Set((linkTypes || []).map(lt => lt.id));
@@ -485,7 +485,7 @@ function createDataMap(
       collectionId: document2.collectionId,
     };
 
-    if (document1CollectionIndex <= document2CollectionIndex) {
+    if (document1CollectionIndex > document2CollectionIndex) {
       document1Map[document1.id].to.push(linkInstanceObjectData);
       document2Map[document2.id].from.push(linkInstanceObjectData);
       linkInstanceMap[linkInstance.id].to.push(document2ObjectData);
@@ -499,6 +499,14 @@ function createDataMap(
   }
 
   return map;
+}
+
+function attributesResourceIdByIndex(resource: AttributesResource, index: number): string {
+  if (index % 2 === 0) {
+    // order is defined by query stem -> Collection, LinkType, Collection, .....
+    return collectionResourceId(resource.id);
+  }
+  return linkTypeResourceId(resource.id);
 }
 
 function collectionResourceId(id: string): string {
