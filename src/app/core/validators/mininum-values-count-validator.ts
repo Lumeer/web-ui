@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {FormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 
-@Component({
-  selector: 'color-collapsed-cell',
-  templateUrl: './color-collapsed-cell.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ColorCollapsedCellComponent {
-  @Input()
-  public values: string[];
+export function minimumValuesCountValidator(valueControlName: string, minimumCount: number): ValidatorFn {
+  return (formArray: FormArray): ValidationErrors | null => {
+    const values = formArray.controls
+      .map(form => form.get(valueControlName))
+      .filter(control => !!control)
+      .map(control => control.value)
+      .filter(value => value || value === 0);
+    return values.length < minimumCount ? {minimumValuesCount: minimumCount} : null;
+  };
 }

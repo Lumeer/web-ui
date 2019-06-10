@@ -1,0 +1,20 @@
+<div [formGroup]="form">
+  <p class="text-muted"
+     i18n="@@constraint.user.description">
+    Provides a way to choose any user in the organization or an external user.
+  </p>
+
+  <div class="form-group">
+    <div class="form-check">
+      <input [formControlName]="formControlName.ExternalUsers"
+             [id]="formControlName.ExternalUsers"
+             class="form-check-input"
+             type="checkbox">
+      <label [for]="formControlName.ExternalUsers"
+             class="form-check-label"
+             i18n="@@constraint.user.externalUsers.label">
+        Enable external users
+      </label>
+    </div>
+  </div>
+</div>

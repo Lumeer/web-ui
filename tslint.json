@@ -2,7 +2,7 @@
   "extends": ["rxjs-tslint-rules"],
   "rules": {
     "class-name": true,
-    "file-header": [true, "Copyright \\(C\\) since 2017 Answer Institute, s\\.r\\.o\\."],
+    "file-header": [true, "Copyright \\(C\\) since 2017 Lumeer\\.io, s\\.r\\.o\\."],
     "forin": true,
     "label-position": true,
     "member-access": true,

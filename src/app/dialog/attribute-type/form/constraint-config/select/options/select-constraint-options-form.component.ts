@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,7 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {take} from 'rxjs/operators';
+import {FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {SelectConstraintOption} from '../../../../../../core/model/data/constraint';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../shared/utils/form.utils';
 import {SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
@@ -53,12 +52,18 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   @ViewChildren('valueInput')
   public valueInputs: QueryList<ElementRef<HTMLInputElement>>;
 
+  @ViewChildren('displayValueInput')
+  public displayValueInputs: QueryList<ElementRef<HTMLInputElement>>;
+
   public readonly formControlNames = SelectConstraintOptionsFormControl;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
       this.resetForm();
       this.createForm();
+    }
+    if (changes.displayValues) {
+      this.form.controls.forEach(control => control.updateValueAndValidity());
     }
   }
 
@@ -68,17 +73,17 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
 
   private createForm() {
     (this.options || [])
-      .map(option => createOptionForm(option.value, option.displayValue))
+      .map(option => this.createOptionForm(option.value, option.displayValue))
       .forEach(form => this.form.push(form));
+    this.form.push(this.createOptionForm());
 
     if (this.form.length < 2) {
-      this.form.push(createOptionForm());
-      this.form.push(createOptionForm());
+      this.form.push(this.createOptionForm());
     }
   }
 
   public onAddOption() {
-    this.form.push(createOptionForm());
+    this.form.push(this.createOptionForm());
   }
 
   public onRemoveOption(index: number) {
@@ -89,21 +94,49 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     moveFormArrayItem(this.form, event.previousIndex, event.currentIndex);
   }
 
-  public onEnterKeyDown(event: KeyboardEvent, index: number) {
-    event.preventDefault();
-    this.form.insert(index + 1, createOptionForm());
-    this.valueInputs.changes.pipe(take(1)).subscribe((valueInputs: QueryList<ElementRef<HTMLInputElement>>) => {
-      const element = valueInputs.toArray()[index + 1];
-      if (element) {
-        element.nativeElement.focus();
-      }
-    });
-  }
-}
+  public onValueInput(event: Event, index: number) {
+    const value = event.target['value'];
 
-function createOptionForm(value = '', displayValue = ''): FormGroup {
-  return new FormGroup({
-    [SelectConstraintOptionsFormControl.Value]: new FormControl(value, Validators.required),
-    [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(displayValue),
-  });
+    if (index === this.form.controls.length - 1 && value) {
+      this.form.push(this.createOptionForm());
+    }
+  }
+
+  public onValueEnterKeyDown(event: KeyboardEvent, index: number) {
+    event.preventDefault();
+
+    const element = this.valueInputs.toArray()[index + 1];
+    if (element) {
+      element.nativeElement.focus();
+    }
+  }
+
+  public onDisplayValueEnterKeyDown(event: KeyboardEvent, index: number) {
+    event.preventDefault();
+
+    const element = this.displayValueInputs.toArray()[index + 1];
+    if (element) {
+      element.nativeElement.focus();
+    }
+  }
+
+  private createOptionForm(value = '', displayValue = ''): FormGroup {
+    return new FormGroup(
+      {
+        [SelectConstraintOptionsFormControl.Value]: new FormControl(value),
+        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(displayValue),
+      },
+      this.createRequiredValueValidator()
+    );
+  }
+
+  private createRequiredValueValidator(): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const valueControl = formGroup.get(SelectConstraintOptionsFormControl.Value);
+      const displayValueControl = formGroup.get(SelectConstraintOptionsFormControl.DisplayValue);
+      return this.displayValues && displayValueControl.value && (!valueControl.value && valueControl.value !== 0)
+        ? {required: true}
+        : null;
+    };
+  }
 }

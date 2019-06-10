@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import {selectNavigation, selectPerspective, selectQuery} from '../core/store/na
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
+import {selectCurrentView, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 
@@ -97,7 +97,7 @@ export class ViewComponent implements OnInit {
       this.store$.pipe(select(selectPerspective)),
       this.getViewByName(name),
       this.store$.pipe(select(selectQuery)),
-      this.view$
+      this.store$.pipe(select(selectCurrentView))
     )
       .pipe(take(1))
       .subscribe(([config, perspective, viewByName, query, currentView]) => {

@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,25 @@ export const constraintTypesMap = {
   [ConstraintType.Text]: ConstraintType.Text,
   [ConstraintType.User]: ConstraintType.User,
   [ConstraintType.Color]: ConstraintType.Color,
+};
+
+export const constraintIconsMap = {
+  [ConstraintType.Address]: 'fas fa-map-marker-alt',
+  [ConstraintType.Boolean]: 'fas fa-check-circle',
+  [ConstraintType.Color]: 'fas fa-palette',
+  [ConstraintType.Coordinates]: 'fas fa-location-circle',
+  [ConstraintType.DateTime]: 'fas fa-calendar-day',
+  [ConstraintType.Email]: 'fas fa-envelope',
+  [ConstraintType.Function]: 'fas fa-function',
+  [ConstraintType.Image]: 'fas fa-file-image',
+  [ConstraintType.Link]: 'fas fa-link',
+  [ConstraintType.Number]: 'fas fa-pi',
+  [ConstraintType.Percentage]: 'fas fa-percentage',
+  [ConstraintType.Rating]: 'fas fa-star',
+  [ConstraintType.Select]: 'fas fa-caret-square-down',
+  [ConstraintType.Tag]: 'fas fa-tag',
+  [ConstraintType.Text]: 'fas fa-font',
+  [ConstraintType.User]: 'fas fa-user',
 };
 
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
@@ -161,8 +180,7 @@ export interface TextConstraintConfig {
 }
 
 export interface UserConstraintConfig {
-  email: boolean;
-  name: boolean;
+  externalUsers: boolean;
 }
 
 export interface ColorConstraintConfig {}

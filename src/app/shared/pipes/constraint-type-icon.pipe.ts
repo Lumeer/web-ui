@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {getAttributeConstraintIconName} from '../utils/attribute.utils';
-import {Constraint} from '../../core/model/data/constraint';
+import {Constraint, constraintIconsMap} from '../../core/model/data/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',
@@ -31,6 +29,6 @@ export class ConstraintTypeIconPipe implements PipeTransform {
       return '';
     }
 
-    return getAttributeConstraintIconName(constraint);
+    return constraintIconsMap[constraint.type];
   }
 }

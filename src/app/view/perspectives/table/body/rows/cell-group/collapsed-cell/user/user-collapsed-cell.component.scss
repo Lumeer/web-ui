@@ -1,0 +1,8 @@
+:host {
+  display: flex;
+  align-items: center;
+
+  & > img {
+    flex-shrink: 0;
+  }
+}

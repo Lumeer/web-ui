@@ -1,35 +1,45 @@
 <table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
 
-<ng-container *ngIf="constraint$ | async; else defaultCollapsedCell"
-              [ngSwitch]="(constraint$ | async)?.type">
+<div *ngIf="{stringValues: stringValues$ | async, constraint: constraint$ | async} as data"
+     [contextMenu]="menuComponent?.contextMenu"
+     [class.affected]="affected$ | async"
+     [class.selected]="selected"
+     [style.cursor]="'default'"
+     (mousedown)="onMouseDown()"
+     class="h-100 w-100 text-nowrap overflow-hidden">
 
-  <boolean-data-input *ngSwitchCase="constraintType.Boolean"
-                      [indeterminate]="booleanValue === 'indeterminate'"
-                      [value]="booleanValue === 'true'"
-                      class="h-100">
-  </boolean-data-input>
+  <ng-container *ngIf="data.constraint; else defaultCollapsedCell"
+                [ngSwitch]="data.constraint?.type">
 
-  <color-collapsed-cell *ngSwitchCase="constraintType.Color"
-                        class="h-100"
-                        [values]="stringValues$ | async">
-  </color-collapsed-cell>
+    <boolean-collapsed-cell *ngSwitchCase="constraintType.Boolean"
+                            [values]="values"
+                            class="h-100">
+    </boolean-collapsed-cell>
 
-  <ng-container *ngSwitchDefault>
-    <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>
+    <color-collapsed-cell *ngSwitchCase="constraintType.Color"
+                          [values]="stringValues$ | async"
+                          class="h-100">
+    </color-collapsed-cell>
+
+    <user-collapsed-cell *ngSwitchCase="constraintType.User"
+                         [constraintConfig]="data.constraint?.config"
+                         [stringValues]="data.stringValues"
+                         [values]="values"
+                         [title]="data.stringValues | join"
+                         class="h-100">
+    </user-collapsed-cell>
+
+    <ng-container *ngSwitchDefault>
+      <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>
+    </ng-container>
+
   </ng-container>
 
-</ng-container>
-
-<ng-template #defaultCollapsedCell>
-  <div *ngIf="{values: stringValues$ | async} as data"
-       [contextMenu]="menuComponent?.contextMenu"
-       [class.affected]="affected$ | async"
-       [class.selected]="selected"
-       [style.cursor]="'default'"
-       [title]="data.values | join"
-       (mousedown)="onMouseDown()"
-       class="h-100 p-1 text-nowrap overflow-hidden"
-       tabindex="0">
-    {{ (data.values | join) || '&nbsp;' }}
-  </div>
-</ng-template>
+  <ng-template #defaultCollapsedCell>
+    <div [title]="data.stringValues | join"
+         class="h-100 p-1"
+         tabindex="0">
+      {{ (data.stringValues | join) || '&nbsp;' }}
+    </div>
+  </ng-template>
+</div>

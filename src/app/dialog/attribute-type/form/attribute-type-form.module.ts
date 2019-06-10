@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import {PercentageConstraintConfigFormComponent} from './constraint-config/perce
 import {SelectConstraintOptionsFormComponent} from './constraint-config/select/options/select-constraint-options-form.component';
 import {SelectConstraintConfigFormComponent} from './constraint-config/select/select-constraint-config-form.component';
 import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
+import {UserConstraintConfigFormComponent} from './constraint-config/user/user-constraint-config-form.component';
 
 @NgModule({
   imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
@@ -44,6 +45,7 @@ import {TextConstraintConfigFormComponent} from './constraint-config/text/text-c
     PercentageConstraintConfigFormComponent,
     SelectConstraintConfigFormComponent,
     SelectConstraintOptionsFormComponent,
+    UserConstraintConfigFormComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })

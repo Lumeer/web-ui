@@ -1,7 +1,7 @@
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-
-@Pipe({
-  name: 'groupColorsByCount',
-})
-export class GroupColorsByCountPipe implements PipeTransform {
-  public transform(values: string[]): {color: string; num: number}[] {
-    return (values || []).reduce((objs, color) => {
-      const obj = objs.find(o => o.color === color);
-      if (obj) {
-        obj.num++;
-      } else {
-        objs.push({color, num: 1});
-      }
-      return objs;
-    }, []);
-  }
+export enum UserConstraintFormControl {
+  ExternalUsers = 'externalUsers',
 }
