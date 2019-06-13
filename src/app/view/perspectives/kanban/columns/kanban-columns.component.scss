@@ -1,4 +1,4 @@
-@import '../../../../../styles/variables';
+@import '~src/styles/variables';
 
 :host {
   max-height: 100%;
@@ -11,7 +11,7 @@
 
 .cdk-drag-placeholder {
   ::ng-deep.card {
-    background: $gray-200;
+    background: $light;
 
     > * {
       visibility: hidden;
