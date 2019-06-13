@@ -54,4 +54,8 @@ i {
   right: 0.1rem;
   font-size: 0.6rem;
   padding: 0.6rem 0.25rem 0.6rem 0.35rem;
+
+  &.fa-function {
+    padding-left: 0rem;
+  }
 }
