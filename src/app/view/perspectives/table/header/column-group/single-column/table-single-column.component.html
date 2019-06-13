@@ -19,6 +19,7 @@
 </div>
 <i *ngIf="(attribute?.constraint | constraintTypeIcon) as iconName"
    [ngClass]="iconName"
+   [style.background-color]="background"
    [title]="attribute?.constraint | constraintTypeIconTitle"
    (click)="onContextMenu($event)"
    class="float-right position-relative"></i>
