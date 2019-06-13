@@ -23,12 +23,13 @@ import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Auth0DecodedHash, Auth0UserProfile, WebAuth} from 'auth0-js';
 import {of, Subscription, timer} from 'rxjs';
-import {filter, first, mergeMap, timeout} from 'rxjs/operators';
+import {catchError, filter, first, mergeMap, timeout} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {AppState} from '../core/store/app.state';
 import {UsersAction} from '../core/store/users/users.action';
 import {Angulartics2} from 'angulartics2';
 import {selectCurrentUser} from '../core/store/users/users.state';
+import {User} from '../core/store/users/user';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -95,14 +96,17 @@ export class AuthService {
               select(selectCurrentUser),
               filter(user => !!user && !!user.lastLoggedIn),
               timeout(10000),
-              first()
+              first(),
+              catchError(() => null)
             )
-            .subscribe(user => {
-              const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
-              this.angulartics2.eventTrack.next({
-                action: 'User returned',
-                properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
-              });
+            .subscribe((user: User) => {
+              if (user) {
+                const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
+                this.angulartics2.eventTrack.next({
+                  action: 'User returned',
+                  properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
+                });
+              }
             });
         }
       } else if (error) {

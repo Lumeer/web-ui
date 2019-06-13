@@ -32,7 +32,7 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
-import {filter, first, map, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
 import {AppState} from './core/store/app.state';
@@ -216,8 +216,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.store$
         .pipe(
           select(selectCurrentUser),
+          filter(user => user && !superUserEmails.includes(user.email)),
+          timeout(10000),
           first(),
-          filter(user => user && !superUserEmails.includes(user.email))
+          catchError(() => null)
         )
         .subscribe(() => {
           smartlookClient.init(environment.smartlookKey);
