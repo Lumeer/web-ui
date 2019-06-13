@@ -1,0 +1,13 @@
+@import '~src/styles/variables';
+
+.cdk-drag-placeholder {
+  background-color: $light;
+
+  & > * {
+    visibility: hidden;
+  }
+}
+
+.draggable-attribute {
+  width: calc(100% - 25px);
+}

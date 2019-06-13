@@ -4,23 +4,48 @@
     Rows
   </h6>
 
-  <pivot-header-attribute-config *ngFor="let attribute of config?.rowAttributes; trackBy: trackByAttribute; let first = first; let index = index"
-                          class="d-block"
-                          [class.pt-3]="!first"
-                          [pivotAttribute]="attribute"
-                          [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
-                          [isRow]="true"
-                          (attributeSelect)="onRowAttributeSelect($event, attribute)"
-                          (attributeRemove)="onRowAttributeRemove(index)"
-                          (attributeChange)="onRowAttributeChange($event)">
-  </pivot-header-attribute-config>
+  <div cdkDropList
+       class="py-2"
+       [id]="rowsListId"
+       [cdkDropListConnectedTo]="[columnsListId, valuesListId]"
+       [cdkDropListEnterPredicate]="rowsListPredicate.bind(this)"
+       (cdkDropListDropped)="onDrop($event)">
+
+    <div *ngFor="let attribute of config?.rowAttributes; trackBy: trackByAttribute; let index = index"
+         cdkDrag
+         cdkDragLockAxis="y"
+         [cdkDragData]="attribute">
+
+      <div class="d-flex my-2">
+
+        <div class="flex-grow-0 d-flex align-items-center">
+          <i cdkDragHandle
+             class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
+             title="Reorder attributes"
+             i18n="@@perspective.pivot.config.reorder">
+          </i>
+        </div>
+
+        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+                                       [pivotAttribute]="attribute"
+                                       [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       [isRow]="true"
+                                       (attributeSelect)="onRowAttributeSelect($event, attribute)"
+                                       (attributeRemove)="onRowAttributeRemove(index)"
+                                       (attributeChange)="onRowAttributeChange($event)">
+        </pivot-header-attribute-config>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <pivot-header-attribute-config class="d-block"
-                          [class.pt-3]="config?.rowAttributes?.length > 0"
-                          [pivotAttribute]="null"
-                          [availableAttributes]="data.items | pivotHeaderSelectItems:config"
-                          [isRow]="true"
-                          (attributeSelect)="onRowAttributeSelect($event)">
+                                 [pivotAttribute]="null"
+                                 [availableAttributes]="data.items | pivotHeaderSelectItems:config"
+                                 [isRow]="true"
+                                 (attributeSelect)="onRowAttributeSelect($event)">
   </pivot-header-attribute-config>
 
 
@@ -28,21 +53,46 @@
     Columns
   </h6>
 
-  <pivot-header-attribute-config *ngFor="let attribute of config?.columnAttributes; trackBy: trackByAttribute; let first = first; let index = index"
-                          class="d-block"
-                          [class.pt-3]="!first"
-                          [pivotAttribute]="attribute"
-                          [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
-                          (attributeSelect)="onColumnAttributeSelect($event, attribute)"
-                          (attributeRemove)="onColumnAttributeRemove(index)"
-                          (attributeChange)="onColumnAttributeChange($event)">
-  </pivot-header-attribute-config>
+  <div cdkDropList
+       class="py-2"
+       [id]="columnsListId"
+       [cdkDropListConnectedTo]="[rowsListId, valuesListId]"
+       [cdkDropListEnterPredicate]="columnsListPredicate.bind(this)"
+       (cdkDropListDropped)="onDrop($event)">
+
+    <div *ngFor="let attribute of config?.columnAttributes; trackBy: trackByAttribute; let index = index"
+         cdkDrag
+         cdkDragLockAxis="y"
+         [cdkDragData]="attribute">
+
+      <div class="d-flex my-2">
+
+        <div class="flex-grow-0 d-flex align-items-center">
+          <i cdkDragHandle
+             class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
+             title="Reorder attributes"
+             i18n="@@perspective.pivot.config.reorder">
+          </i>
+        </div>
+
+        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+                                       [pivotAttribute]="attribute"
+                                       [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       (attributeSelect)="onColumnAttributeSelect($event, attribute)"
+                                       (attributeRemove)="onColumnAttributeRemove(index)"
+                                       (attributeChange)="onColumnAttributeChange($event)">
+        </pivot-header-attribute-config>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <pivot-header-attribute-config class="d-block"
-                          [class.pt-3]="config?.columnAttributes?.length > 0"
-                          [pivotAttribute]="null"
-                          [availableAttributes]="data.items | pivotHeaderSelectItems:config"
-                          (attributeSelect)="onColumnAttributeSelect($event)">
+                                 [pivotAttribute]="null"
+                                 [availableAttributes]="data.items | pivotHeaderSelectItems:config"
+                                 (attributeSelect)="onColumnAttributeSelect($event)">
   </pivot-header-attribute-config>
 
 
@@ -50,21 +100,45 @@
     Values
   </h6>
 
-  <pivot-value-attribute-config *ngFor="let attribute of config?.valueAttributes; trackBy: trackByAttribute; let first = first; let index = index"
-                          class="d-block"
-                          [class.pt-3]="!first"
-                          [pivotAttribute]="attribute"
-                          [availableAttributes]="data.items"
-                          (attributeSelect)="onValueAttributeSelect($event, attribute)"
-                          (attributeRemove)="onValueAttributeRemove(index)"
-                          (attributeChange)="onValueAttributeChange($event)">
-  </pivot-value-attribute-config>
+  <div cdkDropList
+       class="py-2"
+       [id]="valuesListId"
+       [cdkDropListConnectedTo]="[rowsListId, columnsListId]"
+       (cdkDropListDropped)="onDrop($event)">
+
+    <div *ngFor="let attribute of config?.valueAttributes; trackBy: trackByAttribute; let index = index"
+         cdkDrag
+         cdkDragLockAxis="y"
+         [cdkDragData]="attribute">
+
+      <div class="d-flex my-2">
+
+        <div class="flex-grow-0 d-flex align-items-center">
+          <i cdkDragHandle
+             class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
+             title="Reorder attributes"
+             i18n="@@perspective.pivot.config.reorder">
+          </i>
+        </div>
+
+        <pivot-value-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+                                      [pivotAttribute]="attribute"
+                                      [availableAttributes]="data.items"
+                                      (attributeSelect)="onValueAttributeSelect($event, attribute)"
+                                      (attributeRemove)="onValueAttributeRemove(index)"
+                                      (attributeChange)="onValueAttributeChange($event)">
+        </pivot-value-attribute-config>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <pivot-value-attribute-config class="d-block"
-                          [class.pt-3]="config?.valueAttributes?.length > 0"
-                          [pivotAttribute]="null"
-                          [availableAttributes]="data.items"
-                          (attributeSelect)="onValueAttributeSelect($event)">
+                                [pivotAttribute]="null"
+                                [availableAttributes]="data.items"
+                                (attributeSelect)="onValueAttributeSelect($event)">
   </pivot-value-attribute-config>
 
 </ng-container>

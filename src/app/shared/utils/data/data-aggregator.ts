@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -64,7 +63,6 @@ export interface DataAggregatorAttribute {
   resourceIndex: number;
 }
 
-@Injectable()
 export class DataAggregator {
   private constraintData: ConstraintData;
   private attributesResourcesOrder: AttributesResource[];

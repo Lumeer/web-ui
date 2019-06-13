@@ -59,5 +59,3 @@ export interface PivotColumnAttribute extends PivotAttribute {
 export interface PivotValueAttribute extends PivotAttribute {
   aggregation: DataAggregationType;
 }
-
-export type PivotAnyAttribute = PivotRowAttribute | PivotColumnAttribute | PivotValueAttribute;
