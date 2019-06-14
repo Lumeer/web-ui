@@ -42,7 +42,7 @@ import {TemplateType, templateTypesMap} from '../../core/model/template';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceDialogComponent implements OnInit {
-  @ViewChild(CreateResourceDialogFormComponent)
+  @ViewChild(CreateResourceDialogFormComponent, {static: false})
   public resourceFormComponent: CreateResourceDialogFormComponent;
 
   public parentId$: Observable<string>;

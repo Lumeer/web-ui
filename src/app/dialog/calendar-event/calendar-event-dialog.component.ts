@@ -45,7 +45,7 @@ import {AllowedPermissions} from '../../core/model/allowed-permissions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(CalendarEventDialogFormComponent)
+  @ViewChild(CalendarEventDialogFormComponent, {static: false})
   public formComponent: CalendarEventDialogFormComponent;
 
   public collections$: Observable<Collection[]>;

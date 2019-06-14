@@ -61,7 +61,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
-  @ViewChild(ChartDataComponent)
+  @ViewChild(ChartDataComponent, {static: false})
   public chartDataComponent: ChartDataComponent;
 
   public documents$: Observable<DocumentModel[]>;

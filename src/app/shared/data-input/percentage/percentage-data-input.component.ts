@@ -69,7 +69,7 @@ export class PercentageDataInputComponent implements OnChanges {
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  @ViewChild('percentageInput')
+  @ViewChild('percentageInput', {static: false})
   public percentageInput: ElementRef<HTMLInputElement>;
 
   public valid = true;

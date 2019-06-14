@@ -53,7 +53,7 @@ export class TableHierarchyCellComponent implements OnChanges {
   @Output()
   public toggle = new EventEmitter();
 
-  @ViewChild(TableHierarchyCellMenuComponent)
+  @ViewChild(TableHierarchyCellMenuComponent, {static: true})
   public contextMenuComponent: TableHierarchyCellMenuComponent;
 
   public spacesBefore: any[] = [];

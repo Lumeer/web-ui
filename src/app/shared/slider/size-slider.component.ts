@@ -36,7 +36,7 @@ import {SizeType} from './size-type';
   styleUrls: ['./size-slider.component.scss'],
 })
 export class SizeSliderComponent implements OnChanges {
-  @ViewChild('slider')
+  @ViewChild('slider', {static: true})
   public slider: ElementRef;
 
   @Input() public disabled: boolean;

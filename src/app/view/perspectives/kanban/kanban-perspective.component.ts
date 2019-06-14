@@ -58,10 +58,10 @@ import {ViewsAction} from '../../../core/store/views/views.action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(CollapsibleSidebarComponent, {read: ElementRef})
+  @ViewChild(CollapsibleSidebarComponent, {read: ElementRef, static: false})
   public sidebarComponent: ElementRef;
 
-  @ViewChild(KanbanColumnsComponent, {read: ElementRef})
+  @ViewChild(KanbanColumnsComponent, {read: ElementRef, static: false})
   set content(content: ElementRef) {
     this.kanbanColumnsComponent = content;
     this.computeKanbansWidth();

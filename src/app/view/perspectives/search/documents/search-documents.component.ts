@@ -56,16 +56,16 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @Input()
   public maxLines: number = -1;
 
-  @ViewChild('sTemplate')
+  @ViewChild('sTemplate', {static: false})
   private sTempl: TemplateRef<any>;
 
-  @ViewChild('mTemplate')
+  @ViewChild('mTemplate', {static: false})
   private mTempl: TemplateRef<any>;
 
-  @ViewChild('lTemplate')
+  @ViewChild('lTemplate', {static: false})
   private lTempl: TemplateRef<any>;
 
-  @ViewChild('xlTemplate')
+  @ViewChild('xlTemplate', {static: false})
   private xlTempl: TemplateRef<any>;
 
   public size: SizeType;

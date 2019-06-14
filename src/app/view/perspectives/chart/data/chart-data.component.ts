@@ -108,7 +108,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   @Output()
   public patchLinkData = new EventEmitter<LinkInstance>();
 
-  @ViewChild(ChartVisualizerComponent)
+  @ViewChild(ChartVisualizerComponent, {static: true})
   public chartVisualizerComponent: ChartVisualizerComponent;
 
   private dataSubject = new BehaviorSubject<Data>(null);

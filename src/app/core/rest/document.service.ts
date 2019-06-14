@@ -19,7 +19,6 @@
 
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -27,8 +26,8 @@ import {environment} from '../../../environments/environment';
 import {DocumentDto} from '../dto';
 import {DocumentMetaDataDto} from '../dto/document.dto';
 import {AppState} from '../store/app.state';
-import {BaseService} from './base.service';
 import {Workspace} from '../store/navigation/workspace';
+import {BaseService} from './base.service';
 
 // TODO send data attribute without '_id'
 @Injectable()
@@ -105,8 +104,6 @@ export class DocumentService extends BaseService {
     const projectId = this.getOrCurrentProjectId(workspace);
     const collectionId = this.getOrCurrentCollectionId(workspace);
 
-    return `${
-      environment.apiUrl
-    }/rest/organizations/${organizationId}/projects/${projectId}/collections/${collectionId}/documents`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections/${collectionId}/documents`;
   }
 }

@@ -77,7 +77,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   @Output()
   public edit = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent)
+  @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;
 
   public readonly macOS = isMacOS();

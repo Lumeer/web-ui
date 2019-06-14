@@ -29,6 +29,6 @@ export class TableCollapsedCellMenuComponent {
   @Output()
   public expand = new EventEmitter();
 
-  @ViewChild('contextMenu')
+  @ViewChild('contextMenu', {static: true})
   public contextMenu: ElementRef;
 }

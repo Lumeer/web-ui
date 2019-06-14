@@ -47,7 +47,7 @@ export class TableHiddenColumnComponent implements OnChanges {
   @Input()
   public column: TableConfigColumn;
 
-  @ViewChild(ContextMenuComponent)
+  @ViewChild(ContextMenuComponent, {static: true})
   public contextMenuComponent: ContextMenuComponent;
 
   public collection$: Observable<Collection>;

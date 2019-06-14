@@ -38,7 +38,7 @@ import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeTypeDialogComponent implements OnInit {
-  @ViewChild(AttributeTypeFormComponent)
+  @ViewChild(AttributeTypeFormComponent, {static: false})
   public constraintForm: AttributeTypeFormComponent;
 
   public collection$: Observable<Collection>;

@@ -39,13 +39,13 @@ import {DialogType} from '../../dialog-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogWrapperComponent implements AfterViewInit {
-  @ViewChild('modalHeader')
+  @ViewChild('modalHeader', {static: true})
   public headerElement: ElementRef;
 
-  @ViewChild('modalFooter')
+  @ViewChild('modalFooter', {static: true})
   public footerElement: ElementRef;
 
-  @ViewChild('modalBody')
+  @ViewChild('modalBody', {static: true})
   public bodyElement: ElementRef;
 
   @Input()

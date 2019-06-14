@@ -89,7 +89,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
   @Input()
   public origin: ElementRef | HTMLElement;
 
-  @ViewChild('attributeSuggestions')
+  @ViewChild('attributeSuggestions', {static: false})
   public attributeSuggestions: TemplateRef<any>;
 
   public lastName: string;

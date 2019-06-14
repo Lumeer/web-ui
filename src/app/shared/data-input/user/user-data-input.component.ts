@@ -79,7 +79,7 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  @ViewChild('textInput')
+  @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
   public readonly avatarSize = USER_AVATAR_SIZE;

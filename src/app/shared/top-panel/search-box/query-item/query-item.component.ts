@@ -56,10 +56,10 @@ export class QueryItemComponent {
   @Output()
   public change = new EventEmitter();
 
-  @ViewChild(AttributeValueComponent)
+  @ViewChild(AttributeValueComponent, {static: false})
   public attributeValueComponent: AttributeValueComponent;
 
-  @ViewChild(AttributeConditionComponent)
+  @ViewChild(AttributeConditionComponent, {static: false})
   public attributeConditionComponent: AttributeConditionComponent;
 
   public onRemove() {

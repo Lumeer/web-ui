@@ -58,7 +58,7 @@ export class BlocklyDebuggerComponent implements OnInit {
   @Input()
   public blocklyDryRunResult = '';
 
-  @ViewChild('myDiv')
+  @ViewChild('myDiv', {static: false})
   private myDiv: ElementRef;
 
   @Output()

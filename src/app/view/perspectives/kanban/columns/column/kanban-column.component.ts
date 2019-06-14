@@ -55,10 +55,10 @@ import {BehaviorSubject} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KanbanColumnComponent implements OnInit, OnChanges {
-  @ViewChild('cardWrapper')
+  @ViewChild('cardWrapper', {static: true})
   public cardWrapperElement: ElementRef;
 
-  @ViewChild('columnBody')
+  @ViewChild('columnBody', {static: true})
   public columnBodyElement: ElementRef;
 
   @Input()

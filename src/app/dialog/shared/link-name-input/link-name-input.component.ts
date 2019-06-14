@@ -37,7 +37,7 @@ export class LinkNameInputComponent implements OnChanges {
   @Input()
   public focused: boolean;
 
-  @ViewChild('linkName')
+  @ViewChild('linkName', {static: true})
   public linkName: ElementRef;
 
   public ngOnChanges(changes: SimpleChanges) {

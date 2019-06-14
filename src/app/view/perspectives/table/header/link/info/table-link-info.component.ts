@@ -69,10 +69,10 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   @Output()
   public removePart = new EventEmitter();
 
-  @ViewChild('linkMenu')
+  @ViewChild('linkMenu', {static: true})
   public linkMenu: ElementRef;
 
-  @ViewChild(ContextMenuComponent)
+  @ViewChild(ContextMenuComponent, {static: true})
   public contextMenuComponent: ContextMenuComponent;
 
   constructor(private contextMenuService: ContextMenuService) {}

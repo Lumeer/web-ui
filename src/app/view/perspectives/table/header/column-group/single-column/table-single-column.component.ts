@@ -94,13 +94,13 @@ export class TableSingleColumnComponent implements OnChanges {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
-  @ViewChild(TableEditableCellDirective)
+  @ViewChild(TableEditableCellDirective, {static: true})
   public editableCellDirective: TableEditableCellDirective;
 
-  @ViewChild(TableAttributeSuggestionsComponent)
+  @ViewChild(TableAttributeSuggestionsComponent, {static: false})
   public suggestions: TableAttributeSuggestionsComponent;
 
-  @ViewChild(TableColumnContextMenuComponent)
+  @ViewChild(TableColumnContextMenuComponent, {static: false})
   public contextMenuComponent: TableColumnContextMenuComponent;
 
   @HostBinding('style.background')

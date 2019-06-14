@@ -72,7 +72,7 @@ export class TableColumnContextMenuComponent {
   @Output()
   public functionEdit = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent)
+  @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;
 
   public addNextColumn() {

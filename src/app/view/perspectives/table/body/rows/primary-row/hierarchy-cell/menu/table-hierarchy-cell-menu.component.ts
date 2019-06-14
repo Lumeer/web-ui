@@ -39,7 +39,7 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
-  @ViewChild(ContextMenuComponent)
+  @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;
 
   public readonly macOS = isMacOS();

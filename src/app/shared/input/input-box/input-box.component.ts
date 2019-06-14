@@ -33,8 +33,8 @@ const warningStyle = ['border', 'border-danger', 'rounded'];
   styleUrls: ['./input-box.component.scss'],
 })
 export class InputBoxComponent implements OnInit {
-  @ViewChild('input') public input: ElementRef;
-  @ViewChild('inputParent') public inputParent: ElementRef;
+  @ViewChild('input', {static: true}) public input: ElementRef;
+  @ViewChild('inputParent', {static: true}) public inputParent: ElementRef;
 
   @Input() public initialValue: string;
   @Input() public color: string;

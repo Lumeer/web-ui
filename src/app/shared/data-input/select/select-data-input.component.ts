@@ -74,10 +74,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  @ViewChild('textInput')
+  @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(TypeaheadDirective)
+  @ViewChild(TypeaheadDirective, {static: false})
   public typeahead: TypeaheadDirective;
 
   public options: SelectConstraintOption[] = [];

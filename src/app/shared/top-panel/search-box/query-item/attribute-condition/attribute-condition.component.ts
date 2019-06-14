@@ -59,7 +59,7 @@ export class AttributeConditionComponent implements OnInit {
   @Output()
   public change = new EventEmitter();
 
-  @ViewChild('conditionInput')
+  @ViewChild('conditionInput', {static: true})
   private conditionInput: ElementRef;
 
   public focused: boolean;
