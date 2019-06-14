@@ -63,7 +63,7 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output()
   public horizontalScroll = new EventEmitter<number>();
 
-  @ViewChild(CdkVirtualScrollViewport)
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
   public virtualScrollViewport: CdkVirtualScrollViewport;
 
   private scrollLeft = 0;

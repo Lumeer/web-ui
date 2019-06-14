@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
@@ -23,6 +24,7 @@ import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {DocumentsGuard} from '../core/guards/data/documents.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {UsersGuard} from '../core/guards/data/users.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.service';
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
@@ -31,7 +33,6 @@ import {Perspective} from './perspectives/perspective';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
-import {UsersGuard} from '../core/guards/data/users.guard';
 
 const viewRoutes: Routes = [
   {
@@ -49,35 +50,40 @@ const viewRoutes: Routes = [
     children: [
       {
         path: Perspective.Detail,
-        loadChildren: './perspectives/detail/detail-perspective.module#DetailPerspectiveModule',
+        loadChildren: () =>
+          import('./perspectives/detail/detail-perspective.module').then(m => m.DetailPerspectiveModule),
       },
       {
         path: Perspective.Kanban,
-        loadChildren: './perspectives/kanban/kanban-perspective.module#KanbanPerspectiveModule',
+        loadChildren: () =>
+          import('./perspectives/kanban/kanban-perspective.module').then(m => m.KanbanPerspectiveModule),
       },
       {
         path: Perspective.Pivot,
-        loadChildren: './perspectives/pivot/pivot-perspective.module#PivotPerspectiveModule',
+        loadChildren: () => import('./perspectives/pivot/pivot-perspective.module').then(m => m.PivotPerspectiveModule),
       },
       {
         path: Perspective.Chart,
-        loadChildren: './perspectives/chart/chart-perspective.module#ChartPerspectiveModule',
+        loadChildren: () => import('./perspectives/chart/chart-perspective.module').then(m => m.ChartPerspectiveModule),
       },
       {
         path: Perspective.Map,
-        loadChildren: './perspectives/map/map-perspective.module#MapPerspectiveModule',
+        loadChildren: () => import('./perspectives/map/map-perspective.module').then(m => m.MapPerspectiveModule),
       },
       {
         path: Perspective.GanttChart,
-        loadChildren: './perspectives/gantt-chart/gantt-chart-perspective.module#GanttChartPerspectiveModule',
+        loadChildren: () =>
+          import('./perspectives/gantt-chart/gantt-chart-perspective.module').then(m => m.GanttChartPerspectiveModule),
       },
       {
         path: Perspective.Calendar,
-        loadChildren: './perspectives/calendar/calendar-perspective.module#CalendarPerspectiveModule',
+        loadChildren: () =>
+          import('./perspectives/calendar/calendar-perspective.module').then(m => m.CalendarPerspectiveModule),
       },
       {
         path: Perspective.Search,
-        loadChildren: './perspectives/search/search-perspective.module#SearchPerspectiveModule',
+        loadChildren: () =>
+          import('./perspectives/search/search-perspective.module').then(m => m.SearchPerspectiveModule),
       },
       {
         path: Perspective.Table,

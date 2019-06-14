@@ -48,7 +48,7 @@ export class ContactFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public organization: Organization;
 
-  @ViewChild('invoicingContactForm')
+  @ViewChild('invoicingContactForm', {static: true})
   private invoicingContact: NgForm;
 
   public countries = CountriesData.getCountryNames();

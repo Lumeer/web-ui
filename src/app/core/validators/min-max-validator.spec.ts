@@ -17,52 +17,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {minMaxValidator} from './min-max-validator';
 
 describe('minMaxValidator', () => {
+  let form: FormGroup;
+  let min: AbstractControl;
+  let max: AbstractControl;
+
   beforeEach(() => {
-    this.form = new FormGroup({
+    form = new FormGroup({
       min: new FormControl(),
       max: new FormControl(),
     });
-    this.min = this.form.get('min');
-    this.max = this.form.get('max');
+    min = form.get('min');
+    max = form.get('max');
   });
 
   it('should not fail if minimum form control does not exist', () => {
-    expect(minMaxValidator('minimum', 'max')(this.form)).toBeNull();
+    expect(minMaxValidator('minimum', 'max')(form)).toBeNull();
   });
 
   it('should not fail if maximum form control does not exist', () => {
-    expect(minMaxValidator('min', 'maximum')(this.form)).toBeNull();
+    expect(minMaxValidator('min', 'maximum')(form)).toBeNull();
   });
 
   it('should not produce error if min is not set', () => {
-    this.max.setValue(2);
-    expect(minMaxValidator('min', 'max')(this.form)).toBeNull();
+    max.setValue(2);
+    expect(minMaxValidator('min', 'max')(form)).toBeNull();
   });
 
   it('should not produce error if max is not set', () => {
-    this.min.setValue(1);
-    expect(minMaxValidator('min', 'max')(this.form)).toBeNull();
+    min.setValue(1);
+    expect(minMaxValidator('min', 'max')(form)).toBeNull();
   });
 
   it('should not produce error if min is less than max', () => {
-    this.min.setValue(1);
-    this.max.setValue(2);
-    expect(minMaxValidator('min', 'max')(this.form)).toBeNull();
+    min.setValue(1);
+    max.setValue(2);
+    expect(minMaxValidator('min', 'max')(form)).toBeNull();
   });
 
   it('should not produce error if min is equal to max', () => {
-    this.min.setValue(2);
-    this.max.setValue(2);
-    expect(minMaxValidator('min', 'max')(this.form)).toBeNull();
+    min.setValue(2);
+    max.setValue(2);
+    expect(minMaxValidator('min', 'max')(form)).toBeNull();
   });
 
   it('should produce error if min is greater than max', () => {
-    this.min.setValue(2);
-    this.max.setValue(1);
-    expect(minMaxValidator('min', 'max')(this.form)).toEqual({minMaxInvalid: true});
+    min.setValue(2);
+    max.setValue(1);
+    expect(minMaxValidator('min', 'max')(form)).toEqual({minMaxInvalid: true});
   });
 });

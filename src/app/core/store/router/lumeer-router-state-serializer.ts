@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Params, RouterStateSnapshot} from '@angular/router';
-import {Data} from '@angular/router/src/config';
+import {Data, Params, RouterStateSnapshot} from '@angular/router';
 import {RouterStateSerializer} from '@ngrx/router-store';
 
 export interface RouterStateUrl {

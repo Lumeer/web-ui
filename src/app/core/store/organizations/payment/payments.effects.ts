@@ -17,22 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Router} from '@angular/router';
-import {AppState} from '../../app.state';
-import {OrganizationService} from '../../../rest';
-import {NotificationsAction} from '../../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {PaymentsAction, PaymentsActionType} from './payments.action';
-import {PaymentConverter} from './payment.converter';
-import {PlatformLocation} from '@angular/common';
-import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/location/browser_platform_location';
-import {Angulartics2, GoogleAnalyticsSettings, UserTimings} from 'angulartics2';
+import {Angulartics2} from 'angulartics2';
+import {Observable, of} from 'rxjs';
+import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../environments/environment';
+import {OrganizationService} from '../../../rest';
+import {AppState} from '../../app.state';
+import {NotificationsAction} from '../../notifications/notifications.action';
+import {PaymentConverter} from './payment.converter';
+import {PaymentsAction, PaymentsActionType} from './payments.action';
 
 @Injectable()
 export class PaymentsEffects {
@@ -131,9 +129,7 @@ export class PaymentsEffects {
   public createPayment$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
     mergeMap(action => {
-      const returnUrl =
-        (action.payload.returnUrl && action.payload.returnUrl) ||
-        (this.location as BrowserPlatformLocation).location.href;
+      const returnUrl = action.payload.returnUrl || window.location.href;
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
@@ -178,7 +174,6 @@ export class PaymentsEffects {
     private router: Router,
     private actions$: Actions,
     private organizationService: OrganizationService,
-    private location: PlatformLocation,
     private angulartics2: Angulartics2
   ) {}
 }

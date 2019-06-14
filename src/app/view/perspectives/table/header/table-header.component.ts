@@ -51,7 +51,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild('content')
+  @ViewChild('content', {static: true})
   public contentElement: ElementRef<HTMLDivElement>;
 
   public singleCollection$: Observable<boolean>;

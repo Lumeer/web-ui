@@ -48,7 +48,7 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   @Output()
   public change = new EventEmitter<ValueChange>();
 
-  @ViewChild('chart')
+  @ViewChild('chart', {static: true})
   private chartElement: ElementRef;
 
   private chartVisualizer: ChartVisualizer;

@@ -94,7 +94,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Output()
   public useHint = new EventEmitter();
 
-  @ViewChild('hints')
+  @ViewChild('hints', {static: true})
   public hints: TemplateRef<any>;
 
   public collection$: Observable<Collection>;

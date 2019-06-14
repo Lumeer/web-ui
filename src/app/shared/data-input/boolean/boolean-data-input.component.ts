@@ -58,7 +58,7 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  @ViewChild('booleanInput')
+  @ViewChild('booleanInput', {static: true})
   public booleanInput: ElementRef<HTMLInputElement>;
 
   public inputId =

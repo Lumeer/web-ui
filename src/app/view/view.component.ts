@@ -39,7 +39,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewComponent implements OnInit {
-  @ViewChild(ViewControlsComponent)
+  @ViewChild(ViewControlsComponent, {static: false})
   public viewControlsComponent: ViewControlsComponent;
 
   public view$: Observable<View>;

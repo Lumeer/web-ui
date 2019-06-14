@@ -40,7 +40,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild('hiddenInput')
+  @ViewChild('hiddenInput', {static: true})
   public hiddenInput: ElementRef<HTMLInputElement>;
 
   private subscriptions = new Subscription();

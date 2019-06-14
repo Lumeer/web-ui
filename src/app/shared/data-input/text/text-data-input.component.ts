@@ -69,7 +69,7 @@ export class TextDataInputComponent implements OnChanges {
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  @ViewChild('textInput')
+  @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
   private preventSave: boolean;

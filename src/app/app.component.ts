@@ -53,7 +53,7 @@ declare let $: any;
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  @ViewChild('browserWarning')
+  @ViewChild('browserWarning', {static: false})
   public browserWarning: ElementRef;
 
   public isChrome = true;

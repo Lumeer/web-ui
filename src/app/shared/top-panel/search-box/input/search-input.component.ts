@@ -46,10 +46,10 @@ export class SearchInputComponent {
   @Output()
   public search = new EventEmitter();
 
-  @ViewChild('searchInput')
+  @ViewChild('searchInput', {static: true})
   private searchInput: ElementRef;
 
-  @ViewChild(SearchSuggestionsComponent)
+  @ViewChild(SearchSuggestionsComponent, {static: true})
   public searchSuggestions: SearchSuggestionsComponent;
 
   public suggesting: boolean;

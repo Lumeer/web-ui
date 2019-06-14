@@ -78,10 +78,10 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
-  @ViewChild(TableHeaderComponent)
+  @ViewChild(TableHeaderComponent, {static: false})
   public tableHeader: TableHeaderComponent;
 
-  @ViewChild(TableBodyComponent)
+  @ViewChild(TableBodyComponent, {static: false})
   public tableBody: TableBodyComponent;
 
   public currentView$: Observable<View>;

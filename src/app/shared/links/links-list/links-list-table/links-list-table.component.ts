@@ -54,7 +54,7 @@ const PAGE_SIZE = 100;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableComponent implements OnChanges, OnDestroy {
-  @ViewChild(LinksListTableHeaderComponent)
+  @ViewChild(LinksListTableHeaderComponent, {static: false})
   public headerComponent: LinksListTableHeaderComponent;
 
   @Input() public linkType: LinkType;

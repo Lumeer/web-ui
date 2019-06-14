@@ -66,7 +66,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   @Input()
   public selected: boolean;
 
-  @ViewChild(TableCollapsedCellMenuComponent)
+  @ViewChild(TableCollapsedCellMenuComponent, {static: true})
   public menuComponent: TableCollapsedCellMenuComponent;
 
   public affected$: Observable<boolean>;

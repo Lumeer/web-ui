@@ -67,7 +67,7 @@ export class ColorDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('colorInput')
+  @ViewChild('colorInput', {static: false})
   public colorInput: ElementRef<HTMLInputElement>;
 
   public valid = true;
@@ -77,7 +77,7 @@ export class ColorDataInputComponent implements OnChanges {
 
   public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
 
-  @ViewChild(ColorPickerDirective)
+  @ViewChild(ColorPickerDirective, {static: false})
   private colorPicker: ColorPickerDirective;
 
   private refreshValid(value: any) {

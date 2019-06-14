@@ -75,7 +75,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('dateTimePicker')
+  @ViewChild('dateTimePicker', {static: true})
   public dateTimePicker: TemplateRef<any>;
 
   public form = new FormGroup({

@@ -48,7 +48,7 @@ export class MapContentComponent implements OnInit {
   @Input()
   public map: MapModel;
 
-  @ViewChild(MapRenderComponent)
+  @ViewChild(MapRenderComponent, {static: false})
   public mapRenderComponent: MapRenderComponent;
 
   public markers$: Observable<Marker[]>;

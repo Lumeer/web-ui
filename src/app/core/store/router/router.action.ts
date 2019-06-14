@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NavigationExtras} from '@angular/router';
-import {Params} from '@angular/router/src/shared';
+import {NavigationExtras, Params} from '@angular/router';
 import {Action} from '@ngrx/store';
 
 export enum RouterActionType {

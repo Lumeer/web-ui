@@ -77,7 +77,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
   @ViewChildren('postIt', {read: ElementRef})
   public postIts: QueryList<ElementRef>;
 
-  @ViewChild('postItLayout')
+  @ViewChild('postItLayout', {static: false})
   set content(content: ElementRef) {
     if (content) {
       this.postItLayout = content;

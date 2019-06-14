@@ -49,7 +49,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   @Output() public togglePanel = new EventEmitter<any>();
   @Output() public favoriteChange = new EventEmitter<{favorite: boolean; onlyStore: boolean}>();
 
-  @ViewChild(PostItCollectionNameComponent)
+  @ViewChild(PostItCollectionNameComponent, {static: false})
   public collectionNameComponent: PostItCollectionNameComponent;
 
   public isPickerVisible: boolean = false;

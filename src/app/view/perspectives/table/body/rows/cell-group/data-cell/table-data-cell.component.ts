@@ -108,10 +108,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public affect = new EventEmitter();
 
-  @ViewChild(TableDataCellMenuComponent)
+  @ViewChild(TableDataCellMenuComponent, {static: false})
   public menuComponent: TableDataCellMenuComponent;
 
-  @ViewChild(DocumentHintsComponent)
+  @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
 
   @HostBinding('class.affected')

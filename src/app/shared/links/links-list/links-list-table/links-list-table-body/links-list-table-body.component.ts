@@ -35,7 +35,7 @@ import {ResourceType} from '../../../../../core/model/resource-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableBodyComponent {
-  @ViewChild(DocumentHintsComponent)
+  @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
 
   @Input()

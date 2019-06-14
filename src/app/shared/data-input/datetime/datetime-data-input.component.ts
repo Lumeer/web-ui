@@ -71,10 +71,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('dateTimeInput')
+  @ViewChild('dateTimeInput', {static: true})
   public dateTimeInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(DateTimePickerComponent)
+  @ViewChild(DateTimePickerComponent, {static: false})
   public dateTimePicker: DateTimePickerComponent;
 
   public options: DateTimeOptions;

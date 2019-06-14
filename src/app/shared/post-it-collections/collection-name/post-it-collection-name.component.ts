@@ -25,7 +25,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
   styleUrls: ['./post-it-collection-name.component.scss'],
 })
 export class PostItCollectionNameComponent {
-  @ViewChild('collectionNameInput') public input: ElementRef;
+  @ViewChild('collectionNameInput', {static: true}) public input: ElementRef;
 
   @Input() public editable: boolean;
   @Input() public collectionName: string;

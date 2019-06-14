@@ -59,7 +59,7 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
   @Output()
   public horizontalScroll = new EventEmitter<number>();
 
-  @ViewChild(TableRowsComponent)
+  @ViewChild(TableRowsComponent, {static: true})
   public rowsComponent: TableRowsComponent;
 
   public cursor: TableBodyCursor;

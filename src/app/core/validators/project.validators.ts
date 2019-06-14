@@ -18,15 +18,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AbstractControl} from '@angular/forms';
-import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
-
+import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {filter, map, take} from 'rxjs/operators';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 import {AppState} from '../store/app.state';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsCodesForOrganization} from '../store/projects/projects.state';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable()
 export class ProjectValidators {
