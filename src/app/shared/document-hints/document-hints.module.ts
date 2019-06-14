@@ -21,12 +21,11 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {PipesModule} from '../pipes/pipes.module';
 import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
-import {DocumentHintColumnOffsetPipe} from './document-hint-column-offset.pipe';
 import {DocumentHintsComponent} from './document-hints.component';
 
 @NgModule({
   imports: [CommonModule, PipesModule],
-  declarations: [DocumentHintsComponent, DocumentHintColumnOffsetPipe, CanShowAttributeHintsPipe],
+  declarations: [DocumentHintsComponent, CanShowAttributeHintsPipe],
   exports: [DocumentHintsComponent, CanShowAttributeHintsPipe],
 })
 export class DocumentHintsModule {}

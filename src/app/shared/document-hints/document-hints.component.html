@@ -1,21 +1,19 @@
-<ng-container *ngIf="linkedDocumentId">
-  <div *ngIf="documents$ | async as documents"
-       [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
-    <div *ngIf="documents.length"
+<ng-template #hints>
+  <ng-container *ngIf="{documents: documents$ | async, collection: collection$ | async} as data">
+    <div *ngIf="linkedDocumentId && data.collection && data.documents?.length"
          class="dropdown">
-      <div *ngIf="collection$ | async as collection"
-           class="dropdown-menu show"
+      <div class="dropdown-menu show"
            data-test="document-hints">
-        <div *ngFor="let doc of documents; index as documentIndex"
+        <div *ngFor="let doc of data.documents; index as documentIndex"
              [class.selected]="(selectedIndex$ | async) === documentIndex"
              (mousedown)="onUseDocument(doc)"
              class="dropdown-item p-0 d-flex">
           <ng-container *ngFor="let column of columns">
             <div
-              *ngIf="{value: doc.data[column.attributeId] | dataValue : (collection | collectionAttribute : column.attributeId)?.constraint : {users: users$ | async}} as data"
+              *ngIf="{value: doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : {users: users$ | async}} as state"
               [class.font-weight-bold]="column.attributeId === attributeId"
               [style.width.px]="column.width"
-              [innerHtml]="column.attributeId === attributeId ? (data.value | highlightText: value) : data.value"
+              [innerHtml]="column.attributeId === attributeId ? (state.value | highlightText: value) : state.value"
               [title]="doc.data[column.attributeId] || ''"
               class="text-truncate cursor-default p-1"
               data-test="document-hint">
@@ -24,5 +22,5 @@
         </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+</ng-template>
