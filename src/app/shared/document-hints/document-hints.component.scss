@@ -1,16 +1,4 @@
 @import '~src/styles/variables';
-@import '~src/styles/bootstrap_var';
-
-:host {
-  display: block;
-  transform: scale(1);
-  position: relative;
-  z-index: $zindex-dropdown;
-
-  & > div {
-    position: absolute;
-  }
-}
 
 .selected {
   background-color: $gray-300;

@@ -17,15 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -49,7 +57,7 @@ import {DocumentHintColumn} from './document-hint-column';
   styleUrls: ['./document-hints.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentHintsComponent implements OnInit, OnChanges {
+export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public attributeId: string;
 
@@ -86,6 +94,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   @Output()
   public useHint = new EventEmitter();
 
+  @ViewChild('hints')
+  public hints: TemplateRef<any>;
+
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
   public users$: Observable<User[]>;
@@ -95,7 +106,15 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
 
   private hintsCount = 0;
 
-  constructor(private store$: Store<AppState>) {}
+  private overlayRef: OverlayRef;
+  private portal: Portal<any>;
+
+  constructor(
+    private element: ElementRef,
+    private overlay: Overlay,
+    private store$: Store<AppState>,
+    private viewContainer: ViewContainerRef
+  ) {}
 
   public ngOnInit() {
     this.bindDocuments();
@@ -139,6 +158,60 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
         )
       )
     );
+  }
+
+  public ngAfterViewInit() {
+    this.portal = new TemplatePortal(this.hints, this.viewContainer);
+    this.open();
+  }
+
+  public open() {
+    if (this.overlayRef) {
+      return;
+    }
+
+    this.overlayRef = this.overlay.create({
+      disposeOnNavigation: true,
+      panelClass: ['position-absolute', 'w-max-content'],
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(this.element)
+        .withViewportMargin(8)
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+          },
+        ])
+        .withDefaultOffsetX(this.calculatePosition ? -this.calculateOffset() : null),
+    });
+    this.overlayRef.attach(this.portal);
+  }
+
+  private calculateOffset(): number {
+    const index = this.columns.findIndex(column => column.attributeId === this.attributeId);
+    return this.columns.slice(0, index).reduce((offset, column) => column.width + offset, 0);
+  }
+
+  public ngOnDestroy() {
+    this.close();
+  }
+
+  public close() {
+    if (this.overlayRef) {
+      this.overlayRef.detach();
+      this.overlayRef.dispose();
+      this.overlayRef = null;
+    }
   }
 
   public createLink(document: DocumentModel, data: Record<string, any> = {}) {
