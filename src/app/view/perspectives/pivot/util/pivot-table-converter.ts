@@ -19,7 +19,12 @@
 
 import {PivotData, PivotDataHeader} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
-import {PivotConfig} from '../../../../core/store/pivots/pivot';
+import {
+  PivotColumnAttribute,
+  PivotConfig,
+  PivotRowAttribute,
+  PivotRowColumnAttribute,
+} from '../../../../core/store/pivots/pivot';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {pivotConfigHasAdditionalValueLevel} from './pivot-util';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
@@ -72,16 +77,21 @@ export class PivotTableConverter {
     this.rowLevels = (config.rowAttributes || []).length;
     this.columnLevels = (config.columnAttributes || []).length + (pivotConfigHasAdditionalValueLevel(config) ? 1 : 0);
     const hasValue = (config.valueAttributes || []).length > 0;
-    const numberOfSums = Math.max(1, (data.valueTitles || []).length);
-    if ((data.rowHeaders || []).length > 0) {
-      this.rowsTransformationArray = createTransformationMap(data.rowHeaders, this.rowShowSums, this.columnLevels, 1);
+    const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
+    if ((this.data.rowHeaders || []).length > 0) {
+      this.rowsTransformationArray = createTransformationMap(
+        this.data.rowHeaders,
+        this.rowShowSums,
+        this.columnLevels,
+        1
+      );
     } else {
       this.rowsTransformationArray = hasValue ? [this.columnLevels] : [];
     }
 
-    if ((data.columnHeaders || []).length > 0) {
+    if ((this.data.columnHeaders || []).length > 0) {
       this.columnsTransformationArray = createTransformationMap(
-        data.columnHeaders,
+        this.data.columnHeaders,
         this.columnShowSums,
         this.rowLevels,
         numberOfSums
@@ -166,7 +176,7 @@ export class PivotTableConverter {
         background,
       };
 
-      const rowIndexes = this.getIndexesForHeaders(headers);
+      const rowIndexes = getTargetIndexesForHeaders(headers);
       const transformedRowIndexes = rowIndexes
         .map(v => this.rowsTransformationArray[v])
         .filter(v => isNotNullOrUndefined(v));
@@ -248,18 +258,6 @@ export class PivotTableConverter {
       }
     }
     return values;
-  }
-
-  private getIndexesForHeaders(headers: PivotDataHeader[]): number[] {
-    const allRows = (headers || []).reduce((rows, header) => [...rows, ...this.getIndexesForHeader(header)], []);
-    return uniqueValues<number>(allRows);
-  }
-
-  private getIndexesForHeader(pivotDataHeader: PivotDataHeader): number[] {
-    if (pivotDataHeader.children) {
-      return pivotDataHeader.children.reduce((rows, header) => [...rows, ...this.getIndexesForHeader(header)], []);
-    }
-    return [pivotDataHeader.targetIndex];
   }
 
   private fillCellsByColumns(cells: PivotTableCell[][]): HeaderGroupInfo[] {
@@ -345,7 +343,7 @@ export class PivotTableConverter {
             };
           }
 
-          const columnsIndexes = this.getIndexesForHeaders(headers);
+          const columnsIndexes = getTargetIndexesForHeaders(headers);
           const valueColumnsIndexes = columnsIndexes.filter(index => index % numberOfValues === i);
           const transformedColumnIndexes = valueColumnsIndexes
             .map(v => this.columnsTransformationArray[v])
@@ -482,7 +480,7 @@ export class PivotTableConverter {
     for (let j = this.rowLevels; j < columnsCount; j++) {
       let columnContainsPercentage = false;
       for (let i = this.columnLevels; i < rowsCount; i++) {
-        if (cells[i][j] && this.isValueDecimal(cells[i][j].value)) {
+        if (cells[i][j] && isValueDecimal(cells[i][j].value)) {
           columnContainsPercentage = true;
           break;
         }
@@ -490,38 +488,10 @@ export class PivotTableConverter {
 
       if (columnContainsPercentage) {
         for (let i = this.columnLevels; i < rowsCount; i++) {
-          cells[i][j] && (cells[i][j].value = this.formatDecimalValue(cells[i][j].value));
+          cells[i][j] && (cells[i][j].value = formatDecimalValue(cells[i][j].value));
         }
       }
     }
-  }
-
-  private isValueDecimal(value: string): boolean {
-    if (isNullOrUndefined(value)) {
-      return false;
-    }
-
-    if (isNumeric(value)) {
-      return toNumber(value) % 1 !== 0;
-    } else if (value.endsWith('%')) {
-      return toNumber(value.substring(0, value.length - 1)) % 1 !== 0;
-    }
-
-    return false;
-  }
-
-  private formatDecimalValue(value: string): string {
-    if (isNullOrUndefined(value)) {
-      return value;
-    }
-
-    if (isNumeric(value)) {
-      return new Big(toNumber(value)).toFixed(2);
-    } else if (value.endsWith('%')) {
-      return new Big(toNumber(value.substring(0, value.length - 1))).toFixed(2) + '%';
-    }
-
-    return '';
   }
 
   private initCells(): PivotTableCell[][] {
@@ -576,6 +546,34 @@ export class PivotTableConverter {
   }
 }
 
+function isValueDecimal(value: string): boolean {
+  if (isNullOrUndefined(value)) {
+    return false;
+  }
+
+  if (isNumeric(value)) {
+    return toNumber(value) % 1 !== 0;
+  } else if (value.endsWith('%')) {
+    return toNumber(value.substring(0, value.length - 1)) % 1 !== 0;
+  }
+
+  return false;
+}
+
+function formatDecimalValue(value: string): string {
+  if (isNullOrUndefined(value)) {
+    return value;
+  }
+
+  if (isNumeric(value)) {
+    return new Big(toNumber(value)).toFixed(2);
+  } else if (value.endsWith('%')) {
+    return new Big(toNumber(value.substring(0, value.length - 1))).toFixed(2) + '%';
+  }
+
+  return '';
+}
+
 function createTransformationMap(
   headers: PivotDataHeader[],
   showSums: boolean[],
@@ -596,14 +594,27 @@ function iterateThroughTransformationMap(
   numberOfSums: number
 ) {
   let additional = additionalNum;
-  for (const header of headers) {
+  for (let i = 0; i < headers.length; i++) {
+    const header = headers[i];
     if (header.children) {
       iterateThroughTransformationMap(header.children, additional, array, level + 1, showSums, numberOfSums);
-      additional += getHeaderChildCount(header, level, showSums, numberOfSums, false);
+      additional += getHeaderChildCount(header, level, showSums, numberOfSums);
     } else if (isNotNullOrUndefined(header.targetIndex)) {
-      array[header.targetIndex] = header.targetIndex + additional;
+      array[header.targetIndex] = i + additional;
     }
   }
+}
+
+function getTargetIndexesForHeaders(headers: PivotDataHeader[]): number[] {
+  const allRows = (headers || []).reduce((rows, header) => [...rows, ...getTargetIndexesForHeader(header)], []);
+  return uniqueValues<number>(allRows);
+}
+
+function getTargetIndexesForHeader(pivotDataHeader: PivotDataHeader): number[] {
+  if (pivotDataHeader.children) {
+    return pivotDataHeader.children.reduce((rows, header) => [...rows, ...getTargetIndexesForHeader(header)], []);
+  }
+  return [pivotDataHeader.targetIndex];
 }
 
 function getHeadersChildCount(headers: PivotDataHeader[], showSums: boolean[], numberOfSums = 1): number {
@@ -644,7 +655,169 @@ function getDirectHeaderChildCount(
   return 1;
 }
 
-function sortPivotData(data: PivotData, config: PivotConfig): PivotData {
-  // TODO sort
-  return data;
+export function sortPivotData(data: PivotData, config: PivotConfig): PivotData {
+  return {
+    ...data,
+    rowHeaders: sortPivotRowDataHeaders(data.rowHeaders, config.rowAttributes, data),
+    columnHeaders: sortPivotColumnDataHeaders(data.columnHeaders, config.columnAttributes, data),
+  };
+}
+
+function sortPivotRowDataHeaders(
+  rowHeaders: PivotDataHeader[],
+  rowAttributes: PivotRowAttribute[],
+  pivotData: PivotData
+): PivotDataHeader[] {
+  return sortPivotDataHeadersRecursive(
+    rowHeaders,
+    0,
+    rowAttributes,
+    pivotData.columnHeaders,
+    pivotData.values,
+    pivotData.valueTitles || [],
+    true
+  );
+}
+
+function sortPivotColumnDataHeaders(
+  columnHeaders: PivotDataHeader[],
+  columnAttributes: PivotColumnAttribute[],
+  pivotData: PivotData
+): PivotDataHeader[] {
+  return sortPivotDataHeadersRecursive(
+    columnHeaders,
+    0,
+    columnAttributes,
+    pivotData.rowHeaders,
+    pivotData.values,
+    pivotData.valueTitles || [],
+    false
+  );
+}
+
+function sortPivotDataHeadersRecursive(
+  headers: PivotDataHeader[],
+  index: number,
+  pivotAttributes: PivotRowColumnAttribute[],
+  otherSideHeaders: PivotDataHeader[],
+  values: any[][],
+  valueTitles: string[],
+  isRows: boolean
+): PivotDataHeader[] {
+  const rowAttribute = pivotAttributes && pivotAttributes[index];
+  if (!rowAttribute) {
+    return headers;
+  }
+
+  const multiplier = !rowAttribute.sort || rowAttribute.sort.asc ? 1 : -1;
+  const valuesMap = createHeadersValuesMap(headers, rowAttribute, otherSideHeaders, values, valueTitles, isRows);
+  return headers
+    .map(header => ({
+      ...header,
+      children:
+        header.children &&
+        sortPivotDataHeadersRecursive(
+          header.children,
+          index + 1,
+          pivotAttributes,
+          otherSideHeaders,
+          values,
+          valueTitles,
+          isRows
+        ),
+    }))
+    .sort((r1, r2) =>
+      valuesMap[r1.title] > valuesMap[r2.title]
+        ? multiplier
+        : valuesMap[r1.title] < valuesMap[r2.title]
+        ? -multiplier
+        : 0
+    );
+}
+
+function createHeadersValuesMap(
+  headers: PivotDataHeader[],
+  attribute: PivotRowColumnAttribute,
+  otherSideHeaders: PivotDataHeader[],
+  values: any[][],
+  valueTitles: string[],
+  isRows: boolean
+): Record<string, any> {
+  const sortTargetIndexes = sortValueTargetIndexes(attribute, otherSideHeaders, valueTitles);
+  if (!sortTargetIndexes) {
+    return (headers || []).reduce((map, header) => ({...map, [header.title]: header.title}), {});
+  }
+
+  return (headers || []).reduce((map, header) => {
+    const rows = isRows ? getTargetIndexesForHeader(header) : sortTargetIndexes;
+    const columns = isRows ? sortTargetIndexes : getTargetIndexesForHeader(header);
+    return {...map, [header.title]: getNumericValuesSummary(values, rows, columns)};
+  }, {});
+}
+
+function getNumericValuesSummary(values: any[][], rows: number[], columns: number[]): number {
+  let sum = 0;
+  for (const row of rows) {
+    for (const column of columns) {
+      const value = values[row][column];
+      if (isNotNullOrUndefined(value)) {
+        if (isNumeric(value)) {
+          sum += toNumber(value);
+        } else if (String(value).endsWith('%')) {
+          const stringValue = String(value);
+          sum += toNumber(stringValue.substring(0, stringValue.length - 1));
+        }
+      }
+    }
+  }
+  return sum;
+}
+
+function sortValueTargetIndexes(
+  pivotAttribute: PivotRowColumnAttribute,
+  otherSideHeaders: PivotDataHeader[],
+  valueTitles: string[]
+): number[] | null {
+  if (pivotAttribute.sort && pivotAttribute.sort.list) {
+    let pivotHeader: PivotDataHeader = null;
+    let currentOtherSideHeaders = otherSideHeaders;
+    let valueIndex = valueTitles.findIndex(title => title === pivotAttribute.sort.list.valueTitle);
+    if (valueIndex === -1) {
+      if (valueTitles.length === 1) {
+        valueIndex = 0;
+      } else {
+        return null;
+      }
+    }
+
+    for (const value of pivotAttribute.sort.list.values || []) {
+      if (value.isSummary) {
+        const indexes = getTargetIndexesForHeaders(currentOtherSideHeaders || []) || [];
+        return filterIndexesByMod(indexes, valueTitles.length, valueIndex);
+      }
+
+      pivotHeader = (otherSideHeaders || []).find(header => header.title === value.title);
+      if (!pivotHeader) {
+        break;
+      }
+
+      currentOtherSideHeaders = pivotHeader.children || [];
+    }
+
+    if (pivotHeader) {
+      const pivotLeafHeader = currentOtherSideHeaders.find(
+        header => header.title === pivotAttribute.sort.list.valueTitle
+      );
+
+      if (pivotLeafHeader) {
+        return getTargetIndexesForHeader(pivotLeafHeader);
+      }
+    }
+  }
+
+  return null;
+}
+
+function filterIndexesByMod(indexes: number[], mod: number, value: number): number[] {
+  return (indexes || []).filter(index => index % mod === value);
 }

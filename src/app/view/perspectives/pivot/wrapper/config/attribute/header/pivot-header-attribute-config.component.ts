@@ -18,29 +18,42 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute, PivotColumnAttribute, PivotRowAttribute} from '../../../../../../../core/store/pivots/pivot';
+import {
+  PivotAttribute,
+  PivotColumnAttribute,
+  PivotRowAttribute,
+  PivotRowColumnAttribute,
+  PivotSort,
+  PivotSortValue,
+} from '../../../../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
+import {cleanPivotAttribute} from '../../../../util/pivot-util';
+import {PivotData} from '../../../../util/pivot-data';
 
 @Component({
   selector: 'pivot-header-attribute-config',
   templateUrl: './pivot-header-attribute-config.component.html',
+  styleUrls: ['./pivot-header-attribute-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotHeaderAttributeConfigComponent {
   @Input()
-  public pivotAttribute: PivotRowAttribute | PivotColumnAttribute;
+  public pivotAttribute: PivotRowColumnAttribute;
 
   @Input()
-  public availableAttributes: SelectItemModel[];
+  public attributesSelectItems: SelectItemModel[];
 
   @Input()
   public isRow: boolean;
 
-  @Output()
-  public attributeSelect = new EventEmitter<PivotRowAttribute | PivotColumnAttribute>();
+  @Input()
+  public pivotData: PivotData;
 
   @Output()
-  public attributeChange = new EventEmitter<PivotRowAttribute | PivotColumnAttribute>();
+  public attributeSelect = new EventEmitter<PivotRowColumnAttribute>();
+
+  @Output()
+  public attributeChange = new EventEmitter<PivotRowColumnAttribute>();
 
   @Output()
   public attributeRemove = new EventEmitter();
@@ -57,7 +70,7 @@ export class PivotHeaderAttributeConfigComponent {
   }
 
   public onAttributeSelected(attribute: PivotAttribute) {
-    const headerAttribute = {...attribute, showSums: true};
+    const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
     this.attributeSelect.emit(headerAttribute);
   }
 
