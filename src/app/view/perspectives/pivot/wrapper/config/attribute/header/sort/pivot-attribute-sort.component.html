@@ -21,6 +21,7 @@
   <select-item class="w-100 mt-1 d-block"
                *ngFor="let value of (pivotAttribute | pivotSubSortValues:(isRow ? pivotData.columnHeaders : pivotData.rowHeaders)); let index = index"
                [placeholderIcon]="'far fa-sort'"
+               [emptyValue]="subSortPlaceholder"
                [items]="pivotAttribute | pivotSubSortSelectItems:(isRow ? pivotData.columnHeaders : pivotData.rowHeaders):index:summaryTitle"
                [selectedId]="value"
                [removable]="true"

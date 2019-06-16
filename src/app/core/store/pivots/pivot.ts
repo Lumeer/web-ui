@@ -40,19 +40,18 @@ export interface PivotAttribute {
   resourceType: AttributesResourceType;
 }
 
-export interface PivotRowAttribute extends PivotRowColumnAttribute {}
-
-export interface PivotColumnAttribute extends PivotRowColumnAttribute {}
-
 export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;
   sort?: PivotSort;
 }
 
-export interface PivotSort {
-  attribute?: PivotAttribute;
-  list?: PivotSortList;
-  asc: boolean;
+export interface PivotRowAttribute extends PivotRowColumnAttribute {}
+
+export interface PivotColumnAttribute extends PivotRowColumnAttribute {}
+
+export interface PivotSortValue {
+  title: string;
+  isSummary?: boolean;
 }
 
 export interface PivotSortList {
@@ -60,9 +59,10 @@ export interface PivotSortList {
   values: PivotSortValue[];
 }
 
-export interface PivotSortValue {
-  title: string;
-  isSummary?: boolean;
+export interface PivotSort {
+  attribute?: PivotAttribute;
+  list?: PivotSortList;
+  asc: boolean;
 }
 
 export interface PivotValueAttribute extends PivotAttribute {

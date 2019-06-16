@@ -796,7 +796,7 @@ function sortValueTargetIndexes(
         return filterIndexesByMod(indexes, valueTitles.length, valueIndex);
       }
 
-      pivotHeader = (otherSideHeaders || []).find(header => header.title === value.title);
+      pivotHeader = (currentOtherSideHeaders || []).find(header => header.title === value.title);
       if (!pivotHeader) {
         break;
       }
@@ -805,13 +805,8 @@ function sortValueTargetIndexes(
     }
 
     if (pivotHeader) {
-      const pivotLeafHeader = currentOtherSideHeaders.find(
-        header => header.title === pivotAttribute.sort.list.valueTitle
-      );
-
-      if (pivotLeafHeader) {
-        return getTargetIndexesForHeader(pivotLeafHeader);
-      }
+      const targetIndexes = getTargetIndexesForHeaders(currentOtherSideHeaders);
+      return filterIndexesByMod(targetIndexes, valueTitles.length, valueIndex);
     }
   }
 
