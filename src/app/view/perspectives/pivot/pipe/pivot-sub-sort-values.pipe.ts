@@ -27,6 +27,10 @@ import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 })
 export class PivotSubSortValuesPipe implements PipeTransform {
   public transform(pivotAttribute: PivotRowColumnAttribute, otherSideHeaders: PivotDataHeader[]): PivotSortValue[] {
+    if (!otherSideHeaders) {
+      return [];
+    }
+
     let index = -1;
     let currentOtherSideHeaders = otherSideHeaders;
 

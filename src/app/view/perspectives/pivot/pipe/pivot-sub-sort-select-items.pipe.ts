@@ -33,6 +33,10 @@ export class PivotSubSortSelectItemsPipe implements PipeTransform {
     index: number,
     summaryTitle: string
   ): SelectItemModel[] {
+    if (!otherSideHeaders) {
+      return [];
+    }
+
     let currentOtherSideHeaders = otherSideHeaders;
 
     const values = pivotAttribute.sort.list.values || [];

@@ -22,13 +22,12 @@ import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {cleanPivotAttribute} from '../util/pivot-util';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {PivotData} from '../util/pivot-data';
 
 @Pipe({
   name: 'pivotSortSelectedId',
 })
 export class PivotSortSelectedIdPipe implements PipeTransform {
-  public transform(pivotAttribute: PivotRowColumnAttribute, items: SelectItemModel[], pivotData: PivotData): any {
+  public transform(pivotAttribute: PivotRowColumnAttribute, items: SelectItemModel[]): any {
     if (
       pivotAttribute.sort &&
       pivotAttribute.sort.list &&
