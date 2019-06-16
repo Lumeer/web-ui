@@ -1,0 +1,32 @@
+<div class="d-flex w-100 mt-2 align-items-center" *ngIf="{selectItems: pivotAttribute | pivotSortSelectItems:attributeSelectItem:pivotData} as data">
+  <select-item class="flex-grow-1 pr-2 sort-attribute"
+               [placeholderIcon]="'far fa-sort'"
+               [items]="data.selectItems"
+               [selectedId]="pivotAttribute | pivotSortSelectedId:data.selectItems"
+               [removable]="false"
+               [buttonClasses]="buttonClasses"
+               (select)="onSortSelected($event)">
+  </select-item>
+
+  <i class="fas fa-fw fa-lg cursor-pointer text-black-50"
+     [ngClass]="pivotAttribute.sort && !pivotAttribute.sort.asc ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down'"
+     title="Toggle sort"
+     (click)="onSortToggle()"
+     i18n="@@perspective.pivot.config.sort.toggle">
+  </i>
+
+</div>
+
+<ng-container *ngIf="pivotAttribute.sort?.list">
+  <select-item class="w-100 mt-1 d-block"
+               *ngFor="let value of (pivotAttribute | pivotSubSortValues:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders)); let index = index"
+               [placeholderIcon]="'far fa-sort'"
+               [emptyValue]="subSortPlaceholder"
+               [items]="pivotAttribute | pivotSubSortSelectItems:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders):index:summaryTitle"
+               [selectedId]="value"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onSubSortSelected(index, $event)"
+               (remove)="onSubSortRemoved(index)">
+  </select-item>
+</ng-container>

@@ -67,6 +67,7 @@ import {EmailValidPipe} from './email/email-valid.pipe';
 import {UserByEmailPipe} from './email/user-by-email.pipe';
 import {UniqueEntitiesPipe} from './unique-entities.pipe';
 import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items.pipe';
+import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -117,6 +118,7 @@ import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items
     UserByEmailPipe,
     UniqueEntitiesPipe,
     AggregationSelectItemsPipe,
+    FindSelectItemByIdPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -167,6 +169,7 @@ import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items
     UserByEmailPipe,
     UniqueEntitiesPipe,
     AggregationSelectItemsPipe,
+    FindSelectItemByIdPipe,
   ],
 })
 export class PipesModule {}

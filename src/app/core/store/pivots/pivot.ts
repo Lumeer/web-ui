@@ -40,20 +40,29 @@ export interface PivotAttribute {
   resourceType: AttributesResourceType;
 }
 
-export interface PivotRowAttribute extends PivotAttribute {
+export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;
-  sort?: {
-    attribute?: PivotAttribute;
-    value?: string;
-  };
+  sort?: PivotSort;
 }
 
-export interface PivotColumnAttribute extends PivotAttribute {
-  showSums?: boolean;
-  sort?: {
-    attribute?: PivotAttribute;
-    value?: string;
-  };
+export interface PivotRowAttribute extends PivotRowColumnAttribute {}
+
+export interface PivotColumnAttribute extends PivotRowColumnAttribute {}
+
+export interface PivotSortValue {
+  title: string;
+  isSummary?: boolean;
+}
+
+export interface PivotSortList {
+  valueTitle: string;
+  values: PivotSortValue[];
+}
+
+export interface PivotSort {
+  attribute?: PivotAttribute;
+  list?: PivotSortList;
+  asc: boolean;
 }
 
 export interface PivotValueAttribute extends PivotAttribute {

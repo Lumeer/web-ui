@@ -23,6 +23,7 @@ import {
   PivotColumnAttribute,
   PivotConfig,
   PivotRowAttribute,
+  PivotRowColumnAttribute,
   PivotValueAttribute,
 } from '../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../util/pivot-data';
@@ -168,23 +169,27 @@ export class PivotConfigComponent {
     containerArray: PivotAttribute[],
     currentIndex: number
   ) {
-    if (this.movedFromValuesToHeader(previousContainer, container)) {
-      containerArray[currentIndex] = {...cleanPivotAttribute(containerArray[currentIndex]), showSums: true} as
-        | PivotRowAttribute
-        | PivotColumnAttribute;
-    } else if (this.movedFromHeaderToValues(previousContainer, container)) {
+    const pivotAttribute = containerArray[currentIndex];
+    const cleanedAttribute = cleanPivotAttribute(pivotAttribute);
+    if (this.movedFromValuesOrHeaderToHeader(previousContainer, container)) {
+      const asc = !!(<PivotRowColumnAttribute>cleanedAttribute).sort
+        ? (<PivotRowColumnAttribute>cleanedAttribute).sort.asc
+        : true;
       containerArray[currentIndex] = {
-        ...cleanPivotAttribute(containerArray[currentIndex]),
-        aggregation: DataAggregationType.Sum,
-      } as PivotValueAttribute;
+        ...cleanedAttribute,
+        showSums: true,
+        sort: {attribute: cleanedAttribute, asc},
+      } as PivotRowColumnAttribute;
+    } else if (this.movedFromHeaderToValues(previousContainer, container)) {
+      containerArray[currentIndex] = {...cleanedAttribute, aggregation: DataAggregationType.Sum} as PivotValueAttribute;
     }
   }
 
-  private movedFromValuesToHeader(
+  private movedFromValuesOrHeaderToHeader(
     previousContainer: CdkDropList<PivotAttribute>,
     container: CdkDropList<PivotAttribute>
   ): boolean {
-    return previousContainer.id === this.valuesListId && [this.rowsListId, this.columnsListId].includes(container.id);
+    return previousContainer.id !== container.id && [this.rowsListId, this.columnsListId].includes(container.id);
   }
 
   private movedFromHeaderToValues(

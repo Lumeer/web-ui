@@ -16,7 +16,7 @@
          cdkDragLockAxis="y"
          [cdkDragData]="attribute">
 
-      <div class="d-flex my-2">
+      <div class="d-flex py-3">
 
         <div class="flex-grow-0 d-flex align-items-center">
           <i cdkDragHandle
@@ -28,7 +28,8 @@
 
         <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
                                        [pivotAttribute]="attribute"
-                                       [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       [attributesSelectItems]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       [pivotData]="pivotData"
                                        [isRow]="true"
                                        (attributeSelect)="onRowAttributeSelect($event, attribute)"
                                        (attributeRemove)="onRowAttributeRemove(index)"
@@ -43,7 +44,7 @@
 
   <pivot-header-attribute-config class="d-block"
                                  [pivotAttribute]="null"
-                                 [availableAttributes]="data.items | pivotHeaderSelectItems:config"
+                                 [attributesSelectItems]="data.items | pivotHeaderSelectItems:config"
                                  [isRow]="true"
                                  (attributeSelect)="onRowAttributeSelect($event)">
   </pivot-header-attribute-config>
@@ -65,7 +66,7 @@
          cdkDragLockAxis="y"
          [cdkDragData]="attribute">
 
-      <div class="d-flex my-2">
+      <div class="d-flex py-3">
 
         <div class="flex-grow-0 d-flex align-items-center">
           <i cdkDragHandle
@@ -77,7 +78,8 @@
 
         <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
                                        [pivotAttribute]="attribute"
-                                       [availableAttributes]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       [attributesSelectItems]="data.items | pivotHeaderSelectItems:config:attribute"
+                                       [pivotData]="pivotData"
                                        (attributeSelect)="onColumnAttributeSelect($event, attribute)"
                                        (attributeRemove)="onColumnAttributeRemove(index)"
                                        (attributeChange)="onColumnAttributeChange($event)">
@@ -91,7 +93,7 @@
 
   <pivot-header-attribute-config class="d-block"
                                  [pivotAttribute]="null"
-                                 [availableAttributes]="data.items | pivotHeaderSelectItems:config"
+                                 [attributesSelectItems]="data.items | pivotHeaderSelectItems:config"
                                  (attributeSelect)="onColumnAttributeSelect($event)">
   </pivot-header-attribute-config>
 
@@ -111,7 +113,7 @@
          cdkDragLockAxis="y"
          [cdkDragData]="attribute">
 
-      <div class="d-flex my-2">
+      <div class="d-flex py-3">
 
         <div class="flex-grow-0 d-flex align-items-center">
           <i cdkDragHandle

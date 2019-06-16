@@ -1,4 +1,4 @@
-<pivot-attribute-config [availableAttributes]="availableAttributes"
+<pivot-attribute-config [availableAttributes]="attributesSelectItems"
                         [pivotAttribute]="pivotAttribute"
                         [icon]="isRow ? 'far fa-arrow-right' : 'far fa-arrow-down'"
                         (attributeSelect)="onAttributeSelected($event)"
@@ -19,3 +19,11 @@
 
 </pivot-attribute-config>
 
+<pivot-attribute-sort
+  *ngIf="pivotAttribute"
+  [pivotAttribute]="pivotAttribute"
+  [attributeSelectItem]="attributesSelectItems | findSelectItemById:(pivotAttribute | pivotCleanAttribute)"
+  [pivotData]="pivotData"
+  [isRow]="isRow"
+  (attributeChange)="attributeChange.emit($event)">
+</pivot-attribute-sort>
