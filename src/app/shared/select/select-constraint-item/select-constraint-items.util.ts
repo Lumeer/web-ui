@@ -19,7 +19,12 @@
 
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
-import {ConstraintType, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {
+  Constraint,
+  ConstraintConfig,
+  ConstraintType,
+  DateTimeConstraintConfig,
+} from '../../../core/model/data/constraint';
 import {createDateTimeOptions} from '../../date-time/date-time-options';
 
 export function createSelectConstraintItems(attribute: Attribute, defaultTitle: string): SelectItemModel[] {
@@ -33,10 +38,9 @@ export function createSelectConstraintItems(attribute: Attribute, defaultTitle: 
     default:
       return [];
   }
-
 }
 
-export function createSelectDateConstraintItems(config: DateTimeConstraintConfig, defaultTitle: string): SelectItemModel[] {
+export function createDateConstraintOverrideFormats(config: DateTimeConstraintConfig): string[] {
   const options = createDateTimeOptions(config.format);
   const formats = [];
   if (options.year && (options.month || options.day)) {
@@ -58,7 +62,31 @@ export function createSelectDateConstraintItems(config: DateTimeConstraintConfig
     }
   }
 
-  const defaultItem: SelectItemModel = {id: {format: config.format}, value: defaultTitle};
-  return [defaultItem, ...formats.filter(format => format !== config.format)
-    .map(format => ({id: format, value: format}))];
+  return formats;
+}
+
+export function createSelectDateConstraintItems(
+  config: DateTimeConstraintConfig,
+  defaultTitle: string
+): SelectItemModel[] {
+  const formats = createDateConstraintOverrideFormats(config);
+  const defaultItem: SelectItemModel = {id: null, value: defaultTitle};
+  return [
+    defaultItem,
+    ...formats.filter(format => format !== config.format).map(format => ({id: {format}, value: format})),
+  ];
+}
+
+export function isValidConstraintOverride(constraint: Constraint, overrideConfig: Partial<ConstraintConfig>): boolean {
+  switch (constraint.type) {
+    case ConstraintType.DateTime:
+      const validFormats = createDateConstraintOverrideFormats(constraint.config as DateTimeConstraintConfig);
+      return (
+        overrideConfig &&
+        <DateTimeConstraintConfig>overrideConfig &&
+        validFormats.includes((<DateTimeConstraintConfig>overrideConfig).format)
+      );
+    default:
+      return false;
+  }
 }

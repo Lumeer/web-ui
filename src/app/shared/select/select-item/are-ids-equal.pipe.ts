@@ -18,13 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import isEqual from 'lodash/isEqual';
+import {deepObjectsEquals, isNullOrUndefined} from '../../utils/common.utils';
 
 @Pipe({
   name: 'areIdsEqual',
 })
 export class AreIdsEqualPipe implements PipeTransform {
   public transform(firstId: any, secondId: any): boolean {
-    return isEqual(firstId, secondId);
+    if (isNullOrUndefined(firstId) && isNullOrUndefined(secondId)) {
+      return true;
+    }
+    return deepObjectsEquals(firstId, secondId);
   }
 }

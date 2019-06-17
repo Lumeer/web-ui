@@ -16,8 +16,8 @@
     <select-item
       *ngIf="data.configItems.length > 1"
       class="d-block mt-1"
-      [items]="[]"
-      [selectedId]="selectedConfig"
+      [items]="data.configItems"
+      [selectedId]="(data.configItems | findSelectItemById:selectedConfig)?.id || data.configItems[0].id"
       [removable]="false"
       [placeholderText]="configPlaceholder"
       [buttonClasses]="buttonClasses"

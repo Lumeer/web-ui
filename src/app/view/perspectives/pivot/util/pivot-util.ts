@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PivotAttribute, PivotConfig} from '../../../../core/store/pivots/pivot';
+import {
+  PivotAttribute,
+  PivotConfig,
+  PivotRowColumnAttribute,
+  PivotValueAttribute,
+} from '../../../../core/store/pivots/pivot';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return (
@@ -36,19 +41,30 @@ export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConf
     return true;
   }
 
-  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanPivotAttribute(a));
-  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanPivotAttribute(a));
+  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanPivotHeaderAttribute(a));
+  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanPivotHeaderAttribute(a));
   if (JSON.stringify(c1RowAttributes) !== JSON.stringify(c2RowAttributes)) {
     return true;
   }
 
-  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanPivotAttribute(a));
-  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanPivotAttribute(a));
+  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanPivotHeaderAttribute(a));
+  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanPivotHeaderAttribute(a));
   if (JSON.stringify(c1ColumnAttributes) !== JSON.stringify(c2ColumnAttributes)) {
     return true;
   }
 
-  return JSON.stringify(c1.valueAttributes) !== JSON.stringify(c2.valueAttributes);
+  const c1ValueAttributes = (c1.valueAttributes || []).map(a => cleanPivotValueAttribute(a));
+  const c2ValueAttributes = (c2.valueAttributes || []).map(a => cleanPivotValueAttribute(a));
+
+  return JSON.stringify(c1ValueAttributes) !== JSON.stringify(c2ValueAttributes);
+}
+
+function cleanPivotHeaderAttribute(attribute: PivotRowColumnAttribute): PivotRowColumnAttribute {
+  return {...cleanPivotAttribute(attribute), config: attribute.config};
+}
+
+function cleanPivotValueAttribute(attribute: PivotValueAttribute): PivotValueAttribute {
+  return {...cleanPivotAttribute(attribute), aggregation: attribute.aggregation};
 }
 
 export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {

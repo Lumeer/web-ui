@@ -18,16 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {
-  PivotAttribute,
-  PivotColumnAttribute,
-  PivotRowAttribute,
-  PivotRowColumnAttribute,
-  PivotSort,
-  PivotSortValue,
-} from '../../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
-import {cleanPivotAttribute} from '../../../../util/pivot-util';
+import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../../../util/pivot-data';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
 import {ConstraintConfig} from '../../../../../../../core/model/data/constraint';
@@ -38,7 +29,6 @@ import {Collection} from '../../../../../../../core/store/collections/collection
 @Component({
   selector: 'pivot-header-attribute-config',
   templateUrl: './pivot-header-attribute-config.component.html',
-  styleUrls: ['./pivot-header-attribute-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotHeaderAttributeConfigComponent {
@@ -83,21 +73,21 @@ export class PivotHeaderAttributeConfigComponent {
     this.attributeChange.emit(newAttribute);
   }
 
-  public onSelected(value: { id: SelectConstraintItemId, config?: Partial<ConstraintConfig> }) {
-    const resource = this.attributesResources[value.id.resourceIndex];
+  public onSelected(itemId: SelectConstraintItemId) {
+    const resource = this.attributesResources[itemId.resourceIndex];
     if (!resource) {
       return;
     }
 
     const resourceType = <Collection>resource ? AttributesResourceType.Collection : AttributesResourceType.LinkType;
-    const attribute: PivotAttribute = {...value.id, resourceId: resource.id, resourceType, };
-    // TODO config
-    const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}}
+    const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
+    const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
     this.attributeSelect.emit(headerAttribute);
   }
 
   public onSelectedConfig(config: Partial<ConstraintConfig>) {
-    // TODO config
+    const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, config};
+    this.attributeSelect.emit(headerAttribute);
   }
 
   public onRemoved() {

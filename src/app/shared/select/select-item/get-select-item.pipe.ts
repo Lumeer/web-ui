@@ -28,9 +28,6 @@ export class GetSelectItemPipe implements PipeTransform {
   public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
 
   public transform(id: any, items: SelectItemModel[]): SelectItemModel {
-    if (!id) {
-      return null;
-    }
     return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
   }
 }

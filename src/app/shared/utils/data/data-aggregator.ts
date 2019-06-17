@@ -68,7 +68,14 @@ export class DataAggregator {
   private attributesResourcesOrder: AttributesResource[];
   private dataMap: DataResourceMap = {};
 
-  constructor(private formatValue?: (value: any, constraint: Constraint, data?: ConstraintData) => any) {}
+  constructor(
+    private formatValue?: (
+      value: any,
+      constraint: Constraint,
+      data: ConstraintData,
+      aggregatorAttribute: DataAggregatorAttribute
+    ) => any
+  ) {}
 
   public updateData(
     collections: Collection[],
@@ -297,7 +304,10 @@ export class DataAggregator {
         }
 
         for (const value of values) {
-          const formattedValue = this.formatAggregationValue(value, constraint);
+          const formattedValue = this.formatAggregationValue(value, constraint, {
+            resourceIndex: stage.index,
+            attributeId: stage.attributeId,
+          });
 
           if (index === chain.length - 1) {
             if (valuesChains.length > 0) {
@@ -420,9 +430,9 @@ export class DataAggregator {
     return Array.isArray(value) ? value : [value];
   }
 
-  private formatAggregationValue(value: any, constraint: Constraint) {
+  private formatAggregationValue(value: any, constraint: Constraint, attribute: DataAggregatorAttribute) {
     if (this.formatValue) {
-      return this.formatValue(value, constraint, this.constraintData);
+      return this.formatValue(value, constraint, this.constraintData, attribute);
     }
     return formatDataValue(value, constraint, this.constraintData);
   }

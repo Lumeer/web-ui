@@ -31,10 +31,9 @@ export interface SelectConstraintItemId {
   selector: 'select-constraint-item',
   templateUrl: './select-constraint-item.component.html',
   styleUrls: ['./select-constraint-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectConstraintItemComponent {
-
   @Input()
   public attributesResources: AttributesResource[];
 
@@ -66,7 +65,7 @@ export class SelectConstraintItemComponent {
   public buttonClasses: string;
 
   @Output()
-  public select = new EventEmitter<{ id: SelectConstraintItemId, config?: Partial<ConstraintConfig> }>();
+  public select = new EventEmitter<SelectConstraintItemId>();
 
   @Output()
   public selectConfig = new EventEmitter<Partial<ConstraintConfig>>();
@@ -74,15 +73,14 @@ export class SelectConstraintItemComponent {
   @Output()
   public remove = new EventEmitter();
 
-  public readonly configPlaceholder: string
+  public readonly configPlaceholder: string;
 
   constructor(private i18n: I18n) {
     this.configPlaceholder = i18n({id: 'select.constraint.item.config', value: 'Config'});
   }
 
   public onSelect(id: SelectConstraintItemId) {
-    // TODO build config
-    this.select.emit({id, config: null});
+    this.select.emit(id);
   }
 
   public onRemove() {

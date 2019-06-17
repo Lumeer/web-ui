@@ -26,21 +26,22 @@ import {SelectItemModel} from '../select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
-  name: 'selectConstraintConfigItems'
+  name: 'selectConstraintConfigItems',
 })
 export class SelectConstraintConfigItemsPipe implements PipeTransform {
-
   private readonly defaultTitle: string;
 
   constructor(private i18n: I18n) {
     this.defaultTitle = i18n({id: 'default', value: 'Default'});
   }
 
-  public transform(attributesResources: AttributesResource[], selectedAttribute: SelectConstraintItemId): SelectItemModel[] {
+  public transform(
+    attributesResources: AttributesResource[],
+    selectedAttribute: SelectConstraintItemId
+  ): SelectItemModel[] {
     const resource = selectedAttribute && attributesResources[selectedAttribute.resourceIndex];
-    const attribute = selectedAttribute && resource && findAttribute(resource.attributes, selectedAttribute.attributeId);
-    console.log(attribute, attribute && createSelectConstraintItems(attribute, this.defaultTitle));
-    return attribute && createSelectConstraintItems(attribute, this.defaultTitle) || [];
+    const attribute =
+      selectedAttribute && resource && findAttribute(resource.attributes, selectedAttribute.attributeId);
+    return (attribute && createSelectConstraintItems(attribute, this.defaultTitle)) || [];
   }
-
 }

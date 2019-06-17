@@ -17,13 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core/store/pivots/pivot';
+import {
+  PivotAttribute,
+  PivotConfig,
+  PivotRowColumnAttribute,
+  PivotValueAttribute,
+} from '../../../../core/store/pivots/pivot';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {
   AggregatedData,
   DataAggregatorAttribute,
@@ -36,6 +41,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
+import {isValidConstraintOverride} from '../../../../shared/select/select-constraint-item/select-constraint-items.util';
 
 export class PivotDataConverter {
   private collections: Collection[];
@@ -48,7 +54,34 @@ export class PivotDataConverter {
   private dataAggregator: DataAggregator;
 
   constructor(private translateAggregation: (type: DataAggregationType) => string) {
-    this.dataAggregator = new DataAggregator();
+    this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
+      this.formatPivotValue(value, constraint, data, aggregatorAttribute)
+    );
+  }
+
+  private formatPivotValue(
+    value: any,
+    constraint: Constraint,
+    constraintData: ConstraintData,
+    aggregatorAttribute: DataAggregatorAttribute
+  ) {
+    const pivotAttribute = this.findPivotAttributeByAggregatorAttribute(aggregatorAttribute);
+    if (pivotAttribute && pivotAttribute.config && isValidConstraintOverride(constraint, pivotAttribute.config)) {
+      const overriddenConstraint = {...constraint, config: {...constraint.config, ...pivotAttribute.config}};
+      return formatDataValue(value, overriddenConstraint, constraintData);
+    }
+
+    return formatDataValue(value, constraint, constraintData);
+  }
+
+  private findPivotAttributeByAggregatorAttribute(
+    aggregatorAttribute: DataAggregatorAttribute
+  ): PivotRowColumnAttribute {
+    return [...(this.config.rowAttributes || []), ...(this.config.columnAttributes || [])].find(
+      attribute =>
+        attribute.attributeId === aggregatorAttribute.attributeId &&
+        attribute.resourceIndex === aggregatorAttribute.resourceIndex
+    );
   }
 
   private updateData(
