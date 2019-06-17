@@ -41,7 +41,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {isValidConstraintOverride} from '../../../../shared/select/select-constraint-item/select-constraint-items.util';
+import {SelectConstraintItemsFormatter} from '../../../../shared/select/select-constraint-item/select-constraint-items-formatter';
 
 export class PivotDataConverter {
   private collections: Collection[];
@@ -53,7 +53,10 @@ export class PivotDataConverter {
 
   private dataAggregator: DataAggregator;
 
-  constructor(private translateAggregation: (type: DataAggregationType) => string) {
+  constructor(
+    private constraintItemsFormatter: SelectConstraintItemsFormatter,
+    private translateAggregation: (type: DataAggregationType) => string
+  ) {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatPivotValue(value, constraint, data, aggregatorAttribute)
     );
@@ -66,8 +69,12 @@ export class PivotDataConverter {
     aggregatorAttribute: DataAggregatorAttribute
   ) {
     const pivotAttribute = this.findPivotAttributeByAggregatorAttribute(aggregatorAttribute);
-    if (pivotAttribute && pivotAttribute.config && isValidConstraintOverride(constraint, pivotAttribute.config)) {
-      const overriddenConstraint = {...constraint, config: {...constraint.config, ...pivotAttribute.config}};
+    const overrideConfig =
+      pivotAttribute &&
+      pivotAttribute.config &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.config);
+    if (overrideConfig) {
+      const overriddenConstraint = {...constraint, config: {...constraint.config, ...overrideConfig}};
       return formatDataValue(value, overriddenConstraint, constraintData);
     }
 

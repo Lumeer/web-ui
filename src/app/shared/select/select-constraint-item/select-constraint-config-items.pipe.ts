@@ -21,19 +21,14 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource} from '../../../core/model/resource';
 import {SelectConstraintItemId} from './select-constraint-item.component';
 import {findAttribute} from '../../../core/store/collections/collection.util';
-import {createSelectConstraintItems} from './select-constraint-items.util';
+import {SelectConstraintItemsFormatter} from './select-constraint-items-formatter';
 import {SelectItemModel} from '../select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
   name: 'selectConstraintConfigItems',
 })
 export class SelectConstraintConfigItemsPipe implements PipeTransform {
-  private readonly defaultTitle: string;
-
-  constructor(private i18n: I18n) {
-    this.defaultTitle = i18n({id: 'default', value: 'Default'});
-  }
+  constructor(private formatter: SelectConstraintItemsFormatter) {}
 
   public transform(
     attributesResources: AttributesResource[],
@@ -42,6 +37,6 @@ export class SelectConstraintConfigItemsPipe implements PipeTransform {
     const resource = selectedAttribute && attributesResources[selectedAttribute.resourceIndex];
     const attribute =
       selectedAttribute && resource && findAttribute(resource.attributes, selectedAttribute.attributeId);
-    return (attribute && createSelectConstraintItems(attribute, this.defaultTitle)) || [];
+    return (attribute && this.formatter.createItems(attribute)) || [];
   }
 }
