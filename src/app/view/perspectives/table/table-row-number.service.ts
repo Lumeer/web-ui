@@ -21,8 +21,8 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {selectTableLinkedRowsCount} from '../../../../../core/store/tables/tables.selector';
+import {TableBodyCursor} from '../../../core/store/tables/table-cursor';
+import {selectTableLinkedRowsCount} from '../../../core/store/tables/tables.selector';
 
 /**
  * Optimizes table row number calculation by caching previous results and using them when calculating next row numbers.

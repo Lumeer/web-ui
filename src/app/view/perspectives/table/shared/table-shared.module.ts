@@ -18,18 +18,14 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PipesModule} from '../../../shared/pipes/pipes.module';
-import {SharedModule} from '../../../shared/shared.module';
-import {TableBodyModule} from './body/table-body.module';
-import {TableHeaderModule} from './header/table-header.module';
-import {TablePipesModule} from './shared/pipes/table-pipes.module';
-import {TableSharedModule} from './shared/table-shared.module';
-import {TablePerspectiveComponent} from './table-perspective.component';
+import {CommonModule} from '@angular/common';
+import {TableCellScrollDirective} from './directives/table-cell-scroll.directive';
+import {TableEditableCellDirective} from './directives/table-editable-cell.directive';
+import {TablePipesModule} from './pipes/table-pipes.module';
 
 @NgModule({
-  imports: [TableBodyModule, TableHeaderModule, TableSharedModule, SharedModule, PipesModule, TablePipesModule],
-  declarations: [TablePerspectiveComponent],
-  entryComponents: [TablePerspectiveComponent],
-  exports: [TablePerspectiveComponent],
+  imports: [CommonModule, TablePipesModule],
+  declarations: [TableCellScrollDirective, TableEditableCellDirective],
+  exports: [TableCellScrollDirective, TableEditableCellDirective, TablePipesModule],
 })
-export class TablePerspectiveModule {}
+export class TableSharedModule {}

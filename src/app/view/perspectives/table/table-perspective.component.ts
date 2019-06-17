@@ -49,7 +49,7 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
-import {TableRowNumberService} from './shared/services/table-row-number.service';
+import {TableRowNumberService} from './table-row-number.service';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
 

@@ -36,7 +36,7 @@ import {distinctUntilChanged, mergeMap} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
-import {TableRowNumberService} from '../../../../shared/services/table-row-number.service';
+import {TableRowNumberService} from '../../../../table-row-number.service';
 
 declare let ResizeObserver: ResizeObserver;
 
