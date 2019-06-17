@@ -59,6 +59,6 @@ export class PivotSubSortValuesPipe implements PipeTransform {
   }
 
   private isLastHeader(otherSideHeaders: PivotDataHeader[]): boolean {
-    return otherSideHeaders && otherSideHeaders[0] && isNotNullOrUndefined(otherSideHeaders[0].targetIndex);
+    return otherSideHeaders.length === 0 || isNotNullOrUndefined(otherSideHeaders[0].targetIndex);
   }
 }

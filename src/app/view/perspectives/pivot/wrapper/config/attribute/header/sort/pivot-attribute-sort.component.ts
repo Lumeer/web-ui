@@ -104,6 +104,9 @@ export class PivotAttributeSortComponent {
     if (list) {
       const values = [...list.values];
       values.splice(index);
+      if (index === 0) {
+        values[0] = {title: this.summaryTitle, isSummary: true};
+      }
       this.changeSortValues(values);
     }
   }

@@ -24,7 +24,7 @@
                [emptyValue]="subSortPlaceholder"
                [items]="pivotAttribute | pivotSubSortSelectItems:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders):index:summaryTitle"
                [selectedId]="value"
-               [removable]="true"
+               [removable]="index > 0 || !value?.isSummary"
                [buttonClasses]="buttonClasses"
                (select)="onSubSortSelected(index, $event)"
                (remove)="onSubSortRemoved(index)">
