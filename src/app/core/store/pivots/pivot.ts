@@ -65,6 +65,14 @@ export interface PivotSort {
   asc: boolean;
 }
 
+export enum PivotValueType {
+  Default = 'default',
+  ColumnPercentage = 'column',
+  RowPercentage = 'row',
+  AllPercentage = 'all',
+}
+
 export interface PivotValueAttribute extends PivotAttribute {
   aggregation: DataAggregationType;
+  valueType?: PivotValueType;
 }

@@ -16,3 +16,14 @@
 
 </pivot-attribute-config>
 
+<select-item *ngIf="pivotAttribute"
+             class="d-block w-100 mt-2"
+             [emptyValue]="''"
+             [placeholderIcon]="'far fa-badge-percent'"
+             [items]="valueTypes | pivotValueTypeSelectItems"
+             [selectedId]="pivotAttribute.valueType || valueType.Default"
+             [removable]="false"
+             [buttonClasses]="buttonClasses"
+             (select)="onValueTypeSelected($event)">
+</select-item>
+
