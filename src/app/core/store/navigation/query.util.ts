@@ -87,7 +87,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   }
 }
 
-export function conditionValidator(input: FormControl): { [key: string]: any } {
+export function conditionValidator(input: FormControl): {[key: string]: any} {
   const value = input.value.toString().trim();
   const isCondition = conditionFromString(value) != null;
   return !isCondition ? {invalidCondition: value} : null;

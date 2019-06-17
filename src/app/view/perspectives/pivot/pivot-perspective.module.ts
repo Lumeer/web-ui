@@ -66,5 +66,4 @@ import {PivotHeaderMapAttributePipe} from './pipe/pivot-header-map-attribute.pip
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
 })
-export class PivotPerspectiveModule {
-}
+export class PivotPerspectiveModule {}

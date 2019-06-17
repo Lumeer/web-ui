@@ -25,19 +25,23 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {deepObjectsEquals} from '../../utils/common.utils';
 
 @Pipe({
-  name: 'selectConstraintItems'
+  name: 'selectConstraintItems',
 })
 export class SelectConstraintItemsPipe implements PipeTransform {
-
-  public transform(attributesResources: AttributesResource[], restrictedAttributes: { resourceIndex: number, attributeId: string }[]): SelectItemModel[] {
-    return (attributesResources || []).reduce((arr, resource, index) => {
-      if (<Collection>resource) {
-        return [...arr, ...this.collectionSelectItems(resource as Collection, index)];
-      } else if (<LinkType>resource) {
-        return [...arr, ...this.linkTypeSelectItems(resource as LinkType, index)];
-      }
-      return arr;
-    }, []).filter(item => !restrictedAttributes.some(attr => deepObjectsEquals(item.id, attr)))
+  public transform(
+    attributesResources: AttributesResource[],
+    restrictedAttributes: {resourceIndex: number; attributeId: string}[]
+  ): SelectItemModel[] {
+    return (attributesResources || [])
+      .reduce((arr, resource, index) => {
+        if (<Collection>resource) {
+          return [...arr, ...this.collectionSelectItems(resource as Collection, index)];
+        } else if (<LinkType>resource) {
+          return [...arr, ...this.linkTypeSelectItems(resource as LinkType, index)];
+        }
+        return arr;
+      }, [])
+      .filter(item => !restrictedAttributes.some(attr => deepObjectsEquals(item.id, attr)));
   }
 
   public collectionSelectItems(collection: Collection, index: number): SelectItemModel[] {
@@ -49,7 +53,7 @@ export class SelectConstraintItemsPipe implements PipeTransform {
     }));
   }
 
-  public linkTypeSelectItems(linkType: LinkType, index: number,): SelectItemModel[] {
+  public linkTypeSelectItems(linkType: LinkType, index: number): SelectItemModel[] {
     if (!linkType.collections || linkType.collections.length !== 2) {
       return [];
     }
@@ -59,7 +63,5 @@ export class SelectConstraintItemsPipe implements PipeTransform {
       icons: [linkType.collections[0].icon, linkType.collections[1].icon],
       iconColors: [linkType.collections[0].color, linkType.collections[1].color],
     }));
-
   }
-
 }

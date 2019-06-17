@@ -68,7 +68,7 @@ import {UserByEmailPipe} from './email/user-by-email.pipe';
 import {UniqueEntitiesPipe} from './unique-entities.pipe';
 import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items.pipe';
 import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
-import { QueryStemAttributesResourcesPipe } from './query-stem-attributes-resources.pipe';
+import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],

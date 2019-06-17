@@ -46,4 +46,6 @@ export type DataResource =
   | Pick<DocumentModel, 'id' | 'data' | 'collectionId'>
   | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId'>;
 
-export type AttributesResource = Pick<Collection, 'id' | 'attributes' | 'color' | 'icon'> | Pick<LinkType, 'id' | 'attributes' | 'collections'>;
+export type AttributesResource =
+  | Pick<Collection, 'id' | 'attributes' | 'color' | 'icon'>
+  | Pick<LinkType, 'id' | 'attributes' | 'collections'>;

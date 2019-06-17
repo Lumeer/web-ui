@@ -26,10 +26,12 @@ import {SelectConstraintItemId} from '../../../../shared/select/select-constrain
   name: 'pivotHeaderRestrictedAttributes',
 })
 export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
-
-  public transform(attributes: PivotRowColumnAttribute[], currentAttribute: PivotRowColumnAttribute): SelectConstraintItemId[] {
-    return (attributes || []).filter(attribute => !currentAttribute || !deepObjectsEquals(attribute, currentAttribute))
+  public transform(
+    attributes: PivotRowColumnAttribute[],
+    currentAttribute: PivotRowColumnAttribute
+  ): SelectConstraintItemId[] {
+    return (attributes || [])
+      .filter(attribute => !currentAttribute || !deepObjectsEquals(attribute, currentAttribute))
       .map(attribute => ({resourceIndex: attribute.resourceIndex, attributeId: attribute.attributeId}));
-
   }
 }

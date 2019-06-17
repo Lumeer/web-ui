@@ -26,8 +26,7 @@ import {SelectConstraintItemId} from '../../../../shared/select/select-constrain
   name: 'pivotHeaderMapAttribute',
 })
 export class PivotHeaderMapAttributePipe implements PipeTransform {
-
   public transform(pivotAttribute: PivotRowColumnAttribute): SelectConstraintItemId {
-    return pivotAttribute && ({resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId});
+    return pivotAttribute && {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 }

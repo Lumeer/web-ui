@@ -28,6 +28,5 @@ import {pivotAttributesAreSame} from '../util/pivot-util';
 export class PivotHeaderSelectedAttributesPipe implements PipeTransform {
   public transform(config: PivotConfig): PivotRowColumnAttribute[] {
     return [...(config.rowAttributes || []), ...(config.columnAttributes || [])];
-
   }
 }
