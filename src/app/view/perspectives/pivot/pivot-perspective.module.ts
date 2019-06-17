@@ -37,6 +37,7 @@ import {PivotSortSelectedIdPipe} from './pipe/pivot-sort-selected-id.pipe';
 import {PivotAttributeSortComponent} from './wrapper/config/attribute/header/sort/pivot-attribute-sort.component';
 import {PivotSubSortSelectItemsPipe} from './pipe/pivot-sub-sort-select-items.pipe';
 import {PivotSubSortValuesPipe} from './pipe/pivot-sub-sort-values.pipe';
+import {PivotValueTypeSelectItemsPipe} from './pipe/pivot-value-type-select-items.pipe';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import {PivotSubSortValuesPipe} from './pipe/pivot-sub-sort-values.pipe';
     PivotSortSelectedIdPipe,
     PivotSubSortSelectItemsPipe,
     PivotSubSortValuesPipe,
+    PivotValueTypeSelectItemsPipe,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
 })

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute, PivotValueAttribute} from '../../../../../../../core/store/pivots/pivot';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
 import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -47,6 +47,8 @@ export class PivotValueAttributeConfigComponent {
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly aggregationPlaceholder: string;
   public readonly aggregations = Object.values(DataAggregationType);
+  public readonly valueTypes = Object.values(PivotValueType);
+  public readonly valueType = PivotValueType;
 
   constructor(private i18n: I18n) {
     this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
@@ -58,11 +60,20 @@ export class PivotValueAttributeConfigComponent {
   }
 
   public onAttributeSelected(attribute: PivotAttribute) {
-    const valueAttribute = {...attribute, aggregation: DataAggregationType.Sum};
+    const valueAttribute: PivotValueAttribute = {
+      ...attribute,
+      aggregation: DataAggregationType.Sum,
+      valueType: PivotValueType.Default,
+    };
     this.attributeSelect.emit(valueAttribute);
   }
 
   public onAttributeRemoved() {
     this.attributeRemove.emit();
+  }
+
+  public onValueTypeSelected(valueType: PivotValueType) {
+    const valueAttribute: PivotValueAttribute = {...this.pivotAttribute, valueType};
+    this.attributeSelect.emit(valueAttribute);
   }
 }
