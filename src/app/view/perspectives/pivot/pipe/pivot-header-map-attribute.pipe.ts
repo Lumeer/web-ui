@@ -18,21 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotAttribute, PivotConfig} from '../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {pivotAttributesAreSame} from '../util/pivot-util';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {SelectConstraintItemId} from '../../../../shared/select/select-constraint-item/select-constraint-item.component';
 
 @Pipe({
-  name: 'pivotHeaderSelectItems',
+  name: 'pivotHeaderMapAttribute',
 })
-export class PivotHeaderSelectItemsPipe implements PipeTransform {
-  public transform(selectItems: SelectItemModel[], config: PivotConfig, currentAttribute?: PivotAttribute): any {
-    const restrictedAttributes = [...(config.rowAttributes || []), ...(config.columnAttributes || [])].filter(
-      attribute => !currentAttribute || !pivotAttributesAreSame(attribute, currentAttribute)
-    );
+export class PivotHeaderMapAttributePipe implements PipeTransform {
 
-    return selectItems.filter(
-      item => !restrictedAttributes.some(attribute => pivotAttributesAreSame(item.id as PivotAttribute, attribute))
-    );
+  public transform(pivotAttribute: PivotRowColumnAttribute): SelectConstraintItemId {
+    return pivotAttribute && ({resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId});
   }
 }

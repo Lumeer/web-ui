@@ -1,0 +1,29 @@
+<select-item
+  [items]="attributesResources | selectConstraintItems:restrictedAttributes"
+  [selectedId]="selectedAttribute"
+  [removable]="removable"
+  [disabled]="disabled"
+  [buttonClasses]="buttonClasses"
+  [placeholderIcon]="placeholderIcon"
+  [placeholderText]="placeholderText"
+  [emptyValue]="emptyValue"
+  (select)="onSelect($event)"
+  (remove)="onRemove()">
+</select-item>
+
+<ng-container *ngIf="selectedAttribute">
+  <ng-container *ngIf="{configItems: attributesResources | selectConstraintConfigItems:selectedAttribute} as data">
+    <select-item
+      *ngIf="data.configItems.length > 1"
+      class="d-block mt-1"
+      [items]="[]"
+      [selectedId]="selectedConfig"
+      [removable]="false"
+      [placeholderText]="configPlaceholder"
+      [buttonClasses]="buttonClasses"
+      [disabled]="disabled"
+      [emptyValue]="''"
+      (select)="onSelectConfig($event)">
+    </select-item>
+  </ng-container>
+</ng-container>

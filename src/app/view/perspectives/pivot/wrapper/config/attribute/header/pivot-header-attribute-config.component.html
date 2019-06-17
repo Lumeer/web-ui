@@ -1,28 +1,33 @@
-<pivot-attribute-config [availableAttributes]="attributesSelectItems"
-                        [pivotAttribute]="pivotAttribute"
-                        [icon]="isRow ? 'far fa-arrow-right' : 'far fa-arrow-down'"
-                        (attributeSelect)="onAttributeSelected($event)"
-                        (attributeRemove)="onAttributeRemoved()">
+<select-constraint-item [attributesResources]="attributesResources"
+                        [restrictedAttributes]="selectedAttributes | pivotHeaderRestrictedAttributes:pivotAttribute"
+                        [placeholderIcon]="isRow ? 'far fa-arrow-right' : 'far fa-arrow-down'"
+                        [buttonClasses]="buttonClasses"
+                        [selectedAttribute]="pivotAttribute | pivotHeaderMapAttribute"
+                        [selectedConfig]="pivotAttribute?.config"
+                        [emptyValue]="emptyValueString"
+                        [removable]="!!pivotAttribute"
+                        (select)="onSelected($event)"
+                        (selectConfig)="onSelectedConfig($event)"
+                        (remove)="onRemoved()">
+</select-constraint-item>
 
-  <div class="custom-control custom-checkbox mt-1" *ngIf="pivotAttribute">
-    <input [id]="showSumsId"
-           [attr.checked]="pivotAttribute.showSums"
-           [checked]="pivotAttribute.showSums"
-           (change)="onShowSumsChange($event.target.checked)"
-           type="checkbox"
-           class="custom-control-input">
-    <label [for]="showSumsId"
-           class="custom-control-label">
-    </label>
-    <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
-  </div>
-
-</pivot-attribute-config>
+<div class="custom-control custom-checkbox mt-1" *ngIf="pivotAttribute">
+  <input [id]="showSumsId"
+         [attr.checked]="pivotAttribute.showSums"
+         [checked]="pivotAttribute.showSums"
+         (change)="onShowSumsChange($event.target.checked)"
+         type="checkbox"
+         class="custom-control-input">
+  <label [for]="showSumsId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
+</div>
 
 <pivot-attribute-sort
   *ngIf="pivotAttribute"
   [pivotAttribute]="pivotAttribute"
-  [attributeSelectItem]="attributesSelectItems | findSelectItemById:(pivotAttribute | pivotCleanAttribute)"
+  [attributeSelectItem]="pivotAttribute | pivotAttributeSelectItem:attributesResources"
   [pivotData]="pivotData"
   [isRow]="isRow"
   (attributeChange)="attributeChange.emit($event)">
