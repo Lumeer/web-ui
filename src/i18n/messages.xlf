@@ -2274,6 +2274,262 @@
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/empty-row/table-empty-row.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
+      </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
+        <source>Other</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/header/kanban-column-header.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.row.header" datatype="html">
+        <source>
+    Rows
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.reorder" datatype="html">
+        <source>
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
+        <source>
+    Columns
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
+        <source>
+    Values
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
+        <source>Show summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
+        <source>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
+        <source>
+    Main settings
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
+        <source>
+        <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
+        <source>
+  Map settings
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.description" datatype="html">
+        <source>
+  Select attributes with addresses or Earth coordinates to position records on the map.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.attribute-select.placeholder" datatype="html">
+        <source>Choose...
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.placeholder.title" datatype="html">
+        <source>No places found!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.placeholder.description" datatype="html">
+        <source>Make sure you have selected an attribute with addresses or Earth coordinates.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
+        <source>Tasks have long timespan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.invalid.range.subtitle" datatype="html">
+        <source>
+    Tasks have timespan longer than 25 years. I cannot efficiently display such a situation. Try to filter your tasks using the search box at the top of the page.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
+        <source>
+        Previous
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
+        <source>
+        Today
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.next" datatype="html">
+        <source>
+        Next
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
+        <source>
+        Month
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
+        <source>
+        Week
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
+        <source>
+        Day
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.all.views" datatype="html">
+        <source>
+          Views
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.all.collections" datatype="html">
+        <source>
+          Tables
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.all.records" datatype="html">
+        <source>
+          Records
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.tab.all" datatype="html">
+        <source>All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.tab.views" datatype="html">
+        <source>Views</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.tab.collections" datatype="html">
+        <source>Tables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.tab.documents" datatype="html">
+        <source>Records</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+        <source>I am sorry but you do not have permissions to add tables.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
+        <source>There are no Views yet!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
+        <source>Search for something, switch the View, set a name and save the resulting page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
+        <source>Open as Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
+        <source>Open table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
       </trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
         <source>Number of users</source>
         <context-group purpose="location">
@@ -2789,240 +3045,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
-        <source>
-        Previous
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
-        <source>
-        Today
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.next" datatype="html">
-        <source>
-        Next
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
-        <source>
-        Month
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
-        <source>
-        Week
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
-        <source>
-        Day
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
-        <source>
-    Main settings
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
-        <source>
-        <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
-        <source>Tasks have long timespan</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.invalid.range.subtitle" datatype="html">
-        <source>
-    Tasks have timespan longer than 25 years. I cannot efficiently display such a situation. Try to filter your tasks using the search box at the top of the page.
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
-        <source>Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/header/kanban-column-header.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
-        <source>
-  Map settings
-</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.map.config.sidebar.description" datatype="html">
-        <source>
-  Select attributes with addresses or Earth coordinates to position records on the map.
-</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.attribute-select.placeholder" datatype="html">
-        <source>Choose...
-    </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.placeholder.title" datatype="html">
-        <source>No places found!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.placeholder.description" datatype="html">
-        <source>Make sure you have selected an attribute with addresses or Earth coordinates.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.row.header" datatype="html">
-        <source>
-    Rows
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
-        <source>
-    Columns
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
-        <source>
-    Values
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
-        <source>Show summary</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/pivot-header-attribute-config/pivot-header-attribute-config.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.all.views" datatype="html">
-        <source>
-          Views
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.all.collections" datatype="html">
-        <source>
-          Tables
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.all.records" datatype="html">
-        <source>
-          Records
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.tab.all" datatype="html">
-        <source>All</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.tab.views" datatype="html">
-        <source>Views</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.tab.collections" datatype="html">
-        <source>Tables</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.tab.documents" datatype="html">
-        <source>Records</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
-        <source>I am sorry but you do not have permissions to add tables.
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
-        <source>There are no Views yet!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
-        <source>Search for something, switch the View, set a name and save the resulting page.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
-        <source>Open as Table</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
-        <source>Open table</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context>
-          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.not.exist" datatype="html">
@@ -4140,6 +4162,34 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="select.constraint.item.config" datatype="html">
+        <source>Config</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="default" datatype="html">
+        <source>Default</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="select.constraint.items.date.format" datatype="html">
+        <source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="select.constraint.items.date.formatType" datatype="html">
+        <source>{VAR_SELECT, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
         <source>Deleted table</source>
         <context-group purpose="location">
@@ -4445,17 +4495,53 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="perspective.pivot.table.summary.total" datatype="html">
+        <source>Sum total</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-sort-select-items.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.config.value.type" datatype="html">
+        <source>{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-value-type-select-items.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-attribute-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.config.summary" datatype="html">
+        <source>Summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.config.subSort" datatype="html">
+        <source>Select next sort</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="aggregation" datatype="html">
         <source>Aggregation</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-value-attribute-config/pivot-value-attribute-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/value/pivot-value-attribute-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4468,13 +4554,6 @@
       </trans-unit>
       <trans-unit id="perspective.pivot.table.summary.header" datatype="html">
         <source>Summary of</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="perspective.pivot.table.summary.total" datatype="html">
-        <source>Sum total</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
           <context context-type="linenumber">1</context>
