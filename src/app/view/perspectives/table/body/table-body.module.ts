@@ -27,6 +27,7 @@ import {PickerModule} from '../../../../shared/picker/picker.module';
 import {PipesModule} from '../../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../../shared/shared.module';
 import {TablePipesModule} from '../shared/pipes/table-pipes.module';
+import {TableSharedModule} from '../shared/table-shared.module';
 import {TableRowGroupFooterComponent} from './row-group/footer/table-row-group-footer.component';
 import {TableRowGroupComponent} from './row-group/table-row-group.component';
 import {BooleanCollapsedCellComponent} from './rows/cell-group/collapsed-cell/boolean/boolean-collapsed-cell.component';
@@ -57,6 +58,7 @@ import {TableBodyComponent} from './table-body.component';
     PipesModule,
     ContextMenuModule,
     TablePipesModule,
+    TableSharedModule,
     DataInputModule,
     ScrollingModule,
     GravatarModule,

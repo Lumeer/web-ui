@@ -31,6 +31,8 @@ import {TableHeaderCollectionComponent} from './collection/table-header-collecti
 import {TableHiddenColumnComponent} from './column-group/hidden-column/table-hidden-column.component';
 import {TableAttributeSuggestionsComponent} from './column-group/single-column/attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './column-group/single-column/context-menu/table-column-context-menu.component';
+import {TableColumnIconsComponent} from './column-group/single-column/icons/table-column-icons.component';
+import {TableColumnInputComponent} from './column-group/single-column/input/table-column-input.component';
 import {TableSingleColumnComponent} from './column-group/single-column/table-single-column.component';
 import {TableColumnGroupComponent} from './column-group/table-column-group.component';
 import {TableHiddenInputComponent} from './hidden-input/table-hidden-input.component';
@@ -46,6 +48,8 @@ import {TableHeaderComponent} from './table-header.component';
     TableCaptionComponent,
     TableColumnContextMenuComponent,
     TableColumnGroupComponent,
+    TableColumnIconsComponent,
+    TableColumnInputComponent,
     TableHeaderComponent,
     TableHeaderCollectionComponent,
     TableHeaderLinkComponent,

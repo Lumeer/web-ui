@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
-
-@Pipe({
-  name: 'isDefaultAttribute',
+@Component({
+  selector: 'table-column-icons',
+  templateUrl: './table-column-icons.component.html',
+  styleUrls: ['./table-column-icons.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Injectable()
-export class DefaultAttributePipe implements PipeTransform {
-  public transform(attribute: Attribute, collection: Collection): boolean {
-    return collection && getDefaultAttributeId(collection) === attribute.id;
-  }
+export class TableColumnIconsComponent {
+  @Input()
+  public attribute: Attribute;
 }

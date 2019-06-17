@@ -24,6 +24,7 @@ import {
   HostBinding,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -31,15 +32,19 @@ import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
-import {Observable, Subscription} from 'rxjs';
-import {first, map, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, first, map, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
+import {selectOrganizationByWorkspace} from '../../../../../../core/store/organizations/organizations.state';
+import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
+import {RouterAction} from '../../../../../../core/store/router/router.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableModel} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
@@ -53,15 +58,10 @@ import {
   extractAttributeParentName,
   filterAttributesByDepth,
 } from '../../../../../../shared/utils/attribute.utils';
-import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
-import {EDITABLE_EVENT} from '../../../table-perspective.component';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
-import {RouterAction} from '../../../../../../core/store/router/router.action';
-import {selectOrganizationByWorkspace} from '../../../../../../core/store/organizations/organizations.state';
 
 @Component({
   selector: 'table-single-column',
@@ -69,7 +69,7 @@ import {selectOrganizationByWorkspace} from '../../../../../../core/store/organi
   styleUrls: ['./table-single-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableSingleColumnComponent implements OnChanges {
+export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
   public table: TableModel;
 
@@ -94,30 +94,27 @@ export class TableSingleColumnComponent implements OnChanges {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
-  @ViewChild(TableEditableCellDirective, {static: true})
-  public editableCellDirective: TableEditableCellDirective;
-
   @ViewChild(TableAttributeSuggestionsComponent, {static: false})
   public suggestions: TableAttributeSuggestionsComponent;
 
   @ViewChild(TableColumnContextMenuComponent, {static: false})
   public contextMenuComponent: TableColumnContextMenuComponent;
 
-  @HostBinding('style.background')
-  public background: string;
-
   private attributes: Attribute[];
   public attribute: Attribute;
 
   public lastName: string;
 
+  public overriddenValue$ = new BehaviorSubject(null);
+
+  private cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
+
+  public edited$ = new BehaviorSubject(false);
   public selected$: Observable<boolean>;
-  public edited: boolean;
   public functionsCountLimit$: Observable<number>;
 
-  public readonly disabledCharacters = ['.'];
-
   private selectedSubscriptions = new Subscription();
+  private subscriptions = new Subscription();
 
   public constructor(
     private actions$: Actions,
@@ -130,13 +127,37 @@ export class TableSingleColumnComponent implements OnChanges {
     private store$: Store<AppState>
   ) {}
 
+  public ngOnInit() {
+    this.selected$ = this.bindSelected();
+    this.subscriptions.add(this.subscribeToSelected());
+  }
+
+  private bindSelected(): Observable<boolean> {
+    return this.store$.pipe(
+      select(selectTableCursorSelected(this.cursor)),
+      distinctUntilChanged()
+    );
+  }
+
+  private subscribeToSelected(): Subscription {
+    return this.selected$.subscribe(selected => {
+      this.selectedSubscriptions.unsubscribe();
+      if (selected) {
+        this.selectedSubscriptions = new Subscription();
+        this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
+        this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
+      } else {
+        this.edited$.next(false);
+      }
+    });
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && !areTableHeaderCursorsEqual(changes.cursor.previousValue, changes.cursor.currentValue)) {
-      this.bindToSelected();
+      this.cursor$.next(this.cursor);
     }
     if (changes.collection || changes.linkType) {
       this.bindAttribute();
-      this.setBackground();
     }
     this.functionsCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
@@ -144,15 +165,9 @@ export class TableSingleColumnComponent implements OnChanges {
     );
   }
 
-  private setBackground() {
-    const nameChanged =
-      !this.attribute || !this.attribute.id || extractAttributeLastName(this.attribute.name) !== this.lastName;
-    this.background = this.columnBackgroundPipe.transform(this.collection, nameChanged);
-  }
-
   private bindAttribute() {
     this.attributes = this.extractAttributes();
-    this.attribute = this.findAttribute(this.attributes) || {name: this.column.attributeName};
+    this.attribute = findAttribute(this.attributes, this.column.attributeIds[0]) || {name: this.column.attributeName};
 
     if (!this.lastName) {
       this.lastName = extractAttributeLastName(this.attribute.name);
@@ -169,31 +184,18 @@ export class TableSingleColumnComponent implements OnChanges {
     return [];
   }
 
-  private findAttribute(attributes: Attribute[]) {
-    return attributes.find(attribute => attribute.id === this.column.attributeIds[0]);
-  }
-
-  private bindToSelected() {
-    this.selected$ = this.store$.pipe(
-      select(selectTableCursorSelected(this.cursor)),
-      // TODO do not use tap as selected$ might be used several times
-      tap(selected => {
-        this.edited = selected ? this.edited : false;
-
-        this.selectedSubscriptions.unsubscribe();
-        if (selected) {
-          this.selectedSubscriptions = new Subscription();
-          this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
-          this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
-        }
-      })
-    );
-  }
-
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
-      .subscribe(action => this.editableCellDirective.startEditing(action.payload.clear));
+      .subscribe(action => {
+        if (action.payload.clear) {
+          this.overriddenValue$.next('');
+        }
+        if (action.payload.value) {
+          this.overriddenValue$.next(action.payload.value);
+        }
+        this.startEditing();
+      });
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -204,19 +206,21 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public ngOnDestroy() {
     this.selectedSubscriptions.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   public onValueChange(lastName: string) {
     this.lastName = lastName;
-    this.setBackground();
   }
 
-  public onEditStart() {
-    this.edited = true;
+  public onCancel() {
+    this.stopEditing();
+    this.lastName = extractAttributeLastName(this.attribute.name);
   }
 
-  public onEditEnd(lastName: string) {
-    this.edited = false;
+  public onSave(lastName: string) {
+    this.stopEditing();
+
     if (!lastName || this.dialogService.isDialogOpen()) {
       return;
     }
@@ -231,7 +235,6 @@ export class TableSingleColumnComponent implements OnChanges {
       this.isUniqueAttributeName(this.attributes, this.attribute ? this.attribute.id : null, lastName)
     ) {
       this.renameAttribute(this.attribute, lastName);
-      // setTimeout(() => this.changeDetector.detectChanges());
     }
   }
 
@@ -404,7 +407,7 @@ export class TableSingleColumnComponent implements OnChanges {
   }
 
   public onEdit() {
-    this.editableCellDirective.startEditing();
+    this.startEditing();
   }
 
   public onHide() {
@@ -443,8 +446,30 @@ export class TableSingleColumnComponent implements OnChanges {
     this.store$.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
   }
 
+  public onDoubleClick() {
+    this.startEditing();
+  }
+
+  private startEditing() {
+    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+      this.edited$.next(true);
+    }
+  }
+
+  private stopEditing() {
+    this.overriddenValue$.next(null);
+    this.edited$.next(false);
+
+    this.selected$.pipe(take(1)).subscribe(selected => {
+      if (selected) {
+        // sets focus to hidden input
+        this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+      }
+    });
+  }
+
   public onMouseDown() {
-    if (!this.edited) {
+    if (!this.edited$.getValue()) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
@@ -464,7 +489,9 @@ export class TableSingleColumnComponent implements OnChanges {
     );
   }
 
-  public onEditKeyDown(event: KeyboardEvent) {
+  public onKeyDown(event: KeyboardEvent) {
+    event.stopPropagation();
+
     switch (event.code) {
       case KeyCode.ArrowDown:
         return this.suggestions && this.suggestions.moveSelection(Direction.Down);
@@ -479,10 +506,6 @@ export class TableSingleColumnComponent implements OnChanges {
     if (isKeyPrintable(event) && this.suggestions) {
       return this.suggestions.clearSelection();
     }
-  }
-
-  public onKeyDown(event: KeyboardEvent) {
-    event[EDITABLE_EVENT] = this.allowedPermissions && this.allowedPermissions.writeWithView;
   }
 
   public onContextMenu(event: MouseEvent) {

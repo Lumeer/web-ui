@@ -1,58 +1,53 @@
-<div #editableCell
-     tableEditableCell
-     [cancelOnBlur]="!(attribute | entityCreated)"
-     [disabledCharacters]="disabledCharacters"
-     [readonly]="!allowedPermissions?.writeWithView"
-     [selected]="selected$ | async"
-     [value]="attribute | attributeLastName"
-     (contextmenu)="onContextMenu($event)"
-     (valueChange)="onValueChange($event)"
-     (editStart)="onEditStart()"
-     (editEnd)="onEditEnd($event)"
-     (keydown)="onKeyDown($event)"
-     (editKeyDown)="onEditKeyDown($event)"
-     (mousedown)="onMouseDown()"
-     class="table-border-right table-border-bottom h-100 font-italic"
-     [class.uninitialized-column]="!column?.attributeIds[0]"
-     [class.text-default-attribute]="collection ? (attribute | isDefaultAttribute: collection) : null"
-     data-test="table-column-input">
-</div>
-<i *ngIf="(attribute?.function)"
-   [ngClass]="'fas fa-function'"
-   [style.background-color]="background"
-   (click)="onContextMenu($event)"
-   (contextmenu)="onContextMenu($event)"
-   class="float-right position-relative"></i>
-<i *ngIf="(attribute?.constraint | constraintTypeIcon) as iconName"
-   [ngClass]="iconName"
-   [style.background-color]="background"
-   [title]="attribute?.constraint | constraintTypeIconTitle"
-   (click)="onContextMenu($event)"
-   (contextmenu)="onContextMenu($event)"
-   class="float-right position-relative"></i>
+<ng-container *ngIf="{defaultAttribute: attribute | isDefaultAttribute: collection, edited: edited$ | async, overriddenValue: overriddenValue$ | async} as state">
+  <div #columnCell
+       [class.edited]="state.edited"
+       [class.selected]="selected$ | async"
+       [class.uninitialized-column]="!column?.attributeIds[0]"
+       [style.background]="collection | columnBackground : (attribute | attributeNameChanged : (state.overriddenValue || state.overriddenValue === '' ? state.overriddenValue : lastName))"
+       (contextmenu)="onContextMenu($event)"
+       (dblclick)="onDoubleClick()"
+       (mousedown)="onMouseDown()"
+       class="d-flex table-border-right table-border-bottom h-100 w-100 px-1">
+    <table-column-input [default]="state.defaultAttribute"
+                        [edited]="state.edited"
+                        [initialized]="attribute | entityCreated"
+                        [value]="state.overriddenValue || state.overriddenValue === '' ? state.overriddenValue : lastName"
+                        (valueChange)="onValueChange($event)"
+                        (save)="onSave($event)"
+                        (cancel)="onCancel()"
+                        (keydown)="onKeyDown($event)"
+                        class="flex-grow-1">
+    </table-column-input>
 
-<table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
-                             [attributeName]="attribute | attributeName:lastName"
-                             [collection]="collection"
-                             [linkType]="linkType"
+    <table-column-icons *ngIf="!state.edited && (attribute?.constraint || attribute?.function)"
+                        [attribute]="attribute"
+                        class="flex-grow-0">
+    </table-column-icons>
+  </div>
+
+  <table-attribute-suggestions *ngIf="state.edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
+                               [attributeName]="attribute | attributeName:lastName"
+                               [collection]="collection"
+                               [linkType]="linkType"
+                               [cursor]="cursor"
+                               [table]="table"
+                               [origin]="columnCell">
+  </table-attribute-suggestions>
+
+  <table-column-context-menu *ngIf="attribute && cursor"
+                             [attribute]="attribute"
                              [cursor]="cursor"
-                             [table]="table"
-                             [origin]="editableCell">
-</table-attribute-suggestions>
-
-<table-column-context-menu *ngIf="attribute && cursor"
-                           [attribute]="attribute"
-                           [cursor]="cursor"
-                           [canManageConfig]="canManageConfig"
-                           [allowedPermissions]="allowedPermissions"
-                           [defaultAttribute]="collection ? (attribute | isDefaultAttribute: collection) : true"
-                           [leaf]="leaf"
-                           (add)="onAdd($event)"
-                           (configure)="onConfigure()"
-                           (functionEdit)="onFunctionEdit()"
-                           (edit)="onEdit()"
-                           (hide)="onHide()"
-                           (remove)="onRemove()"
-                           (setDefaultAttribute)="onSetDefaultAttribute()"
-                           (split)="onSplit()">
-</table-column-context-menu>
+                             [canManageConfig]="canManageConfig"
+                             [allowedPermissions]="allowedPermissions"
+                             [defaultAttribute]="state.defaultAttribute"
+                             [leaf]="leaf"
+                             (add)="onAdd($event)"
+                             (configure)="onConfigure()"
+                             (functionEdit)="onFunctionEdit()"
+                             (edit)="onEdit()"
+                             (hide)="onHide()"
+                             (remove)="onRemove()"
+                             (setDefaultAttribute)="onSetDefaultAttribute()"
+                             (split)="onSplit()">
+  </table-column-context-menu>
+</ng-container>

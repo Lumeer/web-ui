@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {TableCellScrollDirective} from './directives/table-cell-scroll.directive';
-import {TableEditableCellDirective} from './directives/table-editable-cell.directive';
 import {TablePipesModule} from './pipes/table-pipes.module';
 
 @NgModule({
   imports: [CommonModule, TablePipesModule],
-  declarations: [TableCellScrollDirective, TableEditableCellDirective],
-  exports: [TableCellScrollDirective, TableEditableCellDirective, TablePipesModule],
+  declarations: [TableCellScrollDirective],
+  exports: [TableCellScrollDirective, TablePipesModule],
 })
 export class TableSharedModule {}

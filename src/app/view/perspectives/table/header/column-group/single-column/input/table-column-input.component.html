@@ -1,0 +1,18 @@
+<input *ngIf="!edited; else editableInput"
+       [value]="value"
+       [class.text-default-attribute]="default"
+       class="w-100"
+       data-test="table-column-input"
+       readonly>
+
+<ng-template #editableInput>
+  <input #textInput
+         [readonly]="!edited"
+         [value]="value"
+         [class.text-default-attribute]="default"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         (keydown)="onKeyDown($event)"
+         class="w-100"
+         data-test="table-column-input">
+</ng-template>
