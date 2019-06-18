@@ -17,18 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Renderer2,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -51,17 +40,10 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild('content', {static: true})
-  public contentElement: ElementRef<HTMLDivElement>;
-
   public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(
-    private element: ElementRef<HTMLElement>,
-    private renderer: Renderer2,
-    private store$: Store<AppState>
-  ) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindSingleCollection();
