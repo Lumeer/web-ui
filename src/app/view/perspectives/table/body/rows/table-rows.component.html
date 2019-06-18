@@ -1,6 +1,5 @@
 <ng-container *ngIf="{rows: rows$ | async} as table">
   <cdk-virtual-scroll-viewport [itemSize]="31"
-                               (scroll)="onScroll($event)"
                                class="h-100">
     <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
                        [cursor]="cursor | nextRowCursor : rowIndex"

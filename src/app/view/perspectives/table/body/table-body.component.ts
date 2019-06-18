@@ -22,11 +22,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
   Input,
   OnChanges,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -55,9 +53,6 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public canManageConfig: boolean;
-
-  @Output()
-  public horizontalScroll = new EventEmitter<number>();
 
   @ViewChild(TableRowsComponent, {static: true})
   public rowsComponent: TableRowsComponent;
@@ -99,11 +94,5 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
 
   private setTableRowMinHeight() {
     this.element.nativeElement.style.setProperty('--table-row-min-height', `${TABLE_ROW_MIN_HEIGHT}px`);
-  }
-
-  public scroll(scrollLeft: number) {
-    if (this.rowsComponent) {
-      this.rowsComponent.scroll(scrollLeft);
-    }
   }
 }

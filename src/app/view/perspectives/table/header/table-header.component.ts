@@ -32,8 +32,8 @@ import {
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {AppState} from '../../../../core/store/app.state';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
@@ -57,7 +57,11 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(private renderer: Renderer2, private store$: Store<AppState>) {}
+  public constructor(
+    private element: ElementRef<HTMLElement>,
+    private renderer: Renderer2,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.bindSingleCollection();
@@ -90,10 +94,6 @@ export class TableHeaderComponent implements OnInit, OnChanges {
 
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-  }
-
-  public scroll(left: number) {
-    this.renderer.setStyle(this.contentElement.nativeElement, 'left', `${left}px`);
   }
 }
 

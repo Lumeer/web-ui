@@ -4,12 +4,11 @@
   <ng-container *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
     <table-header [table]="table$ | async"
                   [canManageConfig]="data.canManageConfig"
-                  (scroll)="onHeaderScroll($event)">
+                  cdkScrollable>
     </table-header>
     <table-body [tableId]="tableId"
                 [query]="query"
                 [canManageConfig]="data.canManageConfig"
-                (horizontalScroll)="onBodyHorizontalScroll($event)"
                 class="flex-grow-1"
                 [style.height.px]="((table$ | async)?.config?.rows | rowPositionTop: (table$ | async)?.config?.rows?.length) + 40">
     </table-body>

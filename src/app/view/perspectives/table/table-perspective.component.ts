@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -89,17 +90,18 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private selectedCursor: TableCursor;
 
-  private lastHeaderScroll: number;
-
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private scrollDispatcher: ScrollDispatcher, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.prepareTableId();
     this.initTable();
-    this.subscribeToTable();
-    this.subscribeToSelectedCursor();
+
+    this.subscriptions.add(this.subscribeToTable());
+    this.subscriptions.add(this.subscribeToSelectedCursor());
+    this.subscriptions.add(this.subscribeToScrolling());
+
     this.currentView$ = this.store$.select(selectCurrentView);
   }
 
@@ -111,10 +113,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.elementId = `table-${this.tableId}`;
   }
 
-  private subscribeToSelectedCursor() {
-    this.subscriptions.add(
-      this.store$.pipe(select(selectTableCursor)).subscribe(cursor => (this.selectedCursor = cursor))
-    );
+  private subscribeToSelectedCursor(): Subscription {
+    return this.store$.pipe(select(selectTableCursor)).subscribe(cursor => (this.selectedCursor = cursor));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -153,7 +153,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     if (this.query) {
       this.createTable(this.query, this.config);
     } else {
-      this.subscribeToQuery(config);
+      this.subscriptions.add(this.subscribeToQuery(config));
     }
   }
 
@@ -171,16 +171,14 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new DestroyTable({tableId: this.tableId}));
   }
 
-  private subscribeToTable() {
-    this.subscriptions.add(
-      this.store$
-        .select(selectTableById(this.tableId))
-        .pipe(filter(table => !!table))
-        .subscribe(table => {
-          this.table$.next(table);
-          this.switchPartsIfFirstEmpty(table);
-        })
-    );
+  private subscribeToTable(): Subscription {
+    return this.store$
+      .select(selectTableById(this.tableId))
+      .pipe(filter(table => !!table))
+      .subscribe(table => {
+        this.table$.next(table);
+        this.switchPartsIfFirstEmpty(table);
+      });
   }
 
   private switchPartsIfFirstEmpty(table: TableModel) {
@@ -207,28 +205,26 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private subscribeToQuery(initConfig: TableConfig) {
-    this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectNavigation),
-          filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
-          withLatestFrom(this.store$.pipe(select(selectTableConfig)))
-        )
-        .subscribe(([{query}, config]) => {
-          if (areQueriesEqual(this.query, query)) {
-            return;
-          }
+  private subscribeToQuery(initConfig: TableConfig): Subscription {
+    return this.store$
+      .pipe(
+        select(selectNavigation),
+        filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
+        withLatestFrom(this.store$.pipe(select(selectTableConfig)))
+      )
+      .subscribe(([{query}, config]) => {
+        if (areQueriesEqual(this.query, query)) {
+          return;
+        }
 
-          if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
-            this.addTablePart(query);
-          } else {
-            this.refreshTable(query, config || initConfig);
-          }
+        if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
+          this.addTablePart(query);
+        } else {
+          this.refreshTable(query, config || initConfig);
+        }
 
-          this.query = query;
-        })
-    );
+        this.query = query;
+      });
   }
 
   private addTablePart(query: Query) {
@@ -239,6 +235,15 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private refreshTable(query: Query, config: TableConfig) {
     this.destroyTable();
     this.createTable(query, config);
+  }
+
+  private subscribeToScrolling(): Subscription {
+    return this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable) => {
+      const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);
+      if (otherScrollable) {
+        otherScrollable.scrollTo({left: scrollable.measureScrollOffset('left')});
+      }
+    });
   }
 
   public onClickOutside(event: Event) {
@@ -298,22 +303,5 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @HostListener('contextmenu', ['$event'])
   public onContextMenu(event: MouseEvent) {
     event.preventDefault();
-  }
-
-  public onHeaderScroll(event: Event) {
-    this.lastHeaderScroll = Date.now();
-    const scrollLeft = event.target['scrollLeft'];
-    this.tableBody.scroll(scrollLeft);
-  }
-
-  public onBodyHorizontalScroll(scrollLeft: number) {
-    // need to check if header was not directly scrolled recently, otherwise infinite scroll loop might occur
-    if (this.tableHeader && !this.hasHeaderScrolledRecently()) {
-      this.tableHeader.scroll(-scrollLeft);
-    }
-  }
-
-  private hasHeaderScrolledRecently(): boolean {
-    return this.lastHeaderScroll && Date.now() - this.lastHeaderScroll < 50;
   }
 }

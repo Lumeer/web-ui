@@ -23,12 +23,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -59,9 +57,6 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input()
   public canManageConfig: boolean;
-
-  @Output()
-  public horizontalScroll = new EventEmitter<number>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public virtualScrollViewport: CdkVirtualScrollViewport;
@@ -140,20 +135,6 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-  }
-
-  public onScroll(event: UIEvent) {
-    const scrollLeft: number = event.target['scrollLeft'];
-    if (scrollLeft !== this.scrollLeft) {
-      this.scrollLeft = scrollLeft;
-      this.horizontalScroll.emit(scrollLeft);
-    }
-  }
-
-  public scroll(scrollLeft: number) {
-    if (this.virtualScrollElement) {
-      this.virtualScrollElement.scrollLeft = scrollLeft;
-    }
   }
 
   public get virtualScrollElement(): HTMLElement {

@@ -1,7 +1,14 @@
-<ng-container *ngIf="{defaultAttribute: attribute | isDefaultAttribute: collection, edited: edited$ | async, overriddenValue: overriddenValue$ | async} as state">
+<ng-container *ngIf="{
+  defaultAttribute: attribute | isDefaultAttribute: collection,
+  edited: edited$ | async,
+  selected: selected$ | async,
+  overriddenValue: overriddenValue$ | async
+} as state">
   <div #columnCell
+       tableCellScroll
+       [selected]="state.selected"
        [class.edited]="state.edited"
-       [class.selected]="selected$ | async"
+       [class.selected]="state.selected"
        [class.uninitialized-column]="!column?.attributeIds[0]"
        [style.background]="collection | columnBackground : (attribute | attributeNameChanged : (state.overriddenValue || state.overriddenValue === '' ? state.overriddenValue : lastName))"
        (contextmenu)="onContextMenu($event)"
