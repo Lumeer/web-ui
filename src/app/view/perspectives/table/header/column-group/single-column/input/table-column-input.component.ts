@@ -29,9 +29,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {KeyCode} from '../../../../../../../shared/key-code';
+import {
+  filterOutInvalidAttributeNameCharacters,
+  FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
+} from '../../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier} from '../../../../../../../shared/utils/html-modifier';
-
-const DISABLED_CHARACTERS = ['.'];
 
 @Component({
   selector: 'table-column-input',
@@ -91,6 +93,20 @@ export class TableColumnInputComponent implements OnChanges {
     this.valueChange.emit(value.trim());
   }
 
+  public onPaste(event: Event) {
+    event.preventDefault();
+
+    const clipboardData: DataTransfer = event['clipboardData'] || window['clipboardData'];
+    const clipboardValue = clipboardData.getData('text/plain');
+    const safeValue = filterOutInvalidAttributeNameCharacters(clipboardValue);
+
+    const {selectionStart, selectionEnd, value} = this.textInput.nativeElement;
+    const prefix = value.slice(0, selectionStart);
+    const suffix = value.slice(selectionEnd);
+
+    this.valueChange.emit(prefix + safeValue + suffix);
+  }
+
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
@@ -110,7 +126,7 @@ export class TableColumnInputComponent implements OnChanges {
         return;
     }
 
-    if (DISABLED_CHARACTERS.includes(event.key)) {
+    if (FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS.includes(event.key)) {
       event.preventDefault();
     }
   }

@@ -55,6 +55,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {
   extractAttributeLastName,
   extractAttributeParentName,
+  filterOutInvalidAttributeNameCharacters,
   filterAttributesByDepth,
 } from '../../../../../../shared/utils/attribute.utils';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
@@ -193,7 +194,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
           this.lastName$.next('');
         }
         if (action.payload.value) {
-          this.lastName$.next(action.payload.value);
+          const safeValue = filterOutInvalidAttributeNameCharacters(action.payload.value);
+          this.lastName$.next(safeValue);
         }
         this.startEditing();
       });
