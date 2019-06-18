@@ -3,6 +3,7 @@
      class="flex-grow-1 d-flex flex-column m-0 h-100">
   <ng-container *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
     <table-hidden-input [canManageConfig]="data.canManageConfig"
+                        [tableId]="tableId"
                         class="position-fixed">
     </table-hidden-input>
 

@@ -1,8 +1,13 @@
+:host {
+  z-index: 100;
+}
+
 input {
+  background: transparent;
   border: none;
   caret-color: transparent;
+  color: transparent !important;
   cursor: default;
-  height: 0;
-  width: 0;
-  color: white !important;
+  height: 1px;
+  width: 1px;
 }
