@@ -272,14 +272,17 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToScrolling(): Subscription {
-    return this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable) => {
-      const left = scrollable.measureScrollOffset('left');
-      const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);
+    return this.scrollDispatcher
+      .scrolled()
+      .pipe(filter(scrollable => !!scrollable))
+      .subscribe((scrollable: CdkScrollable) => {
+        const left = scrollable.measureScrollOffset('left');
+        const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);
 
-      if (otherScrollable && otherScrollable.measureScrollOffset('left') !== left) {
-        otherScrollable.scrollTo({left});
-      }
-    });
+        if (otherScrollable && otherScrollable.measureScrollOffset('left') !== left) {
+          otherScrollable.scrollTo({left});
+        }
+      });
   }
 
   public onClickOutside(event: Event) {
