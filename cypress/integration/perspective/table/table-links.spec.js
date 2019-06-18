@@ -24,7 +24,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .last()
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     cy.get('[data-test="text-data-input"]')
       .first()
@@ -44,10 +44,10 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
-      .should('contain', 'A');
+      .should('have.value', 'A');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B');
+      .should('have.value', 'B');
     cy.get('[data-test="text-data-input"]').should('have.length', 4);
 
     cy.get('[data-test="text-data-input"]')
@@ -83,7 +83,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="table-column-input"]')
       .should('have.length', 2)
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     cy.get('[data-test="text-data-input"]')
       .eq(1)
@@ -114,7 +114,7 @@ describe('Table perspective :: Links', () => {
     cy.get('[data-test="table-column-input"]')
       .should('have.length', 3)
       .last()
-      .should('contain', 'B');
+      .should('have.value', 'B');
     cy.get('[data-test="text-data-input"]').should('have.length', 9);
 
     cy.get('[data-test="text-data-input"]')
