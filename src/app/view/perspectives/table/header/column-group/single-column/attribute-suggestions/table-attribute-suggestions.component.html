@@ -10,8 +10,7 @@
         </div>
         <a class="dropdown-item"
            data-test="table-attribute-name-suggestion"
-           [class.selected]="suggestions.selectedIndex === 0 && newCount === 1"
-           (mousedown)="createAttribute()">
+           [class.selected]="suggestions.selectedIndex === 0 && newCount === 1">
           <icons-presenter [colors]="collection ? [collection.color] : []"
                            [icons]="collection ? [collection.icon] : []"
                            class="mr-1">
