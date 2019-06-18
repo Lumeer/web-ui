@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {filterOutInvalidAttributeNameCharacters} from './attribute.utils';
 
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+describe('filterOutInvalidAttributeNameCharacters', () => {
+  it('should keep valid characters', () => {
+    expect(filterOutInvalidAttributeNameCharacters('abc!def')).toEqual('abc!def');
+  });
 
-@Pipe({
-  name: 'isDefaultAttribute',
-})
-@Injectable()
-export class DefaultAttributePipe implements PipeTransform {
-  public transform(attribute: Attribute, collection: Collection): boolean {
-    return collection && getDefaultAttributeId(collection) === attribute.id;
-  }
-}
+  it('should remove dot', () => {
+    expect(filterOutInvalidAttributeNameCharacters('abc.def')).toEqual('abcdef');
+  });
+
+  it('should remove multiple dots', () => {
+    expect(filterOutInvalidAttributeNameCharacters('abc.def.ghi')).toEqual('abcdefghi');
+  });
+});

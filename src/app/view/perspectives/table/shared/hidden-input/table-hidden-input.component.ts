@@ -19,16 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
-import {Subscription} from 'rxjs';
-import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 import {select, Store} from '@ngrx/store';
-import {KeyCode} from '../../../../../shared/key-code';
-import {EDITABLE_EVENT} from '../../table-perspective.component';
-import {Direction} from '../../../../../shared/direction';
-import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
-import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
+import {Subscription} from 'rxjs';
 import {filter, map, switchMap, take} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
+import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
+import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
+import {Direction} from '../../../../../shared/direction';
+import {KeyCode} from '../../../../../shared/key-code';
+import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
+import {EDITABLE_EVENT} from '../../table-perspective.component';
 
 @Component({
   selector: 'table-hidden-input',
@@ -39,6 +39,9 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()
   public canManageConfig: boolean;
+
+  @Input()
+  public tableId: string;
 
   @ViewChild('hiddenInput', {static: true})
   public hiddenInput: ElementRef<HTMLInputElement>;
@@ -58,15 +61,20 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToTableCursorActions(): Subscription {
-    return this.actions$.pipe(ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR)).subscribe(action => {
-      const element = this.hiddenInput.nativeElement;
+    return this.actions$
+      .pipe(
+        ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
+        filter(action => !action.payload.cursor || action.payload.cursor.tableId === this.tableId)
+      )
+      .subscribe(action => {
+        const element = this.hiddenInput.nativeElement;
 
-      if (action.payload.cursor) {
-        setTimeout(() => element.focus());
-      } else {
-        element.blur();
-      }
-    });
+        if (action.payload.cursor) {
+          setTimeout(() => element.focus());
+        } else {
+          element.blur();
+        }
+      });
   }
 
   public ngOnDestroy() {

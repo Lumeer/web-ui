@@ -1,9 +1,5 @@
-<div #content
-     class="d-flex position-fixed">
-  <table-hidden-input [canManageConfig]="canManageConfig"
-                      (click)="unsetCursor()"
-                      class="d-block row-number-header ml-3">
-  </table-hidden-input>
+<div class="d-flex position-fixed">
+  <div class="row-number-header ml-3"></div>
 
   <table-hierarchy-column [cursor]="cursor"
                           (click)="unsetCursor()"

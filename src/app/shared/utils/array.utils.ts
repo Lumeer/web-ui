@@ -33,7 +33,7 @@ export function arrayStartsWith(longer: any[], shorter: any[]): boolean {
 }
 
 export function getLastFromArray<T>(array: T[]): T {
-  return array[array.length - 1];
+  return array && array[array.length - 1];
 }
 
 export function isArraySubset(superset: any[], subset: any[]): boolean {

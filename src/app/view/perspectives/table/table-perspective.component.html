@@ -2,14 +2,18 @@
      (clickOutside)="onClickOutside($event)"
      class="flex-grow-1 d-flex flex-column m-0 h-100">
   <ng-container *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
+    <table-hidden-input [canManageConfig]="data.canManageConfig"
+                        [tableId]="tableId"
+                        class="position-fixed">
+    </table-hidden-input>
+
     <table-header [table]="table$ | async"
                   [canManageConfig]="data.canManageConfig"
-                  (scroll)="onHeaderScroll($event)">
+                  cdkScrollable>
     </table-header>
     <table-body [tableId]="tableId"
                 [query]="query"
                 [canManageConfig]="data.canManageConfig"
-                (horizontalScroll)="onBodyHorizontalScroll($event)"
                 class="flex-grow-1"
                 [style.height.px]="((table$ | async)?.config?.rows | rowPositionTop: (table$ | async)?.config?.rows?.length) + 40">
     </table-body>

@@ -5,7 +5,8 @@
      class="d-flex">
   <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
        cdkDrag
-       cdkDragLockAxis="x">
+       cdkDragLockAxis="x"
+       [cdkDragStartDelay]="500">
     <div *ngIf="cursor | columnChildCursor:columnIndex as columnCursor"
          class="position-relative h-100">
       <div *ngIf="column | isCompoundColumn"

@@ -1,0 +1,10 @@
+<i *ngIf="(attribute?.function)"
+   [class.mb-1]="attribute?.constraint"
+   class="fas fa-function fa-xs">
+</i>
+
+<i *ngIf="(attribute?.constraint | constraintTypeIcon) as iconName"
+   [ngClass]="iconName"
+   [title]="attribute?.constraint | constraintTypeIconTitle"
+   class="fa-xs">
+</i>

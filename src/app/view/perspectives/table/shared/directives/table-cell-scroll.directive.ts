@@ -18,15 +18,11 @@
  */
 
 import {AfterViewChecked, Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
-import {TableCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Directive({
   selector: '[tableCellScroll]',
 })
 export class TableCellScrollDirective implements OnChanges, AfterViewChecked, OnDestroy {
-  @Input()
-  public cursor: TableCursor;
-
   @Input()
   public selected: boolean;
 
@@ -51,7 +47,10 @@ export class TableCellScrollDirective implements OnChanges, AfterViewChecked, On
   }
 
   private initIntersectionObserver() {
-    this.intersectionObserver = new IntersectionObserver(entries => this.scrollIntoViewUnlessFullyVisible(entries));
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      this.destroyIntersectionObserver();
+      this.scrollIntoViewUnlessFullyVisible(entries);
+    });
     this.intersectionObserver.observe(this.element.nativeElement);
   }
 

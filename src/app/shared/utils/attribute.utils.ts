@@ -20,6 +20,8 @@
 import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute} from '../../core/store/collections/collection';
 
+export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
+
 export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
   return attributes.find(attribute => attribute.id === attributeId);
 }
@@ -149,4 +151,9 @@ export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttrib
 
 export function isAttributeConstraintType(attribute: Attribute, type: ConstraintType): boolean {
   return attribute && attribute.constraint && attribute.constraint.type === type;
+}
+
+export function filterOutInvalidAttributeNameCharacters(lastName: string): string {
+  const regex = new RegExp(`[${FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS.map(character => `\\${character}`)}]`, 'g');
+  return (lastName || '').replace(regex, '');
 }

@@ -17,111 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {NgModule} from '@angular/core';
-import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {ContextMenuModule} from 'ngx-contextmenu';
-import {GravatarModule} from 'ngx-gravatar';
-import {DataInputModule} from '../../../shared/data-input/data-input.module';
-import {PickerModule} from '../../../shared/picker/picker.module';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
-import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
-import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
-import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
-import {ColorCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/color/color-collapsed-cell.component';
-import {GroupColorsByCountPipe} from './body/rows/cell-group/collapsed-cell/color/group-colors-by-count.pipe';
-import {TableCollapsedCellMenuComponent} from './body/rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
-import {TableCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/table-collapsed-cell.component';
-import {TableDataCellMenuComponent} from './body/rows/cell-group/data-cell/menu/table-data-cell-menu.component';
-import {TableDataCellComponent} from './body/rows/cell-group/data-cell/table-data-cell.component';
-import {TableCellGroupComponent} from './body/rows/cell-group/table-cell-group.component';
-import {TableEmptyRowComponent} from './body/rows/empty-row/table-empty-row.component';
-import {TableLinkCellComponent} from './body/rows/linked-rows/link-cell/table-link-cell.component';
-import {TableLinkedRowComponent} from './body/rows/linked-rows/linked-row/table-linked-row.component';
-import {TableLinkedRowsComponent} from './body/rows/linked-rows/table-linked-rows.component';
-import {TableHierarchyCellMenuComponent} from './body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component';
-import {TableHierarchyCellComponent} from './body/rows/primary-row/hierarchy-cell/table-hierarchy-cell.component';
-import {TableRowNumbersComponent} from './body/rows/primary-row/row-numbers/table-row-numbers.component';
-import {TablePrimaryRowComponent} from './body/rows/primary-row/table-primary-row.component';
-import {TableRowsComponent} from './body/rows/table-rows.component';
-import {TableBodyComponent} from './body/table-body.component';
-import {TableHeaderAddButtonComponent} from './header/add-button/table-header-add-button.component';
-import {TableCaptionComponent} from './header/collection/caption/table-caption.component';
-import {TableHeaderCollectionComponent} from './header/collection/table-header-collection.component';
-import {TableHiddenColumnComponent} from './header/column-group/hidden-column/table-hidden-column.component';
-import {TableAttributeSuggestionsComponent} from './header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component';
-import {TableColumnContextMenuComponent} from './header/column-group/single-column/context-menu/table-column-context-menu.component';
-import {TableSingleColumnComponent} from './header/column-group/single-column/table-single-column.component';
-import {TableColumnGroupComponent} from './header/column-group/table-column-group.component';
-import {TableHiddenInputComponent} from './header/hidden-input/table-hidden-input.component';
-import {TableHierarchyColumnComponent} from './header/hierarchy-column/table-hierarchy-column.component';
-import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
-import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
-import {TableHeaderComponent} from './header/table-header.component';
-import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
+import {TableBodyModule} from './body/table-body.module';
+import {TableHeaderModule} from './header/table-header.module';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
+import {TableSharedModule} from './shared/table-shared.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
-import {TableCellScrollDirective} from './shared/directives/table-cell-scroll.directive';
-import {UserCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/user/user-collapsed-cell.component';
-import {BooleanCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/boolean/boolean-collapsed-cell.component';
 
 @NgModule({
   imports: [
-    SharedModule,
-    PickerModule,
-    PipesModule,
-    ContextMenuModule,
     ClickOutsideModule,
-    ResizableModule,
+    TableBodyModule,
+    TableHeaderModule,
+    TableSharedModule,
+    SharedModule,
+    PipesModule,
     TablePipesModule,
-    DragDropModule,
-    DataInputModule,
     ScrollingModule,
-    GravatarModule,
   ],
-  declarations: [
-    TablePerspectiveComponent,
-    TableHeaderComponent,
-    TableHeaderCollectionComponent,
-    TableHeaderLinkComponent,
-    TableCaptionComponent,
-    TableColumnGroupComponent,
-    TableSingleColumnComponent,
-    TableLinkInfoComponent,
-    TableHiddenColumnComponent,
-    TableColumnContextMenuComponent,
-    TableAttributeSuggestionsComponent,
-    TableBodyComponent,
-    TableRowGroupComponent,
-    TableRowGroupHeaderComponent,
-    TableRowGroupFooterComponent,
-    TableCellGroupComponent,
-    TableLinkCellComponent,
-    TableRowsComponent,
-    TableDataCellMenuComponent,
-    TableCollapsedCellComponent,
-    TableRowNumbersComponent,
-    TableEditableCellDirective,
-    TableDataCellComponent,
-    TableCollapsedCellMenuComponent,
-    TableLinkedRowsComponent,
-    TablePrimaryRowComponent,
-    TableLinkedRowComponent,
-    TableHierarchyCellComponent,
-    TableHierarchyColumnComponent,
-    TableHierarchyCellMenuComponent,
-    TableHeaderAddButtonComponent,
-    TableHiddenInputComponent,
-    ColorCollapsedCellComponent,
-    GroupColorsByCountPipe,
-    TableEmptyRowComponent,
-    TableCellScrollDirective,
-    UserCollapsedCellComponent,
-    BooleanCollapsedCellComponent,
-  ],
+  declarations: [TablePerspectiveComponent],
   entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],
 })

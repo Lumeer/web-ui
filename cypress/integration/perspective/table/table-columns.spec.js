@@ -5,13 +5,16 @@ describe('Table perspective :: Columns', () => {
 
     // select first column
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
-      .should('contain', 'A')
+      .should('have.value', 'A')
       .click();
 
     // rename first column
     cy.focused()
       .trigger('keydown', {code: 'Backspace'})
-      .type('First');
+      .type('F');
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-column-input')
+      .type('irst');
     cy.get('[data-test="table-attribute-suggestions"]').should('be.visible');
     cy.get('[data-test="table-attribute-name-suggestion"]').click();
     cy.wait('@createAttribute')
@@ -22,10 +25,10 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 2);
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
-      .should('contain', 'First');
+      .should('have.value', 'First');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     // add new column left
     cy.get('[data-test="table-column-input"]')
@@ -37,12 +40,14 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]')
       .first()
-      .should('contain', 'B')
+      .should('have.value', 'B')
       .click();
 
     // rename newly added column
+    cy.focused().type('Z');
     cy.focused()
-      .type('Zeroth')
+      .should('have.attr', 'data-test', 'table-column-input')
+      .type('eroth')
       .trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute')
       .its('status')
@@ -52,12 +57,12 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]')
       .first()
-      .should('contain', 'Zeroth');
+      .should('have.value', 'Zeroth');
 
     // add new column right
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
-      .should('contain', 'First')
+      .should('have.value', 'First')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-add-right"]').click();
 
@@ -65,12 +70,12 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]')
       .eq(2)
-      .should('contain', 'B');
+      .should('have.value', 'B');
 
     // add new column as the last one
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'A')
+      .should('have.value', 'A')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-add-right"]').click();
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
@@ -78,7 +83,7 @@ describe('Table perspective :: Columns', () => {
     // rename last column
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'C')
+      .should('have.value', 'C')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-edit-name"]').click();
     cy.focused().trigger('keydown', {code: 'Enter'});
@@ -90,10 +95,10 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 6);
     cy.get('[data-test="table-column-input"]')
       .eq(4)
-      .should('contain', 'C');
+      .should('have.value', 'C');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'D');
+      .should('have.value', 'D');
   });
 
   it('adds new columns in linked tables', () => {
@@ -103,7 +108,7 @@ describe('Table perspective :: Columns', () => {
 
     // select first column
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
-      .should('contain', 'A')
+      .should('have.value', 'A')
       .click();
 
     // init first column
@@ -118,10 +123,10 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 2);
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
-      .should('contain', 'A');
+      .should('have.value', 'A');
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B');
+      .should('have.value', 'B');
 
     // open link creation dialog
     cy.get('[data-test="table-header-add-button"]').click();
@@ -145,14 +150,15 @@ describe('Table perspective :: Columns', () => {
       .should('contain', 'second');
     cy.get('[data-test="table-column-input"]')
       .should('have.length', 2)
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     // init column in the second table
     cy.get('[data-test="table-column-input"]')
       .last()
       .click();
+    cy.focused().trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .trigger('keydown', {code: 'Enter'})
+      .should('have.attr', 'data-test', 'table-column-input')
       .trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute')
       .its('status')
@@ -162,7 +168,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B')
+      .should('have.value', 'B')
       .click();
 
     // add new column left in first table
@@ -175,12 +181,13 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]')
       .first()
-      .should('contain', 'B')
+      .should('have.value', 'B')
       .click();
 
     // init first column by renaming it
+    cy.focused().type('0');
     cy.focused()
-      .type('0')
+      .should('have.attr', 'data-test', 'table-column-input')
       .trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute')
       .its('status')
@@ -190,12 +197,12 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]')
       .first()
-      .should('contain', '0');
+      .should('have.value', '0');
 
     // add new first column in the second table
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .last()
-      .should('contain', 'A')
+      .should('have.value', 'A')
       .trigger('contextmenu');
     cy.get('[data-test="table-column-menu-add-left"]').click();
 
@@ -203,12 +210,14 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
     cy.get('[data-test="table-column-input"]')
       .eq(2)
-      .should('contain', 'C')
+      .should('have.value', 'C')
       .click();
 
     // init first column in the second table
+    cy.focused().type('C');
     cy.focused()
-      .type('CCC')
+      .should('have.attr', 'data-test', 'table-column-input')
+      .type('CC')
       .trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute')
       .its('status')
@@ -218,6 +227,6 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
     cy.get('[data-test="table-column-input"]')
       .eq(2)
-      .should('contain', 'CCC');
+      .should('have.value', 'CCC');
   });
 });

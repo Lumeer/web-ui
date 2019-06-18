@@ -17,17 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {TableCellScrollDirective} from './directives/table-cell-scroll.directive';
+import {TableHiddenInputComponent} from './hidden-input/table-hidden-input.component';
+import {TablePipesModule} from './pipes/table-pipes.module';
 
-import {Attribute, Collection} from '../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
-
-@Pipe({
-  name: 'isDefaultAttribute',
+@NgModule({
+  imports: [CommonModule, TablePipesModule],
+  declarations: [TableCellScrollDirective, TableHiddenInputComponent],
+  exports: [TableCellScrollDirective, TableHiddenInputComponent, TablePipesModule],
 })
-@Injectable()
-export class DefaultAttributePipe implements PipeTransform {
-  public transform(attribute: Attribute, collection: Collection): boolean {
-    return collection && getDefaultAttributeId(collection) === attribute.id;
-  }
-}
+export class TableSharedModule {}

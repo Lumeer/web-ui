@@ -6,7 +6,7 @@ describe('Table perspective :: Single cell', () => {
     // check if there is only a single column called 'A'
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .last()
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     // select the only table body cell
     cy.get('[data-test="text-data-input"]')
@@ -42,12 +42,12 @@ describe('Table perspective :: Single cell', () => {
     // check if the first column has been initialized
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
-      .should('contain', 'A');
+      .should('have.value', 'A');
 
     // check if the second column has been added
     cy.get('[data-test="table-column-input"]')
       .last()
-      .should('contain', 'B');
+      .should('have.value', 'B');
 
     // check if the table consists of 2 columns and 2 rows
     cy.get('[data-test="table-data-input"]').should('have.length', 4);

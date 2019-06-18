@@ -37,25 +37,3 @@
     color: $primary;
   }
 }
-
-div[contenteditable='true']:not(.edited) {
-  cursor: inherit;
-  color: transparent;
-  text-shadow: 0 0 0 $body-color;
-
-  &.text-default-attribute {
-    color: transparent !important;
-    text-shadow: 0 0 0 $body-color;
-  }
-}
-
-i {
-  bottom: 2rem;
-  right: 0.1rem;
-  font-size: 0.6rem;
-  padding: 0.6rem 0.25rem 0.6rem 0.35rem;
-
-  &.fa-function {
-    padding-left: 0rem;
-  }
-}
