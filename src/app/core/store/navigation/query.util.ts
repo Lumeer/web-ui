@@ -298,17 +298,17 @@ export function queryStemAttributesResourcesOrder(
     return [];
   }
   const chain: AttributesResource[] = [{...baseCollection}];
-  let previousCollectionId = baseCollection.id;
+  let previousCollection = baseCollection;
   for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
     const linkType = (linkTypes || []).find(lt => lt.id === stem.linkTypeIds[i]);
-    const otherCollectionId = linkType && getOtherLinkedCollectionId(linkType, previousCollectionId);
+    const otherCollectionId = linkType && getOtherLinkedCollectionId(linkType, previousCollection.id);
     const otherCollection =
       otherCollectionId && (collections || []).find(collection => collection.id === otherCollectionId);
 
     if (otherCollection && linkType) {
-      chain.push({id: linkType.id, attributes: linkType.attributes, color: otherCollection.color});
+      chain.push({...linkType, collections: [previousCollection, otherCollection]});
       chain.push({...otherCollection});
-      previousCollectionId = otherCollection.id;
+      previousCollection = otherCollection;
     } else {
       break;
     }

@@ -27,7 +27,7 @@ import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrap
 import {PivotConfigComponent} from './wrapper/config/pivot-config.component';
 import {PivotTableComponent} from './wrapper/table/pivot-table.component';
 import {PivotAttributeConfigComponent} from './wrapper/config/attribute/pivot-attribute-config.component';
-import {PivotHeaderSelectItemsPipe} from './pipe/pivot-header-select-items.pipe';
+import {PivotHeaderSelectedAttributesPipe} from './pipe/pivot-header-selected-attributes.pipe';
 import {PivotSelectItemsPipe} from './pipe/pivot-select-items.pipe';
 import {PivotCleanAttributePipe} from './pipe/pivot-clean-attribute.pipe';
 import {PivotValueAttributeConfigComponent} from './wrapper/config/attribute/value/pivot-value-attribute-config.component';
@@ -38,6 +38,9 @@ import {PivotAttributeSortComponent} from './wrapper/config/attribute/header/sor
 import {PivotSubSortSelectItemsPipe} from './pipe/pivot-sub-sort-select-items.pipe';
 import {PivotSubSortValuesPipe} from './pipe/pivot-sub-sort-values.pipe';
 import {PivotValueTypeSelectItemsPipe} from './pipe/pivot-value-type-select-items.pipe';
+import {PivotAttributeSelectItemPipe} from './pipe/pivot-attribute-select-item.pipe';
+import {PivotHeaderRestrictedAttributesPipe} from './pipe/pivot-header-restricted-attributes.pipe';
+import {PivotHeaderMapAttributePipe} from './pipe/pivot-header-map-attribute.pipe';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,7 @@ import {PivotValueTypeSelectItemsPipe} from './pipe/pivot-value-type-select-item
     PivotConfigComponent,
     PivotTableComponent,
     PivotAttributeConfigComponent,
-    PivotHeaderSelectItemsPipe,
+    PivotHeaderSelectedAttributesPipe,
     PivotSelectItemsPipe,
     PivotCleanAttributePipe,
     PivotValueAttributeConfigComponent,
@@ -57,6 +60,9 @@ import {PivotValueTypeSelectItemsPipe} from './pipe/pivot-value-type-select-item
     PivotSubSortSelectItemsPipe,
     PivotSubSortValuesPipe,
     PivotValueTypeSelectItemsPipe,
+    PivotAttributeSelectItemPipe,
+    PivotHeaderRestrictedAttributesPipe,
+    PivotHeaderMapAttributePipe,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
 })

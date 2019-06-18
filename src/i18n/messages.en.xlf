@@ -1951,9 +1951,22 @@
   </source><target state="final">
     Rows
   </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.reorder" datatype="html">
+        <source>
+          </source><target state="final">
+          </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
         <source>
@@ -1961,25 +1974,24 @@
   </source><target state="final">
     Columns
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
         <source>
     Values
   </source><target state="final">
     Values
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
         <source>Show summary</source><target state="final">Show summary</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
+        <source>
+  </source><target state="final">
+  </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/pivot-header-attribute-config/pivot-header-attribute-config.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
@@ -3224,7 +3236,31 @@
         <source>Fill in description</source><target state="final">Fill in description</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.item.config" datatype="html">
+        <source>Config</source><target state="final">Config</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="default" datatype="html">
+        <source>Default</source><target state="final">Default</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="select.constraint.items.date.format" datatype="html">
+        <source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source><target state="final">{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
+        <source>{VAR_SELECT, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
         <source>Deleted table</source><target state="final">Deleted table</target>
         <context-group purpose="location">
@@ -3487,17 +3523,23 @@
         </context-group>
       </trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.summary" datatype="html">
+        <source>Summary</source><target state="final">Summary</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-attribute-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.subSort" datatype="html">
+        <source>Select next sort</source><target state="final">Select next sort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="aggregation" datatype="html">
         <source>Aggregation</source><target state="final">Aggregation</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/pivot-value-attribute-config/pivot-value-attribute-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
         <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} }</source><target state="final">{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context>
@@ -3511,8 +3553,11 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
         <source>Sum total</source><target state="final">Sum total</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-sort-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.type" datatype="html">
+        <source>{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source><target state="final">{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-value-type-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

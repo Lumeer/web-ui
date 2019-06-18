@@ -26,6 +26,11 @@ import {PivotDataConverter} from './pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {TestBed} from '@angular/core/testing';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {environment} from '../../../../../environments/environment';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
@@ -258,7 +263,31 @@ const linkTypes: LinkType[] = [
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
 describe('Pivot data converter', () => {
-  const dataConverter: PivotDataConverter = new PivotDataConverter(type => type.toString());
+  let constraintReadableFormatter: SelectItemWithConstraintFormatter;
+  let dataConverter: PivotDataConverter;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: LOCALE_ID,
+          useFactory: () => environment.locale,
+        },
+        {
+          provide: TRANSLATIONS,
+          useFactory: () => require(`raw-loader!../../../../../../src/i18n/messages.en.xlf`),
+          deps: [LOCALE_ID],
+        },
+        {
+          provide: TRANSLATIONS_FORMAT,
+          useFactory: () => environment.i18nFormat,
+        },
+        I18n,
+      ],
+    });
+    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    dataConverter = new PivotDataConverter(constraintReadableFormatter, type => type.toString());
+  });
 
   it('should return empty data', () => {
     const config: PivotConfig = {rowAttributes: [], columnAttributes: [], valueAttributes: []};

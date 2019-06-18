@@ -18,16 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from './select-item.model';
-import {AreIdsEqualPipe} from './are-ids-equal.pipe';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {SelectItemWithConstraintItemId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
-  name: 'getSelectItem',
+  name: 'pivotHeaderRestrictedAttributes',
 })
-export class GetSelectItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
-
-  public transform(id: any, items: SelectItemModel[]): SelectItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
+  public transform(
+    pivotRowColumnAttributes: PivotRowColumnAttribute[],
+    currentRowColumnAttribute: PivotRowColumnAttribute
+  ): SelectItemWithConstraintItemId[] {
+    return (pivotRowColumnAttributes || [])
+      .filter(attribute => !currentRowColumnAttribute || !deepObjectsEquals(attribute, currentRowColumnAttribute))
+      .map(attribute => ({resourceIndex: attribute.resourceIndex, attributeId: attribute.attributeId}));
   }
 }

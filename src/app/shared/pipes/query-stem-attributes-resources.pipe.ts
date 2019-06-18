@@ -18,21 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotAttribute, PivotConfig} from '../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {pivotAttributesAreSame} from '../util/pivot-util';
+import {QueryStem} from '../../core/store/navigation/query';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {AttributesResource} from '../../core/model/resource';
+import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query.util';
 
 @Pipe({
-  name: 'pivotHeaderSelectItems',
+  name: 'queryStemAttributesResources',
 })
-export class PivotHeaderSelectItemsPipe implements PipeTransform {
-  public transform(selectItems: SelectItemModel[], config: PivotConfig, currentAttribute?: PivotAttribute): any {
-    const restrictedAttributes = [...(config.rowAttributes || []), ...(config.columnAttributes || [])].filter(
-      attribute => !currentAttribute || !pivotAttributesAreSame(attribute, currentAttribute)
-    );
-
-    return selectItems.filter(
-      item => !restrictedAttributes.some(attribute => pivotAttributesAreSame(item.id as PivotAttribute, attribute))
-    );
+export class QueryStemAttributesResourcesPipe implements PipeTransform {
+  public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): AttributesResource[] {
+    return queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   }
 }

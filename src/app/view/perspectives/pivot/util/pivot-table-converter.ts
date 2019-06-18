@@ -899,8 +899,6 @@ function sortValueTargetIndexes(
   valueTitles: string[]
 ): number[] | null {
   if (pivotAttribute.sort && pivotAttribute.sort.list) {
-    let pivotHeader: PivotDataHeader = null;
-    let currentOtherSideHeaders = otherSideHeaders;
     let valueIndex = valueTitles.findIndex(title => title === pivotAttribute.sort.list.valueTitle);
     if (valueIndex === -1) {
       if (valueTitles.length === 1) {
@@ -910,6 +908,8 @@ function sortValueTargetIndexes(
       }
     }
 
+    let pivotHeader: PivotDataHeader = null;
+    let currentOtherSideHeaders = otherSideHeaders;
     for (const value of pivotAttribute.sort.list.values || []) {
       if (value.isSummary) {
         const indexes = getTargetIndexesForHeaders(currentOtherSideHeaders || []) || [];
@@ -925,7 +925,9 @@ function sortValueTargetIndexes(
     }
 
     if (pivotHeader) {
-      const targetIndexes = getTargetIndexesForHeaders(currentOtherSideHeaders);
+      const targetIndexes = isNotNullOrUndefined(pivotHeader.targetIndex)
+        ? [pivotHeader.targetIndex]
+        : getTargetIndexesForHeaders(currentOtherSideHeaders);
       return filterIndexesByMod(targetIndexes, valueTitles.length, valueIndex);
     }
   }

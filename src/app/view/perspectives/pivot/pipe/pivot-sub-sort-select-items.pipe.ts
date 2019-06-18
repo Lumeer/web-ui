@@ -42,7 +42,7 @@ export class PivotSubSortSelectItemsPipe implements PipeTransform {
     const values = pivotAttribute.sort.list.values || [];
     for (let i = 0; i < index; i++) {
       const value = values[i];
-      const pivotHeader = value && (otherSideHeaders || []).find(header => header.title === value.title);
+      const pivotHeader = value && (currentOtherSideHeaders || []).find(header => header.title === value.title);
       if (!pivotHeader) {
         break;
       }

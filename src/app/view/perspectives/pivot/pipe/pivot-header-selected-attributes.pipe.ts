@@ -18,16 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from './select-item.model';
-import {AreIdsEqualPipe} from './are-ids-equal.pipe';
+import {PivotAttribute, PivotConfig, PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {pivotAttributesAreSame} from '../util/pivot-util';
 
 @Pipe({
-  name: 'getSelectItem',
+  name: 'pivotHeaderSelectedAttributes',
 })
-export class GetSelectItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
-
-  public transform(id: any, items: SelectItemModel[]): SelectItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+export class PivotHeaderSelectedAttributesPipe implements PipeTransform {
+  public transform(config: PivotConfig): PivotRowColumnAttribute[] {
+    return [...(config.rowAttributes || []), ...(config.columnAttributes || [])];
   }
 }

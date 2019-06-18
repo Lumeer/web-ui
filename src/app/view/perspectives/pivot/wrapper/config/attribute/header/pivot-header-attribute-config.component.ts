@@ -18,22 +18,17 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {
-  PivotAttribute,
-  PivotColumnAttribute,
-  PivotRowAttribute,
-  PivotRowColumnAttribute,
-  PivotSort,
-  PivotSortValue,
-} from '../../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
-import {cleanPivotAttribute} from '../../../../util/pivot-util';
+import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../../../util/pivot-data';
+import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
+import {Constraint} from '../../../../../../../core/model/data/constraint';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItemWithConstraintItemId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {Collection} from '../../../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'pivot-header-attribute-config',
   templateUrl: './pivot-header-attribute-config.component.html',
-  styleUrls: ['./pivot-header-attribute-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotHeaderAttributeConfigComponent {
@@ -41,7 +36,10 @@ export class PivotHeaderAttributeConfigComponent {
   public pivotAttribute: PivotRowColumnAttribute;
 
   @Input()
-  public attributesSelectItems: SelectItemModel[];
+  public attributesResources: AttributesResource[];
+
+  @Input()
+  public selectedAttributes: PivotRowColumnAttribute[];
 
   @Input()
   public isRow: boolean;
@@ -58,23 +56,41 @@ export class PivotHeaderAttributeConfigComponent {
   @Output()
   public attributeRemove = new EventEmitter();
 
+  public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly showSumsId =
     'pivot-show-sums-' +
     Math.random()
       .toString(36)
       .substr(2);
+  public readonly emptyValueString: string;
+
+  constructor(private i18n: I18n) {
+    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
+  }
 
   public onShowSumsChange(checked: boolean) {
     const newAttribute = {...this.pivotAttribute, showSums: checked};
     this.attributeChange.emit(newAttribute);
   }
 
-  public onAttributeSelected(attribute: PivotAttribute) {
+  public onSelected(itemId: SelectItemWithConstraintItemId) {
+    const resource = this.attributesResources[itemId.resourceIndex];
+    if (!resource) {
+      return;
+    }
+
+    const resourceType = <Collection>resource ? AttributesResourceType.Collection : AttributesResourceType.LinkType;
+    const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
     const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
     this.attributeSelect.emit(headerAttribute);
   }
 
-  public onAttributeRemoved() {
+  public onSelectedConstraint(constraint: Constraint) {
+    const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, constraint};
+    this.attributeSelect.emit(headerAttribute);
+  }
+
+  public onRemoved() {
     this.attributeRemove.emit();
   }
 }

@@ -22,14 +22,24 @@ import {NgModule} from '@angular/core';
 
 import {SelectItemComponent} from './select-item/select-item.component';
 import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
-import {PipesModule} from '../pipes/pipes.module';
 import {PickerModule} from '../picker/picker.module';
 import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
+import {SelectItemWithConstraint} from './select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
+import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [CommonModule, PickerModule],
-  declarations: [SelectItemComponent, GetSelectItemPipe, AreIdsEqualPipe],
+  imports: [CommonModule, PickerModule, PipesModule],
+  declarations: [
+    SelectItemComponent,
+    GetSelectItemPipe,
+    AreIdsEqualPipe,
+    SelectItemWithConstraint,
+    SelectItemWithConstraintPipe,
+    SelectItemWithConstraintConfigPipe,
+  ],
   providers: [AreIdsEqualPipe],
-  exports: [SelectItemComponent],
+  exports: [SelectItemComponent, SelectItemWithConstraint],
 })
 export class SelectModule {}

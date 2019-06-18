@@ -18,16 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from './select-item.model';
-import {AreIdsEqualPipe} from './are-ids-equal.pipe';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {SelectItemWithConstraintItemId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
-  name: 'getSelectItem',
+  name: 'pivotHeaderMapAttribute',
 })
-export class GetSelectItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
-
-  public transform(id: any, items: SelectItemModel[]): SelectItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+export class PivotHeaderMapAttributePipe implements PipeTransform {
+  public transform(pivotAttribute: PivotRowColumnAttribute): SelectItemWithConstraintItemId {
+    return pivotAttribute && {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 }

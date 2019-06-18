@@ -19,6 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {Constraint, ConstraintConfig} from '../../model/data/constraint';
 
 export const DEFAULT_PIVOT_ID = 'default';
 
@@ -43,6 +44,7 @@ export interface PivotAttribute {
 export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;
   sort?: PivotSort;
+  constraint?: Constraint;
 }
 
 export interface PivotRowAttribute extends PivotRowColumnAttribute {}
