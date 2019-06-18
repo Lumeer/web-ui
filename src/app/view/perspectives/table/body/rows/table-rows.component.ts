@@ -17,30 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
   Input,
   OnChanges,
-  OnDestroy,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {combineLatest, Observable} from 'rxjs';
+import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {Query} from '../../../../../core/store/navigation/query';
-import {TableBodyCursor, TableCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor, selectTableRows} from '../../../../../core/store/tables/tables.selector';
+import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-rows',
@@ -48,7 +44,7 @@ import {selectTableCursor, selectTableRows} from '../../../../../core/store/tabl
   styleUrls: ['./table-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class TableRowsComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -58,14 +54,7 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild(CdkVirtualScrollViewport, {static: false})
-  public virtualScrollViewport: CdkVirtualScrollViewport;
-
-  private scrollLeft = 0;
-
   public rows$: Observable<TableConfigRow[]>;
-
-  private subscriptions = new Subscription();
 
   public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
@@ -79,13 +68,13 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private bindRows(cursor: TableBodyCursor, query: Query) {
-    this.rows$ = combineLatest(
+    this.rows$ = combineLatest([
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
         select(selectDocumentsByCustomQuery(query, false, true)),
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
-      )
-    ).pipe(
+      ),
+    ]).pipe(
       debounceTime(10), // fixes not shown linked records after linked part is added
       map(([rows, existingDocumentIds]) => {
         return rows.filter(row => (row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId));
@@ -96,30 +85,6 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private retrieveDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
-  }
-
-  public ngAfterViewInit() {
-    this.subscriptions.add(this.subscribeToSelectedCursor());
-  }
-
-  private subscribeToSelectedCursor(): Subscription {
-    return this.store$
-      .pipe(
-        select(selectTableCursor),
-        filter(cursor => cursor && cursor.tableId === this.cursor.tableId)
-      )
-      .subscribe(cursor => this.scrollLeftIfFirstCellSelected(cursor));
-  }
-
-  private scrollLeftIfFirstCellSelected(cursor: TableCursor) {
-    const element = this.virtualScrollElement;
-    if (cursor.partIndex === 0 && cursor.columnIndex === 0 && element && element.scrollLeft !== 0) {
-      element.scrollLeft = 0;
-    }
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 
   @HostListener('click', ['$event'])
@@ -135,13 +100,5 @@ export class TableRowsComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   public unsetCursor() {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-  }
-
-  public get virtualScrollElement(): HTMLElement {
-    return (
-      this.virtualScrollViewport &&
-      this.virtualScrollViewport.elementRef &&
-      this.virtualScrollViewport.elementRef.nativeElement
-    );
   }
 }

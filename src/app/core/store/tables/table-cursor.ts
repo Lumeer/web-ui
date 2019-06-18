@@ -19,7 +19,14 @@
 
 import {Direction} from '../../../shared/direction';
 import {arrayStartsWith, deepArrayEquals, getLastFromArray} from '../../../shared/utils/array.utils';
-import {TableColumnType, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
+import {
+  TableColumnType,
+  TableConfig,
+  TableConfigColumn,
+  TableConfigPart,
+  TableConfigRow,
+  TableModel,
+} from './table.model';
 import {
   containCompoundColumn,
   filterLeafColumns,
@@ -529,4 +536,21 @@ export function getTableRowCursor(cursor: TableBodyCursor, indexDelta: number): 
   const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
   const rowPath = parentPath.concat(rowIndex + indexDelta);
   return {...cursor, rowPath};
+}
+
+export function isFirstTableCell(cursor: TableCursor): boolean {
+  return (
+    cursor && cursor.partIndex === 0 && (cursor.columnIndex === 0 || (cursor.columnPath && cursor.columnPath[0] === 0))
+  );
+}
+
+export function isLastTableCell(cursor: TableCursor, config: TableConfig): boolean {
+  const lastPart = config && config.parts[config.parts.length - 1];
+  return (
+    config &&
+    cursor &&
+    cursor.partIndex === config.parts.length - 1 &&
+    (cursor.columnIndex === filterLeafColumns(lastPart.columns).length - 1 ||
+      getLastFromArray(cursor.columnPath) === lastPart.columns.length - 1)
+  );
 }

@@ -38,7 +38,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
-import {TableCursor} from '../../../core/store/tables/table-cursor';
+import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfig, selectTableCursor} from '../../../core/store/tables/tables.selector';
@@ -114,7 +114,41 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToSelectedCursor(): Subscription {
-    return this.store$.pipe(select(selectTableCursor)).subscribe(cursor => (this.selectedCursor = cursor));
+    return this.store$.pipe(select(selectTableCursor)).subscribe(cursor => {
+      this.selectedCursor = cursor;
+      this.scrollToEdgeIfEdgeCellSelected(cursor);
+    });
+  }
+
+  private scrollToEdgeIfEdgeCellSelected(cursor: TableCursor) {
+    const [scrollable] = Array.from(this.scrollDispatcher.scrollContainers.keys());
+    if (cursor && scrollable) {
+      this.scrollLeftIfFirstCellSelected(cursor, scrollable);
+      this.scrollRightIfLastCellSelected(cursor, scrollable);
+    }
+  }
+
+  private scrollLeftIfFirstCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
+    if (!isFirstTableCell(cursor)) {
+      return;
+    }
+
+    const scrollLeft = scrollable.measureScrollOffset('left');
+    if (scrollLeft !== 0) {
+      scrollable.scrollTo({left: 0});
+    }
+  }
+
+  private scrollRightIfLastCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
+    const table = this.table$.getValue();
+    if (!isLastTableCell(cursor, table && table.config)) {
+      return;
+    }
+
+    const scrollRight = scrollable.measureScrollOffset('right');
+    if (scrollRight !== 0) {
+      scrollable.scrollTo({right: 0});
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
