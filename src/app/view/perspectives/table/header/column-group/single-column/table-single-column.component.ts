@@ -21,7 +21,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  HostBinding,
   Input,
   OnChanges,
   OnInit,
@@ -33,7 +32,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, take} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, mergeMap, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
@@ -133,9 +132,13 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   private bindSelected(): Observable<boolean> {
-    return this.store$.pipe(
-      select(selectTableCursorSelected(this.cursor)),
-      distinctUntilChanged()
+    return this.cursor$.pipe(
+      mergeMap(cursor =>
+        this.store$.pipe(
+          select(selectTableCursorSelected(cursor)),
+          distinctUntilChanged()
+        )
+      )
     );
   }
 

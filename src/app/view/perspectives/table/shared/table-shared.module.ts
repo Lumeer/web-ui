@@ -20,11 +20,12 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {TableCellScrollDirective} from './directives/table-cell-scroll.directive';
+import {TableHiddenInputComponent} from './hidden-input/table-hidden-input.component';
 import {TablePipesModule} from './pipes/table-pipes.module';
 
 @NgModule({
   imports: [CommonModule, TablePipesModule],
-  declarations: [TableCellScrollDirective],
-  exports: [TableCellScrollDirective, TablePipesModule],
+  declarations: [TableCellScrollDirective, TableHiddenInputComponent],
+  exports: [TableCellScrollDirective, TableHiddenInputComponent, TablePipesModule],
 })
 export class TableSharedModule {}

@@ -35,7 +35,7 @@ import {TableColumnIconsComponent} from './column-group/single-column/icons/tabl
 import {TableColumnInputComponent} from './column-group/single-column/input/table-column-input.component';
 import {TableSingleColumnComponent} from './column-group/single-column/table-single-column.component';
 import {TableColumnGroupComponent} from './column-group/table-column-group.component';
-import {TableHiddenInputComponent} from './hidden-input/table-hidden-input.component';
+import {TableHiddenInputComponent} from '../shared/hidden-input/table-hidden-input.component';
 import {TableHierarchyColumnComponent} from './hierarchy-column/table-hierarchy-column.component';
 import {TableLinkInfoComponent} from './link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './link/table-header-link.component';
@@ -55,7 +55,6 @@ import {TableHeaderComponent} from './table-header.component';
     TableHeaderLinkComponent,
     TableHeaderAddButtonComponent,
     TableHiddenColumnComponent,
-    TableHiddenInputComponent,
     TableHierarchyColumnComponent,
     TableLinkInfoComponent,
     TableRowGroupHeaderComponent,

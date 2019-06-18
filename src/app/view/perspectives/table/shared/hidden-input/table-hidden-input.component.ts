@@ -58,6 +58,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToTableCursorActions(): Subscription {
+    // TODO check same tableId
     return this.actions$.pipe(ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR)).subscribe(action => {
       const element = this.hiddenInput.nativeElement;
 

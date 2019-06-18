@@ -47,7 +47,10 @@ export class TableCellScrollDirective implements OnChanges, AfterViewChecked, On
   }
 
   private initIntersectionObserver() {
-    this.intersectionObserver = new IntersectionObserver(entries => this.scrollIntoViewUnlessFullyVisible(entries));
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      this.destroyIntersectionObserver();
+      this.scrollIntoViewUnlessFullyVisible(entries);
+    });
     this.intersectionObserver.observe(this.element.nativeElement);
   }
 
