@@ -2,7 +2,7 @@
   defaultAttribute: attribute | isDefaultAttribute: collection,
   edited: edited$ | async,
   selected: selected$ | async,
-  overriddenValue: overriddenValue$ | async
+  lastName: lastName$ | async
 } as state">
   <div #columnCell
        tableCellScroll
@@ -10,7 +10,7 @@
        [class.edited]="state.edited"
        [class.selected]="state.selected"
        [class.uninitialized-column]="!column?.attributeIds[0]"
-       [style.background]="collection | columnBackground : (attribute | attributeNameChanged : (state.overriddenValue || state.overriddenValue === '' ? state.overriddenValue : lastName))"
+       [style.background]="collection | columnBackground : (attribute | attributeNameChanged : state.lastName)"
        (contextmenu)="onContextMenu($event)"
        (dblclick)="onDoubleClick()"
        (mousedown)="onMouseDown()"
@@ -18,7 +18,7 @@
     <table-column-input [default]="state.defaultAttribute"
                         [edited]="state.edited"
                         [initialized]="attribute | entityCreated"
-                        [value]="state.overriddenValue || state.overriddenValue === '' ? state.overriddenValue : lastName"
+                        [value]="state.lastName"
                         (valueChange)="onValueChange($event)"
                         (save)="onSave($event)"
                         (cancel)="onCancel()"
@@ -33,7 +33,7 @@
   </div>
 
   <table-attribute-suggestions *ngIf="state.edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
-                               [attributeName]="attribute | attributeName:lastName"
+                               [attributeName]="attribute | attributeName: state.lastName"
                                [collection]="collection"
                                [linkType]="linkType"
                                [cursor]="cursor"

@@ -102,9 +102,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   private attributes: Attribute[];
   public attribute: Attribute;
 
-  public lastName: string;
-
-  public overriddenValue$ = new BehaviorSubject(null);
+  public lastName$ = new BehaviorSubject('');
 
   private cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
 
@@ -172,8 +170,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     this.attributes = this.extractAttributes();
     this.attribute = findAttribute(this.attributes, this.column.attributeIds[0]) || {name: this.column.attributeName};
 
-    if (!this.lastName) {
-      this.lastName = extractAttributeLastName(this.attribute.name);
+    if (!this.lastName$.getValue()) {
+      this.lastName$.next(extractAttributeLastName(this.attribute.name));
     }
   }
 
@@ -192,10 +190,10 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => {
         if (action.payload.clear) {
-          this.overriddenValue$.next('');
+          this.lastName$.next('');
         }
         if (action.payload.value) {
-          this.overriddenValue$.next(action.payload.value);
+          this.lastName$.next(action.payload.value);
         }
         this.startEditing();
       });
@@ -213,12 +211,12 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onValueChange(lastName: string) {
-    this.lastName = lastName;
+    this.lastName$.next(lastName);
   }
 
   public onCancel() {
     this.stopEditing();
-    this.lastName = extractAttributeLastName(this.attribute.name);
+    this.lastName$.next(extractAttributeLastName(this.attribute.name));
   }
 
   public onSave(lastName: string) {
@@ -460,7 +458,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   private stopEditing() {
-    this.overriddenValue$.next(null);
     this.edited$.next(false);
 
     this.selected$.pipe(take(1)).subscribe(selected => {
