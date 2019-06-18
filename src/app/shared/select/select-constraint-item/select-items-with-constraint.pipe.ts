@@ -25,9 +25,9 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {deepObjectsEquals} from '../../utils/common.utils';
 
 @Pipe({
-  name: 'selectConstraintItems',
+  name: 'selectItemWithConstraint',
 })
-export class SelectConstraintItemsPipe implements PipeTransform {
+export class SelectItemWithConstraintPipe implements PipeTransform {
   public transform(
     attributesResources: AttributesResource[],
     restrictedAttributes: {resourceIndex: number; attributeId: string}[]

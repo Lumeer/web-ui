@@ -41,7 +41,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {SelectConstraintItemsFormatter} from '../../../../shared/select/select-constraint-item/select-constraint-items-formatter';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 export class PivotDataConverter {
   private collections: Collection[];
@@ -54,7 +54,7 @@ export class PivotDataConverter {
   private dataAggregator: DataAggregator;
 
   constructor(
-    private constraintItemsFormatter: SelectConstraintItemsFormatter,
+    private constraintItemsFormatter: SelectItemWithConstraintFormatter,
     private translateAggregation: (type: DataAggregationType) => string
   ) {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
@@ -69,16 +69,12 @@ export class PivotDataConverter {
     aggregatorAttribute: DataAggregatorAttribute
   ) {
     const pivotAttribute = this.findPivotAttributeByAggregatorAttribute(aggregatorAttribute);
-    const overrideConfig =
+    const overrideConstraint =
       pivotAttribute &&
-      pivotAttribute.config &&
-      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.config);
-    if (overrideConfig) {
-      const overriddenConstraint = {...constraint, config: {...constraint.config, ...overrideConfig}};
-      return formatDataValue(value, overriddenConstraint, constraintData);
-    }
+      pivotAttribute.constraint &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
 
-    return formatDataValue(value, constraint, constraintData);
+    return formatDataValue(value, overrideConstraint || constraint, constraintData);
   }
 
   private findPivotAttributeByAggregatorAttribute(

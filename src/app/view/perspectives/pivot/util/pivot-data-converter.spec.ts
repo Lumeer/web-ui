@@ -27,7 +27,7 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {TestBed} from '@angular/core/testing';
-import {SelectConstraintItemsFormatter} from '../../../../shared/select/select-constraint-item/select-constraint-items-formatter';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -263,7 +263,7 @@ const linkTypes: LinkType[] = [
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
 describe('Pivot data converter', () => {
-  let constraintReadableFormatter: SelectConstraintItemsFormatter;
+  let constraintReadableFormatter: SelectItemWithConstraintFormatter;
   let dataConverter: PivotDataConverter;
 
   beforeEach(() => {
@@ -285,7 +285,7 @@ describe('Pivot data converter', () => {
         I18n,
       ],
     });
-    constraintReadableFormatter = TestBed.get(SelectConstraintItemsFormatter);
+    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
     dataConverter = new PivotDataConverter(constraintReadableFormatter, type => type.toString());
   });
 

@@ -42,7 +42,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {View} from '../../../../core/store/views/view';
 import {pivotConfigHasDataTransformChange} from '../util/pivot-util';
-import {SelectConstraintItemsFormatter} from '../../../../shared/select/select-constraint-item/select-constraint-items-formatter';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 interface Data {
   collections: Collection[];
@@ -99,7 +99,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public pivotData$: Observable<PivotData>;
 
-  constructor(private constraintItemsFormatter: SelectConstraintItemsFormatter, private i18n: I18n) {
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter, private i18n: I18n) {
     this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
       this.createValueAggregationTitle(type)
     );

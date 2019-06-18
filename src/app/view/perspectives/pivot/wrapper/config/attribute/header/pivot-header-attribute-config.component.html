@@ -1,15 +1,15 @@
-<select-constraint-item [attributesResources]="attributesResources"
-                        [restrictedAttributes]="selectedAttributes | pivotHeaderRestrictedAttributes:pivotAttribute"
-                        [placeholderIcon]="isRow ? 'far fa-arrow-right' : 'far fa-arrow-down'"
-                        [buttonClasses]="buttonClasses"
-                        [selectedAttribute]="pivotAttribute | pivotHeaderMapAttribute"
-                        [selectedConfig]="pivotAttribute?.config"
-                        [emptyValue]="emptyValueString"
-                        [removable]="!!pivotAttribute"
-                        (select)="onSelected($event)"
-                        (selectConfig)="onSelectedConfig($event)"
-                        (remove)="onRemoved()">
-</select-constraint-item>
+<select-item-with-constraint [attributesResources]="attributesResources"
+                             [restrictedIds]="selectedAttributes | pivotHeaderRestrictedAttributes:pivotAttribute"
+                             [placeholderIcon]="isRow ? 'far fa-arrow-right' : 'far fa-arrow-down'"
+                             [buttonClasses]="buttonClasses"
+                             [selectedId]="pivotAttribute | pivotHeaderMapAttribute"
+                             [selectedConstraint]="pivotAttribute?.constraint"
+                             [emptyValue]="emptyValueString"
+                             [removable]="!!pivotAttribute"
+                             (select)="onSelected($event)"
+                             (selectConfig)="onSelectedConstraint($event)"
+                             (remove)="onRemoved()">
+</select-item-with-constraint>
 
 <div class="custom-control custom-checkbox mt-1" *ngIf="pivotAttribute">
   <input [id]="showSumsId"

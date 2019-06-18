@@ -20,18 +20,18 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {SelectConstraintItemId} from '../../../../shared/select/select-constraint-item/select-constraint-item.component';
+import {SelectItemWithConstraintItemId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
   name: 'pivotHeaderRestrictedAttributes',
 })
 export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
   public transform(
-    attributes: PivotRowColumnAttribute[],
-    currentAttribute: PivotRowColumnAttribute
-  ): SelectConstraintItemId[] {
-    return (attributes || [])
-      .filter(attribute => !currentAttribute || !deepObjectsEquals(attribute, currentAttribute))
+    pivotRowColumnAttributes: PivotRowColumnAttribute[],
+    currentRowColumnAttribute: PivotRowColumnAttribute
+  ): SelectItemWithConstraintItemId[] {
+    return (pivotRowColumnAttributes || [])
+      .filter(attribute => !currentRowColumnAttribute || !deepObjectsEquals(attribute, currentRowColumnAttribute))
       .map(attribute => ({resourceIndex: attribute.resourceIndex, attributeId: attribute.attributeId}));
   }
 }

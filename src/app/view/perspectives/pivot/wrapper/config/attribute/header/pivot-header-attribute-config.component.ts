@@ -21,9 +21,9 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../../../util/pivot-data';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
-import {ConstraintConfig} from '../../../../../../../core/model/data/constraint';
+import {Constraint} from '../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SelectConstraintItemId} from '../../../../../../../shared/select/select-constraint-item/select-constraint-item.component';
+import {SelectItemWithConstraintItemId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 
 @Component({
@@ -73,7 +73,7 @@ export class PivotHeaderAttributeConfigComponent {
     this.attributeChange.emit(newAttribute);
   }
 
-  public onSelected(itemId: SelectConstraintItemId) {
+  public onSelected(itemId: SelectItemWithConstraintItemId) {
     const resource = this.attributesResources[itemId.resourceIndex];
     if (!resource) {
       return;
@@ -85,8 +85,8 @@ export class PivotHeaderAttributeConfigComponent {
     this.attributeSelect.emit(headerAttribute);
   }
 
-  public onSelectedConfig(config: Partial<ConstraintConfig>) {
-    const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, config};
+  public onSelectedConstraint(constraint: Constraint) {
+    const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, constraint};
     this.attributeSelect.emit(headerAttribute);
   }
 

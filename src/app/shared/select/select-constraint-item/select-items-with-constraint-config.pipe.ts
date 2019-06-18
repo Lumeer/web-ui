@@ -19,24 +19,24 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource} from '../../../core/model/resource';
-import {SelectConstraintItemId} from './select-constraint-item.component';
+import {SelectItemWithConstraintItemId} from './select-item-with-constraint.component';
 import {findAttribute} from '../../../core/store/collections/collection.util';
-import {SelectConstraintItemsFormatter} from './select-constraint-items-formatter';
+import {SelectItemWithConstraintFormatter} from './select-item-with-constraint-formatter.service';
 import {SelectItemModel} from '../select-item/select-item.model';
 
 @Pipe({
-  name: 'selectConstraintConfigItems',
+  name: 'selectItemWithConstraintConfig',
 })
-export class SelectConstraintConfigItemsPipe implements PipeTransform {
-  constructor(private formatter: SelectConstraintItemsFormatter) {}
+export class SelectItemWithConstraintConfigPipe implements PipeTransform {
+  constructor(private formatter: SelectItemWithConstraintFormatter) {}
 
   public transform(
     attributesResources: AttributesResource[],
-    selectedAttribute: SelectConstraintItemId
+    selectedConstraintItemId: SelectItemWithConstraintItemId
   ): SelectItemModel[] {
-    const resource = selectedAttribute && attributesResources[selectedAttribute.resourceIndex];
+    const resource = selectedConstraintItemId && attributesResources[selectedConstraintItemId.resourceIndex];
     const attribute =
-      selectedAttribute && resource && findAttribute(resource.attributes, selectedAttribute.attributeId);
+      selectedConstraintItemId && resource && findAttribute(resource.attributes, selectedConstraintItemId.attributeId);
     return (attribute && this.formatter.createItems(attribute)) || [];
   }
 }

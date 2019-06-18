@@ -24,9 +24,9 @@ import {SelectItemComponent} from './select-item/select-item.component';
 import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
 import {PickerModule} from '../picker/picker.module';
 import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
-import {SelectConstraintItemComponent} from './select-constraint-item/select-constraint-item.component';
-import {SelectConstraintItemsPipe} from './select-constraint-item/select-constraint-items.pipe';
-import {SelectConstraintConfigItemsPipe} from './select-constraint-item/select-constraint-config-items.pipe';
+import {SelectItemWithConstraint} from './select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
+import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
@@ -35,11 +35,11 @@ import {PipesModule} from '../pipes/pipes.module';
     SelectItemComponent,
     GetSelectItemPipe,
     AreIdsEqualPipe,
-    SelectConstraintItemComponent,
-    SelectConstraintItemsPipe,
-    SelectConstraintConfigItemsPipe,
+    SelectItemWithConstraint,
+    SelectItemWithConstraintPipe,
+    SelectItemWithConstraintConfigPipe,
   ],
   providers: [AreIdsEqualPipe],
-  exports: [SelectItemComponent, SelectConstraintItemComponent],
+  exports: [SelectItemComponent, SelectItemWithConstraint],
 })
 export class SelectModule {}

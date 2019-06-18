@@ -59,12 +59,12 @@ export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConf
   return JSON.stringify(c1ValueAttributes) !== JSON.stringify(c2ValueAttributes);
 }
 
-function cleanPivotHeaderAttribute(attribute: PivotRowColumnAttribute): PivotRowColumnAttribute {
-  return {...cleanPivotAttribute(attribute), config: attribute.config};
+function cleanPivotHeaderAttribute(pivotRowColumnAttribute: PivotRowColumnAttribute): PivotRowColumnAttribute {
+  return {...cleanPivotAttribute(pivotRowColumnAttribute), constraint: pivotRowColumnAttribute.constraint};
 }
 
-function cleanPivotValueAttribute(attribute: PivotValueAttribute): PivotValueAttribute {
-  return {...cleanPivotAttribute(attribute), aggregation: attribute.aggregation};
+function cleanPivotValueAttribute(pivotValueAttribute: PivotValueAttribute): PivotValueAttribute {
+  return {...cleanPivotAttribute(pivotValueAttribute), aggregation: pivotValueAttribute.aggregation};
 }
 
 export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {

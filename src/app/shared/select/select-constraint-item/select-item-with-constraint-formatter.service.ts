@@ -19,12 +19,7 @@
 
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
-import {
-  Constraint,
-  ConstraintConfig,
-  ConstraintType,
-  DateTimeConstraintConfig,
-} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
 import {createDateTimeOptions} from '../../date-time/date-time-options';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Injectable} from '@angular/core';
@@ -58,7 +53,7 @@ export const dateReadableFormatsMap: Record<string, string> = {
 @Injectable({
   providedIn: 'root',
 })
-export class SelectConstraintItemsFormatter {
+export class SelectItemWithConstraintFormatter {
   private readonly defaultTitle: string;
 
   constructor(private i18n: I18n) {
@@ -86,32 +81,35 @@ export class SelectConstraintItemsFormatter {
       ...formatTypes
         .map(type => ({type, format: dateReadableFormatsMap[type]}))
         .filter(({format}) => format !== config.format)
-        .map(({type, format}) => ({id: {format}, value: this.translateDateReadableFormatType(type)})),
+        .map(({type, format}) => ({
+          id: {type: ConstraintType.DateTime, config: {format}} as Constraint,
+          value: this.translateDateReadableFormatType(type),
+        })),
     ];
   }
 
-  public checkValidConstraintOverride(
-    constraint: Constraint,
-    overrideConfig: Partial<ConstraintConfig>
-  ): Partial<ConstraintConfig> {
+  public checkValidConstraintOverride(constraint: Constraint, overrideConstraint: Constraint): Constraint {
+    if (!overrideConstraint || constraint.type !== overrideConstraint.type) {
+      return null;
+    }
+
     switch (constraint.type) {
       case ConstraintType.DateTime:
-        const configFormat =
-          overrideConfig &&
-          <DateTimeConstraintConfig>overrideConfig &&
-          (<DateTimeConstraintConfig>overrideConfig).format;
-        if (configFormat) {
+        const overrideConfig = overrideConstraint.config as DateTimeConstraintConfig;
+        if (overrideConfig.format) {
           const validFormats = createDateConstraintOverrideFormatTypes(
             constraint.config as DateTimeConstraintConfig
           ).map(type => dateReadableFormatsMap[type]);
-          const overrideFormat = validFormats.includes(configFormat)
-            ? this.translateDateReadableFormat(configFormat)
+          const overrideFormat = validFormats.includes(overrideConfig.format)
+            ? this.translateDateReadableFormat(overrideConfig.format)
             : null;
-          return overrideFormat && {format: overrideFormat};
+          return (
+            overrideFormat && {...overrideConstraint, config: {...overrideConstraint.config, format: overrideFormat}}
+          );
         }
         return null;
       default:
-        return false;
+        return null;
     }
   }
 

@@ -19,32 +19,32 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {AttributesResource} from '../../../core/model/resource';
-import {ConstraintConfig} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintConfig} from '../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
-export interface SelectConstraintItemId {
+export interface SelectItemWithConstraintItemId {
   resourceIndex: number;
   attributeId: string;
 }
 
 @Component({
-  selector: 'select-constraint-item',
-  templateUrl: './select-constraint-item.component.html',
-  styleUrls: ['./select-constraint-item.component.scss'],
+  selector: 'select-item-with-constraint',
+  templateUrl: './select-item-with-constraint.component.html',
+  styleUrls: ['./select-item-with-constraint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectConstraintItemComponent {
+export class SelectItemWithConstraint {
   @Input()
   public attributesResources: AttributesResource[];
 
   @Input()
-  public restrictedAttributes: SelectConstraintItemId[];
+  public restrictedIds: SelectItemWithConstraintItemId[];
 
   @Input()
-  public selectedAttribute: SelectConstraintItemId;
+  public selectedId: SelectItemWithConstraintItemId;
 
   @Input()
-  public selectedConfig: Partial<ConstraintConfig>;
+  public selectedConstraint: Constraint;
 
   @Input()
   public placeholderIcon: string;
@@ -65,7 +65,7 @@ export class SelectConstraintItemComponent {
   public buttonClasses: string;
 
   @Output()
-  public select = new EventEmitter<SelectConstraintItemId>();
+  public select = new EventEmitter<SelectItemWithConstraintItemId>();
 
   @Output()
   public selectConfig = new EventEmitter<Partial<ConstraintConfig>>();
@@ -79,7 +79,7 @@ export class SelectConstraintItemComponent {
     this.configPlaceholder = i18n({id: 'select.constraint.item.config', value: 'Config'});
   }
 
-  public onSelect(id: SelectConstraintItemId) {
+  public onSelect(id: SelectItemWithConstraintItemId) {
     this.select.emit(id);
   }
 

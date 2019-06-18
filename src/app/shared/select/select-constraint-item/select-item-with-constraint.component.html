@@ -1,6 +1,6 @@
 <select-item
-  [items]="attributesResources | selectConstraintItems:restrictedAttributes"
-  [selectedId]="selectedAttribute"
+  [items]="attributesResources | selectItemWithConstraint:restrictedIds"
+  [selectedId]="selectedId"
   [removable]="removable"
   [disabled]="disabled"
   [buttonClasses]="buttonClasses"
@@ -11,13 +11,13 @@
   (remove)="onRemove()">
 </select-item>
 
-<ng-container *ngIf="selectedAttribute">
-  <ng-container *ngIf="{configItems: attributesResources | selectConstraintConfigItems:selectedAttribute} as data">
+<ng-container *ngIf="selectedId">
+  <ng-container *ngIf="{configItems: attributesResources | selectItemWithConstraintConfig:selectedId} as data">
     <select-item
       *ngIf="data.configItems.length > 1"
       class="d-block mt-1"
       [items]="data.configItems"
-      [selectedId]="(data.configItems | findSelectItemById:selectedConfig)?.id || data.configItems[0].id"
+      [selectedId]="(data.configItems | findSelectItemById:selectedConstraint)?.id || data.configItems[0].id"
       [removable]="false"
       [placeholderText]="configPlaceholder"
       [buttonClasses]="buttonClasses"
