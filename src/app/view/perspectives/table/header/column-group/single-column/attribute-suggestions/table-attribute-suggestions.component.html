@@ -1,66 +1,73 @@
-<ng-template *ngIf="{linkedAttributes: linkedAttributes$ | async, allAttributes: allAttributes$ | async, selectedIndex: (selectedIndex$ | async)} as suggestions"
-             #attributeSuggestions>
-  <div *ngIf="lastName && (!(collection | attributeExist:attributeName) || !(suggestions.linkedAttributes | empty) || !(suggestions.allAttributes | empty))"
-       class="dropdown">
-    <div class="dropdown-menu show"
-         data-test="table-attribute-suggestions">
-      <ng-container *ngIf="(collection || linkType) && !((collection || linkType) | attributeExist:attributeName)">
-        <div class="dropdown-header cursor-not-allowed"
-             i18n="@@create.new.attribute">Create new attribute
-        </div>
-        <a class="dropdown-item"
-           data-test="table-attribute-name-suggestion"
-           [class.selected]="suggestions.selectedIndex === 0 && newCount === 1">
-          <icons-presenter [colors]="collection ? [collection.color] : []"
-                           [icons]="collection ? [collection.icon] : []"
-                           class="mr-1">
-          </icons-presenter>
-          <span>{{lastName}}</span>
-        </a>
-      </ng-container>
-
-      <div *ngIf="!(collection | attributeExist:attributeName) && (!(suggestions.linkedAttributes | empty) || !(suggestions.allAttributes | empty))"
-           class="dropdown-divider">
-      </div>
-
-      <ng-container *ngIf="(cursor | isLastPart:table) && !(table | embedded)">
-        <ng-container *ngIf="!(suggestions.linkedAttributes | empty)">
+<ng-template #attributeSuggestions>
+  <ng-container *ngIf="{
+    lastName: lastName$ | async,
+    linkedAttributes: linkedAttributes$ | async,
+    allAttributes: allAttributes$ | async,
+    selectedIndex: (selectedIndex$ | async),
+    table: table$ | async
+  } as state">
+    <div *ngIf="state.lastName && (!(collection | attributeExist:attributeName) || !(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
+         class="dropdown">
+      <div class="dropdown-menu show"
+           data-test="table-attribute-suggestions">
+        <ng-container *ngIf="(collection || linkType) && !((collection || linkType) | attributeExist:attributeName)">
           <div class="dropdown-header cursor-not-allowed"
-               i18n="@@table.header.suggestion.link.existing">Use existing link
+               i18n="@@create.new.attribute">Create new attribute
           </div>
-          <a *ngFor="let linkedAttribute of suggestions.linkedAttributes; index as linkedIndex"
-             [class.selected]="suggestions.selectedIndex === newCount + linkedIndex"
-             (mousedown)="useLinkType(linkedAttribute.linkType)"
-             class="dropdown-item">
-            <icons-presenter [colors]="[linkedAttribute.collection.color]"
-                             [icons]="[linkedAttribute.collection.icon]"
+          <a class="dropdown-item"
+             data-test="table-attribute-name-suggestion"
+             [class.selected]="state.selectedIndex === 0 && newCount === 1">
+            <icons-presenter [colors]="collection ? [collection.color] : []"
+                             [icons]="collection ? [collection.icon] : []"
                              class="mr-1">
             </icons-presenter>
-            <span [innerHtml]="(linkedAttribute.collection.name | highlightText:lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:lastName:true)"></span>
-            <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
+            <span>{{state.lastName}}</span>
           </a>
         </ng-container>
 
-        <div *ngIf="!(suggestions.linkedAttributes | empty) && !(suggestions.allAttributes | empty)"
+        <div *ngIf="!(collection | attributeExist:attributeName) && (!(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
              class="dropdown-divider">
         </div>
 
-        <ng-container *ngIf="!(suggestions.allAttributes | empty)">
-          <div class="dropdown-header cursor-not-allowed"
-               i18n="@@create.new.link">Create new link
+        <ng-container *ngIf="(cursor | isLastPart: state.table) && !(state.table | embedded)">
+          <ng-container *ngIf="!(state.linkedAttributes | empty)">
+            <div class="dropdown-header cursor-not-allowed"
+                 i18n="@@table.header.suggestion.link.existing">Use existing link
+            </div>
+            <a *ngFor="let linkedAttribute of state.linkedAttributes; index as linkedIndex"
+               [class.selected]="state.selectedIndex === newCount + linkedIndex"
+               (mousedown)="useLinkType(linkedAttribute.linkType)"
+               class="dropdown-item">
+              <icons-presenter [colors]="[linkedAttribute.collection.color]"
+                               [icons]="[linkedAttribute.collection.icon]"
+                               class="mr-1">
+              </icons-presenter>
+              <span [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+              <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
+            </a>
+          </ng-container>
+
+          <div *ngIf="!(state.linkedAttributes | empty) && !(state.allAttributes | empty)"
+               class="dropdown-divider">
           </div>
-          <a *ngFor="let linkedAttribute of suggestions.allAttributes; index as allIndex"
-             [class.selected]="suggestions.selectedIndex === newCount + linkedCount + allIndex"
-             (mousedown)="createLinkType(linkedAttribute.collection)"
-             class="dropdown-item">
-            <icons-presenter [colors]="[linkedAttribute.collection.color]"
-                             [icons]="[linkedAttribute.collection.icon]"
-                             class="mr-1">
-            </icons-presenter>
-            <span [innerHtml]="(linkedAttribute.collection.name | highlightText:lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:lastName:true)"></span>
-          </a>
+
+          <ng-container *ngIf="!(state.allAttributes | empty)">
+            <div class="dropdown-header cursor-not-allowed"
+                 i18n="@@create.new.link">Create new link
+            </div>
+            <a *ngFor="let linkedAttribute of state.allAttributes; index as allIndex"
+               [class.selected]="state.selectedIndex === newCount + linkedCount + allIndex"
+               (mousedown)="createLinkType(linkedAttribute.collection)"
+               class="dropdown-item">
+              <icons-presenter [colors]="[linkedAttribute.collection.color]"
+                               [icons]="[linkedAttribute.collection.icon]"
+                               class="mr-1">
+              </icons-presenter>
+              <span [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+            </a>
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>
