@@ -914,16 +914,67 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     const workspace = this.workspace;
 
     if (changeEvent instanceof Blockly.Events.Create) {
-      const block = workspace.getBlockById(changeEvent.blockId);
+      const mainBlock = workspace.getBlockById(changeEvent.blockId);
 
       // make sure the default blocks do not offer documents etc in variable dropdowns
-      this.ensureEmptyTypes(block);
+      this.ensureEmptyTypes(mainBlock);
 
       // prevent deletion of the initial variables
-      this.preventDeletionOfInitialVariables(block);
+      this.preventDeletionOfInitialVariables(mainBlock);
 
-      if (block.type === GET_ATTRIBUTE || block.type === GET_LINK_ATTRIBUTE) {
-        block.outputConnection.check_ = [UNKNOWN];
+      if (mainBlock.type === GET_ATTRIBUTE || mainBlock.type === GET_LINK_ATTRIBUTE) {
+        mainBlock.outputConnection.check_ = [UNKNOWN];
+      }
+
+      if (changeEvent.ids) {
+        changeEvent.ids.forEach(newBlockId => {
+          const block = workspace.getBlockById(newBlockId);
+
+          if (block.type === GET_ATTRIBUTE || block.type === SET_ATTRIBUTE) {
+            const link = block.getInput('DOCUMENT');
+
+            if (link.connection && link.connection.targetConnection) {
+              const linkedBlock = link.connection.targetConnection.getSourceBlock();
+              const blockOutputType = this.getOutputConnectionCheck(linkedBlock);
+
+              if (
+                linkedBlock &&
+                (blockOutputType.endsWith(DOCUMENT_VAR_SUFFIX) || blockOutputType.endsWith(DOCUMENT_ARRAY_TYPE_SUFFIX))
+              ) {
+                this.setterAndGetterOutputType(block, linkedBlock);
+              }
+            }
+          }
+
+          if (block.type === GET_LINK_ATTRIBUTE || block.type === SET_LINK_ATTRIBUTE) {
+            const link = block.getInput('LINK');
+
+            if (link.connection && link.connection.targetConnection) {
+              const linkedBlock = link.connection.targetConnection.getSourceBlock();
+              const blockOutputType = this.getOutputConnectionCheck(linkedBlock);
+
+              if (
+                linkedBlock &&
+                (blockOutputType.endsWith(LINK_VAR_SUFFIX) || blockOutputType.endsWith(LINK_TYPE_ARRAY_SUFFIX))
+              ) {
+                this.setterAndGetterOutputType(block, linkedBlock);
+              }
+            }
+          }
+
+          if (block.type === GET_LINK_DOCUMENT) {
+            const link = block.getInput('LINK');
+
+            if (link.connection && link.connection.targetConnection) {
+              const linkedBlock = link.connection.targetConnection.getSourceBlock();
+              const blockOutputType = this.getOutputConnectionCheck(linkedBlock);
+
+              if (linkedBlock && blockOutputType.endsWith(LINK_VAR_SUFFIX)) {
+                this.setLinkDocumentOutputType(block, linkedBlock);
+              }
+            }
+          }
+        });
       }
     }
 
@@ -933,6 +984,14 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       if (block.type === GET_LINK_DOCUMENT && changeEvent.element === 'field' && changeEvent.name === 'COLLECTION') {
         block.outputConnection.check_ = changeEvent.newValue + DOCUMENT_VAR_SUFFIX;
+
+        if (block.outputConnection.targetConnection) {
+          const linkedBlock = block.outputConnection.targetConnection.getSourceBlock();
+
+          if (linkedBlock) {
+            this.setterAndGetterOutputType(linkedBlock, block);
+          }
+        }
       }
     }
 

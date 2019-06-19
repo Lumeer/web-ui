@@ -23,10 +23,12 @@
       </search-document-header>
     </div>
 
-    <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
-         *ngIf="maxLines > 0 && maxLines < documentsOrder.length" i18n="@@search.result.more"
+    <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
+         *ngIf="maxLines > 0 && maxLines < documentsOrder.length"
          (click)="onShowAll()">
-      See all
+      <i class="fas fa-angle-double-right mr-2 align-sub"></i>
+      <span i18n="@@search.result.more">See more</span>
+      <i class="fas fa-angle-double-right ml-2 align-sub"></i>
     </div>
   </div>
 

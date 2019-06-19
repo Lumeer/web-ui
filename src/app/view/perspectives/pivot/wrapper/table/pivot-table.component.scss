@@ -1,4 +1,18 @@
+@import '~src/styles/variables';
+
 .pivot-data-cell,
 .pivot-group-data-cell {
   text-align: right;
+}
+
+.pivot-column-header-cell,
+.pivot-row-header-cell,
+.pivot-group-data-cell,
+.pivot-group-header-cell {
+  font-weight: bold;
+  border: 1px $gray-100 solid;
+}
+
+.pivot-empty-cell {
+  border: 1px transparent solid;
 }

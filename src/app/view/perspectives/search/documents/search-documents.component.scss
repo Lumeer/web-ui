@@ -28,3 +28,7 @@
   cursor: pointer;
   transition: box-shadow $animation-duration;
 }
+
+i.align-sub:before {
+  vertical-align: sub;
+}

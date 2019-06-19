@@ -73,12 +73,6 @@ export class SelectItemWithConstraint {
   @Output()
   public remove = new EventEmitter();
 
-  public readonly configPlaceholder: string;
-
-  constructor(private i18n: I18n) {
-    this.configPlaceholder = i18n({id: 'select.constraint.item.config', value: 'Config'});
-  }
-
   public onSelect(id: SelectItemWithConstraintItemId) {
     this.select.emit(id);
   }

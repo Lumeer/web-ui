@@ -1,6 +1,6 @@
 <div class="row my-4">
   <div class="col">
-    <ul class="list-group" *ngIf="{collection: collection$ | async, rulesLimit: rulesCountLimit$ | async | log} as data">
+    <ul class="list-group" *ngIf="{collection: collection$ | async, rulesLimit: rulesCountLimit$ | async} as data">
       <li
         *ngIf="!(data.collection?.rules)"
         no-rules

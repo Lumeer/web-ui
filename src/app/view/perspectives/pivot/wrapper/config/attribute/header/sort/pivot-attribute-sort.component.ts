@@ -58,7 +58,7 @@ export class PivotAttributeSortComponent {
 
   constructor(private i18n: I18n) {
     this.summaryTitle = i18n({id: 'perspective.pivot.config.summary', value: 'Summary'});
-    this.subSortPlaceholder = i18n({id: 'perspective.pivot.config.subSort', value: 'Select next sort'});
+    this.subSortPlaceholder = i18n({id: 'perspective.pivot.config.subSort', value: 'Next sort by...'});
   }
 
   public onSortSelected(sort: PivotAttribute | string) {

@@ -1,5 +1,5 @@
 <table *ngIf="pivotTable$ | async as pivotTable"
-       class="table table-bordered">
+       class="table table-bordered table-md">
   <tr *ngFor="let row of pivotTable.cells">
 
     <ng-container *ngFor="let cell of row">

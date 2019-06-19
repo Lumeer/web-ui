@@ -22,7 +22,7 @@ import {PivotData} from './pivot-data';
 import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
+import {COLOR_GRAY200, COLOR_GRAY100} from '../../../../core/constants';
 
 describe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
@@ -176,7 +176,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[2][1]).toEqual(undefined);
 
@@ -202,7 +202,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[4][1]).toEqual(undefined);
 
@@ -246,7 +246,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[8][1]).toEqual(undefined);
     expect(pivotTable.cells[9][0]).toEqual({
@@ -255,7 +255,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
     expect(pivotTable.cells[9][1]).toEqual(undefined);
 
@@ -317,7 +317,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[1][1]).toEqual(undefined);
 
@@ -352,7 +352,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[1][4]).toEqual(undefined);
 
@@ -387,7 +387,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[1][7]).toEqual(undefined);
     expect(pivotTable.cells[0][8]).toEqual({
@@ -396,7 +396,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
     expect(pivotTable.cells[1][8]).toEqual(undefined);
 
@@ -607,7 +607,7 @@ describe('Pivot table converter', () => {
       colSpan: 3,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
 
     expect(pivotTable.cells[1][9]).toEqual({
@@ -616,7 +616,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
     expect(pivotTable.cells[1][10]).toEqual({
       value: 'Y',
@@ -624,7 +624,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
     expect(pivotTable.cells[1][11]).toEqual({
       value: 'Z',
@@ -632,7 +632,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       rowSpan: 1,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
 
     expect(pivotTable.cells[2][0].value).toEqual('1');
@@ -707,7 +707,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[6][0]).toEqual({
       value: 'B',
@@ -723,7 +723,7 @@ describe('Pivot table converter', () => {
       colSpan: 2,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
 
     expect(pivotTable.cells[0][2]).toEqual({
@@ -748,7 +748,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[0][8]).toEqual({
       value: converter.createHeaderTitle('Y'),
@@ -756,7 +756,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY400,
+      background: COLOR_GRAY200,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: 'S',
@@ -764,7 +764,7 @@ describe('Pivot table converter', () => {
       colSpan: 1,
       isHeader: true,
       cssClass: PivotTableConverter.groupHeaderClass,
-      background: COLOR_GRAY500,
+      background: COLOR_GRAY100,
     });
 
     expect(pivotTable.cells[2].slice(2).map(v => v.value)).toEqual(['1', '2', '3', '4', '1', '2', '7', '10']);
