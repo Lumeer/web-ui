@@ -45,6 +45,7 @@ import {UserSettingsService} from '../../../../core/service/user-settings.servic
 @Component({
   selector: 'search-views',
   templateUrl: './search-views.component.html',
+  styleUrls: ['./search-views.component.scss'],
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
   @Input()
