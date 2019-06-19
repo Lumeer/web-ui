@@ -54,7 +54,7 @@ export class PivotTableConverter {
   public static readonly columnHeaderClass = 'pivot-column-header-cell';
   public static readonly groupHeaderClass = 'pivot-group-header-cell';
 
-  private readonly groupColors = [COLOR_GRAY500, COLOR_GRAY400, COLOR_GRAY300, COLOR_GRAY200, COLOR_GRAY100];
+  private readonly groupColors = [COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500];
 
   private config: PivotConfig;
   private data: PivotData;

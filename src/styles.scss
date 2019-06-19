@@ -150,3 +150,10 @@ color-picker .color-picker .preset-area {
 .cdk-overlay-container {
   z-index: 1100 !important; // otherwise date picker shown behind Bootstrap modal
 }
+
+.table-md {
+  th,
+  td {
+    padding: $table-cell-padding-md;
+  }
+}
