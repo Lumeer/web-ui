@@ -4,6 +4,7 @@
              [items]="availableAttributes"
              [selectedId]="pivotAttribute | pivotCleanAttribute"
              [removable]="!!pivotAttribute"
+             [fitParent]="true"
              [buttonClasses]="buttonClasses"
              (select)="onAttributeSelected($event)"
              (remove)="onAttributeRemoved()">

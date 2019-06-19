@@ -6,6 +6,7 @@
                              [selectedConstraint]="pivotAttribute?.constraint"
                              [emptyValue]="emptyValueString"
                              [removable]="!!pivotAttribute"
+                             [fitParent]="true"
                              (select)="onSelected($event)"
                              (selectConfig)="onSelectedConstraint($event)"
                              (remove)="onRemoved()">

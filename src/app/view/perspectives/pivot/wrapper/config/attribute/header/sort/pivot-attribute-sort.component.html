@@ -4,6 +4,7 @@
                [items]="data.selectItems"
                [selectedId]="pivotAttribute | pivotSortSelectedId:data.selectItems"
                [removable]="false"
+               [fitParent]="true"
                [buttonClasses]="buttonClasses"
                (select)="onSortSelected($event)">
   </select-item>
@@ -24,6 +25,7 @@
                [emptyValue]="subSortPlaceholder"
                [items]="pivotAttribute | pivotSubSortSelectItems:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders):index:summaryTitle"
                [selectedId]="value"
+               [fitParent]="true"
                [removable]="index > 0 || !value?.isSummary"
                [buttonClasses]="buttonClasses"
                (select)="onSubSortSelected(index, $event)"

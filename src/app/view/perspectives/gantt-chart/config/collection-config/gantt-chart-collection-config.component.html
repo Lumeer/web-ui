@@ -10,6 +10,7 @@
              [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
              [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
              [removable]="true"
+             [fitParent]="true"
              [buttonClasses]="buttonClasses"
              (select)="onBarPropertySelect(propertyRequired, $event)"
              (remove)="onBarPropertyRemoved(propertyRequired)">
@@ -24,6 +25,7 @@
              [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
              [buttonClasses]="buttonClasses"
              [removable]="true"
+             [fitParent]="true"
              (select)="onBarPropertySelect(propertyOptional, $event)"
              (remove)="onBarPropertyRemoved(propertyOptional)">
 </select-item>
