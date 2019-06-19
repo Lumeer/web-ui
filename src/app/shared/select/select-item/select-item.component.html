@@ -33,11 +33,12 @@
   </button>
 
   <div aria-labelledby="selectItemDropdown"
-       class="dropdown-menu">
+       class="dropdown-menu"
+       [class.mw-100]="fitParent">
     <a *ngFor="let item of items"
        [class.active]="selectedId | areIdsEqual:item.id"
        (click)="onSelect(item)"
-       class="dropdown-item">
+       class="dropdown-item text-truncate">
       <icons-presenter *ngIf="item.icons && item.iconColors"
                        [colors]="item.iconColors"
                        [icons]="item.icons">

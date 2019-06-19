@@ -20,7 +20,6 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {AttributesResource} from '../../../core/model/resource';
 import {Constraint, ConstraintConfig} from '../../../core/model/data/constraint';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export interface SelectItemWithConstraintItemId {
   resourceIndex: number;
@@ -63,6 +62,9 @@ export class SelectItemWithConstraint {
 
   @Input()
   public buttonClasses: string;
+
+  @Input()
+  public fitParent = false;
 
   @Output()
   public select = new EventEmitter<SelectItemWithConstraintItemId>();

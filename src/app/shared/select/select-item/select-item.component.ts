@@ -51,6 +51,9 @@ export class SelectItemComponent {
   @Input()
   public buttonClasses: string;
 
+  @Input()
+  public fitParent = false;
+
   @Output()
   public select = new EventEmitter<any>();
 

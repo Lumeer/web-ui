@@ -9,6 +9,7 @@
              [items]="collection | attributesSelectItems"
              [selectedId]="collectionConfig?.attribute?.attributeId"
              [removable]="true"
+             [fitParent]="true"
              [buttonClasses]="buttonClasses"
              (select)="onAttributeSelected($event)"
              (remove)="onAttributeRemoved()">
