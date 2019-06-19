@@ -128,6 +128,10 @@ export class ProjectsEffects {
         mergeMap(newProject => {
           const actions: Action[] = [new ProjectsAction.CreateSuccess({project: newProject})];
 
+          if (onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(newProject)}));
+          }
+
           if (template && template !== TemplateType.Empty) {
             actions.push(
               new ApplyTemplate({
@@ -136,10 +140,6 @@ export class ProjectsEffects {
                 template,
               })
             );
-          }
-
-          if (onSuccess) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(newProject)}));
           }
 
           return actions;

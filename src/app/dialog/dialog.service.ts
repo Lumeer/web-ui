@@ -48,9 +48,16 @@ export class DialogService {
     }
   }
 
+  public closeDialogWithoutRedirect() {
+    this.open = false;
+  }
+
   public closeDialog(): Promise<boolean> {
     this.callback = null;
-    return this.navigateToDialog(null);
+    if (this.open) {
+      return this.navigateToDialog(null);
+    }
+    return Promise.resolve(true);
   }
 
   public closeFullscreenDialog(): Promise<boolean> {
