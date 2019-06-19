@@ -24,14 +24,17 @@ import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../../../environments/environment';
 import {AppState, initialAppState} from './app.state';
+import {calendarsReducer} from './calendars/calendars.reducer';
 import {chartsReducer} from './charts/charts.reducer';
 import {CollectionsEffects} from './collections/collections.effects';
 import {collectionsReducer} from './collections/collections.reducer';
 import {CommonEffects} from './common/common.effects';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
+import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {GroupsEffects} from './groups/groups.effects';
 import {groupsReducer} from './groups/groups.reducer';
+import {kanbansReducer} from './kanbans/kanbans.reducer';
 import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
 import {LinkTypesEffects} from './link-types/link-types.effects';
@@ -48,23 +51,20 @@ import {PaymentsEffects} from './organizations/payment/payments.effects';
 import {paymentsReducer} from './organizations/payment/payments.reducer';
 import {ServiceLimitsEffects} from './organizations/service-limits/service-limits.effects';
 import {serviceLimitsReducer} from './organizations/service-limits/service-limits.reducer';
+import {pivotsReducer} from './pivots/pivots.reducer';
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
 import {TablesEffects} from './tables/tables.effects';
 import {tablesReducer} from './tables/tables.reducer';
+import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
+import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
+import {VideosEffects} from './videos/videos.effects';
+import {videosReducer} from './videos/videos.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
-import {videosReducer} from './videos/videos.reducer';
-import {VideosEffects} from './videos/videos.effects';
-import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
-import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
-import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
-import {calendarsReducer} from './calendars/calendars.reducer';
-import {kanbansReducer} from './kanbans/kanbans.reducer';
-import {pivotsReducer} from './pivots/pivots.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -116,7 +116,13 @@ const effects = [
 
 @NgModule({
   imports: [
-    StoreModule.forRoot(reducers, {initialState: initialAppState}),
+    StoreModule.forRoot(reducers, {
+      initialState: initialAppState,
+      runtimeChecks: {
+        strictActionImmutability: true,
+        strictStateImmutability: true,
+      },
+    }),
     EffectsModule.forRoot(effects),
     environment.storeDevtools
       ? StoreDevtoolsModule.instrument({maxAge: 50, name: `Lumeer NgRx Store (${location.hostname})`})

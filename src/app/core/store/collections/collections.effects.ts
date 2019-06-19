@@ -23,8 +23,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Angulartics2} from 'angulartics2';
 import {EMPTY, from, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {environment} from '../../../../environments/environment';
 import {CollectionDto} from '../../dto';
 import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
@@ -51,8 +53,6 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
-import {Angulartics2} from 'angulartics2';
-import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class CollectionsEffects {
@@ -389,11 +389,10 @@ export class CollectionsEffects {
       return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
         map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdMap[attr.name]))),
         withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
-        flatMap(([attributes, collection]) => {
+        mergeMap(([attributes, collection]) => {
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
-            updateCreateAttributesNextAction(nextAction, attributes);
-            actions.push(nextAction);
+            actions.push(updateCreateAttributesNextAction(nextAction as DocumentsAction.All, attributes));
           }
           if (!collection.defaultAttributeId) {
             const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, attributes);
@@ -572,16 +571,16 @@ function createSetDefaultAttributeAction(
   return null;
 }
 
-function updateCreateAttributesNextAction(nextAction: Action, attributes: Attribute[]) {
-  if (nextAction.type === DocumentsActionType.CREATE) {
-    const action = nextAction as DocumentsAction.Create;
-    action.payload.document = convertNewAttributes(attributes, action);
-  } else if (nextAction.type === DocumentsActionType.UPDATE_DATA) {
-    const action = nextAction as DocumentsAction.UpdateData;
-    action.payload.document = convertNewAttributes(attributes, action);
-  } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
-    const action = nextAction as DocumentsAction.PatchData;
-    action.payload.document = convertNewAttributes(attributes, action);
+function updateCreateAttributesNextAction(action: DocumentsAction.All, attributes: Attribute[]): Action {
+  switch (action.type) {
+    case DocumentsActionType.CREATE:
+      return new DocumentsAction.Create({...action.payload, document: convertNewAttributes(attributes, action)});
+    case DocumentsActionType.PATCH_DATA:
+      return new DocumentsAction.PatchData({...action.payload, document: convertNewAttributes(attributes, action)});
+    case DocumentsActionType.UPDATE_DATA:
+      return new DocumentsAction.UpdateData({...action.payload, document: convertNewAttributes(attributes, action)});
+    default:
+      return action;
   }
 }
 
