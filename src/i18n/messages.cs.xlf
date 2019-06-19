@@ -2725,11 +2725,11 @@
 
             <trans-unit id="search.result.more" datatype="html">
                 <source>
-            See all
+            See more
           </source>
                 <target>Zobrazit vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Record</source>
                 <target>Smazat záznam</target>
