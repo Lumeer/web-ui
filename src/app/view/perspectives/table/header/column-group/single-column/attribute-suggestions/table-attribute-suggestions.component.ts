@@ -27,6 +27,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -34,7 +35,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, first, map, take, tap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -51,7 +52,7 @@ import {selectQuery} from '../../../../../../../core/store/navigation/navigation
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
+import {selectTableById, selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../../shared/direction';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
@@ -70,10 +71,7 @@ const MAX_SUGGESTIONS_COUNT = 5;
   styleUrls: ['./table-attribute-suggestions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewInit, OnDestroy {
-  @Input()
-  public table: TableModel;
-
+export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public cursor: TableHeaderCursor;
 
@@ -92,10 +90,14 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
   @ViewChild('attributeSuggestions', {static: false})
   public attributeSuggestions: TemplateRef<any>;
 
-  public lastName: string;
+  private collection$ = new BehaviorSubject<Collection>(null);
+  private cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
+
+  public lastName$ = new BehaviorSubject('');
 
   public linkedAttributes$: Observable<LinkedAttribute[]>;
   public allAttributes$: Observable<LinkedAttribute[]>;
+  public table$: Observable<TableModel>;
 
   public newCount = 0;
   public linkedCount = 0;
@@ -113,14 +115,23 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
     private viewContainer: ViewContainerRef
   ) {}
 
+  public ngOnInit(): void {
+    this.linkedAttributes$ = this.bindLinkedAttributes();
+    this.allAttributes$ = this.bindAllAttributes();
+    this.table$ = this.bindTable();
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attributeName) {
-      this.lastName = extractAttributeLastName(this.attributeName);
+      this.lastName$.next(extractAttributeLastName(this.attributeName));
     }
-    if ((changes.collection || changes.attributeName) && this.collection) {
-      this.newCount = Number(!findAttributeByName(this.collection.attributes, this.attributeName)); // TODO add support for nested attributes
-      this.linkedAttributes$ = this.suggestLinkedAttributes();
-      this.allAttributes$ = this.suggestAllAttributes();
+    if (changes.collection && this.collection) {
+      // TODO add support for nested attributes
+      this.newCount = Number(!findAttributeByName(this.collection.attributes, this.attributeName));
+      this.collection$.next(this.collection);
+    }
+    if (changes.cursor && this.cursor) {
+      this.cursor$.next(this.cursor);
     }
   }
 
@@ -255,40 +266,45 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
     this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
   }
 
-  public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {
-    return combineLatest(
-      this.store$.select(selectLinkTypesByCollectionId(this.collection.id)),
-      this.store$.select(selectCollectionsDictionary),
-      this.store$.select(selectQuery)
-    ).pipe(
-      map(([linkTypes, collectionsMap, query]) =>
-        linkTypes
-          .filter(linkType => !query.stems[0].linkTypeIds || !query.stems[0].linkTypeIds.includes(linkType.id))
-          .reduce<LinkedAttribute[]>((filtered, linkType) => {
-            if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
-              return filtered.slice(0, 5);
-            }
+  public bindLinkedAttributes(): Observable<LinkedAttribute[]> {
+    return combineLatest([this.collection$, this.lastName$]).pipe(
+      filter(([collection]) => !!collection),
+      mergeMap(([collection, lastName]) =>
+        combineLatest([
+          this.store$.select(selectLinkTypesByCollectionId(collection.id)),
+          this.store$.select(selectCollectionsDictionary),
+          this.store$.select(selectQuery),
+        ]).pipe(
+          map(([linkTypes, collectionsMap, query]) =>
+            linkTypes
+              .filter(linkType => !query.stems[0].linkTypeIds || !query.stems[0].linkTypeIds.includes(linkType.id))
+              .reduce<LinkedAttribute[]>((filtered, linkType) => {
+                if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
+                  return filtered.slice(0, 5);
+                }
 
-            const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, this.collection.id);
-            const collection = collectionsMap[collectionId];
+                const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, collection.id);
+                const otherCollection = collectionsMap[collectionId];
 
-            return filtered.concat(
-              collection.attributes
-                .filter(attribute => this.isMatchingAttribute(collection, attribute))
-                .map(attribute => ({linkType, collection, attribute}))
-                .filter(newAttribute =>
-                  filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute))
-                )
-            );
-          }, [])
-      ),
-      tap(suggestions => (this.linkedCount = suggestions.length))
+                return filtered.concat(
+                  otherCollection.attributes
+                    .filter(attribute => isMatchingAttribute(lastName, otherCollection, attribute))
+                    .map(attribute => ({linkType, collection: otherCollection, attribute}))
+                    .filter(newAttribute =>
+                      filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute))
+                    )
+                );
+              }, [])
+          ),
+          tap(suggestions => (this.linkedCount = suggestions.length))
+        )
+      )
     );
   }
 
-  public suggestAllAttributes(): Observable<LinkedAttribute[]> {
-    return this.store$.select(selectAllCollections).pipe(
-      map((collections: Collection[]) =>
+  public bindAllAttributes(): Observable<LinkedAttribute[]> {
+    return combineLatest([this.store$.pipe(select(selectAllCollections)), this.lastName$]).pipe(
+      map(([collections, lastName]) =>
         collections.reduce<LinkedAttribute[]>((filtered, collection) => {
           if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
             return filtered.slice(0, 5);
@@ -296,7 +312,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
 
           return filtered.concat(
             collection.attributes
-              .filter(attribute => this.isMatchingAttribute(collection, attribute))
+              .filter(attribute => isMatchingAttribute(lastName, collection, attribute))
               .map(attribute => ({collection, attribute}))
               .filter(newAttribute =>
                 filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute))
@@ -308,11 +324,10 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
     );
   }
 
-  private isMatchingAttribute(collection: Collection, attribute: Attribute): boolean {
-    return (
-      this.lastName &&
-      (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()) ||
-        collection.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
+  private bindTable(): Observable<TableModel> {
+    return this.cursor$.pipe(
+      filter(cursor => !!cursor),
+      mergeMap(cursor => this.store$.pipe(select(selectTableById(cursor.tableId))))
     );
   }
 
@@ -372,5 +387,13 @@ export class TableAttributeSuggestionsComponent implements OnChanges, AfterViewI
 function equalLinkedAttributes(a1: LinkedAttribute, a2: LinkedAttribute): boolean {
   return (
     a1.attribute.id === a2.attribute.id && a1.collection.id === a2.collection.id && a1.linkType.id === a2.linkType.id
+  );
+}
+
+function isMatchingAttribute(lastName: string, collection: Collection, attribute: Attribute): boolean {
+  return (
+    lastName &&
+    (attribute.name.toLowerCase().startsWith(lastName.toLowerCase()) ||
+      collection.name.toLowerCase().startsWith(lastName.toLowerCase()))
   );
 }
