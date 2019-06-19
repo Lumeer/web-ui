@@ -1,5 +1,5 @@
 <ng-container *ngIf="{markers: markers$ | async} as data">
-  <ng-container *ngIf="data.markers && data.markers.length > 0; else placeholder">
+  <ng-container *ngIf="data.markers?.length > 0; else placeholder">
     <map-render *ngIf="map"
                 [map]="map"
                 [markers]="data.markers"

@@ -21,6 +21,8 @@
 }
 
 .map-marker {
+  cursor: pointer;
+
   & > .map-marker-shape {
     position: absolute;
     top: -45px;

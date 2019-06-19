@@ -29,15 +29,17 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {LayerGroup, Map, Marker} from 'leaflet';
-import {MapConfig, MapModel} from '../../../../../core/store/maps/map.model';
-import {createMapTileLayer} from './map-tiles';
-import {createLeafletMap} from './map.utils';
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+import {environment} from '../../../../../../environments/environment';
+import {MapConfig, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
+import {createMapboxMap, createMapMarker} from './map.utils';
+
+mapboxgl.accessToken = environment.mapboxKey;
 
 @Component({
   selector: 'map-render',
   templateUrl: './map-render.component.html',
-  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/leaflet/dist/leaflet.css'],
+  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
@@ -46,12 +48,12 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   public map: MapModel;
 
   @Input()
-  public markers: Marker[];
+  public markers: MapMarkerProperties[];
 
   public mapElementId: string;
 
-  private leafletMap: Map;
-  private markersLayer: LayerGroup;
+  private mapboxMap: any;
+  private drawnMarkers: any[] = [];
 
   constructor(private ngZone: NgZone) {}
 
@@ -70,30 +72,26 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private initMap(config: MapConfig) {
-    this.leafletMap = createLeafletMap(this.mapElementId, config);
-    setTimeout(() => this.leafletMap.invalidateSize(), 100);
-
-    createMapTileLayer(config.tiles).addTo(this.leafletMap);
-
-    this.leafletMap.zoomControl.setPosition('bottomright');
+    this.mapboxMap = createMapboxMap(this.mapElementId, config);
+    this.mapboxMap.addControl(new mapboxgl.NavigationControl());
+    setTimeout(() => this.mapboxMap.resize(), 100);
   }
 
-  private addMarkersToMap(markers: Marker[]) {
-    if (this.markersLayer) {
-      this.leafletMap.removeLayer(this.markersLayer);
-    }
+  private addMarkersToMap(markers: MapMarkerProperties[]) {
+    this.drawnMarkers.forEach(marker => marker.remove());
 
-    this.markersLayer = new LayerGroup(markers);
-    this.markersLayer.addTo(this.leafletMap);
+    this.drawnMarkers = markers.map(properties => createMapMarker(properties));
+    this.drawnMarkers.forEach(marker => marker.addTo(this.mapboxMap));
   }
 
   public ngOnDestroy() {
-    if (this.leafletMap) {
-      this.leafletMap.remove();
+    if (this.mapboxMap) {
+      this.mapboxMap.remove();
+      this.mapboxMap = null;
     }
   }
 
   public refreshMapSize() {
-    this.leafletMap.invalidateSize();
+    this.mapboxMap.resize();
   }
 }

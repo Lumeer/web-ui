@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Marker} from 'leaflet';
 import {combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {GeocodingApiService} from '../../../../core/api/geocoding/geocoding-api.service';
@@ -30,7 +29,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
 import {MapRenderComponent} from './render/map-render.component';
-import {createMapMarker, parseCoordinates} from './render/map.utils';
+import {parseCoordinates} from './render/map.utils';
 
 @Component({
   selector: 'map-content',
@@ -51,7 +50,7 @@ export class MapContentComponent implements OnInit {
   @ViewChild(MapRenderComponent, {static: false})
   public mapRenderComponent: MapRenderComponent;
 
-  public markers$: Observable<Marker[]>;
+  public markers$: Observable<MapMarkerProperties[]>;
 
   constructor(private geocodingApiService: GeocodingApiService, private store$: Store<{}>) {}
 
@@ -60,24 +59,22 @@ export class MapContentComponent implements OnInit {
   }
 
   private bindMarkers() {
-    this.markers$ = combineLatest(
+    this.markers$ = combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectDocumentsByQuery)),
       this.store$.pipe(
         select(selectMapConfigById(this.map.id)),
         map(config => config.attributeIdsMap),
         distinctUntilChanged()
-      )
-    ).pipe(
+      ),
+    ]).pipe(
       switchMap(([collectionsMap, documents, attributeIdsMap]) => {
         const allProperties = createMarkerPropertiesList(documents, attributeIdsMap, collectionsMap);
         const coordinateProperties = populateCoordinateProperties(allProperties);
         const uninitializedProperties = filterUninitializedProperties(allProperties, coordinateProperties);
 
         return this.populateAddressProperties(uninitializedProperties).pipe(
-          map(addressProperties => {
-            return coordinateProperties.concat(addressProperties).map(properties => createMapMarker(properties));
-          })
+          map(addressProperties => coordinateProperties.concat(addressProperties))
         );
       })
     );
