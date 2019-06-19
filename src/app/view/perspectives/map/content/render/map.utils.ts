@@ -18,17 +18,12 @@
  */
 
 import * as Coordinates from 'coordinate-parser';
-import {DivIcon, divIcon, LatLngLiteral, Map, MapOptions, marker, Marker} from 'leaflet';
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
+import {MapConfig, MapCoordinates, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 
-const MAP_OPTIONS: MapOptions = {
-  attributionControl: false,
-  minZoom: 3,
-};
-
-export function parseCoordinates(value: string): LatLngLiteral {
+export function parseCoordinates(value: string): MapCoordinates {
   try {
     const coordinates = new Coordinates(value);
     return {
@@ -40,31 +35,59 @@ export function parseCoordinates(value: string): LatLngLiteral {
   }
 }
 
-export function createLeafletMap(elementId: string, config: MapConfig) {
-  return new Map(elementId, {
-    ...MAP_OPTIONS,
+export function createMapboxMap(elementId: string, config: MapConfig) {
+  return new mapboxgl.Map({
+    container: elementId,
+    style: 'mapbox://styles/mapbox/streets-v11',
     center: config.center,
     zoom: config.zoom,
   });
 }
 
-export function createMapMarker(properties: MapMarkerProperties): Marker {
+export function createMapMarker(properties: MapMarkerProperties): any {
   const defaultAttributeValue = properties.document.data[properties.collection.defaultAttributeId] || '';
 
-  // TODO create GeoJSON instead and put properties into it
-  return marker(properties.coordinates, {
-    icon: createMapMarkerIcon(properties.collection),
-  }).bindTooltip(`<b>${defaultAttributeValue}</b>`, {direction: 'bottom'});
+  const popup = new mapboxgl.Popup({
+    anchor: 'top',
+    closeButton: false,
+    closeOnClick: false,
+  }).setHTML(`<span class="text-default-attribute">${defaultAttributeValue}</span>`);
+
+  const element = createMapMarkerIcon(properties.collection);
+  const marker = new mapboxgl.Marker({element}).setLngLat(properties.coordinates).setPopup(popup);
+
+  element.addEventListener('mouseenter', () => {
+    if (!popup.isOpen()) {
+      marker.togglePopup();
+    }
+  });
+  element.addEventListener('mouseleave', () => {
+    if (popup.isOpen()) {
+      marker.togglePopup();
+    }
+  });
+
+  return marker;
 }
 
-function createMapMarkerIcon(collection: Collection): DivIcon {
-  return divIcon({
-    className: 'map-marker',
-    iconSize: null,
-    html: `<div class="map-marker-shape" style="border-color: ${collection.color}">
-             <div class="map-marker-icon" style="background-color: ${shadeColor(collection.color, -0.3)}">
-               <i class="${collection.icon}"></i>
-             </div>
-           </div>`,
-  });
+function createMapMarkerIcon(collection: Collection): HTMLDivElement {
+  const markerElement = document.createElement('div');
+  markerElement.className = 'map-marker';
+
+  const shapeElement = document.createElement('div');
+  shapeElement.className = 'map-marker-shape';
+  shapeElement.style.borderColor = collection.color;
+
+  const circleElement = document.createElement('div');
+  circleElement.className = 'map-marker-icon';
+  circleElement.style.backgroundColor = shadeColor(collection.color, -0.3);
+
+  const iconElement = document.createElement('i');
+  iconElement.className = collection.icon;
+
+  circleElement.appendChild(iconElement);
+  shapeElement.appendChild(circleElement);
+  markerElement.appendChild(shapeElement);
+
+  return markerElement;
 }

@@ -20,11 +20,6 @@
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 
-export enum MapTiles {
-  OpenStreetMap = 'OpenStreetMap',
-  SeznamBasic = 'SeznamBasic',
-}
-
 export interface MapCoordinates {
   lat: number;
   lng: number;
@@ -38,7 +33,6 @@ export interface MapModel {
 export interface MapConfig {
   attributeIdsMap: AttributeIdsMap;
   center: MapCoordinates;
-  tiles: MapTiles;
   zoom: number;
 }
 
@@ -50,8 +44,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
     lat: 49.2331315,
     lng: 16.5701833,
   },
-  tiles: MapTiles.SeznamBasic,
-  zoom: 5,
+  zoom: 4,
 };
 
 export interface MapMarkerProperties {

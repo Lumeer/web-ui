@@ -23,6 +23,7 @@ export interface Environment extends EnvironmentVariables {
   analytics: boolean;
   auth: boolean;
   authPersistence?: boolean; // keep auth token in local storage
+  mapboxKey: string;
   mapQuestKey: string;
   production: boolean;
   pusherLogDisabled?: boolean;
