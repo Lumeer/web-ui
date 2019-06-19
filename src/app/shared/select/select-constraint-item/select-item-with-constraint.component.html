@@ -19,7 +19,7 @@
       [items]="data.configItems"
       [selectedId]="(data.configItems | findSelectItemById:selectedConstraint)?.id || data.configItems[0].id"
       [removable]="false"
-      [placeholderText]="configPlaceholder"
+      placeholderIcon="fas fa-eye"
       [buttonClasses]="buttonClasses"
       [disabled]="disabled"
       [emptyValue]="''"

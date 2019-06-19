@@ -1045,14 +1045,9 @@
         <source>Use different values for users and for computations in functions (e.g. High Priority = 3).</source><target state="final">Use different values for users and for computations in functions (e.g. High Priority = 3).</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="constraint.select.options.reorder" datatype="html">
-        <source>
-        </source><target state="final">
-        </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.select.option.value" datatype="html">
+        <source>Reorder options</source><target state="final">Reorder options</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="constraint.select.option.value" datatype="html">
         <source>Value</source><target state="final">Value</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
@@ -1953,22 +1948,11 @@
   </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.reorder" datatype="html">
-        <source>
-          </source><target state="final">
-          </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">78</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
+        <source>Reorder attributes</source><target state="final">Reorder attributes</target>
+        
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">77</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
         <source>
     Columns
   </source><target state="final">
@@ -1986,14 +1970,9 @@
         <source>Show summary</source><target state="final">Show summary</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
-        <source>
-  </source><target state="final">
-  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.all.collections" datatype="html">
+        <source>Toggle sort</source><target state="final">Toggle sort</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
           Tables
         </source><target state="final">
@@ -2290,10 +2269,10 @@
           </source><target state="final">Use existing link
           </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="create.new.link" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="create.new.link" datatype="html">
         <source>Create new linked Record</source><target state="final">Create new linked Record</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="select" datatype="html">
         <source>Select</source><target state="final">Select</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="unlink" datatype="html">
@@ -3236,31 +3215,16 @@
         <source>Fill in description</source><target state="final">Fill in description</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.item.config" datatype="html">
-        <source>Config</source><target state="final">Config</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-item.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="default" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="default" datatype="html">
         <source>Default</source><target state="final">Default</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="select.constraint.items.date.format" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.format" datatype="html">
         <source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source><target state="final">{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
-        <source>{VAR_SELECT, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-constraint-items-formatter.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
+        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
         <source>Deleted table</source><target state="final">Deleted table</target>
         <context-group purpose="location">
@@ -3531,7 +3495,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.subSort" datatype="html">
-        <source>Select next sort</source><target state="final">Select next sort</target>
+        <source>Next sort by...</source><target state="final">Next sort by...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.ts</context>
           <context context-type="linenumber">1</context>

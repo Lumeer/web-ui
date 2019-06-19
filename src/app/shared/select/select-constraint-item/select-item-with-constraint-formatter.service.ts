@@ -132,7 +132,7 @@ export class SelectItemWithConstraintFormatter {
       {
         id: 'select.constraint.items.date.formatType',
         value:
-          '{type, select, yearly {Yearly} quarterly {Quarterly} weekly {Weekly} monthYear {Month and year} month {Month} dayMonth {Day and month} day {Day} dayMonthYear {Day, month and year} hour {Hour} hourMinutes {Hour and minutes} }',
+          '{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }',
       },
       {type}
     );
