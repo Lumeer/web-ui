@@ -127,11 +127,10 @@ export class ProjectsEffects {
       return this.projectService.createProject(project.organizationId, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, project.organizationId, project.correlationId)),
         mergeMap(newProject => {
-          const actions: Action[] = [new ProjectsAction.CreateSuccess({project: newProject})];
-
-          if (onSuccess) {
-            actions.push(...createCallbackActions(onSuccess, newProject));
-          }
+          const actions: Action[] = [
+            new ProjectsAction.CreateSuccess({project: newProject}),
+            ...createCallbackActions(onSuccess, newProject),
+          ];
 
           if (template && template !== TemplateType.Empty) {
             actions.push(
