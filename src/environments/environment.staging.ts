@@ -24,8 +24,6 @@ export const environment: Environment = {
   analytics: true,
   auth: true,
   authPersistence: true,
-  mapboxKey: 'pk.eyJ1IjoibGl2dGhvbWFzIiwiYSI6ImNqeDM5bWw0aTAweW0zemt0d2xwMzR1dmQifQ.sdcLXmQC0DJ4FXHXTBu_Sw',
-  mapQuestKey: 'LSnxyU8MAt1Apnl0y7bM6e4Kg6NlPBhb',
   production: false,
   storeDevtools: true,
   name: 'staging',
