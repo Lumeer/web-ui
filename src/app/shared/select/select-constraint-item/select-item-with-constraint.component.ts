@@ -21,7 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {AttributesResource} from '../../../core/model/resource';
 import {Constraint, ConstraintConfig} from '../../../core/model/data/constraint';
 
-export interface SelectItemWithConstraintItemId {
+export interface SelectItemWithConstraintId {
   resourceIndex: number;
   attributeId: string;
 }
@@ -37,10 +37,10 @@ export class SelectItemWithConstraint {
   public attributesResources: AttributesResource[];
 
   @Input()
-  public restrictedIds: SelectItemWithConstraintItemId[];
+  public restrictedIds: SelectItemWithConstraintId[];
 
   @Input()
-  public selectedId: SelectItemWithConstraintItemId;
+  public selectedId: SelectItemWithConstraintId;
 
   @Input()
   public selectedConstraint: Constraint;
@@ -67,15 +67,15 @@ export class SelectItemWithConstraint {
   public fitParent = false;
 
   @Output()
-  public select = new EventEmitter<SelectItemWithConstraintItemId>();
+  public select = new EventEmitter<SelectItemWithConstraintId>();
 
   @Output()
-  public selectConfig = new EventEmitter<Partial<ConstraintConfig>>();
+  public selectConstraint = new EventEmitter<Constraint>();
 
   @Output()
   public remove = new EventEmitter();
 
-  public onSelect(id: SelectItemWithConstraintItemId) {
+  public onSelect(id: SelectItemWithConstraintId) {
     this.select.emit(id);
   }
 
@@ -83,7 +83,7 @@ export class SelectItemWithConstraint {
     this.remove.emit();
   }
 
-  public onSelectConfig(config: Partial<ConstraintConfig>) {
-    this.selectConfig.emit(config);
+  public onSelectConstraint(constraint: Constraint) {
+    this.selectConstraint.emit(constraint);
   }
 }

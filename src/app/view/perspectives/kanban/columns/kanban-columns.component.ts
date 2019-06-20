@@ -31,6 +31,7 @@ import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
+import {DRAG_DELAY} from '../../../../core/constants';
 
 @Component({
   selector: 'kanban-columns',
@@ -63,6 +64,7 @@ export class KanbanColumnsComponent implements OnChanges {
   @Output()
   public removeDocument = new EventEmitter<DocumentModel>();
 
+  public readonly dragDelay = DRAG_DELAY;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public currentUser$: Observable<User>;
 

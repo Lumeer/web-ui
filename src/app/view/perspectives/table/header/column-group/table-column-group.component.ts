@@ -36,6 +36,7 @@ import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {DRAG_DELAY} from '../../../../../core/constants';
 
 @Component({
   selector: 'table-column-group',
@@ -65,6 +66,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public canManageConfig: boolean;
 
+  public readonly dragDelay = DRAG_DELAY;
   public resizedColumnIndex: number;
 
   public constructor(private element: ElementRef, private store$: Store<AppState>) {}

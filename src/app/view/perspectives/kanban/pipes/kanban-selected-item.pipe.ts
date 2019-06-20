@@ -17,36 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintType} from '../../model/data/constraint';
+import {Pipe, PipeTransform} from '@angular/core';
+import {KanbanCollectionConfig} from '../../../../core/store/kanbans/kanban';
+import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
-export const DEFAULT_KANBAN_ID = 'default';
-
-export interface Kanban {
-  id: string;
-  config?: KanbanConfig;
-}
-
-export interface KanbanConfig {
-  columns: KanbanColumn[];
-  otherColumn?: KanbanColumn;
-  collections: Record<string, KanbanCollectionConfig>;
-}
-
-export interface KanbanColumn {
-  id: string;
-  title?: string;
-  width: number;
-  documentsIdsOrder: string[];
-  createdFromAttributes?: KanbanAttribute[];
-  constraintType?: ConstraintType;
-}
-
-export interface KanbanCollectionConfig {
-  attribute: KanbanAttribute;
-}
-
-export interface KanbanAttribute {
-  collectionId: string;
-  attributeId: string;
-  constraint?: Constraint;
+@Pipe({
+  name: 'kanbanSelectedItem',
+})
+export class KanbanSelectedItemPipe implements PipeTransform {
+  public transform(config: KanbanCollectionConfig): SelectItemWithConstraintId {
+    if (config && config.attribute) {
+      return {resourceIndex: 0, attributeId: config.attribute.attributeId};
+    }
+    return null;
+  }
 }

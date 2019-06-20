@@ -35,6 +35,7 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} f
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {DRAG_DELAY} from '../../../../../core/constants';
 
 @Component({
   selector: 'pivot-config',
@@ -64,6 +65,7 @@ export class PivotConfigComponent {
   public readonly rowsListId = `${generateId()}:row`;
   public readonly columnsListId = `${generateId()}:column`;
   public readonly valuesListId = `${generateId()}:value`;
+  public readonly dragDelay = DRAG_DELAY;
 
   public onRowAttributeSelect(attribute: PivotRowAttribute, previousAttribute?: PivotRowAttribute) {
     this.onAttributeChange(attribute, previousAttribute, 'rowAttributes');

@@ -18,6 +18,7 @@
       class="card post-it"
       [cdkDragDisabled]="!canManageConfig || !(document | kanbanPostItDraggable:config.collections)"
       [cdkDragData]="document"
+      [cdkDragStartDelay]="dragDelay"
       [class.mb-2]="!last"
       [documentModel]="document"
       [collection]="collections | collectionById:document.collectionId"

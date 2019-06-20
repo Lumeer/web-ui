@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {SelectItemWithConstraintItemId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
   name: 'pivotHeaderRestrictedAttributes',
@@ -29,7 +29,7 @@ export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
   public transform(
     pivotRowColumnAttributes: PivotRowColumnAttribute[],
     currentRowColumnAttribute: PivotRowColumnAttribute
-  ): SelectItemWithConstraintItemId[] {
+  ): SelectItemWithConstraintId[] {
     return (pivotRowColumnAttributes || [])
       .filter(attribute => !currentRowColumnAttribute || !deepObjectsEquals(attribute, currentRowColumnAttribute))
       .map(attribute => ({resourceIndex: attribute.resourceIndex, attributeId: attribute.attributeId}));

@@ -21,11 +21,12 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChang
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanCollectionConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {buildKanbanConfig} from '../util/kanban.util';
 import isEqual from 'lodash/isEqual';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query} from '../../../../core/store/navigation/query';
-import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../../core/store/navigation/query.util';
+import {getBaseCollectionIdsFromQuery} from '../../../../core/store/navigation/query.util';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {KanbanConverter} from '../util/kanban-converter';
 
 @Component({
   selector: 'kanban-config',
@@ -51,6 +52,12 @@ export class KanbanConfigComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 
+  private readonly converter: KanbanConverter;
+
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+    this.converter = new KanbanConverter(constraintItemsFormatter);
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.collections) {
       this.checkConfigColumns(this.config);
@@ -61,7 +68,12 @@ export class KanbanConfigComponent implements OnChanges {
   }
 
   private checkConfigColumns(kanbanConfig: KanbanConfig) {
-    const config = buildKanbanConfig(kanbanConfig, this.documents, this.collections, this.constraintData);
+    const config = this.converter.buildKanbanConfig(
+      kanbanConfig,
+      this.documents,
+      this.collections,
+      this.constraintData
+    );
     if (!isEqual(config, this.config)) {
       setTimeout(() => this.configChange.emit(config));
     }
@@ -91,7 +103,7 @@ export class KanbanConfigComponent implements OnChanges {
   public onCollectionConfigChange(collection: Collection, collectionConfig: KanbanCollectionConfig) {
     const collectionsConfig = {...this.config.collections, [collection.id]: collectionConfig};
     const newConfig = {...this.config, collections: collectionsConfig};
-    const config = buildKanbanConfig(newConfig, this.documents, this.collections, this.constraintData);
+    const config = this.converter.buildKanbanConfig(newConfig, this.documents, this.collections, this.constraintData);
     this.configChange.emit(config);
   }
 }
