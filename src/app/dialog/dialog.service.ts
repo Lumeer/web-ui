@@ -48,14 +48,26 @@ export class DialogService {
     }
   }
 
-  public closeDialog(): Promise<boolean> {
+  public closeDialog(redirect = true): Promise<boolean> {
     this.callback = null;
-    return this.navigateToDialog(null);
+    if (this.open) {
+      if (redirect) {
+        return this.navigateToDialog(null);
+      }
+      this.open = false;
+    }
+    return Promise.resolve(true);
   }
 
-  public closeFullscreenDialog(): Promise<boolean> {
+  public closeFullscreenDialog(redirect = true): Promise<boolean> {
     this.callback = null;
-    return this.navigateToFullscreenDialog(null);
+    if (this.open) {
+      if (redirect) {
+        return this.navigateToFullscreenDialog(null);
+      }
+      this.open = false;
+    }
+    return Promise.resolve(true);
   }
 
   public closeAllDialogs() {

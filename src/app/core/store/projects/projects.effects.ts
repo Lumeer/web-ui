@@ -50,6 +50,7 @@ import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
 import {TemplateType} from '../../model/template';
+import {createCallbackActions} from '../store.utils';
 
 @Injectable()
 export class ProjectsEffects {
@@ -126,7 +127,10 @@ export class ProjectsEffects {
       return this.projectService.createProject(project.organizationId, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, project.organizationId, project.correlationId)),
         mergeMap(newProject => {
-          const actions: Action[] = [new ProjectsAction.CreateSuccess({project: newProject})];
+          const actions: Action[] = [
+            new ProjectsAction.CreateSuccess({project: newProject}),
+            ...createCallbackActions(onSuccess, newProject),
+          ];
 
           if (template && template !== TemplateType.Empty) {
             actions.push(
@@ -136,10 +140,6 @@ export class ProjectsEffects {
                 template,
               })
             );
-          }
-
-          if (onSuccess) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(newProject)}));
           }
 
           return actions;
