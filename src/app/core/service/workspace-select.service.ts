@@ -77,7 +77,7 @@ export class WorkspaceSelectService {
     if (organization && project) {
       const path = ['w', organization.code, project.code, 'view', 'search', 'all'];
       if (fromDialog) {
-        this.dialogService.closeDialogWithoutRedirect();
+        this.dialogService.closeDialog(false);
         this.router.navigateByUrl(path.join('/'));
       } else {
         this.router.navigate(path);
