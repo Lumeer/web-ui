@@ -26,9 +26,11 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Renderer2,
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {environment} from '../../../../../../environments/environment';
 import {MapConfig, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
@@ -55,7 +57,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   private mapboxMap: any;
   private drawnMarkers: any[] = [];
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private i18n: I18n, private ngZone: NgZone, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.mapElementId = `map-${this.map.id}`;
@@ -73,8 +75,43 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private initMap(config: MapConfig) {
     this.mapboxMap = createMapboxMap(this.mapElementId, config);
+
     this.mapboxMap.addControl(new mapboxgl.NavigationControl());
+
+    this.mapboxMap.on('load', () => {
+      this.translateNavigationControls();
+      this.mapboxMap.resize();
+    });
+
     setTimeout(() => this.mapboxMap.resize(), 100);
+  }
+
+  private translateNavigationControls() {
+    this.setControlButtonTitle(
+      'mapboxgl-ctrl-zoom-in',
+      this.i18n({
+        id: 'map.control.zoom.in',
+        value: 'Zoom in',
+      })
+    );
+    this.setControlButtonTitle(
+      'mapboxgl-ctrl-zoom-out',
+      this.i18n({
+        id: 'map.control.zoom.out',
+        value: 'Zoom out',
+      })
+    );
+    this.setControlButtonTitle(
+      'mapboxgl-ctrl-icon mapboxgl-ctrl-compass',
+      this.i18n({
+        id: 'map.control.compass',
+        value: 'Reset bearing to north',
+      })
+    );
+  }
+
+  private setControlButtonTitle(className: string, title: string) {
+    this.renderer.setAttribute(document.getElementsByClassName(className).item(0), 'title', title);
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
