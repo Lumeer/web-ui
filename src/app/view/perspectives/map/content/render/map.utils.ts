@@ -18,10 +18,11 @@
  */
 
 import * as Coordinates from 'coordinate-parser';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+import {Map, Marker, Popup} from 'mapbox-gl';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {MapConfig, MapCoordinates, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
+import {MapStyle, mapStyleUrls} from './map-style';
 
 export function parseCoordinates(value: string): MapCoordinates {
   try {
@@ -35,26 +36,26 @@ export function parseCoordinates(value: string): MapCoordinates {
   }
 }
 
-export function createMapboxMap(elementId: string, config: MapConfig) {
-  return new mapboxgl.Map({
+export function createMapboxMap(elementId: string, config: MapConfig): Map {
+  return new Map({
     container: elementId,
-    style: 'mapbox://styles/mapbox/streets-v11',
+    style: mapStyleUrls[MapStyle.MapTilerStreets],
     center: config.center,
     zoom: config.zoom,
   });
 }
 
-export function createMapMarker(properties: MapMarkerProperties): any {
+export function createMapMarker(properties: MapMarkerProperties): Marker {
   const defaultAttributeValue = properties.document.data[properties.collection.defaultAttributeId] || '';
 
-  const popup = new mapboxgl.Popup({
+  const popup = new Popup({
     anchor: 'top',
     closeButton: false,
     closeOnClick: false,
   }).setHTML(`<span class="text-default-attribute">${defaultAttributeValue}</span>`);
 
   const element = createMapMarkerIcon(properties.collection);
-  const marker = new mapboxgl.Marker({element}).setLngLat(properties.coordinates).setPopup(popup);
+  const marker = new Marker({element}).setLngLat(properties.coordinates).setPopup(popup);
 
   element.addEventListener('mouseenter', () => {
     if (!popup.isOpen()) {

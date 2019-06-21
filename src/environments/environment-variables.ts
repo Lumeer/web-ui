@@ -31,6 +31,9 @@ export interface EnvironmentVariables {
   buildNumber: string;
   i18nFormat: string;
   locale: string;
+  mapboxKey: string;
+  mapQuestKey: string;
+  mapTilerKey: string;
   sentryDsn: string;
   sessionTimeout: number;
   pusherCluster: string;
@@ -47,6 +50,9 @@ const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
 const buildNumber = env['BUILD_NUMBER'];
 const i18nFormat = env['I18N_FORMAT'];
 const locale: string = env['I18N_LOCALE'] || 'en';
+const mapboxKey: string = env['MAPBOX_KEY'];
+const mapQuestKey: string = env['MAPQUEST_KEY'];
+const mapTilerKey: string = env['MAPTILER_KEY'];
 const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
@@ -63,6 +69,9 @@ export const environmentVariables: EnvironmentVariables = {
   buildNumber,
   i18nFormat,
   locale,
+  mapboxKey,
+  mapQuestKey,
+  mapTilerKey,
   sentryDsn,
   sessionTimeout,
   pusherCluster,

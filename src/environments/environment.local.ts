@@ -24,8 +24,6 @@ export const environment: Environment = {
   analytics: false,
   auth: true,
   authPersistence: true,
-  mapboxKey: 'pk.eyJ1IjoibGl2dGhvbWFzIiwiYSI6ImNqeDM5YzlyNjBxbXQzeXA0ZGg5dTcxZ28ifQ.zw9a2HmormnJF5OjuSEz2A',
-  mapQuestKey: 'Euq4lrG3ZlF3i0Fd1kCgfJIIIkZ8ebEb',
   production: false,
   storeDevtools: true,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',

@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {environment} from '../../../../../../environments/environment';
 
-export const environment: Environment = {
-  analytics: true,
-  auth: true,
-  authPersistence: true,
-  production: false,
-  storeDevtools: true,
-  name: 'staging',
-  paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables,
+export enum MapStyle {
+  MapboxStreets = 'MapboxStreets',
+  MapTilerStreets = 'MapTilerStreets',
+}
+
+export const mapStyleUrls = {
+  [MapStyle.MapboxStreets]: 'mapbox://styles/mapbox/streets-v11',
+  [MapStyle.MapTilerStreets]: 'https://api.maptiler.com/maps/streets/style.json?key=' + environment.mapTilerKey,
 };
