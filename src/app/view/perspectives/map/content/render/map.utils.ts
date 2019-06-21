@@ -17,24 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Coordinates from 'coordinate-parser';
 import {Map, Marker, Popup} from 'mapbox-gl';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {MapConfig, MapCoordinates, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
+import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
-
-export function parseCoordinates(value: string): MapCoordinates {
-  try {
-    const coordinates = new Coordinates(value);
-    return {
-      lat: coordinates.getLatitude(),
-      lng: coordinates.getLongitude(),
-    };
-  } catch (error) {
-    return null;
-  }
-}
 
 export function createMapboxMap(elementId: string, config: MapConfig): Map {
   return new Map({

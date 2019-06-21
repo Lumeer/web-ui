@@ -1,0 +1,61 @@
+<div [formGroup]="form">
+  <p class="text-muted"
+     i18n="@@constraint.coordinates.description">
+    Defines the exact position on the surface of the planet Earth.
+  </p>
+
+  <div class="form-group">
+    <label [for]="controls.Format"
+           i18n="@@constraint.coordinates.format.label">
+      Format
+    </label>
+    <select [id]="controls.Format"
+            [formControlName]="controls.Format"
+            (change)="onFormatChange()"
+            class="custom-select"
+            data-test="coordinates-constraint-format-select">
+      <option *ngFor="let format of formats"
+              [value]="format">
+        {format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label [for]="controls.Precision"
+           i18n="@@constraint.coordinates.precision.label">
+      Fractional digits
+    </label>
+    <input [id]="controls.Precision"
+           [formControlName]="controls.Precision"
+           [class.is-invalid]="precisionControl.touched && precisionControl.errors"
+           class="form-control"
+           min="0"
+           max="10"
+           type="number">
+    <div *ngIf="precisionControl.touched && precisionControl.errors?.required"
+         class="invalid-feedback"
+         i18n="@@constraint.coordinates.precision.error.integer">
+      You need to enter a number of fractional digits.
+    </div>
+    <div *ngIf="precisionControl.touched && precisionControl.errors?.pattern"
+         class="invalid-feedback"
+         i18n="@@constraint.coordinates.precision.error.integer">
+      You need to enter a valid integer number.
+    </div>
+    <div *ngIf="precisionControl.touched && precisionControl.errors?.min"
+         class="invalid-feedback"
+         i18n="@@constraint.coordinates.precision.error.min">
+      You need to enter a number greater than or equal to {{precisionControl.errors?.min?.min}}.
+    </div>
+    <div *ngIf="precisionControl.touched && precisionControl.errors?.max"
+         class="invalid-feedback"
+         i18n="@@constraint.coordinates.precision.error.max">
+      You need to enter a number lesser than or equal to {{precisionControl.errors?.max?.max}}.
+    </div>
+  </div>
+
+  <div class="text-secondary">
+    Example: {{ '49.2331315, 16.5701833' | coordinatesDataValue : form.value }}
+  </div>
+</div>

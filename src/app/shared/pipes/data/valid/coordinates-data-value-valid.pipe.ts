@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ColorConstraintConfig} from '../../../core/model/data/constraint';
-import {isColorValid} from '../../utils/data.utils';
+import {parseCoordinates} from '../../../utils/map/coordinates.utils';
 
 @Pipe({
-  name: 'colorValid',
+  name: 'coordinatesDataValueValid',
 })
-export class ColorValidPipe implements PipeTransform {
-  public transform(value: any, config?: ColorConstraintConfig): boolean {
-    return isColorValid(value, config);
+export class CoordinatesDataValueValidPipe implements PipeTransform {
+  public transform(value: any): boolean {
+    return !!parseCoordinates(String(value));
   }
 }

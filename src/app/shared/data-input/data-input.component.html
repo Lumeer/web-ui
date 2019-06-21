@@ -8,6 +8,19 @@
                       (onFocus)="emitFocus($event)">
   </boolean-data-input>
 
+  <coordinates-data-input *ngSwitchCase="constraintType.Coordinates"
+                          [constraintConfig]="constraint?.config"
+                          [focus]="focus"
+                          [readonly]="readonly"
+                          [skipValidation]="skipValidation"
+                          [value]="value"
+                          (valueChange)="onValueChange($event)"
+                          (save)="onSaveValue($event)"
+                          (cancel)="onCancel()"
+                          (onFocus)="emitFocus($event)"
+                          class="d-block">
+  </coordinates-data-input>
+
   <datetime-data-input *ngSwitchCase="constraintType.DateTime"
                        [constraintConfig]="constraint.config"
                        [focus]="focus"

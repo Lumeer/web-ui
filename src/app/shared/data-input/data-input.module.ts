@@ -38,6 +38,7 @@ import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
 import {SelectDataInputComponent} from './select/select-data-input.component';
+import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-input.component';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import {SelectDataInputComponent} from './select/select-data-input.component';
     ColorDataInputComponent,
     UserDataInputComponent,
     SelectDataInputComponent,
+    CoordinatesDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
 })
