@@ -95,7 +95,6 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   public openSpectrum() {
     this.savingColor = false;
-    const __this = this;
 
     $(`#spectrum-picker-${this.id}`).spectrum({
       color: this.color,
@@ -106,18 +105,18 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
       preferredFormat: 'hex',
       containerClassName: 'spectrum-container',
       clickoutFiresChange: false,
-      change: function(color) {
-        __this.savingColor = true;
-        __this.select(color.toHexString());
+      change: color => {
+        this.savingColor = true;
+        this.select(color.toHexString());
       },
-      move: function(color) {
-        __this.preview(color.toHexString());
+      move: color => {
+        this.preview(color.toHexString());
       },
-      hide: function(color) {
-        if (!__this.savingColor) {
-          __this.colorChange.emit(__this.originalColor);
+      hide: color => {
+        if (!this.savingColor) {
+          this.colorChange.emit(this.originalColor);
         }
-        __this.savingColor = false;
+        this.savingColor = false;
       },
     });
   }
