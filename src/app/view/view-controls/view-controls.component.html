@@ -26,13 +26,12 @@
           </button>
           <div aria-labelledby="perspectiveDropdown"
                class="dropdown-menu">
-            <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
-               [class.active]="perspective === aperspective"
-               (click)="onSelectPerspective(aperspective, state.permissions.canManage)"
+            <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query | sortPerspectives"
+               [class.active]="perspective === aperspective.perspective"
+               (click)="onSelectPerspective(aperspective.perspective, state.permissions.canManage)"
                class="dropdown-item">
-              <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
-              <span class="ml-1 text-nowrap"
-                    i18n="@@view.perspective.name">{aperspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document}}</span>
+              <i class="fa-fw {{aperspective.perspective | perspectiveIcon}}"></i>
+              <span class="ml-1 text-nowrap">{{aperspective.name}}</span>
             </a>
           </div>
         </div>

@@ -69,6 +69,7 @@ import {UniqueEntitiesPipe} from './unique-entities.pipe';
 import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items.pipe';
 import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
 import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
+import {SortPerspectivesPipe} from './sort-perspectives.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -80,6 +81,7 @@ import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resource
     NativeDatePipe,
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
+    SortPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
     LengthGreaterThanPipe,
@@ -130,6 +132,7 @@ import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resource
     NativeDatePipe,
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
+    SortPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
     LengthGreaterThanPipe,
