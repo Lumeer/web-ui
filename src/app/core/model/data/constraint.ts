@@ -82,6 +82,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
   switch (type) {
     case ConstraintType.Boolean:
     case ConstraintType.Color:
+    case ConstraintType.Coordinates:
     case ConstraintType.DateTime:
     case ConstraintType.Number:
     case ConstraintType.Percentage:

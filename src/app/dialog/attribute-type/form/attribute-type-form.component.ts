@@ -31,6 +31,7 @@ import {
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Attribute} from '../../../core/store/collections/collection';
 import {convertToBig} from '../../../shared/utils/data.utils';
+import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
 import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
 import {
   isSelectConstraintOptionValueRemoved,
@@ -86,6 +87,11 @@ export class AttributeTypeFormComponent implements OnChanges {
     switch (type) {
       case ConstraintType.Color:
         return {};
+      case ConstraintType.Coordinates:
+        return {
+          format: this.configForm.get(CoordinatesConstraintFormControl.Format).value,
+          precision: this.configForm.get(CoordinatesConstraintFormControl.Precision).value,
+        };
       case ConstraintType.DateTime:
         return {
           format: this.configForm.get('format').value,

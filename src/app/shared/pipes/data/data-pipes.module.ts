@@ -20,17 +20,19 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {BooleanDataValuePipe} from './boolean-data.pipe';
-import {ColorValidPipe} from './color-valid.pipe';
+import {ColorValidPipe} from './valid/color-valid.pipe';
 import {ColorValuePipe} from './color-value.pipe';
 import {DataValuePipe} from './data-value.pipe';
 import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
-import {DateTimeValidPipe} from './datetime-valid.pipe';
+import {DateTimeValidPipe} from './valid/datetime-valid.pipe';
 import {NumberDataValuePipe} from './number-data-value.pipe';
 import {PercentageDataValuePipe} from './percentage-data-value.pipe';
 import {TextDataValuePipe} from './text-data-value.pipe';
 import {UserDataValuePipe} from './user-data-value.pipe';
 import {SelectDataValuePipe} from './select-data-value.pipe';
-import {IsSelectDataValueValidPipe} from './is-select-data-value-valid.pipe';
+import {IsSelectDataValueValidPipe} from './valid/is-select-data-value-valid.pipe';
+import {CoordinatesDataValuePipe} from './coordinates-data-value.pipe';
+import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-valid.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -47,6 +49,8 @@ import {IsSelectDataValueValidPipe} from './is-select-data-value-valid.pipe';
     UserDataValuePipe,
     SelectDataValuePipe,
     IsSelectDataValueValidPipe,
+    CoordinatesDataValuePipe,
+    CoordinatesDataValueValidPipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -61,6 +65,8 @@ import {IsSelectDataValueValidPipe} from './is-select-data-value-valid.pipe';
     UserDataValuePipe,
     SelectDataValuePipe,
     IsSelectDataValueValidPipe,
+    CoordinatesDataValuePipe,
+    CoordinatesDataValueValidPipe,
   ],
 })
 export class DataPipesModule {}

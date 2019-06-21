@@ -33,6 +33,7 @@ import {SelectConstraintOptionsFormComponent} from './constraint-config/select/o
 import {SelectConstraintConfigFormComponent} from './constraint-config/select/select-constraint-config-form.component';
 import {TextConstraintConfigFormComponent} from './constraint-config/text/text-constraint-config-form.component';
 import {UserConstraintConfigFormComponent} from './constraint-config/user/user-constraint-config-form.component';
+import {CoordinatesConstraintConfigFormComponent} from './constraint-config/coordinates/coordinates-constraint-config-form.component';
 
 @NgModule({
   imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
@@ -46,6 +47,7 @@ import {UserConstraintConfigFormComponent} from './constraint-config/user/user-c
     SelectConstraintConfigFormComponent,
     SelectConstraintOptionsFormComponent,
     UserConstraintConfigFormComponent,
+    CoordinatesConstraintConfigFormComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })

@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig} from '../../../core/model/data/constraint';
-import {isSelectDataValueValid} from '../../utils/data.utils';
+import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint';
+import {isDateTimeValid} from '../../../utils/data.utils';
 
 @Pipe({
-  name: 'isSelectDataValueValid',
+  name: 'dateTimeValid',
 })
-export class IsSelectDataValueValidPipe implements PipeTransform {
-  public transform(value: any, config?: SelectConstraintConfig): boolean {
-    return isSelectDataValueValid(value, config);
+export class DateTimeValidPipe implements PipeTransform {
+  public transform(value: any, config?: DateTimeConstraintConfig): boolean {
+    return isDateTimeValid(value, config);
   }
 }
