@@ -1,0 +1,20 @@
+<input *ngIf="readonly; else textEditing"
+       [readonly]="readonly"
+       [title]="value | coordinatesDataValue: constraintConfig"
+       [value]="value | coordinatesDataValue: constraintConfig"
+       [class.invalid-value]="!(value | coordinatesDataValueValid)"
+       (focus)="onFocus.emit($event)"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="coordinates-data-input"
+       type="text">
+
+<ng-template #textEditing>
+  <input #coordinatesInput
+         [title]="value | coordinatesDataValue: constraintConfig"
+         [value]="value | coordinatesDataValue: constraintConfig"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="coordinates-data-input"
+         type="text">
+</ng-template>

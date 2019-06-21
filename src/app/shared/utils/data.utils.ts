@@ -24,11 +24,11 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  CoordinatesConstraintConfig,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
   SelectConstraintConfig,
-  SelectConstraintOption,
   TextConstraintConfig,
   UserConstraintConfig,
 } from '../../core/model/data/constraint';
@@ -38,6 +38,7 @@ import {User} from '../../core/store/users/user';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
 import {validDataColors} from './data/valid-data-colors';
 import {resetUnusedMomentPart} from './date.utils';
+import {formatCoordinates, parseCoordinates} from './map/coordinates.utils';
 import {transformTextBasedOnCaseStyle} from './string.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
@@ -141,6 +142,8 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
   }
 
   switch (constraint.type) {
+    case ConstraintType.Coordinates:
+      return formatCoordinatesDataValue(value, constraint.config as CoordinatesConstraintConfig);
     case ConstraintType.DateTime:
       return formatDateTimeDataValue(value, constraint.config as DateTimeConstraintConfig);
     case ConstraintType.Number:
@@ -164,6 +167,15 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
     default:
       return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
+}
+
+export function formatCoordinatesDataValue(value: any, config: CoordinatesConstraintConfig): string {
+  const coordinates = parseCoordinates(value);
+  if (!coordinates) {
+    return formatUnknownDataValue(value);
+  }
+
+  return formatCoordinates(coordinates, config.format, config.precision);
 }
 
 export function formatDateTimeDataValue(
