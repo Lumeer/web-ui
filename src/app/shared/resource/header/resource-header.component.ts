@@ -50,6 +50,8 @@ export class ResourceHeaderComponent implements AfterViewInit {
   private clickedComponent: any;
   private colorPickerVisible: boolean;
 
+  private savingColor = false;
+
   constructor(private i18n: I18n) {}
 
   @HostListener('document:click', ['$event'])
@@ -167,6 +169,7 @@ export class ResourceHeaderComponent implements AfterViewInit {
 
   public saveSelectedColor(): void {
     if (this.resource.color !== this.oldColor || this.resource.icon !== this.oldIcon) {
+      this.savingColor = true;
       this.colorIconChange.emit({color: this.resource.color, icon: this.resource.icon});
     }
   }
@@ -185,9 +188,16 @@ export class ResourceHeaderComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     $('#dropdown-header').on('shown.bs.dropdown', () => {
       this.colorPickerVisible = true;
+      this.savingColor = false;
     });
     $('#dropdown-header').on('hidden.bs.dropdown', () => {
       this.colorPickerVisible = false;
+
+      if (!this.savingColor) {
+        this.revertSelectedColor();
+      }
+
+      this.savingColor = false;
     });
   }
 
