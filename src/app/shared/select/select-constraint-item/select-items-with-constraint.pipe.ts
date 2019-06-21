@@ -41,7 +41,7 @@ export class SelectItemWithConstraintPipe implements PipeTransform {
         }
         return arr;
       }, [])
-      .filter(item => !restrictedAttributes.some(attr => deepObjectsEquals(item.id, attr)));
+      .filter(item => !(restrictedAttributes || []).some(attr => deepObjectsEquals(item.id, attr)));
   }
 
   public collectionSelectItems(collection: Collection, index: number): SelectItemModel[] {

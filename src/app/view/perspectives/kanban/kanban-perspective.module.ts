@@ -37,6 +37,7 @@ import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
 import {BsDropdownModule} from 'ngx-bootstrap';
 import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
+import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {PickerModule} from '../../../shared/picker/picker.module';
     KanbanDragColumnsPipe,
     KanbanPostItDraggablePipe,
     FilterWritableCollectionsPipe,
+    KanbanSelectedItemPipe,
   ],
   imports: [
     SharedModule,

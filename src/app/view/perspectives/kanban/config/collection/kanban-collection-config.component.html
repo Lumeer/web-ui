@@ -3,14 +3,16 @@
   <b>{{collection.name}}</b>
 </div>
 
-<select-item class="d-block w-100 mt-2"
-             [emptyValue]="emptyValueString"
-             [placeholderIcon]="collection.icon"
-             [items]="collection | attributesSelectItems"
-             [selectedId]="collectionConfig?.attribute?.attributeId"
-             [removable]="true"
-             [fitParent]="true"
-             [buttonClasses]="buttonClasses"
-             (select)="onAttributeSelected($event)"
-             (remove)="onAttributeRemoved()">
-</select-item>
+<select-item-with-constraint class="d-block w-100 mt-2"
+                             [attributesResources]="[collection]"
+                             [emptyValue]="emptyValueString"
+                             [placeholderIcon]="collection.icon"
+                             [selectedConstraint]="collectionConfig?.attribute?.constraint"
+                             [selectedId]="collectionConfig | kanbanSelectedItem"
+                             [removable]="true"
+                             [fitParent]="true"
+                             [buttonClasses]="buttonClasses"
+                             (select)="onAttributeSelected($event)"
+                             (selectConstraint)="onConstraintSelected($event)"
+                             (remove)="onAttributeRemoved()">
+</select-item-with-constraint>

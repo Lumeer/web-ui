@@ -5,6 +5,7 @@
     <kanban-column *ngFor="let column of config.columns; trackBy: trackByColumn; let first = first"
                    cdkDrag
                    [cdkDragDisabled]="!canManageConfig"
+                   [cdkDragStartDelay]="dragDelay"
                    class="column ml-4"
                    [column]="column"
                    [config]="config"

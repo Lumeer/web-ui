@@ -20,13 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {SelectItemWithConstraintItemId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
   name: 'pivotHeaderMapAttribute',
 })
 export class PivotHeaderMapAttributePipe implements PipeTransform {
-  public transform(pivotAttribute: PivotRowColumnAttribute): SelectItemWithConstraintItemId {
+  public transform(pivotAttribute: PivotRowColumnAttribute): SelectItemWithConstraintId {
     return pivotAttribute && {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 }

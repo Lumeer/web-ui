@@ -23,7 +23,7 @@ import {PivotData} from '../../../../util/pivot-data';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
 import {Constraint} from '../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SelectItemWithConstraintItemId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 
 @Component({
@@ -73,7 +73,7 @@ export class PivotHeaderAttributeConfigComponent {
     this.attributeChange.emit(newAttribute);
   }
 
-  public onSelected(itemId: SelectItemWithConstraintItemId) {
+  public onSelected(itemId: SelectItemWithConstraintId) {
     const resource = this.attributesResources[itemId.resourceIndex];
     if (!resource) {
       return;

@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource} from '../../../core/model/resource';
-import {SelectItemWithConstraintItemId} from './select-item-with-constraint.component';
+import {SelectItemWithConstraintId} from './select-item-with-constraint.component';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {SelectItemWithConstraintFormatter} from './select-item-with-constraint-formatter.service';
 import {SelectItemModel} from '../select-item/select-item.model';
@@ -32,7 +32,7 @@ export class SelectItemWithConstraintConfigPipe implements PipeTransform {
 
   public transform(
     attributesResources: AttributesResource[],
-    selectedConstraintItemId: SelectItemWithConstraintItemId
+    selectedConstraintItemId: SelectItemWithConstraintId
   ): SelectItemModel[] {
     const resource = selectedConstraintItemId && attributesResources[selectedConstraintItemId.resourceIndex];
     const attribute =

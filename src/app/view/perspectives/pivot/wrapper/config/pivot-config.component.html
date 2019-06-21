@@ -15,6 +15,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
     <div *ngFor="let attribute of config?.rowAttributes; trackBy: trackByAttribute; let index = index"
          cdkDrag
          cdkDragLockAxis="y"
+         [cdkDragStartDelay]="dragDelay"
          [cdkDragData]="attribute">
 
       <div class="d-flex py-3">
@@ -67,6 +68,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
     <div *ngFor="let attribute of config?.columnAttributes; trackBy: trackByAttribute; let index = index"
          cdkDrag
          cdkDragLockAxis="y"
+         [cdkDragStartDelay]="dragDelay"
          [cdkDragData]="attribute">
 
       <div class="d-flex py-3">
@@ -116,6 +118,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
     <div *ngFor="let attribute of config?.valueAttributes; trackBy: trackByAttribute; let index = index"
          cdkDrag
          cdkDragLockAxis="y"
+         [cdkDragStartDelay]="dragDelay"
          [cdkDragData]="attribute">
 
       <div class="d-flex py-3">

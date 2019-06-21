@@ -21,6 +21,8 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanCollectionConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../../../../core/model/data/constraint';
+import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Component({
   selector: 'kanban-collection-config',
@@ -44,11 +46,21 @@ export class KanbanCollectionConfigComponent {
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
   }
 
-  public onAttributeSelected(attributeId: string) {
-    this.configChange.emit({attribute: {attributeId, collectionId: this.collection.id}});
-  }
-
   public onAttributeRemoved() {
     this.configChange.emit({attribute: null});
+  }
+
+  public onConstraintSelected(constraint: Constraint) {
+    const attribute = {...this.collectionConfig.attribute};
+    this.configChange.emit({attribute: {...attribute, constraint}});
+  }
+
+  public onAttributeSelected(selectId: SelectItemWithConstraintId) {
+    const {attributeId} = selectId;
+    const currentAttributeId =
+      this.collectionConfig && this.collectionConfig.attribute && this.collectionConfig.attribute.attributeId;
+    if (!currentAttributeId || currentAttributeId !== attributeId) {
+      this.configChange.emit({attribute: {attributeId, collectionId: this.collection.id}});
+    }
   }
 }

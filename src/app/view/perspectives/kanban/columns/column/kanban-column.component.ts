@@ -47,6 +47,7 @@ import {Store} from '@ngrx/store';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {BehaviorSubject} from 'rxjs';
+import {DRAG_DELAY} from '../../../../../core/constants';
 
 @Component({
   selector: 'kanban-column',
@@ -100,6 +101,7 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public selectionHelper: SelectionHelper;
   public columnSelectionId: string;
   public documentsIds$ = new BehaviorSubject<string[]>([]);
+  public readonly dragDelay = DRAG_DELAY;
 
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
 

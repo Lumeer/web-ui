@@ -20,7 +20,12 @@
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
-import {buildKanbanConfig} from './kanban.util';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {KanbanConverter} from './kanban-converter';
+import {TestBed} from '@angular/core/testing';
+import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {environment} from '../../../../../environments/environment';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 const documents: DocumentModel[] = [
   {
@@ -98,10 +103,36 @@ const collections: Collection[] = [
   },
 ];
 
-describe('Kanban util', () => {
+describe('Kanban converter', () => {
+  let constraintReadableFormatter: SelectItemWithConstraintFormatter;
+  let converter: KanbanConverter;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: LOCALE_ID,
+          useFactory: () => environment.locale,
+        },
+        {
+          provide: TRANSLATIONS,
+          useFactory: () => require(`raw-loader!../../../../../../src/i18n/messages.en.xlf`),
+          deps: [LOCALE_ID],
+        },
+        {
+          provide: TRANSLATIONS_FORMAT,
+          useFactory: () => environment.i18nFormat,
+        },
+        I18n,
+      ],
+    });
+    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    converter = new KanbanConverter(constraintReadableFormatter);
+  });
+
   it('should create only other column', () => {
     const config: KanbanConfig = {columns: [], collections: {}};
-    const buildConfig = buildKanbanConfig(config, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns).toEqual([]);
     expect(buildConfig.collections).toEqual({});
     expect(buildConfig.otherColumn.documentsIdsOrder).toEqual([
@@ -121,7 +152,7 @@ describe('Kanban util', () => {
 
   it('should create by selected attribute', () => {
     const config: KanbanConfig = {columns: [], collections: {C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}}}};
-    const buildConfig = buildKanbanConfig(config, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
     expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D1', 'D4']);
     expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D2']);
@@ -138,7 +169,7 @@ describe('Kanban util', () => {
         C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
       },
     };
-    const buildConfig = buildKanbanConfig(config, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
     expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D1', 'D4', 'D9']);
     expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D2', 'D6']);
@@ -160,7 +191,7 @@ describe('Kanban util', () => {
         C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
       },
     };
-    const buildConfig = buildKanbanConfig(previousConfig, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(previousConfig, documents, collections);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
     expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D10', 'D7']);
     expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D5', 'D3', 'D8']);
