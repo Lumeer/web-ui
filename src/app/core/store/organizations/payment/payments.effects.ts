@@ -176,7 +176,6 @@ export class PaymentsEffects {
           mixpanel.track('Payment Create', {
             CZK: price,
             users: action.payload.payment.users,
-            validUntil: action.payload.payment.validUntil,
           });
         }
       }

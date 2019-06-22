@@ -109,7 +109,12 @@ export class AuthService {
                 });
 
                 if (environment.mixpanelKey) {
-                  mixpanel.track('User Returned', {hoursSinceLastLogin: hoursSinceLastLogin});
+                  mixpanel.track('User Returned', {
+                    dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
+                    wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
+                    mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
+                    hoursSinceLastLogin: hoursSinceLastLogin,
+                  });
                 }
               }
             });
