@@ -59,10 +59,14 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   public customColor = false;
 
+  private savingColor = false;
+  private originalColor: string;
+
   constructor(private i18n: I18n) {}
 
   public ngOnInit(): void {
     this.resetColor();
+    this.originalColor = this.color;
   }
 
   private resetColor(): void {
@@ -90,7 +94,7 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
   }
 
   public openSpectrum() {
-    const __this = this;
+    this.savingColor = false;
 
     $(`#spectrum-picker-${this.id}`).spectrum({
       color: this.color,
@@ -100,12 +104,19 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
       chooseText: this.i18n({id: 'button.choose', value: 'Choose'}),
       preferredFormat: 'hex',
       containerClassName: 'spectrum-container',
-      clickoutFiresChange: true,
-      change: function(color) {
-        __this.select(color.toHexString());
+      clickoutFiresChange: false,
+      change: color => {
+        this.savingColor = true;
+        this.select(color.toHexString());
       },
-      move: function(color) {
-        __this.preview(color.toHexString());
+      move: color => {
+        this.preview(color.toHexString());
+      },
+      hide: color => {
+        if (!this.savingColor) {
+          this.colorChange.emit(this.originalColor);
+        }
+        this.savingColor = false;
       },
     });
   }
