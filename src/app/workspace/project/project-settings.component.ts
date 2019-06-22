@@ -134,7 +134,7 @@ export class ProjectSettingsComponent implements OnInit {
           filter(project => !!project)
         )
         .subscribe(project => {
-          this.project$.next(project);
+          this.project$.next({...project});
           this.projectCodes$ = this.store$.pipe(
             select(selectProjectsCodesForOrganization(project.organizationId)),
             map(codes => (codes && codes.filter(code => code !== project.code)) || [])

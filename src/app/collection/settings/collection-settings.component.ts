@@ -158,7 +158,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         select(selectCollectionByWorkspace),
         filter(collection => !!collection)
       )
-      .subscribe(collection => this.collection$.next(collection));
+      .subscribe(collection => this.collection$.next({...collection}));
     this.subscriptions.add(sub2);
 
     this.store$

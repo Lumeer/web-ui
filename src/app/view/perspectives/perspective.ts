@@ -18,15 +18,15 @@
  */
 
 export enum Perspective {
-  Detail = 'detail',
   Search = 'search',
   Table = 'table',
-  Kanban = 'kanban',
-  Pivot = 'pivot',
-  Chart = 'chart',
   Calendar = 'calendar',
-  GanttChart = 'ganttChart',
+  Chart = 'chart',
+  Detail = 'detail',
+  Kanban = 'kanban',
   Map = 'map',
+  Pivot = 'pivot',
+  GanttChart = 'ganttChart',
   SmartDoc = 'smartdoc',
 }
 
