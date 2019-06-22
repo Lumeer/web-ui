@@ -25,6 +25,7 @@ import {UserService} from '../../core/rest';
 import {DialogService} from '../dialog.service';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../environments/environment';
+import mixpanel from 'mixpanel-browser';
 
 const FEEDBACK_KEY = 'feedback_message';
 
@@ -71,6 +72,10 @@ export class FeedbackDialogComponent implements OnInit {
               category: 'Feedback',
             },
           });
+
+          if (environment.mixpanelKey) {
+            mixpanel.track('Feedback Send');
+          }
         }
         this.notifyOnSuccess();
         localStorage.removeItem(FEEDBACK_KEY);

@@ -36,6 +36,7 @@ import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable()
 export class UsersEffects {
@@ -142,7 +143,7 @@ export class UsersEffects {
   @Effect({dispatch: false})
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
-    tap(action => {
+    tap((action: UsersAction.CreateSuccess) => {
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
           action: 'User add',
@@ -150,6 +151,10 @@ export class UsersEffects {
             category: 'Collaboration',
           },
         });
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('User Create', {user: action.payload.user.email});
+        }
       }
     })
   );

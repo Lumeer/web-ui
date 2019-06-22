@@ -53,6 +53,7 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable()
 export class CollectionsEffects {
@@ -148,12 +149,19 @@ export class CollectionsEffects {
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateSuccess>(CollectionsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
-    tap(([, collections]) => {
+    tap(([action, collections]) => {
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
           action: 'Collection create',
           properties: {category: 'Application Resources', label: 'count', value: Object.keys(collections).length + 1},
         });
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('Collection Create', {
+            count: Object.keys(collections).length + 1,
+            name: action.payload.collection.name,
+          });
+        }
       }
     }),
     map(([action]) => action)

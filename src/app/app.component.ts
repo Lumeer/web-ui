@@ -30,7 +30,6 @@ import {Title} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
 import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
-import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
 import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../environments/environment';
@@ -45,6 +44,8 @@ import {selectServiceLimitsByWorkspace} from './core/store/organizations/service
 import {ServiceLevelType} from './core/dto/service-level-type';
 import smartlookClient from 'smartlook-client';
 import {superUserEmails} from './auth/super-user-emails';
+import mixpanel from 'mixpanel-browser';
+import {hashUserId} from './shared/utils/system.utils';
 
 declare let $: any;
 
@@ -71,11 +72,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     private pusherService: PusherService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
-    this.title.setTitle('Lumeer - Easy Business Booster');
+    this.title.setTitle('Lumeer - Visual Project&Team Management');
 
     this.initPushNotifications();
     this.handleAuthentication();
-    this.startGoogleAnalyticsTracking();
+    this.startAnalyticsTracking();
     this.setUpExternalServicesUserContext();
   }
 
@@ -91,12 +92,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private startGoogleAnalyticsTracking() {
+  private startAnalyticsTracking() {
     if (!environment.analytics) {
       return;
     }
 
     this.angulartics2GoogleAnalytics.startTracking();
+
+    if (environment.mixpanelKey) {
+      mixpanel.init(environment.mixpanelKey);
+    }
   }
 
   private setUpExternalServicesUserContext() {
@@ -112,14 +117,18 @@ export class AppComponent implements OnInit, AfterViewInit {
         const signUpDate = dateToMonthYear(user.agreementDate);
         const serviceLevel: string = limits ? limits.serviceLevel : ServiceLevelType.FREE;
 
-        this.setGoogleAnalyticsUsername(userIdHash);
-        this.setGoogleAnalyticsDimensions(serviceLevel, signUpDate);
+        this.setAnalyticsUsername(userIdHash);
+        this.setAnalyticsDimensions(serviceLevel, signUpDate);
 
         this.configureSentryUserScope(userIdHash);
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('Application Started');
+        }
       });
   }
 
-  private setGoogleAnalyticsUsername(userIdHash: string) {
+  private setAnalyticsUsername(userIdHash: string) {
     if (!environment.analytics) {
       return;
     }
@@ -127,7 +136,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.angulartics2GoogleAnalytics.setUsername(userIdHash);
   }
 
-  private setGoogleAnalyticsDimensions(serviceLevel: string, monthYear?: string) {
+  private setAnalyticsDimensions(serviceLevel: string, monthYear?: string) {
     if (!environment.analytics) {
       return;
     }
@@ -138,6 +147,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     this.angulartics2GoogleAnalytics.setUserProperties(dimensions);
+
+    if (environment.mixpanelKey) {
+      mixpanel.register({'Registered on': monthYear, 'Service Level': serviceLevel});
+    }
   }
 
   private configureSentryUserScope(userIdHash: string) {
@@ -226,16 +239,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
     }
   }
-}
-
-function hashUserId(userId: string): string {
-  if (userId) {
-    const sha = new jsSHA('SHA-1', 'TEXT');
-    sha.update(userId);
-    return sha.getHash('B64', {});
-  }
-
-  return 'unknown';
 }
 
 function dateToMonthYear(d: Date): string {

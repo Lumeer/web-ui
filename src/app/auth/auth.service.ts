@@ -30,6 +30,7 @@ import {UsersAction} from '../core/store/users/users.action';
 import {Angulartics2} from 'angulartics2';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {User} from '../core/store/users/user';
+import mixpanel from 'mixpanel-browser';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -100,12 +101,16 @@ export class AuthService {
               catchError(() => null)
             )
             .subscribe((user: User) => {
-              if (user) {
+              if (user && environment.analytics) {
                 const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
                 this.angulartics2.eventTrack.next({
                   action: 'User returned',
                   properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
                 });
+
+                if (environment.mixpanelKey) {
+                  mixpanel.track('User Returned', {hoursSinceLastLogin: hoursSinceLastLogin});
+                }
               }
             });
         }

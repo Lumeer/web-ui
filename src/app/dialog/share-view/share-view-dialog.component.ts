@@ -41,6 +41,7 @@ import {userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils
 import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../environments/environment';
+import mixpanel from 'mixpanel-browser';
 
 @Component({
   selector: 'share-view-dialog',
@@ -214,6 +215,10 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
           value: this.view.id,
         },
       });
+
+      if (environment.mixpanelKey) {
+        mixpanel.track('View Shared', {view: this.view.id});
+      }
     }
   }
 

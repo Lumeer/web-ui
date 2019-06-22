@@ -22,6 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapsh
 import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
 import {Angulartics2} from 'angulartics2';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +45,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
           action: 'User login',
           properties: {category: 'User Actions'},
         });
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('User Login');
+        }
       }
       this.authService.login(state.url);
       return false;
