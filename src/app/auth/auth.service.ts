@@ -31,6 +31,7 @@ import {Angulartics2} from 'angulartics2';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
+import {hashUserId} from '../shared/utils/system.utils';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -109,6 +110,7 @@ export class AuthService {
                 });
 
                 if (environment.mixpanelKey) {
+                  mixpanel.identify(hashUserId(user.id));
                   mixpanel.track('User Returned', {
                     dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
                     wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
