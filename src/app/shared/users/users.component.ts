@@ -41,6 +41,7 @@ import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {environment} from '../../../environments/environment';
 import {Angulartics2} from 'angulartics2';
+import mixpanel from 'mixpanel-browser';
 
 @Component({
   selector: 'users',
@@ -86,6 +87,10 @@ export class UsersComponent implements OnInit, OnDestroy {
           category: 'Collaboration',
         },
       });
+
+      if (environment.mixpanelKey) {
+        mixpanel.track('User Invite', {user: email});
+      }
     }
   }
 

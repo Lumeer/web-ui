@@ -17,6 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as jsSHA from 'jssha';
+
 export function isMacOS(): boolean {
   return navigator.platform.toLowerCase().startsWith('mac');
+}
+
+export function hashUserId(userId: string): string {
+  if (userId) {
+    const sha = new jsSHA('SHA-1', 'TEXT');
+    sha.update(userId);
+    return sha.getHash('B64', {});
+  }
+
+  return 'unknown';
 }

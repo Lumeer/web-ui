@@ -31,6 +31,8 @@ import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {PaymentConverter} from './payment.converter';
 import {PaymentsAction, PaymentsActionType} from './payments.action';
+import mixpanel from 'mixpanel-browser';
+import {Payment} from './payment';
 
 @Injectable()
 export class PaymentsEffects {
@@ -72,14 +74,10 @@ export class PaymentsEffects {
             value: action.payload.payment.state,
           },
         });
+
+        const price = this.getPrice(action.payload.payment);
         const ga = (window as any).ga;
         if (ga) {
-          let price = action.payload.payment.amount;
-          if (action.payload.payment.currency === 'EUR') {
-            price = price * 26.1;
-          } else if (action.payload.payment.currency === 'USD') {
-            price = price * 22.84;
-          }
           ga('ecommerce:addTransaction', {
             id: action.payload.payment.paymentId,
             affiliation: 'plans',
@@ -88,6 +86,14 @@ export class PaymentsEffects {
             tax: price * 0.15,
           });
           ga('ecommerce:send');
+        }
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('Payment Paid', {
+            CZK: price,
+            users: action.payload.payment.users,
+            validUntil: action.payload.payment.validUntil,
+          });
         }
       }
     })
@@ -164,9 +170,28 @@ export class PaymentsEffects {
             value: action.payload.payment.amount,
           },
         });
+
+        if (environment.mixpanelKey) {
+          const price = this.getPrice(action.payload.payment);
+          mixpanel.track('Payment Create', {
+            CZK: price,
+            users: action.payload.payment.users,
+          });
+        }
       }
     })
   );
+
+  private getPrice(payment: Payment): number {
+    let price = payment.amount;
+    if (payment.currency === 'EUR') {
+      price = price * 26.1;
+    } else if (payment.currency === 'USD') {
+      price = price * 22.84;
+    }
+
+    return price;
+  }
 
   constructor(
     private i18n: I18n,

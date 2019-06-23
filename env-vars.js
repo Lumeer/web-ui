@@ -16,6 +16,7 @@ config.LUMEER_ENV = env.LUMEER_ENV;
 config.MAPBOX_KEY = env.MAPBOX_KEY;
 config.MAPQUEST_KEY = env.MAPQUEST_KEY;
 config.MAPTILER_KEY = env.MAPTILER_KEY;
+config.MIXPANEL_KEY = env.MIXPANEL_KEY;
 config.PUBLIC_PATH = (env.PUBLIC_PATH && env.PUBLIC_PATH.replace(/\/+/, '/')) || '/ui/';
 config.PUSHER_CLUSTER = env.PUSHER_CLUSTER;
 config.PUSHER_KEY = env.PUSHER_KEY;

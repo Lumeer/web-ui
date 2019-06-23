@@ -44,6 +44,7 @@ import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {areQueriesEqual} from '../navigation/query.helper';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable()
 export class ViewsEffects {
@@ -130,6 +131,13 @@ export class ViewsEffects {
           action: 'View create',
           properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
         });
+
+        if (environment.mixpanelKey) {
+          mixpanel.track('View Create', {
+            count: Object.keys(views).length + 1,
+            perspective: String(action.payload.view.perspective),
+          });
+        }
       }
       return new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}});
     })

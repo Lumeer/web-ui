@@ -72,6 +72,7 @@
     "jssha": "^2.3.1",
     "lodash": "^4.17.11",
     "mapbox-gl": "^1.0.0",
+    "mixpanel-browser": "^2.29.0",
     "moment": "^2.24.0",
     "muuri": "^0.7.1",
     "ng-click-outside": "^4.0.0",

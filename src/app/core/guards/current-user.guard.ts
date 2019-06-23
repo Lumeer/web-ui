@@ -27,6 +27,9 @@ import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUser} from '../store/users/users.state';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
+import {environment} from '../../../environments/environment';
+import {hashUserId} from '../../shared/utils/system.utils';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
@@ -64,6 +67,17 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
         if (!user.agreement) {
           this.authService.saveLoginRedirectPath(state.url);
           this.router.navigate(['/', 'agreement']);
+
+          if (environment.analytics && environment.mixpanelKey) {
+            const userHash = hashUserId(user.id);
+            mixpanel.alias(userHash);
+            mixpanel.identify(userHash);
+          }
+        } else {
+          if (environment.analytics && environment.mixpanelKey) {
+            const userHash = hashUserId(user.id);
+            mixpanel.identify(userHash);
+          }
         }
 
         return user.agreement;

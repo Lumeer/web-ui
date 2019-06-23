@@ -53,6 +53,7 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
+import mixpanel from 'mixpanel-browser';
 
 @Injectable()
 export class CollectionsEffects {
@@ -102,7 +103,26 @@ export class CollectionsEffects {
 
       return this.collectionService.createCollection(collectionDto).pipe(
         map(dto => convertCollectionDtoToModel(dto, collection.correlationId)),
-        mergeMap(newCollection => {
+        withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+        mergeMap(([newCollection, collections]) => {
+          if (environment.analytics) {
+            this.angulartics2.eventTrack.next({
+              action: 'Collection create',
+              properties: {
+                category: 'Application Resources',
+                label: 'count',
+                value: Object.keys(collections).length + 1,
+              },
+            });
+
+            if (environment.mixpanelKey) {
+              mixpanel.track('Collection Create', {
+                count: Object.keys(collections).length + 1,
+                name: action.payload.collection.name,
+              });
+            }
+          }
+
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection: newCollection})];
 
           if (callback) {
@@ -142,21 +162,6 @@ export class CollectionsEffects {
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create table'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
-
-  @Effect({dispatch: false})
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.CreateSuccess>(CollectionsActionType.CREATE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
-    tap(([, collections]) => {
-      if (environment.analytics) {
-        this.angulartics2.eventTrack.next({
-          action: 'Collection create',
-          properties: {category: 'Application Resources', label: 'count', value: Object.keys(collections).length + 1},
-        });
-      }
-    }),
-    map(([action]) => action)
   );
 
   @Effect()
