@@ -65,6 +65,7 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 const MIN_PROGRESS = 0.001;
 const MAX_PROGRESS = 1000;
@@ -82,6 +83,8 @@ export class GanttChartConverter {
   private query: Query;
 
   private dataAggregator = new DataAggregator();
+
+  constructor(private formatter: SelectItemWithConstraintFormatter) {}
 
   public convert(
     config: GanttChartConfig,
@@ -154,7 +157,7 @@ export class GanttChartConverter {
 
     for (const swimlaneValue of Object.keys(aggregatedData.map)) {
       const swimlaneMapOrValues = aggregatedData.map[swimlaneValue];
-      const swimlane = formatSwimlaneValue(swimlaneValue, categoryConstraint, this.constraintData);
+      const swimlane = this.formatSwimlaneValue(swimlaneValue, categoryConstraint, categoryProperty);
 
       if (isArray(swimlaneMapOrValues)) {
         const aggregatedDataValues = swimlaneMapOrValues as AggregatedDataValues[];
@@ -162,7 +165,7 @@ export class GanttChartConverter {
         dataResourcesSwimlanes.push(...dataResources.map(dr => ({...dr, swimlane})));
       } else {
         for (const sumSwimlaneValue of Object.keys(swimlaneMapOrValues)) {
-          const subSwimlane = formatSwimlaneValue(sumSwimlaneValue, subCategoryConstraint, this.constraintData);
+          const subSwimlane = this.formatSwimlaneValue(sumSwimlaneValue, subCategoryConstraint, subCategoryProperty);
 
           const aggregatedDataValues = swimlaneMapOrValues[sumSwimlaneValue] as AggregatedDataValues[];
           const dataResources = aggregatedDataValues[0].objects;
@@ -202,12 +205,14 @@ export class GanttChartConverter {
     const progressProperty = properties[GanttChartBarPropertyOptional.Progress];
     const colorProperty = properties[GanttChartBarPropertyOptional.Color];
 
-    const validTaskIdsMap: Record<string, string[]> = dataResources.reduce((map, dataResource) => {
+    const validTaskIds = [];
+    const validDataResourceIdsMap: Record<string, string[]> = dataResources.reduce((map, dataResource) => {
       const name = nameProperty && dataResource.data[nameProperty.attributeId];
       const start = startProperty && dataResource.data[startProperty.attributeId];
       const end = endProperty && dataResource.data[endProperty.attributeId];
       if (isTaskValid(name, start, end)) {
-        const taskId = createGanttChartTaskId(dataResource.id, dataResource.swimlane, dataResource.subSwimlane);
+        const taskId = createGanttChartTaskId(dataResource);
+        validTaskIds.push(taskId);
         if (map[dataResource.id]) {
           map[dataResource.id].push(taskId);
         } else {
@@ -217,9 +222,9 @@ export class GanttChartConverter {
       return map;
     }, {});
 
-    const tasks: GanttChartTask[] = [];
+    const tasksIdsString = validTaskIds.join(',');
 
-    for (const dataResource of dataResources) {
+    return dataResources.reduce((arr, dataResource) => {
       const formattedData = formatData(dataResource.data, resource.attributes, this.constraintData);
 
       const name = nameProperty && dataResource.data[nameProperty.attributeId];
@@ -232,7 +237,7 @@ export class GanttChartConverter {
       const endEditable = this.isPropertyEditable(endProperty);
 
       if (!isTaskValid(name, start, end)) {
-        continue;
+        return arr;
       }
 
       const interval = createInterval(
@@ -255,33 +260,36 @@ export class GanttChartConverter {
           ? validDataColors[dataResourceColor] || dataResourceColor
           : resourceColor;
 
-      tasks.push({
-        id: createGanttChartTaskId(dataResource.id, dataResource.swimlane, dataResource.subSwimlane),
+      arr.push({
+        id: createGanttChartTaskId(dataResource),
         name: formatDataValue(name, nameAttribute && nameAttribute.constraint, this.constraintData),
         start: interval[0].value,
         end: interval[1].value,
         progress: createProgress(progress),
-        dependencies: createDependencies(dataResource, validTaskIdsMap),
+        dependencies: createDependencies(dataResource, validDataResourceIdsMap),
+        allowed_dependencies: tasksIdsString,
         primary_color: shadeColor(taskColor, 0.5),
         secondary_color: shadeColor(taskColor, 0.3),
         start_drag: startEditable,
         end_drag: endEditable,
         editable: startEditable && endEditable,
-        text_color: contrastColor(taskColor),
+        text_color: contrastColor(shadeColor(taskColor, 0.5)),
         swimlane: dataResource.swimlane,
         sub_swimlane: dataResource.subSwimlane,
 
-        dataResourceId: dataResource.id,
-        collectionConfigId,
-        startAttributeId: interval[0].attrId,
-        endAttributeId: interval[1].attrId,
-        progressAttributeId: progressEditable && progressProperty && progressProperty.attributeId,
-        resourceId: resource.id,
-        resourceType: startProperty.resourceType,
+        metadata: {
+          dataResourceId: dataResource.id,
+          collectionConfigId,
+          startAttributeId: interval[0].attrId,
+          endAttributeId: interval[1].attrId,
+          progressAttributeId: progressEditable && progressProperty && progressProperty.attributeId,
+          resourceId: resource.id,
+          resourceType: startProperty.resourceType,
+        },
       });
-    }
 
-    return tasks;
+      return arr;
+    }, []);
   }
 
   private isPropertyEditable(model: GanttChartBarModel): boolean {
@@ -323,15 +331,18 @@ export class GanttChartConverter {
   private shouldAggregate(properties: Record<string, GanttChartBarModel>): boolean {
     return !!properties[GanttChartBarPropertyOptional.Category];
   }
+
+  public formatSwimlaneValue(value: any, constraint: Constraint, barModel: GanttChartBarModel): string | null {
+    const overrideConstraint =
+      barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
+
+    const formattedValue = formatDataValue(value, overrideConstraint || constraint, this.constraintData);
+    return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
+  }
 }
 
-function createGanttChartTaskId(dataResourceId: string, swimlane: string, sumSwimlane: string): string {
-  return [swimlane, sumSwimlane, dataResourceId].filter(val => !!val).join(':');
-}
-
-function formatSwimlaneValue(value: any, constraint: Constraint, constraintData: ConstraintData): string | null {
-  const formattedValue = formatDataValue(value, constraint, constraintData);
-  return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
+function createGanttChartTaskId(dataResource: DataResourceSwimlanes): string {
+  return [dataResource.swimlane, dataResource.subSwimlane, dataResource.id].filter(val => !!val).join(':');
 }
 
 function createDependencies(dataResource: DataResource, validTaskIdsMap: Record<string, string[]>): string {

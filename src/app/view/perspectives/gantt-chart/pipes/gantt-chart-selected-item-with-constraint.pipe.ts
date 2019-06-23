@@ -18,23 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
+import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
-  name: 'ganttChartModeText',
+  name: 'ganttChartSelectedItemWithConstraint',
 })
-export class GanttChartModeTextPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(mode: GanttChartMode): string {
-    return this.i18n(
-      {
-        id: 'perspective.gantt.config.mode',
-        value:
-          '{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}',
-      },
-      {mode}
-    );
+export class GanttChartSelectedItemWithConstraintPipe implements PipeTransform {
+  public transform(model: GanttChartBarModel): SelectItemWithConstraintId {
+    if (model) {
+      return {attributeId: model.attributeId, resourceIndex: model.resourceIndex};
+    }
+    return null;
   }
 }

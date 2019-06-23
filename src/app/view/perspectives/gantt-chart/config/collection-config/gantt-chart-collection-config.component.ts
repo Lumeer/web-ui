@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {
   GanttChartBarModel,
@@ -29,6 +29,10 @@ import {
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {Constraint} from '../../../../../core/model/data/constraint';
+import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query.util';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'gantt-chart-collection-config',
@@ -54,9 +58,34 @@ export class GanttChartCollectionConfigComponent {
   @Output()
   public configChange = new EventEmitter<GanttChartCollectionConfig>();
 
-  public readonly ganttChartBarsPropertiesRequired = Object.values(GanttChartBarPropertyRequired);
-  public readonly ganttChartBarsPropertiesOptional = Object.values(GanttChartBarPropertyOptional);
+  public readonly propertiesRequired = Object.values(GanttChartBarPropertyRequired);
+  public readonly propertiesOptionalSimple = [
+    GanttChartBarPropertyOptional.Progress,
+    GanttChartBarPropertyOptional.Color,
+  ];
+  public readonly propertiesOptionalConstraint = [
+    GanttChartBarPropertyOptional.Category,
+    GanttChartBarPropertyOptional.SubCategory,
+  ];
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
+
+  public onBarConstraintPropertySelect(type: GanttChartBarProperty, itemId: SelectItemWithConstraintId) {
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
+    const resource = attributesResourcesOrder[itemId.resourceIndex];
+    if (resource) {
+      const resourceType = <Collection>resource ? AttributesResourceType.Collection : AttributesResourceType.LinkType;
+      const bar: GanttChartBarModel = {...itemId, resourceType, resourceId: resource.id};
+      this.onBarPropertySelect(type, bar);
+    }
+  }
+
+  public onBarConstraintSelect(type: GanttChartBarProperty, constraint: Constraint) {
+    const bar = this.config.barsProperties[type];
+    if (bar) {
+      const newBar = {...bar, constraint};
+      this.onBarPropertySelect(type, newBar);
+    }
+  }
 
   public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
     const bars = {...this.config.barsProperties, [type]: bar};
