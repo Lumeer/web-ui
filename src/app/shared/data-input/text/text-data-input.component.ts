@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TextConstraintConfig} from '../../../core/model/data/constraint';
+import {TextConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';

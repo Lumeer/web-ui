@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
+import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {
   CalendarBarModel,
   CalendarBarPropertyOptional,
@@ -31,7 +32,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
 import * as moment from 'moment';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {ConstraintType, DateTimeConstraintConfig} from '../../../../core/model/data/constraint';
+import {ConstraintType} from '../../../../core/model/data/constraint';
 import {Subscription} from 'rxjs';
 
 @Component({

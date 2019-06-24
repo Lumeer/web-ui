@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CoordinatesConstraintConfig} from '../../../core/model/data/constraint';
+import {CoordinatesConstraintConfig} from '../../../core/model/data/constraint-config';
 import {formatCoordinatesDataValue} from '../../utils/data.utils';
 
 @Pipe({

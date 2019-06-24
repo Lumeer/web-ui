@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ColorConstraintConfig, Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {ColorConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {
   GANTT_DATE_FORMAT,
   GanttChartBarModel,

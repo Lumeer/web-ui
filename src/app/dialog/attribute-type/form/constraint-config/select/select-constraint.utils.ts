@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintType, SelectConstraintConfig} from '../../../../../core/model/data/constraint';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {SelectConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {Attribute} from '../../../../../core/store/collections/collection';
 
 export function isUsedSelectConstraintAttribute(attribute: Attribute): boolean {

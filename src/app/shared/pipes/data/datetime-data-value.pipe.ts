@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
 import {formatDateTimeDataValue} from '../../utils/data.utils';
 
 @Pipe({

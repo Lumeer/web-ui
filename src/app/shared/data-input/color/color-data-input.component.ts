@@ -29,7 +29,7 @@ import {
   HostListener,
   OnChanges,
 } from '@angular/core';
-import {ColorConstraintConfig} from '../../../core/model/data/constraint';
+import {ColorConstraintConfig} from '../../../core/model/data/constraint-config';
 import {formatColorDataValue, isColorValid} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';

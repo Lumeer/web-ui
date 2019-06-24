@@ -33,6 +33,7 @@ import {SelectDataValuePipe} from './select-data-value.pipe';
 import {IsSelectDataValueValidPipe} from './valid/is-select-data-value-valid.pipe';
 import {CoordinatesDataValuePipe} from './coordinates-data-value.pipe';
 import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-valid.pipe';
+import {AddressDataValuePipe} from './address-data-value.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -51,6 +52,7 @@ import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-vali
     IsSelectDataValueValidPipe,
     CoordinatesDataValuePipe,
     CoordinatesDataValueValidPipe,
+    AddressDataValuePipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -67,6 +69,7 @@ import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-vali
     IsSelectDataValueValidPipe,
     CoordinatesDataValuePipe,
     CoordinatesDataValueValidPipe,
+    AddressDataValuePipe,
   ],
 })
 export class DataPipesModule {}

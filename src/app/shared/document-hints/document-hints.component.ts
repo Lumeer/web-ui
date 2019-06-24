@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
-import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,13 +29,11 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, first, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
@@ -49,6 +45,8 @@ import {Query} from '../../core/store/navigation/query';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Direction} from '../direction';
+import {DropdownPosition} from '../dropdown/dropdown-position';
+import {DropdownComponent} from '../dropdown/dropdown.component';
 import {DocumentHintColumn} from './document-hint-column';
 
 @Component({
@@ -94,8 +92,10 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Output()
   public useHint = new EventEmitter();
 
-  @ViewChild('hints', {static: true})
-  public hints: TemplateRef<any>;
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
+
+  public readonly dropdownPositions = [DropdownPosition.BottomStart, DropdownPosition.TopStart];
 
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
@@ -106,15 +106,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   private hintsCount = 0;
 
-  private overlayRef: OverlayRef;
-  private portal: Portal<any>;
-
-  constructor(
-    private element: ElementRef,
-    private overlay: Overlay,
-    private store$: Store<AppState>,
-    private viewContainer: ViewContainerRef
-  ) {}
+  constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindDocuments();
@@ -161,40 +153,13 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.hints, this.viewContainer);
     this.open();
   }
 
   public open() {
-    if (this.overlayRef) {
-      return;
+    if (this.dropdown) {
+      this.dropdown.open(this.calculatePosition ? -this.calculateOffset() : null);
     }
-
-    this.overlayRef = this.overlay.create({
-      disposeOnNavigation: true,
-      panelClass: ['position-absolute', 'w-max-content'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(this.element)
-        .withViewportMargin(8)
-        .withPositions([
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-          {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'bottom',
-          },
-        ])
-        .withDefaultOffsetX(this.calculatePosition ? -this.calculateOffset() : null),
-    });
-    this.overlayRef.attach(this.portal);
   }
 
   private calculateOffset(): number {
@@ -207,10 +172,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public close() {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 

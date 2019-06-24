@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CaseStyle} from '../../core/model/data/constraint';
+import {CaseStyle} from '../../core/model/data/constraint-config';
 
 export function escapeStringForRegex(text: string): string {
   return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

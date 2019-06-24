@@ -18,10 +18,11 @@
  */
 
 import {MapCoordinates} from '../store/maps/map.model';
+import {Address} from './address';
 
 export interface GeoLocation {
   coordinates: MapCoordinates;
-  address: any; // TODO change when address constraint is being implemented
+  address: Address;
 }
 
-export type GeoLocationsMap = {[query: string]: GeoLocation[]};
+export type GeoLocationsMap = Record<string, GeoLocation[]>;

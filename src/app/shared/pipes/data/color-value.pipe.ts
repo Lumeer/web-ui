@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ColorConstraintConfig} from '../../../core/model/data/constraint';
+import {ColorConstraintConfig} from '../../../core/model/data/constraint-config';
 import {formatColorDataValue} from '../../utils/data.utils';
 
 @Pipe({

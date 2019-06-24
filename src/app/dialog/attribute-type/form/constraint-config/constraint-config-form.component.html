@@ -1,7 +1,12 @@
 <ng-container [ngSwitch]="type">
+  <address-constraint-config-form *ngSwitchCase="constraintTypes.Address"
+                                  [config]="config"
+                                  [form]="form">
+  </address-constraint-config-form>
+
   <coordinates-constraint-config-form *ngSwitchCase="constraintTypes.Coordinates"
-                                   [config]="config"
-                                   [form]="form">
+                                      [config]="config"
+                                      [form]="form">
   </coordinates-constraint-config-form>
 
   <datetime-constraint-config-form *ngSwitchCase="constraintTypes.DateTime"

@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import {PercentageConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {getPercentageSaveValue, isPercentageValid} from '../../utils/data.utils';

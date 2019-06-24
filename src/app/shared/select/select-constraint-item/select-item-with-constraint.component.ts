@@ -18,8 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ConstraintConfig} from '../../../core/model/data/constraint-config';
 import {AttributesResource} from '../../../core/model/resource';
-import {Constraint, ConstraintConfig} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/data/constraint';
 
 export interface SelectItemWithConstraintId {
   resourceIndex: number;

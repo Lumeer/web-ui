@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CaseStyle, TextConstraintConfig} from '../../../core/model/data/constraint';
+import {CaseStyle, TextConstraintConfig} from '../../../core/model/data/constraint-config';
 import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
 import {formatTextDataValue} from '../../utils/data.utils';
 

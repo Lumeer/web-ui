@@ -1,0 +1,14 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions">
+  <div *ngIf="options?.length > 0"
+       class="dropdown-menu show position-static">
+    <a *ngFor="let option of options"
+       dropdownOption
+       [value]="option.value"
+       (mousedown)="onOptionMouseDown(option)"
+       class="dropdown-item"
+       href="">
+      {{ option.displayValue || option.value }}
+    </a>
+  </div>
+</dropdown>

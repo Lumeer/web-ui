@@ -21,6 +21,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {ResizableModule} from 'angular-resizable-element';
 import {ContextMenuModule} from 'ngx-contextmenu';
+import {DropdownModule} from '../../../../shared/dropdown/dropdown.module';
 import {PickerModule} from '../../../../shared/picker/picker.module';
 import {SharedModule} from '../../../../shared/shared.module';
 import {TableRowGroupHeaderComponent} from '../body/row-group/header/table-row-group-header.component';
@@ -42,7 +43,15 @@ import {TableHeaderLinkComponent} from './link/table-header-link.component';
 import {TableHeaderComponent} from './table-header.component';
 
 @NgModule({
-  imports: [ContextMenuModule, DragDropModule, ResizableModule, SharedModule, TableSharedModule, PickerModule],
+  imports: [
+    ContextMenuModule,
+    DragDropModule,
+    ResizableModule,
+    SharedModule,
+    TableSharedModule,
+    PickerModule,
+    DropdownModule,
+  ],
   declarations: [
     TableAttributeSuggestionsComponent,
     TableCaptionComponent,

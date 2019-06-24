@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintConfig} from '../../model/data/constraint-config';
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {Constraint, ConstraintConfig} from '../../model/data/constraint';
+import {Constraint} from '../../model/data/constraint';
 
 export const DEFAULT_PIVOT_ID = 'default';
 

@@ -1,4 +1,5 @@
-<ng-template #attributeSuggestions>
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions">
   <ng-container *ngIf="{
     lastName: lastName$ | async,
     linkedAttributes: linkedAttributes$ | async,
@@ -70,4 +71,4 @@
       </div>
     </div>
   </ng-container>
-</ng-template>
+</dropdown>

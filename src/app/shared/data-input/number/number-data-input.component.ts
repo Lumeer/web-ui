@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint';
+import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {decimalUserToStore, formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';

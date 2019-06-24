@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint';
+import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 
 @Component({

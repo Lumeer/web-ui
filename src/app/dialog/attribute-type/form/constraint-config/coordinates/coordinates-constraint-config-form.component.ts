@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../core/model/data/constraint';
+import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
 

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {
   KanbanAttribute,
@@ -26,12 +27,7 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  SelectConstraintConfig,
-} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue, isSelectDataValueValid} from '../../../../shared/utils/data.utils';

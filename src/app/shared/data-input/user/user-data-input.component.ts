@@ -36,7 +36,7 @@ import {select, Store} from '@ngrx/store';
 import {TypeaheadMatch} from 'ngx-bootstrap';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {UserConstraintConfig} from '../../../core/model/data/constraint';
+import {UserConstraintConfig} from '../../../core/model/data/constraint-config';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {KeyCode} from '../../key-code';

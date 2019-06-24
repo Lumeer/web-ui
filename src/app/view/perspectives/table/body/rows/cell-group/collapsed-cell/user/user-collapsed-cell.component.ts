@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {UserConstraintConfig} from '../../../../../../../../core/model/data/constraint';
+import {UserConstraintConfig} from '../../../../../../../../core/model/data/constraint-config';
 import {USER_AVATAR_SIZE} from '../../../../../../../../shared/data-input/user/user-data-input.component';
 import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {isEmailValid} from '../../../../../../../../shared/utils/email.utils';

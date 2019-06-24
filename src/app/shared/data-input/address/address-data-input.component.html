@@ -1,0 +1,25 @@
+<input *ngIf="readonly; else textEditing"
+       [readonly]="readonly"
+       [title]="value | addressDataValue"
+       [value]="value | addressDataValue"
+       (focus)="focused.emit($event)"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       data-test="text-data-input"
+       type="text">
+
+<ng-template #textEditing>
+  <input #addressInput
+         [title]="value | addressDataValue"
+         [value]="value | addressDataValue"
+         (focus)="onFocus()"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="text-data-input"
+         type="text">
+
+  <options-dropdown [options]="addressOptions$ | async"
+                    [origin]="addressInput"
+                    (selectOption)="onSelectOption($event)">
+  </options-dropdown>
+</ng-template>

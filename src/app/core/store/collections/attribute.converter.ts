@@ -19,13 +19,8 @@
 
 import {convertToBig} from '../../../shared/utils/data.utils';
 import {AttributeDto, AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
-import {
-  Constraint,
-  ConstraintType,
-  constraintTypesMap,
-  DateTimeConstraintConfig,
-  NumberConstraintConfig,
-} from '../../model/data/constraint';
+import {Constraint, ConstraintType, constraintTypesMap} from '../../model/data/constraint';
+import {DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
 import {Attribute, AttributeFunction} from './collection';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {

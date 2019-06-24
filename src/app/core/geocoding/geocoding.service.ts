@@ -20,10 +20,11 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {GeocodingResultDto} from '../dto/geocoding-result.dto';
 import {GeoCodingApiService} from '../rest/geocoding-api.service';
-import {AddressCoordinatesMap} from './address-coordinates-map';
-import {GeoLocation, GeoLocationsMap} from './geo-location';
+import {MapCoordinates} from '../store/maps/map.model';
+import {Address} from './address';
+import {GeoLocationsMap} from './geo-location';
+import {convertGeoCodingResultToGeoLocations} from './geocoding.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,7 @@ export class GeoCodingService {
 
   constructor(private geoCodingApiService: GeoCodingApiService) {}
 
-  public convertAddressesToCoordinates(addresses: string[]): Observable<AddressCoordinatesMap> {
+  public convertAddressesToCoordinates(addresses: string[]): Observable<Record<string, MapCoordinates>> {
     return this.updateGeoLocationCache(addresses).pipe(
       map(geoLocationsMap =>
         addresses.reduce((coordinatesMap, address) => {
@@ -44,6 +45,12 @@ export class GeoCodingService {
           return coordinatesMap;
         }, {})
       )
+    );
+  }
+
+  public suggestAddressesForQuery(query: string): Observable<Address[]> {
+    return this.updateGeoLocationCache([query]).pipe(
+      map(geoLocationsMap => (geoLocationsMap[query] || []).map(geoLocation => geoLocation.address))
     );
   }
 
@@ -72,13 +79,4 @@ export class GeoCodingService {
       )
     );
   }
-}
-
-function convertGeoCodingResultToGeoLocations(result: GeocodingResultDto): GeoLocation[] {
-  return result && result.results
-    ? result.results.map(res => ({
-        address: undefined, // TODO fill in when implementing address constraint
-        coordinates: res && res.latLng,
-      }))
-    : [];
 }

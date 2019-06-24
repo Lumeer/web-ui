@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint';
+import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
 import {formatNumberDataValue} from '../../utils/data.utils';
 
 @Pipe({
