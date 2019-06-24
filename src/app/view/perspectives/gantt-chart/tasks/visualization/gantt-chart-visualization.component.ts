@@ -82,7 +82,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
     if (this.ganttChart.view_is(this.currentMode)) {
       isNotNullOrUndefined(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
     } else {
-      this.ganttChart.change_view_mode(this.currentMode);
+      this.refreshMode(this.currentMode);
     }
   }
 
@@ -104,13 +104,10 @@ export class GanttChartVisualizationComponent implements OnChanges {
       return;
     }
     this.ganttChart = new frappeGantt.default(ganttElement, tasks, {
-      on_date_change: (task, start, end) => {
+      on_date_change: (task: GanttChartTask, start, end) => {
         if (!task.editable) {
           return;
         }
-
-        const startAttributeId = task.startAttributeId;
-        const endAttributeId = task.endAttributeId;
 
         const startTimeTask = moment(task.start);
         const startTime = moment(start);
@@ -119,43 +116,43 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const endTime = moment(end);
 
         const changes = [];
+        const metadata = task.metadata;
 
         //start time changed
-        if (startAttributeId && !startTimeTask.isSame(startTime)) {
-          changes.push({attributeId: startAttributeId, value: startTime.toDate()});
+        if (metadata.startAttributeId && !startTimeTask.isSame(startTime)) {
+          changes.push({attributeId: metadata.startAttributeId, value: startTime.toDate()});
         }
 
         //end time changed
-        if (endAttributeId && !endTimeTask.isSame(endTime)) {
-          changes.push({attributeId: endAttributeId, value: endTime.toDate()});
+        if (metadata.endAttributeId && !endTimeTask.isSame(endTime)) {
+          changes.push({attributeId: metadata.endAttributeId, value: endTime.toDate()});
         }
 
         if (changes) {
-          this.onValueChanged(task.dataResourceId, task.collectionConfigId, task.resourceType, changes);
+          this.onValueChanged(metadata.dataResourceId, metadata.collectionConfigId, metadata.resourceType, changes);
         }
       },
 
-      on_progress_change: (task, progress) => {
+      on_progress_change: (task: GanttChartTask, progress) => {
         if (!task.editable) {
           return;
         }
 
-        const progressAttributeId = task.progressAttributeId;
+        const metadata = task.metadata;
+        const progressAttributeId = metadata.progressAttributeId;
         if (progressAttributeId) {
-          task.progress = progress;
-          this.onValueChanged(task.dataResourceId, task.collectionConfigId, task.resourceType, [
-            {attributeId: progressAttributeId, value: progress},
-          ]);
+          const changes = [{attributeId: progressAttributeId, value: progress}];
+          this.onValueChanged(metadata.dataResourceId, metadata.collectionConfigId, metadata.resourceType, changes);
         }
       },
-      on_dependency_added: (fromTask, toTask) => {
+      on_dependency_added: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
         if (this.canEditDependency(fromTask, toTask)) {
-          this.addDependency.next({fromId: fromTask.dataResourceId, toId: toTask.dataResourceId});
+          this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
         }
       },
-      on_dependency_deleted: (fromTask, toTask) => {
+      on_dependency_deleted: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
         if (this.canEditDependency(fromTask, toTask)) {
-          this.removeDependency.next({fromId: fromTask.dataResourceId, toId: toTask.dataResourceId});
+          this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
         }
       },
       language: environment.locale,
@@ -165,10 +162,10 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   private canEditDependency(fromTask: GanttChartTask, toTask: GanttChartTask): boolean {
     return (
-      fromTask.resourceType === AttributesResourceType.Collection &&
-      fromTask.resourceType === toTask.resourceType &&
-      fromTask.resourceId === toTask.resourceId &&
-      fromTask.dataResourceId !== toTask.dataResourceId
+      fromTask.metadata.resourceType === AttributesResourceType.Collection &&
+      fromTask.metadata.resourceType === toTask.metadata.resourceType &&
+      fromTask.metadata.resourceId === toTask.metadata.resourceId &&
+      fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
     );
   }
 

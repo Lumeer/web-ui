@@ -130,11 +130,26 @@ function addLinkAttributeItem(
       stem.linkFilters = [linkAttributeFilter];
     }
   } else {
-    query.stems.push({
-      collectionId: attributeItem.collectionIds[0],
-      linkTypeIds: [linkTypeId],
-      linkFilters: [linkAttributeFilter],
-    });
+    const joinIndex = findStemIndexForLinkTypeToJoin(query, attributeItem.linkType, queryData.linkTypes);
+    if (joinIndex >= 0) {
+      const stem = query.stems[joinIndex];
+      if (stem.linkTypeIds) {
+        stem.linkTypeIds.push(attributeItem.linkType.id);
+      } else {
+        stem.linkTypeIds = [attributeItem.linkType.id];
+      }
+      if (stem.linkFilters) {
+        stem.linkFilters.push(linkAttributeFilter);
+      } else {
+        stem.linkFilters = [linkAttributeFilter];
+      }
+    } else {
+      query.stems.push({
+        collectionId: attributeItem.collectionIds[0],
+        linkTypeIds: [linkTypeId],
+        linkFilters: [linkAttributeFilter],
+      });
+    }
   }
 
   return new QueryItemsConverter(queryData).fromQuery(query);

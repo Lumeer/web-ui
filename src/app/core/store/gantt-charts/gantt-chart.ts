@@ -18,9 +18,10 @@
  */
 
 import {AttributesResourceType} from '../../model/resource';
+import {Constraint} from '../../model/data/constraint';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
-export const GANTT_DATE_FORMAT = 'YYYY-MM-DD';
+export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
 
 export interface GanttChart {
   id: string;
@@ -41,6 +42,7 @@ export interface GanttChartBarModel {
   attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+  constraint?: Constraint;
 }
 
 export interface GanttChartTask {
@@ -50,6 +52,7 @@ export interface GanttChartTask {
   end: string;
   progress: number;
   dependencies: string;
+  allowed_dependencies: string;
   start_drag: boolean;
   end_drag: boolean;
   editable: boolean;
@@ -59,7 +62,10 @@ export interface GanttChartTask {
   swimlane?: string;
   sub_swimlane?: string;
 
-  // custom attributes
+  metadata: GanttChartTaskMetadata;
+}
+
+export interface GanttChartTaskMetadata {
   dataResourceId: string;
   collectionConfigId: string;
   startAttributeId: string;
@@ -70,6 +76,8 @@ export interface GanttChartTask {
 }
 
 export enum GanttChartMode {
+  QuarterDay = 'Quarter Day',
+  HalfDay = 'Half Day',
   Day = 'Day',
   Week = 'Week',
   Month = 'Month',

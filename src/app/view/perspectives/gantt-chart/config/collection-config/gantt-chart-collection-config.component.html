@@ -3,7 +3,7 @@
   <b>{{collection.name}}</b>
 </div>
 
-<select-item *ngFor="let propertyRequired of ganttChartBarsPropertiesRequired"
+<select-item *ngFor="let propertyRequired of propertiesRequired"
              class="d-block w-100 mt-2"
              [items]="selectItems | ganttChartPropertyItems:propertyRequired:config"
              [selectedId]="config.barsProperties && config.barsProperties[propertyRequired]"
@@ -18,7 +18,7 @@
 
 
 <select-item class="d-block w-100 mt-2"
-             *ngFor="let propertyOptional of ganttChartBarsPropertiesOptional"
+             *ngFor="let propertyOptional of propertiesOptionalSimple"
              [items]="selectItems | ganttChartPropertyItems:propertyOptional:config"
              [selectedId]="config.barsProperties && config.barsProperties[propertyOptional]"
              [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
@@ -29,3 +29,20 @@
              (select)="onBarPropertySelect(propertyOptional, $event)"
              (remove)="onBarPropertyRemoved(propertyOptional)">
 </select-item>
+
+<select-item-with-constraint class="d-block w-100 mt-2"
+                             *ngFor="let propertyOptional of propertiesOptionalConstraint"
+                             [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
+                             [restrictedIds]="propertyOptional | ganttChartRestrictedItemsWithConstraint:config"
+                             [selectedId]="(config.barsProperties && config.barsProperties[propertyOptional]) | ganttChartSelectedItemWithConstraint"
+                             [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
+                             [selectedConstraint]="config.barsProperties && config.barsProperties[propertyOptional]?.constraint"
+                             [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
+                             [buttonClasses]="buttonClasses"
+                             [removable]="true"
+                             [fitParent]="true"
+                             (select)="onBarConstraintPropertySelect(propertyOptional, $event)"
+                             (selectConstraint)="onBarConstraintSelect(propertyOptional, $event)"
+                             (remove)="onBarPropertyRemoved(propertyOptional)">
+
+</select-item-with-constraint>

@@ -47,6 +47,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 interface Data {
   collections: Collection[];
@@ -107,11 +108,15 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
-  private converter = new GanttChartConverter();
+  private readonly converter: GanttChartConverter;
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public tasks$: Observable<GanttChartTask[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
+
+  constructor(private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter) {
+    this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
+  }
 
   public ngOnInit() {
     this.tasks$ = this.subscribeTasks$();

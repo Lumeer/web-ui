@@ -26,6 +26,8 @@ import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
 import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
 import {GanttChartSelectItemsPipe} from './gantt-chart-select-items.pipe';
+import {GanttChartSelectedItemWithConstraintPipe} from './gantt-chart-selected-item-with-constraint.pipe';
+import {GanttChartRestrictedItemsWithConstraintPipe} from './gantt-chart-restricted-items-with-constraint.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,6 +39,8 @@ import {GanttChartSelectItemsPipe} from './gantt-chart-select-items.pipe';
     GanttChartBarEmptyValuePipe,
     TasksInvalidRangeInfoPipe,
     GanttChartSelectItemsPipe,
+    GanttChartSelectedItemWithConstraintPipe,
+    GanttChartRestrictedItemsWithConstraintPipe,
   ],
   exports: [
     DisplayablePipe,
@@ -46,6 +50,8 @@ import {GanttChartSelectItemsPipe} from './gantt-chart-select-items.pipe';
     GanttChartBarEmptyValuePipe,
     TasksInvalidRangeInfoPipe,
     GanttChartSelectItemsPipe,
+    GanttChartSelectedItemWithConstraintPipe,
+    GanttChartRestrictedItemsWithConstraintPipe,
   ],
 })
 export class GanttChartPipesModule {}
