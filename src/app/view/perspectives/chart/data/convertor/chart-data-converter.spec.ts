@@ -902,12 +902,12 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(6);
     expect(chartData.sets.map(set => set.name)).toEqual(['Ara', 'As', 'Ant', 'Ask', 'Abc', 'And']);
-    expect(chartData.sets[0].points).toContain({id: null, x: 'Sport', y: 320});
+    expect(chartData.sets[0].points).toContain({id: 'D23', x: 'Sport', y: 8});
     expect(chartData.sets[1].points).toContain({id: 'D23', x: 'Sport', y: 8});
-    expect(chartData.sets[2].points).toContain({id: null, x: 'Sport', y: 62});
-    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 126});
-    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 1002});
-    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 1002});
+    expect(chartData.sets[2].points).toContain({id: 'D21', x: 'Sport', y: 8});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 9});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 667});
+    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 667});
   });
   it('should return data with from linked attributes', () => {
     const config: ChartConfig = {
