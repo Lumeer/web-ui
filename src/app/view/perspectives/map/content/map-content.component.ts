@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@ang
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {GeocodingApiService} from '../../../../core/api/geocoding/geocoding-api.service';
+import {GeoCodingService} from '../../../../core/geocoding/geocoding.service';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
@@ -52,7 +52,7 @@ export class MapContentComponent implements OnInit {
 
   public markers$: Observable<MapMarkerProperties[]>;
 
-  constructor(private geocodingApiService: GeocodingApiService, private store$: Store<{}>) {}
+  constructor(private geoCodingService: GeoCodingService, private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindMarkers();
@@ -82,7 +82,7 @@ export class MapContentComponent implements OnInit {
 
   private populateAddressProperties(propertiesList: MapMarkerProperties[]): Observable<MapMarkerProperties[]> {
     const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
-    return this.geocodingApiService.convertAddressesToCoordinates(addresses).pipe(
+    return this.geoCodingService.convertAddressesToCoordinates(addresses).pipe(
       map(addressCoordinatesMap =>
         propertiesList.reduce((addressPropertiesList, properties) => {
           const coordinates = addressCoordinatesMap[properties.document.data[properties.attributeId]];

@@ -44,7 +44,7 @@ export interface MapQuestLatLng {
   lng: number;
 }
 
-export interface Location {
+export interface MapQuestLocation {
   street: string;
   adminArea6: string;
   adminArea6Type: string;
@@ -70,7 +70,7 @@ export interface Location {
 
 export interface MapQuestResult {
   providedLocation: MapQuestProvidedLocation;
-  locations: Location[];
+  locations: MapQuestLocation[];
 }
 
 export interface MapQuestResponse {

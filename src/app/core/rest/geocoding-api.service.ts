@@ -17,8 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {MapCoordinates} from './../../store/maps/map.model';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {GeocodingResultDto} from '../dto/geocoding-result.dto';
 
-export interface AddressCoordinatesMap {
-  [address: string]: MapCoordinates;
+const GEOCODING_URL = `${environment.apiUrl}/rest/geocoding`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GeoCodingApiService {
+  constructor(private http: HttpClient) {}
+
+  public getResults(queries: string[]): Observable<GeocodingResultDto[]> {
+    return this.http.get<GeocodingResultDto[]>(GEOCODING_URL, {
+      params: {
+        query: queries,
+      },
+    });
+  }
 }
