@@ -429,7 +429,7 @@ export class DataAggregator {
     toIndex: number
   ): string {
     if (fromIndex % 2 !== 0 || toIndex % 2 !== 1) {
-      // path goes from document to link
+      // path doesn't go from document to link
       return null;
     }
 
