@@ -460,7 +460,7 @@ export class DataAggregator {
       values.objects.push(...objects);
     } else {
       for (const object of objectData) {
-        // chainVisitedIds[stage.index] = object.id;
+        chainVisitedIds[index] = object.id;
         const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, chain, index, chainVisitedIds);
         this.iterateThroughValues(linkedObjectDataWithLinks, values, chain, index + 1, chainVisitedIds);
       }
