@@ -8,7 +8,7 @@ cache:
     - ~/.m2
   timeout: 900
 jdk:
-  - oraclejdk11
+  - openjdk11
 addons:
   apt:
     packages:
