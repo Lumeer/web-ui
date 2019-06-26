@@ -280,7 +280,8 @@ export class DataAggregator {
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
     const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const data = {};
-    this.iterateRecursive(dataObjects, data, chain, valuesChains, 0);
+    const chainVisitedIds = [];
+    this.iterateRecursive(dataObjects, data, chain, valuesChains, 0, chainVisitedIds);
     return data;
   }
 
@@ -289,13 +290,15 @@ export class DataAggregator {
     data: AggregatedDataMap,
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
-    index: number
+    index: number,
+    chainVisitedIds: string[]
   ) {
     const stage = chain[index];
     const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
 
     for (const object of objectData) {
-      const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, stage, chain[index + 1], object);
+      chainVisitedIds[index] = object.id;
+      const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, chain, index, chainVisitedIds);
 
       if (stage.isRow || stage.isColumn) {
         const values = this.getValues(object, stage.attributeId);
@@ -312,15 +315,22 @@ export class DataAggregator {
           if (index === chain.length - 1) {
             if (valuesChains.length > 0) {
               for (const valueChain of valuesChains) {
+                const fullChain = [...chain, ...valueChain];
                 const valueLinkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
                   object,
-                  stage,
-                  valueChain[0],
-                  object
+                  fullChain,
+                  index,
+                  chainVisitedIds
                 );
                 const lastStage = valueChain[valueChain.length - 1];
                 const dataAggregationValues = this.processLastStage(lastStage, data, formattedValue);
-                this.iterateThroughValues(valueLinkedObjectDataWithLinks, dataAggregationValues, valueChain, 0);
+                this.iterateThroughValues(
+                  valueLinkedObjectDataWithLinks,
+                  dataAggregationValues,
+                  fullChain,
+                  index + 1,
+                  chainVisitedIds
+                );
               }
             } else {
               this.processLastStage(stage, data, formattedValue);
@@ -329,11 +339,18 @@ export class DataAggregator {
             if (!data[formattedValue]) {
               data[formattedValue] = {};
             }
-            this.iterateRecursive(linkedObjectDataWithLinks, data[formattedValue], chain, valuesChains, index + 1);
+            this.iterateRecursive(
+              linkedObjectDataWithLinks,
+              data[formattedValue],
+              chain,
+              valuesChains,
+              index + 1,
+              chainVisitedIds
+            );
           }
         }
       } else {
-        this.iterateRecursive(linkedObjectDataWithLinks, data, chain, valuesChains, index + 1);
+        this.iterateRecursive(linkedObjectDataWithLinks, data, chain, valuesChains, index + 1, chainVisitedIds);
       }
     }
   }
@@ -366,30 +383,63 @@ export class DataAggregator {
 
   private getLinkedObjectDataWithLinks(
     object: DataResourceWithLinks,
-    stage: AttributesResourceChain,
-    nextStage: AttributesResourceChain,
-    currentData: DataResourceWithLinks
+    chain: AttributesResourceChain[],
+    index: number,
+    chainVisitedIds: string[]
   ): DataResourceWithLinks[] {
+    const stage = chain[index];
+    const nextStage = chain[index + 1];
+
     if (!nextStage || nextStage.index === stage.index) {
-      return [currentData];
+      return [object];
     } else {
       const nextStageType = this.attributesResourceTypeForIndex(nextStage.index);
-      const linkedObjectData = stage.index < nextStage.index ? object.from : object.to;
+      const linkedDataResources = stage.index < nextStage.index ? object.from : object.to;
 
       const resourceId = this.attributesResourceIdForIndex(nextStage.index);
-      const nextStageObjectData = this.dataMap[resourceId] || {};
-      return linkedObjectData
-        .filter(
-          d =>
-            ((<LinkInstance>d).linkTypeId &&
-              (<LinkInstance>d).linkTypeId === nextStage.resource.id &&
-              nextStageType === AttributesResourceType.LinkType) ||
-            ((<DocumentModel>d).collectionId &&
-              (<DocumentModel>d).collectionId === nextStage.resource.id &&
-              nextStageType === AttributesResourceType.Collection)
+      const nextStageDataResourcesWithLinks = this.dataMap[resourceId] || {};
+      const mandatoryVisitedId = this.getMandatoryVisitedId(
+        chain,
+        index,
+        chainVisitedIds,
+        stage.index,
+        nextStage.index
+      );
+
+      return linkedDataResources
+        .filter(dataResource =>
+          !!mandatoryVisitedId
+            ? dataResource.id === mandatoryVisitedId
+            : ((<LinkInstance>dataResource).linkTypeId &&
+                (<LinkInstance>dataResource).linkTypeId === nextStage.resource.id &&
+                nextStageType === AttributesResourceType.LinkType) ||
+              ((<DocumentModel>dataResource).collectionId &&
+                (<DocumentModel>dataResource).collectionId === nextStage.resource.id &&
+                nextStageType === AttributesResourceType.Collection)
         )
-        .map(d => nextStageObjectData[d.id]);
+        .map(dataResource => nextStageDataResourcesWithLinks[dataResource.id]);
     }
+  }
+
+  private getMandatoryVisitedId(
+    chain: AttributesResourceChain[],
+    chainIndex: number,
+    chainVisitedIds: string[],
+    fromIndex: number,
+    toIndex: number
+  ): string {
+    if (fromIndex % 2 !== 0 || toIndex % 2 !== 1) {
+      // path doesn't go from document to link
+      return null;
+    }
+
+    for (let i = chainIndex; i >= 1; i--) {
+      if (chain[i].index === fromIndex && chain[i - 1].index === toIndex) {
+        return chainVisitedIds[i - 1];
+      }
+    }
+
+    return null;
   }
 
   private attributesResourceIdForIndex(index: number): string {
@@ -401,22 +451,18 @@ export class DataAggregator {
   private iterateThroughValues(
     objectData: DataResourceWithLinks[],
     values: AggregatedDataValues,
-    valueChain: AttributesResourceChain[],
-    index: number
+    chain: AttributesResourceChain[],
+    index: number,
+    chainVisitedIds: string[]
   ) {
-    if (index === valueChain.length - 1) {
+    if (index === chain.length - 1) {
       const objects = objectData.map(object => ({...object, from: null, to: null}));
       values.objects.push(...objects);
     } else {
-      const stage = valueChain[index];
       for (const object of objectData) {
-        const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
-          object,
-          stage,
-          valueChain[index + 1],
-          object
-        );
-        this.iterateThroughValues(linkedObjectDataWithLinks, values, valueChain, index + 1);
+        chainVisitedIds[index] = object.id;
+        const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, chain, index, chainVisitedIds);
+        this.iterateThroughValues(linkedObjectDataWithLinks, values, chain, index + 1, chainVisitedIds);
       }
     }
   }
