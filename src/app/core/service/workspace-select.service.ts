@@ -73,9 +73,16 @@ export class WorkspaceSelectService {
       });
   }
 
-  private goToProject(organization: Organization, project: Project, fromDialog?: boolean) {
+  private goToProject(organization: Organization, project: Project) {
     if (organization && project) {
-      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all', {outlets: {dialog: null}}]);
+      this.router.navigate([
+        {
+          outlets: {
+            primary: ['w', organization.code, project.code, 'view', 'search', 'all'],
+            dialog: null,
+          },
+        },
+      ]);
     }
   }
 
