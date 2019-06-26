@@ -224,7 +224,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   public onSave(lastName: string) {
     this.stopEditing();
 
-    if (!lastName || this.dialogService.isDialogOpen()) {
+    if (!lastName) {
       return;
     }
 
