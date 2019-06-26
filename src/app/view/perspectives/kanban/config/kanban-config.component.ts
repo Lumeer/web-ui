@@ -21,12 +21,12 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChang
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanCollectionConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import isEqual from 'lodash/isEqual';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query} from '../../../../core/store/navigation/query';
-import {getBaseCollectionIdsFromQuery} from '../../../../core/store/navigation/query.util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
+import {checkOrTransformKanbanConfig} from '../util/kanban.util';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'kanban-config',
@@ -59,40 +59,20 @@ export class KanbanConfigComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.collections) {
-      this.checkConfigColumns(this.config);
-    }
-    if (changes.query) {
-      this.checkQueryCollections();
+    if (changes.documents || changes.collections || changes.constraintData || changes.query) {
+      this.checkConfigColumns();
     }
   }
 
-  private checkConfigColumns(kanbanConfig: KanbanConfig) {
+  private checkConfigColumns() {
     const config = this.converter.buildKanbanConfig(
-      kanbanConfig,
+      checkOrTransformKanbanConfig(this.config, this.collections),
       this.documents,
       this.collections,
       this.constraintData
     );
-    if (!isEqual(config, this.config)) {
+    if (!deepObjectsEquals(config, this.config)) {
       setTimeout(() => this.configChange.emit(config));
-    }
-  }
-
-  private checkQueryCollections() {
-    const collectionIdsInQuery = getBaseCollectionIdsFromQuery(this.query);
-    if (this.config && collectionIdsInQuery.length > 0) {
-      const collectionsConfig = {...this.config.collections};
-      const collectionIdsToRemove = Object.entries(collectionsConfig)
-        .filter(([, collectionConfig]) => collectionConfig && !!collectionConfig.attribute)
-        .map(([collectionId]) => collectionId)
-        .filter(collectionId => !collectionIdsInQuery.includes(collectionId));
-
-      if (collectionIdsToRemove.length > 0) {
-        collectionIdsToRemove.forEach(collectionId => delete collectionsConfig[collectionId]);
-        const newConfig = {...this.config, collections: collectionsConfig};
-        this.checkConfigColumns(newConfig);
-      }
     }
   }
 

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Resource} from '../../core/model/resource';
+import {AttributesResource, AttributesResourceType, Resource} from '../../core/model/resource';
 import {Role} from '../../core/model/role';
 import {User} from '../../core/store/users/user';
 import {Permission} from '../../core/store/permissions/permissions';
@@ -25,6 +25,8 @@ import {View} from '../../core/store/views/view';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 export function userCanReadWorkspace(user: User, organization: Organization, project: Project): boolean {
   if (userHasManageRoleInResource(user, organization)) {
@@ -124,4 +126,14 @@ export function mergePermissions(p1: AllowedPermissions, p2: AllowedPermissions)
     writeWithView: p1.writeWithView && p2.writeWithView,
     manageWithView: p1.manageWithView && p2.manageWithView,
   };
+}
+
+export function getAttributesResourceType(attributesResource: AttributesResource): AttributesResourceType {
+  if (<LinkType>attributesResource && (<LinkType>attributesResource).collectionIds) {
+    return AttributesResourceType.LinkType;
+  } else if (<Collection>attributesResource && (<Collection>attributesResource).permissions) {
+    return AttributesResourceType.Collection;
+  }
+
+  return null;
 }

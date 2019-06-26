@@ -25,6 +25,7 @@ import {Constraint} from '../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {Collection} from '../../../../../../../core/store/collections/collection';
+import {getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'pivot-header-attribute-config',
@@ -79,7 +80,7 @@ export class PivotHeaderAttributeConfigComponent {
       return;
     }
 
-    const resourceType = <Collection>resource ? AttributesResourceType.Collection : AttributesResourceType.LinkType;
+    const resourceType = getAttributesResourceType(resource);
     const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
     const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
     this.attributeSelect.emit(headerAttribute);

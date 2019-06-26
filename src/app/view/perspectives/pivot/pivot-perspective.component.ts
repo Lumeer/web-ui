@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
@@ -27,7 +27,7 @@ import {User} from '../../../core/store/users/user';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {withLatestFrom} from 'rxjs/operators';
+import {take, withLatestFrom} from 'rxjs/operators';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
@@ -44,6 +44,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {checkOrTransformPivotConfig, pivotConfigIsEmpty} from './util/pivot-util';
 
 @Component({
   selector: 'pivot-perspective',
@@ -85,8 +86,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
         if (pivot) {
           this.refreshPivot(view && view.config);
         } else {
-          this.createPivot(view && view.config);
-          this.setupSidebar(view, sidebarOpened);
+          this.createPivot(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -98,21 +98,31 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createPivot(viewConfig: ViewConfig) {
-    const config = (viewConfig && viewConfig.pivot) || this.createDefaultConfig();
-    const pivot = {id: this.pivotId, config};
-    this.store$.dispatch(new PivotsAction.AddPivot({pivot}));
+  private createPivot(view: View, sidebarOpened: boolean) {
+    combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesByQuery)),
+    ])
+      .pipe(take(1))
+      .subscribe(([query, collections, linkTypes]) => {
+        const config = checkOrTransformPivotConfig(
+          view && view.config && view.config.pivot,
+          query,
+          collections,
+          linkTypes
+        );
+        const pivot = {id: this.pivotId, config};
+        this.store$.dispatch(new PivotsAction.AddPivot({pivot}));
+        this.setupSidebar(view, config, sidebarOpened);
+      });
   }
 
-  private createDefaultConfig(): PivotConfig {
-    return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
-  }
-
-  private setupSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
+  private setupSidebar(view: View, config: PivotConfig, opened: boolean) {
+    if (!view || pivotConfigIsEmpty(config)) {
       this.sidebarOpened$.next(true);
+    } else {
+      this.sidebarOpened$.next(opened);
     }
   }
 

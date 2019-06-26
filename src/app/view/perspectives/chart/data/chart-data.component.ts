@@ -51,6 +51,7 @@ import {
 } from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {checkOrTransformChartConfig} from '../visualizer/chart-util';
 
 interface Data {
   collections: Collection[];
@@ -103,6 +104,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public config: ChartConfig;
 
   @Output()
+  public configChange = new EventEmitter<ChartConfig>();
+
+  @Output()
   public patchData = new EventEmitter<DocumentModel>();
 
   @Output()
@@ -129,17 +133,22 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const latestData = data[data.length - 1];
     this.updateDataForConverter(latestData);
 
+    const newConfig = checkOrTransformChartConfig(latestData.config, this.query, this.collections, this.linkTypes);
+    if (!deepObjectsEquals(newConfig, latestData.config)) {
+      this.configChange.emit(newConfig);
+    }
+
     const updates = data.map(d => d.updateType);
     if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
-      return this.chartDataConverter.convert(latestData.config);
+      return this.chartDataConverter.convert(newConfig);
     } else if (updates.includes(UpdateType.Y1)) {
-      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y1);
+      return this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y1);
     } else if (updates.includes(UpdateType.Y2)) {
-      return this.chartDataConverter.convertAxisType(latestData.config, ChartAxisType.Y2);
+      return this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y2);
     } else if (updates.includes(UpdateType.Type)) {
-      return this.chartDataConverter.convertType(latestData.config.type);
+      return this.chartDataConverter.convertType(newConfig.type);
     } else {
-      return this.chartDataConverter.convert(latestData.config);
+      return this.chartDataConverter.convert(newConfig);
     }
   }
 

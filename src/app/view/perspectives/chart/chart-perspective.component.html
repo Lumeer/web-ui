@@ -24,7 +24,8 @@
       [constraintData]="{users: users$ | async}"
       [config]="data.config"
       (patchData)="patchDocumentData($event)"
-      (patchLinkData)="patchLinkInstanceData($event)">
+      (patchLinkData)="patchLinkInstanceData($event)"
+      (configChange)="onConfigChanged($event)">
     </chart-data>
 
   </ng-container>

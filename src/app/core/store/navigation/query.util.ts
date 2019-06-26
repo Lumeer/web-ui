@@ -222,6 +222,10 @@ function isQueryLinkFiltersSubset(superset: LinkAttributeFilter[], subset: LinkA
 }
 
 export function queryWithoutLinks(query: Query): Query {
+  if (!query) {
+    return query;
+  }
+
   const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
 }
