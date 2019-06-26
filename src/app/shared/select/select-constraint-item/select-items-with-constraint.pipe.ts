@@ -18,11 +18,12 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AttributesResource} from '../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {SelectItemModel} from '../select-item/select-item.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {deepObjectsEquals} from '../../utils/common.utils';
+import {getAttributesResourceType} from '../../utils/resource.utils';
 
 @Pipe({
   name: 'selectItemWithConstraint',
@@ -34,9 +35,10 @@ export class SelectItemWithConstraintPipe implements PipeTransform {
   ): SelectItemModel[] {
     return (attributesResources || [])
       .reduce((arr, resource, index) => {
-        if (<Collection>resource) {
+        const resourceType = getAttributesResourceType(resource);
+        if (resourceType === AttributesResourceType.Collection) {
           return [...arr, ...this.collectionSelectItems(resource as Collection, index)];
-        } else if (<LinkType>resource) {
+        } else if (resourceType === AttributesResourceType.LinkType) {
           return [...arr, ...this.linkTypeSelectItems(resource as LinkType, index)];
         }
         return arr;

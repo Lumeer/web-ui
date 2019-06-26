@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -31,8 +31,8 @@ import {
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {ChartAxisType, ChartConfig, ChartSortType, ChartType, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
+import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {ChartConfig, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
@@ -46,13 +46,11 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {chartConfigCollectionIds} from '../../../core/store/charts/chart.util';
 import {ChartDataComponent} from './data/chart-data.component';
-import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {chartConfigIsEmpty, checkOrTransformChartConfig} from './visualizer/chart-util';
 
 @Component({
   selector: 'chart-perspective',
@@ -86,7 +84,6 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.initChart();
     this.subscribeToQuery();
     this.subscribeData();
-    this.subscribeValidConfig();
   }
 
   private subscribeToQuery() {
@@ -113,8 +110,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
         if (chart) {
           this.refreshChart(view && view.config);
         } else {
-          this.createChart(view && view.config);
-          this.setupSidebar(view, sidebarOpened);
+          this.createChart(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -126,26 +122,31 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createChart(viewConfig: ViewConfig) {
-    const config = (viewConfig && viewConfig.chart) || this.createDefaultConfig();
-    const chart = {id: this.chartId, config};
-    this.store$.dispatch(new ChartAction.AddChart({chart}));
+  private createChart(view: View, sidebarOpened: boolean) {
+    combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesByQuery)),
+    ])
+      .pipe(take(1))
+      .subscribe(([query, collections, linkTypes]) => {
+        const config = checkOrTransformChartConfig(
+          view && view.config && view.config.chart,
+          query,
+          collections,
+          linkTypes
+        );
+        const chart = {id: this.chartId, config};
+        this.store$.dispatch(new ChartAction.AddChart({chart}));
+        this.setupSidebar(view, config, sidebarOpened);
+      });
   }
 
-  private createDefaultConfig(): ChartConfig {
-    return {
-      type: ChartType.Line,
-      axes: {},
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum, [ChartAxisType.Y2]: DataAggregationType.Sum},
-      sort: {type: ChartSortType.Ascending},
-    };
-  }
-
-  private setupSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
+  private setupSidebar(view: View, config: ChartConfig, opened: boolean) {
+    if (!view || chartConfigIsEmpty(config)) {
       this.sidebarOpened$.next(true);
+    } else {
+      this.sidebarOpened$.next(opened);
     }
   }
 
@@ -182,28 +183,6 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
-  }
-
-  private subscribeValidConfig() {
-    const subscription = this.store$
-      .pipe(select(selectCollectionsByQuery))
-      .pipe(
-        withLatestFrom(this.store$.pipe(select(selectChartConfig))),
-        withLatestFrom(this.store$.pipe(select(selectAllLinkTypes)))
-      )
-      .subscribe(([[collections, config], linkTypes]) => {
-        const collectionIdsFromConfig = chartConfigCollectionIds(config, linkTypes);
-        const collectionMissing = collectionIdsFromConfig.some(
-          id => !collections.find(collection => collection.id === id)
-        );
-        collectionMissing && this.setDefaultConfig();
-      });
-    this.subscriptions.add(subscription);
-  }
-
-  private setDefaultConfig() {
-    const defaultConfig = this.createDefaultConfig();
-    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config: defaultConfig}));
   }
 
   public onSidebarToggle() {

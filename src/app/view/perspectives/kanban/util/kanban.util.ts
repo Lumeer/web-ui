@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanCollectionConfig, KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (!deepObjectsEquals(viewConfig.collections, currentConfig.collections)) {
@@ -42,4 +44,42 @@ function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boo
     !deepObjectsEquals(column1, column2) ||
     !areArraysSame(column1 && column1.documentsIdsOrder, column2 && column2.documentsIdsOrder)
   );
+}
+
+export function checkOrTransformKanbanConfig(config: KanbanConfig, collections: Collection[]): KanbanConfig {
+  if (!config) {
+    return createDefaultConfig();
+  }
+
+  return {...config, collections: checkOrTransformKanbanCollectionsConfig(config.collections, collections)};
+}
+
+function checkOrTransformKanbanCollectionsConfig(
+  collectionsConfig: Record<string, KanbanCollectionConfig>,
+  collections: Collection[]
+): Record<string, KanbanCollectionConfig> {
+  if (!collectionsConfig) {
+    return collectionsConfig;
+  }
+
+  return Object.keys(collectionsConfig).reduce((map, key) => {
+    const collectionConfig = collectionsConfig[key];
+    if (collectionConfig && collectionConfig.attribute) {
+      const collection = (collections || []).find(coll => coll.id === collectionConfig.attribute.collectionId);
+      const attribute = findAttribute(collection && collection.attributes, collectionConfig.attribute.attributeId);
+      if (attribute) {
+        map[key] = collectionConfig;
+      }
+    }
+
+    return map;
+  }, {});
+}
+
+function createDefaultConfig(): KanbanConfig {
+  return {columns: [], collections: {}};
+}
+
+export function kanbanConfigIsEmpty(config: KanbanConfig): boolean {
+  return config && Object.values(config.collections || {}).filter(value => !!value).length === 0;
 }

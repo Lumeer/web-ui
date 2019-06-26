@@ -23,6 +23,8 @@ import {AppState} from '../app.state';
 import {SearchTab} from './search-tab';
 import {Workspace} from './workspace';
 import {Query} from './query';
+import {query} from '@angular/animations';
+import {queryWithoutLinks} from './query.util';
 
 export interface NavigationState {
   query: Query;
@@ -45,6 +47,12 @@ export const selectQuery = createSelector(
   selectNavigation,
   (state: NavigationState) => state.query
 );
+
+export const selectQueryWithoutLinks = createSelector(
+  selectQuery,
+  currentQuery => queryWithoutLinks(currentQuery)
+);
+
 export const selectPerspective = createSelector(
   selectNavigation,
   (state: NavigationState) => state.perspective

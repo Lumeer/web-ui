@@ -23,6 +23,14 @@ import {
   PivotRowColumnAttribute,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
+import {Query} from '../../../../core/store/navigation/query';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query.util';
+import {AttributesResource} from '../../../../core/model/resource';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return (
@@ -80,4 +88,85 @@ export function pivotConfigHasAdditionalValueLevel(config: PivotConfig): boolean
   const columnsNum = (config.columnAttributes || []).length;
   const valuesNum = (config.valueAttributes || []).length;
   return (columnsNum === 0 && valuesNum > 0) || (columnsNum > 0 && valuesNum > 1);
+}
+
+export function checkOrTransformPivotConfig(
+  config: PivotConfig,
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): PivotConfig {
+  if (!config) {
+    return createDefaultConfig();
+  }
+
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(
+    query && query.stems && query.stems[0],
+    collections,
+    linkTypes
+  );
+  return {
+    rowAttributes: checkOrTransformPivotAttributes<PivotRowColumnAttribute>(
+      config.rowAttributes,
+      attributesResourcesOrder
+    ),
+    columnAttributes: checkOrTransformPivotAttributes<PivotRowColumnAttribute>(
+      config.columnAttributes,
+      attributesResourcesOrder
+    ),
+    valueAttributes: checkOrTransformPivotAttributes<PivotValueAttribute>(
+      config.valueAttributes,
+      attributesResourcesOrder
+    ),
+  };
+}
+
+function checkOrTransformPivotAttributes<T extends PivotAttribute>(
+  pivotAttributes: T[],
+  attributesResourcesOrder: AttributesResource[]
+): T[] {
+  if (!pivotAttributes) {
+    return pivotAttributes;
+  }
+
+  return pivotAttributes.reduce((array, pivotAttribute) => {
+    const attributesResource = attributesResourcesOrder[pivotAttribute.resourceIndex];
+    if (
+      attributesResource &&
+      attributesResource.id === pivotAttribute.resourceId &&
+      getAttributesResourceType(attributesResource) === pivotAttribute.resourceType
+    ) {
+      const attribute = findAttribute(attributesResource.attributes, pivotAttribute.attributeId);
+      if (attribute) {
+        array.push(pivotAttribute);
+      }
+    } else {
+      const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+        ar => ar.id === pivotAttribute.resourceId && getAttributesResourceType(ar) === pivotAttribute.resourceType
+      );
+      if (newAttributesResourceIndex >= 0) {
+        const attribute = findAttribute(
+          attributesResourcesOrder[newAttributesResourceIndex].attributes,
+          pivotAttribute.attributeId
+        );
+        if (attribute) {
+          array.push({...pivotAttribute, resourceIndex: newAttributesResourceIndex});
+        }
+      }
+    }
+
+    return array;
+  }, []);
+}
+
+function createDefaultConfig(): PivotConfig {
+  return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
+}
+
+export function pivotConfigIsEmpty(config: PivotConfig): boolean {
+  return (
+    ((config && config.rowAttributes) || []).length === 0 &&
+    ((config && config.columnAttributes) || []).length === 0 &&
+    ((config && config.valueAttributes) || []).length === 0
+  );
 }

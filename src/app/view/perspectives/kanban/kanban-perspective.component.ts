@@ -33,24 +33,24 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectQueryWithoutLinks} from '../../../core/store/navigation/navigation.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   selectCollectionsByCustomQuery,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -90,16 +90,11 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$
-      .pipe(
-        select(selectQuery),
-        map(query => query && queryWithoutLinks(query))
-      )
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchData(query);
-        this.subscribeDataByQuery(query);
-      });
+    const subscription = this.store$.pipe(select(selectQueryWithoutLinks)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchData(query);
+      this.subscribeDataByQuery(query);
+    });
     this.subscriptions.add(subscription);
   }
 
@@ -129,8 +124,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
         if (kanban) {
           this.refreshKanban(view && view.config);
         } else {
-          this.createKanban(view && view.config);
-          this.setupSidebar(view, sidebarOpened);
+          this.createKanban(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -142,21 +136,26 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
-  private createKanban(viewConfig: ViewConfig) {
-    const config = (viewConfig && viewConfig.kanban) || this.createDefaultConfig();
-    const kanban = {id: this.kanbanId, config};
-    this.store$.dispatch(new KanbansAction.AddKanban({kanban}));
+  private createKanban(view: View, sidebarOpened: boolean) {
+    this.store$
+      .pipe(
+        select(selectQueryWithoutLinks),
+        mergeMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
+        take(1)
+      )
+      .subscribe(collections => {
+        const config = checkOrTransformKanbanConfig(view && view.config && view.config.kanban, collections);
+        const kanban = {id: this.kanbanId, config};
+        this.store$.dispatch(new KanbansAction.AddKanban({kanban}));
+        this.setupSidebar(view, config, sidebarOpened);
+      });
   }
 
-  private createDefaultConfig(): KanbanConfig {
-    return {columns: [], collections: {}};
-  }
-
-  private setupSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
+  private setupSidebar(view: View, config: KanbanConfig, opened: boolean) {
+    if (!view || kanbanConfigIsEmpty(config)) {
       this.sidebarOpened$.next(true);
+    } else {
+      this.sidebarOpened$.next(opened);
     }
   }
 

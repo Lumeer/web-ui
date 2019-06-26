@@ -41,8 +41,9 @@ import {PivotData} from '../util/pivot-data';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {View} from '../../../../core/store/views/view';
-import {pivotConfigHasDataTransformChange} from '../util/pivot-util';
+import {checkOrTransformPivotConfig, pivotConfigHasDataTransformChange} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 interface Data {
   collections: Collection[];
@@ -124,8 +125,13 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   private handleData(data: Data): PivotData {
+    const config = checkOrTransformPivotConfig(data.config, data.query, data.collections, data.linkTypes);
+    if (!deepObjectsEquals(data.config, config)) {
+      this.configChange.next(config);
+    }
+
     return this.pivotTransformer.transform(
-      data.config,
+      config,
       data.collections,
       data.documents,
       data.linkTypes,

@@ -33,6 +33,7 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 import {Constraint} from '../../../../../core/model/data/constraint';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query.util';
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'gantt-chart-collection-config',
@@ -73,7 +74,7 @@ export class GanttChartCollectionConfigComponent {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[itemId.resourceIndex];
     if (resource) {
-      const resourceType = <Collection>resource ? AttributesResourceType.Collection : AttributesResourceType.LinkType;
+      const resourceType = getAttributesResourceType(resource);
       const bar: GanttChartBarModel = {...itemId, resourceType, resourceId: resource.id};
       this.onBarPropertySelect(type, bar);
     }

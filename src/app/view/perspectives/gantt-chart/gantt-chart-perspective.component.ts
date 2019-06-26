@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
@@ -33,7 +33,7 @@ import {Query} from '../../../core/store/navigation/query';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {distinctUntilChanged, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
@@ -48,6 +48,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {checkOrTransformGanttConfig, ganttConfigIsEmpty} from './util/gantt-chart-util';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -90,8 +91,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
         if (ganttChart) {
           this.refreshGanttChart(view && view.config);
         } else {
-          this.createGanttChart(view && view.config);
-          this.setupSidebar(view, sidebarOpened);
+          this.createGanttChart(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -105,21 +105,31 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createGanttChart(viewConfig: ViewConfig) {
-    const config = (viewConfig && viewConfig.ganttChart) || this.createDefaultConfig();
-    const ganttChart = {id: this.ganttChartId, config};
-    this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart}));
+  private createGanttChart(view: View, sidebarOpened: boolean) {
+    combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesByQuery)),
+    ])
+      .pipe(take(1))
+      .subscribe(([query, collections, linkTypes]) => {
+        const config = checkOrTransformGanttConfig(
+          view && view.config && view.config.ganttChart,
+          query,
+          collections,
+          linkTypes
+        );
+        const ganttChart = {id: this.ganttChartId, config};
+        this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart}));
+        this.setupSidebar(view, config, sidebarOpened);
+      });
   }
 
-  private createDefaultConfig(): GanttChartConfig {
-    return {mode: GanttChartMode.Month, collections: {}};
-  }
-
-  private setupSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
+  private setupSidebar(view: View, config: GanttChartConfig, opened: boolean) {
+    if (!view || ganttConfigIsEmpty(config)) {
       this.sidebarOpened$.next(true);
+    } else {
+      this.sidebarOpened$.next(opened);
     }
   }
 

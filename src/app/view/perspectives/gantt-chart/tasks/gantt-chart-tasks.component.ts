@@ -38,9 +38,9 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {GanttChartConverter} from '../util/gantt-chart-util';
+import {GanttChartConverter} from '../util/gantt-chart-converter';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {Query} from '../../../../core/store/navigation/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -48,6 +48,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
 
 interface Data {
   collections: Collection[];
@@ -126,33 +127,30 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data =>
-        this.converter.convert(
-          data.config,
-          data.collections,
-          data.documents,
-          data.linkTypes,
-          data.linkInstances,
-          data.permissions || {},
-          data.constraintData,
-          data.query
-        )
-      )
+      map(data => this.handleData(data))
+    );
+  }
+
+  private handleData(data: Data): GanttChartTask[] {
+    const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
+    if (!deepObjectsEquals(config, data.config)) {
+      this.configChange.emit(config);
+    }
+
+    return this.converter.convert(
+      config,
+      data.collections,
+      data.documents,
+      data.linkTypes,
+      data.linkInstances,
+      data.permissions || {},
+      data.constraintData,
+      data.query
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (
-      (changes.documents ||
-        changes.config ||
-        changes.collections ||
-        changes.permissions ||
-        changes.linkTypes ||
-        changes.linkInstances ||
-        changes.query ||
-        changes.constraintData) &&
-      this.config
-    ) {
+    if (this.shouldConvertData(changes)) {
       this.dataSubject.next({
         collections: this.collections,
         documents: this.documents,
@@ -167,6 +165,20 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (changes.config && this.config) {
       this.currentMode$.next(this.config.mode);
     }
+  }
+
+  private shouldConvertData(changes: SimpleChanges): boolean {
+    return (
+      (changes.documents ||
+        changes.config ||
+        changes.collections ||
+        changes.permissions ||
+        changes.linkTypes ||
+        changes.linkInstances ||
+        changes.query ||
+        changes.constraintData) &&
+      !!this.config
+    );
   }
 
   public onModeChanged(mode: GanttChartMode) {

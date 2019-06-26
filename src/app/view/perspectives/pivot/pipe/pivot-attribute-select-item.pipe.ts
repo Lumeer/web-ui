@@ -19,12 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {AttributesResource} from '../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {cleanPivotAttribute} from '../util/pivot-util';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 
 @Pipe({
   name: 'pivotAttributeSelectItem',
@@ -40,7 +41,8 @@ export class PivotAttributeSelectItemPipe implements PipeTransform {
     }
 
     const cleanedAttribute = cleanPivotAttribute(pivotAttribute);
-    if (<Collection>resource) {
+    const resourceType = getAttributesResourceType(resource);
+    if (resourceType === AttributesResourceType.Collection) {
       const collection = resource as Collection;
       const attribute = findAttribute(collection.attributes, pivotAttribute.attributeId);
       return (
@@ -51,7 +53,7 @@ export class PivotAttributeSelectItemPipe implements PipeTransform {
           iconColors: [collection.color],
         }
       );
-    } else if (<LinkType>resource) {
+    } else if (resourceType === AttributesResourceType.LinkType) {
       const linkType = resource as LinkType;
       const attribute = findAttribute(linkType.attributes, pivotAttribute.attributeId);
       return (

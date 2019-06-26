@@ -1,16 +1,26 @@
-<table *ngIf="pivotTable$ | async as pivotTable"
-       class="table table-bordered table-md">
-  <tr *ngFor="let row of pivotTable.cells">
+<ng-container *ngIf="pivotTable$ | async as pivotTable">
+  <table *ngIf="pivotTable?.cells?.length; else emptyCells"
+         class="table table-bordered table-md">
+    <tr *ngFor="let row of pivotTable.cells">
 
-    <ng-container *ngFor="let cell of row">
-      <td *ngIf="cell"
-          [rowSpan]="cell.rowSpan"
-          [colSpan]="cell.colSpan"
-          [ngClass]="cell.cssClass"
-          [style.background]="cell.background"
-          [style.color]="cell.background && (cell.background | contrastColor)">
-        {{cell.value}}
-      </td>
-    </ng-container>
-  </tr>
-</table>
+      <ng-container *ngFor="let cell of row">
+        <td *ngIf="cell"
+            [rowSpan]="cell.rowSpan"
+            [colSpan]="cell.colSpan"
+            [ngClass]="cell.cssClass"
+            [style.background]="cell.background"
+            [style.color]="cell.background && (cell.background | contrastColor)">
+          {{cell.value}}
+        </td>
+      </ng-container>
+    </tr>
+  </table>
+</ng-container>
+
+<ng-template #emptyCells>
+  <empty-state class="w-100"
+               icon="far fa-empty-set">
+    <h3 i18n="@@perspective.pivot.table.empty.title">Nothing to show</h3>
+    <div i18n="@@perspective.pivot.table.empty.description">Please select valid config in sidebar to display data.</div>
+  </empty-state>
+</ng-template>
