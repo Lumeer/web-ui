@@ -62,6 +62,6 @@ import {ContainsDeletedQueryItemPipe} from './views/view-detail/contains-deleted
     SearchPerspectiveComponent,
     SearchViewsComponent,
   ],
-  exports: [SearchPerspectiveComponent, ViewDetailComponent, EmptyDataComponent],
+  exports: [SearchPerspectiveComponent, ViewDetailComponent],
 })
 export class SearchPerspectiveModule {}
