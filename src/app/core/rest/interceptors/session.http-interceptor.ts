@@ -48,7 +48,7 @@ export class SessionHttpInterceptor implements HttpInterceptor {
   }
 
   private navigateToSessionExpiredPage() {
-    this.router.navigate(['/', 'session-expired'], {
+    this.router.navigate(['/', 'session-expired', {outlets: {dialog: null, fsdialog: null}}], {
       queryParams: {
         redirectUrl: this.router.url,
       },
