@@ -423,6 +423,70 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.description" datatype="html">
+        <source>
+    Defines the exact position on the surface of the planet Earth.
+  </source><target>
+    Určuje přesnou polohu na zeměkouli.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.format.label" datatype="html">
+        <source>
+      Format
+    </source><target>
+      Formát
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precision.label" datatype="html">
+        <source>
+      Fractional digits
+    </source><target>
+      Desetinná místa
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precision.error.integer" datatype="html">
+        <source>
+      You need to enter a number of fractional digits.
+    </source><target>
+      Musíte zadat počet desetinných míst.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precision.error.min" datatype="html">
+        <source>
+      You need to enter a number greater than or equal to <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.min?.min}}"/>.
+    </source><target>
+      Musíte zadat číslo rovné nebo větší než <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.min?.min}}"/>.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precision.error.max" datatype="html">
+        <source>
+      You need to enter a number lesser than or equal to <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.max?.max}}"/>.
+    </source><target>
+      Musíte zadat číslo rovné nebo menší než <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.max?.max}}"/>.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist!
@@ -435,7 +499,7 @@
                 <target>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kartičky} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="view.perspective" datatype="html">
                 <source>Perspective</source>
                 <target>Pohled</target>
@@ -445,7 +509,7 @@
                 <source>Type a title of this page, save, and share!</source>
                 <target>Pojmenujte tuto obrazovku, uložte a sdílejte!</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
 
 
 
@@ -608,13 +672,14 @@
         </context-group>
       </trans-unit><trans-unit id="attribute.type.value" datatype="html">
         <source>
-        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
       </source><target>
-        <x id="ICU" equiv-text="{type, select, DateTime {...} Number {...} Text {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="899cb85e08a5b4ae454b1afc48bd86127cea4f6c" datatype="html">
-        <source>{VAR_SELECT, select, Boolean {Checkbox} Color {Color} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source><target>{VAR_SELECT, select, None {Žádný} Color {Barva} Number {Číslo} DateTime {Datum} Percentage {Procenta} Text {Text} User {Uživatel} Select {Výběr} Boolean {Zaškrtávátko} }</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="f55b19025e06a16709d972fae1b4b04dfe8c1daf" datatype="html">
+        <source>{VAR_SELECT, select, Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+        <target>{VAR_SELECT, select, None {Žádný} Color {Barva} Number {Číslo} DateTime {Datum} Percentage {Procenta} Coordinates {Souřadnice} Text {Text} User {Uživatel} Select {Výběr} Boolean {Zaškrtávátko} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2125,7 +2190,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
         <source>Toggle sort</source><target>Změnit pořadí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">aperspective.gantt.config.modepp/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
 
             <trans-unit id="button.close" datatype="html">
                 <source>Close</source>
@@ -3053,7 +3118,7 @@
                 <source>2. Set Title</source>
                 <target>2. Zadejte název</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
             <trans-unit id="search.all.collections" datatype="html">
                 <source>
           Tables
@@ -3377,19 +3442,19 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.control.zoom.in" datatype="html">
-        <source>Zoom in</source><target state="new">Zoom in</target>
+        <source>Zoom in</source><target>Přiblížit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.control.zoom.out" datatype="html">
-        <source>Zoom out</source><target state="new">Zoom out</target>
+        <source>Zoom out</source><target>Oddálit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.control.compass" datatype="html">
-        <source>Reset bearing to north</source><target state="new">Reset bearing to north</target>
+        <source>Reset bearing to north</source><target>Otočit zpět na sever</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3465,7 +3530,7 @@
                 <source>Share</source>
                 <target>Sdílet</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">82</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">82</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
             <trans-unit id="remove.row" datatype="html">
                 <source>Remove Row</source>
                 <target>Odstranit řádek</target>
@@ -3533,7 +3598,8 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit><trans-unit id="constraint.type.icon.title" datatype="html">
-        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source><target>{VAR_SELECT, select, Text {Text} Number {Číslo} Address {Adresa} Boolean {Zaškrtávátko} Coordinates {Poloha} DateTime {Datum a čas} Email {E-mail} Function {Funkce} Image {Obrázek} Link {Vazba} Percentage {Procenta} Rating {Hodnocení} Select {Výběr} Tag {Značky} User {Výběr uživatele} Color {Barva} }</target>
+        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
+        <target>{VAR_SELECT, select, Text {Text} Number {Číslo} Address {Adresa} Boolean {Zaškrtávátko} Coordinates {Poloha} DateTime {Datum a čas} Email {E-mail} Function {Funkce} Image {Obrázek} Link {Vazba} Percentage {Procenta} Rating {Hodnocení} Select {Výběr} Tag {Značky} User {Výběr uživatele} Color {Barva} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -3600,7 +3666,7 @@
         <source>Changes are not saved yet</source><target>Změny nejsou uloženy</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">91</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
@@ -3870,7 +3936,7 @@
             Save
           </source><target>Uložit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Configure function of</source><target>
       Nastavení funkce atributu
     </target>

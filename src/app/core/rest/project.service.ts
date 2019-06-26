@@ -55,7 +55,11 @@ export class ProjectService extends PermissionService {
   }
 
   public applyTemplate(organizationId: string, projectId: string, template: string): Observable<any> {
-    return this.httpClient.post(`${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`, {});
+    return this.httpClient.post(
+      `${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`,
+      {},
+      {params: {l: environment.locale}}
+    );
   }
 
   public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {
