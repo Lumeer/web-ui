@@ -18,21 +18,21 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
+import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {DialogService} from '../../dialog/dialog.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {User} from '../store/users/user';
-import {selectCurrentUser} from '../store/users/users.state';
-import {Organization} from '../store/organizations/organization';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {Project} from '../store/projects/project';
+import {DialogService} from '../../dialog/dialog.service';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Role} from '../model/role';
+import {AppState} from '../store/app.state';
 import {NotificationsAction} from '../store/notifications/notifications.action';
-import {Router} from '@angular/router';
+import {Organization} from '../store/organizations/organization';
+import {Project} from '../store/projects/project';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
+import {User} from '../store/users/user';
+import {selectCurrentUser} from '../store/users/users.state';
 
 @Injectable({
   providedIn: 'root',
@@ -75,13 +75,7 @@ export class WorkspaceSelectService {
 
   private goToProject(organization: Organization, project: Project, fromDialog?: boolean) {
     if (organization && project) {
-      const path = ['w', organization.code, project.code, 'view', 'search', 'all'];
-      if (fromDialog) {
-        this.dialogService.closeDialog(false);
-        this.router.navigateByUrl(path.join('/'));
-      } else {
-        this.router.navigate(path);
-      }
+      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all', {outlets: {dialog: null}}]);
     }
   }
 
@@ -103,7 +97,7 @@ export class WorkspaceSelectService {
 
   public createNewProject(organization: Organization) {
     this.dialogService.openCreateProjectDialog(organization.id, null, project =>
-      this.goToProject(organization, project, true)
+      this.goToProject(organization, project)
     );
   }
 

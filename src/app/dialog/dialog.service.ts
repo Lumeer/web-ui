@@ -18,17 +18,20 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
+import {AppState} from '../core/store/app.state';
 import {Collection} from '../core/store/collections/collection';
 import {LinkType} from '../core/store/link-types/link.type';
 import {Organization} from '../core/store/organizations/organization';
 import {Project} from '../core/store/projects/project';
-import {DialogPath} from './dialog-path';
-import {environment} from '../../environments/environment';
 import {VideosAction} from '../core/store/videos/videos.action';
 import {getAllVideos} from '../core/store/videos/videos.data';
-import {AppState} from '../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {DialogPath} from './dialog-path';
+import {isDialogPathInUrl} from './dialog.utils';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
@@ -40,34 +43,33 @@ import {Store} from '@ngrx/store';
 })
 export class DialogService {
   public callback: any;
-  private open: boolean;
 
-  public constructor(private router: Router, private store: Store<AppState>, private route: ActivatedRoute) {
+  private open$: Observable<boolean>;
+
+  public constructor(private router: Router, private store: Store<AppState>) {
     if (environment.videoKey) {
       this.store.dispatch(new VideosAction.LoadVideos({videos: getAllVideos(), apiKey: environment.videoKey}));
     }
+
+    this.open$ = this.bindOpen();
   }
 
-  public closeDialog(redirect = true): Promise<boolean> {
-    this.callback = null;
-    if (this.open) {
-      if (redirect) {
-        return this.navigateToDialog(null);
-      }
-      this.open = false;
-    }
-    return Promise.resolve(true);
+  public bindOpen(): Observable<boolean> {
+    return this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map((event: NavigationEnd) => isDialogPathInUrl(event.url)),
+      distinctUntilChanged()
+    );
   }
 
-  public closeFullscreenDialog(redirect = true): Promise<boolean> {
+  public closeDialog(): Promise<boolean> {
     this.callback = null;
-    if (this.open) {
-      if (redirect) {
-        return this.navigateToFullscreenDialog(null);
-      }
-      this.open = false;
-    }
-    return Promise.resolve(true);
+    return this.navigateToDialog(null);
+  }
+
+  public closeFullscreenDialog(): Promise<boolean> {
+    this.callback = null;
+    return this.navigateToFullscreenDialog(null);
   }
 
   public closeAllDialogs() {
@@ -136,17 +138,11 @@ export class DialogService {
     this.navigateToDialog(path);
   }
 
-  public isDialogOpen(): boolean {
-    return this.open;
-  }
-
   private navigateToDialog(path: any[]) {
-    this.open = !!path;
     return this.router.navigate(['', {outlets: {dialog: path, fsdialog: null}}], {queryParamsHandling: 'preserve'});
   }
 
   private navigateToFullscreenDialog(path: any[]) {
-    this.open = !!path;
     return this.router.navigate(['', {outlets: {fsdialog: path, dialog: null}}], {queryParamsHandling: 'preserve'});
   }
 }
