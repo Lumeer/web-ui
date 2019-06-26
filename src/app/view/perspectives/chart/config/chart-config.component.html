@@ -9,7 +9,6 @@
                [buttonClasses]="buttonClasses"
                [items]="chartTypes | chartTypesToSelect"
                [selectedId]="config.type"
-               [fitParent]="true"
                (select)="onTypeSelect($event)">
   </select-item>
 
@@ -20,7 +19,6 @@
                [emptyValue]="axisEmptyValue"
                [buttonClasses]="buttonClasses"
                [removable]="true"
-               [fitParent]="true"
                (select)="onAxisSelect(xAxisType, $event)"
                (remove)="onAxisRemoved(xAxisType)">
   </select-item>
@@ -32,7 +30,6 @@
                [selectedId]="config.sort && config.sort.axis"
                [buttonClasses]="buttonClasses"
                [removable]="true"
-               [fitParent]="true"
                (select)="onSortSelect($event)"
                (remove)="onSortRemoved()">
   </select-item>
@@ -42,7 +39,6 @@
                [placeholderText]="sortTypePlaceholder"
                [buttonClasses]="buttonClasses"
                [removable]="false"
-               [fitParent]="true"
                [selectedId]="config.sort && config.sort.type"
                (select)="onSortTypeSelect($event)">
   </select-item>
@@ -62,7 +58,6 @@
                    [emptyValue]="axisEmptyValue"
                    [buttonClasses]="buttonClasses"
                    [removable]="true"
-                   [fitParent]="true"
                    (select)="onAxisSelect(yAxisType, $event)"
                    (remove)="onAxisRemoved(yAxisType)">
       </select-item>
@@ -74,7 +69,6 @@
                    [placeholderText]="yAxisType | dataSetSelectPlaceholder"
                    [emptyValue]="axisEmptyValue"
                    [removable]="true"
-                   [fitParent]="true"
                    [buttonClasses]="buttonClasses"
                    (select)="onDataNameSelect(yAxisType, $event)"
                    (remove)="onDataNameRemoved(yAxisType)">
@@ -85,7 +79,6 @@
                    [placeholderText]="yAxisType | aggregationSelectPlaceholder"
                    [buttonClasses]="buttonClasses"
                    [removable]="false"
-                   [fitParent]="true"
                    [selectedId]="config.aggregations && config.aggregations[yAxisType]"
                    (select)="onAggregationSelect(yAxisType, $event)">
       </select-item>

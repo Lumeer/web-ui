@@ -10,7 +10,6 @@
              [placeholderText]="propertyRequired | calendarPropertyPlaceholder"
              [emptyValue]="propertyRequired | calendarPropertyEmptyValue"
              [removable]="true"
-             [fitParent]="true"
              [buttonClasses]="buttonClasses"
              (select)="onBarPropertySelect(propertyRequired, $event)"
              (remove)="onBarPropertyRemoved(propertyRequired)">
@@ -25,7 +24,6 @@
                [emptyValue]="propertyOptional | calendarPropertyEmptyValue"
                [buttonClasses]="buttonClasses"
                [removable]="true"
-               [fitParent]="true"
                (select)="onBarPropertySelect(propertyOptional, $event)"
                (remove)="onBarPropertyRemoved(propertyOptional)">
   </select-item>

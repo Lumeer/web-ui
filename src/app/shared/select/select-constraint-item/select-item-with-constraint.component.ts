@@ -64,7 +64,7 @@ export class SelectItemWithConstraint {
   public buttonClasses: string;
 
   @Input()
-  public fitParent = false;
+  public fitParent = true;
 
   @Output()
   public select = new EventEmitter<SelectItemWithConstraintId>();

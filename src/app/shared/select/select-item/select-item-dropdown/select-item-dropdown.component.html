@@ -1,0 +1,18 @@
+<ng-template #selectItemDropdown>
+  <div class="d-flex flex-column card"
+       [class.w-100]="fitParent">
+    <a *ngFor="let item of items"
+       [class.active]="selectedId | areIdsEqual:item.id"
+       (click)="onSelect(item)"
+       class="dropdown-item text-truncate">
+      <icons-presenter *ngIf="item.icons && item.iconColors"
+                       [colors]="item.iconColors"
+                       [icons]="item.icons">
+      </icons-presenter>
+      <i *ngIf="item.icons && !item.iconColors && item.icons.length === 1" class="fa-fw {{item.icons[0]}}"></i>
+      <span class="ml-sm-1 text-nowrap">
+        {{item.value}}
+      </span>
+    </a>
+  </div>
+</ng-template>
