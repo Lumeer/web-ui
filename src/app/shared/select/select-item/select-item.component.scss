@@ -1,16 +1,5 @@
 @import '../../../../styles/variables';
 
-.dropdown-item.active {
-  color: white;
-
-  &:hover,
-  &:active,
-  &:focus {
-    color: white;
-    background-color: $primary-hover;
-  }
-}
-
 .clear {
   color: $primary;
 

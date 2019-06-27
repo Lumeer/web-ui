@@ -10,7 +10,6 @@
                [placeholderText]="aggregationPlaceholder"
                [buttonClasses]="buttonClasses"
                [removable]="false"
-               [fitParent]="true"
                [selectedId]="pivotAttribute.aggregation"
                (select)="onAggregationSelect($event)">
   </select-item>
@@ -24,7 +23,6 @@
              [items]="valueTypes | pivotValueTypeSelectItems"
              [selectedId]="pivotAttribute.valueType || valueType.Default"
              [removable]="false"
-             [fitParent]="true"
              [buttonClasses]="buttonClasses"
              (select)="onValueTypeSelected($event)">
 </select-item>

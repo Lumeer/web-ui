@@ -28,9 +28,11 @@ import {SelectItemWithConstraint} from './select-constraint-item/select-item-wit
 import {SelectItemWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
 import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
 import {PipesModule} from '../pipes/pipes.module';
+import {SelectItemDropdownComponent} from './select-item/select-item-dropdown/select-item-dropdown.component';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @NgModule({
-  imports: [CommonModule, PickerModule, PipesModule],
+  imports: [CommonModule, PickerModule, PipesModule, OverlayModule],
   declarations: [
     SelectItemComponent,
     GetSelectItemPipe,
@@ -38,6 +40,7 @@ import {PipesModule} from '../pipes/pipes.module';
     SelectItemWithConstraint,
     SelectItemWithConstraintPipe,
     SelectItemWithConstraintConfigPipe,
+    SelectItemDropdownComponent,
   ],
   providers: [AreIdsEqualPipe],
   exports: [SelectItemComponent, SelectItemWithConstraint],

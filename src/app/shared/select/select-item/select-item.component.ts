@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {SelectItemModel} from './select-item.model';
+import {SelectItemDropdownComponent} from './select-item-dropdown/select-item-dropdown.component';
 
 @Component({
   selector: 'select-item',
@@ -52,13 +53,16 @@ export class SelectItemComponent {
   public buttonClasses: string;
 
   @Input()
-  public fitParent = false;
+  public fitParent = true;
 
   @Output()
   public select = new EventEmitter<any>();
 
   @Output()
   public remove = new EventEmitter();
+
+  @ViewChild(SelectItemDropdownComponent, {static: false})
+  public selectItemDropdown: SelectItemDropdownComponent;
 
   public onSelect(item: SelectItemModel) {
     this.select.emit(item.id);
@@ -68,5 +72,9 @@ export class SelectItemComponent {
     event.preventDefault();
     event.stopPropagation();
     this.remove.emit();
+  }
+
+  public onDropdownClick() {
+    this.selectItemDropdown.open();
   }
 }

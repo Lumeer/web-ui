@@ -1,4 +1,4 @@
-<div class="input-group flex-nowrap">
+<div class="input-group flex-nowrap" #selectItemParent>
   <div class="input-group-prepend">
     <span class="input-group-text">
       <i *ngIf="placeholderIcon" class="fa-fw {{placeholderIcon}}"></i>
@@ -6,14 +6,10 @@
     </span>
   </div>
 
-  <button aria-expanded="false"
-          aria-haspopup="true"
-          class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle d-flex align-items-center {{buttonClasses}}"
-          data-toggle="dropdown"
-          id="selectItemDropdown"
+  <button class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle d-flex align-items-center {{buttonClasses}}"
           [disabled]="disabled"
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
-          type="button">
+          (click)="onDropdownClick()">
 
     <span class="flex-grow-1 text-left empty-text text-truncate"
           *ngIf="!(selectedId | getSelectItem:items)" [title]="emptyValue">{{emptyValue}}</span>
@@ -32,22 +28,11 @@
     </ng-container>
   </button>
 
-  <div aria-labelledby="selectItemDropdown"
-       class="dropdown-menu"
-       [class.mw-100]="fitParent">
-    <a *ngFor="let item of items"
-       [class.active]="selectedId | areIdsEqual:item.id"
-       (click)="onSelect(item)"
-       class="dropdown-item text-truncate">
-      <icons-presenter *ngIf="item.icons && item.iconColors"
-                       [colors]="item.iconColors"
-                       [icons]="item.icons">
-      </icons-presenter>
-      <i *ngIf="item.icons && !item.iconColors && item.icons.length === 1" class="fa-fw {{item.icons[0]}}"></i>
-      <span class="ml-sm-1 text-nowrap">
-        {{item.value}}
-      </span>
-    </a>
-  </div>
+  <select-item-dropdown [origin]="selectItemParent"
+                        [items]="items"
+                        [selectedId]="selectedId"
+                        [fitParent]="fitParent"
+                        (selectItem)="onSelect($event)">
+  </select-item-dropdown>
 
 </div>
