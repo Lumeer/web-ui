@@ -56,7 +56,7 @@ export class SelectItemDropdownComponent implements AfterViewInit {
   @Output()
   public selectItem = new EventEmitter<SelectItemModel>();
 
-  @ViewChild('selectItemDropdown', {static: true})
+  @ViewChild('selectItemDropdown', {static: false})
   public selectItemDropdown: TemplateRef<any>;
 
   private overlayRef: OverlayRef;
