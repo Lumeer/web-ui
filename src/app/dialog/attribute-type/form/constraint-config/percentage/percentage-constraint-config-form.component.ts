@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint';
 import {FormControl, FormGroup} from '@angular/forms';
+import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {minMaxValidator} from '../../../../../core/validators/min-max-validator';
 

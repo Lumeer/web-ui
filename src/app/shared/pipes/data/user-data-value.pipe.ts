@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {UserConstraintConfig} from '../../../core/model/data/constraint';
+import {UserConstraintConfig} from '../../../core/model/data/constraint-config';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {formatUserDataValue} from '../../utils/data.utils';
 

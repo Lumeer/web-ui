@@ -1,0 +1,52 @@
+<p class="text-muted"
+   i18n="@@constraint.address.description">
+  Suggests addresses in the specified format when entering the value. Drag the fields you want to use to the right.
+</p>
+
+<div *ngIf="fields | arrayDifference : fieldsControl.value as options"
+     class="container mb-3">
+  <div class="row">
+    <div cdkDropList
+         #optionsList="cdkDropList"
+         [cdkDropListData]="options"
+         [cdkDropListConnectedTo]="[fieldsList]"
+         (cdkDropListDropped)="onOptionsDrop($event)"
+         class="col d-flex flex-column justify-content-start"
+         [class.empty-list]="options?.length === 0">
+      <h6 i18n="@@constraint.address.options.header">Available options</h6>
+      <div *ngFor="let option of options"
+           cdkDrag
+           class="cursor-move m-1">
+        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'badge-secondary'}"></ng-container>
+      </div>
+    </div>
+
+    <div cdkDropList
+         #fieldsList="cdkDropList"
+         [cdkDropListData]="fields"
+         [cdkDropListConnectedTo]="[optionsList]"
+         (cdkDropListDropped)="onFieldsDrop($event)"
+         class="col d-flex flex-column justify-content-start"
+         [class.empty-list]="fieldsControl.value?.length === 0">
+      <h6 i18n="@@constraint.address.fields.header">Address fields</h6>
+      <div *ngFor="let option of fieldsControl.value"
+           cdkDrag
+           class="cursor-move m-1">
+        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'badge-primary'}"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="text-secondary">
+  <span i18n="@@constraint.address.example">Example:</span>&nbsp;
+  <span>{{ 'example' | addressDataValue : form.value : exampleAddressesMap }}</span>
+</p>
+
+<ng-template #addressField
+             let-default
+             let-badgeClass="badgeClass">
+  <div class="badge {{badgeClass}}">
+    {default, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent}}
+  </div>
+</ng-template>

@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {UserConstraintConfig} from '../../../../../core/model/data/constraint';
+import {UserConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {UserConstraintFormControl} from './user-constraint-form-control';
 

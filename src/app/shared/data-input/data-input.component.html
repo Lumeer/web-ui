@@ -1,5 +1,17 @@
 <ng-container *ngIf="constraint; else textDataInput"
               [ngSwitch]="constraint.type">
+  <address-data-input *ngSwitchCase="constraintType.Address"
+                      [constraintConfig]="constraint?.config"
+                      [focus]="focus"
+                      [readonly]="readonly"
+                      [skipValidation]="skipValidation"
+                      [value]="value"
+                      (valueChange)="onValueChange($event)"
+                      (save)="onSaveValue($event)"
+                      (cancel)="onCancel()"
+                      (focused)="emitFocus($event)">
+  </address-data-input>
+
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
                       [readonly]="readonly"
                       [value]="value"

@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../core/model/data/constraint';
+import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
 import {formatCoordinatesDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';

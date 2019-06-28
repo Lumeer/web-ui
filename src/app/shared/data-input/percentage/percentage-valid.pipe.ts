@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint';
+import {PercentageConstraintConfig} from '../../../core/model/data/constraint-config';
 import {isPercentageValid} from '../../utils/data.utils';
 
 @Pipe({

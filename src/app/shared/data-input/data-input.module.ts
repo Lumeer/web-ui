@@ -26,6 +26,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import {GravatarModule} from 'ngx-gravatar';
 import {DateTimeModule} from '../date-time/date-time.module';
 import {DirectivesModule} from '../directives/directives.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {BooleanDataInputComponent} from './boolean/boolean-data-input.component';
 import {ColorDataInputComponent} from './color/color-data-input.component';
@@ -39,6 +40,7 @@ import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
 import {SelectDataInputComponent} from './select/select-data-input.component';
 import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-input.component';
+import {AddressDataInputComponent} from './address/address-data-input.component';
 
 @NgModule({
   imports: [
@@ -51,6 +53,7 @@ import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-inpu
     ColorPickerModule,
     GravatarModule,
     TypeaheadModule,
+    DropdownModule,
   ],
   declarations: [
     DataInputComponent,
@@ -65,6 +68,7 @@ import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-inpu
     UserDataInputComponent,
     SelectDataInputComponent,
     CoordinatesDataInputComponent,
+    AddressDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
 })

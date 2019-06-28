@@ -19,6 +19,7 @@
 
 import {Layout} from 'plotly.js';
 import * as d3 from 'd3';
+import {ConstraintConfig, DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {
   ChartAxisCategory,
@@ -30,7 +31,6 @@ import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
 import {createRange} from './plot-util';
 import * as moment from 'moment';
-import {ConstraintConfig, DateTimeConstraintConfig} from '../../../../../core/model/data/constraint';
 import {convertChartDateTickFormat} from '../chart-util';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {

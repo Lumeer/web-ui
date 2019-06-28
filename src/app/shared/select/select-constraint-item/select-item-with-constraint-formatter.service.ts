@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
-import {Constraint, ConstraintType, DateTimeConstraintConfig} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '../../../core/model/data/constraint';
 import {createDateTimeOptions} from '../../date-time/date-time-options';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Injectable} from '@angular/core';

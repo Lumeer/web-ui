@@ -18,7 +18,7 @@
  */
 
 import * as Coordinates from 'coordinate-parser';
-import {CoordinatesFormat} from '../../../core/model/data/constraint';
+import {CoordinatesFormat} from '../../../core/model/data/constraint-config';
 import {MapCoordinates} from '../../../core/store/maps/map.model';
 
 export function parseCoordinates(value: string): MapCoordinates {

@@ -17,8 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {MapCoordinates} from '../store/maps/map.model';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {DropdownOptionDirective} from './options/dropdown-option.directive';
+import {DropdownComponent} from './dropdown.component';
+import {OptionsDropdownComponent} from './options/options-dropdown.component';
 
-export interface AddressCoordinatesMap {
-  [address: string]: MapCoordinates;
-}
+@NgModule({
+  imports: [CommonModule],
+  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
+  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
+})
+export class DropdownModule {}

@@ -70,6 +70,7 @@ import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items
 import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
 import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
+import {ArrayDifferencePipe} from './array/array-difference.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -123,6 +124,7 @@ import {SortPerspectivesPipe} from './sort-perspectives.pipe';
     AggregationSelectItemsPipe,
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
+    ArrayDifferencePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -176,6 +178,7 @@ import {SortPerspectivesPipe} from './sort-perspectives.pipe';
     AggregationSelectItemsPipe,
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
+    ArrayDifferencePipe,
   ],
 })
 export class PipesModule {}

@@ -17,4 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ColumnFunction = any;
+import {Pipe, PipeTransform} from '@angular/core';
+import {AddressesMap} from '../../../core/geocoding/address';
+import {AddressConstraintConfig} from '../../../core/model/data/constraint-config';
+import {formatAddressDataValue} from '../../utils/data.utils';
+
+@Pipe({
+  name: 'addressDataValue',
+})
+export class AddressDataValuePipe implements PipeTransform {
+  public transform(value: any, config?: AddressConstraintConfig, addressesMap?: AddressesMap): string {
+    return formatAddressDataValue(value, config, addressesMap);
+  }
+}

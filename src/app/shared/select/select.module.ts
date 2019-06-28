@@ -19,6 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {DropdownModule} from '../dropdown/dropdown.module';
 
 import {SelectItemComponent} from './select-item/select-item.component';
 import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
@@ -32,7 +33,7 @@ import {SelectItemDropdownComponent} from './select-item/select-item-dropdown/se
 import {OverlayModule} from '@angular/cdk/overlay';
 
 @NgModule({
-  imports: [CommonModule, PickerModule, PipesModule, OverlayModule],
+  imports: [CommonModule, PickerModule, PipesModule, OverlayModule, DropdownModule],
   declarations: [
     SelectItemComponent,
     GetSelectItemPipe,

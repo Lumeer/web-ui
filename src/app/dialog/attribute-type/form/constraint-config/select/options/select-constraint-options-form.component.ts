@@ -29,7 +29,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {SelectConstraintOption} from '../../../../../../core/model/data/constraint';
+import {SelectConstraintOption} from '../../../../../../core/model/data/constraint-config';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../shared/utils/form.utils';
 import {SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 

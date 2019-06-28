@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
-import {ConstraintConfig} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 
 export interface ChartData {

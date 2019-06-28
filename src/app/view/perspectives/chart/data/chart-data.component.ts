@@ -28,6 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -43,12 +44,7 @@ import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DateTimeConstraintConfig,
-} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';

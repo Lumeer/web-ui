@@ -22,15 +22,15 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {
   Constraint,
-  ConstraintConfig,
   ConstraintType,
   constraintTypesMap,
   isConstraintTypeEnabled,
-  SelectConstraintConfig,
 } from '../../../core/model/data/constraint';
+import {ConstraintConfig, SelectConstraintConfig} from '../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Attribute} from '../../../core/store/collections/collection';
 import {convertToBig} from '../../../shared/utils/data.utils';
+import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
 import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
 import {
@@ -85,6 +85,10 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   private createConstraintConfig(type: ConstraintType): ConstraintConfig {
     switch (type) {
+      case ConstraintType.Address:
+        return {
+          fields: this.configForm.get(AddressConstraintFormControl.Fields).value,
+        };
       case ConstraintType.Color:
         return {};
       case ConstraintType.Coordinates:

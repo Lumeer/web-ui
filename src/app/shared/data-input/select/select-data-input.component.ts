@@ -34,7 +34,7 @@ import {Store} from '@ngrx/store';
 import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
-import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint';
+import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {User} from '../../../core/store/users/user';
 import {KeyCode} from '../../key-code';
 import {formatSelectDataValue, formatUserDataValue, isSelectDataValueValid} from '../../utils/data.utils';

@@ -19,11 +19,11 @@
 
 import Big from 'big.js';
 import * as moment from 'moment';
+import {AddressesMap} from '../../core/geocoding/address';
+import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {
+  AddressConstraintConfig,
   ColorConstraintConfig,
-  Constraint,
-  ConstraintData,
-  ConstraintType,
   CoordinatesConstraintConfig,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
@@ -31,7 +31,7 @@ import {
   SelectConstraintConfig,
   TextConstraintConfig,
   UserConstraintConfig,
-} from '../../core/model/data/constraint';
+} from '../../core/model/data/constraint-config';
 import {Attribute} from '../../core/store/collections/collection';
 import {DocumentData} from '../../core/store/documents/document.model';
 import {User} from '../../core/store/users/user';
@@ -142,6 +142,12 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
   }
 
   switch (constraint.type) {
+    case ConstraintType.Address:
+      return formatAddressDataValue(
+        value,
+        constraint.config as AddressConstraintConfig,
+        constraintData && constraintData.addressesMap
+      );
     case ConstraintType.Coordinates:
       return formatCoordinatesDataValue(value, constraint.config as CoordinatesConstraintConfig);
     case ConstraintType.DateTime:
@@ -167,6 +173,23 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
     default:
       return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
+}
+
+export function formatAddressDataValue(
+  value: any,
+  config: AddressConstraintConfig,
+  addressesMap: AddressesMap
+): string {
+  const addresses = addressesMap && addressesMap[value];
+  if (!addresses || !addresses[0]) {
+    return value || '';
+  }
+
+  const [address] = addresses;
+  return (config.fields || [])
+    .map(fieldName => address[fieldName])
+    .filter(fieldValue => !!fieldValue)
+    .join(', ');
 }
 
 export function formatCoordinatesDataValue(value: any, config: CoordinatesConstraintConfig): string {

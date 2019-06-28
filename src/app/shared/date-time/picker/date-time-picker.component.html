@@ -1,4 +1,5 @@
-<ng-template #dateTimePicker>
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions">
   <div class="card"
        (click)="onClick($event)">
     <div class="d-flex"
@@ -45,4 +46,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</dropdown>

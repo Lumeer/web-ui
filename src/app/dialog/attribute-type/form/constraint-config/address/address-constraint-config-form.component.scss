@@ -1,0 +1,16 @@
+.fields-list {
+  display: grid;
+  grid-auto-columns: repeat(auto-fill, minmax(10px, 1fr));
+}
+
+.empty-list {
+  min-height: 25px;
+}
+
+.cdk-drag-preview {
+  z-index: 1100 !important; // otherwise shown under modal
+}
+
+.badge {
+  font-size: 100%;
+}

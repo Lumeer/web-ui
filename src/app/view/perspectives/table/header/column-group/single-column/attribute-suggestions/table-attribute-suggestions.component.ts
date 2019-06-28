@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
-import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -29,9 +27,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
@@ -55,6 +51,8 @@ import {TablesAction} from '../../../../../../../core/store/tables/tables.action
 import {selectTableById, selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
 import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../../shared/direction';
+import {DropdownPosition} from '../../../../../../../shared/dropdown/dropdown-position';
+import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.component';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
@@ -87,8 +85,17 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   @Input()
   public origin: ElementRef | HTMLElement;
 
-  @ViewChild('attributeSuggestions', {static: false})
-  public attributeSuggestions: TemplateRef<any>;
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
+
+  public readonly dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.TopStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopEnd,
+    DropdownPosition.Right,
+    DropdownPosition.Left,
+  ];
 
   private collection$ = new BehaviorSubject<Collection>(null);
   private cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
@@ -105,15 +112,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  private overlayRef: OverlayRef;
-  private portal: Portal<any>;
-
-  public constructor(
-    private dialogService: DialogService,
-    private overlay: Overlay,
-    private store$: Store<AppState>,
-    private viewContainer: ViewContainerRef
-  ) {}
+  public constructor(private dialogService: DialogService, private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
     this.linkedAttributes$ = this.bindLinkedAttributes();
@@ -136,65 +135,13 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   }
 
   public ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.attributeSuggestions, this.viewContainer);
     this.open();
   }
 
   public open() {
-    if (this.overlayRef) {
-      return;
+    if (this.dropdown) {
+      this.dropdown.open();
     }
-
-    this.overlayRef = this.overlay.create({
-      disposeOnNavigation: true,
-      panelClass: ['position-absolute', 'w-max-content'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(this.origin)
-        .withFlexibleDimensions(false)
-        .withViewportMargin(8)
-        .withLockedPosition()
-        .withPositions([
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-          {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'bottom',
-          },
-          {
-            originX: 'end',
-            originY: 'bottom',
-            overlayX: 'end',
-            overlayY: 'top',
-          },
-          {
-            originX: 'end',
-            originY: 'top',
-            overlayX: 'end',
-            overlayY: 'bottom',
-          },
-          {
-            originX: 'end',
-            originY: 'center',
-            overlayX: 'start',
-            overlayY: 'center',
-          },
-          {
-            originX: 'start',
-            originY: 'center',
-            overlayX: 'end',
-            overlayY: 'center',
-          },
-        ]),
-    });
-    this.overlayRef.attach(this.portal);
   }
 
   public ngOnDestroy() {
@@ -202,10 +149,8 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   }
 
   public close() {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 

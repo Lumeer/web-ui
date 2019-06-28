@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {SelectConstraintConfig} from '../../../../../core/model/data/constraint';
+import {SelectConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {minimumValuesCountValidator} from '../../../../../core/validators/mininum-values-count-validator';
 import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';

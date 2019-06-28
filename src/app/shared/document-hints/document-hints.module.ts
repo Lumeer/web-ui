@@ -19,12 +19,13 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {DropdownModule} from '../dropdown/dropdown.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
 import {DocumentHintsComponent} from './document-hints.component';
 
 @NgModule({
-  imports: [CommonModule, PipesModule],
+  imports: [CommonModule, DropdownModule, PipesModule],
   declarations: [DocumentHintsComponent, CanShowAttributeHintsPipe],
   exports: [DocumentHintsComponent, CanShowAttributeHintsPipe],
 })

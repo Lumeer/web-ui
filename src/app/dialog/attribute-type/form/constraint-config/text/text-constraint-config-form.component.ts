@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {CaseStyle, TextConstraintConfig} from '../../../../../core/model/data/constraint';
+import {CaseStyle, TextConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {minMaxValidator} from '../../../../../core/validators/min-max-validator';
 

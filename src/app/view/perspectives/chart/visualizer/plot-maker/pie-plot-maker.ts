@@ -18,12 +18,12 @@
  */
 
 import {Data, Layout} from 'plotly.js';
+import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisCategory, ChartDataSet, convertChartDateFormat} from '../../data/convertor/chart-data';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
-import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint';
 import * as moment from 'moment';
 import {formatDateTimeDataValue, formatPercentageDataValue} from '../../../../../shared/utils/data.utils';
 

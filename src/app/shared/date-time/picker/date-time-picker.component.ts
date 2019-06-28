@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
-import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -31,9 +28,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
@@ -41,6 +36,8 @@ import {BsDatepickerInlineConfig, BsLocaleService} from 'ngx-bootstrap/datepicke
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
+import {DropdownPosition} from '../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
 
@@ -50,7 +47,7 @@ import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
   styleUrls: ['./date-time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -75,8 +72,17 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('dateTimePicker', {static: true})
-  public dateTimePicker: TemplateRef<any>;
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
+
+  public readonly dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.TopStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopEnd,
+    DropdownPosition.Right,
+    DropdownPosition.Left,
+  ];
 
   public form = new FormGroup({
     date: new FormControl(),
@@ -86,12 +92,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
 
   public timeZone = `UTC${moment().format('Z')}, ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
 
-  private overlayRef: OverlayRef;
-  private portal: Portal<any>;
-
   private subscriptions = new Subscription();
 
-  constructor(localeService: BsLocaleService, private overlay: Overlay, private viewContainer: ViewContainerRef) {
+  constructor(localeService: BsLocaleService) {
     localeService.use(environment.locale);
   }
 
@@ -117,10 +120,6 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
       .subscribe(value => this.valueChange.emit(value));
   }
 
-  public ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.dateTimePicker, this.viewContainer);
-  }
-
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
     this.close();
@@ -132,67 +131,14 @@ export class DateTimePickerComponent implements OnChanges, OnInit, AfterViewInit
   }
 
   public open() {
-    if (this.overlayRef) {
-      return;
+    if (this.dropdown) {
+      this.dropdown.open();
     }
-
-    this.overlayRef = this.overlay.create({
-      disposeOnNavigation: true,
-      panelClass: ['position-absolute', 'w-max-content'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(this.origin)
-        .withFlexibleDimensions(false)
-        .withViewportMargin(8)
-        .withLockedPosition()
-        .withPositions([
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-          {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'bottom',
-          },
-          {
-            originX: 'end',
-            originY: 'bottom',
-            overlayX: 'end',
-            overlayY: 'top',
-          },
-          {
-            originX: 'end',
-            originY: 'top',
-            overlayX: 'end',
-            overlayY: 'bottom',
-          },
-          {
-            originX: 'end',
-            originY: 'center',
-            overlayX: 'start',
-            overlayY: 'center',
-          },
-          {
-            originX: 'start',
-            originY: 'center',
-            overlayX: 'end',
-            overlayY: 'center',
-          },
-        ]),
-    });
-    this.overlayRef.attach(this.portal);
   }
 
   public close() {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 

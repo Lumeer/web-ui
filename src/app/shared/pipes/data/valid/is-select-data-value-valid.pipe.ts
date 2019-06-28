@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint';
+import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {isSelectDataValueValid} from '../../../utils/data.utils';
 
 @Pipe({

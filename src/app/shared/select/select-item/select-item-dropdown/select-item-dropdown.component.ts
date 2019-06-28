@@ -30,6 +30,8 @@ import {
   AfterViewInit,
   HostListener,
 } from '@angular/core';
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {SelectItemModel} from '../select-item.model';
 import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
@@ -40,7 +42,7 @@ import {Portal, TemplatePortal} from '@angular/cdk/portal';
   styleUrls: ['./select-item-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemDropdownComponent implements AfterViewInit {
+export class SelectItemDropdownComponent {
   @Input()
   public origin: HTMLElement;
 
@@ -56,17 +58,10 @@ export class SelectItemDropdownComponent implements AfterViewInit {
   @Output()
   public selectItem = new EventEmitter<SelectItemModel>();
 
-  @ViewChild('selectItemDropdown', {static: false})
-  public selectItemDropdown: TemplateRef<any>;
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
 
-  private overlayRef: OverlayRef;
-  private portal: Portal<any>;
-
-  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef) {}
-
-  public ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.selectItemDropdown, this.viewContainer);
-  }
+  public readonly dropdownPositions = [DropdownPosition.BottomStart, DropdownPosition.TopStart];
 
   public onSelect(item: SelectItemModel) {
     this.close();
@@ -74,64 +69,14 @@ export class SelectItemDropdownComponent implements AfterViewInit {
   }
 
   public open() {
-    if (this.overlayRef) {
-      return;
+    if (this.dropdown) {
+      this.dropdown.open();
     }
-
-    this.overlayRef = this.overlay.create(this.getOverlayConfig());
-    this.overlayRef.attach(this.portal);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
-    this.syncWidth();
-  }
-
-  private getOverlayConfig(): OverlayConfig {
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.origin)
-      .withLockedPosition()
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-        },
-      ]);
-
-    return new OverlayConfig({
-      disposeOnNavigation: true,
-      positionStrategy: positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-    });
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    this.syncWidth();
-  }
-
-  private syncWidth() {
-    if (!this.overlayRef || !this.fitParent) {
-      return;
-    }
-
-    const refRect = this.origin.getBoundingClientRect();
-    this.overlayRef.updateSize({width: refRect.width});
   }
 
   public close() {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 }

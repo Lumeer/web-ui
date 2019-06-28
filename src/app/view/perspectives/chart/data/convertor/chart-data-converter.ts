@@ -19,13 +19,8 @@
 
 import {Injectable} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DateTimeConstraintConfig,
-  PercentageConstraintConfig,
-} from '../../../../../core/model/data/constraint';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
+import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {

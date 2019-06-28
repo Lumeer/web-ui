@@ -20,9 +20,9 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
+import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisCategory, ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {ConstraintConfig} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 
 export abstract class PlotMaker {
