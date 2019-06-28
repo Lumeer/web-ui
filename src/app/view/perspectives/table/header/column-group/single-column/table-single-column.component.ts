@@ -32,7 +32,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, mergeMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, first, map, switchMap, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
@@ -55,8 +55,8 @@ import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {
   extractAttributeLastName,
   extractAttributeParentName,
-  filterOutInvalidAttributeNameCharacters,
   filterAttributesByDepth,
+  filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../shared/utils/attribute.utils';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
@@ -132,7 +132,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   private bindSelected(): Observable<boolean> {
     return this.cursor$.pipe(
-      mergeMap(cursor =>
+      switchMap(cursor =>
         this.store$.pipe(
           select(selectTableCursorSelected(cursor)),
           distinctUntilChanged()
