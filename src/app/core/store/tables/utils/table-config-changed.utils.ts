@@ -80,7 +80,31 @@ function areTableColumnsChanged(savedColumns: TableConfigColumn[], shownColumns:
 }
 
 function isTableColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {
-  return JSON.stringify(savedColumn) !== JSON.stringify(shownColumn);
+  if (!savedColumn || !shownColumn || savedColumn.type !== shownColumn.type) {
+    return true;
+  }
+
+  if (savedColumn.type === TableColumnType.COMPOUND) {
+    return isTableCompoundColumnChanged(savedColumn, shownColumn);
+  }
+
+  if (savedColumn.type === TableColumnType.HIDDEN) {
+    return isTableHiddenColumnChanged(savedColumn, shownColumn);
+  }
+
+  return true;
+}
+
+function isTableCompoundColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {
+  return (
+    savedColumn.attributeIds[0] !== shownColumn.attributeIds[0] ||
+    savedColumn.width !== shownColumn.width ||
+    areTableColumnsChanged(savedColumn.children, shownColumn.children)
+  );
+}
+
+function isTableHiddenColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {
+  return false; // it does not matter if there is a difference in hidden attributes since it is not a visual change
 }
 
 export function areTableConfigRowsChanged(
