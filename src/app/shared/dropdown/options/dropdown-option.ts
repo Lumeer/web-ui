@@ -20,4 +20,6 @@
 export interface DropdownOption {
   value: any;
   displayValue?: string;
+  icons?: string[];
+  iconColors?: string[];
 }
