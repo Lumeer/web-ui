@@ -1980,6 +1980,20 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.address.part" datatype="html">
+        <source>
+    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="ce6bbe4476be067d5362883cdc005f069ba12916" datatype="html">
+        <source>{VAR_SELECT, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
       </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>
       All day

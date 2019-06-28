@@ -46,7 +46,7 @@
 <ng-template #addressField
              let-default
              let-badgeClass="badgeClass">
-  <div class="badge {{badgeClass}}">
+  <div class="badge {{badgeClass}}" i18n="@@constraint.address.part">
     {default, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent}}
   </div>
 </ng-template>
