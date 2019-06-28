@@ -24,7 +24,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
@@ -404,7 +404,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-input/color/color-data-input.component.html</context>
@@ -772,7 +772,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
@@ -1416,14 +1416,14 @@
         </context-group>
       </trans-unit><trans-unit id="attribute.type.value" datatype="html">
         <source>
-        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
+        <x id="ICU" equiv-text="{type, select, Address {...} Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-      </trans-unit><trans-unit id="f55b19025e06a16709d972fae1b4b04dfe8c1daf" datatype="html">
-        <source>{VAR_SELECT, select, Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+      </trans-unit><trans-unit id="20eb77b8010bbe1e3936ef86196f2fb3ad21a182" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1954,6 +1954,46 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.address.description" datatype="html">
+        <source>
+  Suggests addresses in the specified format when entering the value. Drag the fields you want to use to the right.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.address.options.header" datatype="html">
+        <source>Available options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.address.fields.header" datatype="html">
+        <source>Address fields</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.address.example" datatype="html">
+        <source>Example:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.address.part" datatype="html">
+        <source>
+    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="ce6bbe4476be067d5362883cdc005f069ba12916" datatype="html">
+        <source>{VAR_SELECT, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
       </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>
       All day
@@ -2206,14 +2246,14 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.suggestion.link.existing" datatype="html">
         <source>Use existing link
             </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
@@ -2244,7 +2284,7 @@
           <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
-        <source>Edit Function...</source>
+        <source>Edit function...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">47</context>
@@ -2365,6 +2405,18 @@
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config.component.html</context>
           <context context-type="linenumber">108</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.table.empty.title" datatype="html">
+        <source>Cannot display anything</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
+        <source>Please configure your view in the sidebar on the left first.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
         <source>Show summary</source>
         <context-group purpose="location">
@@ -2375,7 +2427,7 @@
         <source>Toggle sort</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/attribute/header/sort/pivot-attribute-sort.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source>
@@ -2391,13 +2443,13 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
         <source>

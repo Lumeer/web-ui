@@ -128,6 +128,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   private workspace: any;
   private lumeerVar: string;
+  private initializing = false;
   private destroying = false;
 
   constructor(
@@ -169,6 +170,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   public initBlockly() {
+    this.initializing = true;
     this.registerCustomBlocks();
 
     this.workspace.addChangeListener(this.onWorkspaceChange.bind(this));
@@ -226,6 +228,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
+    setTimeout(() => {
+      this.initializing = false;
+    }, 500); // let the DOM to be parsed in their timeout
   }
 
   private registerCustomBlocks(): void {
@@ -926,7 +931,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         mainBlock.outputConnection.check_ = [UNKNOWN];
       }
 
-      if (changeEvent.ids) {
+      if (!this.initializing && changeEvent.ids) {
         changeEvent.ids.forEach(newBlockId => {
           const block = workspace.getBlockById(newBlockId);
 

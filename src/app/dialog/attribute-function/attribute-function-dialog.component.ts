@@ -233,8 +233,11 @@ export class AttributeFunctionDialogComponent implements OnInit {
   }
 
   public onSubmit(collectionId: string, linkTypeId: string, attribute: Attribute) {
-    attribute.function = {...attribute.function, js: this.js, xml: this.xml, editable: this.editable$.getValue()};
-    this.onAttributeChange(collectionId, linkTypeId, attribute);
+    const newAttribute = {
+      ...attribute,
+      function: {...attribute.function, js: this.js, xml: this.xml, editable: this.editable$.getValue()},
+    };
+    this.onAttributeChange(collectionId, linkTypeId, newAttribute);
   }
 
   public onJsUpdate(jsCode: string) {
