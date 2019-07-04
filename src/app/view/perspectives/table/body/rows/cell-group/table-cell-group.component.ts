@@ -20,14 +20,14 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, mergeMap} from 'rxjs/operators';
+import {filter, switchMap} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
 import {Query} from '../../../../../../core/store/navigation/query';
-import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
+import {TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
   TableColumnType,
   TableConfigColumn,
@@ -71,8 +71,6 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  private rowSelected: boolean;
-
   public constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
@@ -97,17 +95,17 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   }
 
   private bindColumns(): Observable<TableConfigColumn[]> {
-    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTablePartLeafColumns(cursor)))));
+    return this.cursor$.pipe(switchMap(cursor => this.store$.pipe(select(selectTablePartLeafColumns(cursor)))));
   }
 
   private bindDocuments(): Observable<DocumentModel[]> {
-    return combineLatest(this.cursor$, this.rows$).pipe(
+    return combineLatest([this.cursor$, this.rows$]).pipe(
       filter(([cursor, rows]) => !!cursor && !!rows),
-      mergeMap(([cursor, rows]) =>
+      switchMap(([cursor, rows]) =>
         this.store$.pipe(
           select(selectTablePart(cursor)),
           filter(part => part && !!part.collectionId),
-          mergeMap(() => {
+          switchMap(() => {
             const documentIds = rows.map(row => row.documentId);
             return this.store$.pipe(select(selectDocumentsByIds(documentIds)));
           })
@@ -117,13 +115,13 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   }
 
   private bindLinkInstances(): Observable<LinkInstance[]> {
-    return combineLatest(this.cursor$, this.rows$).pipe(
+    return combineLatest([this.cursor$, this.rows$]).pipe(
       filter(([cursor, rows]) => !!cursor && !!rows),
-      mergeMap(([cursor, rows]) =>
+      switchMap(([cursor, rows]) =>
         this.store$.pipe(
           select(selectTablePart(cursor)),
           filter(part => part && !!part.linkTypeId),
-          mergeMap(() => {
+          switchMap(() => {
             const linkInstanceIds = rows.map(row => row.linkInstanceId);
             return this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));
           })
@@ -133,30 +131,16 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   }
 
   private bindSelectedCursor(): Observable<TableCursor> {
-    return this.cursor$.pipe(
-      mergeMap(cursor =>
-        this.store$.pipe(
-          select(selectTableCursor),
-          filter(selectedCursor => {
-            const rowBeingSelected = areTableRowCursorsEqual(cursor, selectedCursor);
-            if (!this.rowSelected && !rowBeingSelected) {
-              return false;
-            }
-
-            this.rowSelected = rowBeingSelected;
-            return true;
-          })
-        )
-      )
-    );
+    // do not try to optimize by comparing rows, otherwise cells below stay selected after row deletion
+    return this.store$.pipe(select(selectTableCursor));
   }
 
   private bindPart(): Observable<TableConfigPart> {
-    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTablePart(cursor)))));
+    return this.cursor$.pipe(switchMap(cursor => this.store$.pipe(select(selectTablePart(cursor)))));
   }
 
   private bindTable(): Observable<TableModel> {
-    return this.cursor$.pipe(mergeMap(cursor => this.store$.pipe(select(selectTableById(cursor && cursor.tableId)))));
+    return this.cursor$.pipe(switchMap(cursor => this.store$.pipe(select(selectTableById(cursor && cursor.tableId)))));
   }
 
   public trackByAttributeIds(index: number, column: TableConfigColumn): string {

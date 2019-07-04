@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, first, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -214,7 +214,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   public bindLinkedAttributes(): Observable<LinkedAttribute[]> {
     return combineLatest([this.collection$, this.lastName$]).pipe(
       filter(([collection]) => !!collection),
-      mergeMap(([collection, lastName]) =>
+      switchMap(([collection, lastName]) =>
         combineLatest([
           this.store$.select(selectLinkTypesByCollectionId(collection.id)),
           this.store$.select(selectCollectionsDictionary),
@@ -272,7 +272,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   private bindTable(): Observable<TableModel> {
     return this.cursor$.pipe(
       filter(cursor => !!cursor),
-      mergeMap(cursor => this.store$.pipe(select(selectTableById(cursor.tableId))))
+      switchMap(cursor => this.store$.pipe(select(selectTableById(cursor.tableId))))
     );
   }
 

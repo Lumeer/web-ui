@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {distinctUntilChanged, mergeMap} from 'rxjs/operators';
+import {distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
@@ -82,7 +82,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
       distinctUntilChanged(
         (a: TableBodyCursor, b: TableBodyCursor) => a.rowPath && b.rowPath && a.rowPath[0] === b.rowPath[0]
       ),
-      mergeMap(cursor => this.tableRowsService.observeRowNumber(cursor.tableId, cursor.rowPath[0]))
+      switchMap(cursor => this.tableRowsService.observeRowNumber(cursor.tableId, cursor.rowPath[0]))
     );
   }
 
