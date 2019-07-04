@@ -379,7 +379,10 @@ describe('Table perspective :: Constraints', () => {
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
-    cy.get('[data-test="attribute-type-select"]').select('Text');
+    cy.get('[data-test="attribute-type-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('Text')
+      .click();
     cy.get('[data-test="text-constraint-case-style-select"]').select('TitleCase');
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.get('[data-test="modal-dialog"]').should('be.hidden');
@@ -414,7 +417,10 @@ describe('Table perspective :: Constraints', () => {
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
-    cy.get('[data-test="attribute-type-select"]').select('Checkbox');
+    cy.get('[data-test="attribute-type-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('Checkbox')
+      .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.get('[data-test="modal-dialog"]').should('be.hidden');
 
@@ -458,7 +464,10 @@ describe('Table perspective :: Constraints', () => {
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
-    cy.get('[data-test="attribute-type-select"]').select('Date');
+    cy.get('[data-test="attribute-type-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('Date')
+      .click();
     cy.get('[data-test="datetime-constraint-format-select"]').select('YYYY-MM-DD');
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.get('[data-test="modal-dialog"]').should('be.hidden');
@@ -568,7 +577,10 @@ describe('Table perspective :: Constraints', () => {
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
-    cy.get('[data-test="attribute-type-select"]').select('Number');
+    cy.get('[data-test="attribute-type-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('Number')
+      .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.get('[data-test="modal-dialog"]').should('be.hidden');
 

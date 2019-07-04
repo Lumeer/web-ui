@@ -9,6 +9,7 @@
        [value]="option.value"
        (mousedown)="onOptionMouseDown($event, option)"
        class="dropdown-item text-truncate"
+       data-test="select-item-option"
        tabindex>
       <icons-presenter *ngIf="option.icons && option.iconColors"
                        [colors]="option.iconColors"

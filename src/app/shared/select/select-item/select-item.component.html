@@ -1,6 +1,7 @@
 <div class="input-group flex-nowrap"
      #selectItemParent>
-  <div class="input-group-prepend">
+  <div *ngIf="placeholderIcon || placeholderText"
+       class="input-group-prepend">
     <span class="input-group-text">
       <i *ngIf="placeholderIcon"
          class="fa-fw {{placeholderIcon}}"></i>
@@ -8,7 +9,9 @@
     </span>
   </div>
 
-  <button class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle d-flex align-items-center {{buttonClasses}}"
+  <button class="btn btn-outline-gray-600 dropdown-toggle d-flex align-items-center {{buttonClasses}}"
+          [class.sharp-top-left]="placeholderIcon || placeholderText"
+          [class.sharp-bottom-left]="placeholderIcon || placeholderText"
           [disabled]="disabled"
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
           (click)="onDropdownClick()"

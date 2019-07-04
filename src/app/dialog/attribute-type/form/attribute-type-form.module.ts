@@ -35,6 +35,7 @@ import {TextConstraintConfigFormComponent} from './constraint-config/text/text-c
 import {UserConstraintConfigFormComponent} from './constraint-config/user/user-constraint-config-form.component';
 import {CoordinatesConstraintConfigFormComponent} from './constraint-config/coordinates/coordinates-constraint-config-form.component';
 import {AddressConstraintConfigFormComponent} from './constraint-config/address/address-constraint-config-form.component';
+import {AttributeTypeSelectComponent} from './select/attribute-type-select.component';
 
 @NgModule({
   imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
@@ -50,6 +51,7 @@ import {AddressConstraintConfigFormComponent} from './constraint-config/address/
     UserConstraintConfigFormComponent,
     CoordinatesConstraintConfigFormComponent,
     AddressConstraintConfigFormComponent,
+    AttributeTypeSelectComponent,
   ],
   exports: [AttributeTypeFormComponent],
 })
