@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {first, map, take, withLatestFrom} from 'rxjs/operators';
+import {map, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -28,16 +28,16 @@ import {MapConfig, MapModel} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query';
 import {isAnyCollectionQuery} from '../../../core/store/navigation/query.util';
+import {View} from '../../../core/store/views/view';
+import {ViewsAction} from '../../../core/store/views/views.action';
 import {
   selectCurrentView,
   selectPerspectiveViewConfig,
   selectSidebarOpened,
 } from '../../../core/store/views/views.state';
-import {Query} from '../../../core/store/navigation/query';
 import {MapContentComponent} from './content/map-content.component';
-import {ViewsAction} from '../../../core/store/views/views.action';
-import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'map-perspective',
@@ -69,7 +69,10 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.bindMap(this.mapId);
-    this.subscribeSidebar();
+
+    this.subscriptions.add(this.subscribeToCollections());
+
+    this.setupSidebar();
   }
 
   private bindMap(mapId: string) {
@@ -81,7 +84,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.store$
       .pipe(
         select(selectPerspectiveViewConfig),
-        first()
+        take(1)
       )
       .subscribe(config => this.createMap(mapId, config));
   }
@@ -89,22 +92,36 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   private createMap(mapId: string, initConfig: MapConfig) {
     this.subscriptions.add(
       this.store$
-        .pipe(select(selectMapConfig))
+        .pipe(
+          select(selectMapConfig),
+          take(1)
+        )
         .subscribe(config => this.store$.dispatch(new MapsAction.CreateMap({mapId, config: config || initConfig})))
     );
   }
 
-  private subscribeSidebar() {
+  private subscribeToCollections(): Subscription {
+    return this.collections$.subscribe(collections =>
+      this.store$.dispatch(
+        new MapsAction.UpdateAttributes({
+          mapId: this.mapId,
+          collections,
+        })
+      )
+    );
+  }
+
+  private setupSidebar() {
     this.store$
-      .pipe(select(selectCurrentView))
       .pipe(
+        select(selectCurrentView),
         withLatestFrom(this.store$.pipe(select(selectSidebarOpened))),
         take(1)
       )
-      .subscribe(([currentView, sidebarOpened]) => this.setupSidebar(currentView, sidebarOpened));
+      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
   }
 
-  private setupSidebar(view: View, opened: boolean) {
+  private openOrCloseSidebar(view: View, opened: boolean) {
     if (view) {
       this.sidebarOpened$.next(opened);
     } else {
