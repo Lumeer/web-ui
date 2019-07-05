@@ -1,6 +1,6 @@
 <ng-container *ngIf="{rows: rows$ | async} as table">
   <cdk-virtual-scroll-viewport [itemSize]="31"
-                               class="h-100">
+                               class="flex-grow-1">
     <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
                        [cursor]="cursor | nextRowCursor : rowIndex"
                        [row]="row"
@@ -8,13 +8,12 @@
                        (unsetCursor)="unsetCursor()">
     </table-primary-row>
 
+    <table-empty-row *ngIf="table.rows?.length === 0"
+                     [canManageConfig]="canManageConfig"
+                     [cursor]="cursor"
+                     (click)="unsetCursor()">
+    </table-empty-row>
+
     <div>&nbsp;</div>
-
   </cdk-virtual-scroll-viewport>
-
-  <table-empty-row *ngIf="!table.rows?.length"
-                   [canManageConfig]="canManageConfig"
-                   [cursor]="cursor"
-                   (click)="unsetCursor()">
-  </table-empty-row>
 </ng-container>
