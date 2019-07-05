@@ -32,7 +32,6 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {Query} from '../../../../core/store/navigation/query';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
-import {getTableElement} from '../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
 
@@ -72,7 +71,6 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    this.setScrollbarWidth();
     this.setTableRowMinHeight();
   }
 
@@ -82,14 +80,6 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
     if (!rowsClick) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
-  }
-
-  public setScrollbarWidth() {
-    const element = this.element.nativeElement;
-    const scrollbarWidth = element.offsetWidth - element.clientWidth;
-
-    const tableElement = getTableElement(this.tableId);
-    tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
   }
 
   private setTableRowMinHeight() {

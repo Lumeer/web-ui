@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,6 +26,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
@@ -35,6 +37,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {Query} from '../../../../../core/store/navigation/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
+import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
 
@@ -53,6 +56,9 @@ export class TableRowsComponent implements OnChanges {
 
   @Input()
   public canManageConfig: boolean;
+
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  public virtualScrollViewport: CdkVirtualScrollViewport;
 
   public rows$: Observable<TableConfigRow[]>;
 
@@ -79,8 +85,17 @@ export class TableRowsComponent implements OnChanges {
       map(([rows, existingDocumentIds]) => {
         return rows.filter(row => (row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId));
       }),
-      tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query})))
+      tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query}))),
+      tap(() => setTimeout(() => this.setScrollbarWidth()))
     );
+  }
+
+  public setScrollbarWidth() {
+    const element = this.virtualScrollViewport.elementRef.nativeElement;
+    const scrollbarWidth = element.offsetWidth - element.clientWidth;
+
+    const tableElement = getTableElement(this.cursor.tableId);
+    tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
   }
 
   private retrieveDocuments(query: Query) {

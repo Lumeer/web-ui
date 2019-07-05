@@ -14,8 +14,7 @@
     <table-body [tableId]="tableId"
                 [query]="query"
                 [canManageConfig]="data.canManageConfig"
-                class="flex-grow-1"
-                [style.height.px]="((table$ | async)?.config?.rows | rowPositionTop: (table$ | async)?.config?.rows?.length) + 40">
+                class="d-flex flex-grow-1">
     </table-body>
   </ng-container>
 </div>
