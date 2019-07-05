@@ -95,7 +95,9 @@ export class TableRowsComponent implements OnChanges {
     const scrollbarWidth = element.offsetWidth - element.clientWidth;
 
     const tableElement = getTableElement(this.cursor.tableId);
-    tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    if (tableElement) {
+      tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    }
   }
 
   private retrieveDocuments(query: Query) {
