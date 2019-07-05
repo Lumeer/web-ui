@@ -17,9 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {SelectItemModel} from './select-item.model';
-import {SelectItemDropdownComponent} from './select-item-dropdown/select-item-dropdown.component';
 
 @Component({
   selector: 'select-item',
@@ -27,7 +38,7 @@ import {SelectItemDropdownComponent} from './select-item-dropdown/select-item-dr
   styleUrls: ['./select-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemComponent {
+export class SelectItemComponent implements OnChanges {
   @Input()
   public items: SelectItemModel[];
 
@@ -61,11 +72,26 @@ export class SelectItemComponent {
   @Output()
   public remove = new EventEmitter();
 
-  @ViewChild(SelectItemDropdownComponent, {static: false})
-  public selectItemDropdown: SelectItemDropdownComponent;
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
-  public onSelect(item: SelectItemModel) {
-    this.select.emit(item.id);
+  public dropdownOptions: DropdownOption[] = [];
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.items && this.items) {
+      this.dropdownOptions = createDropdownOptions(this.items);
+    }
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    if (this.dropdown.isOpen()) {
+      event.preventDefault();
+      this.dropdown.onKeyDown(event);
+    }
+  }
+
+  public onSelect(option: DropdownOption) {
+    this.select.emit(option.value);
   }
 
   public onRemove(event: any) {
@@ -75,6 +101,15 @@ export class SelectItemComponent {
   }
 
   public onDropdownClick() {
-    this.selectItemDropdown.open();
+    this.dropdown.open();
   }
+}
+
+function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
+  return (items || []).map(item => ({
+    value: item.id,
+    displayValue: item.value,
+    icons: item.icons,
+    iconColors: item.iconColors,
+  }));
 }

@@ -1,14 +1,28 @@
-<dropdown [origin]="origin"
+<dropdown [closeOnClickOutside]="closeOnClickOutside"
+          [fitParent]="fitParent"
+          [origin]="origin"
           [positions]="dropdownPositions">
   <div *ngIf="options?.length > 0"
-       class="dropdown-menu show position-static">
+       class="dropdown-menu show position-static w-100">
     <a *ngFor="let option of options"
        dropdownOption
        [value]="option.value"
-       (mousedown)="onOptionMouseDown(option)"
-       class="dropdown-item"
-       href="">
-      {{ option.displayValue || option.value }}
+       (mousedown)="onOptionMouseDown($event, option)"
+       class="dropdown-item text-truncate"
+       data-test="select-item-option"
+       tabindex>
+      <icons-presenter *ngIf="option.icons && option.iconColors"
+                       [colors]="option.iconColors"
+                       [icons]="option.icons">
+      </icons-presenter>
+
+      <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
+         class="fa-fw {{option.icons[0]}}">
+      </i>
+
+      <span class="ml-sm-1 text-nowrap">
+        {{ option.displayValue || option.value }}
+      </span>
     </a>
   </div>
 </dropdown>

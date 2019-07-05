@@ -46,10 +46,19 @@ import {DropdownOptionDirective} from './dropdown-option.directive';
 })
 export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   @Input()
+  public closeOnClickOutside: boolean;
+
+  @Input()
+  public fitParent: boolean;
+
+  @Input()
   public options: DropdownOption[];
 
   @Input()
   public origin: ElementRef | HTMLElement;
+
+  @Input()
+  public selectedValue: any;
 
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
@@ -79,13 +88,23 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  public onOptionMouseDown(option: DropdownOption) {
+  public onOptionMouseDown(event: MouseEvent, option: DropdownOption) {
+    event.preventDefault();
     this.selectOption.emit(option);
+    this.close();
   }
 
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
+      this.highlightSelectedValue();
+    }
+  }
+
+  private highlightSelectedValue() {
+    if ((this.listKeyManager && this.selectedValue) || this.selectedValue === 0) {
+      const activeIndex = (this.options || []).findIndex(option => option.value === this.selectedValue);
+      this.listKeyManager.setActiveItem(activeIndex);
     }
   }
 
@@ -93,6 +112,10 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     if (this.dropdown) {
       this.dropdown.close();
     }
+  }
+
+  public isOpen(): boolean {
+    return this.dropdown && this.dropdown.isOpen();
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -104,6 +127,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
 
     if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
       this.selectOption.emit(this.listKeyManager.activeItem);
+      this.close();
     }
   }
 

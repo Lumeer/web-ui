@@ -20,12 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {
-  Constraint,
-  ConstraintType,
-  constraintTypesMap,
-  isConstraintTypeEnabled,
-} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintType, constraintTypesMap} from '../../../core/model/data/constraint';
 import {ConstraintConfig, SelectConstraintConfig} from '../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Attribute} from '../../../core/store/collections/collection';
@@ -51,8 +46,6 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
-
-  public readonly types = ['None'].concat(Object.keys(ConstraintType).filter(type => isConstraintTypeEnabled(type)));
 
   public form = new FormGroup({
     type: new FormControl(),
