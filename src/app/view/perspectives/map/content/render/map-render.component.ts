@@ -32,16 +32,28 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Map, Marker, NavigationControl} from 'mapbox-gl';
+import {Point} from 'geojson';
+import {GeoJSONSource, Map, MapLayerMouseEvent, MapSourceDataEvent, Marker, NavigationControl} from 'mapbox-gl';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
 import {MapConfig, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
-import {createMapboxMap, createMapMarker} from './map.utils';
+import {
+  createMapboxMap,
+  createMapClusterCountsLayer,
+  createMapClusterMarkersSource,
+  createMapClustersLayer,
+  createMapMarker,
+} from './map-render.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
+
+const MAP_SOURCE_ID = 'records';
+
+const MAP_CLUSTER_CIRCLE_LAYER = 'cluster-circles';
+const MAP_CLUSTER_SYMBOL_LAYER = 'cluster-symbols';
 
 @Component({
   selector: 'map-render',
@@ -60,6 +72,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   public mapElementId: string;
 
   private mapboxMap: Map;
+
+  private allMarkers: Record<string, Marker>;
   private drawnMarkers: Marker[] = [];
 
   private mapLoaded$ = new BehaviorSubject(false);
@@ -94,7 +108,130 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public ngAfterViewInit() {
+    // needs to run outside Angular, otherwise change detection in AppComponent gets triggered on every mouse move
     this.ngZone.runOutsideAngular(() => this.initMap(this.map.config));
+  }
+
+  private initMap(config: MapConfig) {
+    this.mapboxMap = createMapboxMap(this.mapElementId, config);
+    this.mapboxMap.addControl(new NavigationControl());
+
+    this.registerMapEventListeners();
+
+    setTimeout(() => this.mapboxMap.resize(), 100);
+  }
+
+  private registerMapEventListeners() {
+    this.mapboxMap.on('load', () => this.onMapLoad());
+    this.mapboxMap.on('data', event => this.onMapData(event as MapSourceDataEvent));
+    this.mapboxMap.on('moveend', () => this.onMapMoveEnd());
+    this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
+    this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseEnter(event));
+    this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseLeave(event));
+  }
+
+  private onMapLoad() {
+    this.mapLoaded$.next(true);
+
+    this.translateNavigationControls();
+    this.loadOpenMapTilesLanguage();
+
+    this.mapboxMap.resize();
+  }
+
+  private onMapData(event: MapSourceDataEvent) {
+    if (event.sourceId !== MAP_SOURCE_ID || !event.isSourceLoaded) {
+      return;
+    }
+
+    this.drawnMarkers.forEach(marker => marker.remove());
+    this.redrawMarkers();
+  }
+
+  private onMapMoveEnd() {
+    // needs to be delayed, otherwise markers are not shown on cluster click
+    setTimeout(() => this.redrawMarkers(), 100);
+  }
+
+  private onMapClusterClick(event: MapLayerMouseEvent) {
+    const features = this.mapboxMap.queryRenderedFeatures(event.point, {layers: [MAP_CLUSTER_CIRCLE_LAYER]});
+    const clusterId = features[0].properties.cluster_id;
+    (this.mapboxMap.getSource(MAP_SOURCE_ID) as GeoJSONSource).getClusterExpansionZoom(clusterId, (error, zoom) => {
+      if (error) {
+        return;
+      }
+
+      this.mapboxMap.flyTo({
+        center: (features[0].geometry as Point).coordinates as [number, number],
+        zoom: zoom,
+      });
+    });
+  }
+
+  private onMapClusterMouseEnter(event: MapLayerMouseEvent) {
+    this.mapboxMap.getCanvas().style.cursor = 'pointer';
+  }
+
+  private onMapClusterMouseLeave(event: MapLayerMouseEvent) {
+    this.mapboxMap.getCanvas().style.cursor = '';
+  }
+
+  private redrawMarkers() {
+    const unclusteredMarkers = this.getUnclusteredMarkers();
+
+    const addedMarkers = unclusteredMarkers.filter(marker => !this.drawnMarkers.includes(marker));
+    addedMarkers.forEach(marker => marker.addTo(this.mapboxMap));
+
+    const removedMarkers = this.drawnMarkers.filter(marker => !unclusteredMarkers.includes(marker));
+    removedMarkers.forEach(marker => marker.remove());
+
+    this.drawnMarkers = unclusteredMarkers;
+  }
+
+  private getUnclusteredMarkers(): Marker[] {
+    return [
+      ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((documentIds, feature) => {
+        const document = JSON.parse(feature.properties.document || null);
+        if (document) {
+          documentIds.add(document.id);
+        }
+        return documentIds;
+      }, new Set()),
+    ].map(documentId => this.allMarkers[documentId]);
+  }
+
+  private setControlButtonTitle(className: string, title: string) {
+    this.renderer.setAttribute(document.getElementsByClassName(className).item(0), 'title', title);
+  }
+
+  private addMarkersToMap(markers: MapMarkerProperties[]) {
+    this.allMarkers = markers.reduce((markersMap, marker) => {
+      markersMap[marker.document.id] = createMapMarker(marker);
+      return markersMap;
+    }, {});
+
+    if (this.mapboxMap.getSource(MAP_SOURCE_ID)) {
+      this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
+      this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
+      this.mapboxMap.removeSource(MAP_SOURCE_ID);
+    }
+
+    this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
+    this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
+    this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+
+    if (this.mapboxMap) {
+      this.mapboxMap.remove();
+      this.mapboxMap = null;
+    }
+  }
+
+  public refreshMapSize() {
+    this.mapboxMap.resize();
   }
 
   public loadOpenMapTilesLanguage() {
@@ -103,23 +240,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     script.src = 'https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js';
     script.onload = () => (this.mapboxMap as any).autodetectLanguage(environment.locale);
     this.renderer.appendChild(this.element.nativeElement, script);
-  }
-
-  private initMap(config: MapConfig) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, config);
-
-    this.mapboxMap.addControl(new NavigationControl());
-
-    this.mapboxMap.on('load', () => {
-      this.mapLoaded$.next(true);
-
-      this.translateNavigationControls();
-      this.loadOpenMapTilesLanguage();
-
-      this.mapboxMap.resize();
-    });
-
-    setTimeout(() => this.mapboxMap.resize(), 100);
   }
 
   private translateNavigationControls() {
@@ -144,29 +264,5 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
         value: 'Reset bearing to north',
       })
     );
-  }
-
-  private setControlButtonTitle(className: string, title: string) {
-    this.renderer.setAttribute(document.getElementsByClassName(className).item(0), 'title', title);
-  }
-
-  private addMarkersToMap(markers: MapMarkerProperties[]) {
-    this.drawnMarkers.forEach(marker => marker.remove());
-
-    this.drawnMarkers = markers.map(properties => createMapMarker(properties));
-    this.drawnMarkers.forEach(marker => marker.addTo(this.mapboxMap));
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-
-    if (this.mapboxMap) {
-      this.mapboxMap.remove();
-      this.mapboxMap = null;
-    }
-  }
-
-  public refreshMapSize() {
-    this.mapboxMap.resize();
   }
 }
