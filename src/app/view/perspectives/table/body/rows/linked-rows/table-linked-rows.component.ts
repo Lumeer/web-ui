@@ -21,8 +21,8 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../core/store/tables/table.utils';
@@ -69,11 +69,14 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
   }
 
   private bindLinkedRows(): Observable<TableConfigRow[]> {
-    return combineLatest(this.cursor$, this.rows$).pipe(
+    return combineLatest([this.cursor$, this.rows$]).pipe(
       filter(([cursor, rows]) => cursor && rows.length > 0),
       switchMap(([cursor, rows]) => {
         const documentIds = rows.map(row => row.documentId);
-        const linkedRows = rows.reduce((allLinkedRows, row) => allLinkedRows.concat(row.linkedRows), []);
+        const linkedRows = rows.reduce((allLinkedRows, row) => {
+          allLinkedRows.push(...row.linkedRows);
+          return allLinkedRows;
+        }, []);
         return this.store$.pipe(
           select(selectLinkInstancesByDocumentIds(documentIds)),
           debounceTime(100), // otherwise unwanted parallel syncing occurs
@@ -100,11 +103,16 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
 }
 
 function filterRowsByExistingLinkInstance(rows: TableConfigRow[], linkInstances: LinkInstance[]): TableConfigRow[] {
-  return rows
-    ? rows.reduce((existingRows, linkedRow) => {
-        const exists =
-          !linkedRow.linkInstanceId || linkInstances.some(linkInstance => linkInstance.id === linkedRow.linkInstanceId);
-        return exists ? existingRows.concat(linkedRow) : existingRows;
-      }, [])
-    : [];
+  if (!rows) {
+    return [];
+  }
+
+  return rows.reduce((existingRows, linkedRow) => {
+    const exists =
+      !linkedRow.linkInstanceId || linkInstances.some(linkInstance => linkInstance.id === linkedRow.linkInstanceId);
+    if (exists) {
+      existingRows.push(linkedRow);
+    }
+    return existingRows;
+  }, []);
 }

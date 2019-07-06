@@ -248,11 +248,17 @@ export class PivotTableConverter {
     if (valueAttribute.valueType === PivotValueType.AllPercentage) {
       return this.divideValues(value, valueTypeInfo.sum);
     } else if (valueAttribute.valueType === PivotValueType.ColumnPercentage) {
-      const columnsDividers = columns.reduce((arr, column) => [...arr, valueTypeInfo.sumsColumns[column]], []);
+      const columnsDividers = columns.reduce((dividers, column) => {
+        dividers.push(valueTypeInfo.sumsColumns[column]);
+        return dividers;
+      }, []);
       const columnsDivider = aggregateDataValues(DataAggregationType.Sum, columnsDividers);
       return this.divideValues(value, columnsDivider);
     } else if (valueAttribute.valueType === PivotValueType.RowPercentage) {
-      const rowsDividers = rows.reduce((arr, row) => [...arr, valueTypeInfo.sumsRows[row]], []);
+      const rowsDividers = rows.reduce((dividers, row) => {
+        dividers.push(valueTypeInfo.sumsRows[row]);
+        return dividers;
+      }, []);
       const rowsDivider = aggregateDataValues(DataAggregationType.Sum, rowsDividers);
       return this.divideValues(value, rowsDivider);
     }
@@ -726,13 +732,19 @@ function iterateThroughTransformationMap(
 }
 
 function getTargetIndexesForHeaders(headers: PivotDataHeader[]): number[] {
-  const allRows = (headers || []).reduce((rows, header) => [...rows, ...getTargetIndexesForHeader(header)], []);
+  const allRows = (headers || []).reduce((rows, header) => {
+    rows.push(...getTargetIndexesForHeader(header));
+    return rows;
+  }, []);
   return uniqueValues<number>(allRows);
 }
 
 function getTargetIndexesForHeader(pivotDataHeader: PivotDataHeader): number[] {
   if (pivotDataHeader.children) {
-    return pivotDataHeader.children.reduce((rows, header) => [...rows, ...getTargetIndexesForHeader(header)], []);
+    return pivotDataHeader.children.reduce((rows, header) => {
+      rows.push(...getTargetIndexesForHeader(header));
+      return rows;
+    }, []);
   }
   return [pivotDataHeader.targetIndex];
 }
@@ -865,13 +877,17 @@ function createHeadersValuesMap(
 ): Record<string, any> {
   const sortTargetIndexes = sortValueTargetIndexes(attribute, otherSideHeaders, valueTitles);
   if (!sortTargetIndexes) {
-    return (headers || []).reduce((map, header) => ({...map, [header.title]: header.title}), {});
+    return (headers || []).reduce((valuesMap, header) => {
+      valuesMap[header.title] = header.title;
+      return valuesMap;
+    }, {});
   }
 
-  return (headers || []).reduce((map, header) => {
+  return (headers || []).reduce((valuesMap, header) => {
     const rows = isRows ? getTargetIndexesForHeader(header) : sortTargetIndexes;
     const columns = isRows ? sortTargetIndexes : getTargetIndexesForHeader(header);
-    return {...map, [header.title]: getNumericValuesSummary(values, rows, columns)};
+    valuesMap[header.title] = getNumericValuesSummary(values, rows, columns);
+    return valuesMap;
   }, {});
 }
 

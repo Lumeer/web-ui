@@ -98,7 +98,10 @@ export class GanttChartConverter {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
     this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, query, constraintData);
 
-    return ((query && query.stems) || []).reduce((tasks, stem) => [...tasks, ...this.convertByStem(stem)], []);
+    return ((query && query.stems) || []).reduce((tasks, stem) => {
+      tasks.push(...this.convertByStem(stem));
+      return tasks;
+    }, []);
   }
 
   private updateData(

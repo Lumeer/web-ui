@@ -26,15 +26,15 @@ export class UniqueEntitiesPipe implements PipeTransform {
   public transform(entities: {id?: string; correlationId?: string}[]): any[] {
     return (
       entities &&
-      entities.reduce(
-        (uniqueEntities, entity) =>
-          uniqueEntities.some(usedEntity =>
-            entity.id ? usedEntity.id === entity.id : usedEntity.correlationId === entity.correlationId
-          )
-            ? uniqueEntities
-            : uniqueEntities.concat(entity),
-        []
-      )
+      entities.reduce((uniqueEntities, entity) => {
+        const duplicate = uniqueEntities.some(usedEntity =>
+          entity.id ? usedEntity.id === entity.id : usedEntity.correlationId === entity.correlationId
+        );
+        if (!duplicate) {
+          uniqueEntities.push(entity);
+        }
+        return uniqueEntities;
+      }, [])
     );
   }
 }

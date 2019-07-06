@@ -104,7 +104,10 @@ export function formatData(
   constraintData: ConstraintData,
   filterInvalid?: boolean
 ): DocumentData {
-  const idsMap: Record<string, Attribute> = (attributes || []).reduce((map, attr) => ({...map, [attr.id]: attr}), {});
+  const idsMap: Record<string, Attribute> = (attributes || []).reduce((attributesMap, attr) => {
+    attributesMap[attr.id] = attr;
+    return attributesMap;
+  }, {});
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
     const formattedValue = formatDataValue(data[attributeId], attribute.constraint, constraintData);

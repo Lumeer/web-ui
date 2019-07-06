@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, Resource} from '../../core/model/resource';
 import {Role} from '../../core/model/role';
-import {User} from '../../core/store/users/user';
-import {Permission} from '../../core/store/permissions/permissions';
-import {View} from '../../core/store/views/view';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
+import {Organization} from '../../core/store/organizations/organization';
+import {Permission} from '../../core/store/permissions/permissions';
+import {Project} from '../../core/store/projects/project';
+import {User} from '../../core/store/users/user';
+import {View} from '../../core/store/views/view';
 
 export function userCanReadWorkspace(user: User, organization: Organization, project: Project): boolean {
   if (userHasManageRoleInResource(user, organization)) {
@@ -101,9 +101,13 @@ function rolesWithTransitionRoles(roles: string[]): string[] {
   if (!roles || roles.length === 0) {
     return [];
   }
-  const rolesTransition = roles.reduce((arr, role) => [...arr, ...roleWithTransitionRoles(role)], []);
-  const rolesTransitionSet = new Set(rolesTransition);
-  return Array.from(rolesTransitionSet);
+
+  return Array.from(
+    roles.reduce((rolesTransitionSet, role) => {
+      roleWithTransitionRoles(role).forEach(r => rolesTransitionSet.add(r));
+      return rolesTransitionSet;
+    }, new Set())
+  );
 }
 
 function roleWithTransitionRoles(role: string): string[] {

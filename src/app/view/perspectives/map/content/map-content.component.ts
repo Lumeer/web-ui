@@ -92,7 +92,7 @@ export class MapContentComponent implements OnInit {
               coordinates,
               attributeType: MapAttributeType.Address,
             };
-            return addressPropertiesList.concat(addressProperties);
+            addressPropertiesList.push(addressProperties);
           }
           return addressPropertiesList;
         }, [])
@@ -118,7 +118,7 @@ function createMarkerPropertiesList(
     const collection = collectionsMap[document.collectionId];
 
     if (collection && attributeId) {
-      return propertiesList.concat({collection, document, attributeId});
+      propertiesList.push({collection, document, attributeId});
     }
     return propertiesList;
   }, []);
@@ -134,7 +134,7 @@ function populateCoordinateProperties(propertiesList: MapMarkerProperties[]): Ma
         coordinates,
         attributeType: MapAttributeType.Coordinates,
       };
-      return coordinatePropertiesList.concat(coordinateProperties);
+      coordinatePropertiesList.push(coordinateProperties);
     }
     return coordinatePropertiesList;
   }, []);

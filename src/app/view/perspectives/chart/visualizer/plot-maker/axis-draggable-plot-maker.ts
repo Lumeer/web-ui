@@ -115,7 +115,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       const setValues = set.points
         .filter(point => isNotNullOrUndefined(point.y) && isNumeric(point.y))
         .map(point => point.y);
-      return [...allValues, ...setValues];
+      allValues.push(...setValues);
+      return allValues;
     }, []);
 
     return createRange(values);

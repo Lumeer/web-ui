@@ -34,14 +34,14 @@ export class SelectItemWithConstraintPipe implements PipeTransform {
     restrictedAttributes: {resourceIndex: number; attributeId: string}[]
   ): SelectItemModel[] {
     return (attributesResources || [])
-      .reduce((arr, resource, index) => {
+      .reduce((selectItems, resource, index) => {
         const resourceType = getAttributesResourceType(resource);
         if (resourceType === AttributesResourceType.Collection) {
-          return [...arr, ...this.collectionSelectItems(resource as Collection, index)];
+          selectItems.push(...this.collectionSelectItems(resource as Collection, index));
         } else if (resourceType === AttributesResourceType.LinkType) {
-          return [...arr, ...this.linkTypeSelectItems(resource as LinkType, index)];
+          selectItems.push(...this.linkTypeSelectItems(resource as LinkType, index));
         }
-        return arr;
+        return selectItems;
       }, [])
       .filter(item => !(restrictedAttributes || []).some(attr => deepObjectsEquals(item.id, attr)));
   }

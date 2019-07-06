@@ -86,7 +86,14 @@ export class QueryItemsConverter {
   }
 
   private createStemsItems(stems: QueryStem[], skipDeleted: boolean): QueryItem[] {
-    return (stems && stems.reduce((items, stem) => [...items, ...this.createStemItems(stem, skipDeleted)], [])) || [];
+    return (
+      (stems &&
+        stems.reduce((items, stem) => {
+          items.push(...this.createStemItems(stem, skipDeleted));
+          return items;
+        }, [])) ||
+      []
+    );
   }
 
   private createStemItems(stem: QueryStem, skipDeleted: boolean): QueryItem[] {

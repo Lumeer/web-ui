@@ -304,7 +304,8 @@ function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesSt
   const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
     return oldRows.reduce((cleanedRows, row) => {
       if (!row.documentId) {
-        return cleanedRows.concat(row);
+        cleanedRows.push(row);
+        return cleanedRows;
       }
 
       const document = documents.find(doc => doc.id === row.documentId);
@@ -319,7 +320,8 @@ function cleanRows(state: TablesState, action: TablesAction.CleanRows): TablesSt
         }
       }
 
-      return cleanedRows.concat(row);
+      cleanedRows.push(row);
+      return cleanedRows;
     }, []);
   });
 
@@ -334,7 +336,12 @@ function orderPrimaryRows(state: TablesState, action: TablesAction.OrderPrimaryR
     return state;
   }
 
-  const documentsMap = documents.reduce((map, document) => (document.id ? {...map, [document.id]: document} : map), {});
+  const documentsMap = documents.reduce((docsMap, document) => {
+    if (document.id) {
+      docsMap[document.id] = document;
+    }
+    return docsMap;
+  }, {});
 
   if (isValidHierarchicalRowOrder(table.config.rows, documentsMap)) {
     return state;

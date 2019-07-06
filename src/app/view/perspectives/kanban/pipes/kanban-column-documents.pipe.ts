@@ -30,7 +30,10 @@ export class KanbanColumnDocumentsPipe implements PipeTransform {
       return [];
     }
 
-    const documentMap = (documents || []).reduce((map, doc) => ({...map, [doc.id]: doc}), {});
+    const documentMap = (documents || []).reduce((docsMap, doc) => {
+      docsMap[doc.id] = doc;
+      return docsMap;
+    }, {});
     return column.documentsIdsOrder.map(id => documentMap[id]).filter(document => !!document);
   }
 }

@@ -296,9 +296,12 @@ export class TablesEffects {
     mergeMap(action => this.getLatestTable(action)),
     withLatestFrom(this.store$.select(selectQuery)),
     map(([{action, table}, query]) => {
-      const linkTypeIds = table.config.parts
-        .slice(0, action.payload.cursor.partIndex)
-        .reduce((ids, part) => (part.linkTypeId ? ids.concat(part.linkTypeId) : ids), []);
+      const linkTypeIds = table.config.parts.slice(0, action.payload.cursor.partIndex).reduce((ids, part) => {
+        if (part.linkTypeId) {
+          ids.push(part.linkTypeId);
+        }
+        return ids;
+      }, []);
 
       const stem = {...query.stems[0], linkTypeIds};
       const newQuery: Query = {...query, stems: [stem]};
@@ -709,7 +712,10 @@ export class TablesEffects {
             mergeMap(linkInstances => {
               const documentIds = linkInstances.reduce((ids, linkInstance) => {
                 const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
-                return ids.includes(documentId) ? ids : ids.concat(documentId);
+                if (!ids.includes(documentId)) {
+                  ids.push(documentId);
+                }
+                return ids;
               }, []);
               return this.store$.pipe(
                 select(selectDocumentsByQueryAndIds(documentIds)),
@@ -739,7 +745,10 @@ export class TablesEffects {
                         cursor: action.payload.cursor,
                         linkedRows: unknownLinkInstances.reduce((newRows, linkInstance) => {
                           const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
-                          return document ? newRows.concat(createTableRow(document, linkInstance)) : newRows;
+                          if (document) {
+                            newRows.push(createTableRow(document, linkInstance));
+                          }
+                          return newRows;
                         }, []),
                         append: true,
                       })
