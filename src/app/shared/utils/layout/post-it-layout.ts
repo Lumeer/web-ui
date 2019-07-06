@@ -132,9 +132,9 @@ export class PostItLayout {
   }
 
   private createGridItemsMap(): {[key: string]: any} {
-    return this.grid.getItems().reduce((map, item) => {
-      map[this.getPostItId(item.getElement())] = item;
-      return map;
+    return this.grid.getItems().reduce((gridItemsMap, item) => {
+      gridItemsMap[this.getPostItId(item.getElement())] = item;
+      return gridItemsMap;
     }, {});
   }
 

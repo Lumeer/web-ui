@@ -22,18 +22,18 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentView} from '../../../core/store/views/views.state';
-import {View} from '../../../core/store/views/view';
-import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {Collection} from '../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {Role} from '../../../core/model/role';
-import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
 import {selectCurrentUserIsManager} from '../../../core/store/common/permissions.selectors';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
+import {User} from '../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
+import {View} from '../../../core/store/views/view';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
 
 @Pipe({
   name: 'collectionsPermissions',
@@ -58,7 +58,10 @@ export class CollectionsPermissionsPipe implements PipeTransform {
   }
 
   private managePermissionsOfCollections(collections: Collection[]): Record<string, AllowedPermissions> {
-    return collections.reduce((obj, collection) => ({...obj, [collection.id]: this.managePermissions()}), {});
+    return collections.reduce((obj, collection) => {
+      obj[collection.id] = this.managePermissions();
+      return obj;
+    }, {});
   }
 
   private managePermissions(): AllowedPermissions {
@@ -68,10 +71,10 @@ export class CollectionsPermissionsPipe implements PipeTransform {
   private checkCollectionsPermissionWithView(
     collections: Collection[]
   ): Observable<Record<string, AllowedPermissions>> {
-    return combineLatest(
+    return combineLatest([
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
-      this.store$.pipe(select(selectCurrentView))
-    ).pipe(
+      this.store$.pipe(select(selectCurrentView)),
+    ]).pipe(
       mergeMap(([currentUser, currentView]) => {
         if (!currentUser) {
           return of({});
@@ -82,9 +85,9 @@ export class CollectionsPermissionsPipe implements PipeTransform {
 
         return this.getViewCollectionIds(currentView).pipe(
           map(collectionIdsInView =>
-            collections.reduce((obj, collection) => {
+            collections.reduce((collectionPermissions, collection) => {
               if (!collection) {
-                return obj;
+                return collectionPermissions;
               }
 
               const userRoles = userRolesInResource(currentUser, collection);
@@ -100,8 +103,8 @@ export class CollectionsPermissionsPipe implements PipeTransform {
               const writeWithView = viewAllowedPermissions.writeWithView || write;
               const manageWithView = viewAllowedPermissions.manageWithView || manage;
 
-              const collectionPermissions = {read, write, manage, readWithView, writeWithView, manageWithView};
-              return {...obj, [collection.id]: collectionPermissions};
+              collectionPermissions[collection.id] = {read, write, manage, readWithView, writeWithView, manageWithView};
+              return collectionPermissions;
             }, {})
           )
         );
@@ -113,10 +116,10 @@ export class CollectionsPermissionsPipe implements PipeTransform {
     collections: Collection[],
     currentUser: User
   ): Record<string, AllowedPermissions> {
-    return collections.reduce(
-      (obj, collection) => ({...obj, [collection.id]: this.checkCollectionPermissions(collection, currentUser)}),
-      {}
-    );
+    return collections.reduce((collectionPermissions, collection) => {
+      collectionPermissions[collection.id] = this.checkCollectionPermissions(collection, currentUser);
+      return collectionPermissions;
+    }, {});
   }
 
   private checkCollectionPermissions(collection: Collection, currentUser: User): AllowedPermissions {

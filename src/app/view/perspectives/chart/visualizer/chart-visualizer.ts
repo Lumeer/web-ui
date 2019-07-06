@@ -18,18 +18,17 @@
  */
 
 import {ElementRef} from '@angular/core';
-
 import {Config, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
-import {ChartData} from '../data/convertor/chart-data';
-import {ChartType} from '../../../../core/store/charts/chart';
-import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
-import {LinePlotMaker} from './plot-maker/line-plot-maker';
-import {BarPlotMaker} from './plot-maker/bar-plot-maker';
-import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
-import {createRange} from './plot-maker/plot-util';
 import {environment} from '../../../../../environments/environment';
+import {ChartType} from '../../../../core/store/charts/chart';
 import {isNumeric} from '../../../../shared/utils/common.utils';
+import {ChartData} from '../data/convertor/chart-data';
+import {BarPlotMaker} from './plot-maker/bar-plot-maker';
+import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
+import {LinePlotMaker} from './plot-maker/line-plot-maker';
+import {PiePlotMaker} from './plot-maker/pie-plot-maker';
+import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
+import {createRange} from './plot-maker/plot-util';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -107,7 +106,10 @@ export class ChartVisualizer {
       return;
     }
 
-    const values = this.data.reduce((allValues, data) => [...allValues, ...this.dataValues(data)], []);
+    const values = this.data.reduce((allValues, data) => {
+      allValues.push(...this.dataValues(data));
+      return allValues;
+    }, []);
     const range = createRange(values);
 
     this.layout.yaxis.range = range;

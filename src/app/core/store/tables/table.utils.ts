@@ -207,7 +207,10 @@ function createColumnsFromConfig(
   }, []);
 
   const usedAttributeIds = columnsConfig.reduce((ids, columnConfig) => {
-    return columnConfig.attributeIds ? ids.concat(columnConfig.attributeIds) : ids;
+    if (columnConfig.attributeIds) {
+      ids.push(...columnConfig.attributeIds);
+    }
+    return ids;
   }, []);
   const remainingAttributeIds = attributeIds.filter(id => !usedAttributeIds.includes(id));
 
@@ -316,7 +319,10 @@ export function createEmptyColumn(
   parentName?: string
 ): TableConfigColumn {
   const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
-    return column.attributeName ? attributeNames.concat(column.attributeName) : attributeNames;
+    if (column.attributeName) {
+      attributeNames.push(column.attributeName);
+    }
+    return attributeNames;
   }, []);
 
   const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
@@ -582,7 +588,11 @@ function createRowsFromRowsMap(
 ): TableConfigRow[] {
   const rows = rowsMap[documentId] || [];
   return rows.reduce((orderedRows, row) => {
-    return orderedRows.concat(row).concat(row.documentId ? createRowsFromRowsMap(row.documentId, rowsMap) : []);
+    orderedRows.push(row);
+    if (row.documentId) {
+      orderedRows.push(...createRowsFromRowsMap(row.documentId, rowsMap));
+    }
+    return orderedRows;
   }, []);
 }
 
@@ -612,10 +622,9 @@ export function filterTableColumnsByAttributesMap(
   return columns.reduce((filteredColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       if (column.attributeIds.length === 0 && column.attributeName) {
-        return filteredColumns.concat(column);
-      }
-      if (attributesMap[column.attributeIds[0]]) {
-        return filteredColumns.concat({
+        filteredColumns.push(column);
+      } else if (attributesMap[column.attributeIds[0]]) {
+        filteredColumns.push({
           ...column,
           children: filterTableColumnsByAttributesMap(column.children, attributesMap),
         });
@@ -624,7 +633,7 @@ export function filterTableColumnsByAttributesMap(
     if (column.type === TableColumnType.HIDDEN) {
       const attributeIds = column.attributeIds.filter(id => !!attributesMap[id]);
       if (attributeIds.length > 0) {
-        return filteredColumns.concat({...column, attributeIds});
+        filteredColumns.push({...column, attributeIds});
       }
     }
     return filteredColumns;
@@ -697,7 +706,11 @@ export function initializeExistingTableColumns(columns: TableConfigColumn[], att
 
 function extractAttributeIdsFromTableColumns(columns: TableConfigColumn[]): string[] {
   return columns.reduce((attributeIds, column) => {
-    return attributeIds.concat(column.attributeIds).concat(extractAttributeIdsFromTableColumns(column.children || []));
+    attributeIds.push(...column.attributeIds);
+    if (column.children) {
+      attributeIds.push(...extractAttributeIdsFromTableColumns(column.children));
+    }
+    return attributeIds;
   }, []);
 }
 

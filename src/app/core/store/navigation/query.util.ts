@@ -150,7 +150,8 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
     const newFilters = (stem.filters || []).filter(
       filter => filter.collectionId === collectionId && !filters.find(f => deepObjectsEquals(f, filter))
     );
-    return [...filters, ...newFilters];
+    filters.push(...newFilters);
+    return filters;
   }, []);
 }
 
@@ -160,7 +161,8 @@ export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): Co
     const newFilters = (stem.linkFilters || []).filter(
       filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
     );
-    return [...filters, ...newFilters];
+    filters.push(...newFilters);
+    return filters;
   }, []);
 }
 
@@ -180,7 +182,10 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
   const basicCollectionIds = getBaseCollectionIdsFromQuery(query);
   const allLinkTypeIds = getAllLinkTypeIdsFromQuery(query);
   const filteredLinkTypes = (linkTypes || []).filter(linkType => allLinkTypeIds.includes(linkType.id));
-  const collectionIdsFromLinks = filteredLinkTypes.reduce((ids, linkType) => [...ids, ...linkType.collectionIds], []);
+  const collectionIdsFromLinks = filteredLinkTypes.reduce((ids, linkType) => {
+    ids.push(...linkType.collectionIds);
+    return ids;
+  }, []);
   return uniqueValues<string>([...basicCollectionIds, ...collectionIdsFromLinks]);
 }
 

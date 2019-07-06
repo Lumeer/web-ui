@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CalendarEvent} from 'angular-calendar';
+import * as moment from 'moment';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
   CalendarBarPropertyOptional,
@@ -25,15 +28,12 @@ import {
   CalendarConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {CalendarEvent} from 'angular-calendar';
-import * as moment from 'moment';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
-import {formatData} from '../../../../shared/utils/data.utils';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Query} from '../../../../core/store/navigation/query';
+import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
+import {formatData} from '../../../../shared/utils/data.utils';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
 
 export interface CalendarMetaData {
   documentId: string;
@@ -51,19 +51,18 @@ export function createCalendarEvents(
   constraintData: ConstraintData,
   query?: Query
 ): CalendarEvent<CalendarMetaData>[] {
-  return collections.reduce(
-    (tasks, collection) => [
-      ...tasks,
+  return collections.reduce((tasks, collection) => {
+    tasks.push(
       ...createCalendarEventsForCollection(
         config,
         collection,
         documentsByCollection(documents, collection),
         permissions[collection.id] || {},
         constraintData
-      ),
-    ],
-    []
-  );
+      )
+    );
+    return tasks;
+  }, []);
 }
 
 function documentsByCollection(documents: DocumentModel[], collection: Collection): DocumentModel[] {
@@ -218,10 +217,10 @@ export function parseCalendarEventDate(value: any): Date {
     return value;
   }
 
-  const dateAndTimeFormats = dateFormats.reduce(
-    (formats, format) => [...formats, ...timeFormats.map(tf => [format, tf].join(' '))],
-    []
-  );
+  const dateAndTimeFormats = dateFormats.reduce((formats, format) => {
+    formats.push(...timeFormats.map(tf => [format, tf].join(' ')));
+    return formats;
+  }, []);
 
   const allFormats = [moment.ISO_8601, ...dateFormats, ...dateAndTimeFormats];
   const momentDate = moment(value, allFormats);

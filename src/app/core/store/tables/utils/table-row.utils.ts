@@ -52,7 +52,10 @@ function findAllLinkedTableRowsByLevel(rows: TableConfigRow[], level: number): T
   }
 
   return findAllLinkedTableRowsByLevel(
-    rows.reduce((linkedRows, row) => linkedRows.concat(row.linkedRows), []),
+    rows.reduce((linkedRows, row) => {
+      linkedRows.push(...row.linkedRows);
+      return linkedRows;
+    }, []),
     level - 1
   );
 }
@@ -84,5 +87,11 @@ function findAllTableRowsByLevel(rows: TableConfigRow[], level: number): TableCo
     return rows;
   }
 
-  return findAllTableRowsByLevel(rows.reduce((linkedRows, row) => linkedRows.concat(row.linkedRows), []), level - 1);
+  return findAllTableRowsByLevel(
+    rows.reduce((linkedRows, row) => {
+      linkedRows.push(...row.linkedRows);
+      return linkedRows;
+    }, []),
+    level - 1
+  );
 }

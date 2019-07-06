@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryItem} from '../../../query-item/model/query-item';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {QueryItemType} from '../../../query-item/model/query-item-type';
-import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item';
-import {shiftArrayFromIndex} from '../../../../../utils/array.utils';
-import {DocumentQueryItem} from '../../../query-item/model/documents.query-item';
-import {CollectionQueryItem} from '../../../query-item/model/collection.query-item';
-import {LinkQueryItem} from '../../../query-item/model/link.query-item';
-import {getOtherLinkedCollectionId} from '../../../../../utils/link-type.utils';
-import {View} from '../../../../../../core/store/views/view';
-import {ViewQueryItem} from '../../../query-item/model/view.query-item';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {Suggestions} from './suggestions';
+import {View} from '../../../../../../core/store/views/view';
+import {shiftArrayFromIndex} from '../../../../../utils/array.utils';
+import {getOtherLinkedCollectionId} from '../../../../../utils/link-type.utils';
+import {AttributeQueryItem} from '../../../query-item/model/attribute.query-item';
+import {CollectionQueryItem} from '../../../query-item/model/collection.query-item';
+import {DocumentQueryItem} from '../../../query-item/model/documents.query-item';
 import {LinkAttributeQueryItem} from '../../../query-item/model/link-attribute.query-item';
+import {LinkQueryItem} from '../../../query-item/model/link.query-item';
+import {QueryItem} from '../../../query-item/model/query-item';
+import {QueryItemType} from '../../../query-item/model/query-item-type';
+import {ViewQueryItem} from '../../../query-item/model/view.query-item';
+import {Suggestions} from './suggestions';
 
 export function convertSuggestionsToQueryItemsSorted(suggestions: Suggestions, currentItems: QueryItem[]): QueryItem[] {
   if (!suggestions) {
@@ -152,10 +152,10 @@ function createCollectionQueryItems(collections: Collection[]): QueryItem[] {
 }
 
 function createAttributeQueryItems(collections: Collection[]): QueryItem[] {
-  return collections.reduce(
-    (items, collection) => [...items, ...collection.attributes.map(a => new AttributeQueryItem(collection, a, '', ''))],
-    []
-  );
+  return collections.reduce((items, collection) => {
+    items.push(...collection.attributes.map(a => new AttributeQueryItem(collection, a, '', '')));
+    return items;
+  }, []);
 }
 
 function createViewQueryItems(views: View[]): QueryItem[] {
@@ -167,10 +167,10 @@ function createLinkQueryItems(linkTypes: LinkType[]): QueryItem[] {
 }
 
 function createLinkAttributesQueryItems(linkTypes: LinkType[]): QueryItem[] {
-  return linkTypes.reduce(
-    (items, linkType) => [...items, ...linkType.attributes.map(a => new LinkAttributeQueryItem(linkType, a, '', ''))],
-    []
-  );
+  return linkTypes.reduce((items, linkType) => {
+    items.push(...linkType.attributes.map(a => new LinkAttributeQueryItem(linkType, a, '', '')));
+    return items;
+  }, []);
 }
 
 function createItemsByLinksPriority(

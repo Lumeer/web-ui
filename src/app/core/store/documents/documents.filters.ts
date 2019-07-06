@@ -175,8 +175,11 @@ function filterDocumentsByStem(
       fulltexts
     );
 
-    const otherDocumentIds = filteredLinkInstances
-      .reduce((ids, li) => [...ids, ...li.documentIds], [])
+    const otherDocumentIds: string[] = filteredLinkInstances
+      .reduce((ids, li) => {
+        ids.push(...li.documentIds);
+        return ids;
+      }, [])
       .filter(id => !lastStageDocumentIds.has(id));
 
     if (currentStageStem.documentIds && currentStageStem.documentIds.length > 0) {

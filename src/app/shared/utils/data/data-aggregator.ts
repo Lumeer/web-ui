@@ -18,16 +18,16 @@
  */
 
 import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {Query} from '../../../core/store/navigation/query';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {isNullOrUndefined} from '../common.utils';
+import {Collection} from '../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
-import {formatDataValue} from '../data.utils';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query.util';
+import {isNullOrUndefined} from '../common.utils';
+import {formatDataValue} from '../data.utils';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -490,10 +490,10 @@ function createDataMap(
   linkTypes: LinkType[],
   linkInstances: LinkInstance[]
 ): DataResourceMap {
-  const idsOrderMap = attributeResourcesOrder.reduce(
-    (idsMap, axisResource, index) => ({...idsMap, [attributesResourceIdByIndex(axisResource, index)]: index}),
-    {}
-  );
+  const idsOrderMap = attributeResourcesOrder.reduce((idsMap, axisResource, index) => {
+    idsMap[attributesResourceIdByIndex(axisResource, index)] = index;
+    return idsMap;
+  }, {});
   const linkTypeIds = new Set((linkTypes || []).map(lt => lt.id));
   const allDocumentsMap: Record<string, DocumentModel> = {};
   const map: DataResourceMap = {};
