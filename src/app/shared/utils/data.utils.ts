@@ -24,6 +24,7 @@ import {
   AddressConstraintConfig,
   ColorConstraintConfig,
   CoordinatesConstraintConfig,
+  CoordinatesFormat,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
@@ -33,8 +34,10 @@ import {
 } from '../../core/model/data/constraint-config';
 import {Attribute} from '../../core/store/collections/collection';
 import {DocumentData} from '../../core/store/documents/document.model';
-import {AddressesMap, AddressField} from '../../core/store/geocoding/address';
+import {Address, AddressesMap, AddressField} from '../../core/store/geocoding/address';
+import {MapCoordinates} from '../../core/store/maps/map.model';
 import {User} from '../../core/store/users/user';
+import {ADDRESS_DEFAULT_FIELDS} from '../../dialog/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
 import {validDataColors} from './data/valid-data-colors';
 import {resetUnusedMomentPart} from './date.utils';
@@ -206,6 +209,11 @@ export function formatAddressDataValue(
   }, '');
 }
 
+export function getAddressSaveValue(address: Address, config: AddressConstraintConfig): string {
+  const constraintConfig = config || {fields: ADDRESS_DEFAULT_FIELDS};
+  return address ? formatAddressDataValue('', constraintConfig, {['']: [address]}) : '';
+}
+
 export function formatCoordinatesDataValue(value: any, config: CoordinatesConstraintConfig): string {
   const coordinates = parseCoordinates(value);
   if (!coordinates) {
@@ -213,6 +221,10 @@ export function formatCoordinatesDataValue(value: any, config: CoordinatesConstr
   }
 
   return formatCoordinates(coordinates, config.format, config.precision);
+}
+
+export function getCoordinatesSaveValue(coordinates: MapCoordinates): string {
+  return coordinates ? formatCoordinates(coordinates, CoordinatesFormat.DecimalDegrees, 6) : '';
 }
 
 export function formatDateTimeDataValue(

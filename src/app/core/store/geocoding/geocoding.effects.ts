@@ -21,8 +21,9 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {map, mergeMap, take} from 'rxjs/operators';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {GeoCodingApiService} from '../../rest/geocoding-api.service';
+import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
 
@@ -54,18 +55,25 @@ export class GeocodingEffects {
   public getLocation$: Observable<Action> = this.actions$.pipe(
     ofType<GeocodingAction.GetLocation>(GeocodingActionType.GET_LOCATION),
     mergeMap(action => {
-      const {coordinates} = action.payload;
+      const {coordinates, onSuccess, onFailure} = action.payload;
       return this.store$.pipe(
         select(selectLocationByCoordinates(coordinates)),
         take(1),
         mergeMap(storedLocation => {
           if (storedLocation) {
-            return from([]);
+            return from(createCallbackActions(onSuccess, storedLocation));
           }
 
-          return this.geocodingApiService
-            .findLocationByCoordinates(coordinates)
-            .pipe(map(location => new GeocodingAction.GetLocationSuccess({coordinates, location})));
+          return this.geocodingApiService.findLocationByCoordinates(coordinates).pipe(
+            mergeMap(location => [
+              new GeocodingAction.GetLocationSuccess({
+                coordinates,
+                location,
+              }),
+              ...createCallbackActions(onSuccess, location),
+            ]),
+            catchError(error => emitErrorActions(error, onFailure))
+          );
         })
       );
     })

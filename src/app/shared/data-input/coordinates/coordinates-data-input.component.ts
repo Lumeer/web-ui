@@ -28,11 +28,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../core/model/data/constraint-config';
+import {CoordinatesConstraintConfig} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
-import {formatCoordinatesDataValue} from '../../utils/data.utils';
+import {formatCoordinatesDataValue, getCoordinatesSaveValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {formatCoordinates, parseCoordinates} from '../../utils/map/coordinates.utils';
+import {parseCoordinates} from '../../utils/map/coordinates.utils';
 
 @Component({
   selector: 'coordinates-data-input',
@@ -123,10 +123,6 @@ export class CoordinatesDataInputComponent {
 
   private transformValue(value: string) {
     const coordinates = parseCoordinates(value);
-    if (!coordinates) {
-      return '';
-    }
-
-    return formatCoordinates(coordinates, CoordinatesFormat.DecimalDegrees, this.constraintConfig.precision);
+    return getCoordinatesSaveValue(coordinates);
   }
 }

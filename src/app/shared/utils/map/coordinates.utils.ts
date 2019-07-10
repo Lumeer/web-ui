@@ -41,7 +41,7 @@ export function formatCoordinates(coordinates: MapCoordinates, format: Coordinat
   return formatCoordinatesToDecimalDegrees(coordinates, safePrecision);
 }
 
-export function formatCoordinatesToDecimalDegrees(coordinates: MapCoordinates, precision: number): string {
+function formatCoordinatesToDecimalDegrees(coordinates: MapCoordinates, precision: number): string {
   return formatStringCoordinates(coordinates.lng.toFixed(precision), coordinates.lat.toFixed(precision));
 }
 

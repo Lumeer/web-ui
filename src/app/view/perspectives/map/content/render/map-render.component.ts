@@ -22,11 +22,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
   SimpleChanges,
   ViewEncapsulation,
@@ -38,7 +40,7 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
-import {MapConfig, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
+import {MapConfig, MapCoordinates, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
   createMapClusterCountsLayer,
@@ -46,6 +48,7 @@ import {
   createMapClustersLayer,
   createMapMarker,
 } from './map-render.utils';
+import {MarkerMoveEvent} from './marker-move-event';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -68,6 +71,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   @Input()
   public markers: MapMarkerProperties[];
+
+  @Output()
+  public moveMarker = new EventEmitter<MarkerMoveEvent>();
 
   public mapElementId: string;
 
@@ -205,8 +211,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
-    this.allMarkers = markers.reduce((markersMap, marker) => {
-      markersMap[marker.document.id] = createMapMarker(marker);
+    this.allMarkers = markers.reduce((markersMap, properties) => {
+      const marker = createMapMarker(properties);
+      marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
+      markersMap[properties.document.id] = marker;
       return markersMap;
     }, {});
 
@@ -219,6 +227,13 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
     this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
     this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+  }
+
+  private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
+    event.target.setDraggable(false); // disable dragging until map refresh
+
+    const coordinates: MapCoordinates = event.target.getLngLat();
+    this.moveMarker.emit({coordinates, properties});
   }
 
   public ngOnDestroy() {

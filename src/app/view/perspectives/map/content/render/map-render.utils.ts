@@ -102,8 +102,13 @@ export function createMapMarker(properties: MapMarkerProperties): Marker {
     closeOnClick: false,
   }).setHTML(`<span class="text-default-attribute">${defaultAttributeValue}</span>`);
 
-  const element = createMapMarkerIcon(properties.collection);
-  const marker = new Marker({element}).setLngLat(properties.coordinates).setPopup(popup);
+  const element = createMapMarkerIcon(properties.collection, properties.editable);
+  const marker = new Marker({
+    element,
+    draggable: properties.editable,
+  })
+    .setLngLat(properties.coordinates)
+    .setPopup(popup);
 
   element.addEventListener('mouseenter', () => {
     if (!popup.isOpen()) {
@@ -119,9 +124,12 @@ export function createMapMarker(properties: MapMarkerProperties): Marker {
   return marker;
 }
 
-function createMapMarkerIcon(collection: Collection): HTMLDivElement {
+function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDivElement {
   const markerElement = document.createElement('div');
   markerElement.className = 'map-marker';
+  if (editable) {
+    markerElement.classList.add('map-marker--editable');
+  }
 
   const shapeElement = document.createElement('div');
   shapeElement.className = 'map-marker-shape';

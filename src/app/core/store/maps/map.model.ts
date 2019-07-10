@@ -53,6 +53,7 @@ export interface MapMarkerProperties {
   attributeId: string;
   attributeType?: MapAttributeType;
   coordinates?: MapCoordinates;
+  editable?: boolean;
 }
 
 export enum MapAttributeType {

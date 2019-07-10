@@ -18,10 +18,10 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {formatCoordinatesToDecimalDegrees} from '../../../shared/utils/map/coordinates.utils';
-import {GeoLocation} from './geo-location';
+import {getCoordinatesSaveValue} from '../../../shared/utils/data.utils';
 import {AppState} from '../app.state';
 import {MapCoordinates} from '../maps/map.model';
+import {GeoLocation} from './geo-location';
 
 export interface GeocodingState {
   queryCoordinates: Record<string, MapCoordinates>;
@@ -59,5 +59,5 @@ export const selectGeocodingCoordinatesLocation = createSelector(
 export const selectLocationByCoordinates = (coordinates: MapCoordinates) =>
   createSelector(
     selectGeocodingCoordinatesLocation,
-    coordinatesLocation => coordinatesLocation[formatCoordinatesToDecimalDegrees(coordinates, 6)]
+    coordinatesLocation => coordinatesLocation[getCoordinatesSaveValue(coordinates)]
   );
