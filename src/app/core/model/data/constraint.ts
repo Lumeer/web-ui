@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AddressesMap} from '../../geocoding/address';
+import {AddressesMap} from '../../store/geocoding/address';
 import {User} from '../../store/users/user';
 import {ConstraintConfig} from './constraint-config';
 

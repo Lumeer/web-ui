@@ -18,8 +18,9 @@
  */
 
 export interface Address {
+  houseNumber?: string;
   street?: string;
-  zip?: string;
+  postalCode?: string;
   city?: string;
   county?: string;
   state?: string;
@@ -30,8 +31,9 @@ export interface Address {
 export type AddressesMap = Record<string, Address[]>;
 
 export enum AddressField {
+  HouseNumber = 'houseNumber',
   Street = 'street',
-  Zip = 'zip',
+  PostalCode = 'postalCode',
   City = 'city',
   County = 'county',
   State = 'state',

@@ -30,10 +30,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {debounceTime, map, mergeMap} from 'rxjs/operators';
-import {GeoCodingService} from '../../../core/geocoding/geocoding.service';
 import {AddressConstraintConfig} from '../../../core/model/data/constraint-config';
+import {GeocodingAction} from '../../../core/store/geocoding/geocoding.action';
+import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.state';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -85,7 +87,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   private preventSave: boolean;
 
-  constructor(private geoCodingService: GeoCodingService) {}
+  constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.addressOptions$ = this.bindAddressOptions();
@@ -99,10 +101,13 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
           return of([]);
         }
 
-        return this.geoCodingService.suggestAddressesForQuery(value).pipe(
-          map(addresses =>
-            (addresses || []).map(address => ({
-              value: formatAddressDataValue(value, this.constraintConfig, {[value]: [address]}),
+        this.store$.dispatch(new GeocodingAction.GetLocations({query: value.trim()}));
+
+        return this.store$.pipe(
+          select(selectLocationsByQuery(value)),
+          map(locations =>
+            (locations || []).map(location => ({
+              value: formatAddressDataValue(value, this.constraintConfig, {[value]: [location.address]}),
             }))
           )
         );

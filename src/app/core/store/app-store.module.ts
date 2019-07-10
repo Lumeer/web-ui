@@ -32,6 +32,8 @@ import {CommonEffects} from './common/common.effects';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
+import {GeocodingEffects} from './geocoding/geocoding.effects';
+import {geocodingReducer} from './geocoding/geocoding.reducer';
 import {GroupsEffects} from './groups/groups.effects';
 import {groupsReducer} from './groups/groups.reducer';
 import {kanbansReducer} from './kanbans/kanbans.reducer';
@@ -69,6 +71,7 @@ import {viewsReducer} from './views/views.reducer';
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
   documents: documentsReducer,
+  geocoding: geocodingReducer,
   groups: groupsReducer,
   linkInstances: linkInstancesReducer,
   linkTypes: linkTypesReducer,
@@ -96,6 +99,7 @@ const effects = [
   CollectionsEffects,
   CommonEffects,
   DocumentsEffects,
+  GeocodingEffects,
   GroupsEffects,
   LinkInstancesEffects,
   LinkTypesEffects,

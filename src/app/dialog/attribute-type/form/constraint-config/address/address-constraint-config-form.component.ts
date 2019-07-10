@@ -20,7 +20,7 @@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {AddressesMap, AddressField} from '../../../../../core/geocoding/address';
+import {AddressesMap, AddressField} from '../../../../../core/store/geocoding/address';
 import {AddressConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
