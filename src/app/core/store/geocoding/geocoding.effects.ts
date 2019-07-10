@@ -1,0 +1,96 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action, select, Store} from '@ngrx/store';
+import {from, Observable} from 'rxjs';
+import {map, mergeMap, take} from 'rxjs/operators';
+import {GeoCodingApiService} from '../../rest/geocoding-api.service';
+import {GeocodingAction, GeocodingActionType} from './geocoding.action';
+import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
+
+@Injectable()
+export class GeocodingEffects {
+  @Effect()
+  public getCoordinates$: Observable<Action> = this.actions$.pipe(
+    ofType<GeocodingAction.GetCoordinates>(GeocodingActionType.GET_COORDINATES),
+    mergeMap(action => {
+      const {queries} = action.payload;
+      return this.store$.pipe(
+        select(selectGeocodingQueryCoordinates),
+        take(1),
+        mergeMap(queryCoordinates => {
+          const missingQueries = queries.filter(query => !queryCoordinates[query]);
+          if (missingQueries.length === 0) {
+            return from([]);
+          }
+
+          return this.geocodingApiService
+            .findCoordinates(missingQueries)
+            .pipe(map(coordinatesMap => new GeocodingAction.GetCoordinatesSuccess({coordinatesMap})));
+        })
+      );
+    })
+  );
+
+  @Effect()
+  public getLocation$: Observable<Action> = this.actions$.pipe(
+    ofType<GeocodingAction.GetLocation>(GeocodingActionType.GET_LOCATION),
+    mergeMap(action => {
+      const {coordinates} = action.payload;
+      return this.store$.pipe(
+        select(selectLocationByCoordinates(coordinates)),
+        take(1),
+        mergeMap(storedLocation => {
+          if (storedLocation) {
+            return from([]);
+          }
+
+          return this.geocodingApiService
+            .findLocationByCoordinates(coordinates)
+            .pipe(map(location => new GeocodingAction.GetLocationSuccess({coordinates, location})));
+        })
+      );
+    })
+  );
+
+  @Effect()
+  public getLocations$: Observable<Action> = this.actions$.pipe(
+    ofType<GeocodingAction.GetLocations>(GeocodingActionType.GET_LOCATIONS),
+    mergeMap(action => {
+      const {query} = action.payload;
+      return this.store$.pipe(
+        select(selectLocationsByQuery(query)),
+        take(1),
+        mergeMap(storedLocations => {
+          if (storedLocations) {
+            return from([]);
+          }
+
+          return this.geocodingApiService
+            .findLocations(query)
+            .pipe(map(locations => new GeocodingAction.GetLocationsSuccess({query, locations})));
+        })
+      );
+    })
+  );
+
+  constructor(private actions$: Actions, private geocodingApiService: GeoCodingApiService, private store$: Store<{}>) {}
+}

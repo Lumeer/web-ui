@@ -19,7 +19,6 @@
 
 import Big from 'big.js';
 import * as moment from 'moment';
-import {AddressesMap} from '../../core/geocoding/address';
 import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {
   AddressConstraintConfig,
@@ -34,6 +33,7 @@ import {
 } from '../../core/model/data/constraint-config';
 import {Attribute} from '../../core/store/collections/collection';
 import {DocumentData} from '../../core/store/documents/document.model';
+import {AddressesMap, AddressField} from '../../core/store/geocoding/address';
 import {User} from '../../core/store/users/user';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from './common.utils';
 import {validDataColors} from './data/valid-data-colors';
@@ -189,10 +189,21 @@ export function formatAddressDataValue(
   }
 
   const [address] = addresses;
-  return (config.fields || [])
-    .map(fieldName => address[fieldName])
-    .filter(fieldValue => !!fieldValue)
-    .join(', ');
+  const nonEmptyFields = (config.fields || []).filter(fieldName => !!address[fieldName]);
+  const streetFields: string[] = [AddressField.HouseNumber, AddressField.Street];
+
+  return nonEmptyFields.reduce((formattedAddress, fieldName, index) => {
+    const fieldValue = address[fieldName];
+    if (index === 0) {
+      return fieldValue;
+    }
+
+    if (streetFields.includes(fieldName) && streetFields.includes(nonEmptyFields[index - 1])) {
+      return formattedAddress.concat(' ', fieldValue);
+    } else {
+      return formattedAddress.concat(', ', fieldValue);
+    }
+  }, '');
 }
 
 export function formatCoordinatesDataValue(value: any, config: CoordinatesConstraintConfig): string {

@@ -21,11 +21,12 @@ import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@ang
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {GeoCodingService} from '../../../../core/geocoding/geocoding.service';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {GeocodingAction} from '../../../../core/store/geocoding/geocoding.action';
+import {selectGeocodingQueryCoordinates} from '../../../../core/store/geocoding/geocoding.state';
 import {AttributeIdsMap, MapAttributeType, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
 import {parseCoordinates} from '../../../../shared/utils/map/coordinates.utils';
@@ -52,7 +53,7 @@ export class MapContentComponent implements OnInit {
 
   public markers$: Observable<MapMarkerProperties[]>;
 
-  constructor(private geoCodingService: GeoCodingService, private store$: Store<{}>) {}
+  constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindMarkers();
@@ -82,10 +83,12 @@ export class MapContentComponent implements OnInit {
 
   private populateAddressProperties(propertiesList: MapMarkerProperties[]): Observable<MapMarkerProperties[]> {
     const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
-    return this.geoCodingService.convertAddressesToCoordinates(addresses).pipe(
-      map(addressCoordinatesMap =>
+    this.store$.dispatch(new GeocodingAction.GetCoordinates({queries: addresses}));
+    return this.store$.pipe(
+      select(selectGeocodingQueryCoordinates),
+      map(queryCoordinates =>
         propertiesList.reduce((addressPropertiesList, properties) => {
-          const coordinates = addressCoordinatesMap[properties.document.data[properties.attributeId]];
+          const coordinates = queryCoordinates[properties.document.data[properties.attributeId]];
           if (coordinates) {
             const addressProperties: MapMarkerProperties = {
               ...properties,

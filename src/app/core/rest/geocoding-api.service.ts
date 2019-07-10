@@ -21,7 +21,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {GeocodingResultDto} from '../dto/geocoding-result.dto';
+import {CoordinatesDto, LocationDto} from '../dto/location.dto';
 
 const GEOCODING_URL = `${environment.apiUrl}/rest/geocoding`;
 
@@ -31,10 +31,28 @@ const GEOCODING_URL = `${environment.apiUrl}/rest/geocoding`;
 export class GeoCodingApiService {
   constructor(private http: HttpClient) {}
 
-  public getResults(queries: string[]): Observable<GeocodingResultDto[]> {
-    return this.http.get<GeocodingResultDto[]>(GEOCODING_URL, {
+  public findCoordinates(queries: string[]): Observable<Record<string, CoordinatesDto>> {
+    return this.http.get<Record<string, CoordinatesDto>>(`${GEOCODING_URL}/coordinates`, {
       params: {
         query: queries,
+      },
+    });
+  }
+
+  public findLocations(query: string, limit = 10): Observable<LocationDto[]> {
+    return this.http.get<LocationDto[]>(`${GEOCODING_URL}/locations`, {
+      params: {
+        query,
+        limit: String(limit),
+        lang: environment.locale,
+      },
+    });
+  }
+
+  public findLocationByCoordinates(coordinates: CoordinatesDto): Observable<LocationDto> {
+    return this.http.get<LocationDto>(`${GEOCODING_URL}/locations/${coordinates.lat},${coordinates.lng}`, {
+      params: {
+        lang: environment.locale,
       },
     });
   }

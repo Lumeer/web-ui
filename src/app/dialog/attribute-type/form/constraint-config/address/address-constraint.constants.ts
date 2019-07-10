@@ -18,24 +18,32 @@
  */
 
 import {environment} from '../../../../../../environments/environment';
-import {Address, AddressField} from '../../../../../core/geocoding/address';
+import {Address, AddressField} from '../../../../../core/store/geocoding/address';
 
-const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.City, AddressField.Country];
-const ENGLISH_DEFAULT_FIELDS = [AddressField.Street, AddressField.City, AddressField.State, AddressField.Country];
+const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
+const ENGLISH_DEFAULT_FIELDS = [
+  AddressField.HouseNumber,
+  AddressField.Street,
+  AddressField.City,
+  AddressField.State,
+  AddressField.Country,
+];
 
 export const ADDRESS_DEFAULT_FIELDS = environment.locale === 'cs' ? CZECH_DEFAULT_FIELDS : ENGLISH_DEFAULT_FIELDS;
 
 const CZECH_EXAMPLE_ADDRESS: Address = {
-  street: 'Lumírova 452/9',
-  zip: '12800',
+  houseNumber: '452/9',
+  street: 'Lumírova',
+  postalCode: '12800',
   city: 'Praha',
   country: 'Česká republika',
   continent: 'Evropa',
 };
 
 const ENGLISH_EXAMPLE_ADDRESS: Address = {
-  street: '444 Castro Street',
-  zip: '94041',
+  houseNumber: '444',
+  street: 'Castro Street',
+  postalCode: '94041',
   city: 'Mountain View',
   state: 'CA',
   country: 'USA',

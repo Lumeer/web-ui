@@ -18,7 +18,7 @@
  */
 
 import Big from 'big.js';
-import {AddressField} from '../../geocoding/address';
+import {AddressField} from '../../store/geocoding/address';
 
 export interface AddressConstraintConfig {
   fields: AddressField[];
