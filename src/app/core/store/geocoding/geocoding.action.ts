@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {GeoLocation} from './geo-location';
 import {MapCoordinates} from '../maps/map.model';
+import {GeoLocation} from './geo-location';
 
 export enum GeocodingActionType {
   GET_COORDINATES = '[Geocoding] Get Coordinates',
@@ -62,7 +62,13 @@ export namespace GeocodingAction {
   export class GetLocation implements Action {
     public readonly type = GeocodingActionType.GET_LOCATION;
 
-    public constructor(public payload: {coordinates: MapCoordinates}) {}
+    public constructor(
+      public payload: {
+        coordinates: MapCoordinates;
+        onSuccess: (location: GeoLocation) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
   }
 
   export class GetLocationSuccess implements Action {

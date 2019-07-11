@@ -39,7 +39,7 @@ import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.st
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
-import {formatAddressDataValue, formatTextDataValue} from '../../utils/data.utils';
+import {formatAddressDataValue, formatTextDataValue, getAddressSaveValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -107,7 +107,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
           select(selectLocationsByQuery(value)),
           map(locations =>
             (locations || []).map(location => ({
-              value: formatAddressDataValue(value, this.constraintConfig, {[value]: [location.address]}),
+              value: getAddressSaveValue(location.address, this.constraintConfig),
             }))
           )
         );
