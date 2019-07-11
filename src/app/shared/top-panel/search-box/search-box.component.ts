@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 
-import {BehaviorSubject, combineLatest, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
 import {debounceTime, filter, map, startWith, tap, withLatestFrom} from 'rxjs/operators';
@@ -93,7 +93,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest(this.store$.pipe(select(selectQuery)), this.loadData())
+    const querySubscription = combineLatest([this.store$.pipe(select(selectQuery)), this.loadData()])
       .pipe(
         debounceTime(100),
         withLatestFrom(this.router.events.pipe(startWith(null))),
@@ -130,12 +130,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private loadData(): Observable<QueryData> {
-    return observableCombineLatest(
+    return combineLatest([
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
       this.store$.pipe(select(selectCollectionsLoaded)),
-      this.store$.pipe(select(selectLinkTypesLoaded))
-    ).pipe(
+      this.store$.pipe(select(selectLinkTypesLoaded)),
+    ]).pipe(
       debounceTime(100),
       filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => ({
