@@ -18,8 +18,8 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {getCoordinatesSaveValue} from '../../../shared/utils/data.utils';
 import {AppState} from '../app.state';
+import {formatMapCoordinates} from '../maps/map-coordinates';
 import {MapCoordinates} from '../maps/map.model';
 import {GeoLocation} from './geo-location';
 
@@ -59,5 +59,5 @@ export const selectGeocodingCoordinatesLocation = createSelector(
 export const selectLocationByCoordinates = (coordinates: MapCoordinates) =>
   createSelector(
     selectGeocodingCoordinatesLocation,
-    coordinatesLocation => coordinatesLocation[getCoordinatesSaveValue(coordinates)]
+    coordinatesLocation => coordinatesLocation[formatMapCoordinates(coordinates)]
   );

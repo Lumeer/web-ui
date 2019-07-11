@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '../../model/data/constraint';
 import {Attribute, Collection} from '../collections/collection';
-import {AttributeIdsMap} from './map.model';
+import {AttributeIdsMap, MapConfig} from './map.model';
 
 export function updateAttributeIdsMap(attributeIdsMap: AttributeIdsMap, collections: Collection[]): AttributeIdsMap {
   const collectionIds = collections.map(collection => collection.id);
@@ -43,4 +44,20 @@ function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
     attribute =>
       attribute.constraint && [ConstraintType.Address, ConstraintType.Coordinates].includes(attribute.constraint.type)
   );
+}
+
+export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: MapConfig): boolean {
+  if (!deepObjectsEquals(viewConfig.attributeIdsMap, perspectiveConfig.attributeIdsMap)) {
+    return true;
+  }
+
+  if (Boolean(viewConfig.positionSaved) !== Boolean(perspectiveConfig.positionSaved)) {
+    return true;
+  }
+
+  if (viewConfig.positionSaved || perspectiveConfig.positionSaved) {
+    return !deepObjectsEquals(viewConfig.position, perspectiveConfig.position);
+  }
+
+  return false;
 }

@@ -18,16 +18,23 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {map, take, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {MapConfig, MapModel} from '../../../core/store/maps/map.model';
+import {formatMapCoordinates} from '../../../core/store/maps/map-coordinates';
+import {MapConfig, MapModel, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
-import {DEFAULT_MAP_ID, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {
+  DEFAULT_MAP_ID,
+  selectMapById,
+  selectMapConfig,
+  selectMapConfigPosition,
+} from '../../../core/store/maps/maps.state';
+import {selectMapPosition, selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query';
 import {isAnyCollectionQuery} from '../../../core/store/navigation/query.util';
 import {View} from '../../../core/store/views/view';
@@ -62,7 +69,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.bindValidQuery();
@@ -71,6 +78,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.bindMap(this.mapId);
 
     this.subscriptions.add(this.subscribeToCollections());
+    this.subscriptions.add(this.subscribeToMapConfigPosition());
 
     this.setupSidebar();
   }
@@ -89,14 +97,24 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       .subscribe(config => this.createMap(mapId, config));
   }
 
-  private createMap(mapId: string, initConfig: MapConfig) {
+  private createMap(mapId: string, viewConfig: MapConfig) {
     this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectMapConfig),
-          take(1)
+      combineLatest([this.store$.select(selectMapConfig), this.store$.pipe(select(selectMapPosition))])
+        .pipe(take(1))
+        .subscribe(([config, position]) =>
+          this.store$.dispatch(
+            new MapsAction.CreateMap({
+              mapId,
+              config: {
+                ...(config || {
+                  ...viewConfig,
+                  position: viewConfig && viewConfig.positionSaved ? viewConfig.position : undefined,
+                }),
+                ...(position ? {position} : {}),
+              },
+            })
+          )
         )
-        .subscribe(config => this.store$.dispatch(new MapsAction.CreateMap({mapId, config: config || initConfig})))
     );
   }
 
@@ -109,6 +127,29 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
         })
       )
     );
+  }
+
+  private subscribeToMapConfigPosition(): Subscription {
+    return this.store$
+      .pipe(
+        select(selectMapConfigPosition(this.mapId)),
+        filter(position => !!position)
+      )
+      .subscribe(position => this.redirectToMapPosition(position));
+  }
+
+  private redirectToMapPosition(position: MapPosition) {
+    const matrixParams = {
+      ...(position.bearing ? {mb: position.bearing.toFixed(1)} : undefined),
+      mc: formatMapCoordinates(position.center),
+      ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
+      mz: position.zoom.toFixed(2),
+    };
+
+    this.router.navigate(['../map', matrixParams], {
+      queryParamsHandling: 'preserve',
+      relativeTo: this.activatedRoute.parent,
+    });
   }
 
   private setupSidebar() {

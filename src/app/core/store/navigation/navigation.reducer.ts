@@ -18,8 +18,11 @@
  */
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATED, RouterCancelAction, RouterNavigatedAction} from '@ngrx/router-store';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
+import {parseMapCoordinates} from '../maps/map-coordinates';
+import {MapPosition} from '../maps/map.model';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
 import {convertStringToQueryModel} from './query.converter';
@@ -28,14 +31,28 @@ import {SearchTab, searchTabsMap} from './search-tab';
 function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
 
+  const mapPosition: MapPosition =
+    params['mz'] && params['mc']
+      ? {
+          bearing: Number(params['mb']) || 0,
+          center: parseMapCoordinates(params['mc']),
+          pitch: Number(params['mp']) || 0,
+          zoom: Number(params['mz']),
+        }
+      : null;
+
+  const query = convertStringToQueryModel(queryParams['query']);
+  const workspace = {
+    organizationCode: params['organizationCode'],
+    projectCode: params['projectCode'],
+    collectionId: params['collectionId'],
+    viewCode: params['vc'],
+  };
+
   return {
-    query: convertStringToQueryModel(queryParams['query']),
-    workspace: {
-      organizationCode: params['organizationCode'],
-      projectCode: params['projectCode'],
-      collectionId: params['collectionId'],
-      viewCode: params['vc'],
-    },
+    mapPosition: deepObjectsEquals(mapPosition, state.mapPosition) ? state.mapPosition : mapPosition,
+    query: deepObjectsEquals(query, state.query) ? state.query : query,
+    workspace: deepObjectsEquals(workspace, state.workspace) ? state.workspace : workspace,
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
     searchTab: tryToParseSearchTabPath(url),

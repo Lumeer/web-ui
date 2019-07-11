@@ -12,3 +12,7 @@
                      [attributeIds]="map.config | mapAttributeIds : collection.id"
                      (select)="onSelect(collection, $event)">
 </map-attribute-group>
+
+<map-position-checkbox [value]="map.config?.positionSaved"
+                       (valueChange)="onPositionSavedChange($event)">
+</map-position-checkbox>
