@@ -43,6 +43,10 @@ export interface DateTimeConstraintConfig {
   range: boolean;
 }
 
+export interface DurationConstraintConfig {
+  // TODO
+}
+
 export interface NumberConstraintConfig {
   decimal: boolean;
   format: string;
@@ -103,6 +107,7 @@ export type ConstraintConfig =
   | AddressConstraintConfig
   | CoordinatesConstraintConfig
   | DateTimeConstraintConfig
+  | DurationConstraintConfig
   | NumberConstraintConfig
   | PercentageConstraintConfig
   | RatingConstraintConfig

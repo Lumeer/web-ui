@@ -28,6 +28,7 @@ export enum ConstraintType {
   Boolean = 'Boolean',
   Coordinates = 'Coordinates',
   DateTime = 'DateTime',
+  Duration = 'Duration',
   Email = 'Email',
   Image = 'Image',
   Link = 'Link',
@@ -45,6 +46,7 @@ export const constraintTypesMap = {
   [ConstraintType.Color]: ConstraintType.Color,
   [ConstraintType.Coordinates]: ConstraintType.Coordinates,
   [ConstraintType.DateTime]: ConstraintType.DateTime,
+  [ConstraintType.Duration]: ConstraintType.Duration,
   [ConstraintType.Email]: ConstraintType.Email,
   [ConstraintType.Image]: ConstraintType.Image,
   [ConstraintType.Link]: ConstraintType.Link,
@@ -63,6 +65,7 @@ export const constraintIconsMap = {
   [ConstraintType.Color]: 'fas fa-palette',
   [ConstraintType.Coordinates]: 'fas fa-location-circle',
   [ConstraintType.DateTime]: 'fas fa-calendar-day',
+  [ConstraintType.Duration]: 'fas fa-stopwatch',
   [ConstraintType.Email]: 'fas fa-envelope',
   [ConstraintType.Image]: 'fas fa-file-image',
   [ConstraintType.Link]: 'fas fa-link',
@@ -82,6 +85,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Color:
     case ConstraintType.Coordinates:
     case ConstraintType.DateTime:
+    case ConstraintType.Duration:
     case ConstraintType.Number:
     case ConstraintType.Percentage:
     case ConstraintType.Select:

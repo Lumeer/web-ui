@@ -1412,21 +1412,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="attribute.type.value" datatype="html">
-        <source>
-        <x id="ICU" equiv-text="{type, select, Address {...} Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="20eb77b8010bbe1e3936ef86196f2fb3ad21a182" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
         <source><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> event</source>
@@ -1982,14 +1968,14 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
-    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
+    <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-      </trans-unit><trans-unit id="ce6bbe4476be067d5362883cdc005f069ba12916" datatype="html">
-        <source>{VAR_SELECT, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
+      </trans-unit><trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
@@ -4150,6 +4136,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="970055a0f46ef7292144b2c055ef1797517994c6" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/select/attribute-type-select.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="dialog.calendar.event.collection" datatype="html">
         <source>Table</source>
         <context-group purpose="location">
@@ -4204,7 +4197,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.type.icon.title" datatype="html">
-        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
+        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -4582,6 +4575,13 @@
         <source>Select attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/config/collection/kanban-collection-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="map.content.location.error" datatype="html">
+        <source>Failed to save new location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

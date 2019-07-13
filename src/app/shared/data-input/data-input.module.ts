@@ -41,6 +41,7 @@ import {UserDataInputComponent} from './user/user-data-input.component';
 import {SelectDataInputComponent} from './select/select-data-input.component';
 import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-input.component';
 import {AddressDataInputComponent} from './address/address-data-input.component';
+import {DurationDataInputComponent} from './duration/duration-data-input.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {AddressDataInputComponent} from './address/address-data-input.component'
     SelectDataInputComponent,
     CoordinatesDataInputComponent,
     AddressDataInputComponent,
+    DurationDataInputComponent,
   ],
   exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
 })
