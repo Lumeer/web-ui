@@ -60,6 +60,7 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
     );
     this.rulesCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
+      filter(limits => !!limits),
       map(serviceLimits => serviceLimits.rulesPerCollection)
     );
   }
@@ -94,13 +95,14 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
   public onSaveRule(collection: Collection, idx: number, rule: Rule, originalRuleName?: string) {
     const index = collection.rules.findIndex(r => r.name === (originalRuleName ? originalRuleName : rule.name));
 
+    const rules = [...collection.rules];
     if (index >= 0) {
-      collection.rules.splice(index, 1, rule);
+      rules.splice(index, 1, rule);
     } else {
-      collection.rules.push(rule);
+      rules.push(rule);
     }
 
-    this.store$.dispatch(new CollectionsAction.Update({collection}));
+    this.store$.dispatch(new CollectionsAction.Update({collection: {...collection, rules}}));
 
     if (index >= 0) {
       this.onCancelRuleEdit(idx);
