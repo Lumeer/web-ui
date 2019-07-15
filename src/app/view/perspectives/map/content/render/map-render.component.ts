@@ -41,7 +41,6 @@ import {
   Map,
   MapboxEvent,
   MapLayerMouseEvent,
-  MapSourceDataEvent,
   Marker,
   NavigationControl,
   ScaleControl,
@@ -146,13 +145,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.addControl(new GeolocateControl(), 'bottom-right');
 
     this.registerMapEventListeners();
-
-    setTimeout(() => this.mapboxMap.resize(), 100);
   }
 
   private registerMapEventListeners() {
     this.mapboxMap.on('load', () => this.onMapLoad());
-    this.mapboxMap.on('data', event => this.onMapData(event as MapSourceDataEvent));
     this.mapboxMap.on('moveend', (event: MapboxEvent) => this.onMapMoveEnd(event));
     this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
     this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseEnter(event));
@@ -166,14 +162,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.loadOpenMapTilesLanguage();
 
     this.mapboxMap.resize();
-  }
-
-  private onMapData(event: MapSourceDataEvent) {
-    if (event.sourceId !== MAP_SOURCE_ID || !event.isSourceLoaded) {
-      return;
-    }
-
-    this.redrawMarkers();
   }
 
   private onMapMoveEnd(event: MapboxEvent) {
@@ -193,8 +181,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       });
     });
 
-    // needs to be delayed, otherwise markers are not shown on cluster click
-    setTimeout(() => this.redrawMarkers(), 100);
+    this.redrawMarkers();
+    this.mapboxMap.once('idle', () => this.redrawMarkers());
   }
 
   private onMapClusterClick(event: MapLayerMouseEvent) {
@@ -205,7 +193,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
         return;
       }
 
-      this.mapboxMap.flyTo({
+      this.mapboxMap.easeTo({
         center: (features[0].geometry as Point).coordinates as [number, number],
         zoom: zoom,
       });
@@ -270,6 +258,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       const bounds = createMapMarkersBounds(markers);
       this.mapboxMap.fitBounds(bounds, {padding: 100});
     }
+
+    this.redrawMarkers();
+    this.mapboxMap.once('idle', () => this.redrawMarkers());
   }
 
   private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
