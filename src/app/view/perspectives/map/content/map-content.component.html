@@ -3,7 +3,8 @@
     <map-render *ngIf="map"
                 [map]="map"
                 [markers]="data.markers"
-                (moveMarker)="onMoveMarker($event)"
+                (mapMove)="onMapMove($event)"
+                (markerMove)="onMarkerMove($event)"
                 class="flex-grow-1">
     </map-render>
   </ng-container>

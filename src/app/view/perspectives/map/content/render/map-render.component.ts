@@ -35,20 +35,37 @@ import {
 } from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Point} from 'geojson';
-import {GeoJSONSource, Map, MapLayerMouseEvent, MapSourceDataEvent, Marker, NavigationControl} from 'mapbox-gl';
+import {
+  GeoJSONSource,
+  GeolocateControl,
+  Map,
+  MapboxEvent,
+  MapLayerMouseEvent,
+  MapSourceDataEvent,
+  Marker,
+  NavigationControl,
+  ScaleControl,
+} from 'mapbox-gl';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
-import {MapConfig, MapCoordinates, MapMarkerProperties, MapModel} from '../../../../../core/store/maps/map.model';
+import {
+  MapConfig,
+  MapCoordinates,
+  MapMarkerProperties,
+  MapModel,
+  MapPosition,
+} from '../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
   createMapClusterCountsLayer,
   createMapClusterMarkersSource,
   createMapClustersLayer,
   createMapMarker,
+  createMapMarkersBounds,
 } from './map-render.utils';
-import {MarkerMoveEvent} from './marker-move-event';
+import {MarkerMoveEvent} from './marker-move.event';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -73,7 +90,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   public markers: MapMarkerProperties[];
 
   @Output()
-  public moveMarker = new EventEmitter<MarkerMoveEvent>();
+  public markerMove = new EventEmitter<MarkerMoveEvent>();
+
+  @Output()
+  public mapMove = new EventEmitter<MapPosition>();
 
   public mapElementId: string;
 
@@ -120,7 +140,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private initMap(config: MapConfig) {
     this.mapboxMap = createMapboxMap(this.mapElementId, config);
-    this.mapboxMap.addControl(new NavigationControl());
+    this.mapboxMap.addControl(new NavigationControl(), 'top-right');
+    this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
+    // GeolocateControl needs to be added after ScaleControl to be shown above it
+    this.mapboxMap.addControl(new GeolocateControl(), 'bottom-right');
 
     this.registerMapEventListeners();
 
@@ -130,7 +153,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   private registerMapEventListeners() {
     this.mapboxMap.on('load', () => this.onMapLoad());
     this.mapboxMap.on('data', event => this.onMapData(event as MapSourceDataEvent));
-    this.mapboxMap.on('moveend', () => this.onMapMoveEnd());
+    this.mapboxMap.on('moveend', (event: MapboxEvent) => this.onMapMoveEnd(event));
     this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
     this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseEnter(event));
     this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseLeave(event));
@@ -150,11 +173,26 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       return;
     }
 
-    this.drawnMarkers.forEach(marker => marker.remove());
     this.redrawMarkers();
   }
 
-  private onMapMoveEnd() {
+  private onMapMoveEnd(event: MapboxEvent) {
+    const map = event.target;
+
+    if (!map.getSource(MAP_SOURCE_ID) || !map.isSourceLoaded(MAP_SOURCE_ID)) {
+      return;
+    }
+
+    this.ngZone.run(() => {
+      const {lat, lng} = map.getCenter();
+      this.mapMove.emit({
+        bearing: map.getBearing(),
+        center: {lat, lng},
+        pitch: map.getPitch(),
+        zoom: map.getZoom(),
+      });
+    });
+
     // needs to be delayed, otherwise markers are not shown on cluster click
     setTimeout(() => this.redrawMarkers(), 100);
   }
@@ -227,13 +265,18 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
     this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
     this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+
+    if (!this.map.config.position || !this.map.config.position.center) {
+      const bounds = createMapMarkersBounds(markers);
+      this.mapboxMap.fitBounds(bounds, {padding: 100});
+    }
   }
 
   private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
     event.target.setDraggable(false); // disable dragging until map refresh
 
     const coordinates: MapCoordinates = event.target.getLngLat();
-    this.moveMarker.emit({coordinates, properties});
+    this.markerMove.emit({coordinates, properties});
   }
 
   public ngOnDestroy() {

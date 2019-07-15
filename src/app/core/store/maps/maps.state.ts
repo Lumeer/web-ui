@@ -46,6 +46,11 @@ export const selectMapConfigById = (mapId: string) =>
     selectMapById(mapId),
     map => map && map.config
   );
+export const selectMapConfigPosition = (mapId: string) =>
+  createSelector(
+    selectMapConfigById(mapId),
+    config => config && config.position
+  );
 
 export const selectDefaultMap = selectMapById(DEFAULT_MAP_ID);
 export const selectMapConfig = selectMapConfigById(DEFAULT_MAP_ID);

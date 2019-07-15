@@ -32,6 +32,10 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
       return selectAttribute(state, action);
     case MapsActionType.UPDATE_ATTRIBUTES:
       return updateAttributes(state, action);
+    case MapsActionType.CHANGE_POSITION:
+      return changePosition(state, action);
+    case MapsActionType.CHANGE_POSITION_SAVED:
+      return changePositionSaved(state, action);
     case MapsActionType.CLEAR:
       return initialMapsState;
     default:
@@ -40,9 +44,11 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
 }
 
 function createMap(state: MapsState, action: MapsAction.CreateMap): MapsState {
+  const {mapId, config} = action.payload;
+
   const map: MapModel = {
-    id: action.payload.mapId,
-    config: {...DEFAULT_MAP_CONFIG, ...action.payload.config},
+    id: mapId,
+    config: {...DEFAULT_MAP_CONFIG, ...config},
   };
   return mapsAdapter.addOne(map, state);
 }
@@ -81,5 +87,29 @@ function updateAttributes(state: MapsState, action: MapsAction.UpdateAttributes)
   const attributeIdsMap = updateAttributeIdsMap(map.config && map.config.attributeIdsMap, collections);
   const config = {...map.config, attributeIdsMap};
 
+  return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
+}
+
+function changePosition(state: MapsState, action: MapsAction.ChangePosition): MapsState {
+  const {mapId, position} = action.payload;
+
+  const map = state.entities[mapId];
+  if (!map) {
+    return state;
+  }
+
+  const config = {...map.config, position};
+  return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
+}
+
+function changePositionSaved(state: MapsState, action: MapsAction.ChangePositionSaved): MapsState {
+  const {mapId, positionSaved} = action.payload;
+
+  const map = state.entities[mapId];
+  if (!map) {
+    return state;
+  }
+
+  const config = {...map.config, positionSaved};
   return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
 }
