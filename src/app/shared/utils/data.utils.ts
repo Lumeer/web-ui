@@ -26,6 +26,7 @@ import {
   CoordinatesConstraintConfig,
   CoordinatesFormat,
   DateTimeConstraintConfig,
+  DurationConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
   SelectConstraintConfig,
@@ -96,6 +97,8 @@ export function getSaveValue(value: any, constraint: Constraint): any {
       return parseBooleanDataValue(value);
     case ConstraintType.Color:
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
+    case ConstraintType.Duration:
+      return getDurationSaveValue(value, constraint.config as DurationConstraintConfig);
     default:
       return value;
   }
@@ -137,6 +140,8 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
       return isColorValid(value, !withoutConfig ? (constraint.config as ColorConstraintConfig) : null);
     case ConstraintType.Select:
       return isSelectDataValueValid(value, !withoutConfig ? (constraint.config as SelectConstraintConfig) : null);
+    case ConstraintType.Duration:
+      return isDurationDataValueValid(value, !withoutConfig ? (constraint.config as DurationConstraintConfig) : null);
     default:
       return true;
   }
@@ -158,6 +163,8 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
       return formatCoordinatesDataValue(value, constraint.config as CoordinatesConstraintConfig);
     case ConstraintType.DateTime:
       return formatDateTimeDataValue(value, constraint.config as DateTimeConstraintConfig);
+    case ConstraintType.Duration:
+      return formatDurationDataValue(value, constraint.config as DurationConstraintConfig);
     case ConstraintType.Number:
       return formatNumberDataValue(value, constraint.config as NumberConstraintConfig);
     case ConstraintType.Text:
@@ -606,4 +613,17 @@ export function formatSelectDataValue(value: any, config: SelectConstraintConfig
 
 export function isSelectDataValueValid(value: any, config: SelectConstraintConfig): boolean {
   return config && config.options.some(option => String(option.value) === String(value));
+}
+
+export function getDurationSaveValue(value: any, config: DurationConstraintConfig): any {
+  return value;
+}
+
+export function isDurationDataValueValid(value: any, durationConstraintConfig: DurationConstraintConfig): any {
+  // TODO
+  return true;
+}
+
+export function formatDurationDataValue(value: any, config: DurationConstraintConfig) {
+  return value;
 }

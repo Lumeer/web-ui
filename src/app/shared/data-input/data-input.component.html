@@ -45,6 +45,18 @@
                        class="d-block">
   </datetime-data-input>
 
+  <duration-data-input *ngSwitchCase="constraintType.Duration"
+                       [constraintConfig]="constraint.config"
+                       [focus]="focus"
+                       [readonly]="readonly"
+                       [skipValidation]="skipValidation"
+                       [value]="value"
+                       (valueChange)="onValueChange($event)"
+                       (save)="onSaveValue($event)"
+                       (cancel)="onCancel()"
+                       class="d-block">
+  </duration-data-input>
+
   <number-data-input *ngSwitchCase="constraintType.Number"
                      [focus]="focus"
                      [readonly]="readonly"

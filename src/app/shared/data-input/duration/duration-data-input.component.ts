@@ -32,6 +32,7 @@ import {
 import {DurationConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
+import {formatDurationDataValue, getDurationSaveValue, isDurationDataValueValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'duration-data-input',
@@ -85,14 +86,14 @@ export class DurationDataInputComponent implements OnChanges {
     if (changes.value) {
       this.initValue();
     }
-    this.valid = isDurationValid(this.value, this.constraintConfig);
+    this.valid = isDurationDataValueValid(this.value, this.constraintConfig);
   }
 
   private initValue() {
     const input = this.durationInput;
     setTimeout(() => {
       if (input && input.nativeElement) {
-        input.nativeElement.value = this.durationDataValue.transform(this.value, this.constraintConfig);
+        input.nativeElement.value = formatDurationDataValue(this.value, this.constraintConfig);
       }
     });
   }
@@ -105,7 +106,11 @@ export class DurationDataInputComponent implements OnChanges {
       case KeyCode.Tab:
         const input = this.durationInput;
 
-        if (!this.skipValidation && input && !isDurationValid(input.nativeElement.value, this.constraintConfig)) {
+        if (
+          !this.skipValidation &&
+          input &&
+          !isDurationDataValueValid(input.nativeElement.value, this.constraintConfig)
+        ) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -126,7 +131,7 @@ export class DurationDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = isDurationValid(element.value, this.constraintConfig);
+    this.valid = isDurationDataValueValid(element.value, this.constraintConfig);
 
     this.valueChange.emit(value);
   }
@@ -141,6 +146,6 @@ export class DurationDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): number | string {
-    return getDurationSaveValue(value);
+    return getDurationSaveValue(value, this.constraintConfig);
   }
 }

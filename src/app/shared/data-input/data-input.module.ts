@@ -33,9 +33,7 @@ import {ColorDataInputComponent} from './color/color-data-input.component';
 import {DataInputComponent} from './data-input.component';
 import {DatetimeDataInputComponent} from './datetime/datetime-data-input.component';
 import {NumberDataInputComponent} from './number/number-data-input.component';
-import {NumberValidPipe} from './number/number-valid.pipe';
 import {PercentageDataInputComponent} from './percentage/percentage-data-input.component';
-import {PercentageValidPipe} from './percentage/percentage-valid.pipe';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
 import {SelectDataInputComponent} from './select/select-data-input.component';
@@ -63,8 +61,6 @@ import {DurationDataInputComponent} from './duration/duration-data-input.compone
     NumberDataInputComponent,
     BooleanDataInputComponent,
     PercentageDataInputComponent,
-    PercentageValidPipe,
-    NumberValidPipe,
     ColorDataInputComponent,
     UserDataInputComponent,
     SelectDataInputComponent,

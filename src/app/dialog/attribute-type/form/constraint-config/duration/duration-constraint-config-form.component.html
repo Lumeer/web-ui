@@ -1,0 +1,29 @@
+<div [formGroup]="form">
+
+  <div class="form-group">
+    <label [for]="controls.Type"
+           i18n="@@constraint.duration.type.label">
+      Duration type
+    </label>
+    <select [id]="controls.Type"
+            [formControlName]="controls.Type"
+            (change)="onTypeChange()"
+            class="custom-select"
+            data-test="duration-constraint-format-select">
+      <option *ngFor="let type of types"
+              [value]="type">
+        {type, select, Work {Work} Classic {Classic} Custom {Custom}}
+      </option>
+    </select>
+  </div>
+
+  <duration-constraint-config-form-conversion [formGroup]="form"
+                                              [editable]="typeControl.value === type.Custom">
+  </duration-constraint-config-form-conversion>
+
+  <p class="text-muted"
+     i18n="@@constraint.duration.example">
+    Example: 1w 2d 5h 20m 30s
+  </p>
+
+</div>

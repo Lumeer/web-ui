@@ -36,6 +36,10 @@ import {UserConstraintConfigFormComponent} from './constraint-config/user/user-c
 import {CoordinatesConstraintConfigFormComponent} from './constraint-config/coordinates/coordinates-constraint-config-form.component';
 import {AddressConstraintConfigFormComponent} from './constraint-config/address/address-constraint-config-form.component';
 import {AttributeTypeSelectComponent} from './select/attribute-type-select.component';
+import {DurationConstraintConfigFormComponent} from './constraint-config/duration/duration-constraint-config-form.component';
+import {DurationConstraintConfigFormConversionsComponent} from './constraint-config/duration/conversion/duration-constraint-config-form-conversions.component';
+import {DurationConstraintUnitEditablePipe} from './constraint-config/duration/conversion/duration-constraint-unit-editable.pipe';
+import {DurationConstraintUnitMaxValuePipe} from './constraint-config/duration/conversion/duration-constraint-unit-max-value.pipe';
 
 @NgModule({
   imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
@@ -52,6 +56,10 @@ import {AttributeTypeSelectComponent} from './select/attribute-type-select.compo
     CoordinatesConstraintConfigFormComponent,
     AddressConstraintConfigFormComponent,
     AttributeTypeSelectComponent,
+    DurationConstraintConfigFormComponent,
+    DurationConstraintConfigFormConversionsComponent,
+    DurationConstraintUnitEditablePipe,
+    DurationConstraintUnitMaxValuePipe,
   ],
   exports: [AttributeTypeFormComponent],
 })

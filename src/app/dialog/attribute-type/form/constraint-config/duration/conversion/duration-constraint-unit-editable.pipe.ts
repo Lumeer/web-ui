@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
-import {isNumberValid} from '../../utils/data.utils';
+import {DurationUnit} from '../../../../../../core/model/data/constraint-config';
 
 @Pipe({
-  name: 'numberValid',
+  name: 'durationConstraintUnitEditable',
 })
-export class NumberValidPipe implements PipeTransform {
-  public transform(value: any, config?: NumberConstraintConfig): boolean {
-    return isNumberValid(value, config);
+export class DurationConstraintUnitEditablePipe implements PipeTransform {
+  public transform(unit: DurationUnit): boolean {
+    return unit === DurationUnit.Days || unit === DurationUnit.Weeks;
   }
 }

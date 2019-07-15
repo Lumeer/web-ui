@@ -44,7 +44,22 @@ export interface DateTimeConstraintConfig {
 }
 
 export interface DurationConstraintConfig {
-  // TODO
+  type: DurationType;
+  conversions: Record<DurationUnit, number>;
+}
+
+export enum DurationUnit {
+  Weeks = 'w',
+  Days = 'd',
+  Hours = 'h',
+  Minutes = 'm',
+  Seconds = 's',
+}
+
+export enum DurationType {
+  Work = 'Work',
+  Classic = 'Classic',
+  Custom = 'Custom',
 }
 
 export interface NumberConstraintConfig {

@@ -33,6 +33,7 @@ import {
   isUsedSelectConstraintAttribute,
 } from './constraint-config/select/select-constraint.utils';
 import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
+import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
 
 @Component({
   selector: 'attribute-type-form',
@@ -95,6 +96,13 @@ export class AttributeTypeFormComponent implements OnChanges {
           minValue: this.configForm.get('minValue').value,
           maxValue: this.configForm.get('maxValue').value,
           range: undefined, // TODO
+        };
+      case ConstraintType.Duration:
+        return {
+          type: this.configForm.get(DurationConstraintFormControl.Type).value,
+          conversions: this.configForm
+            .get(DurationConstraintFormControl.Conversions)
+            .value.reduce((map, value) => ({...map, [value.unit]: value.value}), {}),
         };
       case ConstraintType.Number:
         return {
