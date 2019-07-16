@@ -30,21 +30,24 @@ export interface MapModel {
   config: MapConfig;
 }
 
+export interface MapPosition {
+  bearing?: number;
+  center?: MapCoordinates;
+  pitch?: number;
+  zoom?: number;
+}
+
 export interface MapConfig {
   attributeIdsMap: AttributeIdsMap;
-  center: MapCoordinates;
-  zoom: number;
+  position?: MapPosition;
+  positionSaved: boolean;
 }
 
 export type AttributeIdsMap = {[collectionId: string]: string[]};
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   attributeIdsMap: {},
-  center: {
-    lat: 49.2331315,
-    lng: 16.5701833,
-  },
-  zoom: 4,
+  positionSaved: false,
 };
 
 export interface MapMarkerProperties {

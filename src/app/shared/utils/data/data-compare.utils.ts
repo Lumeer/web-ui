@@ -90,11 +90,15 @@ function compareNumericValues(a: any, b: any, asc: boolean = true): number {
 }
 
 export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType, constraint: Constraint): boolean {
-  if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
+  if (constraint && constraint.type === ConstraintType.Boolean) {
+    return dataValuesMeetConditionByBoolean(a, b, condition);
+  }
+
+  if ((isNullOrUndefined(a) || a === '') && (isNullOrUndefined(b) || b === '')) {
     return condition === ConditionType.Equals;
   }
 
-  if (isNullOrUndefined(a) || isNullOrUndefined(b)) {
+  if (isNullOrUndefined(a) || a === '' || (isNullOrUndefined(b) || b === '')) {
     return condition === ConditionType.NotEquals;
   }
 
@@ -112,6 +116,17 @@ export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType
       return dataValuesMeetConditionByUser(a, b, condition);
     default:
       return dataValuesMeetConditionByAny(a, b, condition, constraint);
+  }
+}
+
+function dataValuesMeetConditionByBoolean(a: any, b: any, condition: ConditionType): boolean {
+  switch (condition) {
+    case ConditionType.Equals:
+      return !!a === !!b;
+    case ConditionType.NotEquals:
+      return !a !== !b;
+    default:
+      return dataValuesMeetConditionByAny(a, b, condition);
   }
 }
 

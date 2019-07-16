@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {getCoordinatesSaveValue} from '../../../shared/utils/data.utils';
+import {formatMapCoordinates} from '../maps/map-coordinates';
 import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {GeocodingState, initialGeocodingState} from './geocoding.state';
 
@@ -46,7 +46,7 @@ function getCoordinates(state: GeocodingState, action: GeocodingAction.GetCoordi
 
 function getLocation(state: GeocodingState, action: GeocodingAction.GetLocationSuccess): GeocodingState {
   const {coordinates, location} = action.payload;
-  const coordinatesString = getCoordinatesSaveValue(coordinates);
+  const coordinatesString = formatMapCoordinates(coordinates);
 
   const coordinatesLocation = {...state.coordinatesLocation, [coordinatesString]: location};
   return {...state, coordinatesLocation};

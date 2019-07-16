@@ -18,18 +18,28 @@
  */
 
 import {Feature, FeatureCollection, Point} from 'geojson';
-import {GeoJSONSourceRaw, Layer, Map, Marker, Popup} from 'mapbox-gl';
+import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
 
 export function createMapboxMap(elementId: string, config: MapConfig): Map {
+  const positionOptions: Partial<MapboxOptions> = config.position
+    ? {
+        bearing: config.position.bearing,
+        center: config.position.center,
+        pitch: config.position.pitch,
+        zoom: config.position.zoom,
+      }
+    : {};
+
   return new Map({
     container: elementId,
     style: mapStyleUrls[MapStyle.MapTilerStreets],
-    center: config.center,
-    zoom: config.zoom,
+    minZoom: 1,
+    maxZoom: 17,
+    ...positionOptions,
   });
 }
 
@@ -147,4 +157,10 @@ function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDi
   markerElement.appendChild(shapeElement);
 
   return markerElement;
+}
+
+export function createMapMarkersBounds(markers: MapMarkerProperties[]) {
+  const bounds = new LngLatBounds();
+  markers.forEach(marker => bounds.extend(new LngLat(marker.coordinates.lng, marker.coordinates.lat)));
+  return bounds;
 }

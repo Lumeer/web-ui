@@ -17,19 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import isEqual from 'lodash/isEqual';
 import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
+import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {isChartConfigChanged} from '../charts/chart.util';
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {LinkType} from '../link-types/link.type';
+import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig} from './view';
-import isEqual from 'lodash/isEqual';
-import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -50,6 +51,8 @@ export function isViewConfigChanged(
       return isCalendarConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Kanban:
       return isKanbanConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Map:
+      return isMapConfigChanged(viewConfig, perspectiveConfig);
     default:
       return !isEqual(viewConfig, perspectiveConfig);
   }

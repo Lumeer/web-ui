@@ -33,7 +33,14 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {GeoLocation} from '../../../../core/store/geocoding/geo-location';
 import {GeocodingAction} from '../../../../core/store/geocoding/geocoding.action';
 import {selectGeocodingQueryCoordinates} from '../../../../core/store/geocoding/geocoding.state';
-import {MapAttributeType, MapCoordinates, MapMarkerProperties, MapModel} from '../../../../core/store/maps/map.model';
+import {
+  MapAttributeType,
+  MapCoordinates,
+  MapMarkerProperties,
+  MapModel,
+  MapPosition,
+} from '../../../../core/store/maps/map.model';
+import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {getAddressSaveValue, getCoordinatesSaveValue} from '../../../../shared/utils/data.utils';
@@ -45,7 +52,7 @@ import {
   populateCoordinateProperties,
 } from './map-content.utils';
 import {MapRenderComponent} from './render/map-render.component';
-import {MarkerMoveEvent} from './render/marker-move-event';
+import {MarkerMoveEvent} from './render/marker-move.event';
 
 @Component({
   selector: 'map-content',
@@ -132,7 +139,11 @@ export class MapContentComponent implements OnInit {
     );
   }
 
-  public onMoveMarker(event: MarkerMoveEvent) {
+  public onMapMove(position: MapPosition) {
+    this.store$.dispatch(new MapsAction.ChangePosition({mapId: this.map.id, position}));
+  }
+
+  public onMarkerMove(event: MarkerMoveEvent) {
     const attribute = event.properties.collection.attributes.find(attr => attr.id === event.properties.attributeId);
     const constraintType = attribute && attribute.constraint && attribute.constraint.type;
 

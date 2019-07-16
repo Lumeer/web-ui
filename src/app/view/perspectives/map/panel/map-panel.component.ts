@@ -43,4 +43,8 @@ export class MapPanelComponent {
       new MapsAction.SelectAttribute({mapId: this.map.id, collectionId: collection.id, index, attributeId})
     );
   }
+
+  public onPositionSavedChange(positionSaved: boolean) {
+    this.store$.dispatch(new MapsAction.ChangePositionSaved({mapId: this.map.id, positionSaved}));
+  }
 }

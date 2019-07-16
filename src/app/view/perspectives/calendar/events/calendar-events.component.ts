@@ -185,7 +185,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
 
-    const patchDocument = {...changedDocument};
+    const patchDocument = {...changedDocument, data: {}};
     changes.forEach(change => {
       const attribute = ((collection && collection.attributes) || []).find(a => a.id === change.attributeId);
       patchDocument.data[change.attributeId] = this.getSaveValue(change.value, attribute && attribute.constraint);

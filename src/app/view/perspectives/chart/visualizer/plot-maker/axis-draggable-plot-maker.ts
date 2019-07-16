@@ -184,7 +184,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     }, []);
   }
 
-  protected createYScale(setIx: number): (val: number) => any {
+  protected createYScale(setIx: number): d3.scale.Linear<number, number> | YScaleCategories {
     const yAxisElement = this.getYAxisElementForTrace(setIx);
     if (yAxisElement.type === 'category') {
       return this.createYScaleCategories(yAxisElement);
@@ -215,7 +215,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .rangeRound([date1, date2]);
   }
 
-  protected createYScaleCategories(yAxisElement: any): (val: number) => string {
+  protected createYScaleCategories(yAxisElement: any): YScaleCategories {
     const yAxisMargin = this.computeYMarginCategories(yAxisElement);
     const gridHeight = this.getGridHeight();
     const categories = yAxisElement._categories;
@@ -223,7 +223,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const domainRange = d3.range(yAxisMargin + domainStep / 2, gridHeight - yAxisMargin, domainStep);
     const domain = domainRange.reverse();
 
-    return value => {
+    const scale = value => {
       for (let i = 0; i < domain.length; i++) {
         if (value > domain[i]) {
           return categories[i];
@@ -231,6 +231,13 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       }
       return categories.length > 0 ? categories[categories.length - 1] : null;
     };
+
+    scale.invert = category => {
+      const index = categories.findIndex(cat => cat === category);
+      return domain[index];
+    };
+
+    return scale;
   }
 
   protected computeYMarginCategories(yAxisElement: any): number {
@@ -298,8 +305,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, axisCategory, config};
 
-        if (datum.ct) {
-          const initialY = datum.ct[1];
+        if (isNotNullOrUndefined(datum.y)) {
+          const initialY = yScale.invert(initialValue as any);
           const event = d3.event as MouseEvent;
           const offset = plotMaker.getElementOffset(event.target as Element);
           const elementClickedY = event.pageY - offset.top;
@@ -338,8 +345,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const resourceType = set.resourceType;
         const pointId = set && set.points[datum.i].id;
         const value = this.newValue;
+        const valueChanged = value !== pointData.initialValue;
 
-        pointId &&
+        valueChanged &&
+          pointId &&
           setId &&
           value &&
           plotMaker.onValueChanged &&
@@ -408,4 +417,10 @@ export interface PointData {
   initialY?: number;
   offset?: {top: number; left: number};
   clickedY?: number;
+}
+
+interface YScaleCategories {
+  (x: number): string;
+
+  invert(y: string): number;
 }

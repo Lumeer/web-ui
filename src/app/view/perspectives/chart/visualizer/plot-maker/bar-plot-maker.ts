@@ -171,7 +171,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   public getPointNewY(point: any, datum: any, event: any): number {
     const pointData: PointData = point.pointData;
-    const computedY = event.sourceEvent.pageY - pointData.offset.top + datum.ct[1];
+    const computedY = event.sourceEvent.pageY - pointData.offset.top + pointData.initialY;
     const dy = computedY - pointData.clickedY;
     return pointData.initialY + dy;
   }

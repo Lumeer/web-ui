@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 
 import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {CollectionAttributeFilter, Query, QueryStem, ConditionType, LinkAttributeFilter} from './query';
+import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
 import {Collection} from '../collections/collection';
 import {AttributesResource} from '../../model/resource';
+import {AttributeQueryItem} from '../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
+import {ConstraintType} from '../../model/data/constraint';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -82,7 +85,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
         condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required]),
+        conditionValue: new FormControl(queryItem.conditionValue),
       });
   }
 }
