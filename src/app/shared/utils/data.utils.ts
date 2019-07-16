@@ -44,6 +44,11 @@ import {validDataColors} from './data/valid-data-colors';
 import {resetUnusedMomentPart} from './date.utils';
 import {formatCoordinates, parseCoordinates} from './map/coordinates.utils';
 import {transformTextBasedOnCaseStyle} from './string.utils';
+import {
+  formatDurationDataValue,
+  getDurationSaveValue,
+  isDurationDataValueValid,
+} from './constraint/duration-constraint.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -81,7 +86,7 @@ export function parseMomentDate(value: any, expectedFormat?: string): moment.Mom
   return moment(value, formats);
 }
 
-export function getSaveValue(value: any, constraint: Constraint): any {
+export function getSaveValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
   if (!constraint) {
     return value;
   }
@@ -98,7 +103,7 @@ export function getSaveValue(value: any, constraint: Constraint): any {
     case ConstraintType.Color:
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Duration:
-      return getDurationSaveValue(value, constraint.config as DurationConstraintConfig);
+      return getDurationSaveValue(value, constraint.config as DurationConstraintConfig, constraintData.durationMap);
     default:
       return value;
   }
@@ -141,7 +146,7 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
     case ConstraintType.Select:
       return isSelectDataValueValid(value, !withoutConfig ? (constraint.config as SelectConstraintConfig) : null);
     case ConstraintType.Duration:
-      return isDurationDataValueValid(value, !withoutConfig ? (constraint.config as DurationConstraintConfig) : null);
+      return isDurationDataValueValid(value, null); // TODO constraint data
     default:
       return true;
   }
@@ -164,7 +169,11 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
     case ConstraintType.DateTime:
       return formatDateTimeDataValue(value, constraint.config as DateTimeConstraintConfig);
     case ConstraintType.Duration:
-      return formatDurationDataValue(value, constraint.config as DurationConstraintConfig);
+      return formatDurationDataValue(
+        value,
+        constraint.config as DurationConstraintConfig,
+        constraintData && constraintData.durationMap
+      );
     case ConstraintType.Number:
       return formatNumberDataValue(value, constraint.config as NumberConstraintConfig);
     case ConstraintType.Text:
@@ -613,17 +622,4 @@ export function formatSelectDataValue(value: any, config: SelectConstraintConfig
 
 export function isSelectDataValueValid(value: any, config: SelectConstraintConfig): boolean {
   return config && config.options.some(option => String(option.value) === String(value));
-}
-
-export function getDurationSaveValue(value: any, config: DurationConstraintConfig): any {
-  return value;
-}
-
-export function isDurationDataValueValid(value: any, durationConstraintConfig: DurationConstraintConfig): any {
-  // TODO
-  return true;
-}
-
-export function formatDurationDataValue(value: any, config: DurationConstraintConfig) {
-  return value;
 }

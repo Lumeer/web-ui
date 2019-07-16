@@ -25,7 +25,10 @@ import {
   DurationConstraintFormControl,
 } from './duration-constraint-form-control';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
-import {durationConstraintUnitMaxValue} from './duration-constraint.utils';
+import {
+  durationConstraintUnitMaxValue,
+  getDefaultDurationUnitConversion,
+} from '../../../../../shared/utils/constraint/duration-constraint.utils';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -85,7 +88,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
       return this.config.conversions[unit];
     }
 
-    return getDefaultUnitConversion(type, unit);
+    return getDefaultDurationUnitConversion(type, unit);
   }
 
   public onTypeChange() {
@@ -105,20 +108,5 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
 
   public get conversionsControl(): FormArray {
     return this.form.get(DurationConstraintFormControl.Conversions) as FormArray;
-  }
-}
-
-function getDefaultUnitConversion(type: DurationType, unit: DurationUnit): number {
-  switch (unit) {
-    case DurationUnit.Weeks:
-      return type === DurationType.Work ? 5 : 7; // to days
-    case DurationUnit.Days:
-      return type === DurationType.Work ? 8 : 24; // to hours
-    case DurationUnit.Hours:
-      return 60; // to minutes
-    case DurationUnit.Minutes:
-      return 60; // to seconds
-    case DurationUnit.Seconds:
-      return 1000; // to milliseconds
   }
 }

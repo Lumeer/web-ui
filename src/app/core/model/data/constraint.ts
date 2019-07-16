@@ -19,7 +19,7 @@
 
 import {AddressesMap} from '../../store/geocoding/address';
 import {User} from '../../store/users/user';
-import {ConstraintConfig} from './constraint-config';
+import {ConstraintConfig, DurationUnit} from './constraint-config';
 
 export enum ConstraintType {
   Text = 'Text',
@@ -105,4 +105,5 @@ export interface Constraint {
 export interface ConstraintData {
   addressesMap?: AddressesMap;
   users: User[];
+  durationMap: Record<DurationUnit, string>;
 }
