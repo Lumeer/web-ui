@@ -698,8 +698,9 @@ export class TablesEffects {
         take(1),
         filter(([part]) => !!part),
         mergeMap(([part, rows]) => {
-          const rowDocumentIds = findTableRowsIncludingCollapsed(rows, cursor.rowPath)
-            .map(row => row.documentId)
+          const rowsWithPath = findTableRowsIncludingCollapsed(rows, cursor.rowPath);
+          const rowDocumentIds = rowsWithPath
+            .map(rowWithPath => rowWithPath.row.documentId)
             .filter(documentId => !!documentId);
           if (rowDocumentIds.length === 0) {
             return [];
@@ -740,19 +741,29 @@ export class TablesEffects {
                   }
 
                   if (unknownLinkInstances.length > 0) {
-                    actions.push(
-                      new TablesAction.AddLinkedRows({
-                        cursor: action.payload.cursor,
-                        linkedRows: unknownLinkInstances.reduce((newRows, linkInstance) => {
+                    rowsWithPath.forEach(rowWithPath => {
+                      const addedLinkedRows = unknownLinkInstances
+                        .filter(linkInstance => linkInstance.documentIds.includes(rowWithPath.row.documentId))
+                        .reduce((newRows, linkInstance) => {
                           const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
                           if (document) {
                             newRows.push(createTableRow(document, linkInstance));
                           }
                           return newRows;
-                        }, []),
-                        append: true,
-                      })
-                    );
+                        }, []);
+
+                      if (addedLinkedRows.length === 0) {
+                        return;
+                      }
+
+                      actions.push(
+                        new TablesAction.AddLinkedRows({
+                          cursor: {...cursor, rowPath: rowWithPath.path},
+                          linkedRows: addedLinkedRows,
+                          append: true,
+                        })
+                      );
+                    });
                   }
 
                   return actions;

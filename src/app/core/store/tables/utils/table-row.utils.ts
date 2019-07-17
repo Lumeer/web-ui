@@ -60,10 +60,15 @@ function findAllLinkedTableRowsByLevel(rows: TableConfigRow[], level: number): T
   );
 }
 
+export interface RowWithPath {
+  path: number[];
+  row: TableConfigRow;
+}
+
 /**
  * Returns all rows by the given rowPath as they are seen in the UI (including all collapsed rows).
  */
-export function findTableRowsIncludingCollapsed(rows: TableConfigRow[], rowPath: number[]): TableConfigRow[] {
+export function findTableRowsIncludingCollapsed(rows: TableConfigRow[], rowPath: number[]): RowWithPath[] {
   const [rowIndex, ...childPath] = rowPath;
   const row = rows[rowIndex];
 
@@ -72,24 +77,31 @@ export function findTableRowsIncludingCollapsed(rows: TableConfigRow[], rowPath:
   }
 
   if (childPath.length === 0) {
-    return [row];
+    return [{path: [rowIndex], row}];
   }
 
   if (row.linkedRows.length > 1 && !row.expanded) {
-    return findAllTableRowsByLevel(row.linkedRows, childPath.length);
+    const linkedRows: RowWithPath[] = row.linkedRows.map((linkedRow, index) => ({
+      path: [rowIndex, index],
+      row: linkedRow,
+    }));
+    return findAllTableRowsByLevel(linkedRows, childPath.length);
   }
 
-  return findTableRowsIncludingCollapsed(row.linkedRows, childPath);
+  return findTableRowsIncludingCollapsed(row.linkedRows, childPath).map(rowWithPath => ({
+    ...rowWithPath,
+    path: [rowIndex, ...rowWithPath.path],
+  }));
 }
 
-function findAllTableRowsByLevel(rows: TableConfigRow[], level: number): TableConfigRow[] {
+function findAllTableRowsByLevel(rows: RowWithPath[], level: number): RowWithPath[] {
   if (level <= 1) {
     return rows;
   }
 
   return findAllTableRowsByLevel(
     rows.reduce((linkedRows, row) => {
-      linkedRows.push(...row.linkedRows);
+      row.row.linkedRows.forEach((linkedRow, index) => linkedRows.push({path: row.path.concat(index), row: linkedRow}));
       return linkedRows;
     }, []),
     level - 1
