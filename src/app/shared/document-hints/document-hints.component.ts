@@ -89,6 +89,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Input()
   public calculatePosition: boolean = true;
 
+  @Input()
+  public origin: ElementRef | HTMLElement;
+
   @Output()
   public useHint = new EventEmitter();
 
@@ -106,7 +109,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   private hintsCount = 0;
 
-  constructor(public element: ElementRef, private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindDocuments();
