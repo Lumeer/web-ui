@@ -50,7 +50,7 @@ export class AttributeTypeSelectComponent implements OnInit {
         '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User}}',
         {type}
       ),
-      icons: [constraintIconsMap[type] || 'fas fa-empty-set'],
+      icons: [constraintIconsMap[type] || 'fas fa-times'],
     }));
   }
 

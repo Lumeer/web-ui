@@ -59,7 +59,7 @@ export const constraintTypesMap = {
 
 export const constraintIconsMap = {
   [ConstraintType.Address]: 'fas fa-map-marker-alt',
-  [ConstraintType.Boolean]: 'fas fa-check-circle',
+  [ConstraintType.Boolean]: 'fas fa-check-square',
   [ConstraintType.Color]: 'fas fa-palette',
   [ConstraintType.Coordinates]: 'fas fa-location-circle',
   [ConstraintType.DateTime]: 'fas fa-calendar-day',
