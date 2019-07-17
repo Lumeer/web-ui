@@ -124,7 +124,8 @@ describe('findLinkedTableRows()', () => {
 
 describe('findTableRowsIncludingCollapsed()', () => {
   it('should find row in first part', () => {
-    const documentIds = findTableRowsIncludingCollapsed(rows, [0]).map(row => row.documentId);
+    const rowsWithPath = findTableRowsIncludingCollapsed(rows, [0]);
+    const documentIds = rowsWithPath.map(row => row.row.documentId);
     expect(documentIds).toEqual(['a']);
   });
 
@@ -137,22 +138,34 @@ describe('findTableRowsIncludingCollapsed()', () => {
   });
 
   it('should find expanded row in second part', () => {
-    const linkedDocumentIds = findTableRowsIncludingCollapsed(rows, [1, 1]).map(row => row.documentId);
+    const rowsWithPath = findTableRowsIncludingCollapsed(rows, [1, 1]);
+    const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['bb']);
+    const paths = rowsWithPath.map(row => row.path);
+    expect(paths).toEqual([[1, 1]]);
   });
 
   it('should find expanded row in third part', () => {
-    const linkedDocumentIds = findTableRowsIncludingCollapsed(rows, [1, 1, 1]).map(row => row.documentId);
+    const rowsWithPath = findTableRowsIncludingCollapsed(rows, [1, 1, 1]);
+    const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['bbb']);
+    const paths = rowsWithPath.map(row => row.path);
+    expect(paths).toEqual([[1, 1, 1]]);
   });
 
   it('should find collapsed rows in second part', () => {
-    const linkedDocumentIds = findTableRowsIncludingCollapsed(rows, [2, 0]).map(row => row.documentId);
+    const rowsWithPath = findTableRowsIncludingCollapsed(rows, [2, 0]);
+    const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['ca', 'cb']);
+    const paths = rowsWithPath.map(row => row.path);
+    expect(paths).toEqual([[2, 0], [2, 1]]);
   });
 
   it('should find collapsed rows in third part', () => {
-    const linkedDocumentIds = findTableRowsIncludingCollapsed(rows, [2, 0, 1]).map(row => row.documentId);
+    const rowsWithPath = findTableRowsIncludingCollapsed(rows, [2, 0, 1]);
+    const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['caa', 'cab', 'cba', 'cbb']);
+    const paths = rowsWithPath.map(row => row.path);
+    expect(paths).toEqual([[2, 0, 0], [2, 0, 1], [2, 1, 0], [2, 1, 1]]);
   });
 });
