@@ -39,7 +39,9 @@
 </ng-template>
 
 <ng-template #editableRow let-linkRow>
-  <tr class="table-row" id="{{linkRow.correlationId}}">
+  <tr #newRow
+      class="table-row"
+      id="{{linkRow.correlationId}}">
     <td *ngFor="let attr of linkType.attributes">
       &nbsp;
     </td>
@@ -71,7 +73,8 @@
     [calculatePosition]="false"
     [linkedDocumentId]="document.id"
     [linkTypeId]="linkType.id"
-    [collectionId]="otherCollection.id">
+    [collectionId]="otherCollection.id"
+    [origin]="newRow">
   </document-hints>
 
 </ng-template>
