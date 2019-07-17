@@ -23,6 +23,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of} from 'rxjs';
 import {filter, first, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
+import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {selectNavigation, selectPerspective, selectQuery} from '../core/store/navigation/navigation.state';
@@ -37,6 +38,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FileAttachmentsService],
 })
 export class ViewComponent implements OnInit {
   @ViewChild(ViewControlsComponent, {static: false})
@@ -47,6 +49,7 @@ export class ViewComponent implements OnInit {
 
   constructor(
     private dialogService: DialogService,
+    private fileAttachmentsService: FileAttachmentsService,
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
@@ -55,6 +58,8 @@ export class ViewComponent implements OnInit {
   public ngOnInit() {
     this.view$ = this.bindView();
     this.viewsExist$ = this.bindViewsExist();
+
+    this.fileAttachmentsService.init();
   }
 
   private bindView(): Observable<View> {

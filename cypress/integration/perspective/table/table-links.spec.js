@@ -85,6 +85,8 @@ describe('Table perspective :: Links', () => {
       .should('have.length', 2)
       .should('have.value', 'A');
 
+    cy.get('[data-test="text-data-input"]').should('have.length', 6);
+
     cy.get('[data-test="text-data-input"]')
       .eq(1)
       .click();

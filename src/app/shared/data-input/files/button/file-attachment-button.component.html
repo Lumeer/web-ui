@@ -1,0 +1,8 @@
+<i *ngIf="{downloading: downloading$ | async} as state"
+   [title]="fileAttachment.fileName"
+   (click)="onClick()"
+   class="far fa-fw"
+   [ngClass]="state.downloading ? 'fa-spinner fa-spin' : fileAttachment.fileName | fileTypeIcon"
+   [class.cursor-pointer]="!state.downloading && !fileAttachment.uploading"
+   [class.text-secondary]="fileAttachment.uploading">
+</i>

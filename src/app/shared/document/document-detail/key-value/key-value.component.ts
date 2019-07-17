@@ -22,6 +22,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
+import {DataCursor} from '../../../data-input/data-cursor';
 
 @Component({
   selector: 'key-value',
@@ -37,6 +38,9 @@ export class KeyValueComponent {
 
   @Input()
   public constraint: Constraint;
+
+  @Input()
+  public dataCursor: DataCursor;
 
   @Output()
   public keyChange = new EventEmitter<string>();

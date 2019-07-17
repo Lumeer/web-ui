@@ -15,12 +15,14 @@
     <td *ngFor="let attr of linkType.attributes">
       <data-input *ngIf="linkRow.linkInstance?.data[attr.id]"
                   [constraint]="attr.constraint"
+                  [cursor]="linkRow.linkInstance | dataCursor : attr.id"
                   [value]="linkRow.linkInstance.data[attr.id]"
                   [readonly]="true">
       </data-input>
     </td>
     <td *ngFor="let attr of otherCollection.attributes">
       <data-input [constraint]="attr.constraint"
+                  [cursor]="linkRow.document | dataCursor : attr.id"
                   [value]="linkRow.document.data[attr.id]"
                   [readonly]="true">
       </data-input>

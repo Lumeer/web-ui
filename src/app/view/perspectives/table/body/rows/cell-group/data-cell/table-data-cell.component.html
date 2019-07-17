@@ -10,6 +10,7 @@
 
   <data-input *ngIf="{ value: hiddenInputValue$ | async} as hiddenInput"
               [constraint]="data.attribute?.constraint"
+              [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
               [focus]="true"
               [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean))"
               [value]="(clearValue$ | async) ? '' : (hiddenInput.value || hiddenInput.value === 0 ? hiddenInput.value : (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"

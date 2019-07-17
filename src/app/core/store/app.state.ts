@@ -20,6 +20,7 @@
 import {RouterReducerState} from '@ngrx/router-store';
 import {CollectionsState, initialCollectionsState} from './collections/collections.state';
 import {DocumentsState, initialDocumentsState} from './documents/documents.state';
+import {FileAttachmentsState, initialFileAttachmentsState} from './file-attachments/file-attachments.state';
 import {GeocodingState, initialGeocodingState} from './geocoding/geocoding.state';
 import {GroupsState, initialGroupsState} from './groups/groups.state';
 import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
@@ -46,6 +47,7 @@ import {initialPivotsState, PivotsState} from './pivots/pivots.state';
 export interface AppState {
   collections: CollectionsState;
   documents: DocumentsState;
+  fileAttachments: FileAttachmentsState;
   geocoding: GeocodingState;
   groups: GroupsState;
   linkInstances: LinkInstancesState;
@@ -74,6 +76,7 @@ export function initialAppState(): AppState {
   return {
     collections: initialCollectionsState,
     documents: initialDocumentsState,
+    fileAttachments: initialFileAttachmentsState,
     geocoding: initialGeocodingState,
     groups: initialGroupsState,
     linkInstances: initialLinkInstancesState,

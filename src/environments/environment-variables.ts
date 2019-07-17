@@ -34,6 +34,8 @@ export interface EnvironmentVariables {
   mapboxKey: string;
   mapQuestKey: string;
   mapTilerKey: string;
+  maxFileUploadSize: number;
+  presignedUrlTimeout: number;
   sentryDsn: string;
   sessionTimeout: number;
   pusherCluster: string;
@@ -54,6 +56,8 @@ const locale: string = env['I18N_LOCALE'] || 'en';
 const mapboxKey: string = env['MAPBOX_KEY'];
 const mapQuestKey: string = env['MAPQUEST_KEY'];
 const mapTilerKey: string = env['MAPTILER_KEY'];
+const maxFileUploadSize = Number(env['MAX_FILE_UPLOAD_SIZE']) || 10; // MB
+const presignedUrlTimeout = Number(env['PRESIGNED_URL_TIMEOUT']) || 60; // seconds
 const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
@@ -74,6 +78,8 @@ export const environmentVariables: EnvironmentVariables = {
   mapboxKey,
   mapQuestKey,
   mapTilerKey,
+  maxFileUploadSize,
+  presignedUrlTimeout,
   sentryDsn,
   sessionTimeout,
   pusherCluster,
