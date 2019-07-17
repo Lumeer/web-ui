@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export SENTRY_ORG=lumeer-io-sro
+export SENTRY_ORG=lumeer
 export SENTRY_PROJECT=lumeerio
 
 if [ "$SKIP_SENTRY_UPLOAD" = true ]
