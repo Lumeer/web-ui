@@ -136,7 +136,7 @@ describe('Table perspective :: Columns', () => {
 
     // rename link and save changes
     cy.get('[data-test="dialog-title"]').should('be.visible');
-    cy.get('[data-test="link-name-input"]').should('have.value', 'second first');
+    cy.get('[data-test="link-name-input"]').should('have.value', 'first second');
     cy.get('[data-test="link-name-input"]')
       .clear()
       .type('link'); // workaround waiting for dialog close hook binding
