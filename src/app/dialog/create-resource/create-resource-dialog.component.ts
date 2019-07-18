@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {Action, select, Store} from '@ngrx/store';
@@ -27,13 +35,14 @@ import {DialogService} from '../dialog.service';
 import {ResourceType} from '../../core/model/resource-type';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {DialogPath, dialogPathsMap} from '../dialog-path';
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
 import {TemplateType, templateTypesMap} from '../../core/model/template';
+import {selectProjectsByOrganizationId} from '../../core/store/projects/projects.state';
 
 @Component({
   selector: 'create-resource-dialog',
@@ -41,21 +50,36 @@ import {TemplateType, templateTypesMap} from '../../core/model/template';
   styleUrls: ['./create-resource-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateResourceDialogComponent implements OnInit {
+export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   @ViewChild(CreateResourceDialogFormComponent, {static: false})
-  public resourceFormComponent: CreateResourceDialogFormComponent;
+  set content(content: CreateResourceDialogFormComponent) {
+    if (content) {
+      this.resourceFormComponent = content;
+      this.initFormStatusChanges();
+    }
+  }
 
   public parentId$: Observable<string>;
   public initialTemplate$: Observable<TemplateType>;
   public contentValid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
+  public usedCodes$: Observable<string[]>;
+  public formInvalid$ = new BehaviorSubject(true);
 
   public resourceType: ResourceType;
+  private subscriptions = new Subscription();
+  private resourceFormComponent: CreateResourceDialogFormComponent;
 
   constructor(private dialogService: DialogService, private route: ActivatedRoute, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.parseResourceType();
+  }
+
+  public initFormStatusChanges() {
+    const form = this.resourceFormComponent.form;
+    setTimeout(() => this.formInvalid$.next(form.invalid));
+    this.subscriptions.add(form.statusChanges.subscribe(() => this.formInvalid$.next(form.invalid)));
   }
 
   public onSubmit() {
@@ -118,8 +142,12 @@ export class CreateResourceDialogComponent implements OnInit {
 
     if (this.resourceType === ResourceType.Project) {
       this.contentValid$ = this.parentId$.pipe(
-        mergeMap(parentId => this.store$.pipe(select(selectOrganizationById(parentId)))),
+        mergeMap(organizationId => this.store$.pipe(select(selectOrganizationById(organizationId)))),
         map(organization => !!organization)
+      );
+      this.usedCodes$ = this.parentId$.pipe(
+        mergeMap(organizationId => this.store$.pipe(select(selectProjectsByOrganizationId(organizationId)))),
+        map(projects => (projects || []).map(project => project.code))
       );
     } else {
       this.contentValid$ = of(true);
@@ -135,5 +163,9 @@ export class CreateResourceDialogComponent implements OnInit {
       return ResourceType.Project;
     }
     return null;
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

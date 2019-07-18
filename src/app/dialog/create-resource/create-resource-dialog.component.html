@@ -1,4 +1,4 @@
-<dialog-wrapper [submitDisabled]="!resourceFormComponent || resourceFormComponent.form?.invalid"
+<dialog-wrapper [submitDisabled]="formInvalid$ | async"
                 [type]="'primary'"
                 [fitToScreen]="true"
                 [performingAction]="performingAction$ | async"
@@ -14,6 +14,7 @@
       [parentId]="parentId$ | async"
       [resourceType]="resourceType"
       [initialTemplate]="initialTemplate$ | async"
+      [usedCodes]="usedCodes$ | async"
       (submitResource)="submitResource($event)">
     </create-resource-dialog-form>
 

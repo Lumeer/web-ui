@@ -45,6 +45,9 @@ export class IconComponent implements AfterViewInit {
   @Input()
   public url: string; // TODO use for redirecting on click if readonly
 
+  @Input()
+  public label: string;
+
   @Output()
   public colorChange = new EventEmitter<string>();
 
