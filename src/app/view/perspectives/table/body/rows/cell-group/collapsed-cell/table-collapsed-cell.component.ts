@@ -20,8 +20,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {distinctUntilChanged, map, withLatestFrom} from 'rxjs/operators';
-import {Constraint, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {distinctUntilChanged, map} from 'rxjs/operators';
+import {Constraint, ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -31,7 +31,6 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigColumn} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
-import {selectAllUsers} from '../../../../../../../core/store/users/users.state';
 import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
@@ -53,6 +52,9 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   @Input()
   public linkInstances: LinkInstance[];
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public selected: boolean;
@@ -129,9 +131,10 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   private bindStringValue(values: any[], constraintObservable$: Observable<Constraint>): Observable<string[]> {
     return constraintObservable$.pipe(
-      withLatestFrom(this.store$.pipe(select(selectAllUsers))),
-      map(([constraint, users]) =>
-        values.map(value => formatDataValue(value, constraint, {users})).filter(value => !!value || value === 0)
+      map(constraint =>
+        values
+          .map(value => formatDataValue(value, constraint, this.constraintData))
+          .filter(value => !!value || value === 0)
       )
     );
   }

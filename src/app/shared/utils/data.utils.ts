@@ -103,7 +103,11 @@ export function getSaveValue(value: any, constraint: Constraint, constraintData?
     case ConstraintType.Color:
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
     case ConstraintType.Duration:
-      return getDurationSaveValue(value, constraint.config as DurationConstraintConfig, constraintData.durationMap);
+      return getDurationSaveValue(
+        value,
+        constraint.config as DurationConstraintConfig,
+        constraintData.durationUnitsMap
+      );
     default:
       return value;
   }
@@ -122,14 +126,19 @@ export function formatData(
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
     const formattedValue = formatDataValue(data[attributeId], attribute.constraint, constraintData);
-    if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, true)) {
+    if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, constraintData, true)) {
       newData[attributeId] = formattedValue;
     }
   }
   return newData;
 }
 
-export function isValueValid(value: any, constraint: Constraint, withoutConfig?: boolean): boolean {
+export function isValueValid(
+  value: any,
+  constraint: Constraint,
+  constraintData: ConstraintData,
+  withoutConfig?: boolean
+): boolean {
   if (!constraint) {
     return true;
   }
@@ -146,7 +155,7 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
     case ConstraintType.Select:
       return isSelectDataValueValid(value, !withoutConfig ? (constraint.config as SelectConstraintConfig) : null);
     case ConstraintType.Duration:
-      return isDurationDataValueValid(value, null); // TODO constraint data
+      return isDurationDataValueValid(value, constraintData && constraintData.durationUnitsMap);
     default:
       return true;
   }
@@ -172,7 +181,7 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
       return formatDurationDataValue(
         value,
         constraint.config as DurationConstraintConfig,
-        constraintData && constraintData.durationMap
+        constraintData && constraintData.durationUnitsMap
       );
     case ConstraintType.Number:
       return formatNumberDataValue(value, constraint.config as NumberConstraintConfig);

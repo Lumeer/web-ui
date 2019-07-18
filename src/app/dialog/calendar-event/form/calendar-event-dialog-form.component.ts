@@ -47,7 +47,7 @@ import {generateDocumentData} from '../../../core/store/documents/document.utils
 import {User} from '../../../core/store/users/user';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {getSaveValue} from '../../../shared/utils/data.utils';
-import {Constraint} from '../../../core/model/data/constraint';
+import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
 
 export const DEFAULT_EVENT_DURATION = 60;
 
@@ -77,6 +77,9 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   @Input()
   public allowedPermissions: Record<string, AllowedPermissions>;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public createEvent = new EventEmitter<DocumentModel>();
@@ -317,7 +320,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: Date, constraint: Constraint): string {
     if (constraint) {
-      return getSaveValue(value, constraint);
+      return getSaveValue(value, constraint, this.constraintData);
     } else {
       return moment(value).toISOString();
     }

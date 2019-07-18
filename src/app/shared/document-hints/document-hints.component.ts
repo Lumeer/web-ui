@@ -48,6 +48,8 @@ import {Direction} from '../direction';
 import {DropdownPosition} from '../dropdown/dropdown-position';
 import {DropdownComponent} from '../dropdown/dropdown.component';
 import {DocumentHintColumn} from './document-hint-column';
+import {DurationUnitsMap} from '../../core/model/data/constraint';
+import {TranslationService} from '../../core/service/translation.service';
 
 @Component({
   selector: 'document-hints',
@@ -103,13 +105,19 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public selectedIndex$ = new BehaviorSubject<number>(-1);
   private filter$ = new BehaviorSubject<string>('');
 
   private hintsCount = 0;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(
+    private store$: Store<AppState>,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = this.translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.bindDocuments();

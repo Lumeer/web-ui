@@ -92,6 +92,7 @@ describe('Chart data converter single collection', () => {
         },
       ],
       type: ChartType.Line,
+      constraintData: undefined,
     });
   });
 
@@ -109,11 +110,7 @@ describe('Chart data converter single collection', () => {
     };
     const set: ChartDataSet = {
       id: null,
-      points: [
-        {id: null, x: 'Dance', y: undefined},
-        {id: null, x: 'Glass', y: undefined},
-        {id: null, x: 'Sport', y: undefined},
-      ],
+      points: [{id: null, x: 'Dance', y: null}, {id: null, x: 'Glass', y: null}, {id: null, x: 'Sport', y: null}],
       color: '#ffffff',
       xAxis: {
         category: ChartAxisCategory.Text,
@@ -127,7 +124,7 @@ describe('Chart data converter single collection', () => {
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
-    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
   });
 
   it('should return data by y', () => {
@@ -145,10 +142,10 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [
-        {id: 'D1', x: undefined, y: 3},
-        {id: 'D2', x: undefined, y: 7},
-        {id: 'D3', x: undefined, y: 44},
-        {id: 'D4', x: undefined, y: 0},
+        {id: 'D1', x: null, y: 3},
+        {id: 'D2', x: null, y: 7},
+        {id: 'D3', x: null, y: 44},
+        {id: 'D4', x: null, y: 0},
       ],
       color: '#ffffff',
       yAxis: {
@@ -163,7 +160,7 @@ describe('Chart data converter single collection', () => {
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
-    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
   });
 
   it('should return data aggregated simple', () => {
@@ -206,7 +203,7 @@ describe('Chart data converter single collection', () => {
     };
     const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
-    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line});
+    expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
 
     const config2 = {
       ...config,
@@ -218,14 +215,14 @@ describe('Chart data converter single collection', () => {
       ...set,
       points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 7}, {id: null, x: 'Sport', y: 0}],
     };
-    expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line});
+    expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line, constraintData: undefined});
 
     const config3 = {...config, aggregations: null};
     const set3 = {
       ...set,
       points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3}],
     };
-    expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line});
+    expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line, constraintData: undefined});
   });
 
   it('should return data by Y1 and Y2', () => {
@@ -662,6 +659,7 @@ describe('Chart data converter linked collections', () => {
         },
       ],
       type: ChartType.Line,
+      constraintData: undefined,
     });
   });
 

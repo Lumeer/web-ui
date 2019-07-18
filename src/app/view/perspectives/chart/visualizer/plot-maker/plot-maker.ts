@@ -51,7 +51,7 @@ export abstract class PlotMaker {
   public abstract createLayout(): Partial<Layout>;
 
   protected isNumericCategory(category: ChartAxisCategory) {
-    return category === ChartAxisCategory.Percentage || category === ChartAxisCategory.Number;
+    return [ChartAxisCategory.Percentage, ChartAxisCategory.Number, ChartAxisCategory.Duration].includes(category);
   }
 
   protected isAxisCategoryText(type: ChartYAxisType): boolean {

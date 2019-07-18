@@ -37,8 +37,10 @@ import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {Query} from '../../core/store/navigation/query';
 import {selectQuery} from '../../core/store/navigation/navigation.state';
 import {User} from '../../core/store/users/user';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {DurationUnitsMap} from '../../core/model/data/constraint';
+import {TranslationService} from '../../core/service/translation.service';
 
 @Component({
   templateUrl: './calendar-event-dialog.component.html',
@@ -57,6 +59,8 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
   public currentUser$: Observable<User>;
   public formInvalid$ = new BehaviorSubject(true);
   public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   private subscriptions = new Subscription();
 
@@ -64,8 +68,11 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe
-  ) {}
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.config$ = this.subscribeConfig();
@@ -83,6 +90,7 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
     this.update$ = this.document$.pipe(map(document => !!document));
     this.query$ = this.store$.pipe(select(selectQuery));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   private subscribeConfig(): Observable<CalendarConfig> {

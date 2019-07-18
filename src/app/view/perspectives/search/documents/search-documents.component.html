@@ -1,4 +1,4 @@
-<ng-container *ngIf="{users: users$ | async} as constraintData">
+<ng-container *ngIf="{users: users$ | async, durationUnitsMap: durationUnitsMap} as constraintData">
 <ng-container *ngIf="loaded$ | async">
 
   <div class="mt-2" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
@@ -47,8 +47,6 @@
 
 <ng-template #xlTemplate let-document>
   <ng-container *ngTemplateOutlet="lTemplate; context: { $implicit: document}"></ng-container>
-  <!--links></links>
-  <comments></comments-->
 </ng-template>
 
 <ng-template #noDocuments>

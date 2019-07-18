@@ -51,6 +51,8 @@ import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {chartConfigIsEmpty, checkOrTransformChartConfig} from './visualizer/chart-util';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   selector: 'chart-perspective',
@@ -70,6 +72,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -77,7 +80,13 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private chartId = DEFAULT_CHART_ID;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(
+    private store$: Store<AppState>,
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     (PlotlyJS as any).register(CSLocale);

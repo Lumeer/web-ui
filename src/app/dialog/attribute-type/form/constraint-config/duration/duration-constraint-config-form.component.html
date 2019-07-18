@@ -11,7 +11,8 @@
             class="custom-select"
             data-test="duration-constraint-format-select">
       <option *ngFor="let type of types"
-              [value]="type">
+              [value]="type"
+              i18n="@@constraint.duration.type">
         {type, select, Work {Work} Classic {Classic} Custom {Custom}}
       </option>
     </select>

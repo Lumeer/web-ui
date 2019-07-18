@@ -1,4 +1,4 @@
-<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async, query: query$ | async} as data">
+<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async, query: query$ | async, users: users$ | async} as data">
 
   <ng-container *ngIf="{linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0] | linkInstancePermissions | async,
                         document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0] | async | documentPermissions | async} as permissions">
@@ -15,6 +15,7 @@
                          [table]="table$ | async"
                          [allowedPermissions]="data.linkInstances ? permissions.linkInstance : permissions.document"
                          [query]="data.query"
+                         [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
                          (affect)="onAffect()">
         </table-data-cell>
 
@@ -25,6 +26,7 @@
                                 [documents]="data.documents | uniqueEntities"
                                 [linkInstances]="data.linkInstances | uniqueEntities"
                                 [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
+                                [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
                                 [style.width.px]="column | columnWidth:canManageConfig"
                                 class="d-block table-border-right table-border-bottom">
           </table-collapsed-cell>

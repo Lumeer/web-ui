@@ -1,4 +1,4 @@
-<div *ngIf="{users: users$ | async} as constraintData"
+<div *ngIf="{users: users$ | async, durationUnitsMap: durationUnitsMap} as constraintData"
      class="form-control w-100 h-100 p-0"
      data-tour="search-box">
   <form *ngIf="form$ | async as form"

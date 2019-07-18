@@ -17,15 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DurationUnit} from '../../../../../../core/model/data/constraint-config';
-import {durationConstraintUnitMaxValue} from '../../../../../../shared/utils/constraint/duration-constraint.utils';
+import {Injectable} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DurationUnit} from '../model/data/constraint-config';
 
-@Pipe({
-  name: 'durationConstraintUnitMaxValue',
+@Injectable({
+  providedIn: 'root',
 })
-export class DurationConstraintUnitMaxValuePipe implements PipeTransform {
-  public transform(unit: DurationUnit): number {
-    return durationConstraintUnitMaxValue(unit);
+export class TranslationService {
+  constructor(private i18n: I18n) {}
+
+  public createDurationUnitsMap(): Record<DurationUnit, string> {
+    return Object.values(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
+  }
+
+  private translateDurationUnit(unit: DurationUnit): string {
+    return this.i18n(
+      {
+        id: 'constraint.duration.unit',
+        value: '{unit, select, w {w} d {d} h {h} m {m} s {s}}',
+      },
+      {unit}
+    );
   }
 }

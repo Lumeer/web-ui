@@ -18,7 +18,9 @@
  */
 
 import {DurationConstraintConfig, DurationType, DurationUnit} from '../../../core/model/data/constraint-config';
-import {isNumeric, toNumber} from '../common.utils';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import Big, {Comparison, RoundingMode} from 'big.js';
 
 export function durationConstraintUnitMaxValue(unit: DurationUnit): number {
   switch (unit) {
@@ -54,16 +56,20 @@ export function getDefaultDurationUnitConversion(type: DurationType, unit: Durat
 export function getDurationSaveValue(
   value: any,
   config: DurationConstraintConfig,
-  durationMap: Record<DurationUnit, string>
+  durationUnitsMap: DurationUnitsMap
 ): any {
-  if (isDurationDataValueValid(value, durationMap)) {
+  if (isDurationDataValueValid(value, durationUnitsMap)) {
     if (isNumeric(value)) {
+      const bigValue = convertToBig(value);
+      if (bigValue) {
+        return bigValue.toFixed(0);
+      }
       return toNumber(value);
+    } else if (isDurationValidByNativeLetters(value, durationUnitsMap)) {
+      const durationToMillisMap = getDurationUnitToMillisMap(config, durationUnitsMap);
+      return parseValueToDurationValue(value, durationToMillisMap);
     } else if (isDurationValidByGlobalLetters(value)) {
       const durationToMillisMap = getDurationUnitToMillisMap(config);
-      return parseValueToDurationValue(value, durationToMillisMap);
-    } else if (isDurationValidByNativeLetters(value, durationMap)) {
-      const durationToMillisMap = getDurationUnitToMillisMap(config, durationMap);
       return parseValueToDurationValue(value, durationToMillisMap);
     }
 
@@ -74,11 +80,11 @@ export function getDurationSaveValue(
 
 function getDurationUnitToMillisMap(
   config: DurationConstraintConfig,
-  durationMap?: Record<DurationUnit, string>
+  durationUnitsMap?: DurationUnitsMap
 ): Record<string, number> {
   return Object.values(DurationUnit).reduce((map, unit) => {
     const value = getDurationUnitToMillis(unit, config.type || DurationType.Work, config.conversions);
-    const key = (durationMap && durationMap[unit]) || unit;
+    const key = (durationUnitsMap && durationUnitsMap[unit]) || unit;
 
     map[key] = value;
 
@@ -121,36 +127,55 @@ function getDescendantDurationUnit(unit: DurationUnit): DurationUnit | null {
   }
 }
 
-function parseValueToDurationValue(value: any, unitToMillisMap: Record<string, number>): number {
+function parseValueToDurationValue(value: any, unitToMillisMap: Record<string, number>): string {
   const lettersRegexPart = Object.keys(unitToMillisMap).join('|');
   const regex = new RegExp(`\\d*(${lettersRegexPart})`, 'g');
 
-  const groups = (value || '').trim().match(regex) || [];
+  const groups = prepareDurationValue(value).match(regex) || [];
 
-  let millis = 0;
+  let millis = new Big(0);
   for (const group of groups) {
-    const millisPerGroup = unitToMillisMap[group[group.length - 1]];
-    millis += millisPerGroup * (parseInt(group, 10) || 1);
+    const millisPerGroup = new Big(unitToMillisMap[group[group.length - 1]]);
+    const groupNumber = group.replace(/[^\d]/g, '').trim();
+    const multiplier = convertToBig(groupNumber, 1);
+    millis = millis.add(millisPerGroup.times(multiplier));
   }
-  return millis;
+  return millis.toFixed(0);
 }
 
-export function isDurationDataValueValid(value: any, durationMap: Record<DurationUnit, string>): any {
+function convertToBig(value: any, defaultValue?: number): Big {
+  try {
+    return new Big(String(value));
+  } catch (e) {
+    return isNotNullOrUndefined(defaultValue) ? new Big(defaultValue) : null;
+  }
+}
+
+export function isDurationDataValueValid(value: any, durationUnitsMap: DurationUnitsMap): any {
   return (
-    isNumeric(value) || isDurationValidByGlobalLetters(value) || isDurationValidByNativeLetters(value, durationMap)
+    (isNumeric(value) && toNumber(value) >= 0) ||
+    isDurationValidByGlobalLetters(value) ||
+    isDurationValidByNativeLetters(value, durationUnitsMap)
   );
 }
 
 function isDurationValidByGlobalLetters(value: any): boolean {
-  const stringValue = (value || '').toString().trim();
+  const stringValue = prepareDurationValue(value);
   const globalLetters = Object.values(DurationUnit);
   const globalRegex = durationInvalidityTestRegex(globalLetters);
   return !stringValue.match(globalRegex);
 }
 
-function isDurationValidByNativeLetters(value: any, durationMap: Record<DurationUnit, string>): boolean {
-  const stringValue = (value || '').toString().trim();
-  const nativeLetters = Object.values(durationMap || {});
+function prepareDurationValue(value: any): string {
+  return (value || '')
+    .toString()
+    .trim()
+    .replace(/\s/g, '');
+}
+
+function isDurationValidByNativeLetters(value: any, durationUnitsMap: DurationUnitsMap): boolean {
+  const stringValue = prepareDurationValue(value);
+  const nativeLetters = Object.values(durationUnitsMap || {});
   const nativeRegex = durationInvalidityTestRegex(nativeLetters);
   return !stringValue.match(nativeRegex);
 }
@@ -159,10 +184,56 @@ function durationInvalidityTestRegex(letters: string[]): RegExp {
   return new RegExp(`[^${letters.join('')}0-9]`, 'g');
 }
 
+export const sortedDurationUnits = [
+  DurationUnit.Weeks,
+  DurationUnit.Days,
+  DurationUnit.Hours,
+  DurationUnit.Minutes,
+  DurationUnit.Seconds,
+];
+
 export function formatDurationDataValue(
   value: any,
   config: DurationConstraintConfig,
-  durationMap: Record<DurationUnit, string>
-) {
-  return value;
+  durationUnitsMap: DurationUnitsMap,
+  maxUnits?: number
+): string {
+  const saveValue = getDurationSaveValue(value, config, durationUnitsMap);
+  if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
+    const durationToMillisMap = getDurationUnitToMillisMap(config);
+    let currentDuration = convertToBig(saveValue, 0);
+    let usedNumUnits = 0;
+    const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
+
+    return (
+      sortedDurationUnits.reduce((result, unit) => {
+        const unitToMillis = durationToMillisMap[unit];
+        if (unitToMillis) {
+          const unitToMillisBig = new Big(unitToMillis);
+          let numUnits = currentDuration.div(unitToMillisBig).round(0, RoundingMode.RoundDown);
+
+          if (usedNumUnits >= maximumUnits) {
+            return result;
+          }
+
+          currentDuration = currentDuration.sub(numUnits.times(unitToMillisBig));
+
+          // when maxUnits is set, rounding is needed
+          if (usedNumUnits + 1 === maximumUnits && currentDuration.cmp(unitToMillisBig.div(2)) === Comparison.GT) {
+            numUnits = numUnits.add(1);
+          }
+
+          if (numUnits.cmp(new Big(0)) === Comparison.GT) {
+            const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
+            usedNumUnits++;
+            return result + numUnits.toFixed(0) + unitString;
+          }
+        }
+
+        return result;
+      }, '') || '0'
+    );
+  }
+
+  return saveValue;
 }

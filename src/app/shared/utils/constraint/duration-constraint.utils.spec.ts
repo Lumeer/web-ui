@@ -18,9 +18,9 @@
  */
 
 import {DurationConstraintConfig, DurationType, DurationUnit} from '../../../core/model/data/constraint-config';
-import {getDurationSaveValue, isDurationDataValueValid} from './duration-constraint.utils';
+import {formatDurationDataValue, getDurationSaveValue, isDurationDataValueValid} from './duration-constraint.utils';
 
-fdescribe('duration utils', () => {
+describe('duration utils', () => {
   const durationMap = {
     [DurationUnit.Weeks]: 't',
     [DurationUnit.Days]: 'd',
@@ -79,30 +79,52 @@ fdescribe('duration utils', () => {
   });
 
   it('should parse number by number value', () => {
-    expect(getDurationSaveValue(3124141, config, durationMap)).toEqual(3124141);
+    expect(getDurationSaveValue(3124141, config, durationMap)).toEqual(String(3124141));
   });
 
   it('should parse number by weeks only', () => {
-    expect(getDurationSaveValue('4w', config, durationMap)).toEqual(4 * weekToMillis);
+    expect(getDurationSaveValue('4w', config, durationMap)).toEqual(String(4 * weekToMillis));
   });
 
   it('should parse number by weeks only without number', () => {
-    expect(getDurationSaveValue('www', config, durationMap)).toEqual(3 * weekToMillis);
+    expect(getDurationSaveValue('www', config, durationMap)).toEqual(String(3 * weekToMillis));
   });
 
   it('should parse number by weeks and minutes', () => {
-    expect(getDurationSaveValue('8w20m', config, durationMap)).toEqual(8 * weekToMillis + 20 * minuteToMillis);
+    expect(getDurationSaveValue('8w20m', config, durationMap)).toEqual(String(8 * weekToMillis + 20 * minuteToMillis));
   });
 
   it('should parse number by all units', () => {
     expect(getDurationSaveValue('wwdd3h4m5s', config, durationMap)).toEqual(
-      2 * weekToMillis + 2 * dayToMillis + 3 * hourToMillis + 4 * minuteToMillis + 5 * secondToMillis
+      String(2 * weekToMillis + 2 * dayToMillis + 3 * hourToMillis + 4 * minuteToMillis + 5 * secondToMillis)
     );
   });
 
   it('should parse number by repeating units', () => {
     expect(getDurationSaveValue('2w3d4mww4d9wms', config, durationMap)).toEqual(
-      13 * weekToMillis + 7 * dayToMillis + 5 * minuteToMillis + secondToMillis
+      String(13 * weekToMillis + 7 * dayToMillis + 5 * minuteToMillis + secondToMillis)
     );
+  });
+
+  it('should format duration value weeks', () => {
+    expect(formatDurationDataValue('10w', config, durationMap)).toEqual('10t');
+  });
+
+  it('should format duration value weeks group with days', () => {
+    expect(formatDurationDataValue('w21d', config, durationMap)).toEqual('5t1d');
+  });
+
+  it('should format duration value weeks group with days', () => {
+    expect(
+      formatDurationDataValue(String(4 * weekToMillis + 3 * hourToMillis + 2 * secondToMillis), config, durationMap)
+    ).toEqual('4t3h2s');
+  });
+
+  it('should format duration invalid value', () => {
+    expect(formatDurationDataValue('5w4e4s', config, durationMap)).toEqual('5w4e4s');
+  });
+
+  it('should format duration value with spaces', () => {
+    expect(formatDurationDataValue('3w   4d    5h 3s   ', config, durationMap)).toEqual('3t4d5h3s');
   });
 });

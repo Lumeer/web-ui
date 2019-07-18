@@ -23,7 +23,6 @@ import {
   DurationConstraintConversionFormControl,
   DurationConstraintFormControl,
 } from '../duration-constraint-form-control';
-import {DurationUnit} from '../../../../../../core/model/data/constraint-config';
 
 @Component({
   selector: 'duration-constraint-config-form-conversion',
@@ -39,7 +38,6 @@ export class DurationConstraintConfigFormConversionsComponent {
 
   public readonly controls = DurationConstraintFormControl;
   public readonly conversionsControls = DurationConstraintConversionFormControl;
-  public readonly durationUnit = DurationUnit;
 
   public get conversionsControl(): FormArray {
     return this.formGroup.get(DurationConstraintFormControl.Conversions) as FormArray;

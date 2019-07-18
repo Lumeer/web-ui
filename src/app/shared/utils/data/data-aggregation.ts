@@ -81,6 +81,7 @@ function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
+    case ConstraintType.Duration:
       return sumNumericValues(values, onlyNumeric);
     default:
       return sumAnyValues(values, onlyNumeric);
@@ -138,6 +139,7 @@ function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
+    case ConstraintType.Duration:
       return avgNumericValues(values, onlyNumeric);
     default:
       return avgAnyValues(values, onlyNumeric);
@@ -182,6 +184,7 @@ function minInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
+    case ConstraintType.Duration:
       return minInNumericValues(values, onlyNumeric);
     default:
       return minInAnyValues(values, onlyNumeric);
@@ -210,6 +213,7 @@ function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
   switch (constraint.type) {
     case ConstraintType.Number:
     case ConstraintType.Percentage:
+    case ConstraintType.Duration:
       return maxInNumericValues(values, onlyNumeric);
     default:
       return maxInAnyValues(values, onlyNumeric);
@@ -231,6 +235,6 @@ function maxInAnyValues(values: any[], onlyNumeric: boolean): any {
 }
 
 function countValues(values: any[], onlyNumeric?: boolean) {
-  const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)).map(value => toNumber(value)) : values;
+  const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)) : values;
   return filteredValues.length;
 }

@@ -32,7 +32,14 @@ import {
 import {DurationConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {formatDurationDataValue, getDurationSaveValue, isDurationDataValueValid} from '../../utils/data.utils';
+import {
+  formatDurationDataValue,
+  getDurationSaveValue,
+  isDurationDataValueValid,
+} from '../../utils/constraint/duration-constraint.utils';
+import {TranslationService} from '../../../core/service/translation.service';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {isNumeric} from '../../utils/common.utils';
 
 @Component({
   selector: 'duration-data-input',
@@ -71,9 +78,15 @@ export class DurationDataInputComponent implements OnChanges {
   @ViewChild('durationInput', {static: false})
   public durationInput: ElementRef<HTMLInputElement>;
 
+  public readonly durationUnitsMap: DurationUnitsMap;
+
   public valid = true;
 
   private preventSave: boolean;
+
+  constructor(private translationService: TranslationService) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -86,14 +99,18 @@ export class DurationDataInputComponent implements OnChanges {
     if (changes.value) {
       this.initValue();
     }
-    this.valid = isDurationDataValueValid(this.value, this.constraintConfig);
+    this.valid = isDurationDataValueValid(this.value, this.durationUnitsMap);
   }
 
   private initValue() {
     const input = this.durationInput;
     setTimeout(() => {
       if (input && input.nativeElement) {
-        input.nativeElement.value = formatDurationDataValue(this.value, this.constraintConfig);
+        if (!input.nativeElement.value && isNumeric(this.value)) {
+          input.nativeElement.value = String(this.value);
+        } else {
+          input.nativeElement.value = formatDurationDataValue(this.value, this.constraintConfig, this.durationUnitsMap);
+        }
       }
     });
   }
@@ -109,7 +126,7 @@ export class DurationDataInputComponent implements OnChanges {
         if (
           !this.skipValidation &&
           input &&
-          !isDurationDataValueValid(input.nativeElement.value, this.constraintConfig)
+          !isDurationDataValueValid(input.nativeElement.value, this.durationUnitsMap)
         ) {
           event.stopImmediatePropagation();
           event.preventDefault();
@@ -131,7 +148,7 @@ export class DurationDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = isDurationDataValueValid(element.value, this.constraintConfig);
+    this.valid = isDurationDataValueValid(element.value, this.durationUnitsMap);
 
     this.valueChange.emit(value);
   }
@@ -146,6 +163,6 @@ export class DurationDataInputComponent implements OnChanges {
   }
 
   private transformValue(value: any): number | string {
-    return getDurationSaveValue(value, this.constraintConfig);
+    return getDurationSaveValue(value, this.constraintConfig, this.durationUnitsMap);
   }
 }

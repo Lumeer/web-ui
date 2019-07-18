@@ -44,6 +44,8 @@ import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/coll
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {DialogService} from '../../../dialog/dialog.service';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   selector: 'calendar',
@@ -58,6 +60,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -68,8 +71,11 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initCalendar();

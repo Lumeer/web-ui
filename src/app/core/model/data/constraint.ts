@@ -105,5 +105,7 @@ export interface Constraint {
 export interface ConstraintData {
   addressesMap?: AddressesMap;
   users: User[];
-  durationMap: Record<DurationUnit, string>;
+  durationUnitsMap: DurationUnitsMap;
 }
+
+export type DurationUnitsMap = Record<DurationUnit, string>;

@@ -32,6 +32,7 @@ import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 
 @Component({
   selector: 'kanban-columns',
@@ -54,6 +55,9 @@ export class KanbanColumnsComponent implements OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();

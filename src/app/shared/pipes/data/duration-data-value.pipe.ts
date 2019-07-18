@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DurationConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatDurationDataValue} from '../../utils/data.utils';
+import {DurationConstraintConfig, DurationUnit} from '../../../core/model/data/constraint-config';
+import {formatDurationDataValue} from '../../utils/constraint/duration-constraint.utils';
 
 @Pipe({
   name: 'durationDataValue',
 })
 export class DurationDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: DurationConstraintConfig): string {
-    return formatDurationDataValue(value, config);
+  public transform(value: any, config: DurationConstraintConfig, durationMap: Record<DurationUnit, string>): string {
+    return formatDurationDataValue(value, config, durationMap);
   }
 }

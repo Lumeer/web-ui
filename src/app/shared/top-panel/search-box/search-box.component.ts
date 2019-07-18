@@ -52,6 +52,8 @@ import {selectWorkspaceModels} from '../../../core/store/common/common.selectors
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query.helper';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 const allowAutomaticSubmission = true;
 
@@ -65,6 +67,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
   public form$ = new BehaviorSubject<FormGroup>(null);
   public queryItemsControl: FormArray;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public users$: Observable<User[]>;
 
@@ -77,7 +80,14 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: User;
   private queryData: QueryData;
 
-  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private formBuilder: FormBuilder,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initForm();

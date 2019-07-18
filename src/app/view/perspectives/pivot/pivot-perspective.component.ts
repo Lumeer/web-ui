@@ -45,6 +45,8 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformPivotConfig, pivotConfigIsEmpty} from './util/pivot-util';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   selector: 'pivot-perspective',
@@ -61,13 +63,16 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public linkInstances$: Observable<LinkInstance[]>;
   public query$ = new BehaviorSubject<Query>(null);
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initPivot();

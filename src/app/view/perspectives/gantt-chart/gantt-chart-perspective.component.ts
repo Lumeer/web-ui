@@ -49,6 +49,8 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig, ganttConfigIsEmpty} from './util/gantt-chart-util';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -65,6 +67,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -72,7 +75,13 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(
+    private store$: Store<AppState>,
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initGanttChart();
