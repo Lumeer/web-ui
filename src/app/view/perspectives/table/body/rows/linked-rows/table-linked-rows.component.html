@@ -1,6 +1,7 @@
 <ng-container *ngIf="{linkedRows: linkedRows$ | async} as table">
   <table-link-cell [row]="rows && rows.length === 1 ? rows[0] : null"
                    [striped]="striped"
+                   (mousedown)="onLinkCellMouseDown()"
                    (toggle)="onToggle()">
   </table-link-cell>
   <div class="d-flex flex-column">
