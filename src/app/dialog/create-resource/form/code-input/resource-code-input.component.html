@@ -33,6 +33,10 @@
           i18n="@@resource.new.dialog.code.error.required">
             Code is required.
           </span>
+          <span *ngIf="codeInput.errors.pattern && !codeInput.errors.minlength && !codeInput.errors.maxlength"
+          i18n="@@resource.new.dialog.code.error.pattern">
+            Code must contain only characters and digits.
+          </span>
           <span *ngIf="codeInput.errors.notUniqueCode"
           i18n="@@resource.new.dialog.code.error.duplicity">
             Sorry, this code is already taken. Try another!
