@@ -93,6 +93,10 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
     );
   }
 
+  public onLinkCellMouseDown() {
+    this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
+
   public onToggle() {
     this.store$.dispatch(new TablesAction.ToggleLinkedRows({cursor: this.cursor}));
   }
