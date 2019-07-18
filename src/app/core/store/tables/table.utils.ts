@@ -693,10 +693,12 @@ export function addMissingTableColumns(
  * Initializes all columns containing attributeName with existing attribute ID.
  */
 export function initializeExistingTableColumns(columns: TableConfigColumn[], attributes: Attribute[]) {
+  const attributeIds = new Set(extractAttributeIdsFromTableColumns(columns));
+
   return columns.map(column => {
     if (column.attributeName) {
       const attribute = attributes.find(attr => attr.name === column.attributeName);
-      if (attribute) {
+      if (attribute && !attributeIds.has(attribute.id)) {
         return {...column, attributeIds: [attribute.id], attributeName: undefined};
       }
     }
