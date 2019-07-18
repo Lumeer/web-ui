@@ -112,10 +112,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   private hintsCount = 0;
 
-  constructor(
-    private store$: Store<AppState>,
-    private translationService: TranslationService
-  ) {
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
     this.durationUnitsMap = this.translationService.createDurationUnitsMap();
   }
 
