@@ -18,10 +18,13 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {ChartDataSet} from '../../data/convertor/chart-data';
+import {ChartAxisCategory, ChartDataSet, ChartDataSetAxis} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
 import * as d3 from 'd3';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {formatDurationDataValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
+import {DurationConstraintConfig} from '../../../../../core/model/data/constraint-config';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
@@ -63,6 +66,9 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     set.name && (data['name'] = set.name);
     data['x'] = traceX;
     data['y'] = traceY;
+    data['text'] = this.getYTraceTexts(traceY, set.yAxis);
+    data['textinfo'] = 'text';
+    data['hoverinfo'] = 'x+text';
 
     return data;
   }

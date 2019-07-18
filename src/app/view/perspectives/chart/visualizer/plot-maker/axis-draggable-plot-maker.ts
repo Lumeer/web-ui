@@ -40,6 +40,7 @@ import {
   formatDurationDataValue,
   getDurationSaveValue,
 } from '../../../../../shared/utils/constraint/duration-constraint.utils';
+import {uniqueValues} from '../../../../../shared/utils/array.utils';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -71,8 +72,33 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
           ticksuffix: '%',
         },
       };
+    } else if (category === ChartAxisCategory.Duration) {
+      const {values, titles} = this.createXDurationTicks(config as DurationConstraintConfig);
+      return {
+        xaxis: {
+          tickmode: 'array',
+          tickvals: values,
+          ticktext: titles,
+        },
+      };
     }
     return {};
+  }
+
+  private createXDurationTicks(config: DurationConstraintConfig): {values: number[]; titles: string[]} {
+    const values = this.chartData.sets
+      .reduce((allValues, set) => {
+        const setValues = set.points
+          .filter(point => isNotNullOrUndefined(point.x) && isNumeric(point.x))
+          .map(point => point.x);
+        allValues.push(...setValues);
+        return uniqueValues<number>(allValues);
+      }, [])
+      .sort();
+
+    const durationUnitsMap = this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
+    const titles = values.map(value => formatDurationDataValue(value, config, durationUnitsMap));
+    return {values, titles};
   }
 
   protected yAxis1Layout(): Partial<Layout> {
@@ -87,7 +113,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     } else if (category === ChartAxisCategory.Duration) {
       const durationConfig = config as DurationConstraintConfig;
       const range = this.createRange(true);
-      const {values, titles} = this.createDurationTicks(range, durationConfig);
+      const {values, titles} = this.createYDurationTicks(range, durationConfig);
       return {
         yaxis: {
           range: this.areBothYAxisPresented() ? range : null,
@@ -122,7 +148,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     };
   }
 
-  private createDurationTicks(range: number[], config: DurationConstraintConfig): {values: number[]; titles: string[]} {
+  private createYDurationTicks(
+    range: number[],
+    config: DurationConstraintConfig
+  ): {values: number[]; titles: string[]} {
     const durationUnitsMap = this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
     const optimalTickApproxValue = Math.floor((range[1] - range[0]) / 6);
     const optimalTickApproxValueString = formatDurationDataValue(optimalTickApproxValue, config, durationUnitsMap, 1);
@@ -177,7 +206,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     } else if (category === ChartAxisCategory.Duration) {
       const durationConfig = config as DurationConstraintConfig;
       const range = this.createRange(true);
-      const {values, titles} = this.createDurationTicks(range, durationConfig);
+      const {values, titles} = this.createYDurationTicks(range, durationConfig);
       return {
         yaxis2: {
           overlaying: 'y',
@@ -218,6 +247,23 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         categoryarray: this.getYAxisCategories(ChartAxisType.Y2),
       },
     };
+  }
+
+  protected getYTraceTexts(trace: any[], axis: ChartDataSetAxis): any[] {
+    if (!axis || !axis.config) {
+      return trace;
+    }
+
+    if (axis.category === ChartAxisCategory.Duration) {
+      const config = axis.config as DurationConstraintConfig;
+      const durationUnitsMap =
+        this.chartData && this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
+      return trace.map(value =>
+        isNotNullOrUndefined(value) ? formatDurationDataValue(value, config, durationUnitsMap) : value
+      );
+    }
+
+    return trace;
   }
 
   protected getYAxisCategories(type: ChartYAxisType): string[] {
