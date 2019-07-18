@@ -100,5 +100,6 @@ export class TrimValueAccessor extends DefaultValueAccessor {
 
   private updateValue(event: string, value: string): void {
     this.value = this.trim !== '' && event !== this.trim ? value : value.replace(this.regex, '');
+    this.onChange(this.value);
   }
 }
