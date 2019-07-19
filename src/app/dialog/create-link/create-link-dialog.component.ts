@@ -21,13 +21,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
-import {selectAllCollections} from '../../core/store/collections/collections.state';
-import {LinkType} from '../../core/store/link-types/link.type';
+import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {DialogService} from '../dialog.service';
 
 @Component({
@@ -77,10 +77,10 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
           filter(linkCollectionIds => !!linkCollectionIds),
           map(linkCollectionIds => linkCollectionIds.split(',')),
           filter(linkCollectionIds => linkCollectionIds.length === 2),
-          withLatestFrom(this.store$.select(selectAllCollections))
+          withLatestFrom(this.store$.select(selectCollectionsDictionary))
         )
-        .subscribe(([linkCollectionIds, collections]) => {
-          this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
+        .subscribe(([linkCollectionIds, collectionsMap]) => {
+          this.collections = linkCollectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
           this.linkNameInput.setValue(this.collections.map(collection => collection.name).join(' '));
         })
     );
