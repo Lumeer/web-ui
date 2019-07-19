@@ -15,7 +15,7 @@
            pattern="[A-Za-z0-9_]*"
            class="form-control"
            i18n-placeholder="@@resource.new.dialog.code.placeholder"
-           placeholder="Enter code">
+           placeholder="Enter code (e.g. LMR)">
 
   </div>
 
@@ -32,6 +32,10 @@
           <span *ngIf="codeInput.errors.required"
           i18n="@@resource.new.dialog.code.error.required">
             Code is required.
+          </span>
+          <span *ngIf="codeInput.errors.pattern && !codeInput.errors.minlength && !codeInput.errors.maxlength"
+          i18n="@@resource.new.dialog.code.error.pattern">
+            Code must contain only characters and digits.
           </span>
           <span *ngIf="codeInput.errors.notUniqueCode"
           i18n="@@resource.new.dialog.code.error.duplicity">

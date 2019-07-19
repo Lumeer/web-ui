@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'resource-name-input',
   templateUrl: './resource-name-input.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceNameInputComponent {
   @Input()
   public form: FormGroup;
-
-  public get nameInput(): AbstractControl {
-    return this.form.get('name');
-  }
 }

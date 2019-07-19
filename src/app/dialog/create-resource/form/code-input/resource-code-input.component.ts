@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'resource-code-input',
   templateUrl: './resource-code-input.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceCodeInputComponent {
   @Input()
