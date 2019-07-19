@@ -3,7 +3,7 @@
   <div class="form-group">
     <label [for]="controls.Type"
            i18n="@@constraint.duration.type.label">
-      Duration type
+      Time scope
     </label>
     <select [id]="controls.Type"
             [formControlName]="controls.Type"
@@ -13,7 +13,7 @@
       <option *ngFor="let type of types"
               [value]="type"
               i18n="@@constraint.duration.type">
-        {type, select, Work {Work} Classic {Classic} Custom {Custom}}
+        {type, select, Work {Work} Classic {Normal} Custom {Custom}}
       </option>
     </select>
   </div>

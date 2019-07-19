@@ -518,7 +518,7 @@
       </trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
     <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
-  </source><target state="new">
+  </source><target>
     <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </target>
         <context-group purpose="location">
@@ -533,9 +533,9 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
         <source>
-      Duration type
-    </source><target state="new">
-      Typ trvaní
+      Time scope
+    </source><target>
+      Časové rozsahy
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
@@ -544,15 +544,15 @@
       </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
-      </source><target state="new">
+      </source><target>
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
       </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-      </trans-unit><trans-unit id="c95566f50f51e707b7023cf7575564cf244fa3d7" datatype="html">
-        <source>{VAR_SELECT, select, Work {Work} Classic {Classic} Custom {Custom} }</source><target state="new">{VAR_SELECT, select, Work {Pracovní} Classic {Klasický} Custom {Vlastní} }</target>
+      </trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
+        <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target>{VAR_SELECT, select, Work {Pracovní} Classic {Normální} Custom {Vlastní} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
           <context context-type="linenumber">16</context>
@@ -560,14 +560,14 @@
       </trans-unit><trans-unit id="constraint.duration.example" datatype="html">
         <source>
     Example: 1w2d5h20m30s
-  </source><target state="new">
+  </source><target>
     Příklad: 1w2d5h20m30s
   </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
         <source>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
-            </source><target state="new">
+            </source><target>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
             </target>
         <context-group purpose="location">
@@ -575,7 +575,7 @@
           <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target state="new">{VAR_SELECT, select, w {t (týdny)} d {d (dny)} h {h (hodiny)} m {m (minuty)} s {s (sekundy)} }</target>
+        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target>{VAR_SELECT, select, w {t (týdny)} d {d (dny)} h {h (hodiny)} m {m (minuty)} s {s (sekundy)} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">15</context>
@@ -583,7 +583,7 @@
       </trans-unit><trans-unit id="constraint.duration.unit.conversion" datatype="html">
         <source>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
-            </source><target state="new">
+            </source><target>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
             </target>
         <context-group purpose="location">
@@ -591,7 +591,7 @@
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
-        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</source><target state="new">{VAR_SELECT, select, w {dny} d {hodiny} h {minuty} m {sekundy} s {milisekundy} }</target>
+        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</source><target>{VAR_SELECT, select, w {dny} d {hodiny} h {minuty} m {sekundy} s {milisekundy} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">31</context>
@@ -1449,7 +1449,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="970055a0f46ef7292144b2c055ef1797517994c6" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source><target state="new">{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</target>
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+        <target>{VAR_SELECT, select, None {Žádný} Address {Adresa} Color {Barva} Number {Číslo} DateTime {Datum} Percentage {Procenta} Coordinates {Souřadnice} Text {Text} User {Uživatel} Select {Výběr} Duration {Trvání} Boolean {Zaškrtávátko} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/attribute-type/form/select/attribute-type-select.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2256,6 +2257,16 @@
           <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.position.saved" datatype="html">
+        <source>
+    Save map position to view
+  </source><target>
+    Ukládat polohu mapy do pohledu
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/position-checkbox/map-position-checkbox.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.row.header" datatype="html">
         <source>
     Rows
@@ -2519,7 +2530,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
-        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target state="new">{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
+        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target>{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -3128,18 +3139,16 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
-                <source>
-            (click the icon to change it)
-          </source>
+                <source>(click the icon to change it)</source>
                 <target>(změňte ikonu kliknutím)</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/dialog/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.invalid" datatype="html">
                 <source>I am sorry, something went wrong.
   </source>
                 <target>Je mi líto, ale něco se porouchalo.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.required" datatype="html">
                 <source>Required</source>
                 <target>Povinné</target>
@@ -3156,7 +3165,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.placeholder" datatype="html">
-                <source>Enter code</source>
+                <source>Enter code (e.g. LMR)</source>
                 <target>Zadejte kód</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
@@ -3183,6 +3192,16 @@
           <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.pattern" datatype="html">
+        <source>
+            Code must contain only characters and digits.
+          </source><target>
+            Kód musí obsahovat pouze písmena a číslice.
+          </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
                 <source>
@@ -3190,7 +3209,7 @@
           </source>
                 <target>Je mi líto, tento kód už někdo používá. Zkuste jiný!</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.name.label" datatype="html">
                 <source>Name:</source>
                 <target>Jméno:</target>
@@ -3356,7 +3375,25 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.welcome" datatype="html">
-        <source>(1/7) Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source><target>(1/7) Lumeer slouží k práci s informacemi. Veškeré informace jsou uchovávány v tabulkách (jedna tabulka typicky obsahuje údaje podobného zaměření, např. zákazníky). Později můžete použít toto tlačítko pro vytvoření vaší první tabulky. Tabulku pak otevřete kliknutím na ni.</target>
+        <source>Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source><target>(1/7) Lumeer slouží k práci s informacemi. Veškeré informace jsou uchovávány v tabulkách (jedna tabulka typicky obsahuje údaje podobného zaměření, např. zákazníky). Později můžete použít toto tlačítko pro vytvoření vaší první tabulky. Tabulku pak otevřete kliknutím na ni.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="appTour.description.searchViews" datatype="html">
+        <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source><target state="new">Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try openning them!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="appTour.title.tablesView" datatype="html">
+        <source>See the tables</source><target>Prohlédněte si tabulky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="appTour.description.tablesTab" datatype="html">
+        <source>The raw data are stored in Tables which can be accessed on their own tab.</source><target state="new">The raw data are stored in Tables which can be accessed on their own tab.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3368,7 +3405,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.home" datatype="html">
-        <source>(2/7) By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source><target>(2/7) Kliknutím na ikonu Lumeera se vždy vrátíte na tuto obrazovku, kde snadno naleznete přehled všeho, co máte v Lumeerovi uložené.</target>
+        <source>By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source><target>(2/7) Kliknutím na ikonu Lumeera se vždy vrátíte na tuto obrazovku, kde snadno naleznete přehled všeho, co máte v Lumeerovi uložené.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3380,7 +3417,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.search" datatype="html">
-        <source>(3/7) The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source><target>(3/7) Nejjednodušší způsob, jak nalézt uložené informace, je použít vyhledávací pole. Při zadávání toho, co hledáte, vás Lumeer povede. Jen začněte do vyhledávacího pole něco psát.</target>
+        <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source><target>(3/7) Nejjednodušší způsob, jak nalézt uložené informace, je použít vyhledávací pole. Při zadávání toho, co hledáte, vás Lumeer povede. Jen začněte do vyhledávacího pole něco psát.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3392,7 +3429,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.perspectives" datatype="html">
-        <source>(4/7) When you open your table or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.</source><target>(4/7) Když otevřete nějakou tabulku, nebo výsledky hledání, zkuste si přepnout způsob zobrazení údajů. Každý způsob představuje jinou vizuální reprezentaci uložených informací. Je to jako kdybyste si měli brýle, kterými se na informace díváte.</target>
+        <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source><target>(4/7) Když otevřete nějakou tabulku, nebo výsledky hledání, zkuste si přepnout způsob zobrazení údajů. Každý způsob představuje jinou vizuální reprezentaci uložených informací. Je to jako kdybyste si měli brýle, kterými se na informace díváte.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3404,7 +3441,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.views" datatype="html">
-        <source>(5/7) You might connect multiple tables in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source><target>(5/7) Můžete si zobrazit více tabulek vedle sebe, propojit jednotlivé řádky, skrýt některé sloupce... Není nutné opakovat tyto kroky pokaždé, když chcete s vašimi informacemi pracovat. Tomu, jak máte zrovna nastevné zobrazení informací, se v Lumeerovi říká pohled. Pohled si můžete pojmenovat a uložit. Pak jej můžete sdílet se svými kolegy. Pohled můžete nalézt na hlavní obrazovce, kam se dostanete kliknutím na ikonu Lumeera vlevo nahoře.</target>
+        <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source><target>(5/7) Můžete si zobrazit více tabulek vedle sebe, propojit jednotlivé řádky, skrýt některé sloupce... Není nutné opakovat tyto kroky pokaždé, když chcete s vašimi informacemi pracovat. Tomu, jak máte zrovna nastevné zobrazení informací, se v Lumeerovi říká pohled. Pohled si můžete pojmenovat a uložit. Pak jej můžete sdílet se svými kolegy. Pohled můžete nalézt na hlavní obrazovce, kam se dostanete kliknutím na ikonu Lumeera vlevo nahoře.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3416,7 +3453,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.videos" datatype="html">
-        <source>(6/7) Here you can find a list of one-minute videos that explain controls on each page.</source><target>(6/7) Zde můžete nalézt seznam minutových videí, která vás seznámí s ovládacími prvky na konkrétní stránce. Každý způsob zobrazení má svůj seznam. Zde můžete hledat, pokud si nebudete vědět rady.</target>
+        <source>Here you can find a list of one-minute videos that explain controls on each page.</source><target>(6/7) Zde můžete nalézt seznam minutových videí, která vás seznámí s ovládacími prvky na konkrétní stránce. Každý způsob zobrazení má svůj seznam. Zde můžete hledat, pokud si nebudete vědět rady.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3428,7 +3465,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.userMenu" datatype="html">
-        <source>(7/7) You can always return to this tour by invoking it from the user menu.</source><target>(7/7) K této prohlídce se můžete vždy vrátit kliknutím na příslušnou položku v uživatelské nabídce.</target>
+        <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source><target>(7/7) K této prohlídce se můžete vždy vrátit kliknutím na příslušnou položku v uživatelské nabídce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3558,7 +3595,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.content.location.error" datatype="html">
-        <source>Failed to save new location</source><target state="new">Failed to save new location</target>
+        <source>Failed to save the new location</source><target state="new">Failed to save new location</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3632,14 +3669,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>
@@ -3673,7 +3710,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
             <trans-unit id="create.new.collection" datatype="html">
                 <source>Create New Table</source>
                 <target>Vytvořit novou tabulku</target>
@@ -3711,7 +3748,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="remove" datatype="html">
         <source>Remove</source><target>Odstranit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit id="button.choose" datatype="html">
                 <source>Choose</source>
                 <target>Vybrat</target>
