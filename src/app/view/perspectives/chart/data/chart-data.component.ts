@@ -296,7 +296,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   private convertSaveValue(value: any, constraint: Constraint): any {
     if (!value || !constraint) {
-      return getSaveValue(value, constraint);
+      return getSaveValue(value, constraint, this.constraintData);
     }
 
     if (constraint.type === ConstraintType.DateTime) {
@@ -304,7 +304,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return moment(value, convertChartDateFormat(config && config.format)).toISOString();
     }
 
-    return getSaveValue(value, constraint);
+    return getSaveValue(value, constraint, this.constraintData);
   }
 
   private onLinkValueChange(valueChange: ValueChange) {

@@ -17,30 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../core/model/data/constraint';
+import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DurationUnit} from '../model/data/constraint-config';
 
-@Pipe({
-  name: 'constraintTypeIconTitle',
+@Injectable({
+  providedIn: 'root',
 })
-export class ConstraintTypeIconTitlePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export class TranslationService {
+  constructor(private i18n: I18n) {}
 
-  public transform(constraint: Constraint): string {
-    if (!constraint) {
-      return '';
-    }
+  public createDurationUnitsMap(): Record<DurationUnit, string> {
+    return Object.values(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
+  }
 
+  private translateDurationUnit(unit: DurationUnit): string {
     return this.i18n(
       {
-        id: 'constraint.type.icon.title',
-        value:
-          '{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color}}',
+        id: 'constraint.duration.unit',
+        value: '{unit, select, w {w} d {d} h {h} m {m} s {s}}',
       },
-      {
-        constraintType: constraint.type,
-      }
+      {unit}
     );
   }
 }

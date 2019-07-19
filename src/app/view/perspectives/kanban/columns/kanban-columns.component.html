@@ -16,6 +16,7 @@
                    [query]="query"
                    [permissions]="data.permissions"
                    [currentUser]="data.currentUser"
+                   [constraintData]="constraintData"
                    (patchData)="onPatchData($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
@@ -32,6 +33,7 @@
                    [documents]="config.otherColumn | kanbanColumnDocuments:documents"
                    [query]="query"
                    [currentUser]="data.currentUser"
+                   [constraintData]="constraintData"
                    (patchData)="onPatchData($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">

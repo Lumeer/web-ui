@@ -41,6 +41,10 @@ import {
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
+import {selectAllUsers} from '../../../../../../core/store/users/users.state';
+import {User} from '../../../../../../core/store/users/user';
+import {DurationUnitsMap} from '../../../../../../core/model/data/constraint';
+import {TranslationService} from '../../../../../../core/service/translation.service';
 
 @Component({
   selector: 'table-cell-group',
@@ -61,6 +65,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstance[]>;
   public query$: Observable<Query>;
+  public users$: Observable<User[]>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
@@ -68,13 +73,18 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
 
   public table$: Observable<TableModel>;
 
+  public readonly durationUnitsMap: DurationUnitsMap;
+
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  public constructor(private store$: Store<{}>) {}
+  public constructor(private store$: Store<{}>, private translationService: TranslationService) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
+    this.users$ = this.store$.pipe(select(selectAllUsers));
 
     // const cursor$ = this.cursor$.pipe(filter(cursor => !!cursor));
     this.columns$ = this.bindColumns();

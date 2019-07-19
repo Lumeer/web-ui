@@ -208,7 +208,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     for (const {attributeId, value} of changes) {
       const constraint = findAttributeConstraint(resource && resource.attributes, attributeId);
       const saveValue = constraint
-        ? getSaveValue(value, constraint)
+        ? getSaveValue(value, constraint, this.constraintData)
         : this.formatNewValue(dataResource, collectionConfigId, attributeId, value);
 
       const changed = (dataResource.data && dataResource.data[attributeId] !== saveValue) || false;

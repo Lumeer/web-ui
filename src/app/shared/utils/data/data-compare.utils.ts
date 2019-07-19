@@ -44,6 +44,8 @@ export function compareDataValues(a: any, b: any, constraint: Constraint, asc: b
     case ConstraintType.Percentage:
     case ConstraintType.Number:
       return compareNumericValues(a, b, asc);
+    case ConstraintType.Duration:
+      return compareDurationValues(a, b, asc);
     default:
       return compareAnyValues(a, b, asc);
   }
@@ -89,6 +91,13 @@ function compareNumericValues(a: any, b: any, asc: boolean = true): number {
   return multiplier * aBig.cmp(bBig);
 }
 
+function compareDurationValues(a: any, b: any, asc: boolean) {
+  if (isNumeric(a) && isNumeric(b)) {
+    return compareNumericValues(a, b, asc);
+  }
+  return compareAnyValues(a, b, asc);
+}
+
 export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType, constraint: Constraint): boolean {
   if (constraint && constraint.type === ConstraintType.Boolean) {
     return dataValuesMeetConditionByBoolean(a, b, condition);
@@ -112,6 +121,8 @@ export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType
     case ConstraintType.Number:
     case ConstraintType.Percentage:
       return dataValuesMeetConditionByNumber(a, b, condition);
+    case ConstraintType.Duration:
+      return dataValuesMeetConditionDuration(a, b, condition);
     case ConstraintType.User:
       return dataValuesMeetConditionByUser(a, b, condition);
     default:
@@ -193,6 +204,14 @@ function dataValuesMeetConditionByNumber(a: any, b: any, condition: ConditionTyp
     default:
       return true;
   }
+}
+
+function dataValuesMeetConditionDuration(a: any, b: any, condition: ConditionType) {
+  if (isNumeric(a) && isNumeric(b)) {
+    return dataValuesMeetConditionByNumber(a, b, condition);
+  }
+
+  return dataValuesMeetConditionByAny(a, b, condition);
 }
 
 function dataValuesMeetConditionByUser(a: any, b: any, condition: ConditionType): boolean {

@@ -72,6 +72,9 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     set.name && (data['name'] = set.name);
     data['x'] = traceX;
     data['y'] = traceY;
+    data['text'] = this.getYTraceTexts(traceY, set.yAxis);
+    data['textinfo'] = 'text';
+    data['hoverinfo'] = 'x+text';
 
     return data;
   }

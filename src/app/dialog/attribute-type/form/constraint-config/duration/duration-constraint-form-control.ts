@@ -17,15 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint-config';
-import {isPercentageValid} from '../../utils/data.utils';
+export enum DurationConstraintFormControl {
+  Type = 'type',
+  Conversions = 'conversion',
+}
 
-@Pipe({
-  name: 'percentageValid',
-})
-export class PercentageValidPipe implements PipeTransform {
-  public transform(value: any, config?: PercentageConstraintConfig): boolean {
-    return isPercentageValid(value, config);
-  }
+export enum DurationConstraintConversionFormControl {
+  Unit = 'unit',
+  Value = 'value',
 }

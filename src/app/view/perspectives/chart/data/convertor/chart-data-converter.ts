@@ -20,7 +20,12 @@
 import {Injectable} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Constraint, ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
-import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
+import {
+  ConstraintConfig,
+  DateTimeConstraintConfig,
+  DurationConstraintConfig,
+  PercentageConstraintConfig,
+} from '../../../../../core/model/data/constraint-config';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {
@@ -32,7 +37,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric} from '../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {
   decimalUserToStore,
   formatDataValue,
@@ -54,6 +59,7 @@ import {
 import {AggregatedData, AggregatedDataValues, DataAggregator} from '../../../../../shared/utils/data/data-aggregator';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
+import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
 
 @Injectable()
 export class ChartDataConverter {
@@ -123,6 +129,7 @@ export class ChartDataConverter {
     return {
       type,
       sets: [...(this.y1Sets || []), ...(this.y2Sets || [])],
+      constraintData: this.constraintData,
     };
   }
 
@@ -187,36 +194,25 @@ export class ChartDataConverter {
     const dataResources = this.dataAggregator.getDataResources(definedAxis.resourceIndex);
 
     for (const dataObject of dataResources) {
-      let xValue = xAxis && dataObject.data[xAxis.attributeId];
-      let yValue = yAxis && dataObject.data[yAxis.attributeId];
-      if (isNullOrUndefined(xValue || yValue)) {
-        continue;
-      }
-
-      // we know that x or y is set
-      if (isNotNullOrUndefined(xValue || yValue) && actualValues.has(xValue || yValue)) {
+      let value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
+      value = this.formatChartValue(value, constraint, this.constraintData);
+      if (isNullOrUndefined(value) || actualValues.has(value)) {
         continue;
       }
 
       const id = draggable ? dataObject.id : null;
 
-      if (isNotNullOrUndefined(xValue)) {
-        xValue = this.formatChartValue(xValue, constraint);
-      }
-      if (isNotNullOrUndefined(yValue)) {
-        yValue = this.formatChartValue(yValue, constraint);
-      }
-      isNum = isNum && isNumeric(xValue || yValue);
+      isNum = isNum && isNumeric(value);
 
-      points.push({id, x: xValue, y: yValue});
-      actualValues.add(xValue || yValue);
+      points.push({id, x: xAxis ? value : null, y: yAxis ? value : null});
+      actualValues.add(value);
     }
 
     const name = yAxis && this.attributeNameForAxis(yAxis);
 
     const axis = {
       category: this.getAxisCategory(isNum, constraint),
-      config: constraint && constraint.config,
+      config: this.createChartConstraintConfig(constraint),
     };
 
     const dataSet: ChartDataSet = {
@@ -318,10 +314,12 @@ export class ChartDataConverter {
         const values = valueObjects.map(obj => obj.value);
         const aggregation = config.aggregations && config.aggregations[yAxisType];
         let yValue = aggregateDataValues(aggregation, values, yConstraint);
+        yValue = isValueAggregation(aggregation)
+          ? this.formatChartValue(yValue, yConstraint, this.constraintData)
+          : yValue;
         if (isNotNullOrUndefined(yValue)) {
           const id =
             canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
-          yValue = isValueAggregation(aggregation) ? this.formatChartValue(yValue, yConstraint) : yValue;
           const isNum = isNumeric(yValue);
 
           isNumericMap[helperMapKey] = isNumericMap[helperMapKey] && isNum;
@@ -347,11 +345,11 @@ export class ChartDataConverter {
         name,
         yAxis: {
           category: this.getAxisCategory(isNumericMap[name], yConstraint),
-          config: yConstraint && yConstraint.config,
+          config: this.createChartConstraintConfig(yConstraint),
         },
         xAxis: {
           category: this.getAxisCategory(false, xConstraint),
-          config: xConstraint && xConstraint.config,
+          config: this.createChartConstraintConfig(xConstraint),
         },
         yAxisType,
         draggable,
@@ -363,12 +361,20 @@ export class ChartDataConverter {
     return sets;
   }
 
+  private createChartConstraintConfig(constraint: Constraint): ConstraintConfig {
+    return constraint && constraint.config;
+  }
+
   private getAxisColor(axis: ChartAxis): string {
     const collectionResource = this.dataAggregator.getNextCollectionResource(axis.resourceIndex) as Collection;
     return collectionResource && collectionResource.color;
   }
 
-  private formatChartValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
+  private formatChartValue(value: any, constraint: Constraint, constraintData: ConstraintData): any {
+    if (isNullOrUndefined(value)) {
+      return value;
+    }
+
     if (!constraint) {
       return formatDataValue(value);
     }
@@ -378,6 +384,14 @@ export class ChartDataConverter {
         return this.formatDateTimeValue(value, constraint.config as DateTimeConstraintConfig);
       case ConstraintType.Percentage:
         return this.formatPercentageValue(value, constraint.config as PercentageConstraintConfig);
+      case ConstraintType.Duration:
+        const durationUnitsMap = constraintData && constraintData.durationUnitsMap;
+        const durationValue = getDurationSaveValue(
+          value,
+          constraint.config as DurationConstraintConfig,
+          durationUnitsMap
+        );
+        return isNumeric(durationValue) && toNumber(durationValue) >= 0 ? toNumber(durationValue) : null;
       default:
         return formatDataValue(value, constraint, constraintData || this.constraintData);
     }
@@ -407,6 +421,8 @@ export class ChartDataConverter {
         return ChartAxisCategory.Number;
       case ConstraintType.Percentage:
         return ChartAxisCategory.Percentage;
+      case ConstraintType.Duration:
+        return ChartAxisCategory.Duration;
       default:
         return numeric ? ChartAxisCategory.Number : ChartAxisCategory.Text;
     }
@@ -510,6 +526,6 @@ export class ChartDataConverter {
     this.y1Sets = [emptySet];
     this.y2Sets = [];
     this.currentConfig = config;
-    return {sets: [emptySet], type: config.type};
+    return {sets: [emptySet], type: config.type, constraintData: this.constraintData};
   }
 }

@@ -38,7 +38,11 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader} from './pivot-data';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {
+  aggregateDataResources,
+  DataAggregationType,
+  isValueAggregation,
+} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -138,7 +142,12 @@ export class PivotDataConverter {
       const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
       const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (aggregatedValue && attribute && attribute.constraint) {
+      if (
+        isNotNullOrUndefined(aggregatedValue) &&
+        attribute &&
+        attribute.constraint &&
+        isValueAggregation(valueAttribute.aggregation)
+      ) {
         return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
       }
       return aggregatedValue;
@@ -415,7 +424,12 @@ export class PivotDataConverter {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
       const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (aggregatedValue && attribute && attribute.constraint) {
+      if (
+        isNotNullOrUndefined(aggregatedValue) &&
+        attribute &&
+        attribute.constraint &&
+        isValueAggregation(valueAttribute.aggregation)
+      ) {
         return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
       }
       return aggregatedValue;

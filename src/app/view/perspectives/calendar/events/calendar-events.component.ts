@@ -195,7 +195,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: any, constraint: Constraint): any {
     if (constraint) {
-      return getSaveValue(value, constraint);
+      return getSaveValue(value, constraint, this.constraintData);
     } else if (isDateValid(value)) {
       return moment(value).toISOString();
     } else {

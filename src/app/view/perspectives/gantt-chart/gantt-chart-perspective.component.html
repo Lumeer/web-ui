@@ -18,8 +18,7 @@
 
     </collapsible-sidebar>
 
-    <gantt-chart-tasks *ngIf="{users: users$ | async} as constraintData"
-                       class="flex-grow-1 mx-3"
+    <gantt-chart-tasks class="flex-grow-1 mx-3"
                        [style.width.px]="1"
                        [canManageConfig]="data.canManageConfig"
                        [collections]="data.collections"
@@ -29,7 +28,7 @@
                        [linkTypes]="data.linkTypes"
                        [linkInstances]="linkInstances$ | async"
                        [config]="data.config"
-                       [constraintData]="constraintData"
+                       [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
                        [query]="data.query"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"

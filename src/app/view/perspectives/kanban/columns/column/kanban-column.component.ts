@@ -48,6 +48,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'kanban-column',
@@ -88,6 +89,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public patchData = new EventEmitter<DocumentModel>();
@@ -189,7 +193,11 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
       const patchDocument = {...document};
-      patchDocument.data[collectionConfig.attribute.attributeId] = getSaveValue(newValue, constraint);
+      patchDocument.data[collectionConfig.attribute.attributeId] = getSaveValue(
+        newValue,
+        constraint,
+        this.constraintData
+      );
       this.patchData.emit(patchDocument);
     }
   }
@@ -220,7 +228,7 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
     const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
     if (configAttribute) {
       const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
-      data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint);
+      data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint, this.constraintData);
     }
     return {collectionId: collection.id, data};
   }

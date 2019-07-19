@@ -51,6 +51,8 @@ import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -75,13 +77,20 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public collections$: Observable<Collection[]>;
   public query$ = new BehaviorSubject<Query>(null);
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
   private kanbanId = DEFAULT_KANBAN_ID;
 
-  constructor(private store$: Store<AppState>, private renderer: Renderer2) {}
+  constructor(
+    private store$: Store<AppState>,
+    private renderer: Renderer2,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initKanban();

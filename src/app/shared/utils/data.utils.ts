@@ -26,6 +26,7 @@ import {
   CoordinatesConstraintConfig,
   CoordinatesFormat,
   DateTimeConstraintConfig,
+  DurationConstraintConfig,
   NumberConstraintConfig,
   PercentageConstraintConfig,
   SelectConstraintConfig,
@@ -43,6 +44,11 @@ import {validDataColors} from './data/valid-data-colors';
 import {resetUnusedMomentPart} from './date.utils';
 import {formatCoordinates, parseCoordinates} from './map/coordinates.utils';
 import {transformTextBasedOnCaseStyle} from './string.utils';
+import {
+  formatDurationDataValue,
+  getDurationSaveValue,
+  isDurationDataValueValid,
+} from './constraint/duration-constraint.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -80,7 +86,7 @@ export function parseMomentDate(value: any, expectedFormat?: string): moment.Mom
   return moment(value, formats);
 }
 
-export function getSaveValue(value: any, constraint: Constraint): any {
+export function getSaveValue(value: any, constraint: Constraint, constraintData?: ConstraintData): any {
   if (!constraint) {
     return value;
   }
@@ -96,6 +102,12 @@ export function getSaveValue(value: any, constraint: Constraint): any {
       return parseBooleanDataValue(value);
     case ConstraintType.Color:
       return formatColorDataValue(value, constraint.config as ColorConstraintConfig);
+    case ConstraintType.Duration:
+      return getDurationSaveValue(
+        value,
+        constraint.config as DurationConstraintConfig,
+        constraintData.durationUnitsMap
+      );
     default:
       return value;
   }
@@ -114,14 +126,19 @@ export function formatData(
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
     const formattedValue = formatDataValue(data[attributeId], attribute.constraint, constraintData);
-    if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, true)) {
+    if (!filterInvalid || isValueValid(formattedValue, attribute.constraint, constraintData, true)) {
       newData[attributeId] = formattedValue;
     }
   }
   return newData;
 }
 
-export function isValueValid(value: any, constraint: Constraint, withoutConfig?: boolean): boolean {
+export function isValueValid(
+  value: any,
+  constraint: Constraint,
+  constraintData: ConstraintData,
+  withoutConfig?: boolean
+): boolean {
   if (!constraint) {
     return true;
   }
@@ -137,6 +154,8 @@ export function isValueValid(value: any, constraint: Constraint, withoutConfig?:
       return isColorValid(value, !withoutConfig ? (constraint.config as ColorConstraintConfig) : null);
     case ConstraintType.Select:
       return isSelectDataValueValid(value, !withoutConfig ? (constraint.config as SelectConstraintConfig) : null);
+    case ConstraintType.Duration:
+      return isDurationDataValueValid(value, constraintData && constraintData.durationUnitsMap);
     default:
       return true;
   }
@@ -158,6 +177,12 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
       return formatCoordinatesDataValue(value, constraint.config as CoordinatesConstraintConfig);
     case ConstraintType.DateTime:
       return formatDateTimeDataValue(value, constraint.config as DateTimeConstraintConfig);
+    case ConstraintType.Duration:
+      return formatDurationDataValue(
+        value,
+        constraint.config as DurationConstraintConfig,
+        constraintData && constraintData.durationUnitsMap
+      );
     case ConstraintType.Number:
       return formatNumberDataValue(value, constraint.config as NumberConstraintConfig);
     case ConstraintType.Text:

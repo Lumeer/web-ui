@@ -39,7 +39,7 @@ import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
@@ -105,6 +105,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public affect = new EventEmitter();
@@ -233,7 +236,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           this.attribute$.pipe(first()).subscribe(attribute => {
             if (this.editedValue) {
               if (attribute && attribute.constraint) {
-                if (isValueValid(this.editedValue, attribute.constraint)) {
+                if (isValueValid(this.editedValue, attribute.constraint, this.constraintData)) {
                   this.onValueSave(this.editedValue);
                 }
               } else {

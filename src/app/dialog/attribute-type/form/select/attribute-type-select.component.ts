@@ -47,7 +47,7 @@ export class AttributeTypeSelectComponent implements OnInit {
     return ['None'].concat(Object.keys(ConstraintType).filter(type => isConstraintTypeEnabled(type))).map(type => ({
       id: type,
       value: this.i18n(
-        '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User}}',
+        '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User}}',
         {type}
       ),
       icons: [constraintIconsMap[type] || 'fas fa-times'],

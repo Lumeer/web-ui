@@ -21,10 +21,12 @@ import {ConstraintConfig} from '../../../../../core/model/data/constraint-config
 import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 export interface ChartData {
   sets: ChartDataSet[];
   type: ChartType;
+  constraintData?: ConstraintData;
 }
 
 export interface ChartDataSet {
@@ -54,6 +56,7 @@ export interface ChartPoint {
 export enum ChartAxisCategory {
   Date = 'date',
   Percentage = 'percentage',
+  Duration = 'duration',
   Number = 'number',
   Text = 'text',
 }

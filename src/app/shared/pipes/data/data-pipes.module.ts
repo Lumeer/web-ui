@@ -34,6 +34,9 @@ import {IsSelectDataValueValidPipe} from './valid/is-select-data-value-valid.pip
 import {CoordinatesDataValuePipe} from './coordinates-data-value.pipe';
 import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-valid.pipe';
 import {AddressDataValuePipe} from './address-data-value.pipe';
+import {DurationDataValuePipe} from './duration-data-value.pipe';
+import {NumberValidPipe} from './valid/number-valid.pipe';
+import {PercentageValidPipe} from './valid/percentage-valid.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -53,6 +56,9 @@ import {AddressDataValuePipe} from './address-data-value.pipe';
     CoordinatesDataValuePipe,
     CoordinatesDataValueValidPipe,
     AddressDataValuePipe,
+    DurationDataValuePipe,
+    NumberValidPipe,
+    PercentageValidPipe,
   ],
   exports: [
     TextDataValuePipe,
@@ -70,6 +76,9 @@ import {AddressDataValuePipe} from './address-data-value.pipe';
     CoordinatesDataValuePipe,
     CoordinatesDataValueValidPipe,
     AddressDataValuePipe,
+    DurationDataValuePipe,
+    NumberValidPipe,
+    PercentageValidPipe,
   ],
 })
 export class DataPipesModule {}

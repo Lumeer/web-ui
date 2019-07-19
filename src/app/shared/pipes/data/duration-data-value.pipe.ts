@@ -18,29 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../core/model/data/constraint';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DurationConstraintConfig, DurationUnit} from '../../../core/model/data/constraint-config';
+import {formatDurationDataValue} from '../../utils/constraint/duration-constraint.utils';
 
 @Pipe({
-  name: 'constraintTypeIconTitle',
+  name: 'durationDataValue',
 })
-export class ConstraintTypeIconTitlePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(constraint: Constraint): string {
-    if (!constraint) {
-      return '';
-    }
-
-    return this.i18n(
-      {
-        id: 'constraint.type.icon.title',
-        value:
-          '{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color}}',
-      },
-      {
-        constraintType: constraint.type,
-      }
-    );
+export class DurationDataValuePipe implements PipeTransform {
+  public transform(value: any, config: DurationConstraintConfig, durationMap: Record<DurationUnit, string>): string {
+    return formatDurationDataValue(value, config, durationMap);
   }
 }

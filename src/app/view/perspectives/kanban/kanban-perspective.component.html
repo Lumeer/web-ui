@@ -1,6 +1,7 @@
 <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
                 canManageConfig: currentView$ | async | canManageConfig | async,
-                documents: documents$ | async, query: query$ | async} as data">
+                documents: documents$ | async, query: query$ | async,
+                users: users$ | async} as data">
 
   <collapsible-sidebar *ngIf="data.canManageConfig"
                        class="h-100"
@@ -13,7 +14,7 @@
       [config]="data.config"
       [query]="data.query"
       (configChange)="onConfigChanged($event)"
-      [constraintData]="{users: users$ | async}">
+      [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}">
     </kanban-config>
   </collapsible-sidebar>
 
@@ -24,6 +25,7 @@
     [query]="data.query"
     [documents]="data.documents"
     [canManageConfig]="data.canManageConfig"
+    [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
     (configChange)="onConfigChanged($event)"
     (patchData)="onPatchData($event)"
     (removeDocument)="onRemoveDocument($event)">

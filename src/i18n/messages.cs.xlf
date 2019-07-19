@@ -517,7 +517,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
-    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
+    <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </source><target state="new">
     <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </target>
@@ -525,12 +525,76 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-      </trans-unit><trans-unit id="ce6bbe4476be067d5362883cdc005f069ba12916" datatype="html">
-        <source>{VAR_SELECT, select, street {Street} zip {ZIP Code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
-        <target state="new">{VAR_SELECT, select, street {Ulice} zip {PSČ} city {Město} county {Okres} state {Kraj/Stát} country {Země} continent {Kontinent} }</target>
+      </trans-unit><trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</source><target state="new">{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
+        <source>
+      Duration type
+    </source><target state="new">
+      Typ trvaní
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
+        <source>
+        <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
+      </source><target state="new">
+        <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="c95566f50f51e707b7023cf7575564cf244fa3d7" datatype="html">
+        <source>{VAR_SELECT, select, Work {Work} Classic {Classic} Custom {Custom} }</source><target state="new">{VAR_SELECT, select, Work {Pracovní} Classic {Klasický} Custom {Vlastní} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.example" datatype="html">
+        <source>
+    Example: 1w2d5h20m30s
+  </source><target state="new">
+    Příklad: 1w2d5h20m30s
+  </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
+        <source>
+              <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
+            </source><target state="new">
+              <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
+        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target state="new">{VAR_SELECT, select, w {t (týdny)} d {d (dny)} h {h (hodiny)} m {m (minuty)} s {s (sekundy)} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.unit.conversion" datatype="html">
+        <source>
+              <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
+            </source><target state="new">
+              <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
+        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</source><target state="new">{VAR_SELECT, select, w {dny} d {hodiny} h {minuty} m {sekundy} s {milisekundy} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
@@ -711,24 +775,8 @@
     </source><target>
       Typ
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="attribute.type.value" datatype="html">
-        <source>
-        <x id="ICU" equiv-text="{type, select, Address {...} Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
-      </source><target>
-        <x id="ICU" equiv-text="{type, select, Boolean {...} Color {...} Coordinates {...} DateTime {...} None {...} Number {...} Percentage {...} Select {...} Text {...} User {...}}"/>
-      </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="20eb77b8010bbe1e3936ef86196f2fb3ad21a182" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source><target>{VAR_SELECT, select, None {Žádný} Address {Adresa} Color {Barva} Number {Číslo} DateTime {Datum} Percentage {Procenta} Coordinates {Souřadnice} Text {Text} User {Uživatel} Select {Výběr} Boolean {Zaškrtávátko} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.calendar.event.title" datatype="html">
         <source><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> event</source><target><x id="ICU" equiv-text="{data.update, select, 1 {...} other {...}}"/> událost</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
@@ -743,7 +791,7 @@
       </trans-unit><trans-unit id="dialog.calendar.event.button" datatype="html">
         <source>{VAR_SELECT, select, 1 {Update} other {Create} }</source><target>{VAR_SELECT, select, 1 {Upravit} other {Vytvořit} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>
       All day
     </source><target>
@@ -1398,6 +1446,12 @@
         <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source><target>Měníte hodnotu možnosti, která může být již použitá v záznamech. To způsobí, že tyto záznamy nebudou mít platnou hodnotu. Chcete pokračovat?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="970055a0f46ef7292144b2c055ef1797517994c6" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source><target state="new">{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/attribute-type/form/select/attribute-type-select.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.calendar.event.collection" datatype="html">
@@ -2464,6 +2518,12 @@
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
+        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target state="new">{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="projects.notPermissions" datatype="html">
         <source>I am sorry, you are not allowed to view or create any project in this organization.</source><target>Je mi líto ale nemáte oprávnění číst nebo vytvářet projekty v této organizaci.</target>
         <context-group purpose="location">
@@ -3438,7 +3498,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} }</target>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.placeholder" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source><target>{VAR_SELECT, select, y1 {Agregace osy Y1} y2 {Agregace osy Y2} }</target>
@@ -3495,6 +3555,12 @@
         <source>Select attribute</source><target>Vyberte atribut</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/config/collection/kanban-collection-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.content.location.error" datatype="html">
+        <source>Failed to save new location</source><target state="new">Failed to save new location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.control.zoom.in" datatype="html">
@@ -3566,7 +3632,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/attribute-type-dialog.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-function/attribute-function-dialog.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
@@ -3654,8 +3720,8 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit><trans-unit id="constraint.type.icon.title" datatype="html">
-        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
-        <target>{VAR_SELECT, select, Text {Text} Number {Číslo} Address {Adresa} Boolean {Zaškrtávátko} Coordinates {Poloha} DateTime {Datum a čas} Email {E-mail} Function {Funkce} Image {Obrázek} Link {Vazba} Percentage {Procenta} Rating {Hodnocení} Select {Výběr} Tag {Značky} User {Výběr uživatele} Color {Barva} }</target>
+        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Dropdown} Tag {Tag} User {User selection} Color {Color} }</source>
+        <target>{VAR_SELECT, select, Text {Text} Number {Číslo} Address {Adresa} Boolean {Zaškrtávátko} Coordinates {Poloha} DateTime {Datum a čas} Duration {Trvaní} Email {E-mail} Function {Funkce} Image {Obrázek} Link {Vazba} Percentage {Procenta} Rating {Hodnocení} Select {Výběr} Tag {Značky} User {Výběr uživatele} Color {Barva} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>

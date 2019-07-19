@@ -43,6 +43,25 @@ export interface DateTimeConstraintConfig {
   range: boolean;
 }
 
+export interface DurationConstraintConfig {
+  type: DurationType;
+  conversions: Record<DurationUnit, number>;
+}
+
+export enum DurationUnit {
+  Weeks = 'w',
+  Days = 'd',
+  Hours = 'h',
+  Minutes = 'm',
+  Seconds = 's',
+}
+
+export enum DurationType {
+  Work = 'Work',
+  Classic = 'Classic',
+  Custom = 'Custom',
+}
+
 export interface NumberConstraintConfig {
   decimal: boolean;
   format: string;
@@ -103,6 +122,7 @@ export type ConstraintConfig =
   | AddressConstraintConfig
   | CoordinatesConstraintConfig
   | DateTimeConstraintConfig
+  | DurationConstraintConfig
   | NumberConstraintConfig
   | PercentageConstraintConfig
   | RatingConstraintConfig

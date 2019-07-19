@@ -44,6 +44,8 @@ import {convertQueryModelToString} from '../../../../core/store/navigation/query
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
 import {Query} from '../../../../core/store/navigation/query';
+import {DurationUnitsMap} from '../../../../core/model/data/constraint';
+import {TranslationService} from '../../../../core/service/translation.service';
 
 const PAGE_SIZE = 40;
 
@@ -77,6 +79,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public query: Query;
 
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
 
   private page = 0;
   private workspace: Workspace;
@@ -87,8 +90,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private router: Router,
     private userSettingsService: UserSettingsService,
-    private perspectiveService: PerspectiveService
-  ) {}
+    private perspectiveService: PerspectiveService,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.initSettings();

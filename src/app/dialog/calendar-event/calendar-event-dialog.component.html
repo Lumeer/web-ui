@@ -13,6 +13,7 @@
       [query]="query$ | async"
       [currentUser]="currentUser$ | async"
       [allowedPermissions]="collectionsPermissions$ | async"
+      [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
       (createEvent)="onCreateEvent($event)"
       (updateEvent)="onUpdateEvent($event)">
     </create-calendar-event-form>
