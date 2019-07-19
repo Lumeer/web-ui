@@ -4,6 +4,9 @@
      [style.color]="color"
      [style.cursor]="readonly && !url ? 'default' : 'pointer'"
      data-toggle="dropdown">
+    <div *ngIf="label" class="text-center text-muted small my-2">
+      {{label}}
+    </div>
     <i aria-hidden="true"
        class="{{icon}} {{size}}"
        (click)="storeIconAndColor($event)"

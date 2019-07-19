@@ -8,21 +8,21 @@
       [resourceType]="resourceType">
     </create-resource-dialog-parent>
 
-    <div class="form-group">
+    <div class="form-group row">
 
-      <label class="col-form-label mb-2">
+      <label class="col-form-label col-2 mb-2">
           <span i18n="@@resource.new.dialog.icon.label">
             Icon:
-          </span>
-        <span class="ml-4 text-muted small" i18n="@@resource.new.dialog.icon.label.hint">
-            (click the icon to change it)
           </span>
       </label>
 
       <icon-chooser [(color)]="color"
                     [(icon)]="icon"
-                    class="d-block mb-3">
+                    [label]="iconChooserLabel"
+                    class="d-block col-8 mb-3">
       </icon-chooser>
+
+      <div class="col-2"></div>
     </div>
 
     <resource-code-input

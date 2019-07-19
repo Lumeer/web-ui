@@ -31,6 +31,7 @@ import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {BehaviorSubject} from 'rxjs';
 import {TemplateType} from '../../../core/model/template';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'create-resource-dialog-form',
@@ -47,6 +48,9 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @Input()
   public initialTemplate: TemplateType;
 
+  @Input()
+  public usedCodes: string[];
+
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
 
@@ -56,13 +60,20 @@ export class CreateResourceDialogFormComponent implements OnInit {
   public color = DEFAULT_COLOR;
   public icon = DEFAULT_ICON;
 
+  public readonly iconChooserLabel: string;
   private readonly colors = Colors.palette;
 
   constructor(
     private fb: FormBuilder,
     private projectValidators: ProjectValidators,
-    private organizationValidators: OrganizationValidators
-  ) {}
+    private organizationValidators: OrganizationValidators,
+    private i18n: I18n
+  ) {
+    this.iconChooserLabel = i18n({
+      id: 'resource.new.dialog.icon.label.hint',
+      value: '(click the icon to change it)',
+    });
+  }
 
   public ngOnInit() {
     this.createForm();
@@ -75,10 +86,26 @@ export class CreateResourceDialogFormComponent implements OnInit {
   }
 
   private createForm() {
+    const initialCode =
+      this.resourceType === ResourceType.Project ? this.createCodeForTemplate(this.selectedTemplate$.getValue()) : '';
     this.form = this.fb.group({
-      code: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(5)], this.createAsyncValidator()],
+      code: [
+        initialCode,
+        [Validators.required, Validators.minLength(2), Validators.maxLength(5)],
+        this.createAsyncValidator(),
+      ],
       name: [''],
     });
+  }
+
+  private createCodeForTemplate(type: TemplateType): string {
+    let code = type.substring(0, 5);
+    let i = 1;
+    while ((this.usedCodes || []).includes(code)) {
+      code = type.substring(0, 4) + i++;
+    }
+
+    return code;
   }
 
   public onEnter(event: any) {
@@ -120,5 +147,12 @@ export class CreateResourceDialogFormComponent implements OnInit {
 
   public onTemplateSelected(type: TemplateType) {
     this.selectedTemplate$.next(type);
+    this.prefillCodeIfNeeded(type);
+  }
+
+  private prefillCodeIfNeeded(type: TemplateType) {
+    if (!this.form.controls.code.touched) {
+      this.form.controls.code.setValue(this.createCodeForTemplate(type));
+    }
   }
 }
