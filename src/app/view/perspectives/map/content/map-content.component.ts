@@ -181,7 +181,7 @@ export class MapContentComponent implements OnInit {
 
   private onGetLocationFailure(error: any) {
     this.notificationService.error(
-      this.i18n({id: 'map.content.location.error', value: 'Failed to save the new location'})
+      this.i18n({id: 'map.content.location.error', value: 'I could not save the new location.'})
     );
 
     // revert moved marker position

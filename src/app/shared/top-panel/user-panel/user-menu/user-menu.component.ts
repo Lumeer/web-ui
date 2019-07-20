@@ -273,7 +273,7 @@ export class UserMenuComponent {
               value:
                 'Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!',
             }),
-          position: 'right',
+          position: 'top',
         },
       });
       driverSteps.push({

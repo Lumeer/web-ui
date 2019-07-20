@@ -5,7 +5,7 @@
     <ng-container *ngIf="data.hasCollection || data.hasView || data.hasDocument; else noData">
 
       <ng-container *ngIf="data.hasView">
-        <div class="h3 ml-3 my-2" i18n="@@search.all.views" data-tour="search-views">
+        <div class="h3 ml-3 my-2" i18n="@@search.all.views">
           Views
         </div>
         <search-views [maxLines]="10"></search-views>

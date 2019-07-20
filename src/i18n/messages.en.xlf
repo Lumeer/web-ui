@@ -1204,40 +1204,47 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.duration.description" datatype="html">
+        <source>
+      Stores time duration for instance of a task or an event.
+      The duration is specified in a format that is easy to write and read (e.g. 1h30m = 1 hour and 30 minutes).
+      You can switch between a work type of duration where each day has 8 work hours,
+      or normal time where a day has 24 hours.
+    </source><target state="final">
+      Stores time duration for instance of a task or an event.
+      The duration is specified in a format that is easy to write and read (e.g. 1h30m = 1 hour and 30 minutes).
+      You can switch between a work type of duration where each day has 8 work hours,
+      or normal time where a day has 24 hours.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
       </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
         <source>
       Time scope
     </source><target state="final">
       Time scope
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
       </source><target state="final">
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
         <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target state="final">{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.duration.example" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="constraint.duration.example" datatype="html">
         <source>
     Example: 1w2d5h20m30s
   </source><target state="final">
     Example: 1w2d5h20m30s
   </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
         <source>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
             </source><target state="final">
@@ -1285,12 +1292,12 @@
         <source>{VAR_SELECT, select, organization {Organization} project {Project} }</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} }</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
-        <source>Your organization is missing a project, create one first!</source><target state="final">Your organization is missing a project, create one first!</target>
+        <source>Your organization is missing a project. To continue, please create one.</source><target state="final">Your organization is missing a project. To continue, please create one.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
-        <source>Create project in organization:</source><target state="final">Create project in organization:</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
+        <source>Create a new project in organization:</source><target state="final">Create a new project in organization:</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
         <source>Choose template</source><target state="final">Choose template</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
@@ -3686,7 +3693,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.content.location.error" datatype="html">
-        <source>Failed to save the new location</source><target state="final">Failed to save the new location</target>
+        <source>I could not save the new location.</source><target state="final">I could not save the new location.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>

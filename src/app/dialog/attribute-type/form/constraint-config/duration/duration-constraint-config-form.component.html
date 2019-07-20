@@ -1,4 +1,12 @@
 <div [formGroup]="form">
+  <div class="d-flex mb-3">
+    <span class="text-muted" i18n="@@constraint.duration.description">
+      Stores time duration for instance of a task or an event.
+      The duration is specified in a format that is easy to write and read (e.g. 1h30m = 1 hour and 30 minutes).
+      You can switch between a work type of duration where each day has 8 work hours,
+      or normal time where a day has 24 hours.
+    </span>
+  </div>
 
   <div class="form-group">
     <label [for]="controls.Type"

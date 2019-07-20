@@ -526,10 +526,27 @@
           <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit><trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
-        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</source><target state="new">{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</target>
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent} }</source>
+        <target>{VAR_SELECT, select, houseNumber {Číslo domu} street {Ulice} postalCode {PSČ} city {Město} county {Okres} state {Kraj} country {Země} continent {Kontinent} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.description" datatype="html">
+        <source>
+      Stores time duration for instance of a task or an event.
+      The duration is specified in a format that is easy to write and read (e.g. 1h30m = 1 hour and 30 minutes).
+      You can switch between a work type of duration where each day has 8 work hours,
+      or normal time where a day has 24 hours.
+    </source><target>
+      Ukládá časové trvání jako například dobu pro vykonání úkolu nebo trvání události.
+      Doba trvání je uložena ve formátu, který je jednoduchý pro zápis a čtení (např. 1h30m = 1 hodina a 30 minut).
+      Můžete se přepínat mezi pracovním časem, kde má každý pracovní den 8 hodin,
+      nebo normální čas, tedy že jeden den má 24 hodin.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
         <source>
@@ -537,34 +554,25 @@
     </source><target>
       Časové rozsahy
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
       </source><target>
         <x id="ICU" equiv-text="{type, select, Work {...} Classic {...} Custom {...}}"/>
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
         <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target>{VAR_SELECT, select, Work {Pracovní} Classic {Normální} Custom {Vlastní} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.duration.example" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="constraint.duration.example" datatype="html">
         <source>
     Example: 1w2d5h20m30s
   </source><target>
     Příklad: 1w2d5h20m30s
   </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
         <source>
               <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
             </source><target>
@@ -3109,15 +3117,15 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
-                <source>Your organization is missing a project, create one first!</source>
+                <source>Your organization is missing a project. To continue, please create one.</source>
                 <target>Ve vaší organizaci není žádný projekt. Vytvořte si jej!</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
-                <source>Create project in organization:</source>
+                <source>Create a new project in organization:</source>
                 <target>Vytvořit projekt v organizaci:</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
         <source>Choose template</source><target>Vyberte si šablonu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
@@ -3381,7 +3389,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.searchViews" datatype="html">
-        <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source><target state="new">Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try openning them!</target>
+        <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source>
+        <target>Pohledy jsou mozkem Lumeera. Jsou to předem nastavené způsoby zobrazení vašich údajů. Zkuste si je všechny otevřít!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3393,7 +3402,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.tablesTab" datatype="html">
-        <source>The raw data are stored in Tables which can be accessed on their own tab.</source><target state="new">The raw data are stored in Tables which can be accessed on their own tab.</target>
+        <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
+        <target>Samotné údaje jsou uložené v tabulkách, které můžete nalézt na jejich vlastní záložce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3405,7 +3415,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.home" datatype="html">
-        <source>By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source><target>(2/7) Kliknutím na ikonu Lumeera se vždy vrátíte na tuto obrazovku, kde snadno naleznete přehled všeho, co máte v Lumeerovi uložené.</target>
+        <source>By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
+        <target>Kliknutím na ikonu Lumeera se vždy vrátíte na tuto obrazovku, kde snadno naleznete přehled všeho, co máte v Lumeerovi uložené.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3417,7 +3428,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.search" datatype="html">
-        <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source><target>(3/7) Nejjednodušší způsob, jak nalézt uložené informace, je použít vyhledávací pole. Při zadávání toho, co hledáte, vás Lumeer povede. Jen začněte do vyhledávacího pole něco psát.</target>
+        <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
+        <target>Nejjednodušší způsob, jak nalézt uložené informace, je použít vyhledávací pole. Při zadávání toho, co hledáte, vás Lumeer povede. Jen začněte do vyhledávacího pole něco psát.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3429,7 +3441,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.perspectives" datatype="html">
-        <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source><target>(4/7) Když otevřete nějakou tabulku, nebo výsledky hledání, zkuste si přepnout způsob zobrazení údajů. Každý způsob představuje jinou vizuální reprezentaci uložených informací. Je to jako kdybyste si měli brýle, kterými se na informace díváte.</target>
+        <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source>
+        <target>Když otevřete nějakou tabulku, nebo výsledky hledání, zkuste si přepnout způsob zobrazení údajů.  Upravte událost v kalendáři, plánujte úlohy na časové ose, evidujte adresy v mapě, přetahujte body v grafu, nebo si udělejte přehlednou statistickou tabulku.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3441,7 +3454,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.views" datatype="html">
-        <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source><target>(5/7) Můžete si zobrazit více tabulek vedle sebe, propojit jednotlivé řádky, skrýt některé sloupce... Není nutné opakovat tyto kroky pokaždé, když chcete s vašimi informacemi pracovat. Tomu, jak máte zrovna nastevné zobrazení informací, se v Lumeerovi říká pohled. Pohled si můžete pojmenovat a uložit. Pak jej můžete sdílet se svými kolegy. Pohled můžete nalézt na hlavní obrazovce, kam se dostanete kliknutím na ikonu Lumeera vlevo nahoře.</target>
+        <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
+        <target>Jakmile si nastavíte způsob zobrazení v perspektivě, pojmenujte ho a uložte. Později můžete pohled otevřít na hlavní obrazovce, nebo ho sdílet s kolegy.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3453,7 +3467,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.videos" datatype="html">
-        <source>Here you can find a list of one-minute videos that explain controls on each page.</source><target>(6/7) Zde můžete nalézt seznam minutových videí, která vás seznámí s ovládacími prvky na konkrétní stránce. Každý způsob zobrazení má svůj seznam. Zde můžete hledat, pokud si nebudete vědět rady.</target>
+        <source>Here you can find a list of one-minute videos that explain controls on each page.</source>
+        <target>Zde můžete nalézt seznam minutových videí, která vás seznámí s ovládacími prvky na konkrétní stránce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3465,7 +3480,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="appTour.description.userMenu" datatype="html">
-        <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source><target>(7/7) K této prohlídce se můžete vždy vrátit kliknutím na příslušnou položku v uživatelské nabídce.</target>
+        <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source>
+        <target>K této prohlídce se můžete vždy vrátit pomocí uživatelské nabídky, kde naleznete i odkaz na podporu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -3595,7 +3611,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="map.content.location.error" datatype="html">
-        <source>Failed to save the new location</source><target state="new">Failed to save new location</target>
+        <source>I could not save the new location.</source><target>Nepodařilo se mi uložit novou polohu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>
