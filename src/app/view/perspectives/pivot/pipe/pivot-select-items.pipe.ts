@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotAttribute} from '../../../../core/store/pivots/pivot';
-import {Query} from '../../../../core/store/navigation/query';
+import {QueryStem} from '../../../../core/store/navigation/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
@@ -30,12 +30,12 @@ import {AttributesResourceType} from '../../../../core/model/resource';
   name: 'pivotSelectItems',
 })
 export class PivotSelectItemsPipe implements PipeTransform {
-  public transform(query: Query, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
-    if (!query || !query.stems) {
+  public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
+    if (!stem) {
       return [];
     }
 
-    const resources = queryStemAttributesResourcesOrder(query.stems[0], collections, linkTypes);
+    const resources = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
     const items = [];
     for (let i = 0; i < resources.length; i++) {
       if (i % 2 === 0) {

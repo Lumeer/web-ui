@@ -38,11 +38,7 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader} from './pivot-data';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {
-  aggregateDataResources,
-  DataAggregationType,
-  isValueAggregation,
-} from '../../../../shared/utils/data/data-aggregation';
+import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -97,7 +93,7 @@ export class PivotDataConverter {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    constraintData?: ConstraintData
+    constraintData: ConstraintData
   ) {
     this.config = config;
     this.collections = collections;
@@ -135,25 +131,23 @@ export class PivotDataConverter {
   }
 
   private convertValueAttributes(valueAttributes: PivotValueAttribute[]): PivotData {
-    const valueTitles = this.createValueTitles(valueAttributes);
-    const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueTitles);
+    const {titles, constraints} = this.createValueTitles(valueAttributes);
+    const {headers} = this.convertMapToPivotDataHeader({}, 0, [], titles);
 
     const values = (valueAttributes || []).map(valueAttribute => {
       const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (
-        isNotNullOrUndefined(aggregatedValue) &&
-        attribute &&
-        attribute.constraint &&
-        isValueAggregation(valueAttribute.aggregation)
-      ) {
-        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
-      }
-      return aggregatedValue;
+      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     });
 
-    return {columnHeaders: headers, rowHeaders: [], valueTitles, values: [values]};
+    return {
+      columnHeaders: headers,
+      rowHeaders: [],
+      valueTitles: titles,
+      values: [values],
+      valuesConstraints: constraints,
+      constraintData: this.constraintData,
+    };
   }
 
   private findDataResourcesByPivotAttribute(pivotAttribute: PivotAttribute): DataResource[] {
@@ -168,12 +162,12 @@ export class PivotDataConverter {
   private convertAggregatedData(aggregatedData: AggregatedData, valueAttributes: PivotValueAttribute[]): PivotData {
     const rowData = this.convertMapToPivotDataHeader(aggregatedData.map, aggregatedData.rowLevels, this.getRowColors());
 
-    const valueTitles = this.createValueTitles(valueAttributes);
+    const {titles, constraints} = this.createValueTitles(valueAttributes);
     const columnData = this.convertMapToPivotDataHeader(
       aggregatedData.rowLevels > 0 ? aggregatedData.columnsMap : aggregatedData.map,
       aggregatedData.columnLevels,
       this.getColumnColors(),
-      valueTitles
+      titles
     );
 
     const values = this.initValues(rowData.maxIndex + 1, columnData.maxIndex + 1);
@@ -181,7 +175,14 @@ export class PivotDataConverter {
       this.fillValues(values, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
     }
 
-    return {rowHeaders: rowData.headers, columnHeaders: columnData.headers, valueTitles, values};
+    return {
+      rowHeaders: rowData.headers,
+      columnHeaders: columnData.headers,
+      valueTitles: titles,
+      values,
+      valuesConstraints: constraints,
+      constraintData: this.constraintData,
+    };
   }
 
   private convertMapToPivotDataHeader(
@@ -328,11 +329,18 @@ export class PivotDataConverter {
     return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), 0);
   }
 
-  private createValueTitles(valueAttributes: PivotValueAttribute[]): string[] {
-    return (valueAttributes || []).map(pivotAttribute => {
-      const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-      return this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
-    });
+  private createValueTitles(valueAttributes: PivotValueAttribute[]): {titles: string[]; constraints: Constraint[]} {
+    return (valueAttributes || []).reduce(
+      ({titles, constraints}, pivotAttribute) => {
+        const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
+        constraints.push(attribute && attribute.constraint);
+        const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
+        titles.push(title);
+
+        return {titles, constraints};
+      },
+      {titles: [], constraints: []}
+    );
   }
 
   public createValueTitle(aggregation: DataAggregationType, attributeName: string): string {
@@ -423,16 +431,7 @@ export class PivotDataConverter {
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (
-        isNotNullOrUndefined(aggregatedValue) &&
-        attribute &&
-        attribute.constraint &&
-        isValueAggregation(valueAttribute.aggregation)
-      ) {
-        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
-      }
-      return aggregatedValue;
+      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     }
 
     return null;

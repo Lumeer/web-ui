@@ -24,23 +24,24 @@ import {PivotPerspectiveComponent} from './pivot-perspective.component';
 import {SharedModule} from '../../../shared/shared.module';
 import {PivotPerspectiveRoutingModule} from './pivot-perspective-routing.module';
 import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrapper.component';
-import {PivotConfigComponent} from './wrapper/config/pivot-config.component';
+import {PivotConfigComponent} from './wrapper/config/stem-config/pivot-config.component';
 import {PivotTableComponent} from './wrapper/table/pivot-table.component';
-import {PivotAttributeConfigComponent} from './wrapper/config/attribute/pivot-attribute-config.component';
+import {PivotAttributeConfigComponent} from './wrapper/config/stem-config/attribute/pivot-attribute-config.component';
 import {PivotHeaderSelectedAttributesPipe} from './pipe/pivot-header-selected-attributes.pipe';
 import {PivotSelectItemsPipe} from './pipe/pivot-select-items.pipe';
 import {PivotCleanAttributePipe} from './pipe/pivot-clean-attribute.pipe';
-import {PivotValueAttributeConfigComponent} from './wrapper/config/attribute/value/pivot-value-attribute-config.component';
-import {PivotHeaderAttributeConfigComponent} from './wrapper/config/attribute/header/pivot-header-attribute-config.component';
+import {PivotValueAttributeConfigComponent} from './wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component';
+import {PivotHeaderAttributeConfigComponent} from './wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component';
 import {PivotSortSelectItemsPipe} from './pipe/pivot-sort-select-items.pipe';
 import {PivotSortSelectedIdPipe} from './pipe/pivot-sort-selected-id.pipe';
-import {PivotAttributeSortComponent} from './wrapper/config/attribute/header/sort/pivot-attribute-sort.component';
+import {PivotAttributeSortComponent} from './wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component';
 import {PivotSubSortSelectItemsPipe} from './pipe/pivot-sub-sort-select-items.pipe';
 import {PivotSubSortValuesPipe} from './pipe/pivot-sub-sort-values.pipe';
 import {PivotValueTypeSelectItemsPipe} from './pipe/pivot-value-type-select-items.pipe';
 import {PivotAttributeSelectItemPipe} from './pipe/pivot-attribute-select-item.pipe';
 import {PivotHeaderRestrictedAttributesPipe} from './pipe/pivot-header-restricted-attributes.pipe';
 import {PivotHeaderMapAttributePipe} from './pipe/pivot-header-map-attribute.pipe';
+import {PivotConfigWrapperComponent} from './wrapper/config/pivot-config-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {PivotHeaderMapAttributePipe} from './pipe/pivot-header-map-attribute.pip
     PivotAttributeSelectItemPipe,
     PivotHeaderRestrictedAttributesPipe,
     PivotHeaderMapAttributePipe,
+    PivotConfigWrapperComponent,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
 })

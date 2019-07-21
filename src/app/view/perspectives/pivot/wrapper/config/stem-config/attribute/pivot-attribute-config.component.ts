@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute} from '../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
+import {PivotAttribute} from '../../../../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({

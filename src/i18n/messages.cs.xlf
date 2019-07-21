@@ -569,7 +569,7 @@
         <source>
     Example: 1w2d5h20m30s
   </source><target>
-    Příklad: 1w2d5h20m30s
+    Příklad: 1t2d5h20m30s
   </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">

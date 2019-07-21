@@ -17,20 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {PivotConfig, PivotConfigVersion} from './pivot';
 
-export interface PivotData {
-  columnHeaders: PivotDataHeader[];
-  rowHeaders: PivotDataHeader[];
-  valueTitles: string[];
-  values: any[][];
-  valuesConstraints?: Constraint[];
-  constraintData?: ConstraintData;
+export function convertPivotConfigDtoToModel(config: any): PivotConfig {
+  if (!config) {
+    return config;
+  }
+  switch (config.version) {
+    case PivotConfigVersion.V1:
+      return convertPivotConfigDtoToModelV1(config);
+    default:
+      return convertPivotConfigDtoToModelV0(config);
+  }
 }
 
-export interface PivotDataHeader {
-  title: string;
-  children?: PivotDataHeader[];
-  targetIndex?: number;
-  color: string;
+function convertPivotConfigDtoToModelV1(config: any): PivotConfig {
+  return config;
+}
+
+function convertPivotConfigDtoToModelV0(config: any): PivotConfig {
+  return {version: PivotConfigVersion.V0, stemsConfigs: [config]};
 }

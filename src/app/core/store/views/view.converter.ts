@@ -23,6 +23,7 @@ import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/quer
 import {View} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart';
+import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -52,6 +53,8 @@ export function convertViewModelToDto(model: View): ViewDto {
 
 function convertViewConfigDtoToModel(perspective: Perspective, config: any): any {
   switch (perspective) {
+    case Perspective.Pivot:
+      return {...config, pivot: convertPivotConfigDtoToModel(config && config.pivot)};
     case Perspective.GanttChart:
       return {...config, ganttChart: convertGanttChartDtoConfigToModel(config && config.ganttChart)};
     default:

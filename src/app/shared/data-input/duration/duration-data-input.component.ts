@@ -106,7 +106,7 @@ export class DurationDataInputComponent implements OnChanges {
     const input = this.durationInput;
     setTimeout(() => {
       if (input && input.nativeElement) {
-        if (!input.nativeElement.value && isNumeric(this.value)) {
+        if ((!input.nativeElement.value || input.nativeElement.value === '0') && isNumeric(this.value)) {
           input.nativeElement.value = String(this.value);
         } else {
           input.nativeElement.value = formatDurationDataValue(this.value, this.constraintConfig, this.durationUnitsMap);

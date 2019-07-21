@@ -21,21 +21,21 @@ import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@
 import {
   PivotAttribute,
   PivotColumnAttribute,
-  PivotConfig,
   PivotRowAttribute,
   PivotRowColumnAttribute,
+  PivotStemConfig,
   PivotValueAttribute,
-} from '../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../util/pivot-data';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query} from '../../../../../core/store/navigation/query';
-import {cleanPivotAttribute, pivotAttributesAreSame} from '../../util/pivot-util';
+} from '../../../../../../core/store/pivots/pivot';
+import {PivotData} from '../../../util/pivot-data';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../../core/store/navigation/query';
+import {cleanPivotAttribute, pivotAttributesAreSame} from '../../../util/pivot-util';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {generateId} from '../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
-import {DRAG_DELAY} from '../../../../../core/constants';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
+import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {DRAG_DELAY} from '../../../../../../core/constants';
 
 @Component({
   selector: 'pivot-config',
@@ -45,7 +45,7 @@ import {DRAG_DELAY} from '../../../../../core/constants';
 })
 export class PivotConfigComponent {
   @Input()
-  public config: PivotConfig;
+  public config: PivotStemConfig;
 
   @Input()
   public pivotData: PivotData;
@@ -57,10 +57,10 @@ export class PivotConfigComponent {
   public linkTypes: LinkType[];
 
   @Input()
-  public query: Query;
+  public stem: QueryStem;
 
   @Output()
-  public configChange = new EventEmitter<PivotConfig>();
+  public configChange = new EventEmitter<PivotStemConfig>();
 
   public readonly rowsListId = `${generateId()}:row`;
   public readonly columnsListId = `${generateId()}:column`;
@@ -151,7 +151,7 @@ export class PivotConfigComponent {
       return;
     }
 
-    const config = deepObjectCopy<PivotConfig>(this.config);
+    const config = deepObjectCopy<PivotStemConfig>(this.config);
     const previousContainerArray = this.getConfigArrayByContainerId(event.previousContainer.id, config);
     const containerArray = this.getConfigArrayByContainerId(event.container.id, config);
 
@@ -201,7 +201,7 @@ export class PivotConfigComponent {
     return [this.rowsListId, this.columnsListId].includes(previousContainer.id) && container.id === this.valuesListId;
   }
 
-  private getConfigArrayByContainerId(id: string, config: PivotConfig): PivotAttribute[] {
+  private getConfigArrayByContainerId(id: string, config: PivotStemConfig): PivotAttribute[] {
     if (id === this.rowsListId) {
       return config.rowAttributes;
     } else if (id === this.columnsListId) {

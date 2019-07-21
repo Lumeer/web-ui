@@ -125,6 +125,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
     const allowedTypes = [
+      QueryItemType.Collection,
       QueryItemType.Attribute,
       QueryItemType.LinkAttribute,
       QueryItemType.Link,

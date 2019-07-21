@@ -303,7 +303,7 @@ export class TablesEffects {
         return ids;
       }, []);
 
-      const stem = {...query.stems[0], linkTypeIds};
+      const stem = {...query.stemsConfigs[0], linkTypeIds};
       const newQuery: Query = {...query, stems: [stem]};
 
       return new RouterAction.Go({

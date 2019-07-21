@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
-import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
+import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
+import {DataAggregationType} from '../../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({

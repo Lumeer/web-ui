@@ -20,17 +20,18 @@
 import {
   PivotAttribute,
   PivotConfig,
+  PivotConfigVersion,
   PivotRowColumnAttribute,
+  PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query.util';
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return (
@@ -42,6 +43,18 @@ export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): 
 }
 
 export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConfig): boolean {
+  const c1StemsConfigs = c1.stemsConfigs || [];
+  const c2StemsConfigs = c2.stemsConfigs || [];
+  const maxIndex = Math.max(c1StemsConfigs.length, c2StemsConfigs.length);
+  for (let i = 0; i < maxIndex; i++) {
+    if (pivotStemConfigHasDataTransformChange(c1StemsConfigs[i], c2StemsConfigs[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function pivotStemConfigHasDataTransformChange(c1: PivotStemConfig, c2: PivotStemConfig): boolean {
   if (!c1 && !c2) {
     return false;
   }
@@ -84,7 +97,7 @@ export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
   };
 }
 
-export function pivotConfigHasAdditionalValueLevel(config: PivotConfig): boolean {
+export function pivotStemConfigHasAdditionalValueLevel(config: PivotStemConfig): boolean {
   const columnsNum = (config.columnAttributes || []).length;
   const valuesNum = (config.valueAttributes || []).length;
   return (columnsNum === 0 && valuesNum > 0) || (columnsNum > 0 && valuesNum > 1);
@@ -97,14 +110,26 @@ export function checkOrTransformPivotConfig(
   linkTypes: LinkType[]
 ): PivotConfig {
   if (!config) {
-    return createDefaultConfig();
+    return createDefaultConfig(query);
   }
 
-  const attributesResourcesOrder = queryStemAttributesResourcesOrder(
-    query && query.stems && query.stems[0],
-    collections,
-    linkTypes
+  const stemsConfigs = ((query && query.stems) || []).map((stem, index) =>
+    checkOrTransformPivotStemConfig((config.stemsConfigs || [])[index], stem, collections, linkTypes)
   );
+  return {...config, stemsConfigs};
+}
+
+export function checkOrTransformPivotStemConfig(
+  config: PivotStemConfig,
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): PivotStemConfig {
+  if (!config) {
+    return createDefaultStemConfig();
+  }
+
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
     rowAttributes: checkOrTransformPivotAttributes<PivotRowColumnAttribute>(
       config.rowAttributes,
@@ -159,11 +184,21 @@ function checkOrTransformPivotAttributes<T extends PivotAttribute>(
   }, []);
 }
 
-function createDefaultConfig(): PivotConfig {
+function createDefaultConfig(query: Query): PivotConfig {
+  const stems = (query && query.stems) || [];
+  const stemsConfigs = stems.map(() => createDefaultStemConfig());
+  return {version: PivotConfigVersion.V1, stemsConfigs: stemsConfigs, mergeTables: true};
+}
+
+function createDefaultStemConfig(): PivotStemConfig {
   return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
 }
 
 export function pivotConfigIsEmpty(config: PivotConfig): boolean {
+  return (config.stemsConfigs || []).every(stemConfig => pivotStemConfigIsEmpty(stemConfig));
+}
+
+function pivotStemConfigIsEmpty(config: PivotStemConfig): boolean {
   return (
     ((config && config.rowAttributes) || []).length === 0 &&
     ((config && config.columnAttributes) || []).length === 0 &&

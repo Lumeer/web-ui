@@ -57,7 +57,7 @@ export class GanttChartConfigComponent {
     this.configChange.emit({...this.config, collections: collectionsConfig});
   }
 
-  public trackByCollection(index: number, stem: QueryStem): string {
-    return stem.collectionId;
+  public trackByStem(index: number, stem: QueryStem): string {
+    return stem.collectionId + index;
   }
 }

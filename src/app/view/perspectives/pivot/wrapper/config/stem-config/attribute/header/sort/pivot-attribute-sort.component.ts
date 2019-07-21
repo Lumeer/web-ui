@@ -24,10 +24,10 @@ import {
   PivotSort,
   PivotSortList,
   PivotSortValue,
-} from '../../../../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../../../../util/pivot-data';
-import {cleanPivotAttribute} from '../../../../../util/pivot-util';
-import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
+} from '../../../../../../../../../core/store/pivots/pivot';
+import {PivotData} from '../../../../../../util/pivot-data';
+import {cleanPivotAttribute} from '../../../../../../util/pivot-util';
+import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({

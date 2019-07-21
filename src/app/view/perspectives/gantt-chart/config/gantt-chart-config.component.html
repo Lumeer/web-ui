@@ -1,4 +1,4 @@
-<gantt-chart-collection-config *ngFor="let stem of query?.stems; trackBy:trackByCollection"
+<gantt-chart-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem"
                                class="d-block mt-4"
                                [config]="config?.collections[stem.collectionId] || {}"
                                [stem]="stem"

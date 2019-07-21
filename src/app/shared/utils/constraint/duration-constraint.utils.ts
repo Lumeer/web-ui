@@ -205,34 +205,34 @@ export function formatDurationDataValue(
     let usedNumUnits = 0;
     const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
 
-    return (
-      sortedDurationUnits.reduce((result, unit) => {
-        const unitToMillis = durationToMillisMap[unit];
-        if (unitToMillis) {
-          const unitToMillisBig = new Big(unitToMillis);
-          let numUnits = currentDuration.div(unitToMillisBig).round(0, RoundingMode.RoundDown);
+    const value = sortedDurationUnits.reduce((result, unit) => {
+      const unitToMillis = durationToMillisMap[unit];
+      if (unitToMillis) {
+        const unitToMillisBig = new Big(unitToMillis);
+        let numUnits = currentDuration.div(unitToMillisBig).round(0, RoundingMode.RoundDown);
 
-          if (usedNumUnits >= maximumUnits) {
-            return result;
-          }
-
-          currentDuration = currentDuration.sub(numUnits.times(unitToMillisBig));
-
-          // when maxUnits is set, rounding is needed
-          if (usedNumUnits + 1 === maximumUnits && currentDuration.cmp(unitToMillisBig.div(2)) === Comparison.GT) {
-            numUnits = numUnits.add(1);
-          }
-
-          if (numUnits.cmp(new Big(0)) === Comparison.GT) {
-            const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
-            usedNumUnits++;
-            return result + numUnits.toFixed(0) + unitString;
-          }
+        if (usedNumUnits >= maximumUnits) {
+          return result;
         }
 
-        return result;
-      }, '') || '0'
-    );
+        currentDuration = currentDuration.sub(numUnits.times(unitToMillisBig));
+
+        // when maxUnits is set, rounding is needed
+        if (usedNumUnits + 1 === maximumUnits && currentDuration.cmp(unitToMillisBig.div(2)) === Comparison.GT) {
+          numUnits = numUnits.add(1);
+        }
+
+        if (numUnits.cmp(new Big(0)) === Comparison.GT) {
+          const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
+          usedNumUnits++;
+          return result + numUnits.toFixed(0) + unitString;
+        }
+      }
+
+      return result;
+    }, '');
+
+    return value || (toNumber(saveValue) > 0 ? '0' : '');
   }
 
   return saveValue;

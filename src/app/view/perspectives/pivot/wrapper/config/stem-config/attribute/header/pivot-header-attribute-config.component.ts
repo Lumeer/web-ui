@@ -18,14 +18,14 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../../../util/pivot-data';
-import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
-import {Constraint} from '../../../../../../../core/model/data/constraint';
+import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
+import {PivotData} from '../../../../../util/pivot-data';
+import {AttributesResource, AttributesResourceType} from '../../../../../../../../core/model/resource';
+import {Constraint} from '../../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SelectItemWithConstraintId} from '../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {Collection} from '../../../../../../../core/store/collections/collection';
-import {getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
+import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {Collection} from '../../../../../../../../core/store/collections/collection';
+import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'pivot-header-attribute-config',

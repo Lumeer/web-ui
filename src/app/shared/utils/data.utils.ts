@@ -405,7 +405,7 @@ export function formatPercentageDataValue(value: any, config: PercentageConstrai
     return '';
   }
 
-  if (typeof value === 'number') {
+  if (isNumeric(value) && convertToBig(value)) {
     return convertPercentageValue(String(value), config.decimals, suffix) + suffix;
   }
 
@@ -422,11 +422,11 @@ export function formatPercentageStringValue(value: string, config: PercentageCon
   if (percChars === 1 && value.endsWith('%')) {
     const prefix = value.substring(0, value.length - 1);
 
-    if (!isNaN(+prefix)) {
+    if (isNumeric(prefix)) {
       return prefix + suffix;
     }
   } else if (percChars === 0) {
-    if (!isNaN(+value)) {
+    if (isNumeric(value) && convertToBig(value)) {
       return convertPercentageValue(value, config.decimals, suffix) + suffix;
     }
   }
@@ -435,7 +435,7 @@ export function formatPercentageStringValue(value: string, config: PercentageCon
 }
 
 function convertPercentageValue(value: string, decimals?: number, suffix = ''): string {
-  let big = new Big(value);
+  let big = convertToBig(value);
   big.e = big.e + 2;
 
   // prevents extra zeroes after moving the decimal point

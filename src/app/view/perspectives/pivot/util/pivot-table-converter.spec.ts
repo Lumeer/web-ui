@@ -22,9 +22,10 @@ import {PivotData} from './pivot-data';
 import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {COLOR_GRAY200, COLOR_GRAY100} from '../../../../core/constants';
+import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
+import {ConstraintType} from '../../../../core/model/data/constraint';
 
-describe('Pivot table converter', () => {
+fdescribe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
 
   function createDummyAttribute(): PivotAttribute {
@@ -507,6 +508,7 @@ describe('Pivot table converter', () => {
       ],
       columnHeaders: [{title: 'X', targetIndex: 0, color: undefined}, {title: 'Y', targetIndex: 1, color: undefined}],
       values: [['10%', '20%'], ['20%', null], ['30%', '50%'], ['80%', '90%'], ['10%', '90%'], [null, '40%']],
+      valuesConstraints: [{type: ConstraintType.Percentage, config: {}}, {type: ConstraintType.Percentage, config: {}}],
     };
     const config: PivotConfig = {
       columnAttributes: [],
@@ -528,7 +530,7 @@ describe('Pivot table converter', () => {
 
     expect(pivotTable.cells[8][2].value).toEqual('');
     expect(pivotTable.cells[8][3].value).toEqual('40%');
-    expect(pivotTable.cells[9][2].value).toEqual('0');
+    expect(pivotTable.cells[9][2].value).toEqual('0%');
     expect(pivotTable.cells[9][3].value).toEqual('40%');
 
     expect(pivotTable.cells[10][2].value).toEqual('150%');

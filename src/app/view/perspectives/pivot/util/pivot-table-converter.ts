@@ -27,12 +27,13 @@ import {
   PivotValueType,
 } from '../../../../core/store/pivots/pivot';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
-import {pivotConfigHasAdditionalValueLevel} from './pivot-util';
+import {pivotStemConfigHasAdditionalValueLevel} from './pivot-util';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import Big from 'big.js';
+import {formatDataValue} from '../../../../shared/utils/data.utils';
 
 interface HeaderGroupInfo {
   background: string;
@@ -84,7 +85,8 @@ export class PivotTableConverter {
     this.valueTypeInfo = getValuesTypeInfo(data.values, config);
     this.config = config;
     this.rowLevels = (config.rowAttributes || []).length;
-    this.columnLevels = (config.columnAttributes || []).length + (pivotConfigHasAdditionalValueLevel(config) ? 1 : 0);
+    this.columnLevels =
+      (config.columnAttributes || []).length + (pivotStemConfigHasAdditionalValueLevel(config) ? 1 : 0);
     const hasValue = (config.valueAttributes || []).length > 0;
     const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
     if ((this.data.rowHeaders || []).length > 0) {
@@ -242,27 +244,35 @@ export class PivotTableConverter {
     const valueAttribute = this.config.valueAttributes[valueIndex];
     const valueTypeInfo = this.valueTypeInfo[valueIndex];
     if (!valueTypeInfo || !valueAttribute.valueType || valueAttribute.valueType === PivotValueType.Default) {
-      return value;
+      return this.formatValueByConstraint(value, valueIndex);
     }
 
     if (valueAttribute.valueType === PivotValueType.AllPercentage) {
-      return this.divideValues(value, valueTypeInfo.sum);
+      return this.formatValueByConstraint(this.divideValues(value, valueTypeInfo.sum), valueIndex);
     } else if (valueAttribute.valueType === PivotValueType.ColumnPercentage) {
       const columnsDividers = columns.reduce((dividers, column) => {
         dividers.push(valueTypeInfo.sumsColumns[column]);
         return dividers;
       }, []);
       const columnsDivider = aggregateDataValues(DataAggregationType.Sum, columnsDividers);
-      return this.divideValues(value, columnsDivider);
+      return this.formatValueByConstraint(this.divideValues(value, columnsDivider), valueIndex);
     } else if (valueAttribute.valueType === PivotValueType.RowPercentage) {
       const rowsDividers = rows.reduce((dividers, row) => {
         dividers.push(valueTypeInfo.sumsRows[row]);
         return dividers;
       }, []);
       const rowsDivider = aggregateDataValues(DataAggregationType.Sum, rowsDividers);
-      return this.divideValues(value, rowsDivider);
+      return this.formatValueByConstraint(this.divideValues(value, rowsDivider), valueIndex);
     }
 
+    return this.formatValueByConstraint(value, valueIndex);
+  }
+
+  private formatValueByConstraint(value: any, valueIndex: number): any {
+    const constraint = this.data.valuesConstraints && this.data.valuesConstraints[valueIndex];
+    if (constraint) {
+      return formatDataValue(value, constraint, this.data.constraintData);
+    }
     return value;
   }
 
@@ -277,10 +287,6 @@ export class PivotTableConverter {
       } else {
         return '0%';
       }
-    } else if (String(value).endsWith('%') && String(divider).endsWith('%')) {
-      const valueNum = toNumber(value.substring(0, value.length - 1));
-      const dividerNum = toNumber(divider.substring(0, divider.length - 1));
-      return `${(valueNum / dividerNum) * 100}%`;
     }
 
     return '';
@@ -542,16 +548,6 @@ export class PivotTableConverter {
         cells[i][column] && (cells[i][column].background = columnGroupInfo.background);
       }
     }
-  }
-
-  private getValuesFromCells(cells: PivotTableCell[][], rows: number[], columns: number[]): string[] {
-    const values = [];
-    for (const row of rows) {
-      for (const column of columns) {
-        values.push(cells[row][column].value);
-      }
-    }
-    return values;
   }
 
   private formatCellsValues(cells: PivotTableCell[][]) {
@@ -896,13 +892,8 @@ function getNumericValuesSummary(values: any[][], rows: number[], columns: numbe
   for (const row of rows) {
     for (const column of columns) {
       const value = values[row][column];
-      if (isNotNullOrUndefined(value)) {
-        if (isNumeric(value)) {
-          sum += toNumber(value);
-        } else if (String(value).endsWith('%')) {
-          const stringValue = String(value);
-          sum += toNumber(stringValue.substring(0, stringValue.length - 1));
-        }
+      if (isNotNullOrUndefined(value) && isNumeric(value)) {
+        sum += toNumber(value);
       }
     }
   }
