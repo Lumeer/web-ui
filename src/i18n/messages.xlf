@@ -32,7 +32,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
@@ -44,7 +44,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
@@ -83,7 +83,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="collection.document.count" datatype="html">
         <source>Record Count</source>
@@ -794,7 +794,7 @@
         <source>Remove</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source>
@@ -1440,14 +1440,6 @@
           <context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
-        <source>
-            (click the icon to change it)
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
         <source>Required</source>
         <context-group purpose="location">
@@ -1472,7 +1464,7 @@
         <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
@@ -1487,7 +1479,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
         <source>Create new linked table</source>
@@ -1980,13 +1972,24 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
+      </trans-unit><trans-unit id="constraint.duration.description" datatype="html">
         <source>
-      Duration type
+      Stores time duration for instance of a task or an event.
+      The duration is specified in a format that is easy to write and read (e.g. 1h30m = 1 hour and 30 minutes).
+      You can switch between a work type of duration where each day has 8 work hours,
+      or normal time where a day has 24 hours.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.duration.type.label" datatype="html">
+        <source>
+      Time scope
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>
@@ -1994,13 +1997,13 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">23</context>
         </context-group>
-      </trans-unit><trans-unit id="c95566f50f51e707b7023cf7575564cf244fa3d7" datatype="html">
-        <source>{VAR_SELECT, select, Work {Work} Classic {Classic} Custom {Custom} }</source>
+      </trans-unit><trans-unit id="df3c1e46f81b5e32adeff5b4a2f38f739681f86b" datatype="html">
+        <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.example" datatype="html">
         <source>
@@ -2008,7 +2011,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
         <source>
@@ -2079,7 +2082,7 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.code.placeholder" datatype="html">
-        <source>Enter code</source>
+        <source>Enter code (e.g. LMR)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
           <context context-type="linenumber">18</context>
@@ -2108,13 +2111,21 @@
           <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.pattern" datatype="html">
+        <source>
+            Code must contain only characters and digits.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
         <source>
             Sorry, this code is already taken. Try another!
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.name.label" datatype="html">
         <source>Name:</source>
@@ -2128,17 +2139,17 @@
           <context context-type="sourcefile">app/dialog/create-resource/form/name-input/resource-name-input.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
-        <source>Your organization is missing a project, create one first!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
-        <source>Create project in organization:</source>
+        <source>Create a new project in organization:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
+        <source>Your organization is missing a project. To continue, please create one.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
         <source>Choose template</source>
@@ -2529,6 +2540,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.position.saved" datatype="html">
+        <source>
+    Save map position to view
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/position-checkbox/map-position-checkbox.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source>
@@ -4222,6 +4241,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
+        <source>(click the icon to change it)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/dialog/create-resource/form/create-resource-dialog-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="dialog.feedback.success" datatype="html">
         <source>Your feedback has been sent.</source>
         <context-group purpose="location">
@@ -4406,7 +4432,28 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
-        <source>(1/7) Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source>
+        <source>Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.description.searchViews" datatype="html">
+        <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.title.tablesView" datatype="html">
+        <source>See the tables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.description.tablesTab" datatype="html">
+        <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4420,7 +4467,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.home" datatype="html">
-        <source>(2/7) By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
+        <source>By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4434,7 +4481,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.search" datatype="html">
-        <source>(3/7) The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
+        <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4448,7 +4495,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.perspectives" datatype="html">
-        <source>(4/7) When you open your table or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.</source>
+        <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4462,7 +4509,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.views" datatype="html">
-        <source>(5/7) You might connect multiple tables in relations, select the Table perspective and hide some columns for example. You don&apos;t need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
+        <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4476,7 +4523,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.videos" datatype="html">
-        <source>(6/7) Here you can find a list of one-minute videos that explain controls on each page.</source>
+        <source>Here you can find a list of one-minute videos that explain controls on each page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4490,7 +4537,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.userMenu" datatype="html">
-        <source>(7/7) You can always return to this tour by invoking it from the user menu.</source>
+        <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4644,7 +4691,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="map.content.location.error" datatype="html">
-        <source>Failed to save new location</source>
+        <source>I could not save the new location.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>

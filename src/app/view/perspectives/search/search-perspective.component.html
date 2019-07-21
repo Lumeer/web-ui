@@ -17,7 +17,7 @@
              class="nav-link"
              i18n="@@search.tab.views">Views</a>
         </li>
-        <li role="presentation" class="nav-item">
+        <li role="presentation" class="nav-item" data-tour="tables-tab">
           <a [routerLink]="'collections'"
              [queryParams]="{query: stringifyQuery()}"
              [class.active]="isLinkActive('collections')"

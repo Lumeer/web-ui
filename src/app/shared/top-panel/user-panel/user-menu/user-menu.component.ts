@@ -18,7 +18,7 @@
  */
 import {ChangeDetectionStrategy, Component, HostListener, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, timer} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
 import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
@@ -38,6 +38,7 @@ import {selectAllCollections} from '../../../../core/store/collections/collectio
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
+import {selectAllViews} from '../../../../core/store/views/views.state';
 
 @Component({
   selector: 'user-menu',
@@ -87,17 +88,23 @@ export class UserMenuComponent {
     this.bindServiceLimits();
 
     combineLatest(
+      timer(2000, -1),
       this.store$.pipe(select(selectCurrentUser)),
       this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllViews)),
       this.store$.pipe(select(selectUrl))
     )
       .pipe(
-        filter(([user, collections, url]) => !!user && !!collections && !!url),
-        filter(([user, collections, url]) => this.isViewSearchAll(url)),
-        filter(([user, collections, url]) => !user.wizardDismissed && collections.length === 0),
+        filter(
+          ([timerVal, user, collections, views, url]) => timerVal > 0 && !!user && !!collections && !!views && !!url
+        ),
+        filter(([timerVal, user, collections, views, url]) => this.isViewSearchAll(url)),
+        filter(([timerVal, user, collections, views, url]) => !user.wizardDismissed),
         first()
       )
-      .subscribe(() => this.startTour());
+      .subscribe(([timerVal, user, collections, views, url]) =>
+        this.startTour(false, collections.length, views.length)
+      );
   }
 
   private isViewSearchAll(url: string): boolean {
@@ -129,10 +136,16 @@ export class UserMenuComponent {
 
   public onStartTour(): void {
     this.recallWizard();
-    this.startTour(true);
+
+    combineLatest(this.store$.pipe(select(selectAllCollections)), this.store$.pipe(select(selectAllViews)))
+      .pipe(
+        filter(([collections, views]) => !!collections && !!views),
+        first()
+      )
+      .subscribe(([collections, views]) => this.startTour(true, collections.length, views.length));
   }
 
-  private startTour(manual?: boolean): void {
+  private startTour(manual: boolean, collectionsCount: number, viewsCount: number): void {
     if (!this.starting && !this.dismissing) {
       this.starting = true;
 
@@ -151,7 +164,7 @@ export class UserMenuComponent {
 
             if (organizationCode && projectCode) {
               this.router.navigate(['/', 'w', organizationCode, projectCode, 'view', 'search', 'all']).then(() => {
-                this.kickstartTour();
+                this.kickstartTour(collectionsCount, viewsCount);
               });
             } else {
               this.store$.dispatch(
@@ -167,16 +180,16 @@ export class UserMenuComponent {
           });
       } else {
         // we already checked the url
-        this.kickstartTour();
+        this.kickstartTour(collectionsCount, viewsCount);
       }
     }
   }
 
-  private kickstartTour() {
+  private kickstartTour(collectionsCount: number, viewsCount: number) {
     setTimeout(() => {
       // trick to allow access to all document elements
       this.driver.reset(true);
-      this.defineSteps();
+      this.defineSteps(collectionsCount, viewsCount);
       this.driver.start();
       this.starting = false;
     }, 500);
@@ -205,7 +218,14 @@ export class UserMenuComponent {
     }
   }
 
-  private defineSteps(): void {
+  private getStepCounter(stepNo: number, totalSteps: number): string {
+    return '(' + stepNo + '/' + totalSteps + ') ';
+  }
+
+  private defineSteps(collectionsCount: number, viewsCount: number): void {
+    const totalSteps = viewsCount > 0 ? 8 : 7;
+    let stepNo = 1;
+
     const welcomeTitle = this.i18n({
       id: 'appTour.title.welcome',
       value: 'Welcome to Lumeer',
@@ -213,115 +233,175 @@ export class UserMenuComponent {
     const welcomeDescription = this.i18n({
       id: 'appTour.description.welcome',
       value:
-        '(1/7) Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.',
+        'Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.',
     });
 
-    this.driver.defineSteps([
-      {
-        element: '[data-tour="collection-add"]',
+    const driverSteps = [];
+
+    if (viewsCount === 0) {
+      if (collectionsCount === 0) {
+        // views = 0, collections = 0
+        driverSteps.push({
+          element: '[data-tour="collection-create"]',
+          popover: {
+            title: welcomeTitle,
+            description: this.getStepCounter(stepNo++, totalSteps) + welcomeDescription,
+            position: 'bottom',
+          },
+        });
+      } else {
+        // views = 0, collections > 0
+        driverSteps.push({
+          element: '[data-tour="collection-add"]',
+          popover: {
+            title: welcomeTitle,
+            description: this.getStepCounter(stepNo++, totalSteps) + welcomeDescription,
+            position: 'right',
+          },
+        });
+      }
+    } else {
+      // views > 0, collections?
+      driverSteps.push({
+        element: '[data-tour="search-views"]',
         popover: {
           title: welcomeTitle,
-          description: welcomeDescription,
-          position: 'right',
+          description:
+            this.getStepCounter(stepNo++, totalSteps) +
+            this.i18n({
+              id: 'appTour.description.searchViews',
+              value:
+                'Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!',
+            }),
+          position: 'top',
         },
-      },
-      {
-        element: '[data-tour="collection-create"]',
-        popover: {
-          title: welcomeTitle,
-          description: welcomeDescription,
-          position: 'bottom',
-        },
-      },
-      {
-        element: '[data-tour="logo"]',
+      });
+      driverSteps.push({
+        element: '[data-tour="tables-tab"]',
         popover: {
           title: this.i18n({
-            id: 'appTour.title.home',
-            value: 'Get home',
+            id: 'appTour.title.tablesView',
+            value: 'See the tables',
           }),
-          description: this.i18n({
+          description:
+            this.getStepCounter(stepNo++, totalSteps) +
+            this.i18n({
+              id: 'appTour.description.tablesTab',
+              value: 'The raw data are stored in Tables which can be accessed on their own tab.',
+            }),
+          position: 'right',
+        },
+      });
+    }
+
+    driverSteps.push({
+      element: '[data-tour="logo"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.home',
+          value: 'Get home',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
             id: 'appTour.description.home',
             value:
-              '(2/7) By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
+              'By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
           }),
-          position: 'right',
-        },
+        position: 'right',
       },
-      {
-        element: '[data-tour="search-box"]',
-        popover: {
-          title: this.i18n({
-            id: 'appTour.title.search',
-            value: 'Search for information',
-          }),
-          description: this.i18n({
+    });
+
+    driverSteps.push({
+      element: '[data-tour="search-box"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.search',
+          value: 'Search for information',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
             id: 'appTour.description.search',
             value:
-              '(3/7) The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.',
+              'The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.',
           }),
-          position: 'bottom',
-        },
+        position: 'bottom',
       },
-      {
-        element: '[data-tour="perspective"]',
-        popover: {
-          title: this.i18n({
-            id: 'appTour.title.perspectives',
-            value: 'Perspectives',
-          }),
-          description: this.i18n({
+    });
+
+    driverSteps.push({
+      element: '[data-tour="perspective"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.perspectives',
+          value: 'Perspectives',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
             id: 'appTour.description.perspectives',
             value:
-              '(4/7) When you open your table or search results, try selecting a different visual perspective. This is similar to changing glasses through which you can see your information in various ways.',
+              'When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.',
           }),
-          position: 'right',
-        },
+        position: 'right',
       },
-      {
-        element: '[data-tour="view"]',
-        popover: {
-          title: this.i18n({
-            id: 'appTour.title.views',
-            value: 'Views and sharing',
-          }),
-          description: this.i18n({
+    });
+
+    driverSteps.push({
+      element: '[data-tour="view"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.views',
+          value: 'Views and sharing',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
             id: 'appTour.description.views',
             value:
-              "(5/7) You might connect multiple tables in relations, select the Table perspective and hide some columns for example. You don't need to repeat the steps each time. Just give your view, or page if you will, a name and store it. Later you can access the stored view on the home page or you can share the view with your colleagues.",
+              'Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.',
           }),
-          position: 'bottom',
-        },
+        position: 'bottom',
       },
-      {
-        element: '[data-tour="video-menu"]',
-        popover: {
-          title: this.i18n({
-            id: 'appTour.title.videos',
-            value: 'Help with Lumeer',
-          }),
-          description: this.i18n({
+    });
+
+    driverSteps.push({
+      element: '[data-tour="video-menu"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.videos',
+          value: 'Help with Lumeer',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
             id: 'appTour.description.videos',
-            value: '(6/7) Here you can find a list of one-minute videos that explain controls on each page.',
+            value: 'Here you can find a list of one-minute videos that explain controls on each page.',
           }),
-          position: 'left',
-        },
+        position: 'left',
       },
-      {
-        element: '[data-tour="user-menu"]',
-        popover: {
-          title: this.i18n({
-            id: 'appTour.title.userMenu',
-            value: 'Return to this Tour',
-          }),
-          description: this.i18n({
+    });
+
+    driverSteps.push({
+      element: '[data-tour="user-menu"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.userMenu',
+          value: 'Return to this Tour',
+        }),
+        description:
+          this.getStepCounter(stepNo, totalSteps) +
+          this.i18n({
             id: 'appTour.description.userMenu',
-            value: '(7/7) You can always return to this tour by invoking it from the user menu.',
+            value:
+              'You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.',
           }),
-          position: 'left',
-        },
+        position: 'left',
       },
-    ]);
+    });
+
+    this.driver.defineSteps(driverSteps);
   }
 
   @HostListener('document:click', ['$event'])
