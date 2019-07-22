@@ -87,13 +87,13 @@ export class UserMenuComponent {
     this.url$ = this.store$.pipe(select(selectUrl));
     this.bindServiceLimits();
 
-    combineLatest(
-      timer(2000, -1),
+    combineLatest([
+      timer(5000, -1),
       this.store$.pipe(select(selectCurrentUser)),
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllViews)),
-      this.store$.pipe(select(selectUrl))
-    )
+      this.store$.pipe(select(selectUrl)),
+    ])
       .pipe(
         filter(
           ([timerVal, user, collections, views, url]) => timerVal > 0 && !!user && !!collections && !!views && !!url
