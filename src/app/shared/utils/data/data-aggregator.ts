@@ -24,7 +24,7 @@ import {findAttributeConstraint} from '../../../core/store/collections/collectio
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {Query} from '../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query.util';
 import {isNullOrUndefined} from '../common.utils';
 import {formatDataValue} from '../data.utils';
@@ -82,16 +82,12 @@ export class DataAggregator {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    query: Query,
+    queryStem: QueryStem,
     constraintData?: ConstraintData
   ) {
     this.constraintData = constraintData;
 
-    this.attributesResourcesOrder = queryStemAttributesResourcesOrder(
-      query.stems && query.stems[0],
-      collections,
-      linkTypes
-    );
+    this.attributesResourcesOrder = queryStemAttributesResourcesOrder(queryStem, collections, linkTypes);
     this.dataMap = createDataMap(this.attributesResourcesOrder, documents, linkTypes, linkInstances);
   }
 

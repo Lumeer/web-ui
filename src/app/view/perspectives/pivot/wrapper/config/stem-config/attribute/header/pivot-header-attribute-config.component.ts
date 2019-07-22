@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../../../../util/pivot-data';
+import {PivotData, PivotStemData} from '../../../../../util/pivot-data';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../../core/model/resource';
 import {Constraint} from '../../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -46,7 +46,7 @@ export class PivotHeaderAttributeConfigComponent {
   public isRow: boolean;
 
   @Input()
-  public pivotData: PivotData;
+  public pivotData: PivotStemData;
 
   @Output()
   public attributeSelect = new EventEmitter<PivotRowColumnAttribute>();

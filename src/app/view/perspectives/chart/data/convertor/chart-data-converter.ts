@@ -98,7 +98,14 @@ export class ChartDataConverter {
     this.constraintData = constraintData;
 
     const sortedDocuments = this.sortDocuments(documents, config);
-    this.dataAggregator.updateData(collections, sortedDocuments, linkTypes, linkInstances, query, constraintData);
+    this.dataAggregator.updateData(
+      collections,
+      sortedDocuments,
+      linkTypes,
+      linkInstances,
+      query.stems && query.stems[0],
+      constraintData
+    );
   }
 
   private sortDocuments(documents: DocumentModel[], config: ChartConfig): DocumentModel[] {

@@ -1,3 +1,22 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {PivotConfig, PivotStemConfig} from '../../../../../core/store/pivots/pivot';
 import {PivotData} from '../../util/pivot-data';
@@ -33,35 +52,7 @@ export class PivotConfigWrapperComponent {
   public onStemConfigChange(stemConfig: PivotStemConfig, index: number) {
     const config = deepObjectCopy<PivotConfig>(this.config);
     config.stemsConfigs[index] = stemConfig;
-    if (config.mergeTables) {
-      this.syncConnectedConfig(config, stemConfig, index);
-    }
     this.configChange.emit(config);
-  }
-
-  public syncConnectedConfig(config: PivotConfig, newStemConfig: PivotStemConfig, index: number) {
-    for (let i = 0; i < config.stemsConfigs.length; i++) {
-      if (i === index) {
-        continue;
-      }
-      const stemConfig = config.stemsConfigs[i];
-      if (stemConfig.rowAttributes && newStemConfig.rowAttributes) {
-        (newStemConfig.rowAttributes || []).forEach((attribute, index) => {
-          if (stemConfig.rowAttributes[index]) {
-            stemConfig.rowAttributes[index].showSums = attribute.showSums;
-            stemConfig.rowAttributes[index].sort = attribute.sort;
-          }
-        });
-      }
-      if (stemConfig.columnAttributes && newStemConfig.columnAttributes) {
-        (newStemConfig.columnAttributes || []).forEach((attribute, index) => {
-          if (stemConfig.columnAttributes[index]) {
-            stemConfig.columnAttributes[index].showSums = attribute.showSums;
-            stemConfig.columnAttributes[index].sort = attribute.sort;
-          }
-        });
-      }
-    }
   }
 
   public onMergeTablesChange(checked: boolean) {

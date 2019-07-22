@@ -29,7 +29,7 @@ export interface Pivot {
 }
 
 export interface PivotConfig {
-  version: PivotConfigVersion;
+  version?: PivotConfigVersion;
   stemsConfigs: PivotStemConfig[];
   mergeTables?: boolean;
 }

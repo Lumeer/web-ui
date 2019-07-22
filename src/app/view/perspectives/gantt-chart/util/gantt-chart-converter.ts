@@ -96,9 +96,9 @@ export class GanttChartConverter {
     query: Query
   ): GanttChartTask[] {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
-    this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, query, constraintData);
 
     return ((query && query.stems) || []).reduce((tasks, stem) => {
+      this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
       tasks.push(...this.convertByStem(stem));
       return tasks;
     }, []);

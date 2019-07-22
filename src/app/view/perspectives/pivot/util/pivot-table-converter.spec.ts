@@ -19,53 +19,51 @@
 
 import {PivotTableConverter} from './pivot-table-converter';
 import {PivotData} from './pivot-data';
-import {PivotAttribute, PivotConfig, PivotValueAttribute} from '../../../../core/store/pivots/pivot';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
 import {ConstraintType} from '../../../../core/model/data/constraint';
 
-fdescribe('Pivot table converter', () => {
+describe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
 
-  function createDummyAttribute(): PivotAttribute {
-    return {resourceType: AttributesResourceType.Collection, resourceId: 'aaa', attributeId: 'a1', resourceIndex: 0};
-  }
-
-  function createDummyValueAttribute(): PivotValueAttribute {
-    return {
-      resourceType: AttributesResourceType.Collection,
-      resourceId: 'aaa',
-      attributeId: 'a1',
-      resourceIndex: 0,
-      aggregation: DataAggregationType.Sum,
-    };
-  }
-
   it('should return empty rows', () => {
-    const data: PivotData = {valueTitles: [], rowHeaders: [], columnHeaders: [], values: []};
-    const config: PivotConfig = {rowAttributes: [], columnAttributes: [], valueAttributes: []};
-    expect(converter.transform(data, config)).toEqual({cells: []});
+    const data: PivotData = {
+      data: [
+        {
+          valueTitles: [],
+          rowHeaders: [],
+          columnHeaders: [],
+          values: [],
+          rowSorts: [],
+          rowShowSums: [],
+          columnSorts: [],
+          columnShowSums: [],
+          valueTypes: [],
+        },
+      ],
+    };
+    expect(converter.transform(data)).toEqual([{cells: []}]);
   });
 
   it('should return table by only values', () => {
     const data: PivotData = {
-      valueTitles: ['A', 'B', 'C'],
-      rowHeaders: [],
-      columnHeaders: [
-        {title: 'A', targetIndex: 0, color: undefined},
-        {title: 'B', targetIndex: 1, color: undefined},
-        {title: 'C', targetIndex: 2, color: undefined},
+      data: [
+        {
+          valueTitles: ['A', 'B', 'C'],
+          rowHeaders: [],
+          columnHeaders: [
+            {title: 'A', targetIndex: 0, color: undefined},
+            {title: 'B', targetIndex: 1, color: undefined},
+            {title: 'C', targetIndex: 2, color: undefined},
+          ],
+          values: [[10, 20, 30]],
+          rowShowSums: [],
+          columnShowSums: [],
+          hasAdditionalColumnLevel: true,
+        },
       ],
-      values: [[10, 20, 30]],
-    };
-    const config: PivotConfig = {
-      rowAttributes: [],
-      columnAttributes: [],
-      valueAttributes: [createDummyValueAttribute(), createDummyValueAttribute(), createDummyValueAttribute()],
     };
 
-    const pivotTable = converter.transform(data, config);
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells.length).toEqual(2);
     expect(pivotTable.cells[0].length).toEqual(3);
     expect(pivotTable.cells[1].length).toEqual(3);
@@ -118,33 +116,39 @@ fdescribe('Pivot table converter', () => {
 
   it('should return table by only rows', () => {
     const data: PivotData = {
-      valueTitles: [],
-      rowHeaders: [
+      data: [
         {
-          title: 'A',
-          children: [{title: 'a1', targetIndex: 0, color: undefined}, {title: 'a2', targetIndex: 1, color: undefined}],
-          color: undefined,
-        },
-        {title: 'B', children: [{title: 'a1', targetIndex: 2, color: undefined}], color: undefined},
-        {
-          title: 'C',
-          children: [
-            {title: 'a2', targetIndex: 3, color: undefined},
-            {title: 'a3', targetIndex: 4, color: undefined},
-            {title: 'a4', targetIndex: 5, color: undefined},
+          valueTitles: [],
+          rowHeaders: [
+            {
+              title: 'A',
+              children: [
+                {title: 'a1', targetIndex: 0, color: undefined},
+                {title: 'a2', targetIndex: 1, color: undefined},
+              ],
+              color: undefined,
+            },
+            {title: 'B', children: [{title: 'a1', targetIndex: 2, color: undefined}], color: undefined},
+            {
+              title: 'C',
+              children: [
+                {title: 'a2', targetIndex: 3, color: undefined},
+                {title: 'a3', targetIndex: 4, color: undefined},
+                {title: 'a4', targetIndex: 5, color: undefined},
+              ],
+              color: undefined,
+            },
           ],
-          color: undefined,
+          columnHeaders: [],
+          values: [],
+          rowShowSums: [true, true],
+          columnShowSums: [],
+          hasAdditionalColumnLevel: false,
         },
       ],
-      columnHeaders: [],
-      values: [],
     };
-    const config: PivotConfig = {
-      rowAttributes: [{...createDummyAttribute(), showSums: true}, {...createDummyAttribute(), showSums: true}],
-      columnAttributes: [],
-      valueAttributes: [],
-    };
-    const pivotTable = converter.transform(data, config);
+
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells.length).toEqual(10);
     expect(pivotTable.cells[0][0]).toEqual({
       value: 'A',
@@ -260,40 +264,44 @@ fdescribe('Pivot table converter', () => {
     });
     expect(pivotTable.cells[9][1]).toEqual(undefined);
 
-    const configWithoutSums: PivotConfig = {
-      rowAttributes: [createDummyAttribute(), createDummyAttribute()],
-      columnAttributes: [],
-      valueAttributes: [],
-    };
-    const pivotTableWithoutSums = converter.transform(data, configWithoutSums);
+    const dataWithoutSums: PivotData = {...data, data: [{...data.data[0], rowShowSums: [false, false]}]};
+    const pivotTableWithoutSums = converter.transform(dataWithoutSums)[0];
     expect(pivotTableWithoutSums.cells.length).toEqual(6);
   });
 
   it('should return table by only columns', () => {
     const data: PivotData = {
-      valueTitles: [],
-      rowHeaders: [],
-      columnHeaders: [
-        {title: 'X', children: [{title: 'a1', targetIndex: 0, color: undefined}], color: undefined},
+      data: [
         {
-          title: 'Y',
-          children: [{title: 'a1', targetIndex: 1, color: undefined}, {title: 'a2', targetIndex: 2, color: undefined}],
-          color: undefined,
-        },
-        {
-          title: 'Z',
-          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
-          color: undefined,
+          valueTitles: [],
+          rowHeaders: [],
+          columnHeaders: [
+            {title: 'X', children: [{title: 'a1', targetIndex: 0, color: undefined}], color: undefined},
+            {
+              title: 'Y',
+              children: [
+                {title: 'a1', targetIndex: 1, color: undefined},
+                {title: 'a2', targetIndex: 2, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'Z',
+              children: [
+                {title: 'a2', targetIndex: 3, color: undefined},
+                {title: 'a3', targetIndex: 4, color: undefined},
+              ],
+              color: undefined,
+            },
+          ],
+          values: [],
+          columnShowSums: [true, true],
+          rowShowSums: [],
         },
       ],
-      values: [],
     };
-    const config: PivotConfig = {
-      columnAttributes: [{...createDummyAttribute(), showSums: true}, {...createDummyAttribute(), showSums: true}],
-      rowAttributes: [],
-      valueAttributes: [],
-    };
-    const pivotTable = converter.transform(data, config);
+
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells.length).toEqual(2);
     expect(pivotTable.cells[0].length).toEqual(9);
     expect(pivotTable.cells[0][0]).toEqual({
@@ -401,46 +409,50 @@ fdescribe('Pivot table converter', () => {
     });
     expect(pivotTable.cells[1][8]).toEqual(undefined);
 
-    const configWithoutSums: PivotConfig = {
-      columnAttributes: [createDummyAttribute(), createDummyAttribute()],
-      rowAttributes: [],
-      valueAttributes: [],
-    };
-    const pivotTableWithoutSums = converter.transform(data, configWithoutSums);
+    const dataWithoutSums: PivotData = {...data, data: [{...data.data[0], columnShowSums: [false, false]}]};
+    const pivotTableWithoutSums = converter.transform(dataWithoutSums)[0];
     expect(pivotTableWithoutSums.cells.length).toEqual(2);
     expect(pivotTableWithoutSums.cells[0].length).toEqual(5);
   });
 
   it('should return table by row and values', () => {
     const data: PivotData = {
-      valueTitles: ['X', 'Y'],
-      rowHeaders: [
+      data: [
         {
-          title: 'A',
-          children: [
-            {title: 'a1', targetIndex: 0, color: undefined},
-            {title: 'a2', targetIndex: 1, color: undefined},
-            {title: 'a3', targetIndex: 2, color: undefined},
+          valueTitles: ['X', 'Y'],
+          rowHeaders: [
+            {
+              title: 'A',
+              children: [
+                {title: 'a1', targetIndex: 0, color: undefined},
+                {title: 'a2', targetIndex: 1, color: undefined},
+                {title: 'a3', targetIndex: 2, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'B',
+              children: [
+                {title: 'a2', targetIndex: 3, color: undefined},
+                {title: 'a3', targetIndex: 4, color: undefined},
+              ],
+              color: undefined,
+            },
+            {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
           ],
-          color: undefined,
+          columnHeaders: [
+            {title: 'X', targetIndex: 0, color: undefined},
+            {title: 'Y', targetIndex: 1, color: undefined},
+          ],
+          values: [[1, 2], [2, null], [3, 5], [8, 9], [1, 9], [null, 4]],
+          rowShowSums: [true, true],
+          columnShowSums: [],
+          hasAdditionalColumnLevel: true,
         },
-        {
-          title: 'B',
-          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
-          color: undefined,
-        },
-        {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
       ],
-      columnHeaders: [{title: 'X', targetIndex: 0, color: undefined}, {title: 'Y', targetIndex: 1, color: undefined}],
-      values: [[1, 2], [2, null], [3, 5], [8, 9], [1, 9], [null, 4]],
-    };
-    const config: PivotConfig = {
-      columnAttributes: [],
-      rowAttributes: [{...createDummyAttribute(), showSums: true}, {...createDummyAttribute(), showSums: true}],
-      valueAttributes: [createDummyValueAttribute(), createDummyValueAttribute()],
     };
 
-    const pivotTable = converter.transform(data, config);
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells.length).toEqual(11);
     expect(pivotTable.cells[0].length).toEqual(4);
     expect(pivotTable.cells[0][0]).toEqual({
@@ -488,35 +500,46 @@ fdescribe('Pivot table converter', () => {
 
   it('should return table by column and values percentage', () => {
     const data: PivotData = {
-      valueTitles: ['X', 'Y'],
-      rowHeaders: [
+      data: [
         {
-          title: 'A',
-          children: [
-            {title: 'a1', targetIndex: 0, color: undefined},
-            {title: 'a2', targetIndex: 1, color: undefined},
-            {title: 'a3', targetIndex: 2, color: undefined},
+          valueTitles: ['X', 'Y'],
+          rowHeaders: [
+            {
+              title: 'A',
+              children: [
+                {title: 'a1', targetIndex: 0, color: undefined},
+                {title: 'a2', targetIndex: 1, color: undefined},
+                {title: 'a3', targetIndex: 2, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'B',
+              children: [
+                {title: 'a2', targetIndex: 3, color: undefined},
+                {title: 'a3', targetIndex: 4, color: undefined},
+              ],
+              color: undefined,
+            },
+            {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
           ],
-          color: undefined,
+          columnHeaders: [
+            {title: 'X', targetIndex: 0, color: undefined},
+            {title: 'Y', targetIndex: 1, color: undefined},
+          ],
+          values: [['10%', '20%'], ['20%', null], ['30%', '50%'], ['80%', '90%'], ['10%', '90%'], [null, '40%']],
+          valuesConstraints: [
+            {type: ConstraintType.Percentage, config: {}},
+            {type: ConstraintType.Percentage, config: {}},
+          ],
+          rowShowSums: [true, true],
+          columnShowSums: [],
+          hasAdditionalColumnLevel: true,
         },
-        {
-          title: 'B',
-          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
-          color: undefined,
-        },
-        {title: 'C', children: [{title: 'a1', targetIndex: 5, color: undefined}], color: undefined},
       ],
-      columnHeaders: [{title: 'X', targetIndex: 0, color: undefined}, {title: 'Y', targetIndex: 1, color: undefined}],
-      values: [['10%', '20%'], ['20%', null], ['30%', '50%'], ['80%', '90%'], ['10%', '90%'], [null, '40%']],
-      valuesConstraints: [{type: ConstraintType.Percentage, config: {}}, {type: ConstraintType.Percentage, config: {}}],
-    };
-    const config: PivotConfig = {
-      columnAttributes: [],
-      rowAttributes: [{...createDummyAttribute(), showSums: true}, {...createDummyAttribute(), showSums: true}],
-      valueAttributes: [createDummyValueAttribute(), createDummyValueAttribute()],
     };
 
-    const pivotTable = converter.transform(data, config);
+    const pivotTable = converter.transform(data)[0];
 
     expect(pivotTable.cells[1][2].value).toEqual('10%');
     expect(pivotTable.cells[1][3].value).toEqual('20%');
@@ -539,46 +562,48 @@ fdescribe('Pivot table converter', () => {
 
   it('should return table by column and values', () => {
     const data: PivotData = {
-      valueTitles: ['X', 'Y', 'Z'],
-      rowHeaders: [],
-      columnHeaders: [
+      data: [
         {
-          title: 'A',
-          children: [
-            {title: 'X', targetIndex: 0, color: undefined},
-            {title: 'Y', targetIndex: 1, color: undefined},
-            {title: 'Z', targetIndex: 2, color: undefined},
+          valueTitles: ['X', 'Y', 'Z'],
+          rowHeaders: [],
+          columnHeaders: [
+            {
+              title: 'A',
+              children: [
+                {title: 'X', targetIndex: 0, color: undefined},
+                {title: 'Y', targetIndex: 1, color: undefined},
+                {title: 'Z', targetIndex: 2, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'B',
+              children: [
+                {title: 'X', targetIndex: 3, color: undefined},
+                {title: 'Y', targetIndex: 4, color: undefined},
+                {title: 'Z', targetIndex: 5, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'C',
+              children: [
+                {title: 'X', targetIndex: 6, color: undefined},
+                {title: 'Y', targetIndex: 7, color: undefined},
+                {title: 'Z', targetIndex: 8, color: undefined},
+              ],
+              color: undefined,
+            },
           ],
-          color: undefined,
-        },
-        {
-          title: 'B',
-          children: [
-            {title: 'X', targetIndex: 3, color: undefined},
-            {title: 'Y', targetIndex: 4, color: undefined},
-            {title: 'Z', targetIndex: 5, color: undefined},
-          ],
-          color: undefined,
-        },
-        {
-          title: 'C',
-          children: [
-            {title: 'X', targetIndex: 6, color: undefined},
-            {title: 'Y', targetIndex: 7, color: undefined},
-            {title: 'Z', targetIndex: 8, color: undefined},
-          ],
-          color: undefined,
+          values: [[1, 5, 6, 2, null, 1, 4, 5, null]],
+          rowShowSums: [],
+          columnShowSums: [true],
+          hasAdditionalColumnLevel: true,
         },
       ],
-      values: [[1, 5, 6, 2, null, 1, 4, 5, null]],
-    };
-    const config: PivotConfig = {
-      columnAttributes: [{...createDummyAttribute(), showSums: true}],
-      rowAttributes: [],
-      valueAttributes: [createDummyValueAttribute(), createDummyValueAttribute(), createDummyValueAttribute()],
     };
 
-    const pivotTable = converter.transform(data, config);
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells[0][0]).toEqual({
       value: 'A',
       isHeader: true,
@@ -653,48 +678,55 @@ fdescribe('Pivot table converter', () => {
 
   it('should return table by rows and columns and values', () => {
     const data: PivotData = {
-      valueTitles: ['V'],
-      rowHeaders: [
+      data: [
         {
-          title: 'A',
-          children: [
-            {title: 'a1', targetIndex: 0, color: undefined},
-            {title: 'a2', targetIndex: 1, color: undefined},
-            {title: 'a3', targetIndex: 2, color: undefined},
+          valueTitles: ['V'],
+          rowHeaders: [
+            {
+              title: 'A',
+              children: [
+                {title: 'a1', targetIndex: 0, color: undefined},
+                {title: 'a2', targetIndex: 1, color: undefined},
+                {title: 'a3', targetIndex: 2, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'B',
+              children: [
+                {title: 'a2', targetIndex: 3, color: undefined},
+                {title: 'a3', targetIndex: 4, color: undefined},
+              ],
+              color: undefined,
+            },
           ],
-          color: undefined,
-        },
-        {
-          title: 'B',
-          children: [{title: 'a2', targetIndex: 3, color: undefined}, {title: 'a3', targetIndex: 4, color: undefined}],
-          color: undefined,
+          columnHeaders: [
+            {
+              title: 'X',
+              children: [
+                {title: 'x1', targetIndex: 0, color: undefined},
+                {title: 'x2', targetIndex: 1, color: undefined},
+              ],
+              color: undefined,
+            },
+            {
+              title: 'Y',
+              children: [
+                {title: 'x2', targetIndex: 2, color: undefined},
+                {title: 'x3', targetIndex: 3, color: undefined},
+                {title: 'x4', targetIndex: 4, color: undefined},
+              ],
+              color: undefined,
+            },
+          ],
+          values: [[1, 2, 4, 1, 2], [4, 3, 3, 3, 3], [5, 0, 1, 2, 2], [2, 4, 7, 1, 3], [1, 0, 1, 1, 2]],
+          rowShowSums: [false, true],
+          columnShowSums: [true, true],
         },
       ],
-      columnHeaders: [
-        {
-          title: 'X',
-          children: [{title: 'x1', targetIndex: 0, color: undefined}, {title: 'x2', targetIndex: 1, color: undefined}],
-          color: undefined,
-        },
-        {
-          title: 'Y',
-          children: [
-            {title: 'x2', targetIndex: 2, color: undefined},
-            {title: 'x3', targetIndex: 3, color: undefined},
-            {title: 'x4', targetIndex: 4, color: undefined},
-          ],
-          color: undefined,
-        },
-      ],
-      values: [[1, 2, 4, 1, 2], [4, 3, 3, 3, 3], [5, 0, 1, 2, 2], [2, 4, 7, 1, 3], [1, 0, 1, 1, 2]],
-    };
-    const config: PivotConfig = {
-      columnAttributes: [{...createDummyAttribute(), showSums: true}, {...createDummyAttribute(), showSums: true}],
-      rowAttributes: [{...createDummyAttribute()}, {...createDummyAttribute(), showSums: true}],
-      valueAttributes: [createDummyValueAttribute()],
     };
 
-    const pivotTable = converter.transform(data, config);
+    const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells[0][0]).toEqual({
       value: '',
       rowSpan: 2,

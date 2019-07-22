@@ -18,14 +18,29 @@
  */
 
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 
 export interface PivotData {
+  data: PivotStemData[];
+
+  constraintData?: ConstraintData;
+  mergeTables?: boolean;
+  ableToMerge?: boolean;
+}
+
+export interface PivotStemData {
   columnHeaders: PivotDataHeader[];
   rowHeaders: PivotDataHeader[];
   valueTitles: string[];
   values: any[][];
   valuesConstraints?: Constraint[];
-  constraintData?: ConstraintData;
+  valueTypes?: PivotValueType[];
+
+  rowShowSums: boolean[];
+  rowSorts?: PivotSort[];
+  columnShowSums: boolean[];
+  columnSorts?: PivotSort[];
+  hasAdditionalColumnLevel?: boolean;
 }
 
 export interface PivotDataHeader {

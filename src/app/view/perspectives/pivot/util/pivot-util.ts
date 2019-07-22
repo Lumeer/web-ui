@@ -97,12 +97,6 @@ export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
   };
 }
 
-export function pivotStemConfigHasAdditionalValueLevel(config: PivotStemConfig): boolean {
-  const columnsNum = (config.columnAttributes || []).length;
-  const valuesNum = (config.valueAttributes || []).length;
-  return (columnsNum === 0 && valuesNum > 0) || (columnsNum > 0 && valuesNum > 1);
-}
-
 export function checkOrTransformPivotConfig(
   config: PivotConfig,
   query: Query,

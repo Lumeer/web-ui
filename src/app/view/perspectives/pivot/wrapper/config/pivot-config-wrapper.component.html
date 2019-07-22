@@ -5,7 +5,7 @@
     <b>{{collection.name}}</b>
   </div>
 
-  <pivot-config [pivotData]="pivotData"
+  <pivot-config [pivotData]="config?.mergeTables ? pivotData.data[0] : pivotData.data[index]"
                 [stem]="stem"
                 [collections]="collections"
                 [linkTypes]="linkTypes"
