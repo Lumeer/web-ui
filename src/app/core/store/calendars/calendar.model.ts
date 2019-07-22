@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributesResourceType} from '../../model/resource';
+
 export const DEFAULT_CALENDAR_ID = 'default';
 export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
 
@@ -28,7 +30,12 @@ export interface CalendarModel {
 export interface CalendarConfig {
   date: Date;
   mode: CalendarMode;
-  collections: Record<string, CalendarCollectionConfig>;
+  stemsConfigs: CalendarStemConfig[];
+  version?: CalendarConfigVersion;
+}
+
+export enum CalendarConfigVersion {
+  V1 = '1',
 }
 
 export enum CalendarMode {
@@ -37,13 +44,15 @@ export enum CalendarMode {
   Day = 'day',
 }
 
-export interface CalendarCollectionConfig {
+export interface CalendarStemConfig {
   barsProperties?: Record<string, CalendarBarModel>;
 }
 
 export interface CalendarBarModel {
-  collectionId: string;
+  resourceId: string;
   attributeId: string;
+  resourceIndex?: number;
+  resourceType: AttributesResourceType;
 }
 
 export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPropertyOptional;

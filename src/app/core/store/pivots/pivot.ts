@@ -42,7 +42,6 @@ export interface PivotStemConfig {
 
 export enum PivotConfigVersion {
   V1 = '1',
-  V0 = '0',
 }
 
 export interface PivotAttribute {

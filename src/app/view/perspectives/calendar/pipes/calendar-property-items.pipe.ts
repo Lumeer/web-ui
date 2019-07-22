@@ -22,7 +22,7 @@ import {
   CalendarBarModel,
   CalendarBarProperty,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
+  CalendarStemConfig,
   CalendarConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -36,7 +36,7 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
   public transform(
     collection: Collection,
     property: CalendarBarProperty,
-    config: CalendarCollectionConfig
+    config: CalendarStemConfig
   ): SelectItemModel[] {
     const restrictedIds = this.getSelectedAttributesIdsInsteadBar(property, config);
     return collection.attributes
@@ -44,7 +44,7 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
       .map(attribute => this.attributeToItem(collection, attribute));
   }
 
-  public getSelectedAttributesIdsInsteadBar(property: CalendarBarProperty, config: CalendarCollectionConfig): string[] {
+  public getSelectedAttributesIdsInsteadBar(property: CalendarBarProperty, config: CalendarStemConfig): string[] {
     return Object.entries(config.barsProperties || {})
       .filter(entry => entry[0] !== property)
       .map(entry => entry[1].attributeId);

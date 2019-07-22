@@ -35,7 +35,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
+  CalendarStemConfig,
   CalendarConfig,
 } from '../../../core/store/calendars/calendar.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -265,7 +265,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   private createEventDocument(): DocumentModel {
     const {collectionId, title, allDay, eventStart, eventEnd} = this.form.value;
-    const collectionConfig: CalendarCollectionConfig = (this.config && this.config.collections[collectionId]) || {};
+    const collectionConfig: CalendarStemConfig = (this.config && this.config.collections[collectionId]) || {};
     if (!collectionConfig.barsProperties) {
       return;
     }

@@ -120,7 +120,7 @@ export function checkOrTransformPivotStemConfig(
   linkTypes: LinkType[]
 ): PivotStemConfig {
   if (!config) {
-    return createDefaultStemConfig();
+    return createDefaultPivotStemConfig();
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
@@ -180,11 +180,11 @@ function checkOrTransformPivotAttributes<T extends PivotAttribute>(
 
 function createDefaultConfig(query: Query): PivotConfig {
   const stems = (query && query.stems) || [];
-  const stemsConfigs = stems.map(() => createDefaultStemConfig());
+  const stemsConfigs = stems.map(() => createDefaultPivotStemConfig());
   return {version: PivotConfigVersion.V1, stemsConfigs: stemsConfigs, mergeTables: true};
 }
 
-function createDefaultStemConfig(): PivotStemConfig {
+export function createDefaultPivotStemConfig(): PivotStemConfig {
   return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
 }
 

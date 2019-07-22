@@ -18,9 +18,10 @@
  */
 
 import {
-  GanttChartCollectionConfig,
   GanttChartConfig,
+  GanttChartConfigVersion,
   GanttChartMode,
+  GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query';
@@ -35,26 +36,18 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     return true;
   }
 
-  return ganttConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
+  return ganttConfigCollectionsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
-function ganttConfigCollectionsChanged(
-  collections1: Record<string, GanttChartCollectionConfig>,
-  collections2: Record<string, GanttChartCollectionConfig>
-): boolean {
-  if (Object.keys(collections1).length !== Object.keys(collections2).length) {
+function ganttConfigCollectionsChanged(c1: GanttChartStemConfig[], c2: GanttChartStemConfig[]): boolean {
+  if (c1.length !== c2.length) {
     return true;
   }
 
-  return Object.entries(collections1).some(([key, value]) => {
-    return !collections2[key] || ganttConfigCollectionChanged(value, collections2[key]);
-  });
+  return c1.some((config, index) => ganttConfigCollectionChanged(config, c2[index]));
 }
 
-function ganttConfigCollectionChanged(
-  config1: GanttChartCollectionConfig,
-  config2: GanttChartCollectionConfig
-): boolean {
+function ganttConfigCollectionChanged(config1: GanttChartStemConfig, config2: GanttChartStemConfig): boolean {
   if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
     return true;
   }
@@ -71,53 +64,42 @@ export function checkOrTransformGanttConfig(
   linkTypes: LinkType[]
 ): GanttChartConfig {
   if (!config) {
-    return createDefaultConfig();
+    return createDefaultConfig(query);
   }
 
   return {
     ...config,
-    collections: checkOrTransformGanttCollectionsConfig(config.collections, query, collections, linkTypes),
+    stemsConfigs: checkOrTransformGanttStemsConfig(config.stemsConfigs, query, collections, linkTypes),
   };
 }
 
-function checkOrTransformGanttCollectionsConfig(
-  collectionsConfig: Record<string, GanttChartCollectionConfig>,
+function checkOrTransformGanttStemsConfig(
+  stemsConfigs: GanttChartStemConfig[],
   query: Query,
   collections: Collection[],
   linkTypes: LinkType[]
-): Record<string, GanttChartCollectionConfig> {
-  if (!collectionsConfig) {
-    return collectionsConfig;
+): GanttChartStemConfig[] {
+  if (!stemsConfigs) {
+    return stemsConfigs;
   }
 
-  return ((query && query.stems) || []).reduce((map, stem, index) => {
-    const collectionConfig = collectionsConfig[stem.collectionId] || Object.values(collectionsConfig)[index];
-    const ganttChartCollectionConfig = checkOrTransformGanttCollectionConfig(
-      collectionConfig,
-      stem,
-      collections,
-      linkTypes
-    );
-    if (ganttChartCollectionConfig) {
-      map[stem.collectionId] = ganttChartCollectionConfig;
-    }
-
-    return map;
-  }, {});
+  return ((query && query.stems) || []).map((stem, index) =>
+    checkOrTransformGanttCollectionConfig((stemsConfigs || [])[index], stem, collections, linkTypes)
+  );
 }
 
 function checkOrTransformGanttCollectionConfig(
-  collectionConfig: GanttChartCollectionConfig,
+  stemConfig: GanttChartStemConfig,
   stem: QueryStem,
   collections: Collection[],
   linkTypes: LinkType[]
-): GanttChartCollectionConfig {
-  if (!collectionConfig || !collectionConfig.barsProperties) {
-    return collectionConfig;
+): GanttChartStemConfig {
+  if (!stemConfig || !stemConfig.barsProperties) {
+    return stemConfig;
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-  const barsProperties = Object.entries(collectionConfig.barsProperties)
+  const barsProperties = Object.entries(stemConfig.barsProperties)
     .filter(([, bar]) => !!bar)
     .reduce((map, [type, bar]) => {
       const attributesResource = attributesResourcesOrder[bar.resourceIndex];
@@ -150,15 +132,20 @@ function checkOrTransformGanttCollectionConfig(
   return {barsProperties};
 }
 
-function createDefaultConfig(): GanttChartConfig {
-  return {mode: GanttChartMode.Month, collections: {}};
+function createDefaultConfig(query: Query): GanttChartConfig {
+  const stems = (query && query.stems) || [];
+  const stemsConfigs = stems.map(() => createDefaultGanttChartStemConfig());
+  return {mode: GanttChartMode.Month, version: GanttChartConfigVersion.V1, stemsConfigs: stemsConfigs};
+}
+
+export function createDefaultGanttChartStemConfig(): GanttChartStemConfig {
+  return {barsProperties: {}};
 }
 
 export function ganttConfigIsEmpty(config: GanttChartConfig) {
   return (
     config &&
-    Object.values(config.collections || {}).filter(
-      value => Object.values(value.barsProperties || {}).filter(bar => !!bar).length > 0
-    ).length === 0
+    config.stemsConfigs.filter(value => Object.values(value.barsProperties || {}).filter(bar => !!bar).length > 0)
+      .length === 0
   );
 }

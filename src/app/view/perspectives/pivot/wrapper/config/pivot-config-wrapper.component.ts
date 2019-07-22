@@ -24,6 +24,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query';
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 
 @Component({
   selector: 'pivot-config-wrapper',
@@ -48,6 +49,8 @@ export class PivotConfigWrapperComponent {
 
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
+
+  public readonly defaultStemConfig = createDefaultPivotStemConfig();
 
   public onStemConfigChange(stemConfig: PivotStemConfig, index: number) {
     const config = deepObjectCopy<PivotConfig>(this.config);

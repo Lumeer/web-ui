@@ -24,7 +24,7 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
+  CalendarStemConfig,
   CalendarConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -49,18 +49,22 @@ export function createCalendarEvents(
   documents: DocumentModel[],
   permissions: Record<string, AllowedPermissions>,
   constraintData: ConstraintData,
-  query?: Query
+  query: Query
 ): CalendarEvent<CalendarMetaData>[] {
-  return collections.reduce((tasks, collection) => {
-    tasks.push(
-      ...createCalendarEventsForCollection(
-        config,
-        collection,
-        documentsByCollection(documents, collection),
-        permissions[collection.id] || {},
-        constraintData
-      )
-    );
+  return (query.stems || []).reduce((tasks, stem, index) => {
+    const collection = (collections || []).find(coll => coll.id === stem.collectionId);
+    if (collection) {
+      tasks.push(
+        ...createCalendarEventsForCollection(
+          config.stemsConfigs && config.stemsConfigs[index],
+          collection,
+          documentsByCollection(documents, collection),
+          permissions[collection.id] || {},
+          constraintData,
+          query
+        )
+      );
+    }
     return tasks;
   }, []);
 }
@@ -70,20 +74,18 @@ function documentsByCollection(documents: DocumentModel[], collection: Collectio
 }
 
 export function createCalendarEventsForCollection(
-  config: CalendarConfig,
+  config: CalendarStemConfig,
   collection: Collection,
   documents: DocumentModel[],
   permissions: AllowedPermissions,
   constraintData: ConstraintData,
-  query?: Query
+  query: Query
 ): CalendarEvent<CalendarMetaData>[] {
-  const collectionConfig = config.collections && config.collections[collection.id];
-
-  if (!collectionConfig) {
+  if (!config) {
     return [];
   }
 
-  const properties = collectionConfig.barsProperties || {};
+  const properties = config.barsProperties || {};
 
   const nameProperty = properties[CalendarBarPropertyRequired.Name];
   const startProperty = properties[CalendarBarPropertyRequired.StartDate];
@@ -232,7 +234,7 @@ export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfi
     return true;
   }
 
-  return calendarConfigCollectionsChanged(viewConfig.collections || {}, currentConfig.collections || {});
+  return calendarConfigCollectionsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
 function datesChanged(date1: Date, date2: Date): boolean {
@@ -248,23 +250,15 @@ function datesChanged(date1: Date, date2: Date): boolean {
   return date1.getTime() !== date2.getTime();
 }
 
-function calendarConfigCollectionsChanged(
-  collections1: Record<string, CalendarCollectionConfig>,
-  collections2: Record<string, CalendarCollectionConfig>
-): boolean {
-  if (Object.keys(collections1).length !== Object.keys(collections2).length) {
+function calendarConfigCollectionsChanged(c1: CalendarStemConfig[], c2: CalendarStemConfig[]): boolean {
+  if (c1.length !== c2.length) {
     return true;
   }
 
-  return Object.entries(collections1).some(([key, value]) => {
-    return !collections2[key] || calendarConfigCollectionChanged(value, collections2[key]);
-  });
+  return c1.some((config, index) => calendarConfigCollectionChanged(config, c2[index]));
 }
 
-function calendarConfigCollectionChanged(
-  config1: CalendarCollectionConfig,
-  config2: CalendarCollectionConfig
-): boolean {
+function calendarConfigCollectionChanged(config1: CalendarStemConfig, config2: CalendarStemConfig): boolean {
   if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
     return true;
   }
@@ -272,4 +266,8 @@ function calendarConfigCollectionChanged(
   return Object.entries(config1.barsProperties).some(([key, value]) => {
     return !config2.barsProperties[key] || !deepObjectsEquals(value, config2.barsProperties[key]);
   });
+}
+
+export function calendarDefaultStemConfig(): CalendarStemConfig {
+  return {barsProperties: {}};
 }

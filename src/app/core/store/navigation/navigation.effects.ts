@@ -40,7 +40,7 @@ export class NavigationEffects {
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
     map(([action, query]) => {
-      const stem: QueryStem = query.stemsConfigs[0]; // TODO be aware when using with more than 1 stem
+      const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
       const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
       const newStem = {...stem, linkTypeIds};
 
@@ -53,7 +53,7 @@ export class NavigationEffects {
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
     map(([action, query]) => {
-      const stems = query.stemsConfigs || [];
+      const stems = query.stems || [];
       stems.push({collectionId: action.payload.collectionId});
 
       return newQueryAction({...query, stems});

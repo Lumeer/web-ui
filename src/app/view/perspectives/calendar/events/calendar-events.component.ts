@@ -35,11 +35,7 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {
-  CalendarBarPropertyRequired,
-  CalendarConfig,
-  CalendarMode,
-} from '../../../../core/store/calendars/calendar.model';
+import {CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar.model';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
@@ -219,12 +215,14 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   private collectionHasConfig(collectionId: string): boolean {
-    const collectionConfig = this.config && this.config.collections[collectionId];
-    return (
-      collectionConfig &&
-      (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.Name] ||
-        !!collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate])
-    );
+    return true; // TODO
+
+    // const collectionConfig = this.config && this.config.collections[collectionId];
+    // return (
+    //   collectionConfig &&
+    //   (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.Name] ||
+    //     !!collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate])
+    // );
   }
 
   public onEventClicked(event: CalendarEvent<CalendarMetaData>) {

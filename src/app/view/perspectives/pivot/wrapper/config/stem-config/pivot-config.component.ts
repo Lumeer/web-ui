@@ -26,7 +26,7 @@ import {
   PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../../../core/store/pivots/pivot';
-import {PivotData, PivotStemData} from '../../../util/pivot-data';
+import {PivotStemData} from '../../../util/pivot-data';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query';

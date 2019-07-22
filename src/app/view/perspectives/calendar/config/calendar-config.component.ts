@@ -19,7 +19,10 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {CalendarCollectionConfig, CalendarConfig} from '../../../../core/store/calendars/calendar.model';
+import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calendars/calendar.model';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {deepObjectCopy} from '../../../../shared/utils/common.utils';
+import {calendarDefaultStemConfig} from '../util/calendar-util';
 
 @Component({
   selector: 'calendar-config',
@@ -33,15 +36,21 @@ export class CalendarConfigComponent {
   @Input()
   public config: CalendarConfig;
 
+  @Input()
+  public query: Query;
+
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
 
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+  public readonly defaultStemConfig = calendarDefaultStemConfig();
+
+  public onCollectionConfigChange(stemConfig: CalendarStemConfig, index: number) {
+    const config = deepObjectCopy<CalendarConfig>(this.config);
+    config.stemsConfigs[index] = stemConfig;
+    this.configChange.emit(config);
   }
 
-  public onCollectionConfigChange(collection: Collection, config: CalendarCollectionConfig) {
-    const collectionsConfig = {...this.config.collections, [collection.id]: config};
-    this.configChange.emit({...this.config, collections: collectionsConfig});
+  public trackByStem(index: number, stem: QueryStem): string {
+    return stem.collectionId + index;
   }
 }

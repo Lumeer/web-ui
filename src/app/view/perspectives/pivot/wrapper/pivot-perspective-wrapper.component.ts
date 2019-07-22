@@ -142,32 +142,15 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.shouldConvertData(changes)) {
-      this.dataSubject.next({
-        documents: this.documents,
-        config: this.config,
-        collections: this.collections,
-        linkTypes: this.linkTypes,
-        linkInstances: this.linkInstances,
-        query: this.query,
-        constraintData: this.constraintData,
-      });
-    }
-  }
-
-  private shouldConvertData(changes: SimpleChanges): boolean {
-    if (
-      changes.documents ||
-      changes.collections ||
-      changes.linkTypes ||
-      changes.linkInstances ||
-      changes.constraintData
-    ) {
-      return true;
-    }
-    return (
-      changes.config && pivotConfigHasDataTransformChange(changes.config.previousValue, changes.config.currentValue)
-    );
+    this.dataSubject.next({
+      documents: this.documents,
+      config: this.config,
+      collections: this.collections,
+      linkTypes: this.linkTypes,
+      linkInstances: this.linkInstances,
+      query: this.query,
+      constraintData: this.constraintData,
+    });
   }
 
   public onConfigChange(config: PivotConfig) {

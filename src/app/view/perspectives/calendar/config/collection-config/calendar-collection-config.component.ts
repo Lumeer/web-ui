@@ -23,7 +23,7 @@ import {
   CalendarBarProperty,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
+  CalendarStemConfig,
 } from '../../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 
@@ -37,10 +37,10 @@ export class CalendarCollectionConfigComponent {
   public collection: Collection;
 
   @Input()
-  public config: CalendarCollectionConfig;
+  public config: CalendarStemConfig;
 
   @Output()
-  public configChange = new EventEmitter<CalendarCollectionConfig>();
+  public configChange = new EventEmitter<CalendarStemConfig>();
 
   public readonly calendarBarsPropertiesRequired = Object.values(CalendarBarPropertyRequired);
   public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
@@ -48,7 +48,7 @@ export class CalendarCollectionConfigComponent {
 
   public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBarModel) {
     const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
+    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
@@ -57,7 +57,7 @@ export class CalendarCollectionConfigComponent {
     delete bars[type];
     this.removeOptionalProperties(bars, type);
 
-    const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
+    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 

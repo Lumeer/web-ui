@@ -22,8 +22,9 @@ import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
 import {View} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
+import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
+import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -57,6 +58,8 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): any
       return {...config, pivot: convertPivotConfigDtoToModel(config && config.pivot)};
     case Perspective.GanttChart:
       return {...config, ganttChart: convertGanttChartDtoConfigToModel(config && config.ganttChart)};
+    case Perspective.Calendar:
+      return {...config, calendar: convertCalendarDtoConfigToModel(config && config.calendar)};
     default:
       return config;
   }

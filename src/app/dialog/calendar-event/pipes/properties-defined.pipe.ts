@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarCollectionConfig} from '../../../core/store/calendars/calendar.model';
+import {CalendarStemConfig} from '../../../core/store/calendars/calendar.model';
 
 @Pipe({
   name: 'propertiesDefined',
 })
 export class PropertiesDefinedPipe implements PipeTransform {
-  public transform(collectionConfig: CalendarCollectionConfig, properties: string[]): boolean {
+  public transform(collectionConfig: CalendarStemConfig, properties: string[]): boolean {
     return collectionConfig && properties.every(property => !!collectionConfig.barsProperties[property]);
   }
 }

@@ -24,7 +24,7 @@ import {
   CalendarBarModel,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
+  CalendarStemConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Query} from '../../../../core/store/navigation/query';
@@ -45,7 +45,7 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit, OnCha
   public form: FormGroup;
 
   @Input()
-  public collectionConfig: CalendarCollectionConfig;
+  public collectionConfig: CalendarStemConfig;
 
   @Input()
   public collection: Collection;

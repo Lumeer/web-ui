@@ -36,5 +36,5 @@ function convertPivotConfigDtoToModelV1(config: any): PivotConfig {
 }
 
 function convertPivotConfigDtoToModelV0(config: any): PivotConfig {
-  return {version: PivotConfigVersion.V0, stemsConfigs: [config]};
+  return {version: PivotConfigVersion.V1, stemsConfigs: [config]};
 }

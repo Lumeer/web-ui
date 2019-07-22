@@ -114,7 +114,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createDefaultConfig(): CalendarConfig {
-    return {collections: {}, date: new Date(), mode: CalendarMode.Month};
+    return {stemsConfigs: [], date: new Date(), mode: CalendarMode.Month};
   }
 
   private setupSidebar(view: View, opened: boolean) {

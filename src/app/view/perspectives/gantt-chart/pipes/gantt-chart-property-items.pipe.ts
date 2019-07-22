@@ -23,7 +23,7 @@ import {
   GanttChartBarProperty,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
-  GanttChartCollectionConfig,
+  GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -43,7 +43,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
   public transform(
     selectItems: SelectItemModel[],
     property: GanttChartBarProperty,
-    config: GanttChartCollectionConfig
+    config: GanttChartStemConfig
   ): SelectItemModel[] {
     if (sameCollectionProperties.includes(property)) {
       return this.filterSameResourceItems(selectItems, property, config);
@@ -55,7 +55,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
   private filterSameResourceItems(
     selectItems: SelectItemModel[],
     property: GanttChartBarProperty,
-    config: GanttChartCollectionConfig
+    config: GanttChartStemConfig
   ): SelectItemModel[] {
     const sameCollectionModels = Object.entries(config.barsProperties || {})
       .filter(([prop]) => sameCollectionProperties.includes(prop) && prop !== property)
@@ -82,7 +82,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
   private filterAnyResourceItems(
     selectItems: SelectItemModel[],
     property: GanttChartBarProperty,
-    config: GanttChartCollectionConfig
+    config: GanttChartStemConfig
   ): SelectItemModel[] {
     const definedModels = Object.entries(config.barsProperties || {})
       .filter(([prop]) => prop !== property)

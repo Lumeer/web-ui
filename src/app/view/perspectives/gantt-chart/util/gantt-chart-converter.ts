@@ -97,9 +97,9 @@ export class GanttChartConverter {
   ): GanttChartTask[] {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
 
-    return ((query && query.stems) || []).reduce((tasks, stem) => {
+    return ((query && query.stems) || []).reduce((tasks, stem, index) => {
       this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
-      tasks.push(...this.convertByStem(stem));
+      tasks.push(...this.convertByStem(stem, index));
       return tasks;
     }, []);
   }
@@ -124,22 +124,19 @@ export class GanttChartConverter {
     this.query = query;
   }
 
-  private convertByStem(stem: QueryStem): GanttChartTask[] {
-    const stemConfig = this.config && this.config.collections[stem.collectionId];
+  private convertByStem(stem: QueryStem, index: number): GanttChartTask[] {
+    const stemConfig = this.config && this.config.stemsConfigs && this.config.stemsConfigs[index];
     const stemProperties = (stemConfig && stemConfig.barsProperties) || {};
     if (this.requiredPropertiesAreSet(stemProperties)) {
       if (this.shouldAggregate(stemProperties)) {
-        return this.convertByAggregation(stemProperties, stem.collectionId);
+        return this.convertByAggregation(stemProperties);
       }
-      return this.convertSimple(stemProperties, stem.collectionId);
+      return this.convertSimple(stemProperties);
     }
     return [];
   }
 
-  private convertByAggregation(
-    properties: Record<string, GanttChartBarModel>,
-    collectionConfigId: string
-  ): GanttChartTask[] {
+  private convertByAggregation(properties: Record<string, GanttChartBarModel>): GanttChartTask[] {
     const startProperty = properties[GanttChartBarPropertyRequired.Start];
     const resource = this.getResource(startProperty);
 
@@ -176,26 +173,25 @@ export class GanttChartConverter {
       }
     }
 
-    return this.createGanttChartTasksForResource(properties, resource, dataResourcesSwimlanes, collectionConfigId);
+    return this.createGanttChartTasksForResource(properties, resource, dataResourcesSwimlanes);
   }
 
   private convertGanttProperty(property: GanttChartBarModel): DataAggregatorAttribute {
     return {attributeId: property.attributeId, resourceIndex: property.resourceIndex};
   }
 
-  private convertSimple(properties: Record<string, GanttChartBarModel>, collectionConfigId: string): GanttChartTask[] {
+  private convertSimple(properties: Record<string, GanttChartBarModel>): GanttChartTask[] {
     const startProperty = properties[GanttChartBarPropertyRequired.Start];
     const dataResources = this.dataAggregator.getDataResources(startProperty.resourceIndex);
     const resource = this.getResource(startProperty);
 
-    return this.createGanttChartTasksForResource(properties, resource, dataResources, collectionConfigId);
+    return this.createGanttChartTasksForResource(properties, resource, dataResources);
   }
 
   private createGanttChartTasksForResource(
     properties: Record<string, GanttChartBarModel>,
     resource: AttributesResource,
-    dataResources: DataResourceSwimlanes[],
-    collectionConfigId: string
+    dataResources: DataResourceSwimlanes[]
   ): GanttChartTask[] {
     if (!properties) {
       return [];
@@ -281,7 +277,6 @@ export class GanttChartConverter {
 
         metadata: {
           dataResourceId: dataResource.id,
-          collectionConfigId,
           startAttributeId: interval[0].attrId,
           endAttributeId: interval[1].attrId,
           progressAttributeId: progressEditable && progressProperty && progressProperty.attributeId,

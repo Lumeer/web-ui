@@ -30,12 +30,7 @@ import {
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
-import {
-  GanttChartBarPropertyOptional,
-  GanttChartConfig,
-  GanttChartMode,
-  GanttChartTask,
-} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartConfig, GanttChartMode, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {GanttChartConverter} from '../util/gantt-chart-converter';
@@ -190,26 +185,46 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onValueChanged(data: {
+  public onProgressChanged(data: {
     dataResourceId: string;
-    collectionConfigId: string;
-    type: AttributesResourceType;
+    resourceType: AttributesResourceType;
+    change: {attributeId: string; value: any};
+  }) {
+    this.onValueChanged({...data, changes: [data.change]}, true);
+  }
+
+  public onDatesChanged(data: {
+    dataResourceId: string;
+    resourceType: AttributesResourceType;
     changes: {attributeId: string; value: any}[];
   }) {
-    const {dataResourceId, collectionConfigId, type, changes} = data;
-    const dataResource = this.getDataResource(dataResourceId, type);
+    this.onValueChanged(data);
+  }
+
+  public onValueChanged(
+    data: {
+      dataResourceId: string;
+      resourceType: AttributesResourceType;
+      changes: {attributeId: string; value: any}[];
+    },
+    isProgress?: boolean
+  ) {
+    const {dataResourceId, resourceType, changes} = data;
+    const dataResource = this.getDataResource(dataResourceId, resourceType);
     if (!dataResource) {
       return;
     }
 
-    const resource = this.getResource(dataResource, type);
+    const resource = this.getResource(dataResource, resourceType);
 
     const patchData = {};
     for (const {attributeId, value} of changes) {
       const constraint = findAttributeConstraint(resource && resource.attributes, attributeId);
       const saveValue = constraint
         ? getSaveValue(value, constraint, this.constraintData)
-        : this.formatNewValue(dataResource, collectionConfigId, attributeId, value);
+        : isProgress
+        ? this.formatPercentage(dataResource, attributeId, value)
+        : value;
 
       const changed = (dataResource.data && dataResource.data[attributeId] !== saveValue) || false;
       if (changed) {
@@ -218,9 +233,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
 
     if (Object.keys(patchData).length > 0) {
-      if (type === AttributesResourceType.Collection) {
+      if (resourceType === AttributesResourceType.Collection) {
         this.patchDocumentData.emit({...(<DocumentModel>dataResource), data: patchData});
-      } else if (type === AttributesResourceType.LinkType) {
+      } else if (resourceType === AttributesResourceType.LinkType) {
         this.patchLinkData.emit({...(<LinkInstance>dataResource), data: patchData});
       }
     }
@@ -245,20 +260,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return null;
   }
 
-  private formatNewValue(dataResource: DataResource, collectionConfigId: string, attributeId: string, value: any): any {
-    if (this.isProgressAttribute(collectionConfigId, attributeId)) {
-      const currentProgress = dataResource.data[attributeId];
-      if (isNotNullOrUndefined(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
-        return `${value}%`;
-      }
+  private formatPercentage(dataResource: DataResource, attributeId: string, value: any): any {
+    const currentProgress = dataResource.data[attributeId];
+    if (isNotNullOrUndefined(currentProgress) && isNumeric(value) && currentProgress.toString().endsWith('%')) {
+      return `${value}%`;
     }
-    return value;
-  }
-
-  private isProgressAttribute(collectionId: string, attributeId: string): boolean {
-    const collectionConfig = this.config && this.config.collections && this.config.collections[collectionId];
-    const progressAxis = collectionConfig && collectionConfig.barsProperties[GanttChartBarPropertyOptional.Progress];
-    return progressAxis && progressAxis.attributeId === attributeId;
   }
 
   public onAddDependency(data: {fromId: string; toId: string}) {
