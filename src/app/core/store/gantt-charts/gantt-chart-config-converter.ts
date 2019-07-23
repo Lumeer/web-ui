@@ -54,7 +54,7 @@ function convertGanttChartDtoToModelV0(config: any): GanttChartConfig {
         resourceType: model.resourceType || AttributesResourceType.Collection,
       };
     }
-    collections[collectionId] = {barsProperties};
+    collections[collectionId] = {barsProperties, stem: {collectionId}};
   }
 
   return {mode: config.mode, stemsConfigs: Object.values(collections), version: GanttChartConfigVersion.V1};

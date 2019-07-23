@@ -35,16 +35,20 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar.model';
+import {
+  CalendarBarPropertyRequired,
+  CalendarConfig,
+  CalendarMode,
+} from '../../../../core/store/calendars/calendar.model';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {CalendarMetaData, createCalendarEvents} from '../util/calendar-util';
+import {CalendarMetaData, checkOrTransformCalendarConfig, createCalendarEvents} from '../util/calendar-util';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {Query} from '../../../../core/store/navigation/query';
 import * as moment from 'moment';
-import {isDateValid} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
@@ -55,6 +59,7 @@ interface Data {
   config: CalendarConfig;
   permissions: Record<string, AllowedPermissions>;
   query: Query;
+  constraintData: ConstraintData;
 }
 
 @Component({
@@ -105,7 +110,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public newEvent = new EventEmitter<number>();
 
   @Output()
-  public updateEvent = new EventEmitter<string>();
+  public updateEvent = new EventEmitter<{documentId: string; stemIndex: number}>();
 
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());
@@ -123,22 +128,34 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data =>
-        createCalendarEvents(
-          data.config,
-          data.collections,
-          data.documents,
-          data.permissions || {},
-          this.constraintData,
-          data.query
-        )
-      )
+      map(data => this.handleData(data))
+    );
+  }
+
+  private handleData(data: Data): CalendarEvent[] {
+    const config = checkOrTransformCalendarConfig(data.config, data.query, data.collections);
+    if (!deepObjectsEquals(config, data.config)) {
+      this.configChange.emit(config);
+    }
+
+    return createCalendarEvents(
+      config,
+      data.collections,
+      data.documents,
+      data.permissions || {},
+      this.constraintData,
+      data.query
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (
-      (changes.documents || changes.config || changes.collections || changes.permissions || changes.query) &&
+      (changes.documents ||
+        changes.config ||
+        changes.collections ||
+        changes.permissions ||
+        changes.query ||
+        changes.constraintData) &&
       this.config
     ) {
       this.dataSubject.next({
@@ -147,6 +164,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         permissions: this.permissions,
         config: this.config,
         query: this.query,
+        constraintData: this.constraintData,
       });
     }
     if (changes.config && this.config) {
@@ -215,18 +233,18 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   private collectionHasConfig(collectionId: string): boolean {
-    return true; // TODO
-
-    // const collectionConfig = this.config && this.config.collections[collectionId];
-    // return (
-    //   collectionConfig &&
-    //   (!!collectionConfig.barsProperties[CalendarBarPropertyRequired.Name] ||
-    //     !!collectionConfig.barsProperties[CalendarBarPropertyRequired.StartDate])
-    // );
+    return (this.config.stemsConfigs || []).some(
+      config =>
+        config.stem &&
+        config.stem.collectionId === collectionId &&
+        config.barsProperties &&
+        !!config.barsProperties[CalendarBarPropertyRequired.Name] &&
+        !!config.barsProperties[CalendarBarPropertyRequired.StartDate]
+    );
   }
 
   public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
-    this.updateEvent.emit(event.meta.documentId);
+    this.updateEvent.emit({...event.meta});
   }
 
   @HostListener('window:resize')

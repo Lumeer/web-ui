@@ -31,6 +31,7 @@ import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig} from './view';
+import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -53,6 +54,8 @@ export function isViewConfigChanged(
       return isKanbanConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Map:
       return isMapConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Pivot:
+      return isPivotConfigChanged(viewConfig, perspectiveConfig);
     default:
       return !isEqual(viewConfig, perspectiveConfig);
   }

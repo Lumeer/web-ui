@@ -52,9 +52,9 @@ export class PivotConfigWrapperComponent {
 
   public readonly defaultStemConfig = createDefaultPivotStemConfig();
 
-  public onStemConfigChange(stemConfig: PivotStemConfig, index: number) {
+  public onStemConfigChange(stemConfig: PivotStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<PivotConfig>(this.config);
-    config.stemsConfigs[index] = stemConfig;
+    config.stemsConfigs[index] = {...stemConfig, stem};
     this.configChange.emit(config);
   }
 

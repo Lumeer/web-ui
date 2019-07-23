@@ -19,6 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {Constraint} from '../../model/data/constraint';
+import {QueryStem} from '../navigation/query';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
@@ -39,6 +40,7 @@ export enum GanttChartConfigVersion {
 }
 
 export interface GanttChartStemConfig {
+  stem?: QueryStem;
   barsProperties: Record<string, GanttChartBarModel>;
 }
 

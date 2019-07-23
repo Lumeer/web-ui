@@ -29,6 +29,7 @@ import {PipesModule} from '../../shared/pipes/pipes.module';
 import {CalendarEventDialogCollectionFormComponent} from './form/collection-form/calendar-event-dialog-collection-form.component';
 import {PropertiesDefinedPipe} from './pipes/properties-defined.pipe';
 import {DateTimeModule} from '../../shared/date-time/date-time.module';
+import {StemCollectionsItemsPipe} from './pipes/stem-collections-items.pipe';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {DateTimeModule} from '../../shared/date-time/date-time.module';
     CalendarEventDialogFormComponent,
     CalendarEventDialogCollectionFormComponent,
     PropertiesDefinedPipe,
+    StemCollectionsItemsPipe,
   ],
   imports: [
     CommonModule,

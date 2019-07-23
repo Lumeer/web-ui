@@ -40,7 +40,7 @@ import {
 } from '../../../core/store/calendars/calendar.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
-import {deepObjectsEquals, isDateValid} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint, isCollectionAttributeEditable} from '../../../core/store/collections/collection.util';
 import {Query} from '../../../core/store/navigation/query';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
@@ -62,6 +62,9 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   @Input()
   public initialTime: number;
+
+  @Input()
+  public stemIndex: number;
 
   @Input()
   public config: CalendarConfig;
@@ -95,8 +98,8 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     this.collectionPlaceholder = i18n({id: 'dialog.calendar.event.collection', value: 'Table'});
   }
 
-  public get collectionIdControl(): AbstractControl {
-    return this.form.controls.collectionId;
+  public get stemIndexControl(): AbstractControl {
+    return this.form.controls.stemIndex;
   }
 
   public ngOnInit() {
@@ -104,18 +107,10 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
   }
 
   private createForm() {
-    const {
-      collectionId,
-      allDay,
-      title,
-      eventStart,
-      eventEnd,
-      startEditable,
-      endEditable,
-    } = this.getInitialDocumentData();
+    const {stemIndex, allDay, title, eventStart, eventEnd, startEditable, endEditable} = this.getInitialDocumentData();
 
     this.form = this.fb.group({
-      collectionId: [collectionId || this.getInitialCollection(), Validators.required],
+      stemIndex: [isNotNullOrUndefined(stemIndex) && stemIndex >= 0 ? stemIndex : 0, Validators.required],
       allDay: allDay || this.getInitialAllDay(),
       title: [title || this.getInitialTitleName(), Validators.required],
       eventStart: [eventStart || this.getInitialEventStart(), Validators.required],
@@ -156,7 +151,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
   }
 
   private getInitialDocumentData(): {
-    collectionId?: string;
+    stemIndex?: number;
     allDay?: boolean;
     title?: string;
     eventStart?: Date;
@@ -168,7 +163,12 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
       return {startEditable: true, endEditable: true};
     }
 
-    const collectionConfig = (this.config && this.config.collections[this.document.collectionId]) || {};
+    const stemIndex = isNotNullOrUndefined(this.stemIndex)
+      ? this.stemIndex
+      : ((this.config && this.config.stemsConfigs) || []).findIndex(
+          sc => sc.stem && sc.stem.collectionId === this.document.collectionId
+        );
+    const collectionConfig = stemIndex >= 0 ? this.config.stemsConfigs[stemIndex] : {};
     const collectionPermissions =
       (this.allowedPermissions && this.allowedPermissions[this.document.collectionId]) || {};
     const titleProperty =
@@ -201,7 +201,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
       this.query
     );
 
-    return {collectionId, allDay, title, eventStart, eventEnd, startEditable, endEditable};
+    return {stemIndex, allDay, title, eventStart, eventEnd, startEditable, endEditable};
   }
 
   private createEventDatesFromDocument(start: Date, end: Date): {eventStart: Date; eventEnd: Date} {
@@ -227,10 +227,6 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     };
   }
 
-  private getInitialCollection(): string {
-    return this.collections && this.collections[0] && this.collections[0].id;
-  }
-
   private getInitialAllDay(): boolean {
     return false;
   }
@@ -248,8 +244,8 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
     return this.i18n({id: 'dialog.create.calendar.event.default.title', value: 'New event'});
   }
 
-  public onCollectionSelect(id: string) {
-    this.form.controls.collectionId.setValue(id);
+  public onStemIndexSelect(index: number) {
+    this.stemIndexControl.setValue(index);
   }
 
   public onSubmit() {
@@ -264,11 +260,12 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
   }
 
   private createEventDocument(): DocumentModel {
-    const {collectionId, title, allDay, eventStart, eventEnd} = this.form.value;
-    const collectionConfig: CalendarStemConfig = (this.config && this.config.collections[collectionId]) || {};
+    const {stemIndex, title, allDay, eventStart, eventEnd} = this.form.value;
+    const collectionConfig: CalendarStemConfig = (this.config && this.config.stemsConfigs[stemIndex]) || {};
     if (!collectionConfig.barsProperties) {
       return;
     }
+    const collectionId = collectionConfig.stem.collectionId;
     const collectionPermissions = (this.allowedPermissions && this.allowedPermissions[collectionId]) || {};
 
     const titleProperty = collectionConfig.barsProperties[CalendarBarPropertyRequired.Name];

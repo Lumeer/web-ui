@@ -19,15 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectQuery, selectQueryWithoutLinks} from '../../../core/store/navigation/navigation.state';
 import {
   selectCollectionsByCustomQuery,
+  selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
@@ -35,10 +36,9 @@ import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
-import {CalendarConfig, CalendarMode, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar.model';
+import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar.model';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query';
-import {queryWithoutLinks} from '../../../core/store/navigation/query.util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
@@ -46,6 +46,7 @@ import {DialogService} from '../../../dialog/dialog.service';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
+import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
 
 @Component({
   selector: 'calendar',
@@ -94,8 +95,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
         if (calendar) {
           this.refreshCalendar(view && view.config);
         } else {
-          this.createCalendar(view && view.config);
-          this.setupSidebar(view, sidebarOpened);
+          this.createCalendar(view, sidebarOpened);
         }
       });
     this.subscriptions.add(subscription);
@@ -107,40 +107,36 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createCalendar(viewConfig: ViewConfig) {
-    const config = (viewConfig && viewConfig.calendar) || this.createDefaultConfig();
-    const calendar = {id: this.calendarId, config};
-    this.store$.dispatch(new CalendarsAction.AddCalendar({calendar}));
+  private createCalendar(view: View, sidebarOpened: boolean) {
+    combineLatest([this.store$.pipe(select(selectQuery)), this.store$.pipe(select(selectCollectionsByQuery))])
+      .pipe(take(1))
+      .subscribe(([query, collections]) => {
+        const config = checkOrTransformCalendarConfig(view && view.config && view.config.calendar, query, collections);
+        const calendar = {id: this.calendarId, config};
+        this.store$.dispatch(new CalendarsAction.AddCalendar({calendar}));
+        this.setupSidebar(view, config, sidebarOpened);
+      });
   }
 
-  private createDefaultConfig(): CalendarConfig {
-    return {stemsConfigs: [], date: new Date(), mode: CalendarMode.Month};
-  }
-
-  private setupSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
+  private setupSidebar(view: View, config: CalendarConfig, opened: boolean) {
+    if (!view || calendarConfigIsEmpty(config)) {
       this.sidebarOpened$.next(true);
+    } else {
+      this.sidebarOpened$.next(opened);
     }
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$
-      .pipe(
-        select(selectQuery),
-        map(query => query && queryWithoutLinks(query))
-      )
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchDocuments(query);
-        this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-        this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
-        this.permissions$ = this.collections$.pipe(
-          mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-          distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-        );
-      });
+    const subscription = this.store$.pipe(select(selectQueryWithoutLinks)).subscribe(query => {
+      this.query$.next(query);
+      this.fetchDocuments(query);
+      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
+      this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
+      this.permissions$ = this.collections$.pipe(
+        mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+        distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+      );
+    });
     this.subscriptions.add(subscription);
   }
 
@@ -171,8 +167,8 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.dialogService.openCalendarEventDialog(this.calendarId, time);
   }
 
-  public onUpdateEvent(documentId: string) {
-    this.dialogService.openCalendarEventDialog(this.calendarId, 0, documentId);
+  public onUpdateEvent(data: {documentId: string; stemIndex: number}) {
+    this.dialogService.openCalendarEventDialog(this.calendarId, 0, data.documentId, data.stemIndex);
   }
 
   public onSidebarToggle() {

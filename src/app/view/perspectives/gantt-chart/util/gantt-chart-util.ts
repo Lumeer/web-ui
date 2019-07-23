@@ -27,9 +27,13 @@ import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query.util';
+import {
+  collectionIdsChainForStem,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {isArraySubset} from '../../../../shared/utils/array.utils';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (viewConfig.mode !== currentConfig.mode) {
@@ -69,7 +73,7 @@ export function checkOrTransformGanttConfig(
 
   return {
     ...config,
-    stemsConfigs: checkOrTransformGanttStemsConfig(config.stemsConfigs, query, collections, linkTypes),
+    stemsConfigs: checkOrTransformGanttStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
   };
 }
 
@@ -83,19 +87,44 @@ function checkOrTransformGanttStemsConfig(
     return stemsConfigs;
   }
 
-  return ((query && query.stems) || []).map((stem, index) =>
-    checkOrTransformGanttCollectionConfig((stemsConfigs || [])[index], stem, collections, linkTypes)
-  );
+  const stemsConfigsCopy = [...stemsConfigs];
+  return ((query && query.stems) || []).map(stem => {
+    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
+    return checkOrTransformGanttStemConfig(stemConfig[0], stem, collections, linkTypes);
+  });
 }
 
-function checkOrTransformGanttCollectionConfig(
+function findBestStemConfigIndex(
+  stemsConfigs: GanttChartStemConfig[],
+  collectionIds: string[],
+  linkTypes: LinkType[]
+): number {
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (isArraySubset(stemConfigCollectionIds, collectionIds)) {
+      return i;
+    }
+  }
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (collectionIds[0] === stemConfigCollectionIds[0]) {
+      return i;
+    }
+  }
+
+  return 0;
+}
+
+function checkOrTransformGanttStemConfig(
   stemConfig: GanttChartStemConfig,
   stem: QueryStem,
   collections: Collection[],
   linkTypes: LinkType[]
 ): GanttChartStemConfig {
   if (!stemConfig || !stemConfig.barsProperties) {
-    return stemConfig;
+    return createDefaultGanttChartStemConfig(stem);
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
@@ -129,17 +158,17 @@ function checkOrTransformGanttCollectionConfig(
       return map;
     }, {});
 
-  return {barsProperties};
+  return {barsProperties, stem};
 }
 
 function createDefaultConfig(query: Query): GanttChartConfig {
   const stems = (query && query.stems) || [];
-  const stemsConfigs = stems.map(() => createDefaultGanttChartStemConfig());
+  const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem));
   return {mode: GanttChartMode.Month, version: GanttChartConfigVersion.V1, stemsConfigs: stemsConfigs};
 }
 
-export function createDefaultGanttChartStemConfig(): GanttChartStemConfig {
-  return {barsProperties: {}};
+export function createDefaultGanttChartStemConfig(stem?: QueryStem): GanttChartStemConfig {
+  return {barsProperties: {}, stem};
 }
 
 export function ganttConfigIsEmpty(config: GanttChartConfig) {

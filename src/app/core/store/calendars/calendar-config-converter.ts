@@ -54,7 +54,7 @@ function convertCalendarDtoToModelV0(config: any): CalendarConfig {
         resourceType: model.resourceType || AttributesResourceType.Collection,
       };
     }
-    collections[collectionId] = {barsProperties};
+    collections[collectionId] = {barsProperties, stem: {collectionId}};
   }
 
   return {

@@ -105,7 +105,7 @@ const routes: Routes = [
     outlet: 'dialog',
   },
   {
-    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time/:documentId`,
+    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time/:documentId/:stemIndex`,
     component: CalendarEventDialogComponent,
     outlet: 'dialog',
   },

@@ -22,7 +22,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calendars/calendar.model';
 import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
-import {calendarDefaultStemConfig} from '../util/calendar-util';
+import {getCalendarDefaultStemConfig} from '../util/calendar-util';
 
 @Component({
   selector: 'calendar-config',
@@ -42,11 +42,11 @@ export class CalendarConfigComponent {
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
 
-  public readonly defaultStemConfig = calendarDefaultStemConfig();
+  public readonly defaultStemConfig = getCalendarDefaultStemConfig();
 
-  public onCollectionConfigChange(stemConfig: CalendarStemConfig, index: number) {
+  public onCollectionConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<CalendarConfig>(this.config);
-    config.stemsConfigs[index] = stemConfig;
+    config.stemsConfigs[index] = {...stemConfig, stem};
     this.configChange.emit(config);
   }
 

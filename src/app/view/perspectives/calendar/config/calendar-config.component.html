@@ -2,5 +2,5 @@
                             class="d-block mt-4"
                             [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
                             [collection]="collections | collectionById:stem.collectionId"
-                            (configChange)="onCollectionConfigChange($event, index)">
+                            (configChange)="onCollectionConfigChange($event, stem, index)">
 </calendar-collection-config>

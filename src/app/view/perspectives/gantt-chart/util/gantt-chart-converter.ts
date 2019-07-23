@@ -51,7 +51,7 @@ import {
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
 } from '../../../../core/store/collections/collection.util';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
@@ -97,9 +97,10 @@ export class GanttChartConverter {
   ): GanttChartTask[] {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
 
+    const usedTaskIds = new Set<string>();
     return ((query && query.stems) || []).reduce((tasks, stem, index) => {
       this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
-      tasks.push(...this.convertByStem(stem, index));
+      tasks.push(...this.convertByStem(index, usedTaskIds));
       return tasks;
     }, []);
   }
@@ -124,19 +125,22 @@ export class GanttChartConverter {
     this.query = query;
   }
 
-  private convertByStem(stem: QueryStem, index: number): GanttChartTask[] {
+  private convertByStem(index: number, usedTaskIds: Set<string>): GanttChartTask[] {
     const stemConfig = this.config && this.config.stemsConfigs && this.config.stemsConfigs[index];
     const stemProperties = (stemConfig && stemConfig.barsProperties) || {};
     if (this.requiredPropertiesAreSet(stemProperties)) {
       if (this.shouldAggregate(stemProperties)) {
-        return this.convertByAggregation(stemProperties);
+        return this.convertByAggregation(stemProperties, usedTaskIds);
       }
-      return this.convertSimple(stemProperties);
+      return this.convertSimple(stemProperties, usedTaskIds);
     }
     return [];
   }
 
-  private convertByAggregation(properties: Record<string, GanttChartBarModel>): GanttChartTask[] {
+  private convertByAggregation(
+    properties: Record<string, GanttChartBarModel>,
+    usedTaskIds: Set<string>
+  ): GanttChartTask[] {
     const startProperty = properties[GanttChartBarPropertyRequired.Start];
     const resource = this.getResource(startProperty);
 
@@ -173,25 +177,26 @@ export class GanttChartConverter {
       }
     }
 
-    return this.createGanttChartTasksForResource(properties, resource, dataResourcesSwimlanes);
+    return this.createGanttChartTasksForResource(properties, resource, dataResourcesSwimlanes, usedTaskIds);
   }
 
   private convertGanttProperty(property: GanttChartBarModel): DataAggregatorAttribute {
     return {attributeId: property.attributeId, resourceIndex: property.resourceIndex};
   }
 
-  private convertSimple(properties: Record<string, GanttChartBarModel>): GanttChartTask[] {
+  private convertSimple(properties: Record<string, GanttChartBarModel>, usedTaskIds: Set<string>): GanttChartTask[] {
     const startProperty = properties[GanttChartBarPropertyRequired.Start];
     const dataResources = this.dataAggregator.getDataResources(startProperty.resourceIndex);
     const resource = this.getResource(startProperty);
 
-    return this.createGanttChartTasksForResource(properties, resource, dataResources);
+    return this.createGanttChartTasksForResource(properties, resource, dataResources, usedTaskIds);
   }
 
   private createGanttChartTasksForResource(
     properties: Record<string, GanttChartBarModel>,
     resource: AttributesResource,
-    dataResources: DataResourceSwimlanes[]
+    dataResources: DataResourceSwimlanes[],
+    usedTaskIds: Set<string>
   ): GanttChartTask[] {
     if (!properties) {
       return [];
@@ -209,7 +214,7 @@ export class GanttChartConverter {
       const start = startProperty && dataResource.data[startProperty.attributeId];
       const end = endProperty && dataResource.data[endProperty.attributeId];
       if (isTaskValid(name, start, end)) {
-        const taskId = createGanttChartTaskId(dataResource);
+        const taskId = createGanttChartTaskId(dataResource, new Set<string>(usedTaskIds));
         validTaskIds.push(taskId);
         if (map[dataResource.id]) {
           map[dataResource.id].push(taskId);
@@ -259,7 +264,7 @@ export class GanttChartConverter {
           : resourceColor;
 
       arr.push({
-        id: createGanttChartTaskId(dataResource),
+        id: createGanttChartTaskId(dataResource, usedTaskIds),
         name: formatDataValue(name, nameAttribute && nameAttribute.constraint, this.constraintData),
         start: interval[0].value,
         end: interval[1].value,
@@ -338,8 +343,15 @@ export class GanttChartConverter {
   }
 }
 
-function createGanttChartTaskId(dataResource: DataResourceSwimlanes): string {
-  return [dataResource.swimlane, dataResource.subSwimlane, dataResource.id].filter(val => !!val).join(':');
+function createGanttChartTaskId(dataResource: DataResourceSwimlanes, usedTaskIds: Set<string>): string {
+  let id = [dataResource.swimlane, dataResource.subSwimlane, dataResource.id].filter(val => !!val).join(':');
+  let num = 0;
+  while (usedTaskIds.has(id)) {
+    id = id + num++;
+  }
+
+  usedTaskIds.add(id);
+  return id;
 }
 
 function createDependencies(dataResource: DataResource, validTaskIdsMap: Record<string, string[]>): string {

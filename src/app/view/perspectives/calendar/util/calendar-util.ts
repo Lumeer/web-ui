@@ -24,20 +24,30 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarStemConfig,
   CalendarConfig,
+  CalendarConfigVersion,
+  CalendarMode,
+  CalendarStemConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {findAttribute, isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {formatData} from '../../../../shared/utils/data.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {
+  collectionIdsChainForStem,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query.util';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {isArraySubset} from '../../../../shared/utils/array.utils';
 
 export interface CalendarMetaData {
   documentId: string;
   collectionId: string;
+  stemIndex: number;
   color: string;
   startAttributeId: string;
   endAttributeId: string;
@@ -61,7 +71,8 @@ export function createCalendarEvents(
           documentsByCollection(documents, collection),
           permissions[collection.id] || {},
           constraintData,
-          query
+          query,
+          index
         )
       );
     }
@@ -79,7 +90,8 @@ export function createCalendarEventsForCollection(
   documents: DocumentModel[],
   permissions: AllowedPermissions,
   constraintData: ConstraintData,
-  query: Query
+  query: Query,
+  stemIndex: number
 ): CalendarEvent<CalendarMetaData>[] {
   if (!config) {
     return [];
@@ -133,6 +145,7 @@ export function createCalendarEventsForCollection(
       meta: {
         documentId: document.id,
         collectionId: document.collectionId,
+        stemIndex,
         color: collection.color,
         startAttributeId: interval[0].attrId,
         endAttributeId: interval[1].attrId,
@@ -268,6 +281,114 @@ function calendarConfigCollectionChanged(config1: CalendarStemConfig, config2: C
   });
 }
 
-export function calendarDefaultStemConfig(): CalendarStemConfig {
-  return {barsProperties: {}};
+export function calendarConfigIsEmpty(config: CalendarConfig): boolean {
+  return (
+    config &&
+    config.stemsConfigs.filter(value => Object.values(value.barsProperties || {}).filter(bar => !!bar).length > 0)
+      .length === 0
+  );
+}
+
+export function checkOrTransformCalendarConfig(
+  config: CalendarConfig,
+  query: Query,
+  collections: Collection[]
+): CalendarConfig {
+  if (!config) {
+    return calendarDefaultConfig(query);
+  }
+
+  return {
+    ...config,
+    stemsConfigs: checkOrTransformCalendarStemsConfig(config.stemsConfigs || [], query, collections, []),
+  };
+}
+
+function checkOrTransformCalendarStemsConfig(
+  stemsConfigs: CalendarStemConfig[],
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): CalendarStemConfig[] {
+  const stemsConfigsCopy = [...stemsConfigs];
+  return ((query && query.stems) || []).map(stem => {
+    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
+    return checkOrTransformCalendarStemConfig(stemConfig[0], stem, collections, linkTypes);
+  });
+}
+
+function findBestStemConfigIndex(
+  stemsConfigs: CalendarStemConfig[],
+  collectionIds: string[],
+  linkTypes: LinkType[]
+): number {
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (isArraySubset(stemConfigCollectionIds, collectionIds)) {
+      return i;
+    }
+  }
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (collectionIds[0] === stemConfigCollectionIds[0]) {
+      return i;
+    }
+  }
+
+  return 0;
+}
+
+function checkOrTransformCalendarStemConfig(
+  stemConfig: CalendarStemConfig,
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): CalendarStemConfig {
+  if (!stemConfig || !stemConfig.barsProperties) {
+    return getCalendarDefaultStemConfig(stem);
+  }
+
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+  const barsProperties = Object.entries(stemConfig.barsProperties)
+    .filter(([, bar]) => !!bar)
+    .reduce((map, [type, bar]) => {
+      const attributesResource = attributesResourcesOrder[bar.resourceIndex];
+      if (
+        attributesResource &&
+        attributesResource.id === bar.resourceId &&
+        getAttributesResourceType(attributesResource) === bar.resourceType
+      ) {
+        const attribute = findAttribute(attributesResource.attributes, bar.attributeId);
+        if (attribute) {
+          map[type] = bar;
+        }
+      } else {
+        const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+          ar => ar.id === bar.resourceId && getAttributesResourceType(ar) === bar.resourceType
+        );
+        if (newAttributesResourceIndex >= 0) {
+          const attribute = findAttribute(
+            attributesResourcesOrder[newAttributesResourceIndex].attributes,
+            bar.attributeId
+          );
+          if (attribute) {
+            map[type] = {...bar, resourceIndex: newAttributesResourceIndex};
+          }
+        }
+      }
+      return map;
+    }, {});
+
+  return {barsProperties, stem};
+}
+
+function calendarDefaultConfig(query: Query): CalendarConfig {
+  const stemsConfigs = (query.stems || []).map(stem => getCalendarDefaultStemConfig(stem));
+  return {mode: CalendarMode.Month, date: new Date(), version: CalendarConfigVersion.V1, stemsConfigs};
+}
+
+export function getCalendarDefaultStemConfig(stem?: QueryStem): CalendarStemConfig {
+  return {barsProperties: {}, stem};
 }

@@ -21,13 +21,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {
   CalendarBarModel,
   CalendarBarProperty,
-  CalendarBarPropertyRequired,
   CalendarStemConfig,
-  CalendarConfig,
 } from '../../../../core/store/calendars/calendar.model';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {GanttChartBarProperty, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Pipe({
   name: 'calendarPropertyItems',
@@ -51,7 +49,12 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
   }
 
   public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const bar: CalendarBarModel = {collectionId: collection.id, attributeId: attribute.id};
+    const bar: CalendarBarModel = {
+      resourceId: collection.id,
+      attributeId: attribute.id,
+      resourceIndex: 0,
+      resourceType: AttributesResourceType.Collection,
+    };
     return {id: bar, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }

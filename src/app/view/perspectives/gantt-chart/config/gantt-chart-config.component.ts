@@ -54,9 +54,9 @@ export class GanttChartConfigComponent {
     this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
   }
 
-  public onConfigChange(collectionConfig: GanttChartStemConfig, index: number) {
+  public onConfigChange(collectionConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
-    config.stemsConfigs[index] = collectionConfig;
+    config.stemsConfigs[index] = {...collectionConfig, stem};
     this.configChange.emit(config);
   }
 

@@ -12,7 +12,7 @@
                 [collections]="collections"
                 [linkTypes]="linkTypes"
                 [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
-                (configChange)="onStemConfigChange($event, index)">
+                (configChange)="onStemConfigChange($event, stem, index)">
   </pivot-config>
 
 </ng-container>

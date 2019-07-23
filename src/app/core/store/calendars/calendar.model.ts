@@ -18,6 +18,7 @@
  */
 
 import {AttributesResourceType} from '../../model/resource';
+import {QueryStem} from '../navigation/query';
 
 export const DEFAULT_CALENDAR_ID = 'default';
 export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
@@ -45,6 +46,7 @@ export enum CalendarMode {
 }
 
 export interface CalendarStemConfig {
+  stem?: QueryStem;
   barsProperties?: Record<string, CalendarBarModel>;
 }
 

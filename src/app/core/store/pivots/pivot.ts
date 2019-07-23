@@ -20,6 +20,7 @@
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {Constraint} from '../../model/data/constraint';
+import {QueryStem} from '../navigation/query';
 
 export const DEFAULT_PIVOT_ID = 'default';
 
@@ -35,6 +36,7 @@ export interface PivotConfig {
 }
 
 export interface PivotStemConfig {
+  stem?: QueryStem;
   rowAttributes: PivotRowAttribute[];
   columnAttributes: PivotColumnAttribute[];
   valueAttributes: PivotValueAttribute[];
