@@ -205,7 +205,7 @@ export function formatDurationDataValue(
     let usedNumUnits = 0;
     const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
 
-    const value = sortedDurationUnits.reduce((result, unit) => {
+    const reducedValue = sortedDurationUnits.reduce((result, unit) => {
       const unitToMillis = durationToMillisMap[unit];
       if (unitToMillis) {
         const unitToMillisBig = new Big(unitToMillis);
@@ -232,7 +232,7 @@ export function formatDurationDataValue(
       return result;
     }, '');
 
-    return value || (toNumber(saveValue) > 0 ? '0' : '');
+    return reducedValue || (toNumber(saveValue) > 0 ? '0' : '');
   }
 
   return saveValue;
