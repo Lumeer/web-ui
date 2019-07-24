@@ -58,8 +58,8 @@ export class PivotConfigWrapperComponent {
     this.configChange.emit(config);
   }
 
-  public onMergeTablesChange(checked: boolean) {
-    // TODO
+  public onMergeTablesChange(mergeTables: boolean) {
+    this.configChange.emit({...this.config, mergeTables});
   }
 
   public trackByStem(index: number, stem: QueryStem): string {

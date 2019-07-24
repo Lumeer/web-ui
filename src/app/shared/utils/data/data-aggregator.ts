@@ -24,7 +24,7 @@ import {findAttributeConstraint} from '../../../core/store/collections/collectio
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {Query, QueryStem} from '../../../core/store/navigation/query';
+import {QueryStem} from '../../../core/store/navigation/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query.util';
 import {isNullOrUndefined} from '../common.utils';
 import {formatDataValue} from '../data.utils';

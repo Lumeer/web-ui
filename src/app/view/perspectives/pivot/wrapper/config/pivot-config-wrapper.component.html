@@ -1,3 +1,22 @@
+<div class="custom-control custom-checkbox" *ngIf="config?.stemsConfigs?.length > 1"
+     [class.mb-4]="!pivotData || pivotData.ableToMerge || !pivotData.mergeTables">
+  <input id="mergeTablesCheckbox"
+         [attr.checked]="config.mergeTables"
+         [checked]="config.mergeTables"
+         (change)="onMergeTablesChange($event.target.checked)"
+         type="checkbox"
+         class="custom-control-input">
+  <label for="mergeTablesCheckbox"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.pivot.config.merge">Merge tables</span>
+</div>
+
+<div class="text-danger small mb-4 mt-2" i18n="@@perspective.pivot.config.merge.fail"
+     *ngIf="pivotData && !pivotData.ableToMerge && pivotData.mergeTables">
+  There are some tables I can't merge.
+</div>
+
 <ng-container *ngFor="let stem of query?.stems; let index = index; trackBy:trackByStem">
 
   <div class="text-nowrap" *ngIf="collections | collectionById:stem.collectionId as collection"

@@ -47,12 +47,12 @@ export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): 
   );
 }
 
-export function isPivotConfigChanged(c1: PivotConfig, c2: PivotConfig): boolean {
-  if (!!c1.mergeTables !== !!c2.mergeTables) {
+export function isPivotConfigChanged(viewConfig: PivotConfig, currentConfig: PivotConfig): boolean {
+  if (!!viewConfig.mergeTables !== !!currentConfig.mergeTables && (currentConfig.stemsConfigs || []).length > 1) {
     return true;
   }
 
-  return pivotStemConfigsHasChanged(c1.stemsConfigs || [], c2.stemsConfigs || []);
+  return pivotStemConfigsHasChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
 function pivotStemConfigsHasChanged(s1: PivotStemConfig[], s2: PivotStemConfig[]): boolean {
@@ -211,7 +211,7 @@ export function pivotConfigIsEmpty(config: PivotConfig): boolean {
   return (config.stemsConfigs || []).every(stemConfig => pivotStemConfigIsEmpty(stemConfig));
 }
 
-function pivotStemConfigIsEmpty(config: PivotStemConfig): boolean {
+export function pivotStemConfigIsEmpty(config: PivotStemConfig): boolean {
   return (
     ((config && config.rowAttributes) || []).length === 0 &&
     ((config && config.columnAttributes) || []).length === 0 &&

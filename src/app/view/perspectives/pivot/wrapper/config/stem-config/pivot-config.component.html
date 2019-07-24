@@ -36,7 +36,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
                                        [isRow]="true"
                                        (attributeSelect)="onRowAttributeSelect($event, attribute)"
                                        (attributeRemove)="onRowAttributeRemove(index)"
-                                       (attributeChange)="onRowAttributeChange($event)">
+                                       (attributeChange)="onRowAttributeChange(index, $event)">
         </pivot-header-attribute-config>
 
       </div>
@@ -88,7 +88,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
                                        [pivotData]="pivotData"
                                        (attributeSelect)="onColumnAttributeSelect($event, attribute)"
                                        (attributeRemove)="onColumnAttributeRemove(index)"
-                                       (attributeChange)="onColumnAttributeChange($event)">
+                                       (attributeChange)="onColumnAttributeChange(index, $event)">
         </pivot-header-attribute-config>
 
       </div>
@@ -136,7 +136,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
                                       [availableAttributes]="data.items"
                                       (attributeSelect)="onValueAttributeSelect($event, attribute)"
                                       (attributeRemove)="onValueAttributeRemove(index)"
-                                      (attributeChange)="onValueAttributeChange($event)">
+                                      (attributeChange)="onValueAttributeChange(index, $event)">
         </pivot-value-attribute-config>
 
       </div>

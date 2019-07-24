@@ -12,7 +12,8 @@
               [ngClass]="cell.cssClass"
               [style.background]="cell.background"
               [style.color]="cell.background && (cell.background | contrastColor)">
-            {{cell.value}}
+            <ng-container *ngIf="cell | pivotTableCellHasValue">{{cell.value}}</ng-container>
+            <ng-container *ngIf="!(cell | pivotTableCellHasValue)">&nbsp;</ng-container>
           </td>
         </ng-container>
       </tr>

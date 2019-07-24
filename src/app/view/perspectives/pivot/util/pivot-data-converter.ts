@@ -41,9 +41,10 @@ import {
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {pivotStemConfigIsEmpty} from './pivot-util';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -142,7 +143,7 @@ export class PivotDataConverter {
 
     const {stemsConfigs, stems} = this.filterEmptyConfigs(config, query);
 
-    const mergeData = this.createPivotMergeData(stemsConfigs, stems);
+    const mergeData = this.createPivotMergeData(config.mergeTables, stemsConfigs, stems);
     const ableToMerge = mergeData.length === 1;
     const data = this.mergePivotData(mergeData);
     return {data: data, constraintData, ableToMerge, mergeTables: config.mergeTables};
@@ -151,7 +152,7 @@ export class PivotDataConverter {
   private filterEmptyConfigs(config: PivotConfig, query: Query): {stemsConfigs: PivotStemConfig[]; stems: QueryStem[]} {
     return (config.stemsConfigs || []).reduce(
       ({stemsConfigs, stems}, stemConfig, index) => {
-        if (!this.isPivotStemConfigEmpty(stemConfig)) {
+        if (!pivotStemConfigIsEmpty(stemConfig)) {
           const stem = (query.stems || [])[index];
           stemsConfigs.push(stemConfig);
           stems.push(stem);
@@ -163,20 +164,17 @@ export class PivotDataConverter {
     );
   }
 
-  private isPivotStemConfigEmpty(config: PivotStemConfig): boolean {
-    return (
-      [...(config.rowAttributes || []), ...(config.columnAttributes || []), ...(config.valueAttributes || [])]
-        .length === 0
-    );
-  }
-
-  private createPivotMergeData(stemsConfigs: PivotStemConfig[], stems: QueryStem[]): PivotMergeData[] {
+  private createPivotMergeData(
+    mergeTables: boolean,
+    stemsConfigs: PivotStemConfig[],
+    stems: QueryStem[]
+  ): PivotMergeData[] {
     return stemsConfigs.reduce((mergeData: PivotMergeData[], stemConfig, index) => {
       const configType = getPivotStemConfigType(stemConfig);
       const mergeDataIndex = mergeData.findIndex(
         data => data.type === configType && canMergeConfigsByType(data.type, data.configs[0], stemConfig)
       );
-      if (mergeDataIndex >= 0) {
+      if (mergeTables && mergeDataIndex >= 0) {
         mergeData[mergeDataIndex].configs.push(stemConfig);
         mergeData[mergeDataIndex].stems.push(stems[index]);
       } else {
@@ -221,7 +219,6 @@ export class PivotDataConverter {
       const columnAttributes = (config.columnAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
       const valueAttributes = (config.valueAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
 
-      // TODO colors?
       pivotColors.rows.push(...this.getAttributesColors(config.rowAttributes));
       pivotColors.columns.push(...this.getAttributesColors(config.columnAttributes));
       pivotColors.values.push(...this.getAttributesColors(config.valueAttributes));
@@ -229,7 +226,10 @@ export class PivotDataConverter {
       const aggregatedData = this.dataAggregator.aggregate(rowAttributes, columnAttributes, valueAttributes);
       mergedAggregatedData = this.mergeAggregatedData(mergedAggregatedData, aggregatedData);
 
-      mergedValueAttributes.push(...(config.valueAttributes || []));
+      const filteredValueAttributes = (config.valueAttributes || []).filter(
+        valueAttr => !mergedValueAttributes.some(merAttr => deepObjectsEquals(valueAttr, merAttr))
+      );
+      mergedValueAttributes.push(...filteredValueAttributes);
 
       if (!additionalData) {
         additionalData = {
