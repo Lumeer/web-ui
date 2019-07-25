@@ -100,7 +100,7 @@ export class DocumentUi {
   }
 
   private prepareUpdatedDocument(): DocumentModel {
-    const updatedDocument = {...this.document};
+    const updatedDocument = {...this.document, data: {...this.document.data}};
 
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);
