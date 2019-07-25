@@ -18,12 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
-
-const NUMBER_KEYS = Array.from(new Array(10).keys()).map(key => String(key));
 
 @Component({
   selector: 'coordinates-constraint-config-form',
@@ -34,6 +32,12 @@ const NUMBER_KEYS = Array.from(new Array(10).keys()).map(key => String(key));
 export class CoordinatesConstraintConfigFormComponent {
   public readonly controls = CoordinatesConstraintFormControl;
   public readonly formats = Object.values(CoordinatesFormat);
+  public readonly coordinatesFormat = CoordinatesFormat;
+
+  public readonly precisions = {
+    [CoordinatesFormat.DecimalDegrees]: [0, 1, 2, 3, 4, 5, 6],
+    [CoordinatesFormat.DegreesMinutesSeconds]: [0, 1, 2],
+  };
 
   @Input()
   public config: CoordinatesConstraintConfig;
@@ -60,19 +64,12 @@ export class CoordinatesConstraintConfigFormComponent {
     );
     this.form.addControl(
       CoordinatesConstraintFormControl.Precision,
-      new FormControl(this.config ? this.config.precision : getDefaultPrecision(this.config && this.config.format), [
-        Validators.required,
-        Validators.pattern(/^-?[0-9]*$/),
-        Validators.min(0),
-        Validators.max(10),
-      ])
+      new FormControl(this.config ? this.config.precision : getDefaultPrecision(this.config && this.config.format))
     );
   }
 
   public onFormatChange() {
-    if (!this.config) {
-      this.precisionControl.setValue(getDefaultPrecision(this.formatControl.value));
-    }
+    this.precisionControl.setValue(getDefaultPrecision(this.formatControl.value));
   }
 
   public get formatControl(): AbstractControl {
@@ -85,5 +82,5 @@ export class CoordinatesConstraintConfigFormComponent {
 }
 
 function getDefaultPrecision(format: CoordinatesFormat): number {
-  return format === CoordinatesFormat.DegreesMinutesSeconds ? 3 : 6;
+  return format === CoordinatesFormat.DegreesMinutesSeconds ? 0 : 6;
 }
