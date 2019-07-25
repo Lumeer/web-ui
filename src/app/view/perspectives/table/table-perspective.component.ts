@@ -20,6 +20,7 @@
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
   HostListener,
@@ -92,7 +93,11 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  public constructor(private scrollDispatcher: ScrollDispatcher, private store$: Store<AppState>) {}
+  public constructor(
+    private changeDetector: ChangeDetectorRef,
+    private scrollDispatcher: ScrollDispatcher,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.prepareTableId();
@@ -258,6 +263,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.query = query;
+        this.changeDetector.markForCheck();
       });
   }
 
