@@ -18,6 +18,7 @@
  */
 
 import {PivotConfig, PivotConfigVersion} from './pivot';
+import {PivotConfigV0} from './pivot-old';
 
 export function convertPivotConfigDtoToModel(config: any): PivotConfig {
   if (!config) {
@@ -31,10 +32,10 @@ export function convertPivotConfigDtoToModel(config: any): PivotConfig {
   }
 }
 
-function convertPivotConfigDtoToModelV1(config: any): PivotConfig {
+function convertPivotConfigDtoToModelV1(config: PivotConfig): PivotConfig {
   return config;
 }
 
-function convertPivotConfigDtoToModelV0(config: any): PivotConfig {
+function convertPivotConfigDtoToModelV0(config: PivotConfigV0): PivotConfig {
   return {version: PivotConfigVersion.V1, stemsConfigs: [config]};
 }

@@ -19,12 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
-  CalendarBarModel,
+  CalendarBar,
   CalendarBarProperty,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarStemConfig,
-} from '../../../../../core/store/calendars/calendar.model';
+} from '../../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
@@ -46,7 +46,7 @@ export class CalendarCollectionConfigComponent {
   public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBarModel) {
+  public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBar) {
     const bars = {...this.config.barsProperties, [type]: bar};
     const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
@@ -61,7 +61,7 @@ export class CalendarCollectionConfigComponent {
     this.configChange.emit(newConfig);
   }
 
-  private removeOptionalProperties(bars: Record<string, CalendarBarModel>, type: CalendarBarProperty) {
+  private removeOptionalProperties(bars: Record<string, CalendarBar>, type: CalendarBarProperty) {
     if (type === CalendarBarPropertyRequired.StartDate) {
       delete bars[CalendarBarPropertyOptional.EndDate];
     }

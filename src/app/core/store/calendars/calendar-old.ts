@@ -17,26 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarProperty} from '../../../../core/store/calendars/calendar';
+import {CalendarMode} from './calendar';
 
-@Pipe({
-  name: 'calendarPropertyEmptyValue',
-})
-export class CalendarValuePropertyPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export interface CalendarConfigV0 {
+  date: Date;
+  mode: CalendarMode;
+  collections: Record<string, CalendarCollectionConfigV0>;
+}
 
-  public transform(barProperty: CalendarBarProperty): string {
-    return this.i18n(
-      {
-        id: 'calendar.value.placeholder',
-        value:
-          'Select {barProperty, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time}}',
-      },
-      {
-        barProperty,
-      }
-    );
-  }
+export interface CalendarCollectionConfigV0 {
+  barsProperties?: Record<string, CalendarBarModelV0>;
+}
+
+export interface CalendarBarModelV0 {
+  collectionId: string;
+  attributeId: string;
 }

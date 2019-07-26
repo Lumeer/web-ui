@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {CalendarConfig, CalendarModel} from './calendar.model';
+import {CalendarConfig, Calendar} from './calendar';
 
 export enum CalendarsActionType {
   ADD_CALENDAR = '[Calendar] Add calendar',
@@ -31,7 +31,7 @@ export namespace CalendarsAction {
   export class AddCalendar implements Action {
     public readonly type = CalendarsActionType.ADD_CALENDAR;
 
-    public constructor(public payload: {calendar: CalendarModel}) {}
+    public constructor(public payload: {calendar: Calendar}) {}
   }
 
   export class RemoveCalendar implements Action {

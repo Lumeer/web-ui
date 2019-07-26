@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CalendarMode} from '../../../../../core/store/calendars/calendar.model';
+import {CalendarMode} from '../../../../../core/store/calendars/calendar';
 
 @Component({
   selector: 'calendar-header',

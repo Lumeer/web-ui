@@ -18,11 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {
-  CalendarBarModel,
-  CalendarBarProperty,
-  CalendarStemConfig,
-} from '../../../../core/store/calendars/calendar.model';
+import {CalendarBar, CalendarBarProperty, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {AttributesResourceType} from '../../../../core/model/resource';
@@ -49,7 +45,7 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
   }
 
   public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const bar: CalendarBarModel = {
+    const bar: CalendarBar = {
       resourceId: collection.id,
       attributeId: attribute.id,
       resourceIndex: 0,

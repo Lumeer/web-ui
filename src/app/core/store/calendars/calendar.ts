@@ -23,7 +23,7 @@ import {QueryStem} from '../navigation/query';
 export const DEFAULT_CALENDAR_ID = 'default';
 export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
 
-export interface CalendarModel {
+export interface Calendar {
   id: string;
   config?: CalendarConfig;
 }
@@ -47,10 +47,10 @@ export enum CalendarMode {
 
 export interface CalendarStemConfig {
   stem?: QueryStem;
-  barsProperties?: Record<string, CalendarBarModel>;
+  barsProperties?: Record<string, CalendarBar>;
 }
 
-export interface CalendarBarModel {
+export interface CalendarBar {
   resourceId: string;
   attributeId: string;
   resourceIndex?: number;

@@ -19,6 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartStemConfig} from './gantt-chart';
+import {GanttChartConfigV0} from './gantt-chart-old';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {
@@ -33,17 +34,13 @@ export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig
   }
 }
 
-function convertGanttChartDtoToModelV1(config: any): GanttChartConfig {
+function convertGanttChartDtoToModelV1(config: GanttChartConfig): GanttChartConfig {
   return config;
 }
 
-function convertGanttChartDtoToModelV0(config: any): GanttChartConfig {
-  if (!config.collections) {
-    return config;
-  }
-
+function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartConfig {
   const collections: Record<string, GanttChartStemConfig> = {};
-  for (const [collectionId, collectionConfig] of Object.entries<GanttChartStemConfig>(config.collections)) {
+  for (const [collectionId, collectionConfig] of Object.entries<GanttChartStemConfig>(config.collections || {})) {
     const barsProperties: Record<string, GanttChartBarModel> = {};
 
     for (const [key, model] of Object.entries(collectionConfig.barsProperties || {})) {

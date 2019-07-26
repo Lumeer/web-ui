@@ -37,7 +37,7 @@ import {
   CalendarBarPropertyRequired,
   CalendarStemConfig,
   CalendarConfig,
-} from '../../../core/store/calendars/calendar.model';
+} from '../../../core/store/calendars/calendar';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
 import {deepObjectsEquals, isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';

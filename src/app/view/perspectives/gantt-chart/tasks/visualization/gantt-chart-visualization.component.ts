@@ -25,6 +25,12 @@ import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {environment} from '../../../../../../environments/environment';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 
+export interface GanttChartValueChange {
+  dataResourceId: string;
+  resourceType: AttributesResourceType;
+  changes: {attributeId: string; value: any}[];
+}
+
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
@@ -45,18 +51,10 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public currentMode: GanttChartMode;
 
   @Output()
-  public datesChange = new EventEmitter<{
-    dataResourceId: string;
-    resourceType: AttributesResourceType;
-    changes: {attributeId: string; value: any}[];
-  }>();
+  public datesChange = new EventEmitter<GanttChartValueChange>();
 
   @Output()
-  public progressChange = new EventEmitter<{
-    dataResourceId: string;
-    resourceType: AttributesResourceType;
-    change: {attributeId: string; value: any};
-  }>();
+  public progressChange = new EventEmitter<GanttChartValueChange>();
 
   @Output()
   public addDependency = new EventEmitter<{fromId: string; toId: string}>();
@@ -147,7 +145,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const metadata = task.metadata;
         const progressAttributeId = metadata.progressAttributeId;
         if (progressAttributeId) {
-          this.progressChange.emit({...metadata, change: {attributeId: progressAttributeId, value: progress}});
+          this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: progress}]});
         }
       },
       on_dependency_added: (fromTask: GanttChartTask, toTask: GanttChartTask) => {

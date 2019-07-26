@@ -28,7 +28,7 @@ import {
   CalendarConfigVersion,
   CalendarMode,
   CalendarStemConfig,
-} from '../../../../core/store/calendars/calendar.model';
+} from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute, isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';

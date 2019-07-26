@@ -22,7 +22,7 @@ import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarStemConfig,
-} from '../../../../core/store/calendars/calendar.model';
+} from '../../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'calendarRequiredPropertiesSet',

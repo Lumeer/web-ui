@@ -44,6 +44,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
+import {GanttChartValueChange} from './visualization/gantt-chart-visualization.component';
 
 interface Data {
   collections: Collection[];
@@ -185,31 +186,16 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onProgressChanged(data: {
-    dataResourceId: string;
-    resourceType: AttributesResourceType;
-    change: {attributeId: string; value: any};
-  }) {
-    this.onValueChanged({...data, changes: [data.change]}, true);
+  public onProgressChanged(valueChange: GanttChartValueChange) {
+    this.onValueChanged(valueChange, true);
   }
 
-  public onDatesChanged(data: {
-    dataResourceId: string;
-    resourceType: AttributesResourceType;
-    changes: {attributeId: string; value: any}[];
-  }) {
-    this.onValueChanged(data);
+  public onDatesChanged(valueChange: GanttChartValueChange) {
+    this.onValueChanged(valueChange);
   }
 
-  public onValueChanged(
-    data: {
-      dataResourceId: string;
-      resourceType: AttributesResourceType;
-      changes: {attributeId: string; value: any}[];
-    },
-    isProgress?: boolean
-  ) {
-    const {dataResourceId, resourceType, changes} = data;
+  public onValueChanged(valueChange: GanttChartValueChange, isProgress?: boolean) {
+    const {dataResourceId, resourceType, changes} = valueChange;
     const dataResource = this.getDataResource(dataResourceId, resourceType);
     if (!dataResource) {
       return;

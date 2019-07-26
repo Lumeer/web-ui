@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarStemConfig} from '../../../core/store/calendars/calendar.model';
+import {CalendarStemConfig} from '../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'propertiesDefined',

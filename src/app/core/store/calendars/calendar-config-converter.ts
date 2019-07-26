@@ -18,7 +18,8 @@
  */
 
 import {AttributesResourceType} from '../../model/resource';
-import {CalendarBarModel, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar.model';
+import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
+import {CalendarCollectionConfigV0, CalendarConfigV0} from './calendar-old';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {
@@ -33,25 +34,21 @@ export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   }
 }
 
-function convertCalendarDtoToModelV1(config: any): CalendarConfig {
+function convertCalendarDtoToModelV1(config: CalendarConfig): CalendarConfig {
   return config;
 }
 
-function convertCalendarDtoToModelV0(config: any): CalendarConfig {
-  if (!config.collections) {
-    return config;
-  }
-
+function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfig {
   const collections: Record<string, CalendarStemConfig> = {};
-  for (const [collectionId, collectionConfig] of Object.entries<CalendarStemConfig>(config.collections)) {
-    const barsProperties: Record<string, CalendarBarModel> = {};
+  for (const [collectionId, collectionConfig] of Object.entries<CalendarCollectionConfigV0>(config.collections || {})) {
+    const barsProperties: Record<string, CalendarBar> = {};
 
     for (const [key, model] of Object.entries(collectionConfig.barsProperties || {})) {
       barsProperties[key] = {
-        resourceId: model.resourceId || (model as any).collectionId,
+        resourceId: model.collectionId,
         attributeId: model.attributeId,
-        resourceIndex: model.resourceIndex || 0,
-        resourceType: model.resourceType || AttributesResourceType.Collection,
+        resourceIndex: 0,
+        resourceType: AttributesResourceType.Collection,
       };
     }
     collections[collectionId] = {barsProperties, stem: {collectionId}};

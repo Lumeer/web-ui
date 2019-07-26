@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calendars/calendar.model';
+import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calendars/calendar';
 import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {getCalendarDefaultStemConfig} from '../util/calendar-util';

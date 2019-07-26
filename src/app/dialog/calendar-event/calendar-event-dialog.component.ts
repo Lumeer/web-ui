@@ -21,7 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit, On
 import {ActivatedRoute} from '@angular/router';
 import {distinctUntilChanged, filter, map, mergeMap} from 'rxjs/operators';
 import {DialogService} from '../dialog.service';
-import {CalendarConfig} from '../../core/store/calendars/calendar.model';
+import {CalendarConfig} from '../../core/store/calendars/calendar';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {AppState} from '../../core/store/app.state';

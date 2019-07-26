@@ -28,7 +28,9 @@ import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {
   durationConstraintUnitMaxValue,
   getDefaultDurationUnitConversion,
+  getPreviousDurationUnit,
 } from '../../../../../shared/utils/constraint/duration-constraint.utils';
+import {TranslationService} from '../../../../../core/service/translation.service';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -46,6 +48,27 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public readonly type = DurationType;
   public readonly types = Object.values(DurationType);
   public readonly units = Object.values(DurationUnit);
+  public readonly exampleString: string;
+
+  constructor(private translationService: TranslationService) {
+    this.exampleString = this.generateExampleString();
+  }
+
+  private generateExampleString(): string {
+    return Object.values(DurationUnit)
+      .map(unit => `${this.generateRandomNumberForUnit(unit)}${this.translateDurationUnit(unit)}`)
+      .join('');
+  }
+
+  private translateDurationUnit(unit: DurationUnit): string {
+    return this.translationService.translateDurationUnit(unit);
+  }
+
+  private generateRandomNumberForUnit(unit: DurationUnit): number {
+    const previousUnit = getPreviousDurationUnit(unit);
+    const maxValue = previousUnit ? durationConstraintUnitMaxValue(previousUnit) - 1 : 5;
+    return Math.floor(Math.random() * maxValue) + 1;
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {

@@ -36,7 +36,7 @@ import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
-import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar.model';
+import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';

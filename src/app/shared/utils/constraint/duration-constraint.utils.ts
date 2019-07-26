@@ -22,6 +22,14 @@ import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import Big, {Comparison, RoundingMode} from 'big.js';
 
+export const sortedDurationUnits = [
+  DurationUnit.Weeks,
+  DurationUnit.Days,
+  DurationUnit.Hours,
+  DurationUnit.Minutes,
+  DurationUnit.Seconds,
+];
+
 export function durationConstraintUnitMaxValue(unit: DurationUnit): number {
   switch (unit) {
     case DurationUnit.Weeks:
@@ -103,7 +111,7 @@ function getDurationUnitToMillis(
     case DurationUnit.Days:
     case DurationUnit.Hours:
     case DurationUnit.Minutes:
-      const descendantUnit = getDescendantDurationUnit(unit);
+      const descendantUnit = getNextDurationUnit(unit);
       return conversion * getDurationUnitToMillis(descendantUnit, type, conversions);
     case DurationUnit.Seconds:
       return conversion;
@@ -112,19 +120,14 @@ function getDurationUnitToMillis(
   }
 }
 
-function getDescendantDurationUnit(unit: DurationUnit): DurationUnit | null {
-  switch (unit) {
-    case DurationUnit.Weeks:
-      return DurationUnit.Days;
-    case DurationUnit.Days:
-      return DurationUnit.Hours;
-    case DurationUnit.Hours:
-      return DurationUnit.Minutes;
-    case DurationUnit.Minutes:
-      return DurationUnit.Seconds;
-    default:
-      return null;
-  }
+function getNextDurationUnit(unit: DurationUnit): DurationUnit | null {
+  const index = sortedDurationUnits.indexOf(unit);
+  return sortedDurationUnits[index + 1];
+}
+
+export function getPreviousDurationUnit(unit: DurationUnit): DurationUnit | null {
+  const index = sortedDurationUnits.indexOf(unit);
+  return sortedDurationUnits[index - 1];
 }
 
 function parseValueToDurationValue(value: any, unitToMillisMap: Record<string, number>): string {
@@ -183,14 +186,6 @@ function isDurationValidByNativeLetters(value: any, durationUnitsMap: DurationUn
 function durationInvalidityTestRegex(letters: string[]): RegExp {
   return new RegExp(`[^${letters.join('')}0-9]`, 'g');
 }
-
-export const sortedDurationUnits = [
-  DurationUnit.Weeks,
-  DurationUnit.Days,
-  DurationUnit.Hours,
-  DurationUnit.Minutes,
-  DurationUnit.Seconds,
-];
 
 export function formatDurationDataValue(
   value: any,

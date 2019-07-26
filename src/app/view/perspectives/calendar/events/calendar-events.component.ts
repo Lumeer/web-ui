@@ -35,11 +35,7 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {
-  CalendarBarPropertyRequired,
-  CalendarConfig,
-  CalendarMode,
-} from '../../../../core/store/calendars/calendar.model';
+import {CalendarBarPropertyRequired, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
