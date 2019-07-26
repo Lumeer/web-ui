@@ -94,7 +94,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "4mb",
+                  "baseline": "5mb",
                   "maximumWarning": "10%",
                   "maximumError": "25%"
                 },

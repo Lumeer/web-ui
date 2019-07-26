@@ -51,4 +51,4 @@ export const COLOR_DANGER = COLOR_RED;
 export const COLOR_LIGHT = COLOR_GRAY200;
 export const COLOR_DARK = COLOR_GRAY700;
 
-export const DRAG_DELAY = 500;
+export const DRAG_DELAY = 50;
