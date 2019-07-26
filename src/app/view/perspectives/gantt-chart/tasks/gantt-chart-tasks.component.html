@@ -10,7 +10,8 @@
         [ganttChartId]="ganttChartId"
         [currentMode]="data.mode"
         [tasks]="data.tasks"
-        (patchData)="onValueChanged($event)"
+        (datesChange)="onDatesChanged($event)"
+        (progressChange)="onProgressChanged($event)"
         (addDependency)="onAddDependency($event)"
         (removeDependency)="onRemoveDependency($event)">
       </gantt-chart-visualization>

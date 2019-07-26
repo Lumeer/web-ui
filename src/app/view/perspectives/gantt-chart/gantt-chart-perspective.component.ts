@@ -38,7 +38,7 @@ import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operato
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {DEFAULT_GANTT_CHART_ID, GanttChartConfig, GanttChartMode} from '../../../core/store/gantt-charts/gantt-chart';
+import {DEFAULT_GANTT_CHART_ID, GanttChartConfig} from '../../../core/store/gantt-charts/gantt-chart';
 import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';

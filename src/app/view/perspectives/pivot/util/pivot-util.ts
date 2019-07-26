@@ -20,17 +20,23 @@
 import {
   PivotAttribute,
   PivotConfig,
+  PivotConfigVersion,
   PivotRowColumnAttribute,
+  PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query.util';
+import {
+  collectionIdsChainForStem,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query.util';
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isArraySubset} from '../../../../shared/utils/array.utils';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return (
@@ -41,38 +47,28 @@ export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): 
   );
 }
 
-export function pivotConfigHasDataTransformChange(c1: PivotConfig, c2: PivotConfig): boolean {
-  if (!c1 && !c2) {
-    return false;
-  }
-  if ((!c1 && c2) || (c1 && !c2)) {
+export function isPivotConfigChanged(viewConfig: PivotConfig, currentConfig: PivotConfig): boolean {
+  if (!!viewConfig.mergeTables !== !!currentConfig.mergeTables && (currentConfig.stemsConfigs || []).length > 1) {
     return true;
   }
 
-  const c1RowAttributes = (c1.rowAttributes || []).map(a => cleanPivotHeaderAttribute(a));
-  const c2RowAttributes = (c2.rowAttributes || []).map(a => cleanPivotHeaderAttribute(a));
-  if (JSON.stringify(c1RowAttributes) !== JSON.stringify(c2RowAttributes)) {
-    return true;
-  }
-
-  const c1ColumnAttributes = (c1.columnAttributes || []).map(a => cleanPivotHeaderAttribute(a));
-  const c2ColumnAttributes = (c2.columnAttributes || []).map(a => cleanPivotHeaderAttribute(a));
-  if (JSON.stringify(c1ColumnAttributes) !== JSON.stringify(c2ColumnAttributes)) {
-    return true;
-  }
-
-  const c1ValueAttributes = (c1.valueAttributes || []).map(a => cleanPivotValueAttribute(a));
-  const c2ValueAttributes = (c2.valueAttributes || []).map(a => cleanPivotValueAttribute(a));
-
-  return JSON.stringify(c1ValueAttributes) !== JSON.stringify(c2ValueAttributes);
+  return pivotStemConfigsHasChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
-function cleanPivotHeaderAttribute(pivotRowColumnAttribute: PivotRowColumnAttribute): PivotRowColumnAttribute {
-  return {...cleanPivotAttribute(pivotRowColumnAttribute), constraint: pivotRowColumnAttribute.constraint};
+function pivotStemConfigsHasChanged(s1: PivotStemConfig[], s2: PivotStemConfig[]): boolean {
+  if (s1.length !== s2.length) {
+    return true;
+  }
+
+  return s1.some((stemConfig, index) => pivotStemConfigHasChanged(stemConfig, s2[index]));
 }
 
-function cleanPivotValueAttribute(pivotValueAttribute: PivotValueAttribute): PivotValueAttribute {
-  return {...cleanPivotAttribute(pivotValueAttribute), aggregation: pivotValueAttribute.aggregation};
+function pivotStemConfigHasChanged(s1: PivotStemConfig, s2: PivotStemConfig): boolean {
+  return (
+    !deepObjectsEquals(s1.rowAttributes || [], s2.rowAttributes || []) ||
+    !deepObjectsEquals(s1.columnAttributes || [], s2.columnAttributes || []) ||
+    !deepObjectsEquals(s1.valueAttributes || [], s2.valueAttributes || [])
+  );
 }
 
 export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
@@ -84,12 +80,6 @@ export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
   };
 }
 
-export function pivotConfigHasAdditionalValueLevel(config: PivotConfig): boolean {
-  const columnsNum = (config.columnAttributes || []).length;
-  const valuesNum = (config.valueAttributes || []).length;
-  return (columnsNum === 0 && valuesNum > 0) || (columnsNum > 0 && valuesNum > 1);
-}
-
 export function checkOrTransformPivotConfig(
   config: PivotConfig,
   query: Query,
@@ -97,15 +87,63 @@ export function checkOrTransformPivotConfig(
   linkTypes: LinkType[]
 ): PivotConfig {
   if (!config) {
-    return createDefaultConfig();
+    return createDefaultConfig(query);
+  }
+  return {
+    ...config,
+    stemsConfigs: checkOrTransformPivotStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
+  };
+}
+
+export function checkOrTransformPivotStemsConfig(
+  stemsConfigs: PivotStemConfig[],
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): PivotStemConfig[] {
+  const stemsConfigsCopy = [...stemsConfigs];
+  return ((query && query.stems) || []).map(stem => {
+    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
+    return checkOrTransformPivotStemConfig(stemConfig[0], stem, collections, linkTypes);
+  });
+}
+
+function findBestStemConfigIndex(
+  stemsConfigs: PivotStemConfig[],
+  collectionIds: string[],
+  linkTypes: LinkType[]
+): number {
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (isArraySubset(stemConfigCollectionIds, collectionIds)) {
+      return i;
+    }
+  }
+  for (let i = 0; i < stemsConfigs.length; i++) {
+    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
+    if (collectionIds[0] === stemConfigCollectionIds[0]) {
+      return i;
+    }
   }
 
-  const attributesResourcesOrder = queryStemAttributesResourcesOrder(
-    query && query.stems && query.stems[0],
-    collections,
-    linkTypes
-  );
+  return 0;
+}
+
+export function checkOrTransformPivotStemConfig(
+  config: PivotStemConfig,
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): PivotStemConfig {
+  if (!config) {
+    return createDefaultPivotStemConfig(stem);
+  }
+
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
+    stem,
     rowAttributes: checkOrTransformPivotAttributes<PivotRowColumnAttribute>(
       config.rowAttributes,
       attributesResourcesOrder
@@ -159,11 +197,21 @@ function checkOrTransformPivotAttributes<T extends PivotAttribute>(
   }, []);
 }
 
-function createDefaultConfig(): PivotConfig {
-  return {rowAttributes: [], columnAttributes: [], valueAttributes: []};
+function createDefaultConfig(query: Query): PivotConfig {
+  const stems = (query && query.stems) || [];
+  const stemsConfigs = stems.map(stem => createDefaultPivotStemConfig(stem));
+  return {version: PivotConfigVersion.V1, stemsConfigs: stemsConfigs, mergeTables: true};
+}
+
+export function createDefaultPivotStemConfig(stem?: QueryStem): PivotStemConfig {
+  return {stem, rowAttributes: [], columnAttributes: [], valueAttributes: []};
 }
 
 export function pivotConfigIsEmpty(config: PivotConfig): boolean {
+  return (config.stemsConfigs || []).every(stemConfig => pivotStemConfigIsEmpty(stemConfig));
+}
+
+export function pivotStemConfigIsEmpty(config: PivotStemConfig): boolean {
   return (
     ((config && config.rowAttributes) || []).length === 0 &&
     ((config && config.columnAttributes) || []).length === 0 &&

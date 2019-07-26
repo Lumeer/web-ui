@@ -39,7 +39,7 @@ export class PivotSubSortValuesPipe implements PipeTransform {
       const currentIndex = index + 1;
       const value = values[currentIndex];
       if (value && value.isSummary) {
-        return values.slice(0, currentIndex + 1);
+        return values.slice(0, currentIndex + (this.isLastHeader(otherSideHeaders) ? 0 : 1));
       }
 
       const pivotHeader = value && (currentOtherSideHeaders || []).find(header => header.title === value.title);

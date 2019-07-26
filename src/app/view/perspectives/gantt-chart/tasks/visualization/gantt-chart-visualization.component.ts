@@ -25,6 +25,12 @@ import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {environment} from '../../../../../../environments/environment';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 
+export interface GanttChartValueChange {
+  dataResourceId: string;
+  resourceType: AttributesResourceType;
+  changes: {attributeId: string; value: any}[];
+}
+
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
@@ -45,12 +51,10 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public currentMode: GanttChartMode;
 
   @Output()
-  public patchData = new EventEmitter<{
-    dataResourceId: string;
-    type: AttributesResourceType;
-    collectionConfigId: string;
-    changes: {attributeId: string; value: any}[];
-  }>();
+  public datesChange = new EventEmitter<GanttChartValueChange>();
+
+  @Output()
+  public progressChange = new EventEmitter<GanttChartValueChange>();
 
   @Output()
   public addDependency = new EventEmitter<{fromId: string; toId: string}>();
@@ -129,7 +133,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
         }
 
         if (changes) {
-          this.onValueChanged(metadata.dataResourceId, metadata.collectionConfigId, metadata.resourceType, changes);
+          this.datesChange.emit({...metadata, changes});
         }
       },
 
@@ -141,8 +145,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
         const metadata = task.metadata;
         const progressAttributeId = metadata.progressAttributeId;
         if (progressAttributeId) {
-          const changes = [{attributeId: progressAttributeId, value: progress}];
-          this.onValueChanged(metadata.dataResourceId, metadata.collectionConfigId, metadata.resourceType, changes);
+          this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: progress}]});
         }
       },
       on_dependency_added: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
@@ -167,14 +170,5 @@ export class GanttChartVisualizationComponent implements OnChanges {
       fromTask.metadata.resourceId === toTask.metadata.resourceId &&
       fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
     );
-  }
-
-  private onValueChanged(
-    dataResourceId: string,
-    collectionConfigId: string,
-    type: AttributesResourceType,
-    changes: {attributeId: string; value: string}[]
-  ) {
-    this.patchData.emit({dataResourceId, collectionConfigId, type, changes});
   }
 }

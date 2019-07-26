@@ -21,14 +21,14 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
-} from '../../../../core/store/calendars/calendar.model';
+  CalendarStemConfig,
+} from '../../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'calendarRequiredPropertiesSet',
 })
 export class CalendarRequiredPropertiesSetPipe implements PipeTransform {
-  public transform(config: CalendarCollectionConfig, propertyOptional: CalendarBarPropertyOptional): boolean {
+  public transform(config: CalendarStemConfig, propertyOptional: CalendarBarPropertyOptional): boolean {
     const requiredProperties = this.requiredProperties(propertyOptional);
     return config && config.barsProperties && requiredProperties.every(property => !!config.barsProperties[property]);
   }

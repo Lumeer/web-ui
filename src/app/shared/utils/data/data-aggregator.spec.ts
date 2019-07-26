@@ -21,7 +21,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {Query} from '../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query';
 import {DataAggregatorAttribute, DataAggregator} from './data-aggregator';
 
 const documents: DocumentModel[] = [
@@ -218,12 +218,13 @@ const linkTypes: LinkType[] = [
   },
 ];
 
-const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2']}]};
+const queryStem: QueryStem = {collectionId: 'C1', linkTypeIds: ['LT1', 'LT2']};
+const query: Query = {stems: [queryStem]};
 
 describe('Data aggregator', () => {
   it('should return empty data', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
     const aggregatedData = aggregator.aggregate([], [], []);
     expect(aggregatedData.map).toEqual({});
     expect(aggregatedData.rowLevels).toEqual(0);
@@ -232,7 +233,7 @@ describe('Data aggregator', () => {
 
   it('should return empty data by only values', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const valueAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
@@ -246,7 +247,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by one row', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const aggregationAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
     const aggregatedData = aggregator.aggregate(aggregationAttributes, [], []);
@@ -260,7 +261,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by two rows', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const aggregationAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
@@ -279,7 +280,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by one column', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const aggregationAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 1}];
     const aggregatedData = aggregator.aggregate([], aggregationAttributes, []);
@@ -293,7 +294,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by two columns', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const aggregationAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 2},
@@ -315,7 +316,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by two rows and two columns', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const rowAttributes: DataAggregatorAttribute[] = [
       {attributeId: 'a1', resourceIndex: 0},
@@ -358,7 +359,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by one row and two values', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const rowAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
     const valuesAttributes: DataAggregatorAttribute[] = [
@@ -384,7 +385,7 @@ describe('Data aggregator', () => {
 
   it('should aggregate by one row, one column and value', () => {
     const aggregator = new DataAggregator();
-    aggregator.updateData(collections, documents, linkTypes, linkInstances, query);
+    aggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem);
 
     const rowAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 0}];
     const columnAttributes: DataAggregatorAttribute[] = [{attributeId: 'a1', resourceIndex: 2}];

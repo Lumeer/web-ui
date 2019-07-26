@@ -21,13 +21,15 @@ import {
   PivotAttribute,
   PivotConfig,
   PivotRowColumnAttribute,
+  PivotSort,
+  PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {
   AggregatedData,
@@ -36,23 +38,46 @@ import {
   AggregatedDataMap,
   AggregatedDataValues,
 } from '../../../../shared/utils/data/data-aggregator';
-import {PivotData, PivotDataHeader} from './pivot-data';
+import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {
-  aggregateDataResources,
-  DataAggregationType,
-  isValueAggregation,
-} from '../../../../shared/utils/data/data-aggregation';
-import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {pivotStemConfigIsEmpty} from './pivot-util';
+
+interface PivotMergeData {
+  configs: PivotStemConfig[];
+  stems: QueryStem[];
+  type: PivotConfigType;
+}
+
+enum PivotConfigType {
+  Values,
+  Rows,
+  Columns,
+  RowsAndColumns,
+}
+
+interface PivotColors {
+  rows: string[];
+  columns: string[];
+  values: string[];
+}
+
+interface PivotConfigData {
+  rowShowSums: boolean[];
+  rowSorts: PivotSort[];
+  columnShowSums: boolean[];
+  columnSorts: PivotSort[];
+}
 
 export class PivotDataConverter {
   private collections: Collection[];
   private documents: DocumentModel[];
   private linkTypes: LinkType[];
   private linkInstances: LinkInstance[];
-  private config: PivotConfig;
+  private config: PivotStemConfig;
   private constraintData?: ConstraintData;
 
   private dataAggregator: DataAggregator;
@@ -92,14 +117,12 @@ export class PivotDataConverter {
   }
 
   private updateData(
-    config: PivotConfig,
     collections: Collection[],
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    constraintData?: ConstraintData
+    constraintData: ConstraintData
   ) {
-    this.config = config;
     this.collections = collections;
     this.documents = documents;
     this.linkTypes = linkTypes;
@@ -116,44 +139,200 @@ export class PivotDataConverter {
     query: Query,
     constraintData?: ConstraintData
   ): PivotData {
-    this.updateData(config, collections, documents, linkTypes, linkInstances, constraintData);
-    this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, query, constraintData);
+    this.updateData(collections, documents, linkTypes, linkInstances, constraintData);
 
-    const rowAttributes = (config.rowAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
-    const columnAttributes = (config.columnAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
-    const valueAttributes = (config.valueAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
-    if (rowAttributes.length === 0 && columnAttributes.length === 0) {
-      return this.convertValueAttributes(config.valueAttributes || []);
+    const {stemsConfigs, stems} = this.filterEmptyConfigs(config, query);
+
+    const mergeData = this.createPivotMergeData(config.mergeTables, stemsConfigs, stems);
+    const ableToMerge = mergeData.length === 1;
+    const data = this.mergePivotData(mergeData);
+    return {data: data, constraintData, ableToMerge, mergeTables: config.mergeTables};
+  }
+
+  private filterEmptyConfigs(config: PivotConfig, query: Query): {stemsConfigs: PivotStemConfig[]; stems: QueryStem[]} {
+    return (config.stemsConfigs || []).reduce(
+      ({stemsConfigs, stems}, stemConfig, index) => {
+        if (!pivotStemConfigIsEmpty(stemConfig)) {
+          const stem = (query.stems || [])[index];
+          stemsConfigs.push(stemConfig);
+          stems.push(stem);
+        }
+
+        return {stemsConfigs, stems};
+      },
+      {stemsConfigs: [], stems: []}
+    );
+  }
+
+  private createPivotMergeData(
+    mergeTables: boolean,
+    stemsConfigs: PivotStemConfig[],
+    stems: QueryStem[]
+  ): PivotMergeData[] {
+    return stemsConfigs.reduce((mergeData: PivotMergeData[], stemConfig, index) => {
+      const configType = getPivotStemConfigType(stemConfig);
+      const mergeDataIndex = mergeData.findIndex(
+        data => data.type === configType && canMergeConfigsByType(data.type, data.configs[0], stemConfig)
+      );
+      if (mergeTables && mergeDataIndex >= 0) {
+        mergeData[mergeDataIndex].configs.push(stemConfig);
+        mergeData[mergeDataIndex].stems.push(stems[index]);
+      } else {
+        mergeData.push({configs: [stemConfig], stems: [stems[index]], type: configType});
+      }
+
+      return mergeData;
+    }, []);
+  }
+
+  private mergePivotData(mergeData: PivotMergeData[]): PivotStemData[] {
+    return mergeData.reduce((stemData, data) => {
+      if (data.type === PivotConfigType.Values) {
+        stemData.push(this.convertValueAttributes(data.configs, data.stems));
+      } else {
+        stemData.push(this.transformStems(data.configs, data.stems));
+      }
+      return stemData;
+    }, []);
+  }
+
+  private transformStems(configs: PivotStemConfig[], queryStems: QueryStem[]): PivotStemData {
+    const pivotColors: PivotColors = {rows: [], columns: [], values: []};
+    const mergedValueAttributes: PivotValueAttribute[] = [];
+    let mergedAggregatedData: AggregatedData = null;
+    let additionalData: PivotConfigData;
+
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
+      const queryStem = queryStems[i];
+
+      this.config = config;
+      this.dataAggregator.updateData(
+        this.collections,
+        this.documents,
+        this.linkTypes,
+        this.linkInstances,
+        queryStem,
+        this.constraintData
+      );
+      const rowAttributes = (config.rowAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
+      const columnAttributes = (config.columnAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
+      const valueAttributes = (config.valueAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
+
+      pivotColors.rows.push(...this.getAttributesColors(config.rowAttributes));
+      pivotColors.columns.push(...this.getAttributesColors(config.columnAttributes));
+      pivotColors.values.push(...this.getAttributesColors(config.valueAttributes));
+
+      const aggregatedData = this.dataAggregator.aggregate(rowAttributes, columnAttributes, valueAttributes);
+      mergedAggregatedData = this.mergeAggregatedData(mergedAggregatedData, aggregatedData);
+
+      const filteredValueAttributes = (config.valueAttributes || []).filter(
+        valueAttr => !mergedValueAttributes.some(merAttr => deepObjectsEquals(valueAttr, merAttr))
+      );
+      mergedValueAttributes.push(...filteredValueAttributes);
+
+      if (!additionalData) {
+        additionalData = {
+          rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
+          rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
+          columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
+          columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
+        };
+      }
     }
 
-    const aggregatedData = this.dataAggregator.aggregate(rowAttributes, columnAttributes, valueAttributes);
-    return this.convertAggregatedData(aggregatedData, config.valueAttributes || []);
+    return this.convertAggregatedData(mergedAggregatedData, mergedValueAttributes, pivotColors, additionalData);
+  }
+
+  private mergeAggregatedData(a1: AggregatedData, a2: AggregatedData): AggregatedData {
+    if (!a1 || !a2) {
+      return a1 || a2;
+    }
+
+    this.mergeMaps(a1.map, a2.map);
+    this.mergeMaps(a1.columnsMap, a2.columnsMap);
+    return {
+      map: a1.map,
+      columnsMap: a1.columnsMap,
+      rowLevels: Math.max(a1.rowLevels, a2.rowLevels),
+      columnLevels: Math.max(a1.columnLevels, a2.columnLevels),
+    };
+  }
+
+  private mergeMaps(m1: Record<string, any>, m2: Record<string, any>) {
+    Object.keys(m2).forEach(key => {
+      if (m1[key]) {
+        if (isArray(m1[key]) && isArray(m2[key])) {
+          m1[key].push(...m2[key]);
+        } else if (!isArray(m1[key]) && !isArray(m2[key])) {
+          this.mergeMaps(m1[key], m2[key]);
+        }
+      } else {
+        m1[key] = m2[key];
+      }
+    });
+  }
+
+  private getAttributesColors(attributes: PivotAttribute[]): string[] {
+    return (attributes || []).map(attribute => {
+      const resource = this.dataAggregator.getNextCollectionResource(attribute.resourceIndex);
+      return resource && (<Collection>resource).color;
+    });
   }
 
   private convertPivotAttribute(pivotAttribute: PivotAttribute): DataAggregatorAttribute {
     return {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 
-  private convertValueAttributes(valueAttributes: PivotValueAttribute[]): PivotData {
-    const valueTitles = this.createValueTitles(valueAttributes);
-    const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueTitles);
+  private convertValueAttributes(configs: PivotStemConfig[], stems: QueryStem[]): PivotStemData {
+    const data = configs.reduce(
+      (allData, config, index) => {
+        this.dataAggregator.updateData(
+          this.collections,
+          this.documents,
+          this.linkTypes,
+          this.linkInstances,
+          stems[index],
+          this.constraintData
+        );
 
-    const values = (valueAttributes || []).map(valueAttribute => {
-      const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
-      const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (
-        isNotNullOrUndefined(aggregatedValue) &&
-        attribute &&
-        attribute.constraint &&
-        isValueAggregation(valueAttribute.aggregation)
-      ) {
-        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
-      }
-      return aggregatedValue;
-    });
+        const valueAttributes = config.valueAttributes || [];
+        allData.valueTypes.push(...valueAttributes.map(attr => attr.valueType));
+        const valueColors = this.getAttributesColors(valueAttributes);
 
-    return {columnHeaders: headers, rowHeaders: [], valueTitles, values: [values]};
+        const {titles, constraints} = this.createValueTitles(valueAttributes);
+        allData.titles.push(...titles);
+        allData.constraints.push(...constraints);
+
+        const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueColors, titles, allData.headers.length);
+        allData.headers.push(...headers);
+
+        const values = (valueAttributes || []).map(valueAttribute => {
+          const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
+          const attribute = this.findAttributeByPivotAttribute(valueAttribute);
+          return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+        });
+        allData.values.push(...values);
+        return allData;
+      },
+      {titles: [], constraints: [], headers: [], values: [], valueTypes: []}
+    );
+
+    return {
+      columnHeaders: data.headers,
+      rowHeaders: [],
+      valueTitles: data.titles,
+      values: [data.values],
+      valuesConstraints: data.constraints,
+      valueTypes: data.valueTypes,
+
+      rowShowSums: [],
+      rowSorts: [],
+      columnShowSums: [],
+      columnSorts: [],
+
+      hasAdditionalColumnLevel: true,
+    };
   }
 
   private findDataResourcesByPivotAttribute(pivotAttribute: PivotAttribute): DataResource[] {
@@ -165,15 +344,26 @@ export class PivotDataConverter {
     return [];
   }
 
-  private convertAggregatedData(aggregatedData: AggregatedData, valueAttributes: PivotValueAttribute[]): PivotData {
-    const rowData = this.convertMapToPivotDataHeader(aggregatedData.map, aggregatedData.rowLevels, this.getRowColors());
+  private convertAggregatedData(
+    aggregatedData: AggregatedData,
+    valueAttributes: PivotValueAttribute[],
+    pivotColors: PivotColors,
+    additionalData: PivotConfigData
+  ): PivotStemData {
+    const rowData = this.convertMapToPivotDataHeader(
+      aggregatedData.map,
+      aggregatedData.rowLevels,
+      pivotColors.rows,
+      pivotColors.values
+    );
 
-    const valueTitles = this.createValueTitles(valueAttributes);
+    const {titles, constraints} = this.createValueTitles(valueAttributes);
     const columnData = this.convertMapToPivotDataHeader(
       aggregatedData.rowLevels > 0 ? aggregatedData.columnsMap : aggregatedData.map,
       aggregatedData.columnLevels,
-      this.getColumnColors(),
-      valueTitles
+      pivotColors.columns,
+      pivotColors.values,
+      titles
     );
 
     const values = this.initValues(rowData.maxIndex + 1, columnData.maxIndex + 1);
@@ -181,20 +371,40 @@ export class PivotDataConverter {
       this.fillValues(values, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
     }
 
-    return {rowHeaders: rowData.headers, columnHeaders: columnData.headers, valueTitles, values};
+    const hasAdditionalColumnLevel =
+      (aggregatedData.columnLevels === 0 && titles.length > 0) ||
+      (aggregatedData.columnLevels > 0 && titles.length > 1);
+    return {
+      rowHeaders: rowData.headers,
+      columnHeaders: columnData.headers,
+      valueTitles: titles,
+      values,
+      valuesConstraints: constraints,
+
+      ...additionalData,
+
+      valueTypes: valueAttributes.map(attr => attr.valueType),
+      hasAdditionalColumnLevel,
+    };
   }
 
   private convertMapToPivotDataHeader(
     map: Record<string, any>,
     levels: number,
     colors: string[],
-    valueTitles?: string[]
+    valueColors: string[],
+    valueTitles?: string[],
+    additionalNum: number = 0
   ): {headers: PivotDataHeader[]; maxIndex: number} {
     if (levels === 0) {
       if ((valueTitles || []).length > 0) {
         return {
-          headers: valueTitles.map((title, index) => ({title, targetIndex: index, color: this.getValueColor(index)})),
-          maxIndex: valueTitles.length - 1,
+          headers: valueTitles.map((title, index) => ({
+            title,
+            targetIndex: index + additionalNum,
+            color: valueColors[index],
+          })),
+          maxIndex: valueTitles.length - 1 + additionalNum,
         };
       }
       return {headers: [], maxIndex: 0};
@@ -202,7 +412,7 @@ export class PivotDataConverter {
 
     const headers = [];
     const data = {maxIndex: 0};
-    let currentIndex = 0;
+    let currentIndex = additionalNum;
     Object.keys(map).forEach((title, index) => {
       if (levels === 1 && (valueTitles || []).length <= 1) {
         headers.push({title, targetIndex: currentIndex, color: colors[0]});
@@ -218,6 +428,7 @@ export class PivotDataConverter {
         1,
         levels,
         colors,
+        valueColors,
         valueTitles,
         data
       );
@@ -227,29 +438,6 @@ export class PivotDataConverter {
     return {headers, maxIndex: data.maxIndex};
   }
 
-  private getRowColors(): string[] {
-    return (this.config.rowAttributes || []).map(attribute => {
-      const resource = this.dataAggregator.getNextCollectionResource(attribute.resourceIndex);
-      return resource && (<Collection>resource).color;
-    });
-  }
-
-  private getColumnColors(): string[] {
-    return (this.config.columnAttributes || []).map(attribute => {
-      const resource = this.dataAggregator.getNextCollectionResource(attribute.resourceIndex);
-      return resource && (<Collection>resource).color;
-    });
-  }
-
-  private getValueColor(index: number): string {
-    const valueAttribute = this.config.valueAttributes[index];
-    if (valueAttribute) {
-      const resource = this.dataAggregator.getNextCollectionResource(valueAttribute.resourceIndex);
-      return resource && (<Collection>resource).color;
-    }
-    return undefined;
-  }
-
   private iterateThroughPivotDataHeader(
     currentMap: Record<string, any>,
     header: PivotDataHeader,
@@ -257,6 +445,7 @@ export class PivotDataConverter {
     level: number,
     maxLevels: number,
     colors: string[],
+    valueColors: string[],
     valueTitles: string[],
     additionalData: {maxIndex: number}
   ) {
@@ -265,7 +454,7 @@ export class PivotDataConverter {
         header.children = valueTitles.map((title, index) => ({
           title,
           targetIndex: headerIndex + index,
-          color: this.getValueColor(index),
+          color: valueColors[index],
         }));
         additionalData.maxIndex = Math.max(additionalData.maxIndex, headerIndex + valueTitles.length - 1);
       }
@@ -289,6 +478,7 @@ export class PivotDataConverter {
         level + 1,
         maxLevels,
         colors,
+        valueColors,
         valueTitles,
         additionalData
       );
@@ -328,11 +518,18 @@ export class PivotDataConverter {
     return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), 0);
   }
 
-  private createValueTitles(valueAttributes: PivotValueAttribute[]): string[] {
-    return (valueAttributes || []).map(pivotAttribute => {
-      const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-      return this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
-    });
+  private createValueTitles(valueAttributes: PivotValueAttribute[]): {titles: string[]; constraints: Constraint[]} {
+    return (valueAttributes || []).reduce(
+      ({titles, constraints}, pivotAttribute) => {
+        const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
+        constraints.push(attribute && attribute.constraint);
+        const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
+        titles.push(title);
+
+        return {titles, constraints};
+      },
+      {titles: [], constraints: []}
+    );
   }
 
   public createValueTitle(aggregation: DataAggregationType, attributeName: string): string {
@@ -423,16 +620,7 @@ export class PivotDataConverter {
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-      const aggregatedValue = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-      if (
-        isNotNullOrUndefined(aggregatedValue) &&
-        attribute &&
-        attribute.constraint &&
-        isValueAggregation(valueAttribute.aggregation)
-      ) {
-        return formatDataValue(aggregatedValue, attribute.constraint, this.constraintData);
-      }
-      return aggregatedValue;
+      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     }
 
     return null;
@@ -452,4 +640,30 @@ export class PivotDataConverter {
 
     return null;
   }
+}
+
+function getPivotStemConfigType(stemConfig: PivotStemConfig): PivotConfigType {
+  const rowLength = (stemConfig.rowAttributes || []).length;
+  const columnLength = (stemConfig.columnAttributes || []).length;
+
+  if (rowLength > 0 && columnLength > 0) {
+    return PivotConfigType.RowsAndColumns;
+  } else if (rowLength > 0) {
+    return PivotConfigType.Rows;
+  } else if (columnLength > 0) {
+    return PivotConfigType.Columns;
+  }
+  return PivotConfigType.Values;
+}
+
+function canMergeConfigsByType(type: PivotConfigType, c1: PivotStemConfig, c2: PivotStemConfig): boolean {
+  if (type === PivotConfigType.Rows) {
+    return (c1.rowAttributes || []).length === (c2.rowAttributes || []).length;
+  } else if (type === PivotConfigType.Columns) {
+    return (c1.columnAttributes || []).length === (c2.columnAttributes || []).length;
+  }
+  return (
+    (c1.rowAttributes || []).length === (c2.rowAttributes || []).length &&
+    (c1.columnAttributes || []).length === (c2.columnAttributes || []).length
+  );
 }

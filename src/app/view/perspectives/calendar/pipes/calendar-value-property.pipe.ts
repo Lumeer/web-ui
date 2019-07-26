@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarProperty} from '../../../../core/store/calendars/calendar.model';
+import {CalendarBarProperty} from '../../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'calendarPropertyEmptyValue',

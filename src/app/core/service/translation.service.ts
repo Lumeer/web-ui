@@ -31,7 +31,7 @@ export class TranslationService {
     return Object.values(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
   }
 
-  private translateDurationUnit(unit: DurationUnit): string {
+  public translateDurationUnit(unit: DurationUnit): string {
     return this.i18n(
       {
         id: 'constraint.duration.unit',

@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {PivotConfig} from '../../../../../core/store/pivots/pivot';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {PivotData} from '../../util/pivot-data';
 import {BehaviorSubject} from 'rxjs';
 import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {pivotConfigHasDataTransformChange} from '../../util/pivot-util';
 
 @Component({
   selector: 'pivot-table',
@@ -34,14 +32,11 @@ import {pivotConfigHasDataTransformChange} from '../../util/pivot-util';
 })
 export class PivotTableComponent implements OnChanges {
   @Input()
-  public config: PivotConfig;
-
-  @Input()
   public pivotData: PivotData;
 
   private pivotTableConverter: PivotTableConverter;
 
-  public pivotTable$ = new BehaviorSubject<PivotTable>({cells: []});
+  public pivotTables$ = new BehaviorSubject<PivotTable[]>([]);
 
   constructor(private i18n: I18n) {
     const headerSummaryString = i18n({id: 'perspective.pivot.table.summary.header', value: 'Summary of'});
@@ -50,11 +45,8 @@ export class PivotTableComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes.pivotData ||
-      (changes.config && !pivotConfigHasDataTransformChange(changes.config.previousValue, changes.config.currentValue))
-    ) {
-      this.pivotTable$.next(this.pivotTableConverter.transform(this.pivotData, this.config));
+    if (changes.pivotData) {
+      this.pivotTables$.next(this.pivotTableConverter.transform(this.pivotData));
     }
   }
 }

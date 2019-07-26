@@ -1,18 +1,20 @@
 <div [formGroup]="form">
   <div class="form-group">
-    <select-item [items]="collections | collectionsSelectItems"
+    <select-item [items]="query | stemCollectionsItems:collections:stemIndex"
                  [removable]="false"
-                 [selectedId]="form.value.collectionId"
-                 (select)="onCollectionSelect($event)"
+                 [selectedId]="stemIndexControl.value"
+                 (select)="onStemIndexSelect($event)"
                  [placeholderText]="collectionPlaceholder">
     </select-item>
   </div>
 
-  <calendar-event-dialog-collection-form [form]="form"
-                                         [collectionConfig]="config.collections[collectionIdControl.value]"
-                                         [collection]="collections | collectionById:collectionIdControl.value"
-                                         [query]="query"
-                                         [permissions]="allowedPermissions[collectionIdControl.value]">
-  </calendar-event-dialog-collection-form>
+  <ng-container *ngIf="config.stemsConfigs[stemIndexControl.value] as stemConfig">
+    <calendar-event-dialog-collection-form [form]="form"
+                                           [collectionConfig]="stemConfig"
+                                           [collection]="collections | collectionById:stemConfig?.stem?.collectionId"
+                                           [query]="query"
+                                           [permissions]="allowedPermissions[stemConfig?.stem?.collectionId]">
+    </calendar-event-dialog-collection-form>
+  </ng-container>
 
 </div>

@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {GanttChartBarProperty, GanttChartCollectionConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartBarProperty, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 
 @Pipe({
   name: 'ganttChartRestrictedItemsWithConstraint',
 })
 export class GanttChartRestrictedItemsWithConstraintPipe implements PipeTransform {
-  public transform(type: GanttChartBarProperty, config: GanttChartCollectionConfig): SelectItemWithConstraintId[] {
+  public transform(type: GanttChartBarProperty, config: GanttChartStemConfig): SelectItemWithConstraintId[] {
     return Object.keys((config && config.barsProperties) || {})
       .filter(prop => prop !== type)
       .reduce((arr, prop) => {

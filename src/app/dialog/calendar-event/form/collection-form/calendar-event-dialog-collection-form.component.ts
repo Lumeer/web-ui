@@ -21,11 +21,11 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit,
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {
-  CalendarBarModel,
+  CalendarBar,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
-} from '../../../../core/store/calendars/calendar.model';
+  CalendarStemConfig,
+} from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Query} from '../../../../core/store/navigation/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -45,7 +45,7 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit, OnCha
   public form: FormGroup;
 
   @Input()
-  public collectionConfig: CalendarCollectionConfig;
+  public collectionConfig: CalendarStemConfig;
 
   @Input()
   public collection: Collection;
@@ -97,7 +97,7 @@ export class CalendarEventDialogCollectionFormComponent implements OnInit, OnCha
     this.eventEndFormat = this.createPropertyFormat(endProperty, isAllDay);
   }
 
-  private createPropertyFormat(property: CalendarBarModel, allDay: boolean): string {
+  private createPropertyFormat(property: CalendarBar, allDay: boolean): string {
     if (property) {
       const constraint = findAttributeConstraint(this.collection.attributes, property.attributeId);
       if (constraint && constraint.type === ConstraintType.DateTime && constraint.config) {

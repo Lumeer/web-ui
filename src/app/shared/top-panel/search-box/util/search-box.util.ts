@@ -185,7 +185,7 @@ export function removeQueryItemWithRelatedItems(
 
   switch (queryItem.type) {
     case QueryItemType.Collection:
-      return removeCollectionStem(queryData, queryItems, queryItem as CollectionQueryItem);
+      return removeCollectionStem(queryData, queryItems, index);
     case QueryItemType.Link:
       return removeLinkChainFromStem(queryData, queryItems, index);
     case QueryItemType.Attribute:
@@ -197,12 +197,19 @@ export function removeQueryItemWithRelatedItems(
   }
 }
 
-function removeCollectionStem(queryData: QueryData, queryItems: QueryItem[], item: CollectionQueryItem): QueryItem[] {
-  const collectionId = item.collection.id;
-  const currentQuery = convertQueryItemsToQueryModel(queryItems);
+function removeCollectionStem(queryData: QueryData, queryItems: QueryItem[], index: number): QueryItem[] {
+  const queryItem = queryItems[index] as CollectionQueryItem;
+  const collectionId = queryItem.collection.id;
+  const stemIndex = queryItems
+    .slice(0, index)
+    .filter(
+      item => item.type === QueryItemType.Collection && (item as CollectionQueryItem).collection.id === collectionId
+    ).length;
 
-  const stems = (currentQuery.stems || []).filter(stem => stem.collectionId !== collectionId);
-  return new QueryItemsConverter(queryData).fromQuery({...currentQuery, stems});
+  const currentQuery = convertQueryItemsToQueryModel(queryItems);
+  currentQuery.stems.splice(stemIndex, 1);
+
+  return new QueryItemsConverter(queryData).fromQuery(currentQuery);
 }
 
 function removeLinkChainFromStem(queryData: QueryData, queryItems: QueryItem[], linkIndex: number): QueryItem[] {
@@ -210,13 +217,12 @@ function removeLinkChainFromStem(queryData: QueryData, queryItems: QueryItem[], 
   if (!stemData) {
     return;
   }
-  const {collectionId, index} = stemData;
+  const {index} = stemData;
   const currentQuery = convertQueryItemsToQueryModel(queryItems);
-  const stemIndex = (currentQuery.stems || []).findIndex(st => st.collectionId === collectionId);
 
-  if (stemIndex !== -1) {
-    currentQuery.stems[stemIndex] = filterStemByLinkIndex(
-      currentQuery.stems[stemIndex],
+  if (index !== -1) {
+    currentQuery.stems[index] = filterStemByLinkIndex(
+      currentQuery.stems[index],
       linkIndex - (index + 1),
       queryData.linkTypes
     );
@@ -232,7 +238,7 @@ function getStemCollectionIdForLinkIndex(
 ): {collectionId: string; index: number} {
   let collectionItemIndex = index;
   let currentItem: QueryItem = queryItems[index];
-  while (currentItem.type === QueryItemType.Link) {
+  while (currentItem.type === QueryItemType.Link && collectionItemIndex >= 0) {
     collectionItemIndex--;
     currentItem = queryItems[collectionItemIndex];
   }

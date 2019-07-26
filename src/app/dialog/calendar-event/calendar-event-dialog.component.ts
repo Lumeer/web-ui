@@ -21,7 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit, On
 import {ActivatedRoute} from '@angular/router';
 import {distinctUntilChanged, filter, map, mergeMap} from 'rxjs/operators';
 import {DialogService} from '../dialog.service';
-import {CalendarConfig} from '../../core/store/calendars/calendar.model';
+import {CalendarConfig} from '../../core/store/calendars/calendar';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {AppState} from '../../core/store/app.state';
@@ -29,7 +29,7 @@ import {select, Store} from '@ngrx/store';
 import {selectCalendarById} from '../../core/store/calendars/calendars.state';
 import {CollectionsPermissionsPipe} from '../../shared/pipes/permissions/collections-permissions.pipe';
 import {selectCollectionById, selectCollectionsByIds} from '../../core/store/collections/collections.state';
-import {deepObjectsEquals} from '../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-form.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
@@ -41,6 +41,7 @@ import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.st
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {DurationUnitsMap} from '../../core/model/data/constraint';
 import {TranslationService} from '../../core/service/translation.service';
+import {uniqueValues} from '../../shared/utils/array.utils';
 
 @Component({
   templateUrl: './calendar-event-dialog.component.html',
@@ -60,6 +61,7 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
   public formInvalid$ = new BehaviorSubject(true);
   public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
+  public stemIndex$: Observable<number>;
   public readonly durationUnitsMap: DurationUnitsMap;
 
   private subscriptions = new Subscription();
@@ -78,9 +80,11 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
     this.config$ = this.subscribeConfig();
     this.initialTime$ = this.subscribeInitialTime();
     this.document$ = this.subscribeDocument();
+    this.stemIndex$ = this.subscribeStemIndex();
     const configCollections$ = this.config$.pipe(
-      map(config => Object.keys(config.collections)),
-      mergeMap(collectionIds => this.store$.pipe(select(selectCollectionsByIds(collectionIds))))
+      map(config => (config.stemsConfigs || []).map(stemConfig => stemConfig.stem && stemConfig.stem.collectionId)),
+      map(collectionIds => collectionIds.filter(id => isNotNullOrUndefined(id))),
+      mergeMap(collectionIds => this.store$.pipe(select(selectCollectionsByIds(uniqueValues<string>(collectionIds)))))
     );
     this.collectionsPermissions$ = configCollections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
@@ -139,6 +143,13 @@ export class CalendarEventDialogComponent implements OnInit, AfterViewInit, OnDe
     return this.route.paramMap.pipe(
       map(params => params.get('documentId')),
       mergeMap(documentId => this.getDocumentById(documentId))
+    );
+  }
+
+  public subscribeStemIndex(): Observable<number> {
+    return this.route.paramMap.pipe(
+      map(params => params.get('stemIndex')),
+      map(stemIndex => (isNotNullOrUndefined(stemIndex) ? +stemIndex : null))
     );
   }
 

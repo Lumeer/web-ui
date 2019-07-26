@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarMode} from '../../../../core/store/calendars/calendar.model';
+import {CalendarMode} from '../../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'calendarModesToSelect',

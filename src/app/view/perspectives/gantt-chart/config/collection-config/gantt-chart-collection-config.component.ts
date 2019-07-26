@@ -24,7 +24,7 @@ import {
   GanttChartBarProperty,
   GanttChartBarPropertyOptional,
   GanttChartBarPropertyRequired,
-  GanttChartCollectionConfig,
+  GanttChartStemConfig,
 } from '../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query';
@@ -54,10 +54,10 @@ export class GanttChartCollectionConfigComponent {
   public selectItems: SelectItemModel[];
 
   @Input()
-  public config: GanttChartCollectionConfig;
+  public config: GanttChartStemConfig;
 
   @Output()
-  public configChange = new EventEmitter<GanttChartCollectionConfig>();
+  public configChange = new EventEmitter<GanttChartStemConfig>();
 
   public readonly propertiesRequired = Object.values(GanttChartBarPropertyRequired);
   public readonly propertiesOptionalSimple = [

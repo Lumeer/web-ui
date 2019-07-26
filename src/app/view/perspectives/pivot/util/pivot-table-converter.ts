@@ -17,22 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PivotData, PivotDataHeader} from './pivot-data';
+import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
-import {
-  PivotColumnAttribute,
-  PivotConfig,
-  PivotRowAttribute,
-  PivotRowColumnAttribute,
-  PivotValueType,
-} from '../../../../core/store/pivots/pivot';
+import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
-import {pivotConfigHasAdditionalValueLevel} from './pivot-util';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import Big from 'big.js';
+import {formatDataValue} from '../../../../shared/utils/data.utils';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 
 interface HeaderGroupInfo {
   background: string;
@@ -56,8 +51,8 @@ export class PivotTableConverter {
 
   private readonly groupColors = [COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500];
 
-  private config: PivotConfig;
-  private data: PivotData;
+  private data: PivotStemData;
+  private constraintData: ConstraintData;
   private rowLevels: number;
   private rowsTransformationArray: number[];
   private columnLevels: number;
@@ -66,27 +61,33 @@ export class PivotTableConverter {
 
   constructor(private headerSummaryString: string, private summaryString: string) {}
 
-  public transform(data: PivotData, config: PivotConfig): PivotTable {
-    if (!data || !config || this.dataAreEmpty(data)) {
-      return {cells: []};
+  public transform(pivotData: PivotData): PivotTable[] {
+    if (!pivotData) {
+      return [{cells: []}];
     }
 
-    this.updateData(data, config);
-    return this.transformData();
+    this.constraintData = pivotData.constraintData;
+
+    return (pivotData.data || []).map(d => {
+      if (this.dataAreEmpty(d)) {
+        return {cells: []};
+      }
+      this.updateData(d);
+      return this.transformData();
+    });
   }
 
-  private dataAreEmpty(data: PivotData): boolean {
+  private dataAreEmpty(data: PivotStemData): boolean {
     return (data.rowHeaders || []).length === 0 && (data.columnHeaders || []).length === 0;
   }
 
-  private updateData(data: PivotData, config: PivotConfig) {
-    this.data = preparePivotData(data, config);
-    this.valueTypeInfo = getValuesTypeInfo(data.values, config);
-    this.config = config;
-    this.rowLevels = (config.rowAttributes || []).length;
-    this.columnLevels = (config.columnAttributes || []).length + (pivotConfigHasAdditionalValueLevel(config) ? 1 : 0);
-    const hasValue = (config.valueAttributes || []).length > 0;
+  private updateData(data: PivotStemData) {
+    this.data = preparePivotData(data);
     const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
+    this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
+    this.rowLevels = (data.rowShowSums || []).length;
+    this.columnLevels = (data.columnShowSums || []).length + (data.hasAdditionalColumnLevel ? 1 : 0);
+    const hasValue = (data.valueTitles || []).length > 0;
     if ((this.data.rowHeaders || []).length > 0) {
       this.rowsTransformationArray = createTransformationMap(
         this.data.rowHeaders,
@@ -111,11 +112,11 @@ export class PivotTableConverter {
   }
 
   private get rowShowSums(): boolean[] {
-    return ((this.config && this.config.rowAttributes) || []).map(a => a.showSums);
+    return this.data.rowShowSums;
   }
 
   private get columnShowSums(): boolean[] {
-    return ((this.config && this.config.columnAttributes) || []).map(a => a.showSums);
+    return this.data.columnShowSums;
   }
 
   private transformData(): PivotTable {
@@ -238,31 +239,39 @@ export class PivotTableConverter {
   }
 
   private formatValueByValueType(value: any, rows: number[], columns: number[]): any {
-    const valueIndex = columns[0] % this.config.valueAttributes.length;
-    const valueAttribute = this.config.valueAttributes[valueIndex];
+    const valueIndex = columns[0] % this.data.valueTitles.length;
+    const valueType = this.data.valueTypes && this.data.valueTypes[valueIndex];
     const valueTypeInfo = this.valueTypeInfo[valueIndex];
-    if (!valueTypeInfo || !valueAttribute.valueType || valueAttribute.valueType === PivotValueType.Default) {
-      return value;
+    if (!valueTypeInfo || !valueType || valueType === PivotValueType.Default) {
+      return this.formatValueByConstraint(value, valueIndex);
     }
 
-    if (valueAttribute.valueType === PivotValueType.AllPercentage) {
-      return this.divideValues(value, valueTypeInfo.sum);
-    } else if (valueAttribute.valueType === PivotValueType.ColumnPercentage) {
+    if (valueType === PivotValueType.AllPercentage) {
+      return this.formatValueByConstraint(this.divideValues(value, valueTypeInfo.sum), valueIndex);
+    } else if (valueType === PivotValueType.ColumnPercentage) {
       const columnsDividers = columns.reduce((dividers, column) => {
         dividers.push(valueTypeInfo.sumsColumns[column]);
         return dividers;
       }, []);
       const columnsDivider = aggregateDataValues(DataAggregationType.Sum, columnsDividers);
-      return this.divideValues(value, columnsDivider);
-    } else if (valueAttribute.valueType === PivotValueType.RowPercentage) {
+      return this.formatValueByConstraint(this.divideValues(value, columnsDivider), valueIndex);
+    } else if (valueType === PivotValueType.RowPercentage) {
       const rowsDividers = rows.reduce((dividers, row) => {
         dividers.push(valueTypeInfo.sumsRows[row]);
         return dividers;
       }, []);
       const rowsDivider = aggregateDataValues(DataAggregationType.Sum, rowsDividers);
-      return this.divideValues(value, rowsDivider);
+      return this.formatValueByConstraint(this.divideValues(value, rowsDivider), valueIndex);
     }
 
+    return this.formatValueByConstraint(value, valueIndex);
+  }
+
+  private formatValueByConstraint(value: any, valueIndex: number): any {
+    const constraint = this.data.valuesConstraints && this.data.valuesConstraints[valueIndex];
+    if (constraint) {
+      return formatDataValue(value, constraint, this.constraintData);
+    }
     return value;
   }
 
@@ -277,10 +286,6 @@ export class PivotTableConverter {
       } else {
         return '0%';
       }
-    } else if (String(value).endsWith('%') && String(divider).endsWith('%')) {
-      const valueNum = toNumber(value.substring(0, value.length - 1));
-      const dividerNum = toNumber(divider.substring(0, divider.length - 1));
-      return `${(valueNum / dividerNum) * 100}%`;
     }
 
     return '';
@@ -544,16 +549,6 @@ export class PivotTableConverter {
     }
   }
 
-  private getValuesFromCells(cells: PivotTableCell[][], rows: number[], columns: number[]): string[] {
-    const values = [];
-    for (const row of rows) {
-      for (const column of columns) {
-        values.push(cells[row][column].value);
-      }
-    }
-    return values;
-  }
-
   private formatCellsValues(cells: PivotTableCell[][]) {
     const rowsCount = cells.length;
     const columnsCount = (cells[0] && cells[0].length) || 0;
@@ -611,14 +606,14 @@ export class PivotTableConverter {
   }
 
   private getRowsCount(): number {
-    if (this.data.rowHeaders.length === 0 && (this.config.valueAttributes || []).length > 0) {
+    if (this.data.rowHeaders.length === 0 && (this.data.valueTitles || []).length > 0) {
       return 1;
     }
     return getHeadersChildCount(this.data.rowHeaders, this.rowShowSums);
   }
 
   private getColumnsCount(): number {
-    if (this.data.columnHeaders.length === 0 && (this.config.valueAttributes || []).length > 0) {
+    if (this.data.columnHeaders.length === 0 && (this.data.valueTitles || []).length > 0) {
       return 1;
     }
     const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
@@ -626,25 +621,24 @@ export class PivotTableConverter {
   }
 }
 
-function preparePivotData(data: PivotData, config: PivotConfig): PivotData {
-  return sortPivotData(data, config);
+function preparePivotData(data: PivotStemData): PivotStemData {
+  return sortPivotData(data);
 }
 
-function getValuesTypeInfo(values: any[][], config: PivotConfig): ValueTypeInfo[] {
+function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numValues: number): ValueTypeInfo[] {
   const valueTypeInfo = [];
-  const numValues = (config.valueAttributes || []).length;
   const rowsIndexes = [...Array(values.length).keys()];
 
   for (let i = 0; i < numValues; i++) {
-    const valueAttribute = config.valueAttributes[i];
-    if (!valueAttribute.valueType || valueAttribute.valueType === PivotValueType.Default) {
+    const valueType = valueTypes && valueTypes[i];
+    if (!valueType || valueType === PivotValueType.Default) {
       continue;
     }
 
     const columnsCount = (values[0] && values[0].length) || 0;
     const columnIndexes = [...Array(columnsCount).keys()].filter(key => key % numValues === i);
 
-    valueTypeInfo[i] = getValueTypeInfo(values, valueAttribute.valueType, rowsIndexes, columnIndexes);
+    valueTypeInfo[i] = getValueTypeInfo(values, valueType, rowsIndexes, columnIndexes);
   }
 
   return valueTypeInfo;
@@ -787,23 +781,23 @@ function getDirectHeaderChildCount(
   return 1;
 }
 
-export function sortPivotData(data: PivotData, config: PivotConfig): PivotData {
+export function sortPivotData(data: PivotStemData): PivotStemData {
   return {
     ...data,
-    rowHeaders: sortPivotRowDataHeaders(data.rowHeaders, config.rowAttributes, data),
-    columnHeaders: sortPivotColumnDataHeaders(data.columnHeaders, config.columnAttributes, data),
+    rowHeaders: sortPivotRowDataHeaders(data.rowHeaders, data.rowSorts, data),
+    columnHeaders: sortPivotColumnDataHeaders(data.columnHeaders, data.columnSorts, data),
   };
 }
 
 function sortPivotRowDataHeaders(
   rowHeaders: PivotDataHeader[],
-  rowAttributes: PivotRowAttribute[],
-  pivotData: PivotData
+  rowSorts: PivotSort[],
+  pivotData: PivotStemData
 ): PivotDataHeader[] {
   return sortPivotDataHeadersRecursive(
     rowHeaders,
     0,
-    rowAttributes,
+    rowSorts,
     pivotData.columnHeaders,
     pivotData.values,
     pivotData.valueTitles || [],
@@ -813,13 +807,13 @@ function sortPivotRowDataHeaders(
 
 function sortPivotColumnDataHeaders(
   columnHeaders: PivotDataHeader[],
-  columnAttributes: PivotColumnAttribute[],
-  pivotData: PivotData
+  columnSorts: PivotSort[],
+  pivotData: PivotStemData
 ): PivotDataHeader[] {
   return sortPivotDataHeadersRecursive(
     columnHeaders,
     0,
-    columnAttributes,
+    columnSorts,
     pivotData.rowHeaders,
     pivotData.values,
     pivotData.valueTitles || [],
@@ -830,33 +824,21 @@ function sortPivotColumnDataHeaders(
 function sortPivotDataHeadersRecursive(
   headers: PivotDataHeader[],
   index: number,
-  pivotAttributes: PivotRowColumnAttribute[],
+  sorts: PivotSort[],
   otherSideHeaders: PivotDataHeader[],
   values: any[][],
   valueTitles: string[],
   isRows: boolean
 ): PivotDataHeader[] {
-  const rowAttribute = pivotAttributes && pivotAttributes[index];
-  if (!rowAttribute) {
-    return headers;
-  }
-
-  const multiplier = !rowAttribute.sort || rowAttribute.sort.asc ? 1 : -1;
-  const valuesMap = createHeadersValuesMap(headers, rowAttribute, otherSideHeaders, values, valueTitles, isRows);
+  const sort = sorts && sorts[index];
+  const multiplier = !sort || sort.asc ? 1 : -1;
+  const valuesMap = createHeadersValuesMap(headers, sort, otherSideHeaders, values, valueTitles, isRows);
   return headers
     .map(header => ({
       ...header,
       children:
         header.children &&
-        sortPivotDataHeadersRecursive(
-          header.children,
-          index + 1,
-          pivotAttributes,
-          otherSideHeaders,
-          values,
-          valueTitles,
-          isRows
-        ),
+        sortPivotDataHeadersRecursive(header.children, index + 1, sorts, otherSideHeaders, values, valueTitles, isRows),
     }))
     .sort((r1, r2) =>
       valuesMap[r1.title] > valuesMap[r2.title]
@@ -869,13 +851,13 @@ function sortPivotDataHeadersRecursive(
 
 function createHeadersValuesMap(
   headers: PivotDataHeader[],
-  attribute: PivotRowColumnAttribute,
+  sort: PivotSort,
   otherSideHeaders: PivotDataHeader[],
   values: any[][],
   valueTitles: string[],
   isRows: boolean
 ): Record<string, any> {
-  const sortTargetIndexes = sortValueTargetIndexes(attribute, otherSideHeaders, valueTitles);
+  const sortTargetIndexes = sortValueTargetIndexes(sort, otherSideHeaders, valueTitles);
   if (!sortTargetIndexes) {
     return (headers || []).reduce((valuesMap, header) => {
       valuesMap[header.title] = header.title;
@@ -896,13 +878,8 @@ function getNumericValuesSummary(values: any[][], rows: number[], columns: numbe
   for (const row of rows) {
     for (const column of columns) {
       const value = values[row][column];
-      if (isNotNullOrUndefined(value)) {
-        if (isNumeric(value)) {
-          sum += toNumber(value);
-        } else if (String(value).endsWith('%')) {
-          const stringValue = String(value);
-          sum += toNumber(stringValue.substring(0, stringValue.length - 1));
-        }
+      if (isNotNullOrUndefined(value) && isNumeric(value)) {
+        sum += toNumber(value);
       }
     }
   }
@@ -910,12 +887,12 @@ function getNumericValuesSummary(values: any[][], rows: number[], columns: numbe
 }
 
 function sortValueTargetIndexes(
-  pivotAttribute: PivotRowColumnAttribute,
+  sort: PivotSort,
   otherSideHeaders: PivotDataHeader[],
   valueTitles: string[]
 ): number[] | null {
-  if (pivotAttribute.sort && pivotAttribute.sort.list) {
-    let valueIndex = valueTitles.findIndex(title => title === pivotAttribute.sort.list.valueTitle);
+  if (sort && sort.list) {
+    let valueIndex = valueTitles.findIndex(title => title === sort.list.valueTitle);
     if (valueIndex === -1) {
       if (valueTitles.length === 1) {
         valueIndex = 0;
@@ -926,7 +903,7 @@ function sortValueTargetIndexes(
 
     let pivotHeader: PivotDataHeader = null;
     let currentOtherSideHeaders = otherSideHeaders;
-    for (const value of pivotAttribute.sort.list.values || []) {
+    for (const value of sort.list.values || []) {
       if (value.isSummary) {
         const indexes = getTargetIndexesForHeaders(currentOtherSideHeaders || []) || [];
         return filterIndexesByMod(indexes, valueTitles.length, valueIndex);

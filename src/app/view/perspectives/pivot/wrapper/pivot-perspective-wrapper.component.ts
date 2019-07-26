@@ -41,7 +41,7 @@ import {PivotData} from '../util/pivot-data';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {View} from '../../../../core/store/views/view';
-import {checkOrTransformPivotConfig, pivotConfigHasDataTransformChange} from '../util/pivot-util';
+import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
@@ -142,32 +142,15 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.shouldConvertData(changes)) {
-      this.dataSubject.next({
-        documents: this.documents,
-        config: this.config,
-        collections: this.collections,
-        linkTypes: this.linkTypes,
-        linkInstances: this.linkInstances,
-        query: this.query,
-        constraintData: this.constraintData,
-      });
-    }
-  }
-
-  private shouldConvertData(changes: SimpleChanges): boolean {
-    if (
-      changes.documents ||
-      changes.collections ||
-      changes.linkTypes ||
-      changes.linkInstances ||
-      changes.constraintData
-    ) {
-      return true;
-    }
-    return (
-      changes.config && pivotConfigHasDataTransformChange(changes.config.previousValue, changes.config.currentValue)
-    );
+    this.dataSubject.next({
+      documents: this.documents,
+      config: this.config,
+      collections: this.collections,
+      linkTypes: this.linkTypes,
+      linkInstances: this.linkInstances,
+      query: this.query,
+      constraintData: this.constraintData,
+    });
   }
 
   public onConfigChange(config: PivotConfig) {

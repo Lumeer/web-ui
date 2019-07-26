@@ -19,12 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
-  CalendarBarModel,
+  CalendarBar,
   CalendarBarProperty,
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
-  CalendarCollectionConfig,
-} from '../../../../../core/store/calendars/calendar.model';
+  CalendarStemConfig,
+} from '../../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
@@ -37,18 +37,18 @@ export class CalendarCollectionConfigComponent {
   public collection: Collection;
 
   @Input()
-  public config: CalendarCollectionConfig;
+  public config: CalendarStemConfig;
 
   @Output()
-  public configChange = new EventEmitter<CalendarCollectionConfig>();
+  public configChange = new EventEmitter<CalendarStemConfig>();
 
   public readonly calendarBarsPropertiesRequired = Object.values(CalendarBarPropertyRequired);
   public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBarModel) {
+  public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBar) {
     const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
+    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
@@ -57,11 +57,11 @@ export class CalendarCollectionConfigComponent {
     delete bars[type];
     this.removeOptionalProperties(bars, type);
 
-    const newConfig: CalendarCollectionConfig = {...this.config, barsProperties: bars};
+    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
     this.configChange.emit(newConfig);
   }
 
-  private removeOptionalProperties(bars: Record<string, CalendarBarModel>, type: CalendarBarProperty) {
+  private removeOptionalProperties(bars: Record<string, CalendarBar>, type: CalendarBarProperty) {
     if (type === CalendarBarPropertyRequired.StartDate) {
       delete bars[CalendarBarPropertyOptional.EndDate];
     }

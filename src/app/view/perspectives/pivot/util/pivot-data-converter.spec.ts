@@ -290,166 +290,188 @@ describe('Pivot data converter', () => {
   });
 
   it('should return empty data', () => {
-    const config: PivotConfig = {rowAttributes: [], columnAttributes: [], valueAttributes: []};
+    const config: PivotConfig = {stemsConfigs: [{rowAttributes: [], columnAttributes: [], valueAttributes: []}]};
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([]);
-    expect(pivotData.columnHeaders).toEqual([]);
-    expect(pivotData.values).toEqual([[]]);
+    expect(pivotData.data).toEqual([]);
   });
 
   it('should return by one row', () => {
     const config: PivotConfig = {
-      rowAttributes: [
-        {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+      stemsConfigs: [
+        {
+          rowAttributes: [
+            {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+          ],
+          columnAttributes: [],
+          valueAttributes: [],
+        },
       ],
-      columnAttributes: [],
-      valueAttributes: [],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([
       {title: 'a', targetIndex: 0, color: undefined},
       {title: 'c', targetIndex: 1, color: undefined},
       {title: 'b', targetIndex: 2, color: undefined},
     ]);
-    expect(pivotData.columnHeaders).toEqual([]);
-    expect(pivotData.values).toEqual([[undefined], [undefined], [undefined]]);
+    expect(pivotData.data[0].columnHeaders).toEqual([]);
+    expect(pivotData.data[0].values).toEqual([[undefined], [undefined], [undefined]]);
   });
 
   it('should return by one column', () => {
     const config: PivotConfig = {
-      rowAttributes: [],
-      columnAttributes: [
-        {resourceId: 'C3', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 4},
+      stemsConfigs: [
+        {
+          rowAttributes: [],
+          columnAttributes: [
+            {resourceId: 'C3', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 4},
+          ],
+          valueAttributes: [],
+        },
       ],
-      valueAttributes: [],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([]);
-    expect(pivotData.columnHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([]);
+    expect(pivotData.data[0].columnHeaders).toEqual([
       {title: 'xyz', targetIndex: 0, color: undefined},
       {title: 'vuw', targetIndex: 1, color: undefined},
     ]);
-    expect(pivotData.values).toEqual([[undefined, undefined]]);
+    expect(pivotData.data[0].values).toEqual([[undefined, undefined]]);
   });
 
   it('should return by two values', () => {
     const config: PivotConfig = {
-      rowAttributes: [],
-      columnAttributes: [],
-      valueAttributes: [
+      stemsConfigs: [
         {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a1',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Sum,
-        },
-        {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a2',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Min,
+          rowAttributes: [],
+          columnAttributes: [],
+          valueAttributes: [
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a1',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Sum,
+            },
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a2',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Min,
+            },
+          ],
         },
       ],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([]);
-    expect(pivotData.columnHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([]);
+    expect(pivotData.data[0].columnHeaders).toEqual([
       {title: dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'), targetIndex: 0, color: undefined},
       {title: dataConverter.createValueTitle(DataAggregationType.Min, 'Eee'), targetIndex: 1, color: undefined},
     ]);
-    expect(pivotData.values).toEqual([[46, -10]]);
+    expect(pivotData.data[0].values).toEqual([[46, -10]]);
   });
 
   it('should return by row and value', () => {
     const config: PivotConfig = {
-      rowAttributes: [
-        {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 0},
-      ],
-      columnAttributes: [],
-      valueAttributes: [
+      stemsConfigs: [
         {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a1',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Sum,
+          rowAttributes: [
+            {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 0},
+          ],
+          columnAttributes: [],
+          valueAttributes: [
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a1',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Sum,
+            },
+          ],
         },
       ],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([
       {title: 'abc', targetIndex: 0, color: undefined},
       {title: 'def', targetIndex: 1, color: undefined},
     ]);
-    expect(pivotData.columnHeaders).toEqual([
+    expect(pivotData.data[0].columnHeaders).toEqual([
       {title: dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'), targetIndex: 0, color: undefined},
     ]);
-    expect(pivotData.values).toEqual([[37], [31]]);
+    expect(pivotData.data[0].values).toEqual([[37], [31]]);
   });
 
   it('should return by column and value', () => {
     const config: PivotConfig = {
-      rowAttributes: [],
-      columnAttributes: [
-        {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
-      ],
-      valueAttributes: [
+      stemsConfigs: [
         {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a2',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Sum,
+          rowAttributes: [],
+          columnAttributes: [
+            {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+          ],
+          valueAttributes: [
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a2',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Sum,
+            },
+          ],
         },
       ],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([]);
-    expect(pivotData.columnHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([]);
+    expect(pivotData.data[0].columnHeaders).toEqual([
       {title: 'a', targetIndex: 0, color: undefined},
       {title: 'c', targetIndex: 1, color: undefined},
       {title: 'b', targetIndex: 2, color: undefined},
     ]);
-    expect(pivotData.values).toEqual([[-4, 9, -13]]);
+    expect(pivotData.data[0].values).toEqual([[-4, 9, -13]]);
   });
 
   it('should return by two rows, column and three values', () => {
     const config: PivotConfig = {
-      rowAttributes: [
-        {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 0},
-        {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
-      ],
-      columnAttributes: [
-        {resourceId: 'C3', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 4},
-      ],
-      valueAttributes: [
+      stemsConfigs: [
         {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a1',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Sum,
-        },
-        {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a1',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Max,
-        },
-        {
-          resourceId: 'C4',
-          resourceType: AttributesResourceType.Collection,
-          attributeId: 'a2',
-          resourceIndex: 6,
-          aggregation: DataAggregationType.Count,
+          rowAttributes: [
+            {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 0},
+            {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+          ],
+          columnAttributes: [
+            {resourceId: 'C3', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 4},
+          ],
+          valueAttributes: [
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a1',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Sum,
+            },
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a1',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Max,
+            },
+            {
+              resourceId: 'C4',
+              resourceType: AttributesResourceType.Collection,
+              attributeId: 'a2',
+              resourceIndex: 6,
+              aggregation: DataAggregationType.Count,
+            },
+          ],
         },
       ],
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
-    expect(pivotData.rowHeaders).toEqual([
+    expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'abc',
         children: [
@@ -470,7 +492,7 @@ describe('Pivot data converter', () => {
       dataConverter.createValueTitle(DataAggregationType.Max, 'Ddd'),
       dataConverter.createValueTitle(DataAggregationType.Count, 'Eee'),
     ];
-    expect(pivotData.columnHeaders).toEqual([
+    expect(pivotData.data[0].columnHeaders).toEqual([
       {
         title: 'xyz',
         children: [
@@ -490,12 +512,12 @@ describe('Pivot data converter', () => {
         color: undefined,
       },
     ]);
-    expect(pivotData.values).toEqual([
+    expect(pivotData.data[0].values).toEqual([
       [2, 2, 1, 7, 6, 2],
       [6, 4, 2, 6, 6, 1],
       [null, null, null, 16, 6, 5],
       [31, 20, 2, null, null, null],
     ]);
-    expect(pivotData.valueTitles).toEqual(valueTitles);
+    expect(pivotData.data[0].valueTitles).toEqual(valueTitles);
   });
 });

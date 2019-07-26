@@ -19,12 +19,12 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {CalendarModel, DEFAULT_CALENDAR_ID} from './calendar.model';
+import {Calendar, DEFAULT_CALENDAR_ID} from './calendar';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
-export interface CalendarsState extends EntityState<CalendarModel> {}
+export interface CalendarsState extends EntityState<Calendar> {}
 
-export const calendarsAdapter = createEntityAdapter<CalendarModel>({selectId: calendar => calendar.id});
+export const calendarsAdapter = createEntityAdapter<Calendar>({selectId: calendar => calendar.id});
 
 export const initialCalendarsState: CalendarsState = calendarsAdapter.getInitialState();
 

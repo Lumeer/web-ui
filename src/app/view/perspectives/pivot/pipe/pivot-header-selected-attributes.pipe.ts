@@ -18,15 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotAttribute, PivotConfig, PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {pivotAttributesAreSame} from '../util/pivot-util';
+import {PivotRowColumnAttribute, PivotStemConfig} from '../../../../core/store/pivots/pivot';
 
 @Pipe({
   name: 'pivotHeaderSelectedAttributes',
 })
 export class PivotHeaderSelectedAttributesPipe implements PipeTransform {
-  public transform(config: PivotConfig): PivotRowColumnAttribute[] {
+  public transform(config: PivotStemConfig): PivotRowColumnAttribute[] {
     return [...(config.rowAttributes || []), ...(config.columnAttributes || [])];
   }
 }

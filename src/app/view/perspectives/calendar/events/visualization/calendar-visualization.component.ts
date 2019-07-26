@@ -27,7 +27,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {CalendarMode} from '../../../../../core/store/calendars/calendar.model';
+import {CalendarMode} from '../../../../../core/store/calendars/calendar';
 import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';

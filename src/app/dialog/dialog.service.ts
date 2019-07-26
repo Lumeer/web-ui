@@ -32,6 +32,7 @@ import {VideosAction} from '../core/store/videos/videos.action';
 import {getAllVideos} from '../core/store/videos/videos.data';
 import {DialogPath} from './dialog-path';
 import {isDialogPathInUrl} from './dialog.utils';
+import {isNotNullOrUndefined} from '../shared/utils/common.utils';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
@@ -132,9 +133,10 @@ export class DialogService {
     this.navigateToDialog([DialogPath.PLAY_VIDEO, videoId]);
   }
 
-  public openCalendarEventDialog(calendarId: string, time: number, documentId?: string) {
+  public openCalendarEventDialog(calendarId: string, time: number, documentId?: string, stemIndex?: number) {
     const path = [DialogPath.CALENDAR_EVENT, calendarId, time];
     documentId && path.push(documentId);
+    isNotNullOrUndefined(stemIndex) && path.push(stemIndex);
     this.navigateToDialog(path);
   }
 

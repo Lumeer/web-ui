@@ -5,19 +5,18 @@
                        [collapsed]="!sidebarOpened"
                        (toggle)="onSidebarToggle()">
 
-    <pivot-config class="d-block m-3"
-                  [config]="config"
-                  [pivotData]="data.pivotData"
-                  [collections]="collections"
-                  [linkTypes]="linkTypes"
-                  [query]="query"
-                  (configChange)="onConfigChange($event)">
-    </pivot-config>
+    <pivot-config-wrapper class="d-block m-3"
+                          [config]="config"
+                          [pivotData]="data.pivotData"
+                          [collections]="collections"
+                          [linkTypes]="linkTypes"
+                          [query]="query"
+                          (configChange)="onConfigChange($event)">
+    </pivot-config-wrapper>
 
   </collapsible-sidebar>
 
   <pivot-table class="flex-grow-1 h-100 overflow-auto ml-3"
-               [config]="config"
                [pivotData]="data.pivotData">
   </pivot-table>
 

@@ -19,6 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {Constraint} from '../../model/data/constraint';
+import {QueryStem} from '../navigation/query';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
@@ -30,10 +31,16 @@ export interface GanttChart {
 
 export interface GanttChartConfig {
   mode: GanttChartMode;
-  collections: Record<string, GanttChartCollectionConfig>;
+  stemsConfigs: GanttChartStemConfig[];
+  version?: GanttChartConfigVersion;
 }
 
-export interface GanttChartCollectionConfig {
+export enum GanttChartConfigVersion {
+  V1 = '1',
+}
+
+export interface GanttChartStemConfig {
+  stem?: QueryStem;
   barsProperties: Record<string, GanttChartBarModel>;
 }
 
@@ -67,7 +74,6 @@ export interface GanttChartTask {
 
 export interface GanttChartTaskMetadata {
   dataResourceId: string;
-  collectionConfigId: string;
   startAttributeId: string;
   endAttributeId: string;
   progressAttributeId: string;
@@ -97,27 +103,4 @@ export enum GanttChartBarPropertyOptional {
   Color = 'color',
   Category = 'category',
   SubCategory = 'subCategory',
-}
-
-export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
-  if (!config || !config.collections) {
-    return config;
-  }
-
-  const collections: Record<string, GanttChartCollectionConfig> = {};
-  for (const [collectionId, collectionConfig] of Object.entries<GanttChartCollectionConfig>(config.collections)) {
-    const barsProperties: Record<string, GanttChartBarModel> = {};
-
-    for (const [key, model] of Object.entries(collectionConfig.barsProperties || {})) {
-      barsProperties[key] = {
-        resourceId: model.resourceId || (model as any).collectionId,
-        attributeId: model.attributeId,
-        resourceIndex: model.resourceIndex || 0,
-        resourceType: model.resourceType || AttributesResourceType.Collection,
-      };
-    }
-    collections[collectionId] = {barsProperties};
-  }
-
-  return {mode: config.mode, collections};
 }

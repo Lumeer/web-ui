@@ -1,5 +1,5 @@
-<ng-container *ngIf="{items: query | pivotSelectItems:collections:linkTypes,
-attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesResources:collections:linkTypes} as data">
+<ng-container *ngIf="{items: stem | pivotSelectItems:collections:linkTypes,
+attributesResources: stem | queryStemAttributesResources:collections:linkTypes} as data">
 
   <h6 class="font-weight-bold" i18n="@@perspective.pivot.config.row.header">
     Rows
@@ -36,7 +36,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
                                        [isRow]="true"
                                        (attributeSelect)="onRowAttributeSelect($event, attribute)"
                                        (attributeRemove)="onRowAttributeRemove(index)"
-                                       (attributeChange)="onRowAttributeChange($event)">
+                                       (attributeChange)="onRowAttributeChange(index, $event)">
         </pivot-header-attribute-config>
 
       </div>
@@ -88,7 +88,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
                                        [pivotData]="pivotData"
                                        (attributeSelect)="onColumnAttributeSelect($event, attribute)"
                                        (attributeRemove)="onColumnAttributeRemove(index)"
-                                       (attributeChange)="onColumnAttributeChange($event)">
+                                       (attributeChange)="onColumnAttributeChange(index, $event)">
         </pivot-header-attribute-config>
 
       </div>
@@ -136,7 +136,7 @@ attributesResources: (query?.stems && query?.stems[0]) | queryStemAttributesReso
                                       [availableAttributes]="data.items"
                                       (attributeSelect)="onValueAttributeSelect($event, attribute)"
                                       (attributeRemove)="onValueAttributeRemove(index)"
-                                      (attributeChange)="onValueAttributeChange($event)">
+                                      (attributeChange)="onValueAttributeChange(index, $event)">
         </pivot-value-attribute-config>
 
       </div>

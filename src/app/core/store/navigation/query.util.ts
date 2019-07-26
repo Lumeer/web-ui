@@ -286,6 +286,9 @@ export function findStemIndexForLinkTypeToJoin(query: Query, linkType: LinkType,
 }
 
 export function collectionIdsChainForStem(stem: QueryStem, linkTypes: LinkType[]): string[] {
+  if (!stem) {
+    return [];
+  }
   const chain = [stem.collectionId];
   for (const linkTypeId of stem.linkTypeIds || []) {
     const linkType = (linkTypes || []).find(lt => lt.id === linkTypeId);
