@@ -17,38 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ElementRef,
-  ViewChild,
-  EventEmitter,
-  Output,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-
-import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
-import {getSaveValue} from '../../../../../shared/utils/data.utils';
-import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
-import {User} from '../../../../../core/store/users/user';
-import {getQueryFiltersForCollection} from '../../../../../core/store/navigation/query.util';
-import {AppState} from '../../../../../core/store/app.state';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {generateId} from '../../../../../shared/utils/resource.utils';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
+
+import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
+import {Query} from '../../../../../core/store/navigation/query';
+import {getQueryFiltersForCollection} from '../../../../../core/store/navigation/query.util';
+import {User} from '../../../../../core/store/users/user';
+import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
+import {getSaveValue} from '../../../../../shared/utils/data.utils';
+import {generateId} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'kanban-column',
@@ -149,8 +149,8 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private updatePostItsPosition(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
-    const columns = this.config.columns.map(col => ({...col}));
-    const otherColumn = {...this.config.otherColumn};
+    const columns = this.config.columns.map(col => ({...col, documentsIdsOrder: [...col.documentsIdsOrder]}));
+    const otherColumn = {...this.config.otherColumn, documentsIdsOrder: [...this.config.otherColumn.documentsIdsOrder]};
     const column = columns.find(col => col.id === event.container.id) || otherColumn;
 
     if (event.container.id === event.previousContainer.id) {
@@ -192,13 +192,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
       configAttribute && (this.collections || []).find(coll => coll.id === configAttribute.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
-      const patchDocument = {...document};
-      patchDocument.data[collectionConfig.attribute.attributeId] = getSaveValue(
-        newValue,
-        constraint,
-        this.constraintData
-      );
-      this.patchData.emit(patchDocument);
+      const value = getSaveValue(newValue, constraint, this.constraintData);
+      const data = {...document.data, [collectionConfig.attribute.attributeId]: value};
+      this.patchData.emit({...document, data});
     }
   }
 
