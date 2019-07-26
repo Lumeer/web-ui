@@ -31,6 +31,8 @@ import {collectionsReducer} from './collections/collections.reducer';
 import {CommonEffects} from './common/common.effects';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
+import {FileAttachmentsEffects} from './file-attachments/file-attachments.effects';
+import {fileAttachmentsReducer} from './file-attachments/file-attachments.reducer';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {GeocodingEffects} from './geocoding/geocoding.effects';
 import {geocodingReducer} from './geocoding/geocoding.reducer';
@@ -71,6 +73,7 @@ import {viewsReducer} from './views/views.reducer';
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
   documents: documentsReducer,
+  fileAttachments: fileAttachmentsReducer,
   geocoding: geocodingReducer,
   groups: groupsReducer,
   linkInstances: linkInstancesReducer,
@@ -99,6 +102,7 @@ const effects = [
   CollectionsEffects,
   CommonEffects,
   DocumentsEffects,
+  FileAttachmentsEffects,
   GeocodingEffects,
   GroupsEffects,
   LinkInstancesEffects,

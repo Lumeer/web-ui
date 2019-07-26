@@ -57,6 +57,16 @@
                        class="d-block">
   </duration-data-input>
 
+  <files-data-input *ngSwitchCase="constraintType.Files"
+                    [cursor]="cursor"
+                    [focus]="focus"
+                    [readonly]="readonly"
+                    [value]="value"
+                    (save)="onSaveValue($event)"
+                    (cancel)="onCancel()"
+                    class="px-1">
+  </files-data-input>
+
   <number-data-input *ngSwitchCase="constraintType.Number"
                      [focus]="focus"
                      [readonly]="readonly"

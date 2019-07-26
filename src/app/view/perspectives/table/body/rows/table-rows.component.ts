@@ -106,7 +106,7 @@ export class TableRowsComponent implements OnChanges {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    if (event.target === this.element.nativeElement) {
+    if (event.target === this.virtualScrollViewport.elementRef.nativeElement) {
       this.unsetCursor();
     }
   }

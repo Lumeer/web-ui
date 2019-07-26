@@ -5,25 +5,16 @@
                    (toggle)="onToggle()">
   </table-link-cell>
   <div class="d-flex flex-column">
-    <ng-container *ngIf="table.linkedRows && table.linkedRows.length > 0; else emptyRows">
-      <ng-container *ngIf="rows && rows.length === 1 && rows[0].expanded; else collapsedRows">
-        <table-linked-row *ngFor="let linkedRow of table.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
-                          [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
-                          [rows]="[linkedRow]"
-                          [canManageConfig]="canManageConfig">
-        </table-linked-row>
-      </ng-container>
-      <ng-template #collapsedRows>
-        <table-linked-row [cursor]="cursor | nextPartCursor | nextRowCursor:0"
-                          [rows]="table.linkedRows"
-                          [canManageConfig]="canManageConfig">
-        </table-linked-row>
-      </ng-template>
+    <ng-container *ngIf="!table.linkedRows?.length || (rows && rows.length === 1 && rows[0].expanded); else collapsedRows">
+      <table-linked-row *ngFor="let linkedRow of table.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
+                        [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
+                        [rows]="[linkedRow]"
+                        [canManageConfig]="canManageConfig">
+      </table-linked-row>
     </ng-container>
-    <ng-template #emptyRows>
-      <table-linked-row *ngIf="!table.linkedRows || table.linkedRows.length === 0"
-                        [cursor]="cursor | nextPartCursor | nextRowCursor:0"
-                        [rows]="[emptyLinkedRow]"
+    <ng-template #collapsedRows>
+      <table-linked-row [cursor]="cursor | nextPartCursor | nextRowCursor:0"
+                        [rows]="table.linkedRows"
                         [canManageConfig]="canManageConfig">
       </table-linked-row>
     </ng-template>

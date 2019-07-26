@@ -107,6 +107,16 @@ export class NotificationService {
     );
   }
 
+  public confirmYesOrNo(message: string, title: string, onConfirm: () => void, onCancel?: () => void) {
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const yesButton = {text: yesButtonText, action: () => onConfirm()};
+
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+    const noButton = {text: noButtonText, action: () => onCancel && onCancel()};
+
+    this.confirm(message, title, [noButton, yesButton]);
+  }
+
   public hint(message: string, title: string, buttons: SnotifyButton[]): void {
     this.zone.runOutsideAngular(() =>
       this.notifications.success(message, title, {

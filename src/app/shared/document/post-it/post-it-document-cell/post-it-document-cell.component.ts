@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 
 import {BehaviorSubject} from 'rxjs';
+import {DataCursor} from '../../../data-input/data-cursor';
 import {SelectionHelper} from '../util/selection-helper';
 import {KeyCode} from '../../../key-code';
 import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
@@ -54,6 +55,9 @@ export class PostItDocumentCellComponent implements OnChanges {
 
   @Input()
   public constraint: Constraint;
+
+  @Input()
+  public dataCursor: DataCursor;
 
   @Output() public focus = new EventEmitter();
   @Output() public update = new EventEmitter<string>();

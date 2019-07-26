@@ -51,7 +51,6 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
   private rows$ = new BehaviorSubject([]);
 
   public linkedRows$: Observable<TableConfigRow[]>;
-  public emptyLinkedRow = createEmptyTableRow();
 
   constructor(private store$: Store<{}>) {}
 
@@ -89,7 +88,8 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
             )
           )
         );
-      })
+      }),
+      map(linkedRows => (linkedRows && linkedRows.length > 0 ? linkedRows : [createEmptyTableRow()]))
     );
   }
 

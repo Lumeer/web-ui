@@ -29,17 +29,17 @@ import {selectAllCollections} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
 import {filterDocumentsByQuery} from '../documents/documents.filters';
-import {selectAllDocuments, selectDocumentsDictionary} from '../documents/documents.state';
+import {selectAllDocuments} from '../documents/documents.state';
+import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {selectCurrentUser} from '../users/users.state';
-import {selectAllViews, selectCurrentView} from '../views/views.state';
-import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
-import {linkInstancesAdapter, selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {Query} from '../navigation/query';
-import {selectWorkspaceModels} from './common.selectors';
+import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
+import {selectCurrentUser} from '../users/users.state';
 import {View} from '../views/view';
 import {filterViewsByQuery, sortViewsById} from '../views/view.filters';
+import {selectAllViews, selectCurrentView} from '../views/views.state';
+import {selectWorkspaceModels} from './common.selectors';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -147,6 +147,15 @@ export const selectLinkTypesByQuery = createSelector(
     return linkTypes.filter(linkType => linkTypesIdsInQuery.includes(linkType.id));
   }
 );
+
+export const selectLinkTypesByCustomQuery = (query: Query) =>
+  createSelector(
+    selectLinkTypesByReadPermission,
+    linkTypes => {
+      const linkTypesIds = new Set(getAllLinkTypeIdsFromQuery(query));
+      return linkTypes.filter(linkType => linkTypesIds.has(linkType.id));
+    }
+  );
 
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
   createSelector(

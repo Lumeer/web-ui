@@ -66,6 +66,7 @@
     "coordinate-parser": "^1.0.2",
     "core-js": "~3.1.3",
     "driver.js": "^0.9.6",
+    "file-saver": "^2.0.2",
     "flag-icon-css": "^3.3.0",
     "hammerjs": "^2.0.8",
     "jssha": "^2.3.1",

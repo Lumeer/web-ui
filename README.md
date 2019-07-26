@@ -59,8 +59,10 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 > MAPBOX_KEY=<access token> \
 > MAPQUEST_KEY=<consumer key> \
 > MAPTILER_KEY=<key> \
+> MAX_FILE_UPLOAD_SIZE=10 \
 > PUSHER_CLUSTER=us1 \
 > PUSHER_KEY=<pusher api key> \
+> PRESIGNED_URL_TIMEOUT=60 \
 > SENTRY_DSN=https://<key>@sentry.io/<project> \
 > SENTRY_AUTH_TOKEN=<secret token> \
 > SESSION_TIMEOUT=30 \
@@ -80,6 +82,8 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 - `MAPBOX_KEY`: Mapbox access token
 - `MAPQUEST_KEY`: MapQuest consumer key
 - `MAPTILER_KEY`: MapTiler key
+- `MAX_FILE_UPLOAD_SIZE`: maximum allowed size of file attachment in megabytes (10 MB by default)
+- `PRESIGNED_URL_TIMEOUT`: time period in seconds during which a presigned file URL is valid (60s by default)
 - `PUSHER_CLUSTER`: Pusher.com for push notifications - the server cluster to be used
 - `PUSHER_KEY`: Pusher.com for push notifications - the secret API key
 - `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)

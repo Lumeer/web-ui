@@ -49,6 +49,7 @@ import {TableRowNumbersComponent} from './rows/primary-row/row-numbers/table-row
 import {TablePrimaryRowComponent} from './rows/primary-row/table-primary-row.component';
 import {TableRowsComponent} from './rows/table-rows.component';
 import {TableBodyComponent} from './table-body.component';
+import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
 
 @NgModule({
   imports: [
@@ -85,6 +86,7 @@ import {TableBodyComponent} from './table-body.component';
     TableEmptyRowComponent,
     UserCollapsedCellComponent,
     BooleanCollapsedCellComponent,
+    FilesCollapsedCellComponent,
   ],
   exports: [TableBodyComponent],
 })

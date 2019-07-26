@@ -52,6 +52,7 @@ import {
 } from '../common/permissions.selectors';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
+import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {
@@ -137,7 +138,7 @@ export class TablesEffects {
       this.store$.pipe(select(selectViewCode))
     ),
     mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
-      const {config, query} = action.payload;
+      const {config, query, tableId} = action.payload;
 
       const queryStem = query.stems[0];
       const primaryCollection = collectionsMap[queryStem.collectionId];
@@ -172,15 +173,25 @@ export class TablesEffects {
         Math.round(parts.length / 2),
         documentIds
       );
-      const addTableAction: Action = new TablesAction.AddTable({
-        table: {
-          id: action.payload.tableId,
-          config: {parts, rows},
-        },
-      });
 
-      // TODO load in guard instead
-      return [addTableAction, new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query})];
+      const actions: Action[] = [];
+      actions.push(
+        new TablesAction.AddTable({
+          table: {
+            id: action.payload.tableId,
+            config: {parts, rows},
+          },
+        })
+      );
+
+      actions.push(new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query}));
+
+      // if the table is embedded, file attachments are not loaded by guard
+      if (tableId !== DEFAULT_TABLE_ID) {
+        actions.push(new FileAttachmentsAction.GetByQuery({query}));
+      }
+
+      return actions;
     })
   );
 

@@ -51,6 +51,7 @@
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"
                [constraint]="(collection | collectionAttribute : row.id)?.constraint"
+               [dataCursor]="document | dataCursor : row.id"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
                [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id: permissions: query)"
                (keyValueChange)="submitRowChange(idx, $event)"

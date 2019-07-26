@@ -54,7 +54,8 @@ export class AttributeValueComponent {
   @Output()
   public change = new EventEmitter();
 
-  public constraintTypeBoolean = ConstraintType.Boolean;
+  public readonly constraintType = ConstraintType;
+
   public editing$ = new BehaviorSubject(false);
 
   public get conditionValueControl(): AbstractControl {

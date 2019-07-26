@@ -28,18 +28,23 @@ import {DateTimeModule} from '../date-time/date-time.module';
 import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {PipesModule} from '../pipes/pipes.module';
+import {AddressDataInputComponent} from './address/address-data-input.component';
 import {BooleanDataInputComponent} from './boolean/boolean-data-input.component';
 import {ColorDataInputComponent} from './color/color-data-input.component';
+import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-input.component';
 import {DataInputComponent} from './data-input.component';
 import {DatetimeDataInputComponent} from './datetime/datetime-data-input.component';
+import {DurationDataInputComponent} from './duration/duration-data-input.component';
+import {FilesDataInputComponent} from './files/files-data-input.component';
 import {NumberDataInputComponent} from './number/number-data-input.component';
 import {PercentageDataInputComponent} from './percentage/percentage-data-input.component';
+import {SelectDataInputComponent} from './select/select-data-input.component';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
-import {SelectDataInputComponent} from './select/select-data-input.component';
-import {CoordinatesDataInputComponent} from './coordinates/coordinates-data-input.component';
-import {AddressDataInputComponent} from './address/address-data-input.component';
-import {DurationDataInputComponent} from './duration/duration-data-input.component';
+import {DataCursorPipe} from './data-cursor.pipe';
+import {FileTypeIconPipe} from './files/file-type-icon.pipe';
+import {FilesDropdownComponent} from './files/dropdown/files-dropdown.component';
+import {FileAttachmentButtonComponent} from './files/button/file-attachment-button.component';
 
 @NgModule({
   imports: [
@@ -67,7 +72,18 @@ import {DurationDataInputComponent} from './duration/duration-data-input.compone
     CoordinatesDataInputComponent,
     AddressDataInputComponent,
     DurationDataInputComponent,
+    FilesDataInputComponent,
+    DataCursorPipe,
+    FileTypeIconPipe,
+    FilesDropdownComponent,
+    FileAttachmentButtonComponent,
   ],
-  exports: [DataInputComponent, BooleanDataInputComponent, UserDataInputComponent],
+  exports: [
+    DataInputComponent,
+    BooleanDataInputComponent,
+    UserDataInputComponent,
+    DataCursorPipe,
+    FileAttachmentButtonComponent,
+  ],
 })
 export class DataInputModule {}

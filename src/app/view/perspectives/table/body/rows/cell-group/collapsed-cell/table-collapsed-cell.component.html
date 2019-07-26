@@ -21,6 +21,13 @@
                           class="h-100">
     </color-collapsed-cell>
 
+    <files-collapsed-cell *ngSwitchCase="constraintType.Files"
+                          [attributeId]="column.attributeIds[0]"
+                          [documents]="documents"
+                          [linkInstances]="linkInstances"
+                          class="h-100 px-1">
+    </files-collapsed-cell>
+
     <user-collapsed-cell *ngSwitchCase="constraintType.User"
                          [constraintConfig]="data.constraint?.config"
                          [stringValues]="data.stringValues"

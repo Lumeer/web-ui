@@ -1,0 +1,65 @@
+<dropdown [origin]="origin">
+  <div class="card p-3"
+       (click)="onClick($event)">
+    <table *ngIf="files?.length > 0"
+           class="table table-sm">
+      <tbody>
+        <tr *ngFor="let file of files; index as fileIndex">
+          <td [class.border-top-0]="fileIndex === 0"
+              [class.text-secondary]="file.uploading">
+            {{ file.fileName }}
+          </td>
+          <td [class.border-top-0]="fileIndex === 0"
+              class="text-right">
+            <i *ngIf="!file.uploading"
+               (click)="onRemove(file.id)"
+               title="Delete file"
+               i18n-title="@@files.dropdown.button.delete"
+               class="fas fa-trash text-danger cursor-pointer">
+            </i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="fileSizeError$ | async as fileSizeError"
+         class="text-danger">
+      {{ fileSizeError }}
+    </div>
+
+    <div *ngIf="!uploadProgress; else uploading"
+         class="input-group">
+      <div class="custom-file">
+        <input type="file"
+               class="custom-file-input"
+               id="inputGroupFile01"
+               (change)="onFileChange($event)">
+        <label class="custom-file-label"
+               for="inputGroupFile01"
+               i18n="@@files.dropdown.button.choose">Choose file</label>
+      </div>
+    </div>
+
+    <ng-template #uploading>
+      <div class="progress"
+           [style.min-width.px]="300">
+        <div class="progress-bar"
+             role="progressbar"
+             [style.width.%]="uploadProgress"
+             [attr.aria-valuenow]="uploadProgress"
+             aria-valuemin="0"
+             aria-valuemax="100">
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="d-flex flex-grow-0 justify-content-end mt-3">
+      <button class="btn btn-sm btn-outline-secondary"
+              data-test="files-dropdown-cancel-button"
+              i18n="@@button.cancel"
+              (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</dropdown>

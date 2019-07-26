@@ -30,6 +30,7 @@ export enum ConstraintType {
   DateTime = 'DateTime',
   Duration = 'Duration',
   Email = 'Email',
+  Files = 'FileAttachment',
   Image = 'Image',
   Link = 'Link',
   Percentage = 'Percentage',
@@ -48,6 +49,7 @@ export const constraintTypesMap = {
   [ConstraintType.DateTime]: ConstraintType.DateTime,
   [ConstraintType.Duration]: ConstraintType.Duration,
   [ConstraintType.Email]: ConstraintType.Email,
+  [ConstraintType.Files]: ConstraintType.Files,
   [ConstraintType.Image]: ConstraintType.Image,
   [ConstraintType.Link]: ConstraintType.Link,
   [ConstraintType.Number]: ConstraintType.Number,
@@ -67,6 +69,7 @@ export const constraintIconsMap = {
   [ConstraintType.DateTime]: 'fas fa-calendar-day',
   [ConstraintType.Duration]: 'fas fa-stopwatch',
   [ConstraintType.Email]: 'fas fa-envelope',
+  [ConstraintType.Files]: 'fas fa-save',
   [ConstraintType.Image]: 'fas fa-file-image',
   [ConstraintType.Link]: 'fas fa-link',
   [ConstraintType.Number]: 'fas fa-pi',
@@ -86,6 +89,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Coordinates:
     case ConstraintType.DateTime:
     case ConstraintType.Duration:
+    case ConstraintType.Files:
     case ConstraintType.Number:
     case ConstraintType.Percentage:
     case ConstraintType.Select:

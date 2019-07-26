@@ -32,6 +32,7 @@ import {
 import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {checkValidUser, formatDataValue} from '../utils/data.utils';
 import {generateCorrelationId} from '../utils/resource.utils';
+import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 
 @Component({
@@ -46,6 +47,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public cursor: DataCursor;
 
   @Input()
   public focus: boolean;

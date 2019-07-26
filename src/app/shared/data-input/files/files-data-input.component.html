@@ -1,0 +1,14 @@
+<ng-container *ngIf="{files: fileAttachments$ | async} as data">
+  <file-attachment-button *ngFor="let file of data.files"
+                          [fileAttachment]="file">
+  </file-attachment-button>
+
+  <files-dropdown *ngIf="!readonly || (uploadProgress$ | async)"
+                  [files]="data.files"
+                  [origin]="element"
+                  [uploadProgress]="uploadProgress$ | async"
+                  (add)="onAdd($event)"
+                  (remove)="onRemove($event, data.files)"
+                  (cancel)="onCancel()">
+  </files-dropdown>
+</ng-container>
