@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -46,6 +47,7 @@ import {
   ScaleControl,
 } from 'mapbox-gl';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
@@ -106,7 +108,14 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private subscriptions = new Subscription();
 
-  constructor(private element: ElementRef, private i18n: I18n, private ngZone: NgZone, private renderer: Renderer2) {}
+  constructor(
+    private deviceDetectorService: DeviceDetectorService,
+    private element: ElementRef,
+    private i18n: I18n,
+    private ngZone: NgZone,
+    private platform: Platform,
+    private renderer: Renderer2
+  ) {}
 
   public ngOnInit() {
     this.mapElementId = `map-${this.map.id}`;
@@ -145,6 +154,14 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.addControl(new GeolocateControl(), 'bottom-right');
 
     this.registerMapEventListeners();
+    this.fixDefaultMapZoomRate();
+  }
+
+  private fixDefaultMapZoomRate() {
+    // zoom is by default very slow in Blink-based browsers (Chrome, Opera, etc.) on Linux
+    if (this.deviceDetectorService.os === OS.LINUX && this.platform.BLINK) {
+      (this.mapboxMap.scrollZoom as any).setWheelZoomRate(1 / 200);
+    }
   }
 
   private registerMapEventListeners() {
