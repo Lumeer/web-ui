@@ -20,8 +20,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
-import {of} from 'rxjs';
-import {catchError, filter, first, map, take, tap} from 'rxjs/operators';
+import {of, timer} from 'rxjs';
+import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
@@ -38,7 +38,7 @@ import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instan
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
-import {selectLinkTypeById} from '../store/link-types/link-types.state';
+import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
@@ -64,6 +64,7 @@ import {View} from '../store/views/view';
 import {convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
 
 @Injectable({
   providedIn: 'root',
@@ -124,6 +125,7 @@ export class PusherService implements OnDestroy {
     this.bindOtherEvents();
     this.bindFavoriteEvents();
     this.bindUserEvents();
+    this.bindTemplateEvents();
   }
 
   private bindOrganizationEvents() {
@@ -591,6 +593,35 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new UsersAction.DeleteSuccess({userId: data.id}));
       }
+    });
+  }
+
+  private bindTemplateEvents() {
+    this.channel.bind('TemplateCreated:create', data => {
+      timer(2000) // wait for the most recent push notifications to arrive
+        .pipe(
+          withLatestFrom(
+            this.store$.pipe(select(selectCollectionsDictionary)),
+            this.store$.pipe(select(selectLinkTypesDictionary)),
+            this.store$.pipe(select(selectViewsDictionary))
+          ),
+          first()
+        )
+        .subscribe(([, collections, linkTypes, views]) => {
+          const allCollections = data.object.collectionIds.every(id => collections[id]);
+          const allLinkTypes = data.object.linkTypeIds.every(id => linkTypes[id]);
+          const allViews = data.object.viewIds.every(id => views[id]);
+
+          if (!allCollections) {
+            this.store$.dispatch(new CollectionsAction.Get({force: true}));
+          }
+          if (!allLinkTypes) {
+            this.store$.dispatch(new LinkTypesAction.Get({force: true}));
+          }
+          if (!allViews) {
+            this.store$.dispatch(new ViewsAction.Get({force: true}));
+          }
+        });
     });
   }
 

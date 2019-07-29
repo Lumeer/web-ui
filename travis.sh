@@ -2,6 +2,11 @@
 # Abort on Error
 set -e
 
+# Set up a repeating loop to send some output to Travis.
+export PING_SLEEP=300s
+bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
+export PING_LOOP_PID=$!
+
 echo "Starting frontend..."
 npm run http-server &
 while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000"; do
@@ -30,3 +35,5 @@ echo "Stopping backend..."
 
 echo "Printing bundle sizes..."
 npm run bundlesize
+
+kill $PING_LOOP_PID
