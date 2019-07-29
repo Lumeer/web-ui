@@ -20,8 +20,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
-import {combineLatest, of, timer} from 'rxjs';
-import {catchError, filter, first, map, take, tap, timeout, withLatestFrom} from 'rxjs/operators';
+import {of, timer} from 'rxjs';
+import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
@@ -38,7 +38,7 @@ import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instan
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
-import {selectAllLinkTypes, selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
+import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
@@ -63,8 +63,8 @@ import {selectCurrentUser} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import {convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectAllViews, selectViewsDictionary} from '../store/views/views.state';
-import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
+import {selectViewsDictionary} from '../store/views/views.state';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
 
 @Injectable({
   providedIn: 'root',
@@ -81,7 +81,8 @@ export class PusherService implements OnDestroy {
     private authService: AuthService,
     private organizationService: OrganizationService,
     private projectService: ProjectService
-  ) {}
+  ) {
+  }
 
   public init(): void {
     this.subscribeToUser();
