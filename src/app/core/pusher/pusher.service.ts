@@ -81,8 +81,7 @@ export class PusherService implements OnDestroy {
     private authService: AuthService,
     private organizationService: OrganizationService,
     private projectService: ProjectService
-  ) {
-  }
+  ) {}
 
   public init(): void {
     this.subscribeToUser();
@@ -604,9 +603,10 @@ export class PusherService implements OnDestroy {
           withLatestFrom(
             this.store$.pipe(select(selectCollectionsDictionary)),
             this.store$.pipe(select(selectLinkTypesDictionary)),
-            this.store$.pipe(select(selectViewsDictionary)),
+            this.store$.pipe(select(selectViewsDictionary))
           ),
-          first())
+          first()
+        )
         .subscribe(([, collections, linkTypes, views]) => {
           const allCollections = data.object.collectionIds.every(id => collections[id]);
           const allLinkTypes = data.object.linkTypeIds.every(id => linkTypes[id]);
