@@ -55,6 +55,7 @@
                i18n-title="@@userNotifications.mark.read"></i>
             <i (click)="deleteNotificationEvent($event, notification)"
                class="fa fa-trash text-danger ml-1 cursor-pointer"
+               [class.disabled]="notification.deleting"
                title="Delete notification"
                i18n-title="@@userNotifications.delete"></i>
           </span>

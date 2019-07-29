@@ -39,6 +39,7 @@ interface BasicUserNotification {
   createdAt?: Date;
   read: boolean;
   firstReadAt?: Date;
+  deleting?: boolean;
 }
 
 export interface OrganizationSharedUserNotification extends BasicUserNotification {

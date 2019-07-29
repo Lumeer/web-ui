@@ -93,7 +93,7 @@ export class UserNotificationsEffects {
     mergeMap(action =>
       this.userNotificationsService.removeNotification(action.payload.id).pipe(
         map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
-        catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error})))
+        catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.id})))
       )
     )
   );

@@ -22,6 +22,7 @@ import {UserNotification} from '../../../../../core/model/user-notification';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Project} from '../../../../../core/store/projects/project';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'notifications-menu-wrapper',
@@ -60,6 +61,8 @@ export class NotificationsMenuWrapperComponent {
   @Output()
   public clickNotification = new EventEmitter<UserNotification>();
 
+  public loading$ = new BehaviorSubject(false);
+
   public toggleUnreadFilter(event: MouseEvent): void {
     event.stopPropagation();
     this.toggleUnread.emit();
@@ -67,7 +70,10 @@ export class NotificationsMenuWrapperComponent {
 
   public deleteNotificationEvent(event: MouseEvent, notification: UserNotification) {
     event.stopPropagation();
-    this.deleteNotification.next(notification);
+
+    if (notification.deleting !== true) {
+      this.deleteNotification.next(notification);
+    }
   }
 
   public setNotificationReadEvent(event: MouseEvent, notification: UserNotification, read: boolean): void {

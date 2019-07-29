@@ -146,3 +146,8 @@ span.nowrap {
 span.trail:after {
   content: ' ';
 }
+
+i.fa-trash.text-danger.disabled {
+  color: $danger-light !important;
+  cursor: default;
+}
