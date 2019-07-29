@@ -90,12 +90,16 @@ export class UserNotificationsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<UserNotificationsAction.Delete>(UserNotificationsActionType.DELETE),
-    mergeMap(action =>
-      this.userNotificationsService.removeNotification(action.payload.id).pipe(
-        map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
-        catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.id})))
-      )
-    )
+    mergeMap(action => {
+      if (action.payload.userNotification.deleting !== true) {
+        return this.userNotificationsService.removeNotification(action.payload.userNotification.id).pipe(
+          map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
+          catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.userNotification.id})))
+        )
+      } else {
+        return of(null);
+      }
+    })
   );
 
   @Effect()

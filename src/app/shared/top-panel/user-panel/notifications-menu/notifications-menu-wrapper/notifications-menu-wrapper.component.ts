@@ -68,10 +68,7 @@ export class NotificationsMenuWrapperComponent {
 
   public deleteNotificationEvent(event: MouseEvent, notification: UserNotification) {
     event.stopPropagation();
-
-    if (notification.deleting !== true) {
-      this.deleteNotification.next(notification);
-    }
+    this.deleteNotification.next(notification);
   }
 
   public setNotificationReadEvent(event: MouseEvent, notification: UserNotification, read: boolean): void {
