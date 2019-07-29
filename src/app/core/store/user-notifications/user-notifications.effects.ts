@@ -94,8 +94,10 @@ export class UserNotificationsEffects {
       if (action.payload.userNotification.deleting !== true) {
         return this.userNotificationsService.removeNotification(action.payload.userNotification.id).pipe(
           map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
-          catchError(error => of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.userNotification.id})))
-        )
+          catchError(error =>
+            of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.userNotification.id}))
+          )
+        );
       } else {
         return of(null);
       }

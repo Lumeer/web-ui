@@ -84,7 +84,7 @@ export namespace UserNotificationsAction {
   export class DeleteFailure implements Action {
     public readonly type = UserNotificationsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: {error: any, id: string}) {}
+    public constructor(public payload: {error: any; id: string}) {}
   }
 
   export type All =

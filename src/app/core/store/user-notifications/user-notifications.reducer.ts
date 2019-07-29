@@ -39,9 +39,12 @@ export function userNotificationsReducer(
     case UserNotificationsActionType.DELETE_SUCCESS:
       return userNotificationsAdapter.removeOne(action.payload.id, state);
     case UserNotificationsActionType.DELETE:
-      return userNotificationsAdapter.updateOne({id: action.payload.userNotification.id, changes: { deleting: true }}, state);
+      return userNotificationsAdapter.updateOne(
+        {id: action.payload.userNotification.id, changes: {deleting: true}},
+        state
+      );
     case UserNotificationsActionType.DELETE_FAILURE:
-      return userNotificationsAdapter.updateOne({id: action.payload.id, changes: { deleting: false }}, state);
+      return userNotificationsAdapter.updateOne({id: action.payload.id, changes: {deleting: false}}, state);
     default:
       return state;
   }
