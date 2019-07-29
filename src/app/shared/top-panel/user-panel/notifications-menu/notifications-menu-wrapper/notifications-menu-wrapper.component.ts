@@ -61,8 +61,6 @@ export class NotificationsMenuWrapperComponent {
   @Output()
   public clickNotification = new EventEmitter<UserNotification>();
 
-  public loading$ = new BehaviorSubject(false);
-
   public toggleUnreadFilter(event: MouseEvent): void {
     event.stopPropagation();
     this.toggleUnread.emit();
