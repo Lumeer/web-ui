@@ -215,7 +215,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  public deleteNotification(notification: UserNotification) {
-    this.store$.dispatch(new UserNotificationsAction.Delete({id: notification.id}));
+  public deleteNotification(userNotification: UserNotification) {
+    this.store$.dispatch(new UserNotificationsAction.Delete({userNotification}));
   }
 }

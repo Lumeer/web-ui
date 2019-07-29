@@ -22,6 +22,7 @@ import {UserNotification} from '../../../../../core/model/user-notification';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Project} from '../../../../../core/store/projects/project';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'notifications-menu-wrapper',

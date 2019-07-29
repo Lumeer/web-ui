@@ -72,7 +72,7 @@ export namespace UserNotificationsAction {
   export class Delete implements Action {
     public readonly type = UserNotificationsActionType.DELETE;
 
-    public constructor(public payload: {id: string}) {}
+    public constructor(public payload: {userNotification: UserNotification}) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -84,7 +84,7 @@ export namespace UserNotificationsAction {
   export class DeleteFailure implements Action {
     public readonly type = UserNotificationsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; id: string}) {}
   }
 
   export type All =
