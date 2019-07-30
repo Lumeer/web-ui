@@ -27,24 +27,25 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Title} from '@angular/platform-browser';
+import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import mixpanel from 'mixpanel-browser';
+import * as moment from 'moment';
 import {SnotifyService} from 'ng-snotify';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
+import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
-import {AppState} from './core/store/app.state';
-import {selectCurrentUser} from './core/store/users/users.state';
-import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {PusherService} from './core/pusher/pusher.service';
-import * as moment from 'moment';
-import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
-import {ServiceLevelType} from './core/dto/service-level-type';
-import smartlookClient from 'smartlook-client';
 import {superUserEmails} from './auth/super-user-emails';
-import mixpanel from 'mixpanel-browser';
+import {ServiceLevelType} from './core/dto/service-level-type';
+import {PusherService} from './core/pusher/pusher.service';
+import {AppState} from './core/store/app.state';
+import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
+import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
 
 declare let $: any;
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
     private changeDetector: ChangeDetectorRef,
+    private i18n: I18n,
     private router: Router,
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
@@ -72,7 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private pusherService: PusherService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
-    this.title.setTitle('Lumeer - Visual Project&Team Management');
+    this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));
 
     this.initPushNotifications();
     this.handleAuthentication();
