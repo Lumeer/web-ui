@@ -30,6 +30,7 @@ import {MapRenderComponent} from './content/render/map-render.component';
 import {MapAttributeGroupComponent} from './panel/attribute-group/map-attribute-group.component';
 import {MapAttributeIdsPipe} from './panel/map-attribute-ids.pipe';
 import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
+import {MapLoadingComponent} from './content/loading/map-loading.component';
 
 @NgModule({
   imports: [PickerModule, SharedModule, MapPerspectiveRoutingModule],
@@ -43,6 +44,7 @@ import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-positi
     MapAttributeGroupComponent,
     MapAttributeIdsPipe,
     MapPositionCheckboxComponent,
+    MapLoadingComponent,
   ],
   entryComponents: [MapPerspectiveComponent],
   exports: [MapPerspectiveComponent],

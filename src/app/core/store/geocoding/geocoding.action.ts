@@ -38,7 +38,13 @@ export namespace GeocodingAction {
   export class GetCoordinates implements Action {
     public readonly type = GeocodingActionType.GET_COORDINATES;
 
-    public constructor(public payload: {queries: string[]}) {}
+    public constructor(
+      public payload: {
+        queries: string[];
+        onSuccess?: (coordinatesMap: Record<string, MapCoordinates>) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
   }
 
   export class GetCoordinatesSuccess implements Action {
