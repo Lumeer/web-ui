@@ -271,13 +271,18 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
     this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
 
+    this.redrawMarkers();
+    this.mapboxMap.once('idle', () => {
+      this.redrawMarkers();
+      this.fitMarkersBounds(markers);
+    });
+  }
+
+  private fitMarkersBounds(markers: MapMarkerProperties[]) {
     if (!this.map.config.position || !this.map.config.position.center) {
       const bounds = createMapMarkersBounds(markers);
       this.mapboxMap.fitBounds(bounds, {padding: 100});
     }
-
-    this.redrawMarkers();
-    this.mapboxMap.once('idle', () => this.redrawMarkers());
   }
 
   private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {

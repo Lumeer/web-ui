@@ -1,5 +1,5 @@
-<ng-container *ngIf="{markers: markers$ | async} as data">
-  <ng-container *ngIf="data.markers?.length > 0; else placeholder">
+<ng-container *ngIf="{loading: loading$ | async, markers: markers$ | async} as data">
+  <ng-container *ngIf="data.markers?.length > 0; else empty">
     <map-render *ngIf="map"
                 [map]="map"
                 [markers]="data.markers"
@@ -9,7 +9,13 @@
     </map-render>
   </ng-container>
 
-  <ng-template #placeholder>
-    <empty-map class="flex-grow-1"></empty-map>
+  <ng-template #empty>
+    <map-loading *ngIf="data.loading; else placeholder"
+                 class="flex-grow-1">
+    </map-loading>
+
+    <ng-template #placeholder>
+      <empty-map class="flex-grow-1"></empty-map>
+    </ng-template>
   </ng-template>
 </ng-container>

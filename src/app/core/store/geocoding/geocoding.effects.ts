@@ -33,19 +33,23 @@ export class GeocodingEffects {
   public getCoordinates$: Observable<Action> = this.actions$.pipe(
     ofType<GeocodingAction.GetCoordinates>(GeocodingActionType.GET_COORDINATES),
     mergeMap(action => {
-      const {queries} = action.payload;
+      const {queries, onSuccess, onFailure} = action.payload;
       return this.store$.pipe(
         select(selectGeocodingQueryCoordinates),
         take(1),
         mergeMap(queryCoordinates => {
           const missingQueries = queries.filter(query => !queryCoordinates[query]);
           if (missingQueries.length === 0) {
-            return from([]);
+            return from(createCallbackActions(onSuccess, queryCoordinates));
           }
 
-          return this.geocodingApiService
-            .findCoordinates(missingQueries)
-            .pipe(map(coordinatesMap => new GeocodingAction.GetCoordinatesSuccess({coordinatesMap})));
+          return this.geocodingApiService.findCoordinates(missingQueries).pipe(
+            mergeMap(coordinatesMap => [
+              new GeocodingAction.GetCoordinatesSuccess({coordinatesMap}),
+              ...createCallbackActions(onSuccess, coordinatesMap),
+            ]),
+            catchError(error => emitErrorActions(error, onFailure))
+          );
         })
       );
     })
