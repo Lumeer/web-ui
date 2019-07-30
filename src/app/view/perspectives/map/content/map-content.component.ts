@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ConstraintType} from '../../../../core/model/data/constraint';
 import {AddressConstraintConfig} from '../../../../core/model/data/constraint-config';
@@ -60,7 +60,7 @@ import {MarkerMoveEvent} from './render/marker-move.event';
   styleUrls: ['./map-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapContentComponent implements OnInit {
+export class MapContentComponent implements OnInit, OnDestroy {
   @Input()
   public collections: Collection[] = [];
 
@@ -73,9 +73,13 @@ export class MapContentComponent implements OnInit {
   @ViewChild(MapRenderComponent, {static: false})
   public mapRenderComponent: MapRenderComponent;
 
+  public loading$ = new BehaviorSubject(true);
+
   public markers$: Observable<MapMarkerProperties[]>;
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
+
+  private subscriptions = new Subscription();
 
   constructor(
     private collectionsPermissions: CollectionsPermissionsPipe,
@@ -85,11 +89,18 @@ export class MapContentComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.bindMarkers();
+    const allProperties$ = this.bindAllProperties();
+    this.markers$ = this.bindMarkers(allProperties$);
+
+    this.subscriptions.add(this.subscribeToUninitializedProperties(allProperties$));
   }
 
-  private bindMarkers() {
-    this.markers$ = combineLatest([
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  private bindAllProperties(): Observable<MapMarkerProperties[]> {
+    return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectDocumentsByQuery)),
       this.store$.pipe(
@@ -100,16 +111,23 @@ export class MapContentComponent implements OnInit {
     ]).pipe(
       switchMap(([collectionsMap, documents, attributeIdsMap]) => {
         const collections = extractCollectionsFromDocuments(collectionsMap, documents);
-        return this.collectionsPermissions.transform(collections).pipe(
-          switchMap(permissions => {
-            const allProperties = createMarkerPropertiesList(documents, attributeIdsMap, collectionsMap, permissions);
-            const coordinateProperties = populateCoordinateProperties(allProperties);
-            const uninitializedProperties = filterUninitializedProperties(allProperties, coordinateProperties);
+        return this.collectionsPermissions
+          .transform(collections)
+          .pipe(
+            map(permissions => createMarkerPropertiesList(documents, attributeIdsMap, collectionsMap, permissions))
+          );
+      })
+    );
+  }
 
-            return this.populateAddressProperties(uninitializedProperties).pipe(
-              map(addressProperties => coordinateProperties.concat(addressProperties))
-            );
-          })
+  private bindMarkers(allProperties$: Observable<MapMarkerProperties[]>): Observable<MapMarkerProperties[]> {
+    return allProperties$.pipe(
+      switchMap(allProperties => {
+        const coordinateProperties = populateCoordinateProperties(allProperties);
+        const uninitializedProperties = filterUninitializedProperties(allProperties, coordinateProperties);
+
+        return this.populateAddressProperties(uninitializedProperties).pipe(
+          map(addressProperties => coordinateProperties.concat(addressProperties))
         );
       }),
       distinctUntilChanged((previous, next) => areMapMarkerListsEqual(previous, next)),
@@ -118,8 +136,6 @@ export class MapContentComponent implements OnInit {
   }
 
   private populateAddressProperties(propertiesList: MapMarkerProperties[]): Observable<MapMarkerProperties[]> {
-    const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
-    this.store$.dispatch(new GeocodingAction.GetCoordinates({queries: addresses}));
     return this.store$.pipe(
       select(selectGeocodingQueryCoordinates),
       map(queryCoordinates =>
@@ -136,6 +152,35 @@ export class MapContentComponent implements OnInit {
           return addressPropertiesList;
         }, [])
       )
+    );
+  }
+
+  private subscribeToUninitializedProperties(allProperties$: Observable<MapMarkerProperties[]>): Subscription {
+    return allProperties$
+      .pipe(
+        map(allProperties => {
+          const coordinateProperties = populateCoordinateProperties(allProperties);
+          return filterUninitializedProperties(allProperties, coordinateProperties);
+        })
+      )
+      .subscribe(uninitializedProperties => this.getCoordinates(uninitializedProperties));
+  }
+
+  private getCoordinates(propertiesList: MapMarkerProperties[]) {
+    const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
+    if (addresses.length === 0) {
+      this.loading$.next(false);
+      return;
+    }
+
+    this.loading$.next(true);
+
+    this.store$.dispatch(
+      new GeocodingAction.GetCoordinates({
+        queries: addresses,
+        onSuccess: () => this.loading$.next(false),
+        onFailure: () => this.loading$.next(false),
+      })
     );
   }
 
