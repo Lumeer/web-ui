@@ -23,6 +23,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
   Input,
   OnChanges,
@@ -57,6 +58,11 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
 
   @Output()
   public onFocus = new EventEmitter<any>();
+
+  @HostBinding('class.cursor-pointer')
+  public get cursorPointer(): boolean {
+    return !this.readonly;
+  }
 
   @ViewChild('booleanInput', {static: true})
   public booleanInput: ElementRef<HTMLInputElement>;
