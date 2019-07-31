@@ -8,4 +8,8 @@
   &::ng-deep input:focus {
     outline: none;
   }
+
+  &::ng-deep input[readonly] {
+    cursor: default;
+  }
 }

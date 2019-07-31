@@ -198,18 +198,15 @@ export function removeQueryItemWithRelatedItems(
 }
 
 function removeCollectionStem(queryData: QueryData, queryItems: QueryItem[], index: number): QueryItem[] {
-  const queryItem = queryItems[index] as CollectionQueryItem;
-  const collectionId = queryItem.collection.id;
-  const stemIndex = queryItems
-    .slice(0, index)
-    .filter(
-      item => item.type === QueryItemType.Collection && (item as CollectionQueryItem).collection.id === collectionId
-    ).length;
-
+  const stemIndex = getStemIndexByCollectionItemIndex(queryItems, index);
   const currentQuery = convertQueryItemsToQueryModel(queryItems);
   currentQuery.stems.splice(stemIndex, 1);
 
   return new QueryItemsConverter(queryData).fromQuery(currentQuery);
+}
+
+function getStemIndexByCollectionItemIndex(queryItems: QueryItem[], collectionIndex: number): number {
+  return queryItems.slice(0, collectionIndex).filter(item => item.type === QueryItemType.Collection).length;
 }
 
 function removeLinkChainFromStem(queryData: QueryData, queryItems: QueryItem[], linkIndex: number): QueryItem[] {
@@ -217,37 +214,34 @@ function removeLinkChainFromStem(queryData: QueryData, queryItems: QueryItem[], 
   if (!stemData) {
     return;
   }
-  const {index} = stemData;
+  const {collectionIndex} = stemData;
+  const stemIndex = getStemIndexByCollectionItemIndex(queryItems, collectionIndex);
   const currentQuery = convertQueryItemsToQueryModel(queryItems);
 
-  if (index !== -1) {
-    currentQuery.stems[index] = filterStemByLinkIndex(
-      currentQuery.stems[index],
-      linkIndex - (index + 1),
-      queryData.linkTypes
-    );
-    return new QueryItemsConverter(queryData).fromQuery(currentQuery);
-  }
-
-  return queryItems;
+  currentQuery.stems[stemIndex] = filterStemByLinkIndex(
+    currentQuery.stems[stemIndex],
+    linkIndex - (collectionIndex + 1),
+    queryData.linkTypes
+  );
+  return new QueryItemsConverter(queryData).fromQuery(currentQuery);
 }
 
 function getStemCollectionIdForLinkIndex(
   queryItems: QueryItem[],
   index: number
-): {collectionId: string; index: number} {
-  let collectionItemIndex = index;
+): {collectionId: string; collectionIndex: number} {
+  let collectionIndex = index;
   let currentItem: QueryItem = queryItems[index];
-  while (currentItem.type === QueryItemType.Link && collectionItemIndex >= 0) {
-    collectionItemIndex--;
-    currentItem = queryItems[collectionItemIndex];
+  while (currentItem.type === QueryItemType.Link && collectionIndex >= 0) {
+    collectionIndex--;
+    currentItem = queryItems[collectionIndex];
   }
 
-  if (collectionItemIndex < 0 || currentItem.type !== QueryItemType.Collection) {
+  if (collectionIndex < 0 || currentItem.type !== QueryItemType.Collection) {
     return null;
   }
 
-  return {collectionId: (currentItem as CollectionQueryItem).collection.id, index: collectionItemIndex};
+  return {collectionId: (currentItem as CollectionQueryItem).collection.id, collectionIndex};
 }
 
 function removeQueryItem(queryItems: QueryItem[], index: number): QueryItem[] {
