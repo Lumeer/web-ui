@@ -75,6 +75,10 @@ export class FilesDropdownComponent implements AfterViewInit {
   }
 
   public onFileChange(event: Event) {
+    if (this.uploadProgress) {
+      return;
+    }
+
     const files: FileList = event.target['files'];
 
     if (files.length !== 1) {
