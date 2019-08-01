@@ -104,34 +104,31 @@ export function createMapClusterCountsLayer(id: string, source: string): Layer {
 }
 
 export function createMapMarker(properties: MapMarkerProperties): Marker {
-  const defaultAttributeValue = properties.document.data[properties.collection.defaultAttributeId] || '';
-
-  const popup = new Popup({
-    anchor: 'top',
-    closeButton: false,
-    closeOnClick: false,
-  }).setHTML(`<span class="text-default-attribute">${defaultAttributeValue}</span>`);
-
+  const popup = createMapMarkerPopup(properties);
   const element = createMapMarkerIcon(properties.collection, properties.editable);
-  const marker = new Marker({
-    element,
-    draggable: properties.editable,
-  })
+
+  const marker = new Marker({element, draggable: properties.editable})
     .setLngLat(properties.coordinates)
     .setPopup(popup);
 
-  element.addEventListener('mouseenter', () => {
-    if (!popup.isOpen()) {
-      marker.togglePopup();
-    }
-  });
-  element.addEventListener('mouseleave', () => {
-    if (popup.isOpen()) {
-      marker.togglePopup();
-    }
-  });
+  element.addEventListener('mouseenter', () => !popup.isOpen() && marker.togglePopup());
+  element.addEventListener('mouseleave', () => popup.isOpen() && marker.togglePopup());
 
   return marker;
+}
+
+function createMapMarkerPopup(properties: MapMarkerProperties): Popup {
+  const defaultAttributeValue = properties.document.data[properties.collection.defaultAttributeId] || '';
+  const positionAttributeValue = properties.document.data[properties.attributeId] || '';
+
+  const defaultAttributeHtml = `<span class="text-default-attribute">${defaultAttributeValue}</span>`;
+  const html = defaultAttributeValue ? `${defaultAttributeHtml}<br>${positionAttributeValue}` : positionAttributeValue;
+
+  return new Popup({
+    anchor: 'top',
+    closeButton: false,
+    closeOnClick: false,
+  }).setHTML(html);
 }
 
 function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDivElement {
