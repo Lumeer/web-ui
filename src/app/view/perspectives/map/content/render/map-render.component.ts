@@ -245,7 +245,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
           documentIds.add(document.id);
         }
         return documentIds;
-      }, new Set()),
+      }, new Set<string>()),
     ].map(documentId => this.allMarkers[documentId]);
   }
 

@@ -31,7 +31,7 @@ export function extractCollectionsFromDocuments(
     ...documents.reduce((collectionIds, document) => {
       collectionIds.add(document.collectionId);
       return collectionIds;
-    }, new Set()),
+    }, new Set<string>()),
   ].map(collectionId => collectionsMap[collectionId]);
 }
 
