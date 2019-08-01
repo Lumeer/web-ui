@@ -106,7 +106,7 @@ function rolesWithTransitionRoles(roles: string[]): string[] {
     roles.reduce((rolesTransitionSet, role) => {
       roleWithTransitionRoles(role).forEach(r => rolesTransitionSet.add(r));
       return rolesTransitionSet;
-    }, new Set())
+    }, new Set<string>())
   );
 }
 
