@@ -22,7 +22,6 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   NgZone,
@@ -76,6 +75,8 @@ const MAP_SOURCE_ID = 'records';
 const MAP_CLUSTER_CIRCLE_LAYER = 'cluster-circles';
 const MAP_CLUSTER_SYMBOL_LAYER = 'cluster-symbols';
 
+const OPENMAPTILES_LANGUAGE_URL = 'https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js';
+
 @Component({
   selector: 'map-render',
   templateUrl: './map-render.component.html',
@@ -110,7 +111,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   constructor(
     private deviceDetectorService: DeviceDetectorService,
-    private element: ElementRef,
     private i18n: I18n,
     private ngZone: NgZone,
     private platform: Platform,
@@ -306,11 +306,22 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public loadOpenMapTilesLanguage() {
+    const existingScript = document.querySelector(`script[src="${OPENMAPTILES_LANGUAGE_URL}"]`);
+    if (existingScript) {
+      // do not load the script twice
+      this.activateMapTilesLanguageAutoDetection();
+      return;
+    }
+
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js';
-    script.onload = () => (this.mapboxMap as any).autodetectLanguage(environment.locale);
-    this.renderer.appendChild(this.element.nativeElement, script);
+    script.src = OPENMAPTILES_LANGUAGE_URL;
+    script.onload = () => this.activateMapTilesLanguageAutoDetection();
+    this.renderer.appendChild(document.body, script);
+  }
+
+  private activateMapTilesLanguageAutoDetection() {
+    (this.mapboxMap as any).autodetectLanguage(environment.locale);
   }
 
   private translateNavigationControls() {
