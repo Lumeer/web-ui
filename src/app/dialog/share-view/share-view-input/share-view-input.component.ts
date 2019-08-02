@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {User} from '../../../core/store/users/user';
 
 @Component({
   selector: 'share-view-input',
@@ -35,6 +36,9 @@ export class ShareViewInputComponent {
   @Input()
   public selectedIndex: number;
 
+  @Input()
+  public currentUsers: User[];
+
   @Output()
   public suggestionChoose = new EventEmitter<string>();
 
@@ -46,6 +50,9 @@ export class ShareViewInputComponent {
 
   @Output()
   public inputChanged = new EventEmitter<string>();
+
+  @Output()
+  public addNewUser = new EventEmitter();
 
   public onSuggestionClick(suggestion: string) {
     this.suggestionChoose.emit(suggestion);
@@ -61,5 +68,9 @@ export class ShareViewInputComponent {
 
   public onInputChanged(value: string) {
     this.inputChanged.emit(value);
+  }
+
+  public onAddUser() {
+    this.addNewUser.emit();
   }
 }

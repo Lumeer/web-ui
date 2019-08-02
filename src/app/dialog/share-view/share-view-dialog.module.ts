@@ -29,6 +29,7 @@ import {ViewPermissionsChangedPipe} from './pipes/view-permissions-changed.pipe'
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
 import {UserRolesPipe} from './pipes/user-roles.pipe';
 import {CanRemoveUserPipe} from './pipes/can-remove-user.pipe';
+import {CanAddNewUserPipe} from './pipes/can-add-new-user.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DialogWrapperModule],
@@ -40,6 +41,7 @@ import {CanRemoveUserPipe} from './pipes/can-remove-user.pipe';
     ViewPermissionsChangedPipe,
     UserRolesPipe,
     CanRemoveUserPipe,
+    CanAddNewUserPipe,
   ],
   entryComponents: [ShareViewDialogComponent],
 })

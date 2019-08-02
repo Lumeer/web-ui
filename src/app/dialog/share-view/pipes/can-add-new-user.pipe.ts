@@ -17,27 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../groups/group';
+import {Pipe, PipeTransform} from '@angular/core';
+import {User} from '../../../core/store/users/user';
+import {isEmailValid} from '../../../shared/utils/email.utils';
 
-export interface User {
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: {[organizationId: string]: string[]};
-  groups?: Group[];
-  defaultWorkspace?: DefaultWorkspace;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
-  wizardDismissed?: boolean;
-  lastLoggedIn?: Date;
-
-  correlationId?: string;
-}
-
-export interface DefaultWorkspace {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+@Pipe({
+  name: 'canAddNewUser',
+})
+export class CanAddNewUserPipe implements PipeTransform {
+  public transform(text: string, currentUsers: User[]): boolean {
+    const trimmedText = (text || '').toLowerCase().trim();
+    return isEmailValid(trimmedText) && !(currentUsers || []).some(user => user.email.toLowerCase() === trimmedText);
+  }
 }

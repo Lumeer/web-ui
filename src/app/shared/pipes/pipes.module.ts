@@ -71,6 +71,7 @@ import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
 import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
 import {ArrayDifferencePipe} from './array/array-difference.pipe';
+import {ConcatPipe} from './concat.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -125,6 +126,7 @@ import {ArrayDifferencePipe} from './array/array-difference.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
+    ConcatPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -179,6 +181,7 @@ import {ArrayDifferencePipe} from './array/array-difference.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
+    ConcatPipe,
   ],
 })
 export class PipesModule {}

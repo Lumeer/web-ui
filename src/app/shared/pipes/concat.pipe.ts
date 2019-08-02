@@ -17,27 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../groups/group';
+import {Pipe, PipeTransform} from '@angular/core';
 
-export interface User {
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: {[organizationId: string]: string[]};
-  groups?: Group[];
-  defaultWorkspace?: DefaultWorkspace;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
-  wizardDismissed?: boolean;
-  lastLoggedIn?: Date;
-
-  correlationId?: string;
-}
-
-export interface DefaultWorkspace {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+@Pipe({
+  name: 'concat',
+})
+export class ConcatPipe implements PipeTransform {
+  public transform(values: any[][]): any[] {
+    return (values || []).reduce((arr, val) => {
+      arr.push(...val);
+      return arr;
+    }, []);
+  }
 }

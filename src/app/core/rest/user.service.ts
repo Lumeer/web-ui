@@ -35,6 +35,13 @@ export class UserService {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
+  public createUserInWorkspace(organizationId: string, projectId: string, users: UserDto[]): Observable<UserDto[]> {
+    return this.httpClient.post<UserDto[]>(
+      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users`,
+      users
+    );
+  }
+
   public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {
     return this.httpClient.put<UserDto>(this.organizationUsersApiPrefix(organizationId, user.id), user);
   }
@@ -49,8 +56,12 @@ export class UserService {
     return this.httpClient.get<UserDto[]>(this.organizationUsersApiPrefix(organizationId));
   }
 
+  private organizationApiPrefix(organizationId: string): string {
+    return `${this.usersApiPrefix()}/organizations/${organizationId}/`;
+  }
+
   private organizationUsersApiPrefix(organizationId: string, userId?: string): string {
-    return `${this.usersApiPrefix()}/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
+    return `${this.organizationApiPrefix(organizationId)}users${userId ? `/${userId}` : ''}`;
   }
 
   public getCurrentUser(): Observable<UserDto> {

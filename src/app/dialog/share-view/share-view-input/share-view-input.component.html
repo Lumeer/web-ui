@@ -1,27 +1,29 @@
-<div class="mt-2">
-
-  <!-- TODO remove once Angular supports ICU messages in attributes -->
-  <div hidden>
-      <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
-        Enter users' emails...
-      </span>
-  </div>
-
-  <input class="form-control flex-grow-1"
+<div class="d-flex">
+  <input class="form-control form-control-sm flex-fill mr-2"
          [ngModel]="text"
          (keydown)="onKeyDown($event)"
          (input)="onInputChanged($event.target.value); onSuggest()"
          (focus)="onSuggest()"
-         [placeholder]="inputPlaceholder | removeHtmlComments"/>
+         placeholder="Enter user email..."
+         i18n-placeholder="@@view.share.dialog.input.placeholder"/>
 
-  <div class="dropdown" *ngIf="text && suggestions.length > 0">
-    <div class="dropdown-menu show suggestions">
-      <div class="dropdown-item"
-           *ngFor="let suggestion of suggestions; let index = index"
-           [class.selected]="index === selectedIndex"
-           (click)="onSuggestionClick(suggestion)">
-        {{suggestion}}
-      </div>
+  <button type="button"
+          class="btn btn-sm btn-primary text-nowrap"
+          [disabled]="!(text | canAddNewUser:currentUsers)"
+          (click)="onAddUser()">
+    <i class="fas fa-plus mr-2"></i>
+    <span class="font-weight-bold" i18n="@@view.share.dialog.input.button">Add user</span>
+  </button>
+
+</div>
+
+<div class="dropdown" *ngIf="text && suggestions.length > 0">
+  <div class="dropdown-menu show suggestions">
+    <div class="dropdown-item"
+         *ngFor="let suggestion of suggestions; let index = index"
+         [class.selected]="index === selectedIndex"
+         (click)="onSuggestionClick(suggestion)">
+      {{suggestion}}
     </div>
   </div>
 </div>

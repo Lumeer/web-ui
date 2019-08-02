@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, combineLatest as observableCombineLatest, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Organization} from '../../core/store/organizations/organization';
@@ -33,15 +33,16 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
 import {KeyCode} from '../../shared/key-code';
 import {ClipboardService} from '../../core/service/clipboard.service';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourceType} from '../../core/model/resource-type';
-import {userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
+import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
+import {isEmailValid} from '../../shared/utils/email.utils';
 
 @Component({
   selector: 'share-view-dialog',
@@ -51,8 +52,9 @@ import mixpanel from 'mixpanel-browser';
 export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public staticUsers: User[] = [];
   public changeableUsers: User[] = [];
-  public userRoles: {[id: string]: string[]} = {};
-  public initialUserRoles: {[id: string]: string[]} = {};
+  public newUsers: User[] = [];
+  public userRoles: Record<string, string[]> = {};
+  public initialUserRoles: Record<string, string[]> = {};
   public currentUser: User;
   public organization: Organization;
   public project: Project;
@@ -93,7 +95,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
-        this.addItem(this.text$.getValue().trim());
+        this.onEnter();
         return;
       case KeyCode.ArrowUp:
       case KeyCode.ArrowDown:
@@ -102,17 +104,27 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  private onEnter() {
+    this.addItem(this.text$.getValue().trim());
+  }
+
   private addItem(text: string) {
     const selectedIndex = this.selectedIndex$.getValue();
     const suggestions = this.suggestions$.getValue();
 
-    if (!isNullOrUndefined(selectedIndex) && selectedIndex < suggestions.length) {
+    if (isNotNullOrUndefined(selectedIndex) && selectedIndex < suggestions.length) {
       this.addUserWithEmail(suggestions[selectedIndex]);
     } else {
-      const userChosen = this.changeableUsers.find(u => u.email.toLowerCase() === text.toLowerCase());
+      const userWasAdded = [...this.staticUsers, ...this.changeableUsers, ...this.newUsers].find(
+        u => u.email.toLowerCase() === text.toLowerCase()
+      );
       const user = this.users.find(u => u.email.toLowerCase() === text.toLowerCase());
-      if (!userChosen && user) {
-        this.addUser(user);
+      if (!userWasAdded) {
+        if (user) {
+          this.addUser(user);
+        } else {
+          this.addNewUser(text);
+        }
       }
     }
   }
@@ -128,6 +140,19 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     this.userRoles = {...this.userRoles, [user.id]: []};
     this.changeableUsers = [...this.changeableUsers, user];
     this.text$.next('');
+  }
+
+  private addNewUser(text: string) {
+    if (isEmailValid(text)) {
+      const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
+      this.userRoles = {...this.userRoles, [newUser.correlationId]: []};
+      this.newUsers = [...this.newUsers, newUser];
+      this.text$.next('');
+    }
+  }
+
+  public onAddNewUser() {
+    this.onEnter();
   }
 
   private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
@@ -147,13 +172,19 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public deleteUser(user: User) {
-    delete this.userRoles[user.id];
-    this.userRoles = {...this.userRoles};
-    this.changeableUsers = this.changeableUsers.filter(u => u.id !== user.id);
+    if (user.id) {
+      delete this.userRoles[user.id];
+      this.userRoles = {...this.userRoles};
+      this.changeableUsers = this.changeableUsers.filter(u => u.id !== user.id);
+    } else if (user.correlationId) {
+      delete this.userRoles[user.correlationId];
+      this.userRoles = {...this.userRoles};
+      this.newUsers = this.newUsers.filter(u => u.correlationId !== user.correlationId);
+    }
   }
 
   public onNewRoles(user: User, roles: string[]) {
-    this.userRoles = {...this.userRoles, [user.id]: roles};
+    this.userRoles = {...this.userRoles, [user.id || user.correlationId]: roles};
   }
 
   public suggest() {
@@ -202,8 +233,18 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
     const permissions = [...changeablePermissions, ...staticPermissions];
 
+    const newUsers = Object.keys(this.userRoles)
+      .map(id => this.newUsers.find(user => user.correlationId === id))
+      .filter(user => !!user)
+      .filter(user => (this.userRoles[user.correlationId] || []).length > 0);
+
     this.store$.dispatch(
-      new ViewsAction.SetPermissions({viewId: this.view.id, type: PermissionType.Users, permissions})
+      new ViewsAction.SetUserPermissions({
+        viewId: this.view.id,
+        permissions,
+        newUsers,
+        newUsersRoles: this.userRoles,
+      })
     );
 
     if (environment.analytics) {
@@ -233,12 +274,12 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
           map(params => params.get('viewCode')),
           filter(viewCode => !!viewCode),
           mergeMap(viewCode =>
-            observableCombineLatest(
+            combineLatest([
               this.store$.pipe(select(selectViewByCode(viewCode))),
               this.store$.pipe(select(selectWorkspaceModels)),
               this.store$.pipe(select(selectAllUsers)),
-              this.store$.pipe(select(selectCurrentUser))
-            )
+              this.store$.pipe(select(selectCurrentUser)),
+            ])
           ),
           filter(
             ([view, models, users, currentUser]) =>
@@ -308,6 +349,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public trackByUser(index: number, user: User): string {
-    return user.id;
+    return user.id || user.correlationId;
   }
 }

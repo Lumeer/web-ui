@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {SearchConfig, ViewConfig, ViewCursor, View} from './view';
 import {Workspace} from '../navigation/workspace';
+import {User} from '../users/user';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -40,7 +41,7 @@ export enum ViewsActionType {
   DELETE_SUCCESS = '[Views] Delete :: Success',
   DELETE_FAILURE = '[Views] Delete :: Failure',
 
-  SET_PERMISSIONS = '[Views] Set Permission',
+  SET_USER_PERMISSIONS = '[Views] Set User Permission',
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
@@ -123,10 +124,17 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class SetPermissions implements Action {
-    public readonly type = ViewsActionType.SET_PERMISSIONS;
+  export class SetUserPermissions implements Action {
+    public readonly type = ViewsActionType.SET_USER_PERMISSIONS;
 
-    public constructor(public payload: {viewId: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(
+      public payload: {
+        viewId: string;
+        permissions: Permission[];
+        newUsers: User[];
+        newUsersRoles: Record<string, string[]>;
+      }
+    ) {}
   }
 
   export class SetPermissionsSuccess implements Action {
@@ -198,7 +206,7 @@ export namespace ViewsAction {
     | Create
     | CreateSuccess
     | CreateFailure
-    | SetPermissions
+    | SetUserPermissions
     | SetPermissionsSuccess
     | SetPermissionsFailure
     | Update
