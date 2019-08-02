@@ -20,13 +20,15 @@
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
 import {CalendarCollectionConfigV0, CalendarConfigV0} from './calendar-old';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {
     return config;
   }
 
-  switch (config.version) {
+  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  switch (version) {
     case CalendarConfigVersion.V1:
       return convertCalendarDtoToModelV1(config);
     default:

@@ -19,12 +19,14 @@
 
 import {PivotConfig, PivotConfigVersion} from './pivot';
 import {PivotConfigV0} from './pivot-old';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertPivotConfigDtoToModel(config: any): PivotConfig {
   if (!config) {
     return config;
   }
-  switch (config.version) {
+  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  switch (version) {
     case PivotConfigVersion.V1:
       return convertPivotConfigDtoToModelV1(config);
     default:

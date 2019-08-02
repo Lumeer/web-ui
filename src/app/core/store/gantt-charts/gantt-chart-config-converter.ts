@@ -20,13 +20,15 @@
 import {AttributesResourceType} from '../../model/resource';
 import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartStemConfig} from './gantt-chart';
 import {GanttChartConfigV0} from './gantt-chart-old';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {
     return config;
   }
 
-  switch (config.version) {
+  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  switch (version) {
     case GanttChartConfigVersion.V1:
       return convertGanttChartDtoToModelV1(config);
     default:
