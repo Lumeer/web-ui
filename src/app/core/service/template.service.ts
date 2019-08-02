@@ -53,6 +53,8 @@ export class TemplateService {
         return this.createBUGTemplate();
       case TemplateType.TIME:
         return this.createTIMETemplate();
+      case TemplateType.SUPPLY:
+        return this.createSupplyTemplate();
       default:
         return null;
     }
@@ -147,6 +149,19 @@ export class TemplateService {
     };
   }
 
+  private createSupplyTemplate(): Template {
+    return {
+      type: TemplateType.SUPPLY,
+      imagePath: 'assets/templates/supply.jpg',
+      title: this.i18n({id: 'template.supply.title', value: 'Supply Chain Management'}),
+      description: this.i18n({
+        id: 'template.supply.description',
+        value: 'Be ready to move goods to the right location in time to satisfy your customers.',
+      }),
+      url: this.createUrlForType(TemplateType.SUPPLY),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -163,6 +178,8 @@ export class TemplateService {
         return this.getTIMEUrl();
       case TemplateType.BUG:
         return this.getBUGUrl();
+      case TemplateType.SUPPLY:
+        return this.getSupplyUrl();
     }
   }
 
@@ -203,7 +220,12 @@ export class TemplateService {
   }
 
   private getTIMEUrl(): string {
-    return null;
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/sablona-riadenie-energie');
+      default:
+        return this.createUrl('template-energy-management');
+    }
   }
 
   private getBUGUrl(): string {
@@ -212,6 +234,15 @@ export class TemplateService {
         return this.createUrl('cs/system-hlaseni-chyb');
       default:
         return this.createUrl('issue-tracker');
+    }
+  }
+
+  private getSupplyUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/sablona-manazment-skladovych-zasob');
+      default:
+        return this.createUrl('template-supply-chain-management');
     }
   }
 
