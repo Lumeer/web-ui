@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceType} from '../../../core/model/resource-type';
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   selector: '[share-user]',

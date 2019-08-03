@@ -23,7 +23,7 @@ export interface User {
   id?: string;
   name?: string;
   email: string;
-  groupsMap: {[organizationId: string]: string[]};
+  groupsMap: Record<string, string[]>;
   groups?: Group[];
   defaultWorkspace?: DefaultWorkspace;
   agreement?: boolean;

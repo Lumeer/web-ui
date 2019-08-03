@@ -17,233 +17,92 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Organization} from '../../core/store/organizations/organization';
-import {Permission, PermissionType} from '../../core/store/permissions/permissions';
+import {Permission} from '../../core/store/permissions/permissions';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {View} from '../../core/store/views/view';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
-import {KeyCode} from '../../shared/key-code';
-import {ClipboardService} from '../../core/service/clipboard.service';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {ResourceType} from '../../core/model/resource-type';
-import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
-import {UserRolesInResourcePipe} from '../../shared/pipes/user-roles-in-resource.pipe';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
-import {isEmailValid} from '../../shared/utils/email.utils';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {userCanReadWorkspace} from '../../shared/utils/resource.utils';
+import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 
 @Component({
   selector: 'share-view-dialog',
   templateUrl: './share-view-dialog.component.html',
-  styleUrls: ['./share-view-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareViewDialogComponent implements OnInit, OnDestroy {
-  public staticUsers: User[] = [];
-  public changeableUsers: User[] = [];
-  public newUsers: User[] = [];
-  public userRoles: Record<string, string[]> = {};
-  public initialUserRoles: Record<string, string[]> = {};
-  public currentUser: User;
-  public organization: Organization;
-  public project: Project;
+export class ShareViewDialogComponent implements OnInit {
+  @ViewChild(ShareViewDialogBodyComponent, {static: true})
+  public shareViewDialogBody: ShareViewDialogBodyComponent;
 
-  public text$ = new BehaviorSubject<string>('');
-  public suggestions$ = new BehaviorSubject<string[]>([]);
-  public selectedIndex$ = new BehaviorSubject<number>(null);
-  public viewShareUrl$ = new BehaviorSubject<string>('');
+  public currentUser$: Observable<User>;
+  public organization$: Observable<Organization>;
+  public project$: Observable<Project>;
+  public view$: Observable<View>;
+  public users$: Observable<User[]>;
 
-  public viewResourceType = ResourceType.View;
+  public submitDisabled$ = new BehaviorSubject(true);
 
   private view: View;
-  private users: User[] = [];
-  private subscriptions = new Subscription();
 
   public constructor(
     private i18n: I18n,
-    private clipboardService: ClipboardService,
-    private userRolesInResourcePipe: UserRolesInResourcePipe,
     private route: ActivatedRoute,
     private store$: Store<AppState>,
     private angulartics2: Angulartics2
   ) {}
 
   public ngOnInit() {
-    this.subscribeToView();
-    this.parseViewShareUrl();
+    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.users$ = this.bindUsers();
+    this.view$ = this.bindView();
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+  private bindUsers(): Observable<User[]> {
+    return combineLatest([
+      this.store$.pipe(select(selectWorkspaceModels)),
+      this.store$.pipe(select(selectAllUsers)),
+    ]).pipe(
+      filter(([models, users]) => models.organization && models.project && !!users),
+      map(([models, users]) => users.filter(user => userCanReadWorkspace(user, models.organization, models.project)))
+    );
   }
 
-  public copyToClipboard() {
-    this.clipboardService.copy(this.viewShareUrl$.getValue());
-  }
-
-  public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case KeyCode.Enter:
-        this.onEnter();
-        return;
-      case KeyCode.ArrowUp:
-      case KeyCode.ArrowDown:
-        this.onUpAndDownArrowKeysDown(event);
-        return;
-    }
-  }
-
-  private onEnter() {
-    this.addItem(this.text$.getValue().trim());
-  }
-
-  private addItem(text: string) {
-    const selectedIndex = this.selectedIndex$.getValue();
-    const suggestions = this.suggestions$.getValue();
-
-    if (isNotNullOrUndefined(selectedIndex) && selectedIndex < suggestions.length) {
-      this.addUserWithEmail(suggestions[selectedIndex]);
-    } else {
-      const userWasAdded = [...this.staticUsers, ...this.changeableUsers, ...this.newUsers].find(
-        u => u.email.toLowerCase() === text.toLowerCase()
-      );
-      const user = this.users.find(u => u.email.toLowerCase() === text.toLowerCase());
-      if (!userWasAdded) {
-        if (user) {
-          this.addUser(user);
-        } else {
-          this.addNewUser(text);
-        }
-      }
-    }
-  }
-
-  private addUserWithEmail(email: string) {
-    const user = this.users.find(u => u.email === email);
-    if (user) {
-      this.addUser(user);
-    }
-  }
-
-  private addUser(user: User) {
-    this.userRoles = {...this.userRoles, [user.id]: []};
-    this.changeableUsers = [...this.changeableUsers, user];
-    this.text$.next('');
-  }
-
-  private addNewUser(text: string) {
-    if (isEmailValid(text)) {
-      const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
-      this.userRoles = {...this.userRoles, [newUser.correlationId]: []};
-      this.newUsers = [...this.newUsers, newUser];
-      this.text$.next('');
-    }
-  }
-
-  public onAddNewUser() {
-    this.onEnter();
-  }
-
-  private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
-    const suggestions = this.suggestions$.getValue();
-    if (suggestions.length === 0) {
-      return;
-    }
-
-    event.preventDefault();
-    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
-
-    const selectedIndex = this.selectedIndex$.getValue();
-    const newIndex = isNullOrUndefined(selectedIndex) ? 0 : selectedIndex + direction;
-    if (newIndex >= 0 && newIndex < suggestions.length) {
-      this.selectedIndex$.next(newIndex);
-    }
-  }
-
-  public deleteUser(user: User) {
-    if (user.id) {
-      delete this.userRoles[user.id];
-      this.userRoles = {...this.userRoles};
-      this.changeableUsers = this.changeableUsers.filter(u => u.id !== user.id);
-    } else if (user.correlationId) {
-      delete this.userRoles[user.correlationId];
-      this.userRoles = {...this.userRoles};
-      this.newUsers = this.newUsers.filter(u => u.correlationId !== user.correlationId);
-    }
-  }
-
-  public onNewRoles(user: User, roles: string[]) {
-    this.userRoles = {...this.userRoles, [user.id || user.correlationId]: roles};
-  }
-
-  public suggest() {
-    const textLowerCase = this.text$.getValue().toLowerCase();
-    const newSuggestions = this.users
-      .filter(user => !this.isUserPresented(user))
-      .map(user => user.email)
-      .filter(email => email.toLowerCase().includes(textLowerCase));
-
-    this.suggestions$.next(newSuggestions);
-    this.recomputeSelectedIndex();
-  }
-
-  private isUserPresented(user: User): boolean {
-    return !!this.changeableUsers.find(u => u.id === user.id) || !!this.staticUsers.find(u => u.id === user.id);
-  }
-
-  private recomputeSelectedIndex() {
-    const text = this.text$.getValue();
-    const selectedIndex = this.selectedIndex$.getValue();
-    const suggestions = this.suggestions$.getValue();
-
-    if (suggestions.length === 0 || !text) {
-      this.selectedIndex$.next(null);
-    } else if (!isNullOrUndefined(selectedIndex)) {
-      this.selectedIndex$.next(Math.min(selectedIndex, suggestions.length - 1));
-    }
-  }
-
-  public onInputChanged(value: string) {
-    this.text$.next(value);
-  }
-
-  public onSuggestionClick(text: string) {
-    this.addItem(text);
+  private bindView(): Observable<View> {
+    return this.route.paramMap.pipe(
+      map(params => params.get('viewCode')),
+      filter(viewCode => !!viewCode),
+      mergeMap(viewCode => this.store$.pipe(select(selectViewByCode(viewCode)))),
+      tap(view => (this.view = view))
+    );
   }
 
   public share() {
-    const changeablePermissions: Permission[] = Object.keys(this.userRoles)
-      .filter(id => this.changeableUsers.find(user => user.id === id))
-      .map(id => ({id, roles: this.userRoles[id]}));
+    this.shareViewDialogBody.onSubmit();
+  }
 
-    const staticPermissions = this.staticUsers
-      .map(user => this.getUserPermissionsInView(user))
-      .filter(permission => permission && permission.roles && permission.roles.length > 0);
-
-    const permissions = [...changeablePermissions, ...staticPermissions];
-
-    const newUsers = Object.keys(this.userRoles)
-      .map(id => this.newUsers.find(user => user.correlationId === id))
-      .filter(user => !!user)
-      .filter(user => (this.userRoles[user.correlationId] || []).length > 0);
-
+  public onShare(data: {permissions: Permission[]; newUsers: User[]; newUsersRoles: Record<string, string[]>}) {
     this.store$.dispatch(
       new ViewsAction.SetUserPermissions({
         viewId: this.view.id,
-        permissions,
-        newUsers,
-        newUsersRoles: this.userRoles,
+        ...data,
       })
     );
 
@@ -263,92 +122,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getUserPermissionsInView(user: User): Permission {
-    return this.view.permissions.users.find(permission => permission.id === user.id);
-  }
-
-  private subscribeToView() {
-    this.subscriptions.add(
-      this.route.paramMap
-        .pipe(
-          map(params => params.get('viewCode')),
-          filter(viewCode => !!viewCode),
-          mergeMap(viewCode =>
-            combineLatest([
-              this.store$.pipe(select(selectViewByCode(viewCode))),
-              this.store$.pipe(select(selectWorkspaceModels)),
-              this.store$.pipe(select(selectAllUsers)),
-              this.store$.pipe(select(selectCurrentUser)),
-            ])
-          ),
-          filter(
-            ([view, models, users, currentUser]) =>
-              view && models.organization && models.project && !!users && !!currentUser
-          )
-        )
-        .subscribe(([view, models, users, currentUser]) => {
-          this.view = view;
-          this.users = users.filter(user => userCanReadWorkspace(user, models.organization, models.project));
-          this.organization = models.organization;
-          this.project = models.project;
-          this.currentUser = currentUser;
-          this.initUsers();
-        })
-    );
-  }
-
-  private initUsers() {
-    for (const user of this.users) {
-      if (userIsManagerInWorkspace(user, this.organization, this.project) || user.id === this.currentUser.id) {
-        this.addUserToStaticIfNotPresented(user);
-      } else if (this.view.permissions.users.find(u => u.id === user.id)) {
-        this.addUserToChangeableIfNotPresented(user);
-      }
-    }
-    this.checkRemovedUsers();
-  }
-
-  private addUserToStaticIfNotPresented(user: User) {
-    if (!this.isUserPresented(user)) {
-      this.staticUsers.push(user);
-      this.initRolesForUser(user);
-    }
-  }
-
-  private initRolesForUser(user: User) {
-    const roles = this.userRolesInResourcePipe.transform(
-      user,
-      this.view,
-      this.viewResourceType,
-      this.organization,
-      this.project
-    );
-    this.userRoles[user.id] = roles;
-    this.initialUserRoles[user.id] = roles;
-  }
-
-  private addUserToChangeableIfNotPresented(user: User) {
-    if (!this.isUserPresented(user)) {
-      this.changeableUsers.push(user);
-      this.initRolesForUser(user);
-    }
-  }
-
-  private checkRemovedUsers() {
-    const userIds = this.users.map(user => user.id);
-    this.staticUsers = this.staticUsers.filter(user => userIds.includes(user.id));
-    this.changeableUsers = this.changeableUsers.filter(user => userIds.includes(user.id));
-  }
-
-  private parseViewShareUrl() {
-    const currentUrl = window.location.href;
-    const match = currentUrl.match('(.+/w/[^/]+/[^/]+/).*');
-    if (match && match[1]) {
-      this.viewShareUrl$.next(match[1] + 'view;vc=' + this.view.code);
-    }
-  }
-
-  public trackByUser(index: number, user: User): string {
-    return user.id || user.correlationId;
+  public onRolesChanged(changed: boolean) {
+    this.submitDisabled$.next(!changed);
   }
 }

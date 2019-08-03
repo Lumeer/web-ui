@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {User} from '../../../core/store/users/user';
+import {User} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'share-view-input',
@@ -38,6 +38,9 @@ export class ShareViewInputComponent {
 
   @Input()
   public currentUsers: User[];
+
+  @Input()
+  public canAddNewUsers: boolean;
 
   @Output()
   public suggestionChoose = new EventEmitter<string>();

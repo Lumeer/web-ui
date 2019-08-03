@@ -22,14 +22,14 @@ import {CommonModule} from '@angular/common';
 
 import {SharedModule} from '../../shared/shared.module';
 import {ShareViewDialogComponent} from './share-view-dialog.component';
-import {ShareUserComponent} from './share-user/share-user.component';
-import {ShareViewInputComponent} from './share-view-input/share-view-input.component';
-import {ShareViewCopyComponent} from './share-view-copy/share-view-copy.component';
-import {ViewPermissionsChangedPipe} from './pipes/view-permissions-changed.pipe';
+import {ShareUserComponent} from './body/user/share-user.component';
+import {ShareViewInputComponent} from './body/input/share-view-input.component';
+import {ShareViewCopyComponent} from './body/copy/share-view-copy.component';
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
 import {UserRolesPipe} from './pipes/user-roles.pipe';
 import {CanRemoveUserPipe} from './pipes/can-remove-user.pipe';
 import {CanAddNewUserPipe} from './pipes/can-add-new-user.pipe';
+import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DialogWrapperModule],
@@ -38,10 +38,10 @@ import {CanAddNewUserPipe} from './pipes/can-add-new-user.pipe';
     ShareUserComponent,
     ShareViewInputComponent,
     ShareViewCopyComponent,
-    ViewPermissionsChangedPipe,
     UserRolesPipe,
     CanRemoveUserPipe,
     CanAddNewUserPipe,
+    ShareViewDialogBodyComponent,
   ],
   entryComponents: [ShareViewDialogComponent],
 })
