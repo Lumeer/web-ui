@@ -75,14 +75,7 @@ export class NavigationEffects {
 
       const [url] = previousUrl.split('?', 2);
       const queryParams = this.router.parseUrl(previousUrl).queryParams;
-
-      const [, w, , , ...page] = url.split('/');
-      if (w !== 'w') {
-        return new RouterAction.Go({path: [url], queryParams});
-      }
-
-      const path = ['/', 'w', organizationCode, projectCode, ...page];
-      return new RouterAction.Go({path, queryParams});
+      return new RouterAction.Go({path: [url], queryParams});
     })
   );
 

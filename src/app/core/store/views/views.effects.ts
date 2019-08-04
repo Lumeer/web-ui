@@ -22,17 +22,17 @@ import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of} from 'rxjs';
-import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {Observable, of, pipe} from 'rxjs';
+import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
-import {ViewService} from '../../rest';
+import {UserService, ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation, selectPerspective, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {PermissionType} from '../permissions/permissions';
+import {Permission, PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {TablesAction} from '../tables/tables.action';
@@ -40,11 +40,14 @@ import {View} from './view';
 import {convertViewDtoToModel, convertViewModelToDto} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
-import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {areQueriesEqual} from '../navigation/query.helper';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
+import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
+import {User} from '../users/user';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
+import {convertUserModelToDto} from '../users/user.converter';
 
 @Injectable()
 export class ViewsEffects {
@@ -242,25 +245,44 @@ export class ViewsEffects {
   );
 
   @Effect()
-  public setPermission$ = this.actions$.pipe(
-    ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
+  public setUserPermission$ = this.actions$.pipe(
+    ofType<ViewsAction.SetUserPermissions>(ViewsActionType.SET_USER_PERMISSIONS),
     concatMap(action => {
-      const {permissions, type, viewId} = action.payload;
+      const {permissions, viewId, newUsers, newUsersRoles} = action.payload;
 
-      const permissionsDto: PermissionDto[] = permissions.map(model => PermissionsConverter.toPermissionDto(model));
-
-      let observable;
-      if (type === PermissionType.Users) {
-        observable = this.viewService.updateUserPermission(viewId, permissionsDto);
-      } else {
-        observable = this.viewService.updateGroupPermission(viewId, permissionsDto);
-      }
-      return observable.pipe(
-        concatMap(() => of(new ViewsAction.SetPermissionsSuccess(action.payload))),
+      return this.addUserToWorkspace(newUsers, newUsersRoles).pipe(
+        mergeMap(newPermissions => {
+          const permissionsDto: PermissionDto[] = [...permissions, ...newPermissions].map(model =>
+            PermissionsConverter.toPermissionDto(model)
+          );
+          return this.viewService.updateUserPermission(viewId, permissionsDto);
+        }),
+        concatMap(() => of(new ViewsAction.SetPermissionsSuccess({...action.payload, type: PermissionType.Users}))),
         catchError(error => of(new ViewsAction.SetPermissionsFailure({error})))
       );
     })
   );
+
+  private addUserToWorkspace(newUsers: User[], newUsersRoles: Record<string, string[]>): Observable<Permission[]> {
+    if (newUsers.length === 0) {
+      return of([]);
+    }
+
+    const usersDtos = newUsers.map(user => convertUserModelToDto(user));
+    return this.store$.select(pipe(selectWorkspaceWithIds)).pipe(
+      take(1),
+      mergeMap(workspace =>
+        this.userService.createUserInWorkspace(workspace.organizationId, workspace.projectId, usersDtos)
+      ),
+      map(users =>
+        users.map((user, index) => {
+          const correlationId = newUsers[index].correlationId;
+          const roles = newUsersRoles[correlationId];
+          return {id: user.id, roles};
+        })
+      )
+    );
+  }
 
   @Effect()
   public setPermissionFailure$: Observable<Action> = this.actions$.pipe(
@@ -294,6 +316,7 @@ export class ViewsEffects {
     private router: Router,
     private store$: Store<AppState>,
     private viewService: ViewService,
+    private userService: UserService,
     private angulartics2: Angulartics2
   ) {}
 }

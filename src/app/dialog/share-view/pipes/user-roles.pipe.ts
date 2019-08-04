@@ -25,6 +25,6 @@ import {User} from '../../../core/store/users/user';
 })
 export class UserRolesPipe implements PipeTransform {
   public transform(user: User, userRoles: {[id: string]: string[]}): string[] {
-    return userRoles[user.id] || [];
+    return userRoles[user.id || user.correlationId] || [];
   }
 }
