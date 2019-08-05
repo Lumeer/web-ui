@@ -57,6 +57,7 @@ import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -118,6 +119,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
 
   private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private subscribeData() {

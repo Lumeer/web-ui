@@ -47,5 +47,5 @@ export type DataResource =
   | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId'>;
 
 export type AttributesResource =
-  | Pick<Collection, 'id' | 'attributes' | 'color' | 'icon'>
-  | Pick<LinkType, 'id' | 'attributes' | 'collections'>;
+  | Pick<Collection, 'id' | 'attributes' | 'name' | 'color' | 'icon'>
+  | Pick<LinkType, 'id' | 'attributes' | 'name' | 'collections'>;

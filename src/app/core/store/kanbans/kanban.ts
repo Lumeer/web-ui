@@ -42,6 +42,7 @@ export enum KanbanConfigVersion {
 export interface KanbanColumn {
   id: string;
   title?: string;
+  value?: any;
   width: number;
   resourcesOrder: KanbanResource[];
   createdFromAttributes?: KanbanAttribute[];

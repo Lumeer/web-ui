@@ -19,15 +19,11 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PipesModule} from '../pipes/pipes.module';
-import {PreviewResultsComponent} from './preview-results.component';
-import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
-import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
-import {DataInputModule} from '../data-input/data-input.module';
+import {ModalWrapperComponent} from './modal-wrapper/modal-wrapper.component';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, PipesModule],
-  declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
-  exports: [PreviewResultsComponent, PreviewResultsTableComponent],
+  declarations: [ModalWrapperComponent],
+  imports: [CommonModule],
+  exports: [ModalWrapperComponent],
 })
-export class PreviewResultsModule {}
+export class ModalModule {}

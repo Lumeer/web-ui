@@ -33,6 +33,8 @@ import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
 import {ConstraintData} from '../../../../core/model/data/constraint';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 
 @Component({
   selector: 'kanban-columns',
@@ -49,6 +51,12 @@ export class KanbanColumnsComponent implements OnChanges {
 
   @Input()
   public documents: DocumentModel[];
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
 
   @Input()
   public canManageConfig: boolean;

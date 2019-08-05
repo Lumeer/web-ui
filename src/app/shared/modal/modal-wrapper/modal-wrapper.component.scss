@@ -1,0 +1,18 @@
+@import '../../../../styles/variables';
+
+.footer-bg {
+  background-color: $gray-100;
+}
+
+.icon {
+  font-size: 3rem;
+}
+
+.modal-header {
+  border-top-left-radius: 0.2rem;
+  border-top-right-radius: 0.2rem;
+}
+
+.dialog-body {
+  overflow: auto;
+}

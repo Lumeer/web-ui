@@ -37,10 +37,10 @@ export class KanbanColumnCardsPipe implements PipeTransform {
       return docsMap;
     }, {});
 
-    return column.resourcesOrder.reduce((arr, order) => {
+    return column.resourcesOrder.reduce<KanbanCard[]>((arr, order) => {
       // for now we support only documents
       if (order.resourceType === AttributesResourceType.Collection && documentMap[order.id]) {
-        arr.push({attributeId: order.attributeId, resource: documentMap[order.id]});
+        arr.push({attributeId: order.attributeId, dataResource: documentMap[order.id]});
       }
       return arr;
     }, []);

@@ -34,11 +34,15 @@ import {KanbanColumnFooterComponent} from './columns/column/footer/kanban-column
 import {KanbanColumnCardsPipe} from './pipes/kanban-column-cards.pipe';
 import {KanbanDragColumnsPipe} from './pipes/kanban-drag-columns.pipe';
 import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
-import {BsDropdownModule} from 'ngx-bootstrap';
-import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
+import {FilterWritableResourcesPipe} from './pipes/filter-writable-resources.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
 import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-select-item-ids.pipe';
+import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
+import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/choose-link-document-modal.component';
+import {ModalModule as NgxModalModule} from 'ngx-bootstrap';
+import {ModalModule} from '../../../shared/modal/modal.module';
+import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 
 @NgModule({
   declarations: [
@@ -52,9 +56,10 @@ import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-selec
     KanbanColumnCardsPipe,
     KanbanDragColumnsPipe,
     KanbanPostItDraggablePipe,
-    FilterWritableCollectionsPipe,
+    FilterWritableResourcesPipe,
     KanbanSelectedItemPipe,
     KanbanRestrictedSelectItemIdsPipe,
+    ChooseLinkDocumentModalComponent,
   ],
   imports: [
     SharedModule,
@@ -62,10 +67,13 @@ import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-selec
     KanbanPerspectiveRoutingModule,
     DataInputModule,
     DragDropModule,
-    BsDropdownModule,
+    DropdownModule,
     PickerModule,
+    PreviewResultsModule,
+    ModalModule,
+    NgxModalModule.forRoot(),
   ],
-  entryComponents: [KanbanPerspectiveComponent],
+  entryComponents: [KanbanPerspectiveComponent, ChooseLinkDocumentModalComponent],
   exports: [KanbanPerspectiveComponent],
 })
 export class KanbanPerspectiveModule {}

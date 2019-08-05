@@ -20,32 +20,30 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanResourceCreate} from '../columns/column/footer/kanban-column-footer.component';
 
 @Pipe({
-  name: 'filterWritableCollections',
+  name: 'filterWritableResources',
 })
-export class FilterWritableCollectionsPipe implements PipeTransform {
+export class FilterWritableResourcesPipe implements PipeTransform {
   public transform(
-    column: KanbanColumn,
+    kanbanConfig: KanbanConfig,
     collections: Collection[],
-    permissions: Record<string, AllowedPermissions>,
-    kanbanConfig: KanbanConfig
-  ): Collection[] {
-    let allowedCollectionIds: string[];
-    if (column.title) {
-      allowedCollectionIds = (kanbanConfig.stemsConfigs || [])
-        .filter(config => config && !!config.attribute)
-        .map(config => config.stem && config.stem.collectionId)
-        .filter(id => !!id);
-    } else {
-      // is other column
-      allowedCollectionIds = (collections || []).map(collection => collection.id);
-    }
+    permissions: Record<string, AllowedPermissions>
+  ): KanbanResourceCreate[] {
+    const allowedResources = (kanbanConfig.stemsConfigs || []).reduce<KanbanResourceCreate[]>((arr, config) => {
+      if (config && config.attribute) {
+        const resource = (collections || []).find(coll => coll.id === config.attribute.resourceId);
+        arr.push({stem: config.stem, kanbanAttribute: config.attribute, resource});
+      }
 
-    return (collections || []).filter(collection => {
-      const permission = permissions[collection.id];
-      return permission && permission.writeWithView && allowedCollectionIds.includes(collection.id);
+      return arr;
+    }, []);
+
+    return allowedResources.filter(resourceCreate => {
+      const permission = permissions[resourceCreate.resource.id];
+      return permission && permission.writeWithView;
     });
   }
 }

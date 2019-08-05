@@ -37,20 +37,26 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
   }
 
   const currentColumns = currentConfig.columns || [];
-  return (viewConfig.columns || []).some((column, index) => {
-    if (index > currentColumns.length - 1) {
-      return true;
-    }
+  return (
+    (viewConfig.columns || []).some((column, index) => {
+      if (index > currentColumns.length - 1) {
+        return true;
+      }
 
-    const currentColumn = (currentConfig.columns || [])[index];
-    return kanbanColumnsChanged(column, currentColumn);
-  });
+      const currentColumn = (currentConfig.columns || [])[index];
+      return kanbanColumnsChanged(column, currentColumn);
+    }) || kanbanColumnsChanged(viewConfig.otherColumn, currentConfig.otherColumn)
+  );
 }
 
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
   return (
-    !deepObjectsEquals(column1, column2) ||
-    !areArraysSame(column1 && column1.resourcesOrder, column2 && column2.resourcesOrder)
+    column1.title !== column2.title ||
+    column1.width !== column2.width ||
+    !areArraysSame(
+      ((column1 && column1.resourcesOrder) || []).map(order => order.id),
+      ((column2 && column2.resourcesOrder) || []).map(order => order.id)
+    )
   );
 }
 

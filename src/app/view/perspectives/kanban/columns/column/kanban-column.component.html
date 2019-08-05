@@ -14,29 +14,29 @@
     <post-it-document
       *ngFor="let card of cards; trackBy: trackByCard; let idx = index; let last = last"
       cdkDrag
-      id="{{columnSelectionId}}#{{card.resource.id}}"
+      id="{{columnSelectionId}}#{{card.dataResource.id}}"
       class="card post-it"
       [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
       [cdkDragData]="card"
       [cdkDragStartDelay]="dragDelay"
       [class.mb-2]="!last"
-      [documentModel]="card.resource"
-      [collection]="collections | collectionById:card.resource.collectionId"
+      [documentModel]="card.dataResource"
+      [collection]="collections | collectionById:card.dataResource.collectionId"
       [query]="query"
       [selectionHelper]="selectionHelper"
       [perspectiveId]="columnSelectionId"
       [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
       [index]="idx"
-      [permissions]="permissions[card.resource.collectionId] || {}"
-      (remove)="onRemoveDocument(card.resource)">
+      [permissions]="permissions[card.dataResource.collectionId] || {}"
+      (remove)="onRemoveDocument(card.dataResource)">
     </post-it-document>
 
   </div>
 
-  <div class="card-footer px-3 py-2" *ngIf="{collections: column | filterWritableCollections:collections:permissions:config} as footerData">
-    <kanban-column-footer *ngIf="footerData.collections.length > 0"
-                          [collections]="footerData.collections"
-                          (selectCollection)="createDocumentInCollection($event)">
+  <div class="card-footer px-3 py-2" *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
+    <kanban-column-footer *ngIf="footerData.resources.length > 0"
+                          [resources]="footerData.resources"
+                          (selectResource)="createObjectInResource($event)">
     </kanban-column-footer>
   </div>
 

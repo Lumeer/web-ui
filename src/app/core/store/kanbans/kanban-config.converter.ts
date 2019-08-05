@@ -70,6 +70,7 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
 
   return {
     ...column,
+    value: column.title,
     resourcesOrder: (column.documentsIdsOrder || []).map(id => ({
       id,
       attributeId: null,

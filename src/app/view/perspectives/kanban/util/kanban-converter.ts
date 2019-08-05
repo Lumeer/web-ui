@@ -37,6 +37,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {filterDocumentsByStem} from '../../../../core/store/documents/documents.filters';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
 
 interface KanbanColumnData {
   resourcesOrder: KanbanResource[];
@@ -112,7 +113,7 @@ export class KanbanConverter {
           constraintData,
           stemConfig.attribute
         );
-        if (isNotNullOrUndefined(formattedValue) && formattedValue !== '') {
+        if (isNotNullOrUndefined(formattedValue) && String(formattedValue).trim() !== '') {
           const createdByAttribute = {...stemConfig.attribute};
           const stringValue = formattedValue.toString();
 
@@ -227,16 +228,6 @@ function createKanbanColumns(
 
 function getColumnIdOrGenerate(column: KanbanColumn): string {
   return (column && column.id) || generateId();
-}
-
-function groupDocumentsByCollection(documents: DocumentModel[]): Record<string, DocumentModel[]> {
-  return (documents || []).reduce((map, doc) => {
-    if (!map[doc.collectionId]) {
-      map[doc.collectionId] = [];
-    }
-    map[doc.collectionId].push(doc);
-    return map;
-  }, {});
 }
 
 function mergeConstraintType(currentConstraint: ConstraintType, newConstrainTypes: ConstraintType[]): ConstraintType {
