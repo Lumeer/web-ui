@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, HostListener, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, timer} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
@@ -52,6 +52,12 @@ export class UserMenuComponent {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public controlsVisible: boolean;
+
+  @Output()
+  public toggleControls = new EventEmitter();
 
   public currentUser$: Observable<User>;
   public url$: Observable<string>;
@@ -186,6 +192,10 @@ export class UserMenuComponent {
   }
 
   private kickstartTour(collectionsCount: number, viewsCount: number) {
+    if (!this.controlsVisible) {
+      this.toggleControls.emit();
+    }
+
     setTimeout(() => {
       // trick to allow access to all document elements
       this.driver.reset(true);
@@ -223,20 +233,37 @@ export class UserMenuComponent {
   }
 
   private defineSteps(collectionsCount: number, viewsCount: number): void {
-    const totalSteps = viewsCount > 0 ? 8 : 7;
+    const totalSteps = viewsCount > 0 ? 8 : collectionsCount > 0 ? 8 : 7;
     let stepNo = 1;
 
-    const welcomeTitle = this.i18n({
-      id: 'appTour.title.welcome',
-      value: 'Welcome to Lumeer',
+    const driverSteps = [];
+    const basicTitle = this.i18n({
+      id: 'appTour.title.basic',
+      value: 'Access your information',
     });
-    const welcomeDescription = this.i18n({
-      id: 'appTour.description.welcome',
+    const basicDescription = this.i18n({
+      id: 'appTour.description.basic',
       value:
-        'Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.',
+        'Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.',
     });
 
-    const driverSteps = [];
+    driverSteps.push({
+      element: '[data-tour="logo"]',
+      popover: {
+        title: this.i18n({
+          id: 'appTour.title.welcome',
+          value: 'Welcome to Lumeer',
+        }),
+        description:
+          this.getStepCounter(stepNo++, totalSteps) +
+          this.i18n({
+            id: 'appTour.description.welcome',
+            value:
+              'Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
+          }),
+        position: 'right',
+      },
+    });
 
     if (viewsCount === 0) {
       if (collectionsCount === 0) {
@@ -244,19 +271,37 @@ export class UserMenuComponent {
         driverSteps.push({
           element: '[data-tour="collection-create"]',
           popover: {
-            title: welcomeTitle,
-            description: this.getStepCounter(stepNo++, totalSteps) + welcomeDescription,
-            position: 'bottom',
+            title: basicTitle,
+            description: this.getStepCounter(stepNo++, totalSteps) + basicDescription,
+            position: 'top',
           },
         });
       } else {
         // views = 0, collections > 0
         driverSteps.push({
+          element: '[data-tour="search-views"]',
+          popover: {
+            title: this.i18n({
+              id: 'appTour.title.searchViewsNoView',
+              value: 'Create views of your data',
+            }),
+            description:
+              this.getStepCounter(stepNo++, totalSteps) +
+              this.i18n({
+                id: 'appTour.description.searchViewsNoView',
+                value:
+                  'Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!',
+              }),
+            position: 'top',
+          },
+        });
+
+        driverSteps.push({
           element: '[data-tour="collection-add"]',
           popover: {
-            title: welcomeTitle,
-            description: this.getStepCounter(stepNo++, totalSteps) + welcomeDescription,
-            position: 'right',
+            title: basicTitle,
+            description: this.getStepCounter(stepNo++, totalSteps) + basicDescription,
+            position: 'top',
           },
         });
       }
@@ -265,7 +310,7 @@ export class UserMenuComponent {
       driverSteps.push({
         element: '[data-tour="search-views"]',
         popover: {
-          title: welcomeTitle,
+          title: basicTitle,
           description:
             this.getStepCounter(stepNo++, totalSteps) +
             this.i18n({
@@ -276,6 +321,7 @@ export class UserMenuComponent {
           position: 'top',
         },
       });
+
       driverSteps.push({
         element: '[data-tour="tables-tab"]',
         popover: {
@@ -293,24 +339,6 @@ export class UserMenuComponent {
         },
       });
     }
-
-    driverSteps.push({
-      element: '[data-tour="logo"]',
-      popover: {
-        title: this.i18n({
-          id: 'appTour.title.home',
-          value: 'Get home',
-        }),
-        description:
-          this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.home',
-            value:
-              'By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
-          }),
-        position: 'right',
-      },
-    });
 
     driverSteps.push({
       element: '[data-tour="search-box"]',
@@ -344,7 +372,7 @@ export class UserMenuComponent {
             value:
               'When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.',
           }),
-        position: 'right',
+        position: 'bottom',
       },
     });
 
@@ -391,7 +419,7 @@ export class UserMenuComponent {
           value: 'Return to this Tour',
         }),
         description:
-          this.getStepCounter(stepNo, totalSteps) +
+          this.getStepCounter(stepNo++, totalSteps) +
           this.i18n({
             id: 'appTour.description.userMenu',
             value:

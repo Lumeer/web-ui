@@ -114,7 +114,7 @@ export class FileAttachmentButtonComponent {
     this.notificationService.error(
       this.i18n({
         id: 'file.attachment.download.failure',
-        value: 'I could not download the file attachment. Please try again later.',
+        value: 'Could not download the file attachment. Please try again later.',
       })
     );
   }
@@ -123,7 +123,7 @@ export class FileAttachmentButtonComponent {
     this.notificationService.error(
       this.i18n({
         id: 'file.attachment.not.exist',
-        value: 'I could not find the file attachment.',
+        value: 'Could not find the file attachment.',
       })
     );
   }

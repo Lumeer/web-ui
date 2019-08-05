@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
@@ -29,4 +29,10 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 export class UserPanelComponent {
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public controlsVisible: boolean;
+
+  @Output()
+  public toggleControls = new EventEmitter();
 }

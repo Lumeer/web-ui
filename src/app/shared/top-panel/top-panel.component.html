@@ -16,6 +16,8 @@
   </workspace-panel>
 
   <user-panel [workspace]="state.workspace"
+              (toggleControls)="onToggleControls()"
+              [controlsVisible]="!mobile || (controlsShown$ | async)"
               class="user-panel">
   </user-panel>
 
