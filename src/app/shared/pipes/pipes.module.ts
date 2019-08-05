@@ -127,11 +127,8 @@ import {PerspectiveDisplayablePipe} from './perspective-displayable.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
-<<<<<<< HEAD
     ConcatPipe,
-=======
     PerspectiveDisplayablePipe,
->>>>>>> Link support in kanban #LMR-1919
   ],
   exports: [
     LightenColorPipe,
@@ -186,11 +183,8 @@ import {PerspectiveDisplayablePipe} from './perspective-displayable.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
-<<<<<<< HEAD
     ConcatPipe,
-=======
     PerspectiveDisplayablePipe,
->>>>>>> Link support in kanban #LMR-1919
   ],
 })
 export class PipesModule {}
