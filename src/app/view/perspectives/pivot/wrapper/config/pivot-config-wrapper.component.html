@@ -14,7 +14,7 @@
 
 <div class="text-danger small mb-4 mt-2" i18n="@@perspective.pivot.config.merge.fail"
      *ngIf="pivotData && !pivotData.ableToMerge && pivotData.mergeTables">
-  There are some tables I can't merge.
+  There are some tables that cannot be merged.
 </div>
 
 <ng-container *ngFor="let stem of query?.stems; let index = index; trackBy:trackByStem">

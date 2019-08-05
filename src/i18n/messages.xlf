@@ -35,6 +35,10 @@
           <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
@@ -129,7 +133,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="query.item.button.remove" datatype="html">
         <source>Remove query item</source>
@@ -202,7 +206,7 @@
         <source>Add Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.document" datatype="html">
         <source>Create New Record</source>
@@ -700,7 +704,7 @@
         <source>Remove Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
@@ -710,13 +714,25 @@
         <source>Set Attribute Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit><trans-unit id="keyValue.configure.function" datatype="html">
         <source>Set Attribute Function</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="files.dropdown.button.delete" datatype="html">
+        <source>Delete file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="files.dropdown.button.add" datatype="html">
+        <source>Add file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="document.button.remove" datatype="html">
         <source>Delete Record</source>
@@ -750,11 +766,11 @@
         <source>You can scroll the table...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context>
@@ -782,19 +798,19 @@
         <source>Select</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="unlink" datatype="html">
         <source>Unlink</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="remove" datatype="html">
         <source>Remove</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source>
@@ -994,7 +1010,7 @@
         <source>Delete notification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/notifications-menu-wrapper/notifications-menu-wrapper.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.empty" datatype="html">
         <source>
@@ -1002,7 +1018,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/notifications-menu-wrapper/notifications-menu-wrapper.component.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.organizationShared" datatype="html">
         <source>A new organization has been shared with you.</source>
@@ -1898,39 +1914,39 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.coordinates.precision.label" datatype="html">
         <source>
-      Fractional digits
+      Precision
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.coordinates.precision.error.integer" datatype="html">
+      </trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
         <source>
-      You need to enter a number of fractional digits.
-    </source>
+          <x id="ICU" equiv-text="{precision, select, 0 {...} 1 {...} 2 {...} 3 {...} 4 {...} 5 {...} 6 {...}}"/>
+        </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">36</context>
         </context-group>
+      </trans-unit><trans-unit id="c67cdd21e868a43fb776065d8ea04cd16206ae09" datatype="html">
+        <source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">37</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.coordinates.precision.error.min" datatype="html">
+      </trans-unit><trans-unit id="constraint.coordinates.precisions.dms" datatype="html">
         <source>
-      You need to enter a number greater than or equal to <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.min?.min}}"/>.
-    </source>
+          <x id="ICU" equiv-text="{precision, select, 0 {...} 1 {...} 2 {...}}"/>
+        </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">44</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.coordinates.precision.error.max" datatype="html">
-        <source>
-      You need to enter a number lesser than or equal to <x id="INTERPOLATION" equiv-text="{{precisionControl.errors?.max?.max}}"/>.
-    </source>
+      </trans-unit><trans-unit id="908215aa52ade63a923b43a7d391d0584918aa87" datatype="html">
+        <source>{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.address.description" datatype="html">
         <source>
@@ -2170,8 +2186,12 @@
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
       </trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
+        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2492,7 +2512,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.merge.fail" datatype="html">
         <source>
-  There are some tables I can&apos;t merge.
+  There are some tables that cannot be merged.
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config-wrapper.component.html</context>
@@ -2563,6 +2583,12 @@
           <context context-type="sourcefile">app/view/perspectives/map/panel/position-checkbox/map-position-checkbox.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+      </trans-unit><trans-unit id="map.loading.title" datatype="html">
+        <source>Map content is loading.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source>
         <context-group purpose="location">
@@ -2627,11 +2653,43 @@
         </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
-          Views
-        </source>
+        Views
+      </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
+        <source>Your first task is to create a view!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
+        <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.createTable1" datatype="html">
+        <source>Create and open a Table. Switch the Perspective</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.createTable2" datatype="html">
+        <source>and save the View</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
@@ -2639,7 +2697,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.records" datatype="html">
         <source>
@@ -2647,7 +2705,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="search.tab.all" datatype="html">
         <source>All</source>
@@ -2679,18 +2737,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context>
           <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
-        <source>There are no Views yet!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
-        <source>Search for something, switch the View, set a name and save the resulting page.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.html</context>
-          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
         <source>Open as Table</source>
@@ -3221,6 +3267,13 @@
           <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="page.title" datatype="html">
+        <source>Lumeer - Visual Project&amp;Team Management</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="organization.not.exist" datatype="html">
         <source>Organization does not exist</source>
         <context-group purpose="location">
@@ -3306,6 +3359,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -3354,6 +3411,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
@@ -3602,6 +3663,20 @@
       </trans-unit>
       <trans-unit id="template.hr.description" datatype="html">
         <source>Ensure your candidates have the best experience interviewing with your team.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.supply.title" datatype="html">
+        <source>Supply Chain Management</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.supply.description" datatype="html">
+        <source>Be ready to move goods to the right location in time to satisfy your customers.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4234,8 +4309,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="970055a0f46ef7292144b2c055ef1797517994c6" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+      <trans-unit id="3dc1fa939c26ba547db151442ada4865d1376bc9" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/attribute-type/form/select/attribute-type-select.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4273,6 +4348,55 @@
         <source>Could not send feedback.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/dialog/feedback-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.download.failure" datatype="html">
+        <source>Could not download the file attachment. Please try again later.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/button/file-attachment-button.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.not.exist" datatype="html">
+        <source>Could not find the file attachment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/button/file-attachment-button.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.upload.max.size.error" datatype="html">
+        <source>Cannot process files bigger than <x id="INTERPOLATION" equiv-text="{{size}}"/> MB. Please upload smaller file.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.upload.success" datatype="html">
+        <source>The file is successfully saved.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.upload.failure" datatype="html">
+        <source>Could not save the file. Please try again later.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.delete.confirm.message" datatype="html">
+        <source>Do you really want to permanently delete this file?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="file.attachment.delete.confirm.title" datatype="html">
+        <source>Delete file?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4438,6 +4562,20 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="appTour.title.basic" datatype="html">
+        <source>Access your information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.description.basic" datatype="html">
+        <source>Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="appTour.title.welcome" datatype="html">
         <source>Welcome to Lumeer</source>
         <context-group purpose="location">
@@ -4446,7 +4584,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
-        <source>Lumeer organizes your information in tables (i.e. categories) of similar records. Later, you can use this button to add your first table. Then you can open the table by simply clicking on it.</source>
+        <source>Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.title.searchViewsNoView" datatype="html">
+        <source>Create views of your data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appTour.description.searchViewsNoView" datatype="html">
+        <source>Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4468,20 +4620,6 @@
       </trans-unit>
       <trans-unit id="appTour.description.tablesTab" datatype="html">
         <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="appTour.title.home" datatype="html">
-        <source>Get home</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="appTour.description.home" datatype="html">
-        <source>By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>

@@ -102,7 +102,7 @@ export class FilesDropdownComponent implements AfterViewInit {
       this.i18n(
         {
           id: 'file.upload.max.size.error',
-          value: 'I cannot process files bigger than {{size}} MB. Please upload smaller file.',
+          value: 'Cannot process files bigger than {{size}} MB. Please upload smaller file.',
         },
         {size}
       )

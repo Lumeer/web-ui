@@ -163,7 +163,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     this.notificationService.success(
       this.i18n({
         id: 'file.attachment.upload.success',
-        value: 'I have successfully saved the file.',
+        value: 'The file is successfully saved.',
       })
     );
   }
@@ -199,7 +199,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     this.notificationService.error(
       this.i18n({
         id: 'file.attachment.upload.failure',
-        value: 'I could not save the file. Please try again later.',
+        value: 'Could not save the file. Please try again later.',
       })
     );
   }
