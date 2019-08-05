@@ -19,7 +19,6 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartStemConfig} from './gantt-chart';
-import {GanttChartConfigV0} from './gantt-chart-old';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {GanttChartCollectionConfigV0, GanttChartConfigV0} from './gantt-chart-old';
 

@@ -33,7 +33,6 @@ import {
 import {Store} from '@ngrx/store';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 import {KanbanAttribute, KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -43,38 +42,24 @@ import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
+import {generateDocumentData, groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 
-import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
 import {Query} from '../../../../../core/store/navigation/query';
-import {getQueryFiltersForCollection} from '../../../../../core/store/navigation/query.util';
-import {User} from '../../../../../core/store/users/user';
-import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
-import {getSaveValue} from '../../../../../shared/utils/data.utils';
-import {generateId} from '../../../../../shared/utils/resource.utils';
-import {getSaveValue} from '../../../../../shared/utils/data.utils';
-import {User} from '../../../../../core/store/users/user';
-import {generateId} from '../../../../../shared/utils/resource.utils';
-import {BehaviorSubject} from 'rxjs';
-import {DRAG_DELAY} from '../../../../../core/constants';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {
+  getQueryFiltersForCollection,
+  queryStemAttributesResourcesOrder,
+} from '../../../../../core/store/navigation/query.util';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {filterDocumentsByStem} from '../../../../../core/store/documents/documents.filters';
-import {generateDocumentData, groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
-import {
-  getQueryFiltersForCollection,
-  queryStemAttributesResourcesOrder,
-} from '../../../../../core/store/navigation/query.util';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
 import {BsModalService} from 'ngx-bootstrap';
 import {ChooseLinkDocumentModalComponent} from '../../modal/choose-link-document/choose-link-document-modal.component';
+import {User} from '../../../../../core/store/users/user';
+import {generateId} from '../../../../../shared/utils/resource.utils';
+import {getSaveValue} from '../../../../../shared/utils/data.utils';
 
 export interface KanbanCard {
   dataResource: DataResource;
@@ -224,11 +209,10 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
-      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
+      const constraint = findAttributeConstraint(collection.attributes, card.attributeId);
       const value = getSaveValue(newValue, constraint, this.constraintData);
       const data = {...document.data, [card.attributeId]: value};
       this.patchDocumentData.emit({...document, data});
-
     }
   }
 
