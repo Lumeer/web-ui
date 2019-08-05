@@ -12,17 +12,17 @@
                    [dragColumnsIds]="column | kanbanDragColumns:config.columns"
                    [collections]="collections"
                    [canManageConfig]="canManageConfig"
-                   [documents]="column | kanbanColumnDocuments:documents"
+                   [cards]="column | kanbanColumnCards:documents"
                    [query]="query"
                    [permissions]="data.permissions"
                    [currentUser]="data.currentUser"
                    [constraintData]="constraintData"
-                   (patchData)="onPatchData($event)"
+                   (patchDocumentData)="onPatchDocumentData($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
     </kanban-column>
 
-    <kanban-column *ngIf="config.otherColumn?.documentsIdsOrder?.length > 0"
+    <kanban-column *ngIf="config.otherColumn?.resourcesOrder?.length > 0"
                    class="column ml-4"
                    [column]="config.otherColumn"
                    [config]="config"
@@ -30,11 +30,11 @@
                    [collections]="collections"
                    [canManageConfig]="canManageConfig"
                    [permissions]="data.permissions"
-                   [documents]="config.otherColumn | kanbanColumnDocuments:documents"
+                   [cards]="config.otherColumn | kanbanColumnCards:documents"
                    [query]="query"
                    [currentUser]="data.currentUser"
                    [constraintData]="constraintData"
-                   (patchData)="onPatchData($event)"
+                   (patchDocumentData)="onPatchDocumentData($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
     </kanban-column>

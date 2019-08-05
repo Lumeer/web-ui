@@ -1,4 +1,4 @@
-<ng-container *ngIf="query$ | async | displayable; else notDisplayable">
+<ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
                 canManageConfig: currentView$ | async | canManageConfig | async,

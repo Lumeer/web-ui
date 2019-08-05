@@ -34,7 +34,6 @@ import {ColumnWidthPipe} from './column-width.pipe';
 import {CursorEqualsPipe} from './cursor-equals.pipe';
 import {DataCellDocumentPipe} from './data-cell-document.pipe';
 import {DataPipe} from './data.pipe';
-import {DisplayablePipe} from './displayable.pipe';
 import {DocumentHintColumnsPipe} from './document-hint-columns.pipe';
 import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
@@ -71,7 +70,6 @@ import {CellCollapsedPipe} from './cell-collapsed.pipe';
     NextRowCursorPipe,
     ExpandablePipe,
     CollapsiblePipe,
-    DisplayablePipe,
     PartWidthPipe,
     PartCursorPipe,
     MaxPartsPipe,
@@ -113,7 +111,6 @@ import {CellCollapsedPipe} from './cell-collapsed.pipe';
     NextRowCursorPipe,
     ExpandablePipe,
     CollapsiblePipe,
-    DisplayablePipe,
     PartWidthPipe,
     PartCursorPipe,
     MaxPartsPipe,

@@ -72,6 +72,7 @@ import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resource
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
 import {ArrayDifferencePipe} from './array/array-difference.pipe';
 import {ConcatPipe} from './concat.pipe';
+import {PerspectiveDisplayablePipe} from './perspective-displayable.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -126,7 +127,11 @@ import {ConcatPipe} from './concat.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
+<<<<<<< HEAD
     ConcatPipe,
+=======
+    PerspectiveDisplayablePipe,
+>>>>>>> Link support in kanban #LMR-1919
   ],
   exports: [
     LightenColorPipe,
@@ -181,7 +186,11 @@ import {ConcatPipe} from './concat.pipe';
     FindSelectItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
+<<<<<<< HEAD
     ConcatPipe,
+=======
+    PerspectiveDisplayablePipe,
+>>>>>>> Link support in kanban #LMR-1919
   ],
 })
 export class PipesModule {}

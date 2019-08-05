@@ -25,7 +25,7 @@ import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {GanttChartVisualizationComponent} from './tasks/visualization/gantt-chart-visualization.component';
 import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
-import {GanttChartCollectionConfigComponent} from './config/collection-config/gantt-chart-collection-config.component';
+import {GanttChartStemConfigComponent} from './config/stem/gantt-chart-stem-config.component';
 import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
 import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.component';
 import {GanttChartInvalidRangeComponent} from './tasks/invalid-range/gantt-chart-invalid-range.component';
@@ -36,7 +36,7 @@ import {GanttChartInvalidRangeComponent} from './tasks/invalid-range/gantt-chart
     GanttChartPerspectiveComponent,
     GanttChartVisualizationComponent,
     GanttChartConfigComponent,
-    GanttChartCollectionConfigComponent,
+    GanttChartStemConfigComponent,
     GanttChartTasksComponent,
     GanttChartHeaderComponent,
     GanttChartInvalidRangeComponent,

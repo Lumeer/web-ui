@@ -1,35 +1,49 @@
-<ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
-                canManageConfig: currentView$ | async | canManageConfig | async,
+<ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
+
+  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async, linkTypes: linkTypes$ | async,
+                canManageConfig: currentView$ | async | canManageConfig | async, linkInstances: linkInstances$ | async,
                 documents: documents$ | async, query: query$ | async,
                 users: users$ | async} as data">
 
-  <collapsible-sidebar *ngIf="data.canManageConfig"
-                       class="h-100"
-                       [collapsed]="!(sidebarOpened$ | async)"
-                       (toggle)="onSidebarToggle()">
-    <kanban-config
-      class="d-block m-3"
+    <collapsible-sidebar *ngIf="data.canManageConfig"
+                         class="h-100"
+                         [collapsed]="!(sidebarOpened$ | async)"
+                         (toggle)="onSidebarToggle()">
+      <kanban-config
+        class="d-block m-3"
+        [collections]="data.collections"
+        [linkTypes]="data.linkTypes"
+        [documents]="data.documents"
+        [linkInstances]="data.linkInstances"
+        [config]="data.config"
+        [query]="data.query"
+        (configChange)="onConfigChanged($event)"
+        [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}">
+      </kanban-config>
+    </collapsible-sidebar>
+
+    <kanban-columns
+      class="flex-grow-1 h-100"
       [collections]="data.collections"
       [documents]="data.documents"
       [config]="data.config"
       [query]="data.query"
+      [canManageConfig]="data.canManageConfig"
+      [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
       (configChange)="onConfigChanged($event)"
-      [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}">
-    </kanban-config>
-  </collapsible-sidebar>
+      (patchDocumentData)="onPatchDocumentData($event)"
 
-  <kanban-columns
-    class="flex-grow-1 h-100"
-    [collections]="data.collections"
-    [config]="data.config"
-    [query]="data.query"
-    [documents]="data.documents"
-    [canManageConfig]="data.canManageConfig"
-    [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
-    (configChange)="onConfigChanged($event)"
-    (patchData)="onPatchData($event)"
-    (removeDocument)="onRemoveDocument($event)">
+      (removeDocument)="onRemoveDocument($event)">
 
-  </kanban-columns>
+    </kanban-columns>
+
+  </ng-container>
+
 
 </ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minCollections]="1">
+  </invalid-query>
+</ng-template>

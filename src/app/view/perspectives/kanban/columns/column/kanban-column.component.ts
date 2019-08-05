@@ -49,6 +49,18 @@ import {User} from '../../../../../core/store/users/user';
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
 import {getSaveValue} from '../../../../../shared/utils/data.utils';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+import {getSaveValue} from '../../../../../shared/utils/data.utils';
+import {User} from '../../../../../core/store/users/user';
+import {generateId} from '../../../../../shared/utils/resource.utils';
+import {BehaviorSubject} from 'rxjs';
+import {DRAG_DELAY} from '../../../../../core/constants';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {DataResource} from '../../../../../core/model/resource';
+
+export interface KanbanCard {
+  resource: DataResource;
+  attributeId: string;
+}
 
 @Component({
   selector: 'kanban-column',
@@ -76,7 +88,7 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[];
+  public cards: KanbanCard[];
 
   @Input()
   public canManageConfig: boolean;
@@ -94,7 +106,7 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Output()
-  public patchData = new EventEmitter<DocumentModel>();
+  public patchDocumentData = new EventEmitter<DocumentModel>();
 
   @Output()
   public removeDocument = new EventEmitter<DocumentModel>();
@@ -107,8 +119,6 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public documentsIds$ = new BehaviorSubject<string[]>([]);
   public readonly dragDelay = DRAG_DELAY;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
-
   public ngOnInit() {
     this.columnSelectionId = this.column.id || generateId();
     this.selectionHelper = new SelectionHelper(
@@ -120,18 +130,18 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private documentRows(key: string): number {
-    const document = (this.documents || []).find(doc => doc.id === key);
-    return (document && Object.keys(document.data).length - 1) || 0;
+    const document = (this.cards || []).find(doc => doc.resource.id === key);
+    return (document && Object.keys(document.resource.data).length - 1) || 0;
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents) {
-      this.documentsIds$.next((this.documents || []).map(document => document.id));
+      this.documentsIds$.next((this.cards || []).map(document => document.resource.id));
     }
   }
 
-  public trackByDocument(index: number, document: DocumentModel) {
-    return document.id;
+  public trackByCard(index: number, card: KanbanCard) {
+    return card.resource.id;
   }
 
   public onDropPostIt(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
@@ -154,24 +164,19 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
     const column = columns.find(col => col.id === event.container.id) || otherColumn;
 
     if (event.container.id === event.previousContainer.id) {
-      moveItemInArray(column.documentsIdsOrder, event.previousIndex, event.currentIndex);
+      moveItemInArray(column.resourcesOrder, event.previousIndex, event.currentIndex);
     } else {
       const previousColumn = columns.find(col => col.id === event.previousContainer.id);
       if (previousColumn) {
         transferArrayItem(
-          previousColumn.documentsIdsOrder,
-          column.documentsIdsOrder,
+          previousColumn.resourcesOrder,
+          column.resourcesOrder,
           event.previousIndex,
           event.currentIndex
         );
       } else {
         // it's Other column
-        transferArrayItem(
-          otherColumn.documentsIdsOrder,
-          column.documentsIdsOrder,
-          event.previousIndex,
-          event.currentIndex
-        );
+        transferArrayItem(otherColumn.resourcesOrder, column.resourcesOrder, event.previousIndex, event.currentIndex);
       }
     }
 
@@ -183,31 +188,30 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private updatePostItValue(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
-    const document = event.item.data as DocumentModel;
+    const card = event.item.data as KanbanCard;
+    const document = card.resource as DocumentModel;
     const newValue = event.container.data.title;
 
-    const collectionConfig = this.config.collections[document.collectionId];
-    const configAttribute = collectionConfig && collectionConfig.attribute;
-    const collection =
-      configAttribute && (this.collections || []).find(coll => coll.id === configAttribute.collectionId);
+    const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
       const value = getSaveValue(newValue, constraint, this.constraintData);
-      const data = {...document.data, [collectionConfig.attribute.attributeId]: value};
-      this.patchData.emit({...document, data});
+      const data = {...document.data, [card.attributeId]: value};
+      this.patchDocumentData.emit({...document, data});
     }
   }
 
   public createDocumentInCollection(collection: Collection) {
-    const document = this.createDocumentForCollection(collection);
-    if (document) {
-      this.store$.dispatch(
-        new DocumentsAction.Create({
-          document,
-          callback: documentId => this.onDocumentCreated(documentId),
-        })
-      );
-    }
+    // TODO dialog
+    // const document = this.createDocumentForCollection(collection);
+    // if (document) {
+    //   this.store$.dispatch(
+    //     new DocumentsAction.Create({
+    //       document,
+    //       callback: documentId => this.onDocumentCreated(documentId),
+    //     })
+    //   );
+    // }
   }
 
   private onDocumentCreated(id: string) {
@@ -217,17 +221,17 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
     });
   }
 
-  private createDocumentForCollection(collection: Collection): DocumentModel {
-    const collectionConfig = this.config.collections[collection.id];
-    const configAttribute = collectionConfig && collectionConfig.attribute;
-    const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-    const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
-    if (configAttribute) {
-      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
-      data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint, this.constraintData);
-    }
-    return {collectionId: collection.id, data};
-  }
+  // private createDocumentForCollection(collection: Collection): DocumentModel {
+  //   const collectionConfig = this.config.collections[collection.id];
+  //   const configAttribute = collectionConfig && collectionConfig.attribute;
+  //   const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
+  //   const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
+  //   if (configAttribute) {
+  //     const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
+  //     data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint, this.constraintData);
+  //   }
+  //   return {collectionId: collection.id, data};
+  // }
 
   public onRemoveDocument(document: DocumentModel) {
     this.removeDocument.emit(document);

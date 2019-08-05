@@ -21,6 +21,7 @@ import {AttributesResourceType} from '../../model/resource';
 import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartStemConfig} from './gantt-chart';
 import {GanttChartConfigV0} from './gantt-chart-old';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {GanttChartCollectionConfigV0, GanttChartConfigV0} from './gantt-chart-old';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {
@@ -41,8 +42,10 @@ function convertGanttChartDtoToModelV1(config: GanttChartConfig): GanttChartConf
 }
 
 function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartConfig {
-  const collections: Record<string, GanttChartStemConfig> = {};
-  for (const [collectionId, collectionConfig] of Object.entries<GanttChartStemConfig>(config.collections || {})) {
+  const stemConfigsMap: Record<string, GanttChartStemConfig> = {};
+  for (const [collectionId, collectionConfig] of Object.entries<GanttChartCollectionConfigV0>(
+    config.collections || {}
+  )) {
     const barsProperties: Record<string, GanttChartBarModel> = {};
 
     for (const [key, model] of Object.entries(collectionConfig.barsProperties || {})) {
@@ -53,8 +56,8 @@ function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartCo
         resourceType: model.resourceType || AttributesResourceType.Collection,
       };
     }
-    collections[collectionId] = {barsProperties, stem: {collectionId}};
+    stemConfigsMap[collectionId] = {barsProperties, stem: {collectionId}};
   }
 
-  return {mode: config.mode, stemsConfigs: Object.values(collections), version: GanttChartConfigVersion.V1};
+  return {mode: config.mode, stemsConfigs: Object.values(stemConfigsMap), version: GanttChartConfigVersion.V1};
 }

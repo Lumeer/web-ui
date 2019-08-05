@@ -68,7 +68,7 @@ export function filterDocumentsByQuery(
     });
   } else if (queryWithFunctions.stems) {
     queryWithFunctions.stems.forEach(stem => {
-      const documentsByStem = filterDocumentsByStem(
+      const {allDocuments} = filterDocumentsByStem(
         documentsByCollectionsMap,
         collections,
         linkTypes,
@@ -77,7 +77,7 @@ export function filterDocumentsByQuery(
         queryWithFunctions.fulltexts,
         includeChildren
       );
-      documentsByStems = mergeDocuments(documentsByStems, documentsByStem);
+      documentsByStems = mergeDocuments(documentsByStems, allDocuments);
     });
   }
 
@@ -128,18 +128,20 @@ function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocument
   return documentsWithChildren;
 }
 
-function filterDocumentsByStem(
-  documentsByCollectionMap: {[collectionId: string]: [DocumentModel]},
+export function filterDocumentsByStem(
+  documentsByCollectionMap: Record<string, DocumentModel[]>,
   collections: Collection[],
   linkTypes: LinkType[],
   linkInstances: LinkInstance[],
   stem: QueryStem,
   fulltexts: string[],
   includeChildren?: boolean
-): DocumentModel[] {
+): {allDocuments: DocumentModel[]; pipelineDocuments: DocumentModel[][]} {
+  const allDocuments = [];
+  const pipelineDocuments = [];
   const baseCollection = collections.find(collection => collection.id === stem.collectionId);
   if (!baseCollection) {
-    return [];
+    return {allDocuments, pipelineDocuments};
   }
 
   const baseStem = cleanStemForBaseCollection(stem, documentsByCollectionMap[stem.collectionId] || []);
@@ -154,6 +156,9 @@ function filterDocumentsByStem(
   const filteredDocuments = includeChildren
     ? getDocumentsWithChildren(documentsByBaseStem, documentsByCollectionMap[baseStem.collectionId] || [])
     : documentsByBaseStem;
+
+  allDocuments.push(...filteredDocuments);
+  pipelineDocuments[0] = filteredDocuments;
 
   let lastStageDocuments = filteredDocuments;
 
@@ -203,11 +208,12 @@ function filterDocumentsByStem(
       break;
     }
 
-    filteredDocuments.push(...currentStageDocuments);
+    allDocuments.push(...currentStageDocuments);
+    pipelineDocuments[i + 1] = currentStageDocuments;
     lastStageDocuments = currentStageDocuments;
   }
 
-  return filteredDocuments;
+  return {allDocuments, pipelineDocuments};
 }
 
 function cleanStemForBaseCollection(stem: QueryStem, documents: DocumentModel[]): QueryStem {
@@ -248,7 +254,7 @@ function createStemsPipeline(
   stem: QueryStem,
   collections: Collection[],
   linkTypes: LinkType[],
-  documentsByCollectionMap: {[collectionId: string]: [DocumentModel]}
+  documentsByCollectionMap: Record<string, DocumentModel[]>
 ): QueryStem[] {
   const pipeline: QueryStem[] = [];
   let lastCollectionId = stem.collectionId;

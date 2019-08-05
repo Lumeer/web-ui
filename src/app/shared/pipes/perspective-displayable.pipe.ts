@@ -18,15 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-
-import {isSingleCollectionQuery} from '../../../../core/store/navigation/query.util';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query';
+import {isNullOrUndefined} from '../utils/common.utils';
 
 @Pipe({
-  name: 'displayable',
+  name: 'perspectiveDisplayable',
 })
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isSingleCollectionQuery(query);
+export class PerspectiveDisplayablePipe implements PipeTransform {
+  public transform(query: Query, minStems: number, maxStems?: number): boolean {
+    const numStems = ((query && query.stems) || []).length;
+    return numStems >= minStems && (isNullOrUndefined(maxStems) || numStems <= maxStems);
   }
 }

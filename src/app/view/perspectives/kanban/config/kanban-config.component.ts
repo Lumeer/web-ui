@@ -19,14 +19,16 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanCollectionConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanStemConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
-import {checkOrTransformKanbanConfig} from '../util/kanban.util';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {checkOrTransformKanbanConfig, createDefaultKanbanStemConfig} from '../util/kanban.util';
+import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 
 @Component({
   selector: 'kanban-config',
@@ -38,7 +40,13 @@ export class KanbanConfigComponent implements OnChanges {
   public collections: Collection[];
 
   @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
   public documents: DocumentModel[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
 
   @Input()
   public config: KanbanConfig;
@@ -54,21 +62,25 @@ export class KanbanConfigComponent implements OnChanges {
 
   private readonly converter: KanbanConverter;
 
+  public readonly defaultStemConfig = createDefaultKanbanStemConfig();
+
   constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
     this.converter = new KanbanConverter(constraintItemsFormatter);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.collections || changes.constraintData || changes.query) {
+    if (changes.documents || changes.collections || changes.linkTypes || changes.constraintData || changes.query) {
       this.checkConfigColumns();
     }
   }
 
   private checkConfigColumns() {
     const config = this.converter.buildKanbanConfig(
-      checkOrTransformKanbanConfig(this.config, this.collections),
-      this.documents,
+      checkOrTransformKanbanConfig(this.config, this.query, this.collections, this.linkTypes),
       this.collections,
+      this.linkTypes,
+      this.documents,
+      this.linkInstances,
       this.constraintData
     );
     if (!deepObjectsEquals(config, this.config)) {
@@ -76,14 +88,21 @@ export class KanbanConfigComponent implements OnChanges {
     }
   }
 
-  public trackByCollection(index: number, collection: Collection): string {
-    return collection.id;
+  public trackByStem(index: number, stem: QueryStem): string {
+    return stem.collectionId + index;
   }
 
-  public onCollectionConfigChange(collection: Collection, collectionConfig: KanbanCollectionConfig) {
-    const collectionsConfig = {...this.config.collections, [collection.id]: collectionConfig};
-    const newConfig = {...this.config, collections: collectionsConfig};
-    const config = this.converter.buildKanbanConfig(newConfig, this.documents, this.collections, this.constraintData);
+  public onConfigChange(stemConfig: KanbanStemConfig, stem: QueryStem, index: number) {
+    const newConfig = deepObjectCopy<KanbanConfig>(this.config);
+    newConfig.stemsConfigs[index] = {...stemConfig, stem};
+    const config = this.converter.buildKanbanConfig(
+      newConfig,
+      this.collections,
+      this.linkTypes,
+      this.documents,
+      this.linkInstances,
+      this.constraintData
+    );
     this.configChange.emit(config);
   }
 }

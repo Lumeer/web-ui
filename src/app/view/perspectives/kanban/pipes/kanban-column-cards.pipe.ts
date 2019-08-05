@@ -20,13 +20,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {KanbanCard} from '../columns/column/kanban-column.component';
 
 @Pipe({
-  name: 'kanbanColumnDocuments',
+  name: 'kanbanColumnCards',
 })
-export class KanbanColumnDocumentsPipe implements PipeTransform {
-  public transform(column: KanbanColumn, documents: DocumentModel[]): DocumentModel[] {
-    if (!column || !column.documentsIdsOrder || column.documentsIdsOrder.length === 0) {
+export class KanbanColumnCardsPipe implements PipeTransform {
+  public transform(column: KanbanColumn, documents: DocumentModel[]): KanbanCard[] {
+    if (!column || !column.resourcesOrder || column.resourcesOrder.length === 0) {
       return [];
     }
 
@@ -34,6 +36,13 @@ export class KanbanColumnDocumentsPipe implements PipeTransform {
       docsMap[doc.id] = doc;
       return docsMap;
     }, {});
-    return column.documentsIdsOrder.map(id => documentMap[id]).filter(document => !!document);
+
+    return column.resourcesOrder.reduce((arr, order) => {
+      // for now we support only documents
+      if (order.resourceType === AttributesResourceType.Collection && documentMap[order.id]) {
+        arr.push({attributeId: order.attributeId, resource: documentMap[order.id]});
+      }
+      return arr;
+    }, []);
   }
 }

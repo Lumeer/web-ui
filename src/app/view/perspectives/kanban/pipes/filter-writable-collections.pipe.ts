@@ -30,13 +30,14 @@ export class FilterWritableCollectionsPipe implements PipeTransform {
     column: KanbanColumn,
     collections: Collection[],
     permissions: Record<string, AllowedPermissions>,
-    config: KanbanConfig
+    kanbanConfig: KanbanConfig
   ): Collection[] {
     let allowedCollectionIds: string[];
     if (column.title) {
-      allowedCollectionIds = Object.entries(config.collections || {})
-        .filter(([, collectionConfig]) => collectionConfig && !!collectionConfig.attribute)
-        .map(([collectionId]) => collectionId);
+      allowedCollectionIds = (kanbanConfig.stemsConfigs || [])
+        .filter(config => config && !!config.attribute)
+        .map(config => config.stem && config.stem.collectionId)
+        .filter(id => !!id);
     } else {
       // is other column
       allowedCollectionIds = (collections || []).map(collection => collection.id);

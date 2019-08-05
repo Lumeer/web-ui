@@ -41,7 +41,7 @@ function convertCalendarDtoToModelV1(config: CalendarConfig): CalendarConfig {
 }
 
 function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfig {
-  const collections: Record<string, CalendarStemConfig> = {};
+  const stemConfigsMap: Record<string, CalendarStemConfig> = {};
   for (const [collectionId, collectionConfig] of Object.entries<CalendarCollectionConfigV0>(config.collections || {})) {
     const barsProperties: Record<string, CalendarBar> = {};
 
@@ -53,13 +53,13 @@ function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfig {
         resourceType: AttributesResourceType.Collection,
       };
     }
-    collections[collectionId] = {barsProperties, stem: {collectionId}};
+    stemConfigsMap[collectionId] = {barsProperties, stem: {collectionId}};
   }
 
   return {
     date: config.date,
     mode: config.mode,
-    stemsConfigs: Object.values(collections),
+    stemsConfigs: Object.values(stemConfigsMap),
     version: CalendarConfigVersion.V1,
   };
 }

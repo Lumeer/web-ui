@@ -17,14 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KanbanCollectionConfig, KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {
+  collectionIdsChainForStem,
+  findBestStemConfigIndex,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query.util';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
-  if (!deepObjectsEquals(viewConfig.collections, currentConfig.collections)) {
+  if (!deepObjectsEquals(viewConfig.stemsConfigs, currentConfig.stemsConfigs)) {
     return true;
   }
 
@@ -42,44 +50,95 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
   return (
     !deepObjectsEquals(column1, column2) ||
-    !areArraysSame(column1 && column1.documentsIdsOrder, column2 && column2.documentsIdsOrder)
+    !areArraysSame(column1 && column1.resourcesOrder, column2 && column2.resourcesOrder)
   );
 }
 
-export function checkOrTransformKanbanConfig(config: KanbanConfig, collections: Collection[]): KanbanConfig {
+export function checkOrTransformKanbanConfig(
+  config: KanbanConfig,
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): KanbanConfig {
   if (!config) {
-    return createDefaultConfig();
+    return createDefaultConfig(query);
   }
 
-  return {...config, collections: checkOrTransformKanbanCollectionsConfig(config.collections, collections)};
+  return {
+    ...config,
+    stemsConfigs: checkOrTransformKanbanStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
+  };
 }
 
-function checkOrTransformKanbanCollectionsConfig(
-  collectionsConfig: Record<string, KanbanCollectionConfig>,
-  collections: Collection[]
-): Record<string, KanbanCollectionConfig> {
-  if (!collectionsConfig) {
-    return collectionsConfig;
+function checkOrTransformKanbanStemsConfig(
+  stemsConfigs: KanbanStemConfig[],
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): KanbanStemConfig[] {
+  if (!stemsConfigs) {
+    return stemsConfigs;
   }
 
-  return Object.keys(collectionsConfig).reduce((map, key) => {
-    const collectionConfig = collectionsConfig[key];
-    if (collectionConfig && collectionConfig.attribute) {
-      const collection = (collections || []).find(coll => coll.id === collectionConfig.attribute.collectionId);
-      const attribute = findAttribute(collection && collection.attributes, collectionConfig.attribute.attributeId);
+  const stemsConfigsCopy = [...stemsConfigs];
+  return ((query && query.stems) || []).map(stem => {
+    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
+    return checkOrTransformKanbanStemConfig(stemConfig[0], stem, collections, linkTypes);
+  });
+}
+
+function checkOrTransformKanbanStemConfig(
+  stemConfig: KanbanStemConfig,
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): KanbanStemConfig {
+  if (!stemConfig || !stemConfig.attribute) {
+    return createDefaultKanbanStemConfig(stem);
+  }
+
+  const kanbanAttribute = stemConfig.attribute;
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+  const attributesResource = attributesResourcesOrder[kanbanAttribute.resourceIndex];
+  if (
+    attributesResource &&
+    attributesResource.id === kanbanAttribute.resourceId &&
+    getAttributesResourceType(attributesResource) === kanbanAttribute.resourceType
+  ) {
+    const attribute = findAttribute(attributesResource.attributes, kanbanAttribute.attributeId);
+    if (attribute) {
+      return {attribute: kanbanAttribute, stem};
+    }
+  } else {
+    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+      ar => ar.id === kanbanAttribute.resourceId && getAttributesResourceType(ar) === kanbanAttribute.resourceType
+    );
+    if (newAttributesResourceIndex >= 0) {
+      const attribute = findAttribute(
+        attributesResourcesOrder[newAttributesResourceIndex].attributes,
+        kanbanAttribute.attributeId
+      );
       if (attribute) {
-        map[key] = collectionConfig;
+        return {attribute: {...kanbanAttribute, resourceIndex: newAttributesResourceIndex}, stem};
       }
     }
+  }
 
-    return map;
-  }, {});
+  return {attribute: null, stem};
 }
 
-function createDefaultConfig(): KanbanConfig {
-  return {columns: [], collections: {}};
+function createDefaultConfig(query: Query): KanbanConfig {
+  const stems = (query && query.stems) || [];
+  const stemsConfigs = stems.map(stem => createDefaultKanbanStemConfig(stem));
+  return {columns: [], stemsConfigs, version: KanbanConfigVersion.V1};
 }
 
-export function kanbanConfigIsEmpty(config: KanbanConfig): boolean {
-  return config && Object.values(config.collections || {}).filter(value => !!value).length === 0;
+export function createDefaultKanbanStemConfig(stem?: QueryStem): KanbanStemConfig {
+  return {attribute: null, stem};
+}
+
+export function kanbanConfigIsEmpty(kanbanCOnfig: KanbanConfig): boolean {
+  return kanbanCOnfig && kanbanCOnfig.stemsConfigs.filter(config => !!config.attribute).length === 0;
 }

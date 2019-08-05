@@ -12,23 +12,23 @@
        [cdkDropListConnectedTo]="dragColumnsIds"
        (cdkDropListDropped)="onDropPostIt($event)">
     <post-it-document
-      *ngFor="let document of documents; trackBy: trackByDocument; let idx = index; let last = last"
+      *ngFor="let card of cards; trackBy: trackByCard; let idx = index; let last = last"
       cdkDrag
-      id="{{columnSelectionId}}#{{document.id}}"
+      id="{{columnSelectionId}}#{{card.resource.id}}"
       class="card post-it"
-      [cdkDragDisabled]="!canManageConfig || !(document | kanbanPostItDraggable:config.collections)"
-      [cdkDragData]="document"
+      [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
+      [cdkDragData]="card"
       [cdkDragStartDelay]="dragDelay"
       [class.mb-2]="!last"
-      [documentModel]="document"
-      [collection]="collections | collectionById:document.collectionId"
+      [documentModel]="card.resource"
+      [collection]="collections | collectionById:card.resource.collectionId"
       [query]="query"
       [selectionHelper]="selectionHelper"
       [perspectiveId]="columnSelectionId"
-      [canDrag]="canManageConfig && (document | kanbanPostItDraggable:config.collections)"
+      [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
       [index]="idx"
-      [permissions]="permissions[document.collectionId] || {}"
-      (remove)="onRemoveDocument(document)">
+      [permissions]="permissions[card.resource.collectionId] || {}"
+      (remove)="onRemoveDocument(card.resource)">
     </post-it-document>
 
   </div>

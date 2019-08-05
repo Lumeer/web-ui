@@ -63,7 +63,7 @@ export class KanbanColumnsComponent implements OnChanges {
   public configChange = new EventEmitter<KanbanConfig>();
 
   @Output()
-  public patchData = new EventEmitter<DocumentModel>();
+  public patchDocumentData = new EventEmitter<DocumentModel>();
 
   @Output()
   public removeDocument = new EventEmitter<DocumentModel>();
@@ -98,8 +98,8 @@ export class KanbanColumnsComponent implements OnChanges {
     return column.title || '';
   }
 
-  public onPatchData(document: DocumentModel) {
-    this.patchData.emit(document);
+  public onPatchDocumentData(document: DocumentModel) {
+    this.patchDocumentData.emit(document);
   }
 
   public onColumnsChange(data: {columns: KanbanColumn[]; otherColumn: KanbanColumn}) {

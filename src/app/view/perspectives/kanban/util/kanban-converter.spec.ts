@@ -26,6 +26,7 @@ import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 const documents: DocumentModel[] = [
   {
@@ -130,74 +131,139 @@ describe('Kanban converter', () => {
     converter = new KanbanConverter(constraintReadableFormatter);
   });
 
-  it('should create only other column', () => {
-    const config: KanbanConfig = {columns: [], collections: {}};
-    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
+  it('should create empty columns', () => {
+    const config: KanbanConfig = {columns: [], stemsConfigs: []};
+    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
     expect(buildConfig.columns).toEqual([]);
-    expect(buildConfig.collections).toEqual({});
-    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual([
-      'D1',
-      'D2',
-      'D3',
-      'D4',
-      'D5',
-      'D6',
-      'D7',
-      'D8',
-      'D9',
-      'D10',
-      'D11',
-    ]);
+    expect(buildConfig.stemsConfigs).toEqual([]);
+    expect(buildConfig.otherColumn.resourcesOrder).toEqual([]);
   });
 
   it('should create by selected attribute', () => {
-    const config: KanbanConfig = {columns: [], collections: {C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}}}};
-    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
+    const stem = {collectionId: collections[0].id};
+    const config: KanbanConfig = {
+      columns: [],
+      stemsConfigs: [
+        {
+          stem,
+          attribute: {
+            attributeId: 'a1',
+            resourceId: 'C1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+        },
+      ],
+    };
+    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
-    expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D1', 'D4']);
-    expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D2']);
-    expect(buildConfig.columns[2].documentsIdsOrder).toEqual(['D3', 'D5']);
-    expect(buildConfig.collections).toEqual(config.collections);
-    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D6', 'D7', 'D8', 'D9', 'D10', 'D11']);
+    expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D1', 'D4']);
+    expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D2']);
+    expect(buildConfig.columns[2].resourcesOrder.map(order => order.id)).toEqual(['D3', 'D5']);
+    expect(buildConfig.stemsConfigs).toEqual(config.stemsConfigs);
+    expect(buildConfig.otherColumn.resourcesOrder).toEqual([]);
   });
 
   it('should create by multiple attributes', () => {
+    const stem = {collectionId: collections[0].id};
+    const stem2 = {collectionId: collections[1].id};
     const config: KanbanConfig = {
       columns: [],
-      collections: {
-        C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}},
-        C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
-      },
+      stemsConfigs: [
+        {
+          stem,
+          attribute: {
+            attributeId: 'a1',
+            resourceId: 'C1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+        },
+        {
+          stem: stem2,
+          attribute: {
+            attributeId: 'a1',
+            resourceId: 'C2',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+        },
+      ],
     };
-    const buildConfig = converter.buildKanbanConfig(config, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
-    expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D1', 'D4', 'D9']);
-    expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D2', 'D6']);
-    expect(buildConfig.columns[2].documentsIdsOrder).toEqual(['D3', 'D5', 'D8']);
-    expect(buildConfig.columns[3].documentsIdsOrder).toEqual(['D7', 'D10']);
-    expect(buildConfig.collections).toEqual(config.collections);
-    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D11']);
+    expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D1', 'D4', 'D9']);
+    expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D2', 'D6']);
+    expect(buildConfig.columns[2].resourcesOrder.map(order => order.id)).toEqual(['D3', 'D5', 'D8']);
+    expect(buildConfig.columns[3].resourcesOrder.map(order => order.id)).toEqual(['D7', 'D10']);
+    expect(buildConfig.stemsConfigs).toEqual(config.stemsConfigs);
+    expect(buildConfig.otherColumn.resourcesOrder).toEqual([]);
   });
 
   it('should create by previous config', () => {
+    const resourceType = AttributesResourceType.Collection;
+    const stem = {collectionId: collections[0].id};
+    const stem2 = {collectionId: collections[1].id};
     const previousConfig: KanbanConfig = {
       columns: [
-        {id: '1', title: 'LMR', width: 200, documentsIdsOrder: ['D350', 'D10', 'D7']},
-        {id: '2', title: 'Glass', width: 100, documentsIdsOrder: ['D5', 'D1', 'D3', 'D8']},
-        {id: '3', title: 'Dance', width: 800, documentsIdsOrder: ['D111', 'D6', 'D3', 'D1', 'D2']},
+        {
+          id: '1',
+          title: 'LMR',
+          width: 200,
+          resourcesOrder: [{id: 'D350', resourceType}, {id: 'D10', resourceType}, {id: 'D7', resourceType}],
+        },
+        {
+          id: '2',
+          title: 'Glass',
+          width: 100,
+          resourcesOrder: [
+            {id: 'D5', resourceType},
+            {id: 'D1', resourceType},
+            {id: 'D3', resourceType},
+            {id: 'D8', resourceType},
+          ],
+        },
+        {
+          id: '3',
+          title: 'Dance',
+          width: 800,
+          resourcesOrder: [
+            {id: 'D111', resourceType},
+            {id: 'D6', resourceType},
+            {id: 'D3', resourceType},
+            {id: 'D1', resourceType},
+            {id: 'D2', resourceType},
+          ],
+        },
       ],
-      collections: {
-        C1: {attribute: {attributeId: 'a1', collectionId: 'C1'}},
-        C2: {attribute: {attributeId: 'a1', collectionId: 'C2'}},
-      },
+      stemsConfigs: [
+        {
+          stem,
+          attribute: {
+            attributeId: 'a1',
+            resourceId: 'C1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+        },
+        {
+          stem: stem2,
+          attribute: {
+            attributeId: 'a1',
+            resourceId: 'C2',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+        },
+      ],
     };
-    const buildConfig = converter.buildKanbanConfig(previousConfig, documents, collections);
+    const buildConfig = converter.buildKanbanConfig(previousConfig, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
-    expect(buildConfig.columns[0].documentsIdsOrder).toEqual(['D10', 'D7']);
-    expect(buildConfig.columns[1].documentsIdsOrder).toEqual(['D5', 'D3', 'D8']);
-    expect(buildConfig.columns[2].documentsIdsOrder).toEqual(['D6', 'D2']);
-    expect(buildConfig.columns[3].documentsIdsOrder).toEqual(['D1', 'D4', 'D9']);
-    expect(buildConfig.collections).toEqual(previousConfig.collections);
-    expect(buildConfig.otherColumn.documentsIdsOrder).toEqual(['D11']);
+    expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D10', 'D7']);
+    expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D5', 'D3', 'D8']);
+    expect(buildConfig.columns[2].resourcesOrder.map(order => order.id)).toEqual(['D6', 'D2']);
+    expect(buildConfig.columns[3].resourcesOrder.map(order => order.id)).toEqual(['D1', 'D4', 'D9']);
+    expect(buildConfig.stemsConfigs).toEqual(previousConfig.stemsConfigs);
+    expect(buildConfig.otherColumn.resourcesOrder).toEqual([]);
   });
 });
