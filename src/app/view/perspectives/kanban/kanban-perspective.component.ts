@@ -50,7 +50,7 @@ import {
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
@@ -84,6 +84,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
   public users$: Observable<User[]>;
+  public currentUser$: Observable<User>;
+
   public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -100,11 +102,6 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
-
     this.initKanban();
     this.subscribeToQuery();
     this.subscribeData();
@@ -123,9 +120,14 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   private initKanban() {

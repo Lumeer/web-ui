@@ -68,12 +68,13 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
     return null;
   }
 
+  const attributeId =
+    (column.createdFromAttributes || []).length === 1 ? column.createdFromAttributes[0].attributeId : null;
   return {
     ...column,
-    value: column.title,
     resourcesOrder: (column.documentsIdsOrder || []).map(id => ({
       id,
-      attributeId: null,
+      attributeId,
       resourceType: AttributesResourceType.Collection,
     })),
     createdFromAttributes: (column.createdFromAttributes || []).map(attribute => ({

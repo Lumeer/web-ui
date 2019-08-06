@@ -32,6 +32,7 @@
       [query]="data.query"
       [canManageConfig]="data.canManageConfig"
       [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
+      [currentUser]="currentUser$ | async"
       (configChange)="onConfigChanged($event)"
       (patchDocumentData)="onPatchDocumentData($event)"
 

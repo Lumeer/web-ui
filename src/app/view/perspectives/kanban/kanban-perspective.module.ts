@@ -40,7 +40,7 @@ import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
 import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-select-item-ids.pipe';
 import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
 import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/choose-link-document-modal.component';
-import {ModalModule as NgxModalModule} from 'ngx-bootstrap';
+import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 
