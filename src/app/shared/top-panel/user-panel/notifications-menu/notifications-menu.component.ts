@@ -177,12 +177,12 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Table];
 
       if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
-        const buildUrl = this.router.createUrlTree(path, {queryParams: {query}}).toString();
+        const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query}}).toString();
         if (!this.startsWithCurrentUrl(buildUrl)) {
-          this.router.navigate(path, {queryParams: {query}});
+          this.router.navigate(path, {queryParams: {q: query}});
         }
       } else {
-        this.router.navigate(path, {queryParams: {query}});
+        this.router.navigate(path, {queryParams: {q: query}});
       }
     });
   }

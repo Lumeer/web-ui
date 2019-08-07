@@ -135,7 +135,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public onDocumentsClick() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Table], {
-      queryParams: {query: this.documentsQuery(this.collection$.getValue().id)},
+      queryParams: {q: this.documentsQuery(this.collection$.getValue().id)},
     });
   }
 

@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from '../../dto';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
-import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryDto} from '../../dto';
+import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {decodeQuery, encodeQuery} from './query/query-encoding';
+import {prolongQuery, ShortenedQuery, shortenQuery} from './query/shortened-query';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
@@ -96,11 +98,16 @@ function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkA
   };
 }
 
-export function convertQueryModelToString(query: Query, nullPage = false): string {
-  return JSON.stringify(query || {}, (key, value) => {
-    if (nullPage && (key === 'page' || key === 'pageSize') && value === null) {
-      return 0;
-    }
+export function convertQueryModelToString(query: Query): string {
+  return encodeQuery(stringifyQuery(shortenQuery(query)));
+}
+
+function stringifyQuery(query: ShortenedQuery): string {
+  if (!query) {
+    return '';
+  }
+
+  return JSON.stringify(query, (key, value) => {
     if (isNullOrUndefined(value) || (value instanceof Array && value.length === 0)) {
       return undefined;
     }
@@ -109,25 +116,31 @@ export function convertQueryModelToString(query: Query, nullPage = false): strin
 }
 
 export function normalizeQueryModel(query: Query): Query {
-  return JSON.parse(convertQueryModelToString(query, true));
+  return {
+    stems: (query && query.stems) || [],
+    fulltexts: (query && query.fulltexts) || [],
+    page: (query && query.page) || 0,
+    pageSize: (query && query.pageSize) || 0,
+  };
 }
 
-export function convertStringToQueryModel(stringQuery: string): Query {
-  const parsedQuery = stringQuery ? parseStringQuery(stringQuery) : {};
-  const query: Query = parsedQuery ? parsedQuery : {};
-
-  query.stems = query.stems || [];
-  query.fulltexts = query.fulltexts || [];
-  query.pageSize = isNullOrUndefined(query.pageSize) ? null : query.pageSize;
-  query.page = isNullOrUndefined(query.page) ? null : query.page;
-
-  return query;
+export function convertQueryStringToModel(stringQuery: string): Query {
+  return fillInEmptyQuery(prolongQuery(parseStringQuery(decodeQuery(stringQuery))));
 }
 
-function parseStringQuery(stringQuery: string) {
+function parseStringQuery(stringQuery: string): ShortenedQuery {
   try {
     return JSON.parse(stringQuery);
   } catch (e) {
     return null;
   }
+}
+
+function fillInEmptyQuery(query: Query): Query {
+  return {
+    stems: (query && query.stems) || [],
+    fulltexts: (query && query.fulltexts) || [],
+    page: isNullOrUndefined(query && query.page) ? null : query.page,
+    pageSize: isNullOrUndefined(query && query.pageSize) ? null : query.pageSize,
+  };
 }

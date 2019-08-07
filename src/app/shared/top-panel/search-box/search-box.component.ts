@@ -241,7 +241,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private navigateToQuery(query: string, redirect?: boolean) {
     const searchUrl = ['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'];
     const url = redirect || !this.perspective ? searchUrl : [];
-    this.router.navigate(url, {queryParams: {query}});
+    this.router.navigate(url, {queryParams: {q: query}});
   }
 
   private itemsChanged(queryItems: QueryItem[]): boolean {

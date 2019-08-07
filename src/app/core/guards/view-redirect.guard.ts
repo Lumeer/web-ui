@@ -71,7 +71,7 @@ export class ViewRedirectGuard implements CanActivate {
         }
         viewPath.push(perspective);
 
-        this.router.navigate(viewPath, {queryParams: {query}});
+        this.router.navigate(viewPath, {queryParams: {q: query}});
 
         return false;
       })
