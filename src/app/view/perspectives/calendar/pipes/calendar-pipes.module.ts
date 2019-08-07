@@ -22,7 +22,6 @@ import {CommonModule} from '@angular/common';
 import {CalendarPropertyItemsPipe} from './calendar-property-items.pipe';
 import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.pipe';
 import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
-import {DisplayablePipe} from './displayable.pipe';
 import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
 import {CalendarModesToSelectPipe} from './calendar-modes-to-select.pipe';
 import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
@@ -30,7 +29,6 @@ import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    DisplayablePipe,
     CalendarPropertyItemsPipe,
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
@@ -39,7 +37,6 @@ import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
     FirstDayOfWeekPipe,
   ],
   exports: [
-    DisplayablePipe,
     CalendarPropertyItemsPipe,
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,

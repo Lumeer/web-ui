@@ -11,7 +11,8 @@
       <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
     </div>
   </div>
-  <div class="table-responsive h-10em">
+  <div class="h-10em"
+       [class.table-responsive]="resizeable">
     <table class="table table-sm" id="preview-results-table">
       <thead>
         <tr>
@@ -48,12 +49,14 @@
       </tbody>
     </table>
   </div>
-  <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
-        title="You can scroll the table...">
-    <i class="fas fa-arrows-h"></i>
-  </span>
-  <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
-        title="You can scroll the table...">
+  <ng-container *ngIf="resizeable">
+    <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
+          title="You can scroll the table...">
+      <i class="fas fa-arrows-h"></i>
+    </span>
+    <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
+          title="You can scroll the table...">
     <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
-  </span>
+    </span>
+  </ng-container>
 </ng-container>

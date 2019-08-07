@@ -28,6 +28,6 @@ import {DataInputModule} from '../data-input/data-input.module';
 @NgModule({
   imports: [CommonModule, DataInputModule, PipesModule],
   declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
-  exports: [PreviewResultsComponent],
+  exports: [PreviewResultsComponent, PreviewResultsTableComponent],
 })
 export class PreviewResultsModule {}

@@ -17,16 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Constraint, ConstraintType} from '../../model/data/constraint';
+import {KanbanAttribute, KanbanColumn} from './kanban';
 
-import {Query} from '../../../../../core/store/navigation/query';
-import {isSingleCollectionQuery} from '../../../../../core/store/navigation/query.util';
+export interface KanbanConfigV0 {
+  columns: KanbanColumnV0[];
+  otherColumn?: KanbanColumnV0;
+  collections: Record<string, KanbanCollectionConfigV0>;
+}
 
-@Pipe({
-  name: 'displayable',
-})
-export class DisplayablePipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isSingleCollectionQuery(query);
-  }
+export interface KanbanCollectionConfigV0 {
+  attribute: KanbanAttributeV0;
+}
+
+export interface KanbanAttributeV0 {
+  collectionId: string;
+  attributeId: string;
+  constraint?: Constraint;
+}
+
+export interface KanbanColumnV0 {
+  id: string;
+  title?: string;
+  width: number;
+  documentsIdsOrder: string[];
+  createdFromAttributes?: KanbanAttributeV0[];
+  constraintType?: ConstraintType;
 }

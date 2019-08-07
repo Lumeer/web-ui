@@ -33,22 +33,23 @@ import {
 import {Store} from '@ngrx/store';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {AppState} from '../../../../../core/store/app.state';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 
 import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
-import {Query} from '../../../../../core/store/navigation/query';
-import {getQueryFiltersForCollection} from '../../../../../core/store/navigation/query.util';
-import {User} from '../../../../../core/store/users/user';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
-import {getSaveValue} from '../../../../../shared/utils/data.utils';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {Query} from '../../../../../core/store/navigation/query';
+import {DataResource} from '../../../../../core/model/resource';
+import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
+import {BsModalService} from 'ngx-bootstrap';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+
+export interface KanbanCard {
+  dataResource: DataResource;
+  attributeId: string;
+}
 
 @Component({
   selector: 'kanban-column',
@@ -64,6 +65,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public columnBodyElement: ElementRef;
 
   @Input()
+  public cards: KanbanCard[];
+
+  @Input()
   public config: KanbanConfig;
 
   @Input()
@@ -76,9 +80,6 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[];
-
-  @Input()
   public canManageConfig: boolean;
 
   @Input()
@@ -87,27 +88,24 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   @Input()
   public query: Query;
 
-  @Input()
-  public currentUser: User;
-
-  @Input()
-  public constraintData: ConstraintData;
-
-  @Output()
-  public patchData = new EventEmitter<DocumentModel>();
-
   @Output()
   public removeDocument = new EventEmitter<DocumentModel>();
 
   @Output()
+  public updateDocument = new EventEmitter<{document: DocumentModel; newValue: string; attributeId: string}>();
+
+  @Output()
   public columnsChange = new EventEmitter<{columns: KanbanColumn[]; otherColumn: KanbanColumn}>();
+
+  @Output()
+  public createResource = new EventEmitter<KanbanResourceCreate>();
 
   public selectionHelper: SelectionHelper;
   public columnSelectionId: string;
   public documentsIds$ = new BehaviorSubject<string[]>([]);
   public readonly dragDelay = DRAG_DELAY;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private modalService: BsModalService) {}
 
   public ngOnInit() {
     this.columnSelectionId = this.column.id || generateId();
@@ -120,18 +118,18 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private documentRows(key: string): number {
-    const document = (this.documents || []).find(doc => doc.id === key);
-    return (document && Object.keys(document.data).length - 1) || 0;
+    const document = (this.cards || []).find(card => card.dataResource.id === key);
+    return (document && Object.keys(document.dataResource.data).length - 1) || 0;
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents) {
-      this.documentsIds$.next((this.documents || []).map(document => document.id));
+      this.documentsIds$.next((this.cards || []).map(card => card.dataResource.id));
     }
   }
 
-  public trackByDocument(index: number, document: DocumentModel) {
-    return document.id;
+  public trackByCard(index: number, card: KanbanCard) {
+    return card.dataResource.id;
   }
 
   public onDropPostIt(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
@@ -149,29 +147,24 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private updatePostItsPosition(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
-    const columns = this.config.columns.map(col => ({...col, documentsIdsOrder: [...col.documentsIdsOrder]}));
-    const otherColumn = {...this.config.otherColumn, documentsIdsOrder: [...this.config.otherColumn.documentsIdsOrder]};
+    const columns = this.config.columns.map(col => ({...col, resourcesOrder: [...col.resourcesOrder]}));
+    const otherColumn = {...this.config.otherColumn, resourcesOrder: this.config.otherColumn.resourcesOrder};
     const column = columns.find(col => col.id === event.container.id) || otherColumn;
 
     if (event.container.id === event.previousContainer.id) {
-      moveItemInArray(column.documentsIdsOrder, event.previousIndex, event.currentIndex);
+      moveItemInArray(column.resourcesOrder, event.previousIndex, event.currentIndex);
     } else {
       const previousColumn = columns.find(col => col.id === event.previousContainer.id);
       if (previousColumn) {
         transferArrayItem(
-          previousColumn.documentsIdsOrder,
-          column.documentsIdsOrder,
+          previousColumn.resourcesOrder,
+          column.resourcesOrder,
           event.previousIndex,
           event.currentIndex
         );
       } else {
         // it's Other column
-        transferArrayItem(
-          otherColumn.documentsIdsOrder,
-          column.documentsIdsOrder,
-          event.previousIndex,
-          event.currentIndex
-        );
+        transferArrayItem(otherColumn.resourcesOrder, column.resourcesOrder, event.previousIndex, event.currentIndex);
       }
     }
 
@@ -183,50 +176,22 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   }
 
   private updatePostItValue(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
-    const document = event.item.data as DocumentModel;
+    const card = event.item.data as KanbanCard;
+    const document = card.dataResource as DocumentModel;
     const newValue = event.container.data.title;
 
-    const collectionConfig = this.config.collections[document.collectionId];
-    const configAttribute = collectionConfig && collectionConfig.attribute;
-    const collection =
-      configAttribute && (this.collections || []).find(coll => coll.id === configAttribute.collectionId);
-    if (collection) {
-      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
-      const value = getSaveValue(newValue, constraint, this.constraintData);
-      const data = {...document.data, [collectionConfig.attribute.attributeId]: value};
-      this.patchData.emit({...document, data});
-    }
+    this.updateDocument.emit({document, newValue, attributeId: card.attributeId});
   }
 
-  public createDocumentInCollection(collection: Collection) {
-    const document = this.createDocumentForCollection(collection);
-    if (document) {
-      this.store$.dispatch(
-        new DocumentsAction.Create({
-          document,
-          callback: documentId => this.onDocumentCreated(documentId),
-        })
-      );
-    }
+  public createObjectInResource(resourceCreate: KanbanResourceCreate) {
+    this.createResource.emit(resourceCreate);
   }
 
-  private onDocumentCreated(id: string) {
+  public onDocumentCreated(id: string) {
     setTimeout(() => {
       const postIt = document.getElementById(`${this.columnSelectionId}#${id}`);
       postIt && postIt.scrollIntoView();
     });
-  }
-
-  private createDocumentForCollection(collection: Collection): DocumentModel {
-    const collectionConfig = this.config.collections[collection.id];
-    const configAttribute = collectionConfig && collectionConfig.attribute;
-    const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-    const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
-    if (configAttribute) {
-      const constraint = findAttributeConstraint(collection.attributes, configAttribute.attributeId);
-      data[configAttribute.attributeId] = getSaveValue(this.column.title, constraint, this.constraintData);
-    }
-    return {collectionId: collection.id, data};
   }
 
   public onRemoveDocument(document: DocumentModel) {

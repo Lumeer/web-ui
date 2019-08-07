@@ -1,18 +1,12 @@
-<div class="btn-group" dropdown [dropup]="true">
-  <button id="button-dropup" dropdownToggle type="button" class="btn btn-link dropdown-toggle p-0">
+<div #parentElement>
+  <button type="button" class="btn btn-link p-0" (click)="onButtonClick()">
     <i class="fa fa-plus mr-2"></i><span i18n="@@create.new.document">Create New Record</span>
   </button>
-  <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
-      role="menu" aria-labelledby="button-dropup">
-    <li role="menuitem" *ngFor="let collection of collections; trackBy: trackByCollection"
-        (click)="onCollectionSelected(collection)">
-      <div class="dropdown-item cursor-pointer">
-        <icons-presenter [colors]="[collection.color]"
-                         [icons]="[collection.icon]"
-                         class="mr-2">
-        </icons-presenter>
-        <span [title]="collection.name">{{collection.name | truncate:20}}</span>
-      </div>
-    </li>
-  </ul>
+
+  <options-dropdown [closeOnClickOutside]="true"
+                    [fitParent]="false"
+                    [origin]="parentElement"
+                    [options]="dropdownOptions"
+                    (selectOption)="onOptionSelect($event)">
+  </options-dropdown>
 </div>

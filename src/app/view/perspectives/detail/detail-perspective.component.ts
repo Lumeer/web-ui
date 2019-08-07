@@ -49,7 +49,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
   private selectedCollection: Collection;
-  private collectionSubsription = new Subscription();
+  private collectionSubscription = new Subscription();
 
   public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
@@ -58,7 +58,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.collectionSubsription.unsubscribe();
+    this.collectionSubscription.unsubscribe();
   }
 
   public selectCollection(collection: Collection) {
@@ -82,8 +82,8 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       .transform(collection)
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
 
-    this.collectionSubsription.unsubscribe();
-    this.collectionSubsription = this.store$
+    this.collectionSubscription.unsubscribe();
+    this.collectionSubscription = this.store$
       .pipe(
         select(selectCollectionById(collection.id)),
         mergeMap(coll => {

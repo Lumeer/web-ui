@@ -18,15 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {KanbanCollectionConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanCard} from '../columns/column/kanban-column.component';
 
 @Pipe({
   name: 'kanbanPostItDraggable',
 })
 export class KanbanPostItDraggablePipe implements PipeTransform {
-  public transform(document: DocumentModel, collectionsConfig: Record<string, KanbanCollectionConfig>): boolean {
-    const collectionConfig = collectionsConfig[document.collectionId];
-    return collectionConfig && !!collectionConfig.attribute;
+  public transform(card: KanbanCard): boolean {
+    return !!card.attributeId;
   }
 }

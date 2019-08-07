@@ -42,6 +42,9 @@ export class PreviewResultsTableComponent implements OnChanges {
   @Input()
   public loaded: boolean;
 
+  @Input()
+  public resizeable = true;
+
   public page = 0;
 
   @Output()

@@ -32,15 +32,14 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {Constraint} from '../../../../../core/model/data/constraint';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query.util';
-import {AttributesResourceType} from '../../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'gantt-chart-collection-config',
-  templateUrl: './gantt-chart-collection-config.component.html',
+  templateUrl: './gantt-chart-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartCollectionConfigComponent {
+export class GanttChartStemConfigComponent {
   @Input()
   public collections: Collection[];
 

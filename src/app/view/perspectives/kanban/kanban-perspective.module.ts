@@ -27,32 +27,39 @@ import {SharedModule} from '../../../shared/shared.module';
 import {KanbanPerspectiveRoutingModule} from './kanban-perspective-routing.module';
 import {KanbanConfigComponent} from './config/kanban-config.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
-import {KanbanCollectionConfigComponent} from './config/collection/kanban-collection-config.component';
+import {KanbanStemConfigComponent} from './config/stem/kanban-stem-config.component';
 import {KanbanColumnComponent} from './columns/column/kanban-column.component';
 import {KanbanColumnHeaderComponent} from './columns/column/header/kanban-column-header.component';
 import {KanbanColumnFooterComponent} from './columns/column/footer/kanban-column-footer.component';
-import {KanbanColumnDocumentsPipe} from './pipes/kanban-column-documents.pipe';
+import {KanbanColumnCardsPipe} from './pipes/kanban-column-cards.pipe';
 import {KanbanDragColumnsPipe} from './pipes/kanban-drag-columns.pipe';
 import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
-import {BsDropdownModule} from 'ngx-bootstrap';
-import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
+import {FilterWritableResourcesPipe} from './pipes/filter-writable-resources.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
+import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-select-item-ids.pipe';
+import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
+import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/choose-link-document-modal.component';
+import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
+import {ModalModule} from '../../../shared/modal/modal.module';
+import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 
 @NgModule({
   declarations: [
     KanbanPerspectiveComponent,
     KanbanConfigComponent,
     KanbanColumnsComponent,
-    KanbanCollectionConfigComponent,
+    KanbanStemConfigComponent,
     KanbanColumnComponent,
     KanbanColumnHeaderComponent,
     KanbanColumnFooterComponent,
-    KanbanColumnDocumentsPipe,
+    KanbanColumnCardsPipe,
     KanbanDragColumnsPipe,
     KanbanPostItDraggablePipe,
-    FilterWritableCollectionsPipe,
+    FilterWritableResourcesPipe,
     KanbanSelectedItemPipe,
+    KanbanRestrictedSelectItemIdsPipe,
+    ChooseLinkDocumentModalComponent,
   ],
   imports: [
     SharedModule,
@@ -60,10 +67,13 @@ import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
     KanbanPerspectiveRoutingModule,
     DataInputModule,
     DragDropModule,
-    BsDropdownModule,
+    DropdownModule,
     PickerModule,
+    PreviewResultsModule,
+    ModalModule,
+    NgxModalModule.forRoot(),
   ],
-  entryComponents: [KanbanPerspectiveComponent],
+  entryComponents: [KanbanPerspectiveComponent, ChooseLinkDocumentModalComponent],
   exports: [KanbanPerspectiveComponent],
 })
 export class KanbanPerspectiveModule {}

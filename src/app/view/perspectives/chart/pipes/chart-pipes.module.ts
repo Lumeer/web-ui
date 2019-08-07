@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DisplayablePipe} from './displayable.pipe';
 import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
 import {DataSetSelectPlaceholderPipe} from './axis/data-set-select-placeholder.pipe';
@@ -34,7 +33,6 @@ import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeh
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    DisplayablePipe,
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
     DataSetSelectPlaceholderPipe,
@@ -47,7 +45,6 @@ import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeh
     AggregationSelectPlaceholderPipe,
   ],
   exports: [
-    DisplayablePipe,
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
     DataSetSelectPlaceholderPipe,

@@ -1,23 +1,32 @@
-<ng-container *ngIf="{pivotData: pivotData$ | async,
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+
+  <ng-container *ngIf="{pivotData: pivotData$ | async,
                       canManageConfig: currentView | canManageConfig | async} as data">
 
-  <collapsible-sidebar *ngIf="data.canManageConfig"
-                       [collapsed]="!sidebarOpened"
-                       (toggle)="onSidebarToggle()">
+    <collapsible-sidebar *ngIf="data.canManageConfig"
+                         [collapsed]="!sidebarOpened"
+                         (toggle)="onSidebarToggle()">
 
-    <pivot-config-wrapper class="d-block m-3"
-                          [config]="config"
-                          [pivotData]="data.pivotData"
-                          [collections]="collections"
-                          [linkTypes]="linkTypes"
-                          [query]="query"
-                          (configChange)="onConfigChange($event)">
-    </pivot-config-wrapper>
+      <pivot-config-wrapper class="d-block m-3"
+                            [config]="config"
+                            [pivotData]="data.pivotData"
+                            [collections]="collections"
+                            [linkTypes]="linkTypes"
+                            [query]="query"
+                            (configChange)="onConfigChange($event)">
+      </pivot-config-wrapper>
 
-  </collapsible-sidebar>
+    </collapsible-sidebar>
 
-  <pivot-table class="flex-grow-1 h-100 overflow-auto ml-3"
-               [pivotData]="data.pivotData">
-  </pivot-table>
+    <pivot-table class="flex-grow-1 h-100 overflow-auto ml-3"
+                 [pivotData]="data.pivotData">
+    </pivot-table>
 
+  </ng-container>
 </ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minCollections]="1">
+  </invalid-query>
+</ng-template>

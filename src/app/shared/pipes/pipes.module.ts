@@ -72,6 +72,7 @@ import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resource
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
 import {ArrayDifferencePipe} from './array/array-difference.pipe';
 import {ConcatPipe} from './concat.pipe';
+import {PerspectiveDisplayablePipe} from './perspective-displayable.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -127,6 +128,7 @@ import {ConcatPipe} from './concat.pipe';
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
     ConcatPipe,
+    PerspectiveDisplayablePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -182,6 +184,7 @@ import {ConcatPipe} from './concat.pipe';
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
     ConcatPipe,
+    PerspectiveDisplayablePipe,
   ],
 })
 export class PipesModule {}

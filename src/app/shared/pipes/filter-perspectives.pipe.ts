@@ -40,6 +40,7 @@ function canShowPerspective(perspective: Perspective, query: Query): boolean {
     case Perspective.Calendar:
     case Perspective.GanttChart:
     case Perspective.Pivot:
+    case Perspective.Kanban:
       return isAnyCollectionQuery(query);
     case Perspective.SmartDoc:
       return false;

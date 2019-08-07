@@ -108,6 +108,8 @@ export function getSaveValue(value: any, constraint: Constraint, constraintData?
         constraint.config as DurationConstraintConfig,
         constraintData.durationUnitsMap
       );
+    case ConstraintType.Select:
+      return getSelectSaveValue(value, constraint.config as SelectConstraintConfig);
     default:
       return value;
   }
@@ -631,4 +633,15 @@ export function formatSelectDataValue(value: any, config: SelectConstraintConfig
 
 export function isSelectDataValueValid(value: any, config: SelectConstraintConfig): boolean {
   return config && config.options.some(option => String(option.value) === String(value));
+}
+
+function getSelectSaveValue(value: any, config: SelectConstraintConfig): any {
+  if (config.displayValues) {
+    const displayOption = config.options.find(option => option.displayValue === value);
+    if (displayOption) {
+      return displayOption.value;
+    }
+  }
+
+  return value;
 }

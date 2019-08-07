@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DisplayablePipe} from './displayable.pipe';
 import {GanttChartModeTextPipe} from './gantt-chart-mode-text.pipe';
 import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
 import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
@@ -32,7 +31,6 @@ import {GanttChartRestrictedItemsWithConstraintPipe} from './gantt-chart-restric
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    DisplayablePipe,
     GanttChartModeTextPipe,
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,
@@ -43,7 +41,6 @@ import {GanttChartRestrictedItemsWithConstraintPipe} from './gantt-chart-restric
     GanttChartRestrictedItemsWithConstraintPipe,
   ],
   exports: [
-    DisplayablePipe,
     GanttChartModeTextPipe,
     GanttChartPropertyItemsPipe,
     GanttChartBarPlaceholderPipe,

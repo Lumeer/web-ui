@@ -1,9 +1,9 @@
-<div class="wrapper h-100" *ngIf="{permissions: permissions$ | async, currentUser: currentUser$ | async} as data">
+<div class="wrapper h-100" *ngIf="{permissions: permissions$ | async} as data">
   <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
        cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="dropColumn($event)">
     <kanban-column *ngFor="let column of config.columns; trackBy: trackByColumn; let first = first"
-                   cdkDrag
+                   cdkDrag #kanbanColumn
                    [cdkDragDisabled]="!canManageConfig"
                    [cdkDragStartDelay]="dragDelay"
                    class="column ml-4"
@@ -12,29 +12,27 @@
                    [dragColumnsIds]="column | kanbanDragColumns:config.columns"
                    [collections]="collections"
                    [canManageConfig]="canManageConfig"
-                   [documents]="column | kanbanColumnDocuments:documents"
+                   [cards]="column | kanbanColumnCards:documents"
                    [query]="query"
                    [permissions]="data.permissions"
-                   [currentUser]="data.currentUser"
-                   [constraintData]="constraintData"
-                   (patchData)="onPatchData($event)"
+                   (createResource)="createObjectInResource($event, column)"
+                   (updateDocument)="onUpdateDocument($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
     </kanban-column>
 
-    <kanban-column *ngIf="config.otherColumn?.documentsIdsOrder?.length > 0"
-                   class="column ml-4"
+    <kanban-column *ngIf="config.otherColumn?.resourcesOrder?.length > 0"
+                   class="column ml-4" #kanbanColumn
                    [column]="config.otherColumn"
                    [config]="config"
                    [dragColumnsIds]="config.otherColumn | kanbanDragColumns:config.columns"
                    [collections]="collections"
                    [canManageConfig]="canManageConfig"
                    [permissions]="data.permissions"
-                   [documents]="config.otherColumn | kanbanColumnDocuments:documents"
+                   [cards]="config.otherColumn | kanbanColumnCards:documents"
                    [query]="query"
-                   [currentUser]="data.currentUser"
-                   [constraintData]="constraintData"
-                   (patchData)="onPatchData($event)"
+                   (createResource)="createObjectInResource($event, config.otherColumn)"
+                   (updateDocument)="onUpdateDocument($event)"
                    (columnsChange)="onColumnsChange($event)"
                    (removeDocument)="onRemoveDocument($event)">
     </kanban-column>
