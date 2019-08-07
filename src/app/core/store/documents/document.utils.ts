@@ -36,8 +36,8 @@ export function mergeDocuments(documentsA: DocumentModel[], documentsB: Document
   return documentsA.concat(documentsBToAdd);
 }
 
-export function groupDocumentsByCollection(documents: DocumentModel[]): {[collectionId: string]: [DocumentModel]} {
-  return documents.reduce((map, document) => {
+export function groupDocumentsByCollection(documents: DocumentModel[]): Record<string, DocumentModel[]> {
+  return (documents || []).reduce((map, document) => {
     if (!map[document.collectionId]) {
       map[document.collectionId] = [];
     }
@@ -50,7 +50,7 @@ export function generateDocumentData(
   collection: Collection,
   collectionFilters: CollectionAttributeFilter[],
   currentUser?: User
-): {[attributeId: string]: any} {
+): Record<string, any> {
   if (!collection) {
     return {};
   }
@@ -89,7 +89,7 @@ export function generateDocumentData(
   return data;
 }
 
-export function generateDocumentDataByQuery(query: Query, currentUser: User): {[attributeId: string]: any} {
+export function generateDocumentDataByQuery(query: Query, currentUser: User): Record<string, any> {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
   const collection: Collection = {
     id: collectionId,

@@ -20,11 +20,12 @@
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
-import {View} from './view';
+import {View, ViewConfig} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
 import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
 import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
+import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -52,7 +53,7 @@ export function convertViewModelToDto(model: View): ViewDto {
   };
 }
 
-function convertViewConfigDtoToModel(perspective: Perspective, config: any): any {
+function convertViewConfigDtoToModel(perspective: Perspective, config: any): ViewConfig {
   switch (perspective) {
     case Perspective.Pivot:
       return {...config, pivot: convertPivotConfigDtoToModel(config && config.pivot)};
@@ -60,6 +61,8 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): any
       return {...config, ganttChart: convertGanttChartDtoConfigToModel(config && config.ganttChart)};
     case Perspective.Calendar:
       return {...config, calendar: convertCalendarDtoConfigToModel(config && config.calendar)};
+    case Perspective.Kanban:
+      return {...config, kanban: convertKanbanConfigDtoToModel(config && config.kanban)};
     default:
       return config;
   }

@@ -17,23 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ModalWrapperComponent} from './modal-wrapper/modal-wrapper.component';
 
-@Pipe({
-  name: 'kanbanColumnDocuments',
+@NgModule({
+  declarations: [ModalWrapperComponent],
+  imports: [CommonModule],
+  exports: [ModalWrapperComponent],
 })
-export class KanbanColumnDocumentsPipe implements PipeTransform {
-  public transform(column: KanbanColumn, documents: DocumentModel[]): DocumentModel[] {
-    if (!column || !column.documentsIdsOrder || column.documentsIdsOrder.length === 0) {
-      return [];
-    }
-
-    const documentMap = (documents || []).reduce((docsMap, doc) => {
-      docsMap[doc.id] = doc;
-      return docsMap;
-    }, {});
-    return column.documentsIdsOrder.map(id => documentMap[id]).filter(document => !!document);
-  }
-}
+export class ModalModule {}

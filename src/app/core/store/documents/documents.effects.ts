@@ -24,7 +24,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, first, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {CollectionService, DocumentService, SearchService} from '../../rest';
+import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {convertQueryModelToDto} from '../navigation/query.converter';
@@ -42,6 +42,9 @@ import {
 } from './documents.state';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
+import {LinkInstance} from '../link-instances/link.instance';
+import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -103,6 +106,32 @@ export class DocumentsEffects {
             catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
           );
         })
+      );
+    })
+  );
+
+  @Effect()
+  public createWithLink$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
+    mergeMap(action => {
+      const {document, otherDocumentId, linkTypeId, callback} = action.payload;
+      const documentDto = convertDocumentModelToDto(document);
+
+      return this.documentService.createDocument(documentDto).pipe(
+        map(dto => convertDocumentDtoToModel(dto)),
+        mergeMap(newDocument => {
+          const linkInstance: LinkInstance = {documentIds: [newDocument.id, otherDocumentId], linkTypeId};
+          const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
+          return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
+            map(dto => convertLinkInstanceDtoToModel(dto)),
+            mergeMap(newLink => [
+              new DocumentsAction.CreateSuccess({document: newDocument}),
+              new LinkInstancesAction.CreateSuccess({linkInstance: newLink}),
+              new CommonAction.ExecuteCallback({callback: () => callback(newDocument.id)}),
+            ])
+          );
+        }),
+        catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -398,6 +427,7 @@ export class DocumentsEffects {
   constructor(
     private actions$: Actions,
     private documentService: DocumentService,
+    private linkInstanceService: LinkInstanceService,
     private collectionService: CollectionService,
     private i18n: I18n,
     private searchService: SearchService,

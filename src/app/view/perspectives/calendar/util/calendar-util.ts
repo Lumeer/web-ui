@@ -39,6 +39,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   collectionIdsChainForStem,
+  findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
@@ -317,27 +318,6 @@ function checkOrTransformCalendarStemsConfig(
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
     return checkOrTransformCalendarStemConfig(stemConfig[0], stem, collections, linkTypes);
   });
-}
-
-function findBestStemConfigIndex(
-  stemsConfigs: CalendarStemConfig[],
-  collectionIds: string[],
-  linkTypes: LinkType[]
-): number {
-  for (let i = 0; i < stemsConfigs.length; i++) {
-    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
-    if (isArraySubset(stemConfigCollectionIds, collectionIds)) {
-      return i;
-    }
-  }
-  for (let i = 0; i < stemsConfigs.length; i++) {
-    const stemConfigCollectionIds = collectionIdsChainForStem(stemsConfigs[i].stem, linkTypes);
-    if (collectionIds[0] === stemConfigCollectionIds[0]) {
-      return i;
-    }
-  }
-
-  return 0;
 }
 
 function checkOrTransformCalendarStemConfig(

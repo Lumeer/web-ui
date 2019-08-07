@@ -18,6 +18,8 @@
  */
 
 import {Constraint, ConstraintType} from '../../model/data/constraint';
+import {QueryStem} from '../navigation/query';
+import {AttributesResourceType} from '../../model/resource';
 
 export const DEFAULT_KANBAN_ID = 'default';
 
@@ -29,24 +31,38 @@ export interface Kanban {
 export interface KanbanConfig {
   columns: KanbanColumn[];
   otherColumn?: KanbanColumn;
-  collections: Record<string, KanbanCollectionConfig>;
+  stemsConfigs: KanbanStemConfig[];
+  version?: KanbanConfigVersion;
+}
+
+export enum KanbanConfigVersion {
+  V1 = '1',
 }
 
 export interface KanbanColumn {
   id: string;
   title?: string;
   width: number;
-  documentsIdsOrder: string[];
+  resourcesOrder: KanbanResource[];
   createdFromAttributes?: KanbanAttribute[];
   constraintType?: ConstraintType;
 }
 
-export interface KanbanCollectionConfig {
+export interface KanbanResource {
+  id: string;
+  attributeId?: string;
+  resourceType: AttributesResourceType;
+}
+
+export interface KanbanStemConfig {
+  stem?: QueryStem;
   attribute: KanbanAttribute;
 }
 
 export interface KanbanAttribute {
-  collectionId: string;
+  resourceId: string;
   attributeId: string;
+  resourceIndex?: number;
+  resourceType: AttributesResourceType;
   constraint?: Constraint;
 }

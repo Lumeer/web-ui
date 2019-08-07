@@ -62,7 +62,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
   public map$: Observable<MapModel>;
-  public validQuery$: Observable<boolean>;
+  public query$: Observable<Query>;
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private mapId = DEFAULT_MAP_ID;
@@ -72,7 +72,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
 
   public ngOnInit() {
-    this.bindValidQuery();
+    this.query$ = this.store$.pipe(select(selectQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.bindMap(this.mapId);
@@ -168,13 +168,6 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     } else {
       this.sidebarOpened$.next(true);
     }
-  }
-
-  private bindValidQuery() {
-    this.validQuery$ = this.store$.pipe(
-      select(selectQuery),
-      map(query => isAnyCollectionQuery(query))
-    );
   }
 
   public ngOnDestroy() {

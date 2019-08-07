@@ -19,25 +19,35 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {KanbanCollectionConfig} from '../../../../../core/store/kanbans/kanban';
+import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Constraint} from '../../../../../core/model/data/constraint';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../core/store/navigation/query';
+import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query.util';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'kanban-collection-config',
-  templateUrl: './kanban-collection-config.component.html',
+  templateUrl: './kanban-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanCollectionConfigComponent {
+export class KanbanStemConfigComponent {
   @Input()
-  public collection: Collection;
+  public collections: Collection[];
 
   @Input()
-  public collectionConfig: KanbanCollectionConfig;
+  public linkTypes: LinkType[];
+
+  @Input()
+  public config: KanbanStemConfig;
+
+  @Input()
+  public stem: QueryStem;
 
   @Output()
-  public configChange = new EventEmitter<KanbanCollectionConfig>();
+  public configChange = new EventEmitter<KanbanStemConfig>();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly emptyValueString: string;
@@ -51,16 +61,18 @@ export class KanbanCollectionConfigComponent {
   }
 
   public onConstraintSelected(constraint: Constraint) {
-    const attribute = {...this.collectionConfig.attribute};
-    this.configChange.emit({attribute: {...attribute, constraint}});
+    const attribute = {...this.config.attribute};
+    this.configChange.emit({...this.config, attribute: {...attribute, constraint}});
   }
 
   public onAttributeSelected(selectId: SelectItemWithConstraintId) {
-    const {attributeId} = selectId;
-    const currentAttributeId =
-      this.collectionConfig && this.collectionConfig.attribute && this.collectionConfig.attribute.attributeId;
-    if (!currentAttributeId || currentAttributeId !== attributeId) {
-      this.configChange.emit({attribute: {attributeId, collectionId: this.collection.id}});
+    const {attributeId, resourceIndex} = selectId;
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
+    const resource = attributesResourcesOrder[resourceIndex];
+    if (resource) {
+      const resourceType = getAttributesResourceType(resource);
+      const attribute = {attributeId, resourceIndex, resourceType, resourceId: resource.id};
+      this.configChange.emit({...this.config, attribute});
     }
   }
 }

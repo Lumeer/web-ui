@@ -28,6 +28,7 @@ export enum DocumentsActionType {
   GET_FAILURE = '[Documents] Get :: Failure',
 
   CREATE = '[Documents] Create',
+  CREATE_WITH_LINK = '[Documents] Create With Link',
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
 
@@ -99,6 +100,19 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
+  }
+
+  export class CreateWithLink implements Action {
+    public readonly type = DocumentsActionType.CREATE_WITH_LINK;
+
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        otherDocumentId: string;
+        linkTypeId: string;
+        callback?: (documentId: string) => void;
+      }
+    ) {}
   }
 
   export class Patch implements Action {
@@ -252,6 +266,7 @@ export namespace DocumentsAction {
     | GetSuccess
     | GetFailure
     | Create
+    | CreateWithLink
     | CreateSuccess
     | CreateFailure
     | Patch

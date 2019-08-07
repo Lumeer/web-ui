@@ -18,16 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanCollectionConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
   name: 'kanbanSelectedItem',
 })
 export class KanbanSelectedItemPipe implements PipeTransform {
-  public transform(config: KanbanCollectionConfig): SelectItemWithConstraintId {
+  public transform(config: KanbanStemConfig): SelectItemWithConstraintId {
     if (config && config.attribute) {
-      return {resourceIndex: 0, attributeId: config.attribute.attributeId};
+      return {resourceIndex: config.attribute.resourceIndex, attributeId: config.attribute.attributeId};
     }
     return null;
   }

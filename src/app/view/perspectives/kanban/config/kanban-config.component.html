@@ -1,6 +1,8 @@
-<kanban-collection-config *ngFor="let collection of collections; trackBy:trackByCollection"
-                            class="d-block mt-4"
-                            [collectionConfig]="config?.collections[collection.id]"
-                            [collection]="collection"
-                            (configChange)="onCollectionConfigChange(collection, $event)">
+<kanban-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
+                          class="d-block mt-4"
+                          [stem]="stem"
+                          [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
+                          [collections]="collections"
+                          [linkTypes]="linkTypes"
+                          (configChange)="onConfigChange($event, stem, index)">
 </kanban-collection-config>

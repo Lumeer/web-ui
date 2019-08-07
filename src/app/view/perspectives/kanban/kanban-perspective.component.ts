@@ -29,30 +29,35 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {take, tap, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
-import {selectQueryWithoutLinks} from '../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
-  selectCollectionsByCustomQuery,
-  selectDocumentsByCustomQuery,
+  selectCollectionsByQuery,
+  selectDocumentsByQuery,
+  selectLinkInstancesByQuery,
+  selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -74,9 +79,13 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public config$: Observable<KanbanConfig>;
   public currentView$: Observable<View>;
   public documents$: Observable<DocumentModel[]>;
+  public linkTypes$: Observable<LinkType[]>;
+  public linkInstances$: Observable<LinkInstance[]>;
   public collections$: Observable<Collection[]>;
-  public query$ = new BehaviorSubject<Query>(null);
+  public query$: Observable<Query>;
   public users$: Observable<User[]>;
+  public currentUser$: Observable<User>;
+
   public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -99,27 +108,26 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQueryWithoutLinks)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchData(query);
-      this.subscribeDataByQuery(query);
-    });
-    this.subscriptions.add(subscription);
+    this.query$ = this.store$.pipe(
+      select(selectQuery),
+      tap(query => this.fetchData(query))
+    );
   }
 
   private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
-  }
-
-  private subscribeDataByQuery(query: Query) {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   private initKanban() {
@@ -146,14 +154,19 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private createKanban(view: View, sidebarOpened: boolean) {
-    this.store$
-      .pipe(
-        select(selectQueryWithoutLinks),
-        mergeMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
-        take(1)
-      )
-      .subscribe(collections => {
-        const config = checkOrTransformKanbanConfig(view && view.config && view.config.kanban, collections);
+    combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesByQuery)),
+    ])
+      .pipe(take(1))
+      .subscribe(([query, collections, linkTypes]) => {
+        const config = checkOrTransformKanbanConfig(
+          view && view.config && view.config.kanban,
+          query,
+          collections,
+          linkTypes
+        );
         const kanban = {id: this.kanbanId, config};
         this.store$.dispatch(new KanbansAction.AddKanban({kanban}));
         this.setupSidebar(view, config, sidebarOpened);
@@ -196,7 +209,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
-  public onPatchData(document: DocumentModel) {
+  public onPatchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
