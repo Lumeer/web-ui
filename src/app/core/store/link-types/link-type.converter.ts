@@ -21,16 +21,19 @@ import {LinkTypeDto} from '../../dto';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkType} from './link.type';
 
-export function convertLinkTypeDtoToModel(dto: LinkTypeDto, correlationId?: string): LinkType {
+export function convertLinkTypeDtoToModel(
+  dto: LinkTypeDto,
+  correlationId?: string,
+  preventSortAttributes?: boolean
+): LinkType {
+  const attributes = dto.attributes ? dto.attributes.map(attribute => convertAttributeDtoToModel(attribute)) : [];
   return {
     id: dto.id,
     name: dto.name,
     collectionIds: dto.collectionIds,
-    attributes: dto.attributes
-      ? dto.attributes
-          .map(attribute => convertAttributeDtoToModel(attribute))
-          .sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
-      : [],
+    attributes: !preventSortAttributes
+      ? attributes.sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
+      : attributes,
     correlationId: correlationId,
     version: dto.version,
   };
