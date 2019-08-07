@@ -25,7 +25,12 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Collection, ImportedCollection} from './collection';
 
-export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: string): Collection {
+export function convertCollectionDtoToModel(
+  dto: CollectionDto,
+  correlationId?: string,
+  preventSortAttributes?: boolean
+): Collection {
+  const attributes = dto.attributes ? dto.attributes.map(attribute => convertAttributeDtoToModel(attribute)) : [];
   return {
     id: dto.id,
     code: dto.code,
@@ -33,11 +38,9 @@ export function convertCollectionDtoToModel(dto: CollectionDto, correlationId?: 
     description: dto.description,
     color: dto.color,
     icon: dto.icon,
-    attributes: dto.attributes
-      ? dto.attributes
-          .map(attribute => convertAttributeDtoToModel(attribute))
-          .sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
-      : [],
+    attributes: !preventSortAttributes
+      ? attributes.sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
+      : attributes,
     defaultAttributeId: dto.defaultAttributeId,
     permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
     documentsCount: dto.documentsCount,
