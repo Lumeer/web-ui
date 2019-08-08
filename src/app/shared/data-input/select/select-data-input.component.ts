@@ -72,6 +72,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('textInput', {static: false})
@@ -184,5 +187,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   public onBlur() {
     this.cancel.emit();
+    this.dataBlur.emit();
   }
 }

@@ -77,6 +77,9 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('textInput', {static: false})
@@ -168,6 +171,7 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
     } else {
       this.saveValue();
     }
+    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])

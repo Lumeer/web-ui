@@ -1,0 +1,7 @@
+h4 data-input {
+  display: inline-block;
+
+  ::ng-deep input {
+    font-weight: bold;
+  }
+}

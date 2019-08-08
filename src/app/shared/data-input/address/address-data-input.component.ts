@@ -74,6 +74,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public focused = new EventEmitter<any>();
 
   @ViewChild('addressInput', {static: false})
@@ -153,6 +156,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     }
 
     this.value$.next('');
+    this.dataBlur.emit();
   }
 
   public onSelectOption(option: DropdownOption) {

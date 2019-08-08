@@ -66,6 +66,9 @@ export class CoordinatesDataInputComponent {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('coordinatesInput', {static: false})
@@ -95,6 +98,7 @@ export class CoordinatesDataInputComponent {
     } else {
       this.saveValue(this.coordinatesInput);
     }
+    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])
