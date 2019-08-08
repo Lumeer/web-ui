@@ -9,7 +9,8 @@
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
                       (cancel)="onCancel()"
-                      (focused)="emitFocus($event)">
+                      (focused)="emitFocus($event)"
+                      (dataBlur)="onDataBlur()">
   </address-data-input>
 
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
@@ -30,6 +31,7 @@
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
                           (onFocus)="emitFocus($event)"
+                          (dataBlur)="onDataBlur()"
                           class="d-block">
   </coordinates-data-input>
 
@@ -54,6 +56,7 @@
                        (valueChange)="onValueChange($event)"
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
+                       (dataBlur)="onDataBlur()"
                        class="d-block">
   </duration-data-input>
 
@@ -77,6 +80,7 @@
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
+                     (dataBlur)="onDataBlur()"
                      class="d-block">
   </number-data-input>
 
@@ -90,6 +94,7 @@
                          (save)="onSaveValue($event)"
                          (cancel)="onCancel()"
                          (onFocus)="emitFocus($event)"
+                         (dataBlur)="onDataBlur()"
                          class="d-block">
   </percentage-data-input>
 
@@ -115,6 +120,7 @@
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
+                     (dataBlur)="onDataBlur()"
                      class="d-block">
   </select-data-input>
 
@@ -127,7 +133,8 @@
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
-                   (onFocus)="emitFocus($event)">
+                   (onFocus)="emitFocus($event)"
+                   (dataBlur)="onDataBlur()" >
   </user-data-input>
 
   <text-data-input *ngSwitchDefault
@@ -140,6 +147,7 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
+                   (dataBlur)="onDataBlur()"
                    class="d-block">
   </text-data-input>
 </ng-container>
@@ -154,6 +162,7 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
+                   (dataBlur)="onDataBlur()"
                    class="d-block">
   </text-data-input>
 </ng-template>

@@ -244,7 +244,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
 
   public onShowAllClicked() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
-      queryParams: {query: convertQueryModelToString(this.query)},
+      queryParams: {q: convertQueryModelToString(this.query)},
     });
   }
 

@@ -73,6 +73,9 @@ export class DurationDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('durationInput', {static: false})
@@ -160,6 +163,7 @@ export class DurationDataInputComponent implements OnChanges {
     } else {
       this.save.emit(this.transformValue(this.durationInput.nativeElement.value));
     }
+    this.dataBlur.emit();
   }
 
   private transformValue(value: any): number | string {

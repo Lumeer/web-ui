@@ -291,7 +291,7 @@ export class TablesEffects {
         new RouterAction.Go({
           path: [],
           queryParams: {
-            query: convertQueryModelToString(newQuery),
+            q: convertQueryModelToString(newQuery),
           },
           extras: {
             queryParamsHandling: 'merge',
@@ -320,7 +320,7 @@ export class TablesEffects {
       return new RouterAction.Go({
         path: [],
         queryParams: {
-          query: convertQueryModelToString(newQuery),
+          q: convertQueryModelToString(newQuery),
         },
         extras: {
           queryParamsHandling: 'merge',

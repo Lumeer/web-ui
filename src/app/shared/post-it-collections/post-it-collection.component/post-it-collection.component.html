@@ -56,7 +56,7 @@
        [style.color]="collection.color"
        [title]="collection.name"
        [routerLink]="[workspacePath(), 'view', 'table']"
-       [queryParams]="{ query: queryForCollectionDocuments() }"
+       [queryParams]="{ q: queryForCollectionDocuments() }"
        data-test="collection-card-icon">
       <i class="fa-3x {{ collection.icon }}"
          aria-hidden="true"
@@ -71,7 +71,7 @@
       <a title="Record Count"
          i18n-title="@@collection.document.count"
          [routerLink]="[workspacePath(), 'view', 'table']"
-         [queryParams]="{ query: queryForCollectionDocuments() }">
+         [queryParams]="{ q: queryForCollectionDocuments() }">
         <i class="far fa-file"
            aria-hidden="true">
         </i>

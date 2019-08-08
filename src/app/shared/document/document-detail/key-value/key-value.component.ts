@@ -85,9 +85,11 @@ export class KeyValueComponent {
   }
 
   public onNewRowValue(value: any) {
-    this.value = value;
-    this.valueChange.emit(value);
-    this.keyValueChange.emit([this.key, value]);
+    if (this.value !== value) {
+      this.value = value;
+      this.valueChange.emit(value);
+      this.keyValueChange.emit([this.key, value]);
+    }
     this.editing$.next(false);
   }
 
@@ -126,5 +128,21 @@ export class KeyValueComponent {
 
   public invokeFunctionConfig(event: Event): void {
     this.onFunction.emit(event);
+  }
+
+  public onDataInputClick() {
+    this.editing$.next(true);
+  }
+
+  public onDataInputFocus() {
+    this.editing$.next(true);
+  }
+
+  public onDataInputCancel() {
+    this.editing$.next(false);
+  }
+
+  public onDataInputBlur() {
+    this.editing$.next(false);
   }
 }

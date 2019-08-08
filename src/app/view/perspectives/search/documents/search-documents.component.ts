@@ -166,7 +166,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onShowAll() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {
-      queryParams: {query: convertQueryModelToString(this.query)},
+      queryParams: {q: convertQueryModelToString(this.query)},
     });
   }
 
