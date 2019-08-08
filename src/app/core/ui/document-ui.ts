@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {UiRow} from './ui-row';
 import {Attribute, Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
@@ -32,9 +32,7 @@ import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {ConstraintType, DurationUnitsMap} from '../model/data/constraint';
-import {User} from '../store/users/user';
-import {selectAllUsers} from '../store/users/users.state';
+import {ConstraintType} from '../model/data/constraint';
 
 export class DocumentUi {
   public rows$ = new BehaviorSubject<UiRow[]>([]);
