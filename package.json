@@ -4,7 +4,7 @@
   "description": "Lumeer Web UI",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_OPTIONS=${NODE_OPTIONS:=--max_old_space_size=4096} ng build $(node ./env-vars.js)",
+    "build": "NODE_OPTIONS=${NODE_OPTIONS:=--max_old_space_size=4096} ng build --progress=true $(node ./env-vars.js)",
     "bundlesize": "bundlesize",
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json -d ../web-ui-docs -n 'Lumeer Web UI documentation'",
     "format:check": "prettier --check '**/*.{ts,js,json,scss,md}'",
