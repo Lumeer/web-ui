@@ -38,8 +38,7 @@ export class CreateResourceDialogTemplatesComponent implements OnInit, AfterView
   public templates: Template[];
   public readonly idPrefix = generateId();
 
-  constructor(private templateService: TemplateService) {
-  }
+  constructor(private templateService: TemplateService) {}
 
   public ngOnInit() {
     this.templates = this.templateService.getTemplates();

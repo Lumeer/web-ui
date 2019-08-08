@@ -17,14 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component, HostListener,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Action, select, Store} from '@ngrx/store';
 import {filter, map} from 'rxjs/operators';
@@ -36,9 +29,16 @@ import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} f
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
-import {selectAllOrganizations, selectOrganizationById, selectOrganizationsLoaded} from '../../../core/store/organizations/organizations.state';
+import {
+  selectAllOrganizations,
+  selectOrganizationById,
+  selectOrganizationsLoaded,
+} from '../../../core/store/organizations/organizations.state';
 import {TemplateType} from '../../../core/model/template';
-import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../../../core/store/projects/projects.state';
+import {
+  selectProjectsByOrganizationId,
+  selectProjectsLoadedForOrganization,
+} from '../../../core/store/projects/projects.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {KeyCode} from '../../key-code';
 
@@ -79,9 +79,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private resourceFormComponent: CreateResourceDialogFormComponent;
 
-  constructor(private bsModalRef: BsModalRef,
-              private store$: Store<AppState>) {
-  }
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.parseResourceType();
@@ -97,7 +95,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
     this.resourceFormComponent.onSubmit();
   }
 
-  public submitResource(data: { resource: Organization | Project; template?: TemplateType }) {
+  public submitResource(data: {resource: Organization | Project; template?: TemplateType}) {
     const {resource, template} = data;
 
     const action = this.createResourceAction(resource, template);
@@ -155,16 +153,14 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
       );
     } else {
       this.contentValid$ = of(true);
-      this.subscriptions.add(
-        this.someOrganizationExist$().subscribe(exists => this.preventClose$.next(!exists))
-      );
+      this.subscriptions.add(this.someOrganizationExist$().subscribe(exists => this.preventClose$.next(!exists)));
     }
   }
 
   private someProjectExist$(organizationId: string): Observable<boolean> {
     return combineLatest([
       this.store$.pipe(select(selectProjectsLoadedForOrganization(organizationId))),
-      this.store$.pipe(select(selectProjectsByOrganizationId(organizationId)))
+      this.store$.pipe(select(selectProjectsByOrganizationId(organizationId))),
     ]).pipe(
       filter(([loaded]) => loaded),
       map(([, projects]) => (projects || []).length > 0)
@@ -174,14 +170,14 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   private someOrganizationExist$(): Observable<boolean> {
     return combineLatest([
       this.store$.pipe(select(selectOrganizationsLoaded)),
-      this.store$.pipe(select(selectAllOrganizations))
+      this.store$.pipe(select(selectAllOrganizations)),
     ]).pipe(
       filter(([loaded]) => loaded),
       map(([, organizations]) => (organizations || []).length > 0)
     );
   }
 
-  public onClose(){
+  public onClose() {
     this.onClose$.next();
     this.hideDialog();
   }

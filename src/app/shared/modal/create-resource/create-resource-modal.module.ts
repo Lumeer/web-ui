@@ -46,5 +46,4 @@ import {PipesModule} from '../../pipes/pipes.module';
   exports: [CreateResourceModalComponent],
   entryComponents: [CreateResourceModalComponent],
 })
-export class CreateResourceModalModule {
-}
+export class CreateResourceModalModule {}

@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener, AfterViewInit, ViewChild, ElementRef, Renderer2} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+} from '@angular/core';
 import {DialogType} from '../../../dialog/dialog-type';
 
 @Component({
@@ -27,7 +38,6 @@ import {DialogType} from '../../../dialog/dialog-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalWrapperComponent implements AfterViewInit {
-
   @ViewChild('modalHeader', {static: false})
   public headerElement: ElementRef;
 
@@ -70,8 +80,7 @@ export class ModalWrapperComponent implements AfterViewInit {
   @Output()
   public submit = new EventEmitter();
 
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) {}
 
   public onCloseClick() {
     this.close.next();
@@ -104,8 +113,8 @@ export class ModalWrapperComponent implements AfterViewInit {
     const large = window.matchMedia('(min-width: 992px)').matches;
 
     if (large) {
-      const headerHeight = this.headerElement && this.headerElement.nativeElement.offsetHeight || 0;
-      const footerHeight = this.footerElement && this.footerElement.nativeElement.offsetHeight || 0;
+      const headerHeight = (this.headerElement && this.headerElement.nativeElement.offsetHeight) || 0;
+      const footerHeight = (this.footerElement && this.footerElement.nativeElement.offsetHeight) || 0;
 
       this.renderer.setStyle(
         this.bodyElement.nativeElement,
