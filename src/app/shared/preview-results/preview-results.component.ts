@@ -164,7 +164,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getData(collection: Collection) {
-    const collectionQuery = {...this.query, stems: [{collectionId: collection.id}]};
+    const collectionQuery = {
+      ...this.query,
+      stems: ((this.query && this.query.stems) || []).filter(stem => stem.collectionId === collection.id),
+    };
     this.updateDataSubscription(collectionQuery);
     this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
 
