@@ -1,0 +1,17 @@
+<div class="panel-item invite ml-2">
+  <button *ngIf="!mobile; else mobileIcon"
+          class="btn btn-success btn-sm align-baseline font-weight-bold"
+          title="Invite a colleague"
+          i18n-title="@@inviteUser.button.title"
+          (click)="onInviteUser()">
+    <i class="fas fa-user-plus mr-2"></i>
+    <span i18n="@@inviteUser.button.text">Invite</span>
+  </button>
+</div>
+
+<ng-template #mobileIcon>
+  <i class="fas fa-user-plus mr-2 text-success align-baseline cursor-pointer"
+     title="Invite a colleague"
+     i18n-title="@@inviteUser.button.title"
+     (click)="onInviteUser()"></i>
+</ng-template>

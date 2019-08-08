@@ -17,25 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
 @Component({
-  selector: 'user-panel',
-  templateUrl: './user-panel.component.html',
-  styleUrls: ['./user-panel.component.scss'],
+  selector: 'invite-user',
+  templateUrl: './invite-user.component.html',
+  styleUrls: ['./invite-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPanelComponent {
-  @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public controlsVisible: boolean;
-
+export class InviteUserComponent {
   @Input()
   public mobile: boolean;
 
-  @Output()
-  public toggleControls = new EventEmitter();
+  public onInviteUser() {
+    // todo open dialog
+    return;
+  }
 }
