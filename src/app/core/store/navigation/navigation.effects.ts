@@ -121,7 +121,7 @@ function newQueryAction(query: Query): Action {
   return new RouterAction.Go({
     path: [],
     queryParams: {
-      query: convertQueryModelToString(query),
+      q: convertQueryModelToString(query),
     },
     extras: {
       queryParamsHandling: 'merge',

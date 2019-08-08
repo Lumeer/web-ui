@@ -25,7 +25,7 @@ import {parseMapCoordinates} from '../maps/map-coordinates';
 import {MapPosition} from '../maps/map.model';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
-import {convertStringToQueryModel} from './query.converter';
+import {convertQueryStringToModel} from './query.converter';
 import {SearchTab, searchTabsMap} from './search-tab';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
@@ -41,7 +41,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigatedActio
         }
       : null;
 
-  const query = convertStringToQueryModel(queryParams['query']);
+  const query = convertQueryStringToModel(queryParams['q']);
   const workspace = {
     organizationCode: params['organizationCode'],
     projectCode: params['projectCode'],

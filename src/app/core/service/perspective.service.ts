@@ -74,7 +74,7 @@ export class PerspectiveService {
         viewPath.push(perspective.toString());
 
         if (queryToSet) {
-          this.router.navigate(viewPath, {queryParams: {query: queryToSet}});
+          this.router.navigate(viewPath, {queryParams: {q: queryToSet}});
         } else {
           this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
         }
