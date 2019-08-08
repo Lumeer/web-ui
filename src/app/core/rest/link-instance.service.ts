@@ -22,10 +22,11 @@ import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {LinkInstanceDto} from '../dto';
+import {LinkInstanceDuplicateDto} from '../dto/link-instance.dto';
 import {AppState} from '../store/app.state';
-import {map} from 'rxjs/operators';
 import {BaseService} from './base.service';
 
 @Injectable()
@@ -48,6 +49,10 @@ export class LinkInstanceService extends BaseService {
 
   public deleteLinkInstance(id: string): Observable<string> {
     return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
+  }
+
+  public duplicateLinkInstances(linkInstanceDuplicate: LinkInstanceDuplicateDto): Observable<LinkInstanceDto[]> {
+    return this.httpClient.post<LinkInstanceDto[]>(`${this.restApiPrefix()}/duplicate`, linkInstanceDuplicate);
   }
 
   private restApiPrefix(id?: string, secondId?: string): string {

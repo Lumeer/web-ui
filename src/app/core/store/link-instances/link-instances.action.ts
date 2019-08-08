@@ -42,6 +42,9 @@ export enum LinkInstancesActionType {
   DELETE_SUCCESS = '[Link Instances] Delete :: Success',
   DELETE_FAILURE = '[Link Instances] Delete :: Failure',
 
+  DUPLICATE = '[Link Instances] Duplicate',
+  DUPLICATE_SUCCESS = '[Link Instances] Duplicate :: Success',
+
   CLEAR = '[Link Instances] Clear',
   CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
 }
@@ -137,6 +140,27 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class Duplicate implements Action {
+    public readonly type = LinkInstancesActionType.DUPLICATE;
+
+    public constructor(
+      public payload: {
+        originalDocumentId: string;
+        newDocumentId: string;
+        linkInstanceIds: string[];
+        documentIdsMap: Record<string, string>;
+        onSuccess?: (linkInstances: LinkInstance[]) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class DuplicateSuccess implements Action {
+    public readonly type = LinkInstancesActionType.DUPLICATE_SUCCESS;
+
+    public constructor(public payload: {linkInstances: LinkInstance[]}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = LinkInstancesActionType.CLEAR;
   }
@@ -163,6 +187,8 @@ export namespace LinkInstancesAction {
     | DeleteConfirm
     | DeleteSuccess
     | DeleteFailure
+    | Duplicate
+    | DuplicateSuccess
     | Clear
     | ClearByLinkType;
 }
