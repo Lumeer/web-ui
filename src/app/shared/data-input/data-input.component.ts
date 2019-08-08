@@ -76,6 +76,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   private tempElement: HTMLElement;
@@ -153,5 +156,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   public emitFocus($event: any) {
     this.onFocus.emit($event);
+  }
+
+  public onDataBlur() {
+    this.dataBlur.emit();
   }
 }

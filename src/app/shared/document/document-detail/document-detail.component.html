@@ -4,10 +4,14 @@
       <div class="align-text-bottom w-100">
         <h4>
           <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
-          <strong *ngIf="state?.summary$ | async">{{state?.summary$ | async}}</strong>
+          <data-input *ngIf="users$ | async as users"
+            [readonly]="true"
+            [value]="state?.summary$ | async"
+            [constraint]="(state?.attribute$ | async)?.constraint"
+            [constraintData]="{users: users, durationUnitsMap: durationUnitsMap}">
+          </data-input>
           <em *ngIf="!(state?.summary$ | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
             Record</em>
-          <!--span i18n="@@document.detail.heading">Document detail</span-->
         </h4>
         <div class="toolbar">
           <i class="fas fa-fw fa-trash text-danger clickable text-danger"

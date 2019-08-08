@@ -66,6 +66,9 @@ export class NumberDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('numberInput', {static: false})
@@ -134,6 +137,7 @@ export class NumberDataInputComponent implements OnChanges {
     } else {
       this.save.emit(this.transformValue(this.numberInput.nativeElement.value));
     }
+    this.dataBlur.emit();
   }
 
   private transformValue(value: any): string {

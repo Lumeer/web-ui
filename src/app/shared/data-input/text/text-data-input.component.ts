@@ -67,6 +67,9 @@ export class TextDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('textInput', {static: false})
@@ -96,6 +99,7 @@ export class TextDataInputComponent implements OnChanges {
     } else {
       this.saveValue(this.textInput);
     }
+    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])

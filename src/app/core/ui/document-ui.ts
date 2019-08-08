@@ -37,6 +37,7 @@ import {ConstraintType} from '../model/data/constraint';
 export class DocumentUi {
   public rows$ = new BehaviorSubject<UiRow[]>([]);
   public summary$ = new BehaviorSubject<string>('');
+  public attribute$ = new BehaviorSubject<Attribute>(null);
   public favorite$ = new BehaviorSubject<boolean>(false);
   public length$ = new BehaviorSubject<number>(0);
 
@@ -277,6 +278,7 @@ export class DocumentUi {
     if (this.collection && this.document) {
       this.summary = this.getDocumentSummary();
       this.summary$.next(this.summary);
+      this.attribute$.next(this.getDocumentDefaultAttribute());
 
       this.favorite$.next(this.document.favorite);
 
@@ -329,6 +331,26 @@ export class DocumentUi {
       for (const attr of this.collection.attributes) {
         if (this.document.data[attr.id]) {
           return this.document.data[attr.id];
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private getDocumentDefaultAttribute(): Attribute {
+    if (this.collection && this.collection.defaultAttributeId && this.document) {
+      for (const attr of this.collection.attributes) {
+        if (attr.id === this.collection.defaultAttributeId) {
+          return attr;
+        }
+      }
+    }
+
+    if (this.collection && this.document && this.collection.attributes.length > 0) {
+      for (const attr of this.collection.attributes) {
+        if (this.document.data[attr.id]) {
+          return attr;
         }
       }
     }

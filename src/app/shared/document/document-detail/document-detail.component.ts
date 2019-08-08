@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Collection} from '../../../core/store/collections/collection';
@@ -25,7 +25,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectUserById} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectUserById} from '../../../core/store/users/users.state';
 import {filter, first, map} from 'rxjs/operators';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
@@ -36,19 +36,22 @@ import {Query} from '../../../core/store/navigation/query';
 import {isSingleCollectionQuery} from '../../../core/store/navigation/query.util';
 import {DialogService} from '../../../dialog/dialog.service';
 import {DocumentUi} from '../../../core/ui/document-ui';
-import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {RouterAction} from '../../../core/store/router/router.action';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {User} from '../../../core/store/users/user';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
 
 @Component({
   selector: 'document-detail',
   templateUrl: './document-detail.component.html',
+  styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnChanges, OnDestroy {
+export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
@@ -60,6 +63,9 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
 
   @Input()
   public permissions: AllowedPermissions;
+
+  public readonly durationUnitsMap: DurationUnitsMap;
+  public users$: Observable<User[]>;
 
   public state: DocumentUi;
 
@@ -73,6 +79,10 @@ export class DocumentDetailComponent implements OnChanges, OnDestroy {
     private perspective: PerspectiveService,
     private dialogService: DialogService
   ) {}
+
+  public ngOnInit() {
+    this.users$ = this.store$.pipe(select(selectAllUsers));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document) {

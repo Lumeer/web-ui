@@ -67,6 +67,9 @@ export class PercentageDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public dataBlur = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('percentageInput', {static: false})
@@ -142,6 +145,7 @@ export class PercentageDataInputComponent implements OnChanges {
     } else {
       this.save.emit(this.transformValue(this.percentageInput.nativeElement.value));
     }
+    this.dataBlur.emit();
   }
 
   private transformValue(value: any): number | string {
