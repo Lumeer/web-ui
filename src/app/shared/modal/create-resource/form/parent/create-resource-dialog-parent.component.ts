@@ -18,13 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {AppState} from '../../../../core/store/app.state';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {Resource} from '../../../../core/model/resource';
+import {Resource} from '../../../../../core/model/resource';
 import {Observable} from 'rxjs';
-import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
-import {selectProjectsByOrganizationId} from '../../../../core/store/projects/projects.state';
+import {selectOrganizationById} from '../../../../../core/store/organizations/organizations.state';
+import {selectProjectsByOrganizationId} from '../../../../../core/store/projects/projects.state';
 import {map} from 'rxjs/operators';
 
 @Component({

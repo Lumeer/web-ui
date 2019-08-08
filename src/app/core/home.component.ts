@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
   }
 
   private redirectToWorkspace(): Subscription {
-    return combineLatest(this.getDefaultWorkspace(), this.getOrganizationsAndProjects())
+    return combineLatest([this.getDefaultWorkspace(), this.getOrganizationsAndProjects()])
       .pipe(first())
       .subscribe(([workspace, {organizations, projects}]) => {
         if (organizations.length > 0 && projects.length > 0) {

@@ -176,7 +176,7 @@ export class KanbanColumnsComponent implements OnChanges {
     linkTypeId: string
   ) {
     const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
-    const config = {initialState: {documents, collection, callback}, keyboard: true};
+    const config = {initialState: {documents, collection, callback}, keyboard: true, class: 'modal-lg'};
     this.modalService.show(ChooseLinkDocumentModalComponent, config);
   }
 

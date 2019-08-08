@@ -22,7 +22,6 @@ import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {DialogService} from '../../dialog/dialog.service';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Role} from '../model/role';
 import {AppState} from '../store/app.state';
@@ -33,6 +32,10 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {User} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {ResourceType} from '../model/resource-type';
+import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
+import {TemplateType} from '../model/template';
 
 @Injectable({
   providedIn: 'root',
@@ -42,9 +45,9 @@ export class WorkspaceSelectService {
 
   constructor(
     private store$: Store<AppState>,
-    private dialogService: DialogService,
     private i18n: I18n,
-    private router: Router
+    private router: Router,
+    private modalService: BsModalService
   ) {
     this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
   }
@@ -75,14 +78,7 @@ export class WorkspaceSelectService {
 
   private goToProject(organization: Organization, project: Project) {
     if (organization && project) {
-      this.router.navigate([
-        {
-          outlets: {
-            primary: ['w', organization.code, project.code, 'view', 'search', 'all'],
-            dialog: null,
-          },
-        },
-      ]);
+      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all']);
     }
   }
 
@@ -102,17 +98,33 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(organization: Organization) {
-    this.dialogService.openCreateProjectDialog(organization.id, null, project =>
-      this.goToProject(organization, project)
-    );
+  public createNewProject(organization: Organization, templateType?: TemplateType): BsModalRef {
+    return this.openCreateProjectModal(organization, templateType, project => this.goToProject(organization, project));
   }
 
   public selectProject(organization: Organization, project: Project) {
     this.goToProject(organization, project);
   }
 
-  public createNewOrganization() {
-    this.dialogService.openCreateOrganizationDialog(organization => this.createNewProject(organization));
+  public createNewOrganization(): BsModalRef {
+    return this.openCreateOrganizationModal(organization => this.createNewProject(organization));
+  }
+
+  private openCreateProjectModal(
+    organization: Organization,
+    templateType: TemplateType,
+    callback: (Project) => void
+  ): BsModalRef {
+    const initialState = {templateType, parentId: organization.id, resourceType: ResourceType.Project, callback};
+    const config = {initialState, keyboard: false, class: 'modal-lg'};
+    config['backdrop'] = 'static';
+    return this.modalService.show(CreateResourceModalComponent, config);
+  }
+
+  private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {
+    const initialState = {resourceType: ResourceType.Organization, callback};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    return this.modalService.show(CreateResourceModalComponent, config);
   }
 }

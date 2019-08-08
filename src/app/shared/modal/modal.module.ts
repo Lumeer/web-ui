@@ -10,7 +10,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theattribute
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,11 +19,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ModalWrapperComponent} from './modal-wrapper/modal-wrapper.component';
+import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
+import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
 
 @NgModule({
-  declarations: [ModalWrapperComponent],
-  imports: [CommonModule],
-  exports: [ModalWrapperComponent],
+  declarations: [],
+  imports: [CommonModule, ModalWrapperModule, CreateResourceModalModule],
+  exports: [ModalWrapperModule, CreateResourceModalModule],
 })
 export class ModalModule {}

@@ -17,27 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {CurrentUserGuard} from './current-user.guard';
-import {CollectionsGuard} from './data/collections.guard';
-import {LinkTypesGuard} from './data/link-types.guard';
-import {ViewsGuard} from './data/views.guard';
-import {PageNotFoundGuard} from './page-not-found.guard';
-import {ViewRedirectGuard} from './view-redirect.guard';
-import {UsersGuard} from './data/users.guard';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Template} from '../../../../../../core/model/template';
 
-@NgModule({
-  imports: [CommonModule],
-  declarations: [],
-  providers: [
-    CollectionsGuard,
-    LinkTypesGuard,
-    PageNotFoundGuard,
-    ViewsGuard,
-    ViewRedirectGuard,
-    CurrentUserGuard,
-    UsersGuard,
-  ],
+@Component({
+  selector: 'create-resource-dialog-template',
+  templateUrl: './create-resource-dialog-template.component.html',
+  styleUrls: ['./create-resource-dialog-template.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuardsModule {}
+export class CreateResourceDialogTemplateComponent {
+  @Input()
+  public template: Template;
+
+  @Input()
+  public selected: boolean;
+
+  @Output()
+  public templateSelect = new EventEmitter();
+
+  public onSelect() {
+    this.templateSelect.emit();
+  }
+}

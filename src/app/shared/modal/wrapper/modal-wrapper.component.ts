@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener, AfterViewInit, ViewChild, ElementRef, Renderer2} from '@angular/core';
 import {DialogType} from '../../../dialog/dialog-type';
 
 @Component({
@@ -26,7 +26,17 @@ import {DialogType} from '../../../dialog/dialog-type';
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWrapperComponent {
+export class ModalWrapperComponent implements AfterViewInit {
+
+  @ViewChild('modalHeader', {static: false})
+  public headerElement: ElementRef;
+
+  @ViewChild('modalFooter', {static: false})
+  public footerElement: ElementRef;
+
+  @ViewChild('modalBody', {static: false})
+  public bodyElement: ElementRef;
+
   @Input()
   public type: DialogType;
 
@@ -51,11 +61,17 @@ export class ModalWrapperComponent {
   @Input()
   public performingAction = false;
 
+  @Input()
+  public fitToScreen: boolean;
+
   @Output()
   public close = new EventEmitter();
 
   @Output()
   public submit = new EventEmitter();
+
+  constructor(private renderer: Renderer2) {
+  }
 
   public onCloseClick() {
     this.close.next();
@@ -64,6 +80,40 @@ export class ModalWrapperComponent {
   public onSubmitClick() {
     if (!this.submitDisabled) {
       this.submit.emit();
+    }
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.recomputeBodyHeightIfNeeded();
+  }
+
+  public ngAfterViewInit() {
+    this.recomputeBodyHeightIfNeeded();
+  }
+
+  public recomputeBodyHeightIfNeeded() {
+    if (!this.fitToScreen) {
+      return;
+    }
+
+    setTimeout(() => this.recomputeBodyHeight());
+  }
+
+  private recomputeBodyHeight() {
+    const large = window.matchMedia('(min-width: 992px)').matches;
+
+    if (large) {
+      const headerHeight = this.headerElement && this.headerElement.nativeElement.offsetHeight || 0;
+      const footerHeight = this.footerElement && this.footerElement.nativeElement.offsetHeight || 0;
+
+      this.renderer.setStyle(
+        this.bodyElement.nativeElement,
+        'max-height',
+        `calc(100% - ${headerHeight + footerHeight}px)`
+      );
+    } else {
+      this.renderer.setStyle(this.bodyElement.nativeElement, 'max-height', null);
     }
   }
 }

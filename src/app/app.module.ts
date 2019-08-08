@@ -33,6 +33,7 @@ import {DialogModule} from './dialog/dialog.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {SharedModule} from './shared/shared.module';
+import {ModalModule} from 'ngx-bootstrap';
 
 declare const require; // Use the require method provided by webpack
 

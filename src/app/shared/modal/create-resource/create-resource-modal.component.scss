@@ -1,11 +1,7 @@
 :host {
   @media (min-width: 992px) {
-    min-height: 400px;
+    min-height: 300px;
     display: flex;
     max-height: calc(100vh - 3.5rem);
   }
-}
-
-dialog-wrapper {
-  width: 100%;
 }

@@ -21,7 +21,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
-import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
@@ -75,23 +74,6 @@ const routes: Routes = [
     path: `${DialogPath.SHARE_VIEW}/:viewCode`,
     component: ShareViewDialogComponent,
     outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.CREATE_ORGANIZATION}`,
-    component: CreateResourceDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
-    component: CreateResourceDialogComponent,
-    outlet: 'dialog',
-    data: {modalDialogClass: 'modal-dialog-scrollable modal-lg'},
-  },
-  {
-    path: `${DialogPath.CREATE_PROJECT}/:organizationId/:templateId`,
-    component: CreateResourceDialogComponent,
-    outlet: 'dialog',
-    data: {modalDialogClass: 'modal-dialog-scrollable modal-lg'},
   },
   {
     path: `${DialogPath.PLAY_VIDEO}/:videoId`,

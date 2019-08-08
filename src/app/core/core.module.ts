@@ -24,7 +24,7 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {BsDropdownModule, PopoverModule, TimepickerModule} from 'ngx-bootstrap';
+import {BsDropdownModule, ModalModule, PopoverModule, TimepickerModule} from 'ngx-bootstrap';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {csLocale} from 'ngx-bootstrap/locale';
@@ -78,6 +78,7 @@ if (environment.locale === 'cs') {
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
     PopoverModule.forRoot(),
+    ModalModule.forRoot(),
     TimepickerModule.forRoot(),
     TypeaheadModule.forRoot(),
     DeviceDetectorModule.forRoot(),
