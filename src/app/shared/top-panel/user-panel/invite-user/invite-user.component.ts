@@ -26,6 +26,8 @@ import {selectProjectByWorkspace} from '../../../../core/store/projects/projects
 import {Observable} from 'rxjs';
 import {Project} from '../../../../core/store/projects/project';
 import {ResourceType} from '../../../../core/model/resource-type';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 
 @Component({
   selector: 'invite-user',
@@ -37,13 +39,16 @@ export class InviteUserComponent {
   @Input()
   public mobile: boolean;
 
+  public organization$: Observable<Organization>;
   public project$: Observable<Project>;
 
+  public readonly organizationType = ResourceType.Organization;
   public readonly projectType = ResourceType.Project;
 
   constructor(private modalService: BsModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
   }
 
