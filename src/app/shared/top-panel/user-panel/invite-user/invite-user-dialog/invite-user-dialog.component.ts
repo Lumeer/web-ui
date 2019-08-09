@@ -24,7 +24,11 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectAllUsers, selectUsersByEmails, selectUsersDictionary} from '../../../../../core/store/users/users.state';
-import {flatMap, map} from 'rxjs/operators';
+import {filter, first, flatMap, map} from 'rxjs/operators';
+import {InvitationType} from '../../../../../core/model/invitation-type';
+import {UsersAction} from '../../../../../core/store/users/users.action';
+import {User} from '../../../../../core/store/users/user';
+import {selectWorkspace} from '../../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'invite-user-dialog',
@@ -38,7 +42,9 @@ export class InviteUserDialogComponent implements OnInit {
   public newUsers$ = new BehaviorSubject<string[]>([]);
   public existingUsers$: Observable<string[]>;
 
-  public accessType = 0;
+  public accessType = InvitationType.JoinOnly;
+
+  public readonly invitationType = InvitationType;
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
@@ -56,7 +62,23 @@ export class InviteUserDialogComponent implements OnInit {
   public onSubmit() {
     const selectedUsers = this.newUsers$.getValue();
 
-    // todo invite user
+    this.store$
+      .pipe(
+        select(selectWorkspace),
+        filter(workspace => !!workspace),
+        first()
+      )
+      .subscribe(workspace => {
+        this.store$.dispatch(
+          new UsersAction.InviteUsers({
+            organizationId: workspace.organizationId,
+            projectId: workspace.projectId,
+            users: selectedUsers.map(
+              userEmail => ({email: userEmail, groupsMap: {}, defaultWorkspace: workspace} as User)
+            ),
+          })
+        );
+      });
 
     this.hideDialog();
   }

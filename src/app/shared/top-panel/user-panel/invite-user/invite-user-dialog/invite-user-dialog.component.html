@@ -31,7 +31,7 @@
       <h5>Select invited colleagues' role:</h5>
     </div>
     <div class="list-group">
-      <a class="list-group-item list-group-item-action" [class.active]="accessType === 0" (click)="accessType = 0;">
+      <a class="list-group-item list-group-item-action" [class.active]="accessType === invitationType.JoinOnly" (click)="accessType = invitationType.JoinOnly;">
         <span i18n="@@inviteUser.dialog.readOnlyNoAccess.title">Invite to project but do not share anything yet</span>
         <small class="text-muted d-block">
           <span i18n="@@inviteUser.dialog.readOnlyNoAccess.description1">
@@ -39,7 +39,7 @@
           </span>
         </small>
       </a>
-      <a class="list-group-item list-group-item-action" [class.active]="accessType === 1" (click)="accessType = 1;">
+      <a class="list-group-item list-group-item-action" [class.active]="accessType === invitationType.ReadOnly" (click)="accessType = invitationType.ReadOnly;">
         <span i18n="@@inviteUser.dialog.readOnly.title">Invite as read only</span>
         <small class="text-muted d-block">
           <span i18n="@@inviteUser.dialog.readOnly.description1">
@@ -47,7 +47,7 @@
           </span>
         </small>
       </a>
-      <a class="list-group-item list-group-item-action" [class.active]="accessType === 2" (click)="accessType = 2;">
+      <a class="list-group-item list-group-item-action" [class.active]="accessType === invitationType.ReadWrite" (click)="accessType = invitationType.ReadWrite;">
         <span i18n="@@inviteUser.dialog.write.title">Invite for collaboration</span>
         <small class="text-muted d-block">
           <span i18n="@@inviteUser.dialog.write.description1">
@@ -55,7 +55,7 @@
           </span>
         </small>
       </a>
-      <a class="list-group-item list-group-item-action" [class.active]="accessType === 3" (click)="accessType = 3;">
+      <a class="list-group-item list-group-item-action" [class.active]="accessType === invitationType.Manage" (click)="accessType = invitationType.Manage;">
         <span i18n="@@inviteUser.dialog.manage.title">Invite as managers</span>
         <small class="text-muted d-block">
           <span i18n="@@inviteUser.dialog.manage.description1">

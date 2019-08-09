@@ -189,6 +189,64 @@ export class UsersEffects {
   );
 
   @Effect()
+  public invite$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.InviteUsers>(UsersActionType.INVITE),
+    mergeMap(action => {
+      const usersDto = action.payload.users.map(user => convertUserModelToDto(user));
+
+      return this.userService
+        .createUserInWorkspace(
+          action.payload.organizationId,
+          action.payload.projectId,
+          usersDto,
+          action.payload.invitationType
+        )
+        .pipe(
+          map(dtos => dtos.map(dto => convertUserDtoToModel(dto))),
+          map(users => new UsersAction.InviteSuccess({users})),
+          catchError(error =>
+            of(
+              new UsersAction.InviteFailure({
+                error,
+                organizationId: action.payload.organizationId,
+                projectId: action.payload.projectId,
+              })
+            )
+          )
+        );
+    })
+  );
+
+  @Effect({dispatch: false})
+  public inviteSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.InviteSuccess>(UsersActionType.INVITE_SUCCESS),
+    tap((action: UsersAction.InviteSuccess) => {
+      if (environment.analytics) {
+        this.angulartics2.eventTrack.next({
+          action: 'User add',
+          properties: {
+            category: 'Collaboration',
+          },
+        });
+
+        if (environment.mixpanelKey) {
+          action.payload.users.forEach(user => mixpanel.track('User Create', {user: user.email}));
+        }
+      }
+    })
+  );
+
+  @Effect()
+  public inviteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.InviteFailure>(UsersActionType.INVITE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(
+      action =>
+        new UsersAction.CreateFailure({organizationId: action.payload.organizationId, error: action.payload.error})
+    )
+  );
+
+  @Effect()
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Update>(UsersActionType.UPDATE),
     mergeMap(action => {

@@ -31,6 +31,8 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
       return {...state, currentUser: action.payload.user};
     case UsersActionType.CREATE_SUCCESS:
       return usersAdapter.addOne(action.payload.user, state);
+    case UsersActionType.INVITE_SUCCESS:
+      return usersAdapter.upsertMany(action.payload.users, state);
     case UsersActionType.UPDATE_SUCCESS:
       return usersAdapter.upsertOne(action.payload.user, state);
     case UsersActionType.DELETE_SUCCESS:
