@@ -18,6 +18,14 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {BsModalService} from 'ngx-bootstrap';
+import {InviteUserDialogComponent} from './invite-user-dialog/invite-user-dialog.component';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
+import {Observable} from 'rxjs';
+import {Project} from '../../../../core/store/projects/project';
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   selector: 'invite-user',
@@ -29,8 +37,17 @@ export class InviteUserComponent {
   @Input()
   public mobile: boolean;
 
+  public project$: Observable<Project>;
+
+  public readonly projectType = ResourceType.Project;
+
+  constructor(private modalService: BsModalService, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+  }
+
   public onInviteUser() {
-    // todo open dialog
-    return;
+    this.modalService.show(InviteUserDialogComponent, {keyboard: true});
   }
 }

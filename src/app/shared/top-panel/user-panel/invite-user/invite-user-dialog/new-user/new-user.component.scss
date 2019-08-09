@@ -1,0 +1,18 @@
+@import '../../../../../../../styles/variables';
+
+input:focus {
+  box-shadow: none !important;
+}
+
+input::placeholder {
+  color: $gray-400;
+  font-style: italic;
+}
+
+.form-control.ng-dirty.ng-invalid {
+  border: solid 1px $danger;
+}
+
+.invalid-message {
+  color: $danger !important;
+}

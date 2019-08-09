@@ -43,6 +43,6 @@ import {PipesModule} from '../pipes/pipes.module';
     NewUserComponent,
     UsersComponent,
   ],
-  exports: [UsersComponent],
+  exports: [UsersComponent, NewUserComponent],
 })
 export class UsersModule {}

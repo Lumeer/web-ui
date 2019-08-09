@@ -83,6 +83,12 @@ export const selectUserByEmail = (email: string) =>
     users => users && users.find(user => user.email === email)
   );
 
+export const selectUsersByEmails = (emails: string[]) =>
+  createSelector(
+    selectAllUsers,
+    users => users && users.find(user => emails.indexOf(user.email) >= 0)
+  );
+
 export const selectCurrentUserForWorkspace = createSelector(
   selectCurrentUser,
   selectGroupsDictionary,

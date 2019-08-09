@@ -10,8 +10,6 @@
             [constraint]="(state?.attribute$ | async)?.constraint"
             [constraintData]="{users: users, durationUnitsMap: durationUnitsMap}">
           </data-input>
-          <em *ngIf="!(state?.summary$ | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
-            Record</em>
         </h4>
         <div class="toolbar">
           <i class="fas fa-fw fa-trash text-danger clickable text-danger"

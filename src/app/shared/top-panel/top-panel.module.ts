@@ -34,9 +34,24 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
 import {NotificationsMenuModule} from './user-panel/notifications-menu/notifications-menu.module';
 import {InviteUserComponent} from './user-panel/invite-user/invite-user.component';
+import {InviteUserDialogComponent} from './user-panel/invite-user/invite-user-dialog/invite-user-dialog.component';
+import {ModalModule} from '../modal/modal.module';
+import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
+import {NewUserComponent} from './user-panel/invite-user/invite-user-dialog/new-user/new-user.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, RouterModule, ResourceMenuModule, SearchBoxModule, NotificationsMenuModule],
+  imports: [
+    CommonModule,
+    PipesModule,
+    RouterModule,
+    ResourceMenuModule,
+    SearchBoxModule,
+    NotificationsMenuModule,
+    ModalModule,
+    NgxModalModule.forRoot(),
+    FormsModule,
+  ],
   declarations: [
     TopPanelComponent,
     TopPanelWrapperComponent,
@@ -48,7 +63,10 @@ import {InviteUserComponent} from './user-panel/invite-user/invite-user.componen
     ControlsToggleComponent,
     VideoMenuComponent,
     InviteUserComponent,
+    InviteUserDialogComponent,
+    NewUserComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
+  entryComponents: [InviteUserDialogComponent],
 })
 export class TopPanelModule {}
