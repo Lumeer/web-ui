@@ -70,7 +70,7 @@ export class NewUserComponent {
   public emailPlaceHolder(): string {
     return this.i18n({
       id: 'inviteUser.dialog.input.add.placeholder',
-      value: 'Enter user email and press Enter',
+      value: 'Enter an email and press Enter',
     });
   }
 

@@ -10,7 +10,7 @@
   <div class="body p-3">
 
     <div class="d-block">
-      <h5>First enter colleagues' emails:</h5>
+      <h5>First enter colleague's email:</h5>
     </div>
 
     <new-user [users]="newUsers$ | async" [existingUsers]="existingUsers$ | async" (userCreated)="onAddUser($event)"></new-user>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="d-block mt-3">
-      <h5>Select invited colleagues' role:</h5>
+      <h5>Invited colleagues can:</h5>
     </div>
     <div class="list-group">
       <a class="list-group-item list-group-item-action" [class.active]="accessType === invitationType.JoinOnly" (click)="accessType = invitationType.JoinOnly;">
@@ -79,7 +79,7 @@
   </div>
 
   <span class="button-cancel">
-      <i class="fal fa-times"></i>&nbsp;<span i18n="@@modal.cancel">Cancel</span>
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
   </span>
 
   <span class="button-submit">

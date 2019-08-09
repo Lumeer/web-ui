@@ -4,12 +4,12 @@
   (submit)="onSubmit()"
   [submitDisabled]="!(selectedDocumentId$ | async)">
 
-  <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose document</span>
+  <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>
 
   <div class="body p-3">
     <div class="text-muted text-center"
          i18n="@@modal.kanban.chooseDocument.description">
-      To create a document, you must first select one of the linked documents below.
+      Select to which record you want to link the new one.
     </div>
     <preview-results-table class="d-block mt-2" [documents]="documents"
                            [collection]="collection"
@@ -21,7 +21,7 @@
   </div>
 
   <span class="button-cancel">
-      <i class="fal fa-times"></i>&nbsp;<span i18n="@@modal.cancel">Cancel</span>
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
   </span>
 
   <span class="button-submit">
