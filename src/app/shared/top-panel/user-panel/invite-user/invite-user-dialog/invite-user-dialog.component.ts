@@ -67,19 +67,28 @@ export class InviteUserDialogComponent implements OnInit {
     combineLatest([
       this.store$.pipe(select(selectOrganizationByWorkspace)),
       this.store$.pipe(select(selectProjectByWorkspace)),
-      this.store$.pipe(select(selectWorkspace)),
     ])
       .pipe(
         filter(([organization, project]) => !!organization && !!project),
         first()
       )
-      .subscribe(([organization, project, workspace]) => {
+      .subscribe(([organization, project]) => {
         this.store$.dispatch(
           new UsersAction.InviteUsers({
             organizationId: organization.id,
             projectId: project.id,
             users: selectedUsers.map(
-              userEmail => ({email: userEmail, groupsMap: {}, defaultWorkspace: workspace} as User)
+              userEmail =>
+                ({
+                  email: userEmail,
+                  groupsMap: {},
+                  defaultWorkspace: {
+                    organizationId: organization.id,
+                    organizationCode: organization.code,
+                    projectId: project.id,
+                    projectCode: project.code,
+                  },
+                } as User)
             ),
             invitationType: this.accessType,
           })
