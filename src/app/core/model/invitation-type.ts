@@ -20,13 +20,13 @@
 import {ResourceType} from './resource-type';
 
 export enum InvitationType {
-  JoinOnly = 0,
-  ReadOnly = 1,
-  ReadWrite = 2,
-  Manage = 3,
+  JoinOnly = 'JOIN_ONLY',
+  ReadOnly = 'READ_ONLY',
+  ReadWrite = 'READ_WRITE',
+  Manage = 'MANAGE',
 }
 
-export const invitationTypesMap: {[id: number]: InvitationType} = {
+export const invitationTypesMap: {[id: string]: InvitationType} = {
   [InvitationType.JoinOnly]: InvitationType.JoinOnly,
   [InvitationType.ReadOnly]: InvitationType.ReadOnly,
   [InvitationType.ReadWrite]: InvitationType.ReadWrite,

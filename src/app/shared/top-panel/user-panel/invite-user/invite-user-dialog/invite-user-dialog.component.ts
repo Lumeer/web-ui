@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DialogType} from '../../../../../dialog/dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectAllUsers, selectUsersByEmails, selectUsersDictionary} from '../../../../../core/store/users/users.state';
@@ -29,6 +29,8 @@ import {InvitationType} from '../../../../../core/model/invitation-type';
 import {UsersAction} from '../../../../../core/store/users/users.action';
 import {User} from '../../../../../core/store/users/user';
 import {selectWorkspace} from '../../../../../core/store/navigation/navigation.state';
+import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'invite-user-dialog',
@@ -62,20 +64,24 @@ export class InviteUserDialogComponent implements OnInit {
   public onSubmit() {
     const selectedUsers = this.newUsers$.getValue();
 
-    this.store$
+    combineLatest([
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+      this.store$.pipe(select(selectProjectByWorkspace)),
+      this.store$.pipe(select(selectWorkspace)),
+    ])
       .pipe(
-        select(selectWorkspace),
-        filter(workspace => !!workspace),
+        filter(([organization, project]) => !!organization && !!project),
         first()
       )
-      .subscribe(workspace => {
+      .subscribe(([organization, project, workspace]) => {
         this.store$.dispatch(
           new UsersAction.InviteUsers({
-            organizationId: workspace.organizationId,
-            projectId: workspace.projectId,
+            organizationId: organization.id,
+            projectId: project.id,
             users: selectedUsers.map(
               userEmail => ({email: userEmail, groupsMap: {}, defaultWorkspace: workspace} as User)
             ),
+            invitationType: this.accessType,
           })
         );
       });
