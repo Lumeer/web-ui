@@ -18,9 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DocumentMetaData, DocumentModel} from './document.model';
 import {Query} from '../navigation/query';
 import {Workspace} from '../navigation/workspace';
+import {DocumentMetaData, DocumentModel} from './document.model';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -36,6 +36,9 @@ export enum DocumentsActionType {
 
   UPDATE_SUCCESS = '[Documents] Update :: Success',
   UPDATE_FAILURE = '[Documents] Update :: Failure',
+
+  DUPLICATE = '[Documents] Duplicate',
+  DUPLICATE_SUCCESS = '[Documents] Duplicate :: Success',
 
   UPDATE_DATA = '[Documents] Update Data',
   PATCH_DATA = '[Documents] Patch Data',
@@ -131,6 +134,25 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.UPDATE_FAILURE;
 
     public constructor(public payload: {error: any; originalDocument?: DocumentModel}) {}
+  }
+
+  export class Duplicate implements Action {
+    public readonly type = DocumentsActionType.DUPLICATE;
+
+    public constructor(
+      public payload: {
+        collectionId: string;
+        documentIds: string[];
+        onSuccess?: (documents: DocumentModel[]) => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class DuplicateSuccess implements Action {
+    public readonly type = DocumentsActionType.DUPLICATE_SUCCESS;
+
+    public constructor(public payload: {documents: DocumentModel[]}) {}
   }
 
   export class UpdateData implements Action {
@@ -276,6 +298,8 @@ export namespace DocumentsAction {
     | RemoveFavorite
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
+    | Duplicate
+    | DuplicateSuccess
     | UpdateData
     | UpdateDataInternal
     | PatchData

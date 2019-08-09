@@ -24,14 +24,20 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, first, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {CommonAction} from '../common/common.action';
+import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {RouterAction} from '../router/router.action';
+import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {
@@ -40,11 +46,6 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
-import {selectCollectionsDictionary} from '../collections/collections.state';
-import {UserHintService} from '../../../shared/user-hint/user-hint.service';
-import {LinkInstance} from '../link-instances/link.instance';
-import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -176,6 +177,22 @@ export class DocumentsEffects {
           map(document => new DocumentsAction.UpdateSuccess({document})),
           catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
         );
+    })
+  );
+
+  @Effect()
+  public duplicate$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Duplicate>(DocumentsActionType.DUPLICATE),
+    mergeMap(action => {
+      const {collectionId, documentIds, onSuccess, onFailure} = action.payload;
+      return this.documentService.duplicateDocuments(collectionId, documentIds).pipe(
+        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
+        mergeMap(documents => [
+          new DocumentsAction.DuplicateSuccess({documents}),
+          ...createCallbackActions(onSuccess, documents),
+        ]),
+        catchError(error => emitErrorActions(error, onFailure))
+      );
     })
   );
 

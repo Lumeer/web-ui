@@ -46,6 +46,8 @@ export function documentsReducer(
       return revertDocument(state, action.payload.originalDocument);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
+    case DocumentsActionType.DUPLICATE_SUCCESS:
+      return documentsAdapter.addMany(action.payload.documents, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
     case DocumentsActionType.REMOVE_FAVORITE_SUCCESS:
