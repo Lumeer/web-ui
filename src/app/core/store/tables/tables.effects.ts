@@ -50,6 +50,7 @@ import {
   selectDocumentsByQuery,
   selectDocumentsByQueryAndIds,
 } from '../common/permissions.selectors';
+import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
@@ -808,34 +809,40 @@ export class TablesEffects {
 
           const emptyRow = createEmptyTableRow();
 
-          const primaryDocumentCallback = (documentId: string) =>
-            (row.linkedRows || [])
-              .map(linkedRow => ({
-                linkInstance: linkInstancesMap[linkedRow.linkInstanceId],
-                linkedDocument: documentsMap[linkedRow.documentId],
-              }))
-              .filter(({linkInstance, linkedDocument}) => !!linkInstance && !!linkedDocument)
-              .forEach(({linkInstance, linkedDocument}) => {
-                const linkedDocumentCallback = (linkedDocumentId: string) =>
-                  this.store$.dispatch(
-                    new LinkInstancesAction.Create({
-                      linkInstance: {
-                        linkTypeId: linkInstance.linkTypeId,
-                        documentIds: [documentId, linkedDocumentId],
-                        data: {...linkInstance.data},
-                      },
-                    })
-                  );
-                this.store$.dispatch(
-                  new DocumentsAction.Create({
-                    document: {
-                      collectionId: linkedDocument.collectionId,
-                      data: {...linkedDocument.data},
-                    },
-                    callback: linkedDocumentCallback,
-                  })
-                );
-              });
+          const duplicateLinkInstances = (newDocumentId, documents: DocumentModel[]) => {
+            const linkInstanceIds = (row.linkedRows || [])
+              .map(linkedRow => linkedRow.linkInstanceId)
+              .filter(id => id && linkInstancesMap[id]);
+            const documentIdsMap = documents.reduce((idsMap, doc) => {
+              idsMap[doc.metaData.originalDocumentId] = doc.id;
+              return idsMap;
+            }, {});
+
+            this.store$.dispatch(
+              new LinkInstancesAction.Duplicate({
+                originalDocumentId: row.documentId,
+                newDocumentId,
+                linkInstanceIds,
+                documentIdsMap,
+              })
+            );
+          };
+
+          const duplicateLinkedDocuments = (documentId: string) => {
+            const linkedDocumentIds = (row.linkedRows || [])
+              .map(linkedRow => linkedRow.documentId)
+              .filter(id => id && documentsMap[id]);
+
+            if (linkedDocumentIds.length > 0) {
+              this.store$.dispatch(
+                new DocumentsAction.Duplicate({
+                  collectionId: documentsMap[linkedDocumentIds[0]].collectionId,
+                  documentIds: linkedDocumentIds,
+                  onSuccess: documents => duplicateLinkInstances(documentId, documents),
+                })
+              );
+            }
+          };
 
           return [
             new TablesAction.AddPrimaryRows({cursor: {...cursor, rowPath: [cursor.rowPath[0] + 1]}, rows: [emptyRow]}),
@@ -845,7 +852,7 @@ export class TablesEffects {
                 collectionId: document.collectionId,
                 data: {...document.data},
               },
-              callback: primaryDocumentCallback,
+              callback: documentId => duplicateLinkedDocuments(documentId),
             }),
           ];
         })

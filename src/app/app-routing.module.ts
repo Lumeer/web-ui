@@ -23,7 +23,6 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-s
 import {AuthGuard} from './auth/auth.guard';
 import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
-import {TemplateRedirectGuard} from './core/guards/template-redirect.guard';
 import {HomeComponent} from './core/home.component';
 import {RedirectComponent} from './core/redirect.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
@@ -37,7 +36,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'template/:templateId',
-    canActivate: [AuthGuard, CurrentUserGuard, TemplateRedirectGuard],
+    canActivate: [AuthGuard, CurrentUserGuard],
     component: RedirectComponent,
   },
   {

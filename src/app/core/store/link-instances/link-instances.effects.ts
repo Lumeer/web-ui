@@ -24,11 +24,13 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkInstanceDto} from '../../dto';
+import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
@@ -177,6 +179,30 @@ export class LinkInstancesEffects {
     map(() => {
       const message = this.i18n({id: 'link.instance.delete.fail', value: 'Could not delete the link'});
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public duplicate$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.Duplicate>(LinkInstancesActionType.DUPLICATE),
+    mergeMap(action => {
+      const {originalDocumentId, newDocumentId, linkInstanceIds, documentIdsMap, onSuccess, onFailure} = action.payload;
+
+      const duplicateDto: LinkInstanceDuplicateDto = {
+        originalDocumentId,
+        newDocumentId,
+        linkInstanceIds,
+        documentIdsMap,
+      };
+
+      return this.linkInstanceService.duplicateLinkInstances(duplicateDto).pipe(
+        map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
+        mergeMap(linkInstances => [
+          new LinkInstancesAction.DuplicateSuccess({linkInstances}),
+          ...createCallbackActions(onSuccess, linkInstances),
+        ]),
+        catchError(error => emitErrorActions(error, onFailure))
+      );
     })
   );
 

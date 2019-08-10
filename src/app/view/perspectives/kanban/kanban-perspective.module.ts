@@ -41,8 +41,8 @@ import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-selec
 import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
 import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/choose-link-document-modal.component';
 import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
-import {ModalModule} from '../../../shared/modal/modal.module';
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
+import {ModalWrapperModule} from '../../../shared/modal/wrapper/modal-wrapper.module';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,7 @@ import {PreviewResultsModule} from '../../../shared/preview-results/preview-resu
     DropdownModule,
     PickerModule,
     PreviewResultsModule,
-    ModalModule,
+    ModalWrapperModule,
     NgxModalModule.forRoot(),
   ],
   entryComponents: [KanbanPerspectiveComponent, ChooseLinkDocumentModalComponent],

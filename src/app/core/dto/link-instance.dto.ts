@@ -30,3 +30,10 @@ export interface LinkInstanceDto {
 
   data?: {[attributeId: string]: any};
 }
+
+export interface LinkInstanceDuplicateDto {
+  originalDocumentId: string;
+  newDocumentId: string;
+  linkInstanceIds: string[];
+  documentIdsMap: Record<string, string>;
+}

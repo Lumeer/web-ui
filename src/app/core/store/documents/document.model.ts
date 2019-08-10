@@ -41,5 +41,6 @@ export type DocumentData = {
 };
 
 export interface DocumentMetaData {
+  originalDocumentId?: string;
   parentId?: string;
 }

@@ -38,6 +38,8 @@ export function linkInstancesReducer(
       return revertLinkInstance(state, action.payload.originalLinkInstance);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
+    case LinkInstancesActionType.DUPLICATE_SUCCESS:
+      return linkInstancesAdapter.addMany(action.payload.linkInstances, state);
     case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:
       return linkInstancesAdapter.removeMany(
         linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,

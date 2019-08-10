@@ -17,26 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Template} from '../../../../../core/model/template';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ModalWrapperComponent} from './modal-wrapper.component';
 
-@Component({
-  selector: 'create-resource-dialog-template',
-  templateUrl: './create-resource-dialog-template.component.html',
-  styleUrls: ['./create-resource-dialog-template.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@NgModule({
+  declarations: [ModalWrapperComponent],
+  imports: [CommonModule],
+  exports: [ModalWrapperComponent],
 })
-export class CreateResourceDialogTemplateComponent {
-  @Input()
-  public template: Template;
-
-  @Input()
-  public selected: boolean;
-
-  @Output()
-  public templateSelect = new EventEmitter();
-
-  public onSelect() {
-    this.templateSelect.emit();
-  }
-}
+export class ModalWrapperModule {}

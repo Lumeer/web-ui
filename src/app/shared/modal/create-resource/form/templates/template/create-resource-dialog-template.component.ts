@@ -17,53 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {DialogType} from '../../../dialog/dialog-type';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Template} from '../../../../../../core/model/template';
 
 @Component({
-  selector: 'modal-wrapper',
-  templateUrl: './modal-wrapper.component.html',
-  styleUrls: ['./modal-wrapper.component.scss'],
+  selector: 'create-resource-dialog-template',
+  templateUrl: './create-resource-dialog-template.component.html',
+  styleUrls: ['./create-resource-dialog-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWrapperComponent {
+export class CreateResourceDialogTemplateComponent {
   @Input()
-  public type: DialogType;
+  public template: Template;
 
   @Input()
-  public icon: string;
-
-  @Input()
-  public showSubmit = true;
-
-  @Input()
-  public showClose = true;
-
-  @Input()
-  public showHeader = true;
-
-  @Input()
-  public showFooter = true;
-
-  @Input()
-  public submitDisabled = false;
-
-  @Input()
-  public performingAction = false;
+  public selected: boolean;
 
   @Output()
-  public close = new EventEmitter();
+  public templateSelect = new EventEmitter();
 
-  @Output()
-  public submit = new EventEmitter();
-
-  public onCloseClick() {
-    this.close.next();
-  }
-
-  public onSubmitClick() {
-    if (!this.submitDisabled) {
-      this.submit.emit();
-    }
+  public onSelect() {
+    this.templateSelect.emit();
   }
 }
