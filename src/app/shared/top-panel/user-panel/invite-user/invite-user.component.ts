@@ -53,6 +53,6 @@ export class InviteUserComponent {
   }
 
   public onInviteUser() {
-    this.modalService.show(InviteUserDialogComponent, {keyboard: true});
+    this.modalService.show(InviteUserDialogComponent, {keyboard: true, backdrop: 'static'});
   }
 }
