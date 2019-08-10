@@ -23,27 +23,27 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {ResourceCodeInputComponent} from './form/code-input/resource-code-input.component';
 import {ResourceNameInputComponent} from './form/name-input/resource-name-input.component';
-import {CreateResourceDialogComponent} from './create-resource-dialog.component';
-import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
-import {SharedModule} from '../../shared/shared.module';
-import {PickerModule} from '../../shared/picker/picker.module';
+import {CreateResourceModalComponent} from './create-resource-modal.component';
+import {PickerModule} from '../../picker/picker.module';
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 import {CreateResourceDialogParentComponent} from './form/parent/create-resource-dialog-parent.component';
 import {CreateResourceDialogTemplatesComponent} from './form/templates/create-resource-dialog-templates.component';
 import {CreateResourceDialogTemplateComponent} from './form/templates/template/create-resource-dialog-template.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
-    CreateResourceDialogComponent,
+    CreateResourceModalComponent,
     CreateResourceDialogFormComponent,
     CreateResourceDialogParentComponent,
     CreateResourceDialogTemplatesComponent,
     CreateResourceDialogTemplateComponent,
   ],
-  imports: [CommonModule, SharedModule, FormsModule, ReactiveFormsModule, DialogWrapperModule, PickerModule],
-  exports: [CreateResourceDialogComponent],
-  entryComponents: [CreateResourceDialogComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalWrapperModule, PickerModule, PipesModule],
+  exports: [CreateResourceModalComponent],
+  entryComponents: [CreateResourceModalComponent],
 })
-export class CreateResourceDialogModule {}
+export class CreateResourceModalModule {}

@@ -18,9 +18,9 @@
  */
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Template, TemplateType} from '../../../../core/model/template';
-import {TemplateService} from '../../../../core/service/template.service';
-import {generateId} from '../../../../shared/utils/resource.utils';
+import {Template, TemplateType} from '../../../../../core/model/template';
+import {TemplateService} from '../../../../../core/service/template.service';
+import {generateId} from '../../../../utils/resource.utils';
 
 @Component({
   selector: 'create-resource-dialog-templates',
@@ -49,7 +49,8 @@ export class CreateResourceDialogTemplatesComponent implements OnInit, AfterView
   }
 
   public ngAfterViewInit() {
-    if (this.selectedTemplate !== TemplateType.Empty) {
+    const large = window.matchMedia('(min-width: 992px)').matches;
+    if (large) {
       const templateElement = document.getElementById(`${this.idPrefix}${this.selectedTemplate}`);
       setTimeout(() => {
         templateElement && templateElement.scrollIntoView();

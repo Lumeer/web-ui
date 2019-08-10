@@ -1,0 +1,31 @@
+<div class="modal-header bg-{{type}} justify-content-center text-center p-3"
+     *ngIf="showHeader" #modalHeader>
+  <i *ngIf="icon" class="{{icon}} icon"></i>
+  <h4 class="modal-title mt-2 text-white">
+    <ng-content select=".title"></ng-content>
+  </h4>
+  <ng-content select=".description"></ng-content>
+</div>
+<div class="modal-body p-0" #modalBody [class.h-100]="fitToScreen">
+  <ng-content select=".body"></ng-content>
+</div>
+<div class="modal-footer footer-bg p-3"
+     *ngIf="showFooter" #modalFooter>
+  <div class="d-block w-100">
+    <button *ngIf="showClose"
+            [disabled]="performingAction"
+            type="button"
+            class="btn btn-outline-secondary text-nowrap float-left" (click)="onCloseClick()">
+      <ng-content select=".button-cancel"></ng-content>
+    </button>
+    <button *ngIf="showSubmit"
+            [attr.aria-disabled]="submitDisabled || performingAction"
+            [disabled]="submitDisabled || performingAction"
+            (click)="onSubmitClick()"
+            type="button"
+            class="btn btn-{{type}} text-nowrap float-right">
+      <span *ngIf="performingAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+      <ng-content select=".button-submit"></ng-content>
+    </button>
+  </div>
+</div>

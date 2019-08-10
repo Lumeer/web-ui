@@ -30,7 +30,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
 
@@ -38,12 +37,10 @@ import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanb
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
-import {BsModalService} from 'ngx-bootstrap';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 
 export interface KanbanCard {
@@ -104,8 +101,6 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public columnSelectionId: string;
   public documentsIds$ = new BehaviorSubject<string[]>([]);
   public readonly dragDelay = DRAG_DELAY;
-
-  constructor(private store$: Store<AppState>, private modalService: BsModalService) {}
 
   public ngOnInit() {
     this.columnSelectionId = this.column.id || generateId();

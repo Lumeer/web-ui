@@ -20,17 +20,17 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import {ResourceType} from '../../../core/model/resource-type';
-import {safeGetRandomIcon} from '../../../shared/picker/icon-picker/icons';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import * as Colors from '../../../shared/picker/color-picker/colors';
-import {Resource} from '../../../core/model/resource';
-import {ProjectValidators} from '../../../core/validators/project.validators';
-import {OrganizationValidators} from '../../../core/validators/organization.validators';
-import {Organization} from '../../../core/store/organizations/organization';
-import {Project} from '../../../core/store/projects/project';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {safeGetRandomIcon} from '../../../picker/icon-picker/icons';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
+import * as Colors from '../../../picker/color-picker/colors';
+import {Resource} from '../../../../core/model/resource';
+import {ProjectValidators} from '../../../../core/validators/project.validators';
+import {OrganizationValidators} from '../../../../core/validators/organization.validators';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Project} from '../../../../core/store/projects/project';
 import {BehaviorSubject} from 'rxjs';
-import {TemplateType} from '../../../core/model/template';
+import {TemplateType} from '../../../../core/model/template';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -76,13 +76,13 @@ export class CreateResourceDialogFormComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.createForm();
-    this.color = this.colors[Math.round(Math.random() * this.colors.length)];
-    this.icon = safeGetRandomIcon();
-
     if (this.initialTemplate) {
       this.selectedTemplate$.next(this.initialTemplate);
     }
+
+    this.createForm();
+    this.color = this.colors[Math.round(Math.random() * this.colors.length)];
+    this.icon = safeGetRandomIcon();
   }
 
   private createForm() {

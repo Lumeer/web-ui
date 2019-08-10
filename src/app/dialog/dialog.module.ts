@@ -37,7 +37,6 @@ import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {CreateResourceDialogModule} from './create-resource/create-resource-dialog.module';
 
 @NgModule({
   imports: [
@@ -51,7 +50,6 @@ import {CreateResourceDialogModule} from './create-resource/create-resource-dial
     AttributeTypeFormModule,
     CalendarEventDialogModule,
     ClickOutsideModule,
-    CreateResourceDialogModule,
   ],
   declarations: [
     CreateCollectionDialogComponent,

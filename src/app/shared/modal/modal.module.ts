@@ -19,11 +19,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ModalWrapperComponent} from './modal-wrapper/modal-wrapper.component';
+import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
+import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
 
 @NgModule({
-  declarations: [ModalWrapperComponent],
-  imports: [CommonModule],
-  exports: [ModalWrapperComponent],
+  declarations: [],
+  imports: [CommonModule, ModalWrapperModule, CreateResourceModalModule],
+  exports: [ModalWrapperModule, CreateResourceModalModule],
 })
 export class ModalModule {}

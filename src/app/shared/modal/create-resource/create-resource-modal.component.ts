@@ -17,40 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Action, select, Store} from '@ngrx/store';
-import {map, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../core/store/app.state';
-import {DialogService} from '../dialog.service';
-import {ResourceType} from '../../core/model/resource-type';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {DialogPath, dialogPathsMap} from '../dialog-path';
+import {filter, map} from 'rxjs/operators';
+import {AppState} from '../../../core/store/app.state';
+import {ResourceType} from '../../../core/model/resource-type';
+import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
+import {ProjectsAction} from '../../../core/store/projects/projects.action';
+import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
-import {TemplateType, templateTypesMap} from '../../core/model/template';
-import {selectProjectsByOrganizationId} from '../../core/store/projects/projects.state';
+import {Organization} from '../../../core/store/organizations/organization';
+import {Project} from '../../../core/store/projects/project';
+import {
+  selectAllOrganizations,
+  selectOrganizationById,
+  selectOrganizationsLoaded,
+} from '../../../core/store/organizations/organizations.state';
+import {TemplateType} from '../../../core/model/template';
+import {
+  selectProjectsByOrganizationId,
+  selectProjectsLoadedForOrganization,
+} from '../../../core/store/projects/projects.state';
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {KeyCode} from '../../key-code';
 
 @Component({
-  selector: 'create-resource-dialog',
-  templateUrl: './create-resource-dialog.component.html',
-  styleUrls: ['./create-resource-dialog.component.scss'],
+  templateUrl: './create-resource-modal.component.html',
+  styleUrls: ['./create-resource-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateResourceDialogComponent implements OnInit, OnDestroy {
+export class CreateResourceModalComponent implements OnInit, OnDestroy {
   @ViewChild(CreateResourceDialogFormComponent, {static: false})
   set content(content: CreateResourceDialogFormComponent) {
     if (content) {
@@ -59,18 +56,30 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  public parentId$: Observable<string>;
-  public initialTemplate$: Observable<TemplateType>;
+  @Input()
+  public resourceType: ResourceType;
+
+  @Input()
+  public parentId: string;
+
+  @Input()
+  public templateType: TemplateType;
+
+  @Input()
+  public callback: (resource: Project | Organization) => void;
+
   public contentValid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
   public usedCodes$: Observable<string[]>;
   public formInvalid$ = new BehaviorSubject(true);
+  public preventClose$ = new BehaviorSubject(true);
 
-  public resourceType: ResourceType;
+  public onClose$ = new Subject();
+
   private subscriptions = new Subscription();
   private resourceFormComponent: CreateResourceDialogFormComponent;
 
-  constructor(private dialogService: DialogService, private route: ActivatedRoute, private store$: Store<AppState>) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.parseResourceType();
@@ -94,7 +103,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
       this.performingAction$.next(true);
       this.store$.dispatch(action);
     } else {
-      this.dialogService.closeDialog();
+      this.hideDialog();
     }
   }
 
@@ -119,53 +128,72 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   }
 
   private onCreateResourceSuccess(resource: Organization | Project) {
-    const callback = this.dialogService.callback;
-    if (callback) {
-      callback(resource);
-    } else {
-      this.dialogService.closeDialog();
+    if (this.callback) {
+      this.callback(resource);
     }
+    this.hideDialog();
   }
 
   private onCreateResourceFailure() {
-    this.dialogService.closeDialog();
+    this.performingAction$.next(false);
   }
 
   private parseResourceType() {
-    this.resourceType = this.getResourceTypeFromRouter();
-
-    this.parentId$ = this.route.paramMap.pipe(map(params => params.get('organizationId')));
-    this.initialTemplate$ = this.route.paramMap.pipe(
-      map(params => params.get('templateId')),
-      map(templateId => templateId && templateTypesMap[templateId.toUpperCase()])
-    );
-
     if (this.resourceType === ResourceType.Project) {
-      this.contentValid$ = this.parentId$.pipe(
-        mergeMap(organizationId => this.store$.pipe(select(selectOrganizationById(organizationId)))),
+      this.contentValid$ = this.store$.pipe(
+        select(selectOrganizationById(this.parentId)),
         map(organization => !!organization)
       );
-      this.usedCodes$ = this.parentId$.pipe(
-        mergeMap(organizationId => this.store$.pipe(select(selectProjectsByOrganizationId(organizationId)))),
+      this.usedCodes$ = this.store$.pipe(
+        select(selectProjectsByOrganizationId(this.parentId)),
         map(projects => (projects || []).map(project => project.code))
+      );
+      this.subscriptions.add(
+        this.someProjectExist$(this.parentId).subscribe(exists => this.preventClose$.next(!exists))
       );
     } else {
       this.contentValid$ = of(true);
+      this.subscriptions.add(this.someOrganizationExist$().subscribe(exists => this.preventClose$.next(!exists)));
     }
   }
 
-  private getResourceTypeFromRouter(): ResourceType {
-    const [rootPath] = this.route.routeConfig.path.split('/');
-    const dialogPath = dialogPathsMap[rootPath];
-    if (dialogPath === DialogPath.CREATE_ORGANIZATION) {
-      return ResourceType.Organization;
-    } else if (dialogPath === DialogPath.CREATE_PROJECT) {
-      return ResourceType.Project;
-    }
-    return null;
+  private someProjectExist$(organizationId: string): Observable<boolean> {
+    return combineLatest([
+      this.store$.pipe(select(selectProjectsLoadedForOrganization(organizationId))),
+      this.store$.pipe(select(selectProjectsByOrganizationId(organizationId))),
+    ]).pipe(
+      filter(([loaded]) => loaded),
+      map(([, projects]) => (projects || []).length > 0)
+    );
+  }
+
+  private someOrganizationExist$(): Observable<boolean> {
+    return combineLatest([
+      this.store$.pipe(select(selectOrganizationsLoaded)),
+      this.store$.pipe(select(selectAllOrganizations)),
+    ]).pipe(
+      filter(([loaded]) => loaded),
+      map(([, organizations]) => (organizations || []).length > 0)
+    );
+  }
+
+  public onClose() {
+    this.onClose$.next();
+    this.hideDialog();
+  }
+
+  public hideDialog() {
+    this.bsModalRef.hide();
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Escape && !this.performingAction$.getValue() && !this.preventClose$.getValue()) {
+      this.onClose();
+    }
   }
 }

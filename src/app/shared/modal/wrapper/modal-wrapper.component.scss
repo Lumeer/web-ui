@@ -1,5 +1,9 @@
 @import '../../../../styles/variables';
 
+:host {
+  width: 100%;
+}
+
 .footer-bg {
   background-color: $gray-100;
 }

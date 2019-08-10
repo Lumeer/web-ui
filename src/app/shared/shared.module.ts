@@ -49,6 +49,7 @@ import {TopPanelModule} from './top-panel/top-panel.module';
 import {TourComponent} from './tour/tour.component';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
+import {ModalModule} from './modal/modal.module';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     CollapsibleSidebarModule,
     BlocklyModule,
     DateTimeModule,
+    ModalModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -117,6 +119,7 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     LoadingIndicatorComponent,
     BlocklyModule,
     DateTimeModule,
+    ModalModule,
   ],
 })
 export class SharedModule {}

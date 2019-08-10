@@ -26,7 +26,6 @@ import {ViewsGuard} from './data/views.guard';
 import {PageNotFoundGuard} from './page-not-found.guard';
 import {ViewRedirectGuard} from './view-redirect.guard';
 import {UsersGuard} from './data/users.guard';
-import {TemplateRedirectGuard} from './template-redirect.guard';
 
 @NgModule({
   imports: [CommonModule],
@@ -39,7 +38,6 @@ import {TemplateRedirectGuard} from './template-redirect.guard';
     ViewRedirectGuard,
     CurrentUserGuard,
     UsersGuard,
-    TemplateRedirectGuard,
   ],
 })
 export class GuardsModule {}
