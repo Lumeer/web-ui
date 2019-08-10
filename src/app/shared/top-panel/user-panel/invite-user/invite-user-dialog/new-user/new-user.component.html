@@ -1,20 +1,49 @@
 <form class="form-inline d-flex">
-  <input ngModel [value]="email" name="emailField" #emailField="ngModel"
-         id="emailField" class="form-control form-control-sm mr-sm-2 flex-fill" type="email"
-         [placeholder]="emailPlaceHolder()"
-         (keypress)="onKeyPress($event)"
-         (input)="onInputChanged(emailField.control.value)" email>
-  <button type="button"
-          class="btn btn-sm btn-primary"
-          [disabled]="emailField.invalid || !email || isDuplicate"
-          (click)="onAddUser()">
-    <i class="fas fa-plus mr-2"></i>
-    <span class="font-weight-bold" i18n="@@inviteUser.dialog.button">Add</span>
-  </button>
+
+  <ng-container *ngIf="allowedUsers && allowedUsers.length; else noAllowedUsers">
+    <input ngModel [value]="email" name="emailDropdown" #emailDropdown="ngModel"
+           id="emailDropdown" class="form-control form-control-sm mr-sm-2 flex-fill" type="email"
+           list="allowedUsersList"
+           [placeholder]="emailPlaceHolder()"
+           (keypress)="onKeyPress($event)"
+           (input)="onInputChanged(emailDropdown.control.value)" email>
+    <datalist id="allowedUsersList">
+      <option *ngFor="let user of allowedUsers" [value]="user">{{user}}</option>
+    </datalist>
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            [disabled]="isDuplicate || !isAllowed"
+            (click)="onAddUser()">
+      <i class="fas fa-plus mr-2"></i>
+      <span class="font-weight-bold" i18n="@@inviteUser.dialog.button">Add</span>
+    </button>
+
+    <small id="emailDropdownValid" class="d-block invalid-message" *ngIf="emailDropdown.invalid" i18n="@@inviteUser.dialog.user.emailDropdown.invalid">
+      Please select one of the colleagues who are already in your organization.
+    </small>
+  </ng-container>
+
+  <ng-template #noAllowedUsers>
+    <input ngModel [value]="email" name="emailField" #emailField="ngModel"
+           id="emailField" class="form-control form-control-sm mr-sm-2 flex-fill" type="email"
+           [placeholder]="emailPlaceHolder()"
+           (keypress)="onKeyPress($event)"
+           (input)="onInputChanged(emailField.control.value)" email>
+    <small id="emailValid" class="invalid-message" *ngIf="emailField.invalid" i18n="@@inviteUser.dialog.user.email.invalid">
+      Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
+    </small>
+    <small class="invalid-message" *ngIf="isDuplicate" i18n="@@inviteUser.dialog.email.duplicate">
+      A colleague with this email is already invited. Try another!
+    </small>
+
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            [disabled]="emailField.invalid || !email || isDuplicate"
+            (click)="onAddUser()">
+      <i class="fas fa-plus mr-2"></i>
+      <span class="font-weight-bold" i18n="@@inviteUser.dialog.button">Add</span>
+    </button>
+  </ng-template>
+
+
 </form>
-<small id="emailValid" class="invalid-message" *ngIf="emailField.invalid" i18n="@@inviteUser.dialog.user.email.invalid">
-  Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
-</small>
-<small class="invalid-message" *ngIf="isDuplicate" i18n="@@inviteUser.dialog.email.duplicate">
-  A colleague with this email is already invited. Try another!
-</small>

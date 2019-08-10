@@ -32,18 +32,26 @@ export class NewUserComponent {
   public users: string[];
 
   @Input()
-  public existingUsers: string[];
+  public existingUsers: string[] = [];
+
+  @Input()
+  public allowedUsers: string[] = [];
 
   @Output()
   public userCreated = new EventEmitter<string>();
 
   public email: string;
   public isDuplicate: boolean = false;
+  public isAllowed: boolean = true;
 
   constructor(private i18n: I18n) {}
 
   public onAddUser() {
-    if (this.existingUsers.indexOf(this.email) < 0) {
+    if (this.allowedUsers && this.allowedUsers.length) {
+      if (this.allowedUsers.indexOf(this.email) >= 0) {
+        this.addUser();
+      }
+    } else if (this.existingUsers && this.existingUsers.indexOf(this.email) < 0) {
       this.addUser();
     }
   }
@@ -56,11 +64,18 @@ export class NewUserComponent {
   public onInputChanged(value: string) {
     this.email = value;
     this.checkDuplicates();
+    this.checkAllowed();
   }
 
   public checkDuplicates() {
     this.isDuplicate =
       !!this.users.find(user => user === this.email) || !!this.existingUsers.find(user => user === this.email);
+  }
+
+  public checkAllowed() {
+    if (this.allowedUsers && this.allowedUsers.length > 0) {
+      this.isAllowed = !!this.allowedUsers.find(user => user === this.email);
+    }
   }
 
   private clearInputs() {

@@ -31,6 +31,9 @@ import {User} from '../../../../../core/store/users/user';
 import {selectWorkspace} from '../../../../../core/store/navigation/navigation.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
 
 @Component({
   selector: 'invite-user-dialog',
@@ -44,6 +47,12 @@ export class InviteUserDialogComponent implements OnInit {
   public newUsers$ = new BehaviorSubject<string[]>([]);
   public existingUsers$: Observable<string[]>;
 
+  public organization$: Observable<Organization>;
+  public project$: Observable<Project>;
+
+  public readonly organizationType = ResourceType.Organization;
+  public readonly projectType = ResourceType.Project;
+
   public accessType = InvitationType.JoinOnly;
 
   public readonly invitationType = InvitationType;
@@ -55,6 +64,9 @@ export class InviteUserDialogComponent implements OnInit {
       select(selectAllUsers),
       map(users => users.map(u => u.email))
     );
+
+    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
   }
 
   public hideDialog() {
