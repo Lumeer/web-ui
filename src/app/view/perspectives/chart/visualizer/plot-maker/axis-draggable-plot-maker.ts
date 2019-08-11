@@ -41,6 +41,9 @@ import {
   getDurationSaveValue,
 } from '../../../../../shared/utils/constraint/duration-constraint.utils';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
+import {formatDateTimeDataValue} from '../../../../../shared/utils/data.utils';
+
+const dateTicksLimit = 5;
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -58,12 +61,22 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const config = this.axisConfig(ChartAxisType.X);
     if (category === ChartAxisCategory.Date) {
       const dateConfig = config as DateTimeConstraintConfig;
-      const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
+      const {values, titles} = this.createXDateTicks(dateConfig);
+      if (values.length > dateTicksLimit) {
+        const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
+        return {
+          xaxis: {
+            type: 'date',
+            tickformat: tickFormat,
+            hoverformat: tickFormat,
+          },
+        };
+      }
       return {
         xaxis: {
-          type: 'date',
-          tickformat: tickFormat,
-          hoverformat: tickFormat,
+          tickmode: 'array',
+          tickvals: values,
+          ticktext: titles,
         },
       };
     } else if (category === ChartAxisCategory.Percentage) {
@@ -83,6 +96,24 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       };
     }
     return {};
+  }
+
+  private createXDateTicks(config: DateTimeConstraintConfig): {values: number[]; titles: string[]} {
+    const values = this.chartData.sets
+      .reduce((allValues, set) => {
+        const setValues = set.points
+          .map(point => {
+            const momentDate = isNotNullOrUndefined(point.x) && moment(point.x);
+            return momentDate && momentDate.isValid() && momentDate.toDate().getTime();
+          })
+          .filter(value => isNotNullOrUndefined(value));
+        allValues.push(...setValues);
+        return uniqueValues<number>(allValues);
+      }, [])
+      .sort();
+
+    const titles = values.map(value => formatDateTimeDataValue(new Date(value), config));
+    return {values, titles};
   }
 
   private createXDurationTicks(config: DurationConstraintConfig): {values: number[]; titles: string[]} {
@@ -247,6 +278,24 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         categoryarray: this.getYAxisCategories(ChartAxisType.Y2),
       },
     };
+  }
+
+  protected formatXTrace(trace: any[], axis: ChartDataSetAxis): any[] {
+    if (!axis) {
+      return trace;
+    }
+
+    if (axis.category === ChartAxisCategory.Date) {
+      const layout = this.xAxisLayout();
+      if (layout && layout.xaxis && layout.xaxis.tickmode === 'array') {
+        return trace.map(value => {
+          const momentDate = isNotNullOrUndefined(value) && moment(value);
+          return momentDate && momentDate.isValid() && momentDate.toDate().getTime();
+        });
+      }
+    }
+
+    return trace;
   }
 
   protected getYTraceTexts(trace: any[], axis: ChartDataSetAxis): any[] {
