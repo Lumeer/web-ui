@@ -18,24 +18,25 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {InvitationType} from '../../../core/model/invitation-type';
 
 @Component({
-  selector: 'user-panel',
-  templateUrl: './user-panel.component.html',
-  styleUrls: ['./user-panel.component.scss'],
+  selector: 'invitation-type-select',
+  templateUrl: './invitation-type-select.component.html',
+  styleUrls: ['./invitation-type-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPanelComponent {
+export class InvitationTypeSelectComponent {
   @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public controlsVisible: boolean;
-
-  @Input()
-  public mobile: boolean;
+  public selectedInvitationType = InvitationType.JoinOnly;
 
   @Output()
-  public toggleControls = new EventEmitter();
+  public onInvitationTypeSelect = new EventEmitter<InvitationType>();
+
+  public readonly invitationType = InvitationType;
+
+  public setInvitationType(type: InvitationType) {
+    this.selectedInvitationType = type;
+    this.onInvitationTypeSelect.emit(type);
+  }
 }

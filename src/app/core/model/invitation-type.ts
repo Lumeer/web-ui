@@ -17,25 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace';
-
-@Component({
-  selector: 'user-panel',
-  templateUrl: './user-panel.component.html',
-  styleUrls: ['./user-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class UserPanelComponent {
-  @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public controlsVisible: boolean;
-
-  @Input()
-  public mobile: boolean;
-
-  @Output()
-  public toggleControls = new EventEmitter();
+export enum InvitationType {
+  JoinOnly = 'JOIN_ONLY',
+  ReadOnly = 'READ_ONLY',
+  ReadWrite = 'READ_WRITE',
+  Manage = 'MANAGE',
 }
+
+export const invitationTypesMap: Record<string, InvitationType> = {
+  [InvitationType.JoinOnly]: InvitationType.JoinOnly,
+  [InvitationType.ReadOnly]: InvitationType.ReadOnly,
+  [InvitationType.ReadWrite]: InvitationType.ReadWrite,
+  [InvitationType.Manage]: InvitationType.Manage,
+};

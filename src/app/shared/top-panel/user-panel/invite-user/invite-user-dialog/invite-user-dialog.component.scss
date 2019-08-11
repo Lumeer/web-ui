@@ -1,0 +1,15 @@
+.badge {
+  font-size: 1rem;
+}
+
+.lh-2 {
+  line-height: 2rem;
+}
+
+a.list-group-item {
+  transition: color 0ms ease-out;
+
+  &.active {
+    color: white;
+  }
+}

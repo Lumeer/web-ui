@@ -43,7 +43,7 @@ import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
-import {Query} from '../../core/store/navigation/query';
+import {Query, QueryStem} from '../../core/store/navigation/query';
 import {getQueryFiltersForCollection} from '../../core/store/navigation/query.util';
 import {generateCorrelationId} from '../utils/resource.utils';
 
@@ -163,10 +163,18 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
+  private filterStems(collection: Collection, stems: QueryStem[]): QueryStem[] {
+    if (stems.length > 0) {
+      return stems.filter(stem => stem.collectionId === collection.id);
+    } else {
+      return [{collectionId: collection.id}];
+    }
+  }
+
   private getData(collection: Collection) {
     const collectionQuery = {
       ...this.query,
-      stems: ((this.query && this.query.stems) || []).filter(stem => stem.collectionId === collection.id),
+      stems: this.filterStems(collection, (this.query && this.query.stems) || []),
     };
     this.updateDataSubscription(collectionQuery);
     this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));

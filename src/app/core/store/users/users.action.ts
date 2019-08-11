@@ -19,6 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {DefaultWorkspace, User} from './user';
+import {InvitationType} from '../../model/invitation-type';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -38,6 +39,10 @@ export enum UsersActionType {
   CREATE = '[Users] Create',
   CREATE_SUCCESS = '[Users] Create :: Success',
   CREATE_FAILURE = '[Users] Create :: Failure',
+
+  INVITE = '[Users] Invite',
+  INVITE_SUCCESS = '[Users] Invite :: Success',
+  INVITE_FAILURE = '[Users] Invite :: Failure',
 
   UPDATE = '[Users] Update',
   UPDATE_SUCCESS = '[Users] Update :: Success',
@@ -127,6 +132,26 @@ export namespace UsersAction {
     public constructor(public payload: {error: any; organizationId: string}) {}
   }
 
+  export class InviteUsers implements Action {
+    public readonly type = UsersActionType.INVITE;
+
+    public constructor(
+      public payload: {organizationId: string; projectId: string; users: User[]; invitationType?: InvitationType}
+    ) {}
+  }
+
+  export class InviteSuccess implements Action {
+    public readonly type = UsersActionType.INVITE_SUCCESS;
+
+    public constructor(public payload: {users: User[]}) {}
+  }
+
+  export class InviteFailure implements Action {
+    public readonly type = UsersActionType.INVITE_FAILURE;
+
+    public constructor(public payload: {error: any; organizationId: string; projectId: string}) {}
+  }
+
   export class Update implements Action {
     public readonly type = UsersActionType.UPDATE;
 
@@ -184,6 +209,9 @@ export namespace UsersAction {
     | Create
     | CreateSuccess
     | CreateFailure
+    | InviteUsers
+    | InviteSuccess
+    | InviteFailure
     | Update
     | UpdateSuccess
     | UpdateFailure

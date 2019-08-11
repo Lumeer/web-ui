@@ -1,0 +1,7 @@
+@import '../../../../../styles/variables';
+
+.panel-item.invite {
+  height: var(--top-panel-line-height);
+  line-height: var(--top-panel-line-height);
+  white-space: nowrap;
+}

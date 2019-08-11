@@ -1,7 +1,7 @@
-<div class="modal-header bg-{{type}} justify-content-center text-center p-3"
+<div class="modal-header bg-{{type}} justify-content-center align-items-center text-center p-3"
      *ngIf="showHeader" #modalHeader>
-  <i *ngIf="icon" class="{{icon}} icon"></i>
-  <h4 class="modal-title mt-2 text-white">
+  <i *ngIf="icon" class="{{icon}} icon text-white mr-2"></i>
+  <h4 class="modal-title text-white">
     <ng-content select=".title"></ng-content>
   </h4>
   <ng-content select=".description"></ng-content>

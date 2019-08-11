@@ -26,6 +26,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {DefaultWorkspaceDto} from '../dto/default-workspace.dto';
 import {FeedbackDto} from '../dto/feedback.dto';
+import {InvitationType} from '../model/invitation-type';
 
 @Injectable()
 export class UserService {
@@ -35,9 +36,15 @@ export class UserService {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
-  public createUserInWorkspace(organizationId: string, projectId: string, users: UserDto[]): Observable<UserDto[]> {
+  public createUserInWorkspace(
+    organizationId: string,
+    projectId: string,
+    users: UserDto[],
+    invitationType?: InvitationType
+  ): Observable<UserDto[]> {
     return this.httpClient.post<UserDto[]>(
-      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users`,
+      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users/${invitationType ||
+        InvitationType.JoinOnly}`,
       users
     );
   }

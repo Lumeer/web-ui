@@ -71,18 +71,8 @@ export class ShareViewDialogComponent implements OnInit {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
-    this.users$ = this.bindUsers();
+    this.users$ = this.store$.pipe(select(selectAllUsers));
     this.view$ = this.bindView();
-  }
-
-  private bindUsers(): Observable<User[]> {
-    return combineLatest([
-      this.store$.pipe(select(selectWorkspaceModels)),
-      this.store$.pipe(select(selectAllUsers)),
-    ]).pipe(
-      filter(([models, users]) => models.organization && models.project && !!users),
-      map(([models, users]) => users.filter(user => userCanReadWorkspace(user, models.organization, models.project)))
-    );
   }
 
   private bindView(): Observable<View> {
