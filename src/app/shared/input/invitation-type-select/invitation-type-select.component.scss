@@ -1,0 +1,7 @@
+a.list-group-item {
+  transition: color 0ms ease-out;
+
+  &.active {
+    color: white;
+  }
+}

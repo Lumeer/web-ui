@@ -22,10 +22,11 @@ import {NgModule} from '@angular/core';
 
 import {FilterBoxComponent} from './filter-box/filter-box.component';
 import {InputBoxComponent} from './input-box/input-box.component';
+import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [FilterBoxComponent, InputBoxComponent],
-  exports: [FilterBoxComponent, InputBoxComponent],
+  declarations: [FilterBoxComponent, InputBoxComponent, InvitationTypeSelectComponent],
+  exports: [FilterBoxComponent, InputBoxComponent, InvitationTypeSelectComponent],
 })
 export class InputModule {}

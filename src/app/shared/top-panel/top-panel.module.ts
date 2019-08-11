@@ -39,6 +39,7 @@ import {ModalModule} from '../modal/modal.module';
 import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
 import {NewUserComponent} from './user-panel/invite-user/invite-user-dialog/new-user/new-user.component';
 import {FormsModule} from '@angular/forms';
+import {InputModule} from '../input/input.module';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import {FormsModule} from '@angular/forms';
     ModalModule,
     NgxModalModule.forRoot(),
     FormsModule,
+    InputModule,
   ],
   declarations: [
     TopPanelComponent,

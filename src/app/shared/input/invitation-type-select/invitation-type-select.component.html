@@ -1,0 +1,34 @@
+<div class="list-group">
+  <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.JoinOnly" (click)="setInvitationType(invitationType.JoinOnly)">
+    <span i18n="@@inviteUser.dialog.readOnlyNoAccess.title">Invite to project but do not share anything yet</span>
+    <small class="text-muted d-block">
+            <span i18n="@@inviteUser.dialog.readOnlyNoAccess.description1">
+              New colleagues can join the project, they won't see exiting tables and views.
+            </span>
+    </small>
+  </a>
+  <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.ReadOnly" (click)="setInvitationType(invitationType.ReadOnly)">
+    <span i18n="@@inviteUser.dialog.readOnly.title">Invite as read only</span>
+    <small class="text-muted d-block">
+            <span i18n="@@inviteUser.dialog.readOnly.description1">
+              New colleagues will see everything in the project, they cannot change anything.
+            </span>
+    </small>
+  </a>
+  <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.ReadWrite" (click)="setInvitationType(invitationType.ReadWrite)">
+    <span i18n="@@inviteUser.dialog.write.title">Invite for collaboration</span>
+    <small class="text-muted d-block">
+            <span i18n="@@inviteUser.dialog.write.description1">
+              New colleagues will see everything in the project and they will be able to change and add data.
+            </span>
+    </small>
+  </a>
+  <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.Manage" (click)="setInvitationType(invitationType.Manage)">
+    <span i18n="@@inviteUser.dialog.manage.title">Invite as managers</span>
+    <small class="text-muted d-block">
+            <span i18n="@@inviteUser.dialog.manage.description1">
+              You give your newly invited colleagues full control over the project. They can read, write and manage everything.
+            </span>
+    </small>
+  </a>
+</div>

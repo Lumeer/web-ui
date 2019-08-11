@@ -17,16 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum InvitationType {
-  JoinOnly = 'JOIN_ONLY',
-  ReadOnly = 'READ_ONLY',
-  ReadWrite = 'READ_WRITE',
-  Manage = 'MANAGE',
-}
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {InvitationType} from '../../../core/model/invitation-type';
 
-export const invitationTypesMap: Record<string, InvitationType> = {
-  [InvitationType.JoinOnly]: InvitationType.JoinOnly,
-  [InvitationType.ReadOnly]: InvitationType.ReadOnly,
-  [InvitationType.ReadWrite]: InvitationType.ReadWrite,
-  [InvitationType.Manage]: InvitationType.Manage,
-};
+@Component({
+  selector: 'invitation-type-select',
+  templateUrl: './invitation-type-select.component.html',
+  styleUrls: ['./invitation-type-select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class InvitationTypeSelectComponent {
+  @Input()
+  public selectedInvitationType = InvitationType.JoinOnly;
+
+  @Output()
+  public onInvitationTypeSelect = new EventEmitter<InvitationType>();
+
+  public readonly invitationType = InvitationType;
+
+  public setInvitationType(type: InvitationType) {
+    this.selectedInvitationType = type;
+    this.onInvitationTypeSelect.emit(type);
+  }
+}
