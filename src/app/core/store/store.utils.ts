@@ -26,7 +26,7 @@ export function createCallbackActions<T>(callback: (result: T) => void, result?:
 }
 
 export function emitErrorActions(error: any, onFailure?: (error: any) => void): Observable<Action> {
-  const actions: Action[] = [];
+  const actions: Action[] = [new CommonAction.HandleError({error})];
   if (onFailure) {
     actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
   }

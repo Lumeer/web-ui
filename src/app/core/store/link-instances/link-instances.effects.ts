@@ -23,10 +23,15 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+import {ConstraintType} from '../../model/data/constraint';
 import {LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
+import {hasAttributeType} from '../collections/collection.util';
+import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
+import {selectLinkTypeById} from '../link-types/link-types.state';
 import {convertQueryModelToDto} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -97,6 +102,23 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.CreateSuccess>(LinkInstancesActionType.CREATE_SUCCESS),
+    mergeMap(action => {
+      const {linkTypeId, id: linkInstanceId} = action.payload.linkInstance;
+      return this.store$.pipe(
+        select(selectLinkTypeById(linkTypeId)),
+        take(1),
+        mergeMap(linkType =>
+          hasAttributeType(linkType, ConstraintType.Files)
+            ? [new FileAttachmentsAction.Get({linkTypeId, linkInstanceId})]
+            : []
+        )
+      );
+    })
+  );
+
+  @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.CreateFailure>(LinkInstancesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -119,9 +141,27 @@ export class LinkInstancesEffects {
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.patchLinkInstanceData(linkInstanceId, data).pipe(
             map(dto => convertLinkInstanceDtoToModel(dto)),
-            map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance})),
+            map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
             catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
           )
+        )
+      );
+    })
+  );
+
+  @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.UpdateSuccess>(LinkInstancesActionType.UPDATE_SUCCESS),
+    mergeMap(action => {
+      const {linkInstance, originalLinkInstance} = action.payload;
+      const {linkTypeId, id: linkInstanceId} = linkInstance;
+      return this.store$.pipe(
+        select(selectLinkTypeById(linkTypeId)),
+        take(1),
+        mergeMap(linkType =>
+          hasFilesAttributeChanged(linkType, linkInstance, originalLinkInstance)
+            ? [new FileAttachmentsAction.Get({linkTypeId, linkInstanceId})]
+            : []
         )
       );
     })
@@ -202,6 +242,24 @@ export class LinkInstancesEffects {
           ...createCallbackActions(onSuccess, linkInstances),
         ]),
         catchError(error => emitErrorActions(error, onFailure))
+      );
+    })
+  );
+
+  @Effect()
+  public duplicateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.DuplicateSuccess>(LinkInstancesActionType.DUPLICATE_SUCCESS),
+    mergeMap(action => {
+      const {linkInstances} = action.payload;
+      const {linkTypeId} = linkInstances[0];
+      return this.store$.pipe(
+        select(selectLinkTypeById(linkTypeId)),
+        take(1),
+        mergeMap(linkType =>
+          hasAttributeType(linkType, ConstraintType.Files)
+            ? linkInstances.map(link => new FileAttachmentsAction.Get({linkTypeId, linkInstanceId: link.id}))
+            : []
+        )
       );
     })
   );

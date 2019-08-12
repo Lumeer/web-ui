@@ -155,7 +155,6 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   private onSuccess(fileAttachment: FileAttachment) {
     this.showSuccessNotification();
-    this.refreshFileAttachment(fileAttachment);
     this.addFileNameToData(fileAttachment.fileName);
   }
 
@@ -164,19 +163,6 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
       this.i18n({
         id: 'file.attachment.upload.success',
         value: 'The file is successfully saved.',
-      })
-    );
-  }
-
-  private refreshFileAttachment(fileAttachment: FileAttachment) {
-    const {collectionId, documentId, linkTypeId, linkInstanceId, attributeId} = fileAttachment;
-    this.store$.dispatch(
-      new FileAttachmentsAction.Get({
-        collectionId,
-        documentId,
-        linkTypeId,
-        linkInstanceId,
-        attributeId,
       })
     );
   }

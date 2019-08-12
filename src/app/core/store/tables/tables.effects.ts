@@ -846,13 +846,11 @@ export class TablesEffects {
 
           return [
             new TablesAction.AddPrimaryRows({cursor: {...cursor, rowPath: [cursor.rowPath[0] + 1]}, rows: [emptyRow]}),
-            new DocumentsAction.Create({
-              document: {
-                correlationId: emptyRow.correlationId,
-                collectionId: document.collectionId,
-                data: {...document.data},
-              },
-              callback: documentId => duplicateLinkedDocuments(documentId),
+            new DocumentsAction.Duplicate({
+              correlationId: emptyRow.correlationId,
+              collectionId: document.collectionId,
+              documentIds: [document.id],
+              onSuccess: documents => duplicateLinkedDocuments(documents[0].id),
             }),
           ];
         })

@@ -31,11 +31,14 @@ import {OrganizationService, ProjectService} from '../rest';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 import {DocumentsAction} from '../store/documents/documents.action';
+import {selectDocumentById} from '../store/documents/documents.state';
 import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
@@ -64,7 +67,6 @@ import {View} from '../store/views/view';
 import {convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
-import {selectCollectionsDictionary} from '../store/collections/collections.state';
 
 @Injectable({
   providedIn: 'root',
@@ -399,9 +401,20 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(data.object, data.correlationId)})
-        );
+        const document = convertDocumentDtoToModel(data.object, data.correlationId);
+        this.store$
+          .pipe(
+            select(selectDocumentById(document.id)),
+            take(1)
+          )
+          .subscribe(originalDocument =>
+            this.store$.dispatch(
+              new DocumentsAction.UpdateSuccess({
+                document,
+                originalDocument,
+              })
+            )
+          );
       }
     });
     this.channel.bind('Document:update:ALT', data => {
@@ -476,11 +489,15 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new LinkInstancesAction.UpdateSuccess({
-            linkInstance: convertLinkInstanceDtoToModel(data.object, data.correlationId),
-          })
-        );
+        const linkInstance = convertLinkInstanceDtoToModel(data.object, data.correlationId);
+        this.store$
+          .pipe(
+            select(selectLinkInstanceById(linkInstance.id)),
+            take(1)
+          )
+          .subscribe(originalLinkInstance =>
+            this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}))
+          );
       }
     });
     this.channel.bind('LinkInstance:update:ALT', data => {
