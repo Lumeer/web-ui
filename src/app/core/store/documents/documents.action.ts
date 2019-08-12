@@ -127,7 +127,7 @@ export namespace DocumentsAction {
   export class UpdateSuccess implements Action {
     public readonly type = DocumentsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; originalDocument: DocumentModel}) {}
   }
 
   export class UpdateFailure implements Action {
@@ -142,6 +142,7 @@ export namespace DocumentsAction {
     public constructor(
       public payload: {
         collectionId: string;
+        correlationId?: string;
         documentIds: string[];
         onSuccess?: (documents: DocumentModel[]) => void;
         onFailure?: (error: any) => void;

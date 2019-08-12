@@ -23,12 +23,16 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, filter, first, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
+import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
+import {ConstraintType} from '../../model/data/constraint';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
-import {selectCollectionsDictionary} from '../collections/collections.state';
+import {hasAttributeType} from '../collections/collection.util';
+import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {CommonAction} from '../common/common.action';
+import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -138,6 +142,23 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.CreateSuccess>(DocumentsActionType.CREATE_SUCCESS),
+    mergeMap(action => {
+      const {collectionId, id: documentId} = action.payload.document;
+      return this.store$.pipe(
+        select(selectCollectionById(collectionId)),
+        take(1),
+        mergeMap(collection =>
+          hasAttributeType(collection, ConstraintType.Files)
+            ? [new FileAttachmentsAction.Get({collectionId, documentId})]
+            : []
+        )
+      );
+    })
+  );
+
+  @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -169,14 +190,19 @@ export class DocumentsEffects {
   public patch$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Patch>(DocumentsActionType.PATCH),
     mergeMap(action => {
-      const documentDto = convertDocumentModelToDto(action.payload.document);
-      return this.documentService
-        .patchDocument(action.payload.collectionId, action.payload.documentId, documentDto)
-        .pipe(
-          map(dto => convertDocumentDtoToModel(dto)),
-          map(document => new DocumentsAction.UpdateSuccess({document})),
-          catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
-        );
+      const {collectionId, documentId} = action.payload;
+      return this.store$.pipe(
+        select(selectDocumentById(documentId)),
+        take(1),
+        mergeMap(originalDocument => {
+          const documentDto = convertDocumentModelToDto(action.payload.document);
+          return this.documentService.patchDocument(collectionId, documentId, documentDto).pipe(
+            map(dto => convertDocumentDtoToModel(dto)),
+            map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
+            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+          );
+        })
+      );
     })
   );
 
@@ -184,14 +210,32 @@ export class DocumentsEffects {
   public duplicate$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Duplicate>(DocumentsActionType.DUPLICATE),
     mergeMap(action => {
-      const {collectionId, documentIds, onSuccess, onFailure} = action.payload;
-      return this.documentService.duplicateDocuments(collectionId, documentIds).pipe(
-        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
+      const {collectionId, documentIds, correlationId, onSuccess, onFailure} = action.payload;
+      return this.documentService.duplicateDocuments(collectionId, documentIds, correlationId).pipe(
+        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto, correlationId))),
         mergeMap(documents => [
           new DocumentsAction.DuplicateSuccess({documents}),
           ...createCallbackActions(onSuccess, documents),
         ]),
         catchError(error => emitErrorActions(error, onFailure))
+      );
+    })
+  );
+
+  @Effect()
+  public duplicateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.DuplicateSuccess>(DocumentsActionType.DUPLICATE_SUCCESS),
+    mergeMap(action => {
+      const {documents} = action.payload;
+      const {collectionId} = documents[0];
+      return this.store$.pipe(
+        select(selectCollectionById(collectionId)),
+        take(1),
+        mergeMap(collection =>
+          hasAttributeType(collection, ConstraintType.Files)
+            ? documents.map(doc => new FileAttachmentsAction.Get({collectionId, documentId: doc.id}))
+            : []
+        )
       );
     })
   );
@@ -266,6 +310,24 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateSuccess>(DocumentsActionType.UPDATE_SUCCESS),
+    mergeMap(action => {
+      const {document, originalDocument} = action.payload;
+      const {collectionId, id: documentId} = document;
+      return this.store$.pipe(
+        select(selectCollectionById(collectionId)),
+        take(1),
+        mergeMap(collection =>
+          hasFilesAttributeChanged(collection, document, originalDocument)
+            ? [new FileAttachmentsAction.Get({collectionId, documentId})]
+            : []
+        )
+      );
+    })
+  );
+
+  @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
     withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
@@ -283,7 +345,7 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.updateDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
-        map(document => new DocumentsAction.UpdateSuccess({document})),
+        map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
       );
     })
@@ -332,7 +394,7 @@ export class DocumentsEffects {
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
         flatMap(document => [
-          new DocumentsAction.UpdateSuccess({document}),
+          new DocumentsAction.UpdateSuccess({document, originalDocument}),
           new DocumentsAction.CheckDataHint({document: action.payload.document}),
         ]),
         catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
@@ -361,12 +423,12 @@ export class DocumentsEffects {
       const {collectionId, documentId, metaData} = action.payload;
       return this.store$.pipe(
         select(selectDocumentById(documentId)),
-        first(),
-        mergeMap(oldDocument => {
+        take(1),
+        mergeMap(originalDocument => {
           return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
             mergeMap(dto => {
-              const document = {...convertDocumentDtoToModel(dto), data: oldDocument.data};
-              const actions: Action[] = [new DocumentsAction.UpdateSuccess({document})];
+              const document = {...convertDocumentDtoToModel(dto), data: originalDocument.data};
+              const actions: Action[] = [new DocumentsAction.UpdateSuccess({document, originalDocument})];
 
               if (action.payload.onSuccess) {
                 actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)}));
@@ -385,10 +447,23 @@ export class DocumentsEffects {
   public updateMetaData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
     mergeMap(action => {
-      const documentDto = convertDocumentModelToDto(action.payload.document);
-      return this.documentService.updateDocumentMetaData(documentDto).pipe(
-        map(dto => new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(dto)})),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+      const {document} = action.payload;
+      return this.store$.pipe(
+        select(selectDocumentById(document.id)),
+        take(1),
+        mergeMap(originalDocument => {
+          const documentDto = convertDocumentModelToDto(document);
+          return this.documentService.updateDocumentMetaData(documentDto).pipe(
+            map(
+              dto =>
+                new DocumentsAction.UpdateSuccess({
+                  document: convertDocumentDtoToModel(dto),
+                  originalDocument,
+                })
+            ),
+            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+          );
+        })
       );
     })
   );

@@ -99,8 +99,13 @@ export class DocumentService extends BaseService {
     return this.httpClient.get<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`);
   }
 
-  public duplicateDocuments(collectionId: string, documentIds: string[]): Observable<DocumentDto[]> {
-    return this.httpClient.post<DocumentDto[]>(`${this.apiPrefix({collectionId})}/duplicate`, documentIds);
+  public duplicateDocuments(
+    collectionId: string,
+    documentIds: string[],
+    correlationId?: string
+  ): Observable<DocumentDto[]> {
+    const options = correlationId ? {headers: {correlation_id: correlationId}} : {};
+    return this.httpClient.post<DocumentDto[]>(`${this.apiPrefix({collectionId})}/duplicate`, documentIds, options);
   }
 
   private apiPrefix(workspace?: Workspace): string {

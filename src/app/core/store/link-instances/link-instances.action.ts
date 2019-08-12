@@ -107,7 +107,7 @@ export namespace LinkInstancesAction {
   export class UpdateSuccess implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {linkInstance: LinkInstance}) {}
+    public constructor(public payload: {linkInstance: LinkInstance; originalLinkInstance: LinkInstance}) {}
   }
 
   export class UpdateFailure implements Action {

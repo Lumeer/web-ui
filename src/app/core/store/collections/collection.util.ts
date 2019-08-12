@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Collection} from './collection';
+import {AllowedPermissions} from '../../model/allowed-permissions';
+import {Constraint, ConstraintType} from '../../model/data/constraint';
 import {LinkType} from '../link-types/link.type';
-import {Constraint} from '../../model/data/constraint';
 import {AttributeFilter, ConditionType, Query} from '../navigation/query';
 import {conditionFromString, getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query.util';
-import {AllowedPermissions} from '../../model/allowed-permissions';
+import {Attribute, Collection} from './collection';
 
 export function isCollectionAttributeEditable(
   attributeId: string,
@@ -150,4 +150,8 @@ export function findAttribute(attributes: Attribute[], attributeId: string): Att
 export function findAttributeConstraint(attributes: Attribute[], attributeId: string): Constraint {
   const attribute = findAttribute(attributes, attributeId);
   return attribute && attribute.constraint;
+}
+
+export function hasAttributeType(entity: Collection | LinkType, constraintType: ConstraintType): boolean {
+  return entity && entity.attributes.some(attr => attr.constraint && attr.constraint.type === constraintType);
 }
