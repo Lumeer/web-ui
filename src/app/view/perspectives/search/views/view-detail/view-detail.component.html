@@ -12,6 +12,7 @@
       <div class="flex-column align-self-center">
         <i [ngClass]="(viewSize === sizeType.XL || viewSize  === sizeType.L) ? 'fa-3x' : (viewSize === sizeType.M ? 'fa-2x' : '')"
            class="fa-fw mr-2 {{getIconForPerspective(view.perspective)}} align-self-center"
+           [ngStyle]="viewSize === sizeType.XL ? {} : {color: (queryItems$ | async | queryColor)}"
            aria-hidden="true"></i>&nbsp;
       </div>
       <div class="flex-column flex-fill" [class.align-self-center]="viewSize !== sizeType.XL">

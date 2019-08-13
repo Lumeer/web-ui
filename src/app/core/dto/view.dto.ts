@@ -25,4 +25,6 @@ export interface ViewDto extends ResourceDto {
   query: QueryDto;
   config: any; // TODO create DTO
   authorRights?: {[collectionId: string]: string[]};
+  favorite?: boolean;
+  lastTimeUsed?: number;
 }
