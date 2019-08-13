@@ -55,6 +55,8 @@ export class TemplateService {
         return this.createTIMETemplate();
       case TemplateType.SUPPLY:
         return this.createSupplyTemplate();
+      case TemplateType.EDCAL:
+        return this.createEdcalTemplate();
       default:
         return null;
     }
@@ -162,6 +164,19 @@ export class TemplateService {
     };
   }
 
+  private createEdcalTemplate(): Template {
+    return {
+      type: TemplateType.EDCAL,
+      imagePath: 'assets/templates/edcal.jpg',
+      title: this.i18n({id: 'template.edcal.title', value: 'Editorial Calendar'}),
+      description: this.i18n({
+        id: 'template.edcal.description',
+        value: 'Any editor picks are now easily planned and visualized.',
+      }),
+      url: this.createUrlForType(TemplateType.SUPPLY),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -180,6 +195,8 @@ export class TemplateService {
         return this.getBUGUrl();
       case TemplateType.SUPPLY:
         return this.getSupplyUrl();
+      case TemplateType.EDCAL:
+        return this.getEdcalUrl();
     }
   }
 
@@ -243,6 +260,15 @@ export class TemplateService {
         return this.createUrl('cs/sablona-manazment-skladovych-zasob');
       default:
         return this.createUrl('template-supply-chain-management');
+    }
+  }
+
+  private getEdcalUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/editoruv-vyber');
+      default:
+        return this.createUrl('editorial-calendar');
     }
   }
 

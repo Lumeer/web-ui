@@ -33,6 +33,8 @@ export interface View extends Resource {
   query: Query;
   config: ViewConfig;
   authorRights?: {[collectionId: string]: string[]};
+  lastTimeUsed?: Date;
+  favorite?: boolean;
 }
 
 export interface ViewCursor {

@@ -17,35 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Template {
-  imagePath?: string;
-  icon?: string;
-  title: string;
-  description: string;
-  type: TemplateType;
-  url?: string;
-}
+import {Pipe, PipeTransform} from '@angular/core';
+import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
+import {COLOR_PRIMARY} from '../../core/constants';
 
-export enum TemplateType {
-  PROJ = 'PROJ',
-  WORK = 'WORK',
-  SUPPLY = 'SUPPLY',
-  BUG = 'BUG',
-  HR = 'HR',
-  EDCAL = 'EDCAL',
-  OKR = 'OKR',
-  TIME = 'TIME',
-  Empty = 'EMPTY',
-}
+@Pipe({
+  name: 'queryColor',
+})
+export class QueryColorPipe implements PipeTransform {
+  public transform(queryItems: QueryItem[]): string {
+    if (!queryItems || !queryItems.length || !queryItems[0].colors || !queryItems[0].colors.length) {
+      return COLOR_PRIMARY;
+    }
 
-export const templateTypesMap: Record<string, TemplateType> = {
-  [TemplateType.Empty]: TemplateType.Empty,
-  [TemplateType.OKR]: TemplateType.OKR,
-  [TemplateType.HR]: TemplateType.HR,
-  [TemplateType.PROJ]: TemplateType.PROJ,
-  [TemplateType.WORK]: TemplateType.WORK,
-  [TemplateType.TIME]: TemplateType.TIME,
-  [TemplateType.BUG]: TemplateType.BUG,
-  [TemplateType.SUPPLY]: TemplateType.SUPPLY,
-  [TemplateType.EDCAL]: TemplateType.EDCAL,
-};
+    return queryItems[0].colors[0];
+  }
+}

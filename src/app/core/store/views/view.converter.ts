@@ -39,6 +39,8 @@ export function convertViewDtoToModel(dto: ViewDto): View {
     permissions: PermissionsConverter.fromDto(dto.permissions),
     authorRights: dto.authorRights,
     version: dto.version,
+    favorite: dto.favorite,
+    lastTimeUsed: new Date(dto.lastTimeUsed),
   };
 }
 
