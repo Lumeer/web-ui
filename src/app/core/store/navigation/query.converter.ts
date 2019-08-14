@@ -115,17 +115,8 @@ function stringifyQuery(query: ShortenedQuery): string {
   });
 }
 
-export function normalizeQueryModel(query: Query): Query {
-  return {
-    stems: (query && query.stems) || [],
-    fulltexts: (query && query.fulltexts) || [],
-    page: (query && query.page) || 0,
-    pageSize: (query && query.pageSize) || 0,
-  };
-}
-
 export function convertQueryStringToModel(stringQuery: string): Query {
-  return fillInEmptyQuery(prolongQuery(parseStringQuery(decodeQuery(stringQuery))));
+  return normalizeQueryModel(prolongQuery(parseStringQuery(decodeQuery(stringQuery))));
 }
 
 function parseStringQuery(stringQuery: string): ShortenedQuery {
@@ -136,11 +127,21 @@ function parseStringQuery(stringQuery: string): ShortenedQuery {
   }
 }
 
-function fillInEmptyQuery(query: Query): Query {
+export function normalizeQueryModel(query: Query): Query {
   return {
-    stems: (query && query.stems) || [],
+    stems: ((query && query.stems) || []).map(stem => normalizeQueryStem(stem)),
     fulltexts: (query && query.fulltexts) || [],
     page: isNullOrUndefined(query && query.page) ? null : query.page,
     pageSize: isNullOrUndefined(query && query.pageSize) ? null : query.pageSize,
+  };
+}
+
+function normalizeQueryStem(stem: QueryStem): QueryStem {
+  return {
+    collectionId: stem.collectionId,
+    documentIds: stem.documentIds || [],
+    filters: stem.filters || [],
+    linkFilters: stem.linkFilters || [],
+    linkTypeIds: stem.linkTypeIds || [],
   };
 }
