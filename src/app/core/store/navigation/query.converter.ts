@@ -136,7 +136,7 @@ export function normalizeQueryModel(query: Query): Query {
   };
 }
 
-function normalizeQueryStem(stem: QueryStem): QueryStem {
+export function normalizeQueryStem(stem: QueryStem): QueryStem {
   return {
     collectionId: stem.collectionId,
     documentIds: stem.documentIds || [],

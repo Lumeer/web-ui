@@ -18,7 +18,8 @@
                    (createResource)="createObjectInResource($event, column)"
                    (updateDocument)="onUpdateDocument($event)"
                    (columnsChange)="onColumnsChange($event)"
-                   (removeDocument)="onRemoveDocument($event)">
+                   (removeDocument)="onRemoveDocument($event)"
+                   (removeColumn)="onRemoveColumn(column)">
     </kanban-column>
 
     <kanban-column *ngIf="config.otherColumn?.resourcesOrder?.length > 0"

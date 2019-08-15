@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
@@ -31,5 +31,12 @@ export class KanbanColumnHeaderComponent {
   @Input()
   public column: KanbanColumn;
 
+  @Output()
+  public remove = new EventEmitter();
+
   public readonly constraintTypes = ConstraintType;
+
+  public onRemove() {
+    this.remove.emit();
+  }
 }

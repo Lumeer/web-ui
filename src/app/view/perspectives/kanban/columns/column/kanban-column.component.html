@@ -2,7 +2,8 @@
 
   <div class="card-header p-0"
        [class.cursor-move]="canManageConfig">
-    <kanban-column-header [column]="column">
+    <kanban-column-header [column]="column"
+                          (remove)="onRemoveColumn()">
     </kanban-column-header>
   </div>
 
