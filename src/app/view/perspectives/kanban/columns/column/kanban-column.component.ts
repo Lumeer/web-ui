@@ -97,6 +97,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   @Output()
   public createResource = new EventEmitter<KanbanResourceCreate>();
 
+  @Output()
+  public removeColumn = new EventEmitter();
+
   public selectionHelper: SelectionHelper;
   public columnSelectionId: string;
   public documentsIds$ = new BehaviorSubject<string[]>([]);
@@ -191,5 +194,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   public onRemoveDocument(document: DocumentModel) {
     this.removeDocument.emit(document);
+  }
+
+  public onRemoveColumn() {
+    this.removeColumn.emit();
   }
 }

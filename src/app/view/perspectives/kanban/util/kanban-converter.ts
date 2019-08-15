@@ -27,7 +27,7 @@ import {
   KanbanStemConfig,
 } from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
@@ -68,7 +68,7 @@ export class KanbanConverter {
       constraintData
     );
 
-    const columns = createKanbanColumns(config, columnsMap);
+    const columns = createKanbanColumns(config, columnsMap, collections);
     const otherColumn = {
       id: getColumnIdOrGenerate(config && config.otherColumn),
       width: COLUMN_WIDTH,
@@ -83,7 +83,7 @@ export class KanbanConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    constraintData?: ConstraintData
+    constraintData: ConstraintData
   ): {columnsMap: Record<string, KanbanColumnData>; otherResourcesOrder: KanbanResource[]} {
     const columnsMap: Record<string, KanbanColumnData> = {};
     const otherResourcesOrder: KanbanResource[] = [];
@@ -182,7 +182,8 @@ export class KanbanConverter {
 
 function createKanbanColumns(
   currentConfig: KanbanConfig,
-  columnsMap: Record<string, KanbanColumnData>
+  columnsMap: Record<string, KanbanColumnData>,
+  collections: Collection[]
 ): KanbanColumn[] {
   let newColumnsTitles = Object.keys(columnsMap);
   const selectedAttributes = (currentConfig.stemsConfigs || [])
@@ -199,15 +200,17 @@ function createKanbanColumns(
       const {resourcesOrder = null, attributes = null, constraintTypes = null} = columnsMap[title] || {};
       const newResourcesOrder = sortDocumentsIdsByPreviousOrder(resourcesOrder, currentColumn.resourcesOrder);
 
-      newColumns.push({
-        id: getColumnIdOrGenerate(currentColumn),
-        title,
-        width: currentColumn.width,
-        resourcesOrder: newResourcesOrder,
-        createdFromAttributes: attributes,
-        constraintType: mergeConstraintType(currentColumn.constraintType, constraintTypes),
-      });
-      newColumnsTitles = newColumnsTitles.filter(newColumnTitle => newColumnTitle !== title);
+      if (isColumnValid(resourcesOrder, title, currentColumn.createdFromAttributes, collections)) {
+        newColumns.push({
+          id: getColumnIdOrGenerate(currentColumn),
+          title,
+          width: currentColumn.width,
+          resourcesOrder: newResourcesOrder,
+          createdFromAttributes: attributes || currentColumn.createdFromAttributes,
+          constraintType: mergeConstraintType(currentColumn.constraintType, constraintTypes),
+        });
+        newColumnsTitles = newColumnsTitles.filter(newColumnTitle => newColumnTitle !== title);
+      }
     }
   }
 
@@ -226,13 +229,55 @@ function createKanbanColumns(
   return newColumns;
 }
 
+function isColumnValid(
+  resourcesOrder: KanbanResource[],
+  title: string,
+  attributes: KanbanAttribute[],
+  collections: Collection[]
+): boolean {
+  if ((resourcesOrder || []).length > 0) {
+    return true;
+  }
+
+  if ((attributes || []).every(attribute => selectedAttributeIsInvalid(title, attribute, collections))) {
+    return false;
+  }
+
+  return true;
+}
+
+function selectedAttributeIsInvalid(
+  title: string,
+  kanbanAttribute: KanbanAttribute,
+  collections: Collection[]
+): boolean {
+  const attribute = findAttributeByKanbanAttribute(kanbanAttribute, collections);
+  if (!attribute) {
+    return true;
+  }
+
+  if (attribute.constraint && attribute.constraint.type === ConstraintType.Select) {
+    const config = attribute.constraint.config as SelectConstraintConfig;
+    if (!isSelectDataValueValid(title, config)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function findAttributeByKanbanAttribute(kanbanAttribute: KanbanAttribute, collections: Collection[]): Attribute {
+  const collection = (collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
+  return findAttribute(collection && collection.attributes, kanbanAttribute.attributeId);
+}
+
 function getColumnIdOrGenerate(column: KanbanColumn): string {
   return (column && column.id) || generateId();
 }
 
 function mergeConstraintType(currentConstraint: ConstraintType, newConstrainTypes: ConstraintType[]): ConstraintType {
   if (currentConstraint) {
-    if (newConstrainTypes && newConstrainTypes.length === 1 && newConstrainTypes[0] === currentConstraint) {
+    if (!newConstrainTypes || (newConstrainTypes.length === 1 && newConstrainTypes[0] === currentConstraint)) {
       return currentConstraint;
     }
   } else if (newConstrainTypes && newConstrainTypes.length === 1) {

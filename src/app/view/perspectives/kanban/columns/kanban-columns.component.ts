@@ -253,4 +253,10 @@ export class KanbanColumnsComponent implements OnChanges {
       this.patchDocumentData.emit({...document, data});
     }
   }
+
+  public onRemoveColumn(column: KanbanColumn) {
+    const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
+    const config = {...this.config, columns: filteredColumns};
+    this.configChange.next(config);
+  }
 }

@@ -1,20 +1,25 @@
 <ng-container [ngSwitch]="column.constraintType">
 
   <ng-container *ngSwitchCase="constraintTypes.Color">
-    <div [style.background]="column.title" class="px-3 py-2 color-title">
-      <div>&nbsp;</div>
+    <div [style.background]="column.title" class="px-3 py-2 color-title flex-grow-1">
+      <div *ngIf="column.resourcesOrder.length > 0">&nbsp;</div>
+      <div *ngIf="column.resourcesOrder.length === 0" class="text-end">
+        <i class="fa fa-trash cursor-pointer"
+           [style.color]="column.title | contrastColor"
+           (click)="onRemove()"></i>
+      </div>
     </div>
   </ng-container>
 
   <div *ngSwitchCase="constraintTypes.Boolean" class="d-flex py-1">
-    <boolean-data-input class="px-3 py-1"
+    <boolean-data-input class="px-3 py-1 flex-grow-1"
                         [value]="column.title"
                         [readonly]="true">
     </boolean-data-input>
   </div>
 
   <user-data-input *ngSwitchCase="constraintTypes.User"
-                   class="px-3 py-2"
+                   class="px-3 py-2 flex-grow-1"
                    [value]="column.title"
                    [readonly]="true"
                    [focus]="false">
@@ -22,13 +27,18 @@
 
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="column.title; else otherTitle">
-      <div class="px-3 py-2 text-truncate" [title]="column.title">
+      <div class="px-3 py-2 text-truncate flex-grow-1" [title]="column.title">
         <span class="font-weight-bold">{{column.title}}</span>
       </div>
     </ng-container>
   </ng-container>
 
 </ng-container>
+
+<div class="d-flex align-items-center justify-content-center pr-3"
+     *ngIf="column.resourcesOrder?.length === 0 && column.constraintType !==constraintTypes.Color && column.title">
+  <i class="fa fa-trash text-danger cursor-pointer" (click)="onRemove()"></i>
+</div>
 
 <ng-template #otherTitle>
   <div class="px-3 py-2">
