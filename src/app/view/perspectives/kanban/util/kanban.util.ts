@@ -18,8 +18,7 @@
  */
 
 import {KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {areArraysSame} from '../../../../shared/utils/array.utils';
+import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query';
@@ -30,9 +29,10 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {normalizeQueryStem} from '../../../../core/store/navigation/query.converter';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
-  if (!deepObjectsEquals(viewConfig.stemsConfigs, currentConfig.stemsConfigs)) {
+  if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
     return true;
   }
 
@@ -47,6 +47,19 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
       return kanbanColumnsChanged(column, currentColumn);
     }) || kanbanColumnsChanged(viewConfig.otherColumn, currentConfig.otherColumn)
   );
+}
+
+function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsConfigs: KanbanStemConfig[]): boolean {
+  const normalizedViewStemsConfigs = viewStemsConfigs.map(config => ({
+    ...config,
+    stem: config.stem && normalizeQueryStem(config.stem),
+  }));
+  const normalizedCurrentStemsConfigs = currentStemsConfigs.map(config => ({
+    ...config,
+    stem: config.stem && normalizeQueryStem(config.stem),
+  }));
+
+  return !deepArrayEquals(normalizedViewStemsConfigs, normalizedCurrentStemsConfigs);
 }
 
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {

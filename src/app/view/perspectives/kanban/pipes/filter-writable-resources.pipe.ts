@@ -35,7 +35,9 @@ export class FilterWritableResourcesPipe implements PipeTransform {
     const allowedResources = (kanbanConfig.stemsConfigs || []).reduce<KanbanResourceCreate[]>((arr, config) => {
       if (config && config.attribute) {
         const resource = (collections || []).find(coll => coll.id === config.attribute.resourceId);
-        arr.push({stem: config.stem, kanbanAttribute: config.attribute, resource});
+        if (resource) {
+          arr.push({stem: config.stem, kanbanAttribute: config.attribute, resource});
+        }
       }
 
       return arr;
