@@ -23,6 +23,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {BlocklyModule} from './blockly/blockly.module';
+import {BrowserWarningModule} from './browser-warning/browser-warning.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
 import {CommentsComponent} from './comments/comments.component';
 import {DateTimeModule} from './date-time/date-time.module';
@@ -77,6 +78,7 @@ import {ModalModule} from './modal/modal.module';
     BlocklyModule,
     DateTimeModule,
     ModalModule,
+    BrowserWarningModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -120,6 +122,7 @@ import {ModalModule} from './modal/modal.module';
     BlocklyModule,
     DateTimeModule,
     ModalModule,
+    BrowserWarningModule,
   ],
 })
 export class SharedModule {}

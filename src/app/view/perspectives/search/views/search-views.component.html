@@ -1,4 +1,4 @@
-<div class="mt-2" *ngIf="{views: views$ | async, queryData: queryData$ | async} as data" data-tour="search-views">
+<div class="mt-2 mb-5" *ngIf="{views: views$ | async, queryData: queryData$ | async} as data" data-tour="search-views">
   <size-slider class="d-flex justify-content-end mb-2"
                [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
 

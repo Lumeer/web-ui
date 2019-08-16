@@ -19,16 +19,15 @@
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DialogType} from '../../../../../dialog/dialog-type';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectAllUsers, selectUsersByEmails, selectUsersDictionary} from '../../../../../core/store/users/users.state';
-import {filter, first, flatMap, map} from 'rxjs/operators';
+import {selectAllUsers} from '../../../../../core/store/users/users.state';
+import {filter, first, map} from 'rxjs/operators';
 import {InvitationType} from '../../../../../core/model/invitation-type';
 import {UsersAction} from '../../../../../core/store/users/users.action';
 import {User} from '../../../../../core/store/users/user';
-import {selectWorkspace} from '../../../../../core/store/navigation/navigation.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
 import {ResourceType} from '../../../../../core/model/resource-type';

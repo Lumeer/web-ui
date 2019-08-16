@@ -1,7 +1,7 @@
 <ng-container *ngIf="{users: users$ | async, durationUnitsMap: durationUnitsMap} as constraintData">
 <ng-container *ngIf="loaded$ | async">
 
-  <div class="mt-2" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
+  <div class="mt-2 mb-5" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
        [infiniteScrollDisabled]="maxLines > 0"
        [infiniteScrollDistance]="2"
        (scrolled)="onScrollDown($event)">

@@ -56,7 +56,7 @@ import {
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {BsModalService} from 'ngx-bootstrap';
+import {BsModalService} from 'ngx-bootstrap/modal';
 import {KanbanColumnComponent} from './column/kanban-column.component';
 
 @Component({

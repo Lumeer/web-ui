@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {BsModalService} from 'ngx-bootstrap';
+import {BsModalService} from 'ngx-bootstrap/modal';
 import {InviteUserDialogComponent} from './invite-user-dialog/invite-user-dialog.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';

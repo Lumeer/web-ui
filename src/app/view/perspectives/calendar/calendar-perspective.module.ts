@@ -34,7 +34,7 @@ import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
 import {CalendarHeaderComponent} from './events/header/calendar-header.component';
-import {PopoverModule} from 'ngx-bootstrap';
+import {PopoverModule} from 'ngx-bootstrap/popover';
 import {CalendarCollectionConfigComponent} from './config/collection-config/calendar-collection-config.component';
 import {adapterFactory} from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';

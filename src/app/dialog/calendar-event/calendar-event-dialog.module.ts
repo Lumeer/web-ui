@@ -22,7 +22,7 @@ import {CommonModule} from '@angular/common';
 import {CalendarEventDialogComponent} from './calendar-event-dialog.component';
 import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-form.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TimepickerModule} from 'ngx-bootstrap';
+import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {DialogWrapperModule} from '../shared/wrapper/dialog-wrapper.module';
 import {SelectModule} from '../../shared/select/select.module';
 import {PipesModule} from '../../shared/pipes/pipes.module';

@@ -1,5 +1,10 @@
 @import '../../../../styles/bootstrap_var';
 
+:host {
+  display: flex;
+  height: 100%;
+}
+
 @include media-breakpoint-down(xs) {
   .nav-link {
     padding: 0.5rem 0.8rem;

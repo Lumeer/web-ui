@@ -30,14 +30,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
-import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap';
-import {Subscription} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
-import {User} from '../../../core/store/users/user';
 import {KeyCode} from '../../key-code';
-import {formatSelectDataValue, formatUserDataValue, isSelectDataValueValid} from '../../utils/data.utils';
+import {isSelectDataValueValid} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
