@@ -2,22 +2,40 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="collection.name.placeholder" datatype="html">
-        <source>Click to set name</source>
+      <trans-unit id="resource.new.dialog.icon.label" datatype="html">
+        <source>
+            Icon:
+          </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/post-it-collections/collection-name/post-it-collection-name.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.document.icon.set" datatype="html">
-        <source>Click icon to set it
-    </source>
+      </trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
+        <source>Required</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context>
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
+        <source>
+  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="3402fe8e8941ce8571fdfef686032d5719eb94af" datatype="html">
+        <source>{VAR_SELECT, select, organization {Organization} project {Project} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="button.cancel" datatype="html">
-        <source>Cancel
-          </source>
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context>
           <context context-type="linenumber">42</context>
@@ -40,7 +58,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
@@ -48,10 +66,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
@@ -81,6 +95,40 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/modal/choose-link-document/choose-link-document-modal.component.html</context>
           <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.create" datatype="html">
+        <source>Create</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
+        <source>I am sorry, something went wrong.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.name.placeholder" datatype="html">
+        <source>Click to set name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/collection-name/post-it-collection-name.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.document.icon.set" datatype="html">
+        <source>Click icon to set it
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="button.select" datatype="html">
         <source>Select
@@ -176,6 +224,62 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/tag/tag.component.html</context>
           <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title" datatype="html">
+        <source>Invite to project but do not share anything yet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
+        <source>
+              New colleagues can join the project, they won&apos;t see exiting tables and views.
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.title" datatype="html">
+        <source>Invite as read only</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
+        <source>
+              New colleagues will see everything in the project, they cannot change anything.
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.write.title" datatype="html">
+        <source>Invite for collaboration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.write.description1" datatype="html">
+        <source>
+              New colleagues will see everything in the project and they will be able to change and add data.
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.manage.title" datatype="html">
+        <source>Invite as managers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
+        <source>
+              You give your newly invited colleagues full control over the project. They can read, write and manage everything.
+            </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
         <source>Remove Record</source>
@@ -903,128 +1007,91 @@
         <source>Invite colleagues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="InviteUser.dialog.users.list" datatype="html">
         <source>Colleagues to invite: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">40</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title" datatype="html">
-        <source>Invite to project but do not share anything yet</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
+      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
         <source>
-            New colleagues can join the project, they won&apos;t see exiting tables and views.
-          </source>
+          Use the cog icon
+        </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">57</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.title" datatype="html">
-        <source>Invite as read only</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
+      </trans-unit><trans-unit id="inviteUser.dialog.settings.description2" datatype="html">
         <source>
-            New colleagues will see everything in the project, they cannot change anything.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.write.title" datatype="html">
-        <source>Invite for collaboration</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.write.description1" datatype="html">
-        <source>
-            New colleagues will see everything in the project and they will be able to change and add data.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.manage.title" datatype="html">
-        <source>Invite as managers</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
-        <source>
-            You give your newly invited colleagues full control over the project. They can read, write and manage everything.
-          </source>
+          next to the table, or the Share button to change access rights later (especially
+          for the newly created tables and views).
+        </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
-        <source>
-        Use the cog icon
-      </source>
+      </trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+        <source>Only organization and project managers can invite colleagues, please ask them.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.settings.description2" datatype="html">
-        <source>
-        next to the table, or the Share button to change access rights later (especially
-        for the newly created tables and views).
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
+        <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
       </trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
         <source>Invite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/invite-user-dialog.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.button.title" datatype="html">
         <source>Invite a colleague</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
+        <source>
+      Please select one of the colleagues who are already in your organization.
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.user.email.invalid" datatype="html">
         <source>
-  Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
-</source>
+      Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
+    </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
         <source>
-  A colleague with this email is already invited. Try another!
-</source>
+      A colleague with this email is already invited. Try another!
+    </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source>
@@ -1214,6 +1281,97 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/notifications-menu-wrapper/notification-view/notification-view.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
+        <source>
+    Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/>
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.placeholder" datatype="html">
+        <source>Enter code (e.g. LMR)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.length.min" datatype="html">
+        <source>
+            Code must have at least 2 characters.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.length.max" datatype="html">
+        <source>
+            Code can have 5 characters at most.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.required" datatype="html">
+        <source>
+            Code is required.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.pattern" datatype="html">
+        <source>
+            Code must contain only characters and digits.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
+        <source>
+            Sorry, this code is already taken. Try another!
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.name.label" datatype="html">
+        <source>Name:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.name.placeholder" datatype="html">
+        <source>Enter name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
+        <source>Create a new project in organization:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
+        <source>Your organization is missing a project. To continue, please create one.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
+        <source>Choose template</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">templates.choose</note>
+      </trans-unit><trans-unit id="templates.learn.more" datatype="html">
+        <source>Learn more</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/template/create-resource-dialog-template.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
       </trans-unit><trans-unit id="collapsible-sidebar.expand-button" datatype="html">
         <source>Expand</source>
         <context-group purpose="location">
@@ -1372,7 +1530,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
         <source>
@@ -1576,55 +1734,6 @@
           <context context-type="sourcefile">app/dialog/calendar-event/calendar-event-dialog.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.icon.label" datatype="html">
-        <source>
-            Icon:
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
-        <source>Required</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
-        <source>
-  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit><trans-unit id="3402fe8e8941ce8571fdfef686032d5719eb94af" datatype="html">
-        <source>{VAR_SELECT, select, organization {Organization} project {Project} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.create" datatype="html">
-        <source>Create</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
-        <source>I am sorry, something went wrong.
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.title" datatype="html">
         <source>Create new linked table</source>
         <context-group purpose="location">
@@ -1771,7 +1880,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.input.placeholder" datatype="html">
         <source>Enter user email and press Enter</source>
@@ -2221,97 +2330,6 @@
           <context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
-        <source>
-    Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/>
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.placeholder" datatype="html">
-        <source>Enter code (e.g. LMR)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.error.length.min" datatype="html">
-        <source>
-            Code must have at least 2 characters.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.error.length.max" datatype="html">
-        <source>
-            Code can have 5 characters at most.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.error.required" datatype="html">
-        <source>
-            Code is required.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.error.pattern" datatype="html">
-        <source>
-            Code must contain only characters and digits.
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
-        <source>
-            Sorry, this code is already taken. Try another!
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/code-input/resource-code-input.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.name.label" datatype="html">
-        <source>Name:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/name-input/resource-name-input.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.name.placeholder" datatype="html">
-        <source>Enter name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/name-input/resource-name-input.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
-        <source>Create a new project in organization:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
-        <source>Your organization is missing a project. To continue, please create one.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
-        <source>Choose template</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <note priority="1" from="description">templates.choose</note>
-      </trans-unit><trans-unit id="templates.learn.more" datatype="html">
-        <source>Learn more</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/create-resource/form/templates/template/create-resource-dialog-template.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
         <source>1. Select View</source>
         <context-group purpose="location">
@@ -2592,7 +2610,7 @@
         <source>Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/header/kanban-column-header.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.row.header" datatype="html">
         <source>
@@ -3834,6 +3852,34 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="template.edcal.title" datatype="html">
+        <source>Editorial Calendar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.edcal.description" datatype="html">
+        <source>Any editor picks are now easily planned and visualized.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.task.title" datatype="html">
+        <source>Task Tracker</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.task.description" datatype="html">
+        <source>No more tasks will be ever missed when tracked and organized in Lumeer.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="constraint.duration.unit" datatype="html">
         <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source>
         <context-group purpose="location">
@@ -4482,13 +4528,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
-        <source>(click the icon to change it)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/dialog/create-resource/form/create-resource-dialog-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="dialog.feedback.success" datatype="html">
         <source>Your feedback has been sent.</source>
         <context-group purpose="location">
@@ -4567,6 +4606,13 @@
         <source>Write text here...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
+        <source>(click the icon to change it)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
