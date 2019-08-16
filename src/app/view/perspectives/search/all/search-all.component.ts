@@ -32,7 +32,7 @@ import {
 } from '../../../../core/store/common/permissions.selectors';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {selectAllViews, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -50,6 +50,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public hasCollection$: Observable<boolean>;
   public hasDocument$: Observable<boolean>;
   public hasView$: Observable<boolean>;
+  public hasAnyView$: Observable<boolean>;
   public query$ = new BehaviorSubject<Query>(null);
 
   private workspace: Workspace;
@@ -103,6 +104,11 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
     this.hasView$ = this.store$.pipe(
       select(selectViewsByQuery),
+      map(views => views && views.length > 0)
+    );
+
+    this.hasAnyView$ = this.store$.pipe(
+      select(selectAllViews),
       map(views => views && views.length > 0)
     );
 
