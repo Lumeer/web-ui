@@ -20,11 +20,11 @@
 import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {convertQueryModelToString} from '../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter} from 'rxjs/operators';
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {isNullOrUndefined} from '../../utils/common.utils';
 
 declare let $: any;

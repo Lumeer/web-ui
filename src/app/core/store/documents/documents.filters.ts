@@ -20,8 +20,8 @@
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from '../navigation/query';
-import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from '../navigation/query/query';
+import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';

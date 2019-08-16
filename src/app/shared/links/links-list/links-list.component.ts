@@ -29,7 +29,7 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'links-list',

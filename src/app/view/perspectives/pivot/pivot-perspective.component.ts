@@ -22,7 +22,7 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {User} from '../../../core/store/users/user';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';

@@ -20,7 +20,7 @@
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query';
+import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;

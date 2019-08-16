@@ -17,15 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {isSingleCollectionQuery} from '../../core/store/navigation/query/query.util';
-import {Query} from '../../core/store/navigation/query/query';
+import * as CRC32 from 'crc-32';
+import {Base64} from 'js-base64';
 
-@Pipe({
-  name: 'singleCollectionQuery',
-})
-export class SingleCollectionQueryPipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isSingleCollectionQuery(query);
+export function encodeQueryParam(param: string): string {
+  if (!param || param === '{}') {
+    return '';
   }
+
+  const base64 = Base64.encode(param, true);
+  const crc = calculateQueryCRC(base64);
+  return base64 + crc;
+}
+
+export function decodeQueryParam(param: string): string {
+  if (!param) {
+    return '';
+  }
+
+  const base64 = param.slice(0, -8);
+  const crc = param.slice(-8);
+
+  if (calculateQueryCRC(base64) !== crc) {
+    return '';
+  }
+
+  try {
+    return Base64.decode(base64);
+  } catch (e) {
+    return '';
+  }
+}
+
+function calculateQueryCRC(query: string): string {
+  const crcNumber = CRC32.str(query) + Math.pow(16, 8) / 2;
+  return crcNumber.toString(16).padStart(8, '0');
 }

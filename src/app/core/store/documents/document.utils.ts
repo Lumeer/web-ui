@@ -19,8 +19,8 @@
 import {Collection} from '../collections/collection';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
-import {CollectionAttributeFilter, Query, ConditionType} from '../navigation/query';
-import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query.util';
+import {CollectionAttributeFilter, Query, ConditionType} from '../navigation/query/query';
+import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query/query.util';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];

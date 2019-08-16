@@ -19,7 +19,7 @@
 
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {dataValuesMeetCondition} from './data-compare.utils';
-import {ConditionType} from '../../../core/store/navigation/query';
+import {ConditionType} from '../../../core/store/navigation/query/query';
 
 describe('Data values meet condition', () => {
   it('should compare by date only year constraint', () => {

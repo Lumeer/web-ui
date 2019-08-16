@@ -37,7 +37,7 @@ import {GanttChartConverter} from '../util/gantt-chart-converter';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';

@@ -41,7 +41,7 @@ import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Direction} from '../direction';

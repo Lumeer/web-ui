@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 import {Workspace} from '../navigation/workspace';
 import {DocumentMetaData, DocumentModel} from './document.model';
 

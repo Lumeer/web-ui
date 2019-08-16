@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';

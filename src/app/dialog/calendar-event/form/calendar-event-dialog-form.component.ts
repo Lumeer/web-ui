@@ -42,7 +42,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {isAllDayEvent, parseCalendarEventDate} from '../../../view/perspectives/calendar/util/calendar-util';
 import {deepObjectsEquals, isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint, isCollectionAttributeEditable} from '../../../core/store/collections/collection.util';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {User} from '../../../core/store/users/user';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';

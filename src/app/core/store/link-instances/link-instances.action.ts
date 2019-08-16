@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 import {LinkInstance} from './link.instance';
 
 export enum LinkInstancesActionType {

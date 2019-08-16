@@ -23,15 +23,18 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
+import {DialogPath} from '../../../dialog/dialog-path';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectNavigation, selectQuery} from './navigation.state';
-import {convertQueryModelToString} from './query.converter';
+import {QueryParam} from './query-param';
+import {Query, QueryStem} from './query/query';
+import {convertQueryModelToString} from './query/query.converter';
 import {SearchTab} from './search-tab';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {Query, QueryStem} from './query';
-import {DialogPath} from '../../../dialog/dialog-path';
+import {convertViewCursorToString} from './view-cursor/view-cursor';
 
 @Injectable()
 export class NavigationEffects {
@@ -86,6 +89,26 @@ export class NavigationEffects {
   );
 
   @Effect()
+  public setViewCursor$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.SetViewCursor>(NavigationActionType.SET_VIEW_CURSOR),
+    withLatestFrom(this.moduleLazyLoadingService.observeLazyLoading()),
+    // otherwise it fails to redirect to lazy loaded module when cursor is being changed at the same time
+    filter(([, lazyLoading]) => !lazyLoading),
+    map(
+      ([action]) =>
+        new RouterAction.Go({
+          path: [],
+          queryParams: {
+            [QueryParam.ViewCursor]: convertViewCursorToString(action.payload.cursor) || null,
+          },
+          extras: {
+            queryParamsHandling: 'merge',
+          },
+        })
+    )
+  );
+
+  @Effect()
   public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
@@ -114,14 +137,19 @@ export class NavigationEffects {
     })
   );
 
-  constructor(private actions$: Actions, private router: Router, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private moduleLazyLoadingService: ModuleLazyLoadingService,
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 }
 
 function newQueryAction(query: Query): Action {
   return new RouterAction.Go({
     path: [],
     queryParams: {
-      q: convertQueryModelToString(query),
+      [QueryParam.Query]: convertQueryModelToString(query),
     },
     extras: {
       queryParamsHandling: 'merge',

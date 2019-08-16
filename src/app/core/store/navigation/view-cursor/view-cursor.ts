@@ -17,15 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {isSingleCollectionQuery} from '../../core/store/navigation/query/query.util';
-import {Query} from '../../core/store/navigation/query/query';
+import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
+import {
+  parseShortenedViewCursor,
+  prolongViewCursor,
+  shortenViewCursor,
+  stringifyShortenedViewCursor,
+} from './shortened-view-cursor';
 
-@Pipe({
-  name: 'singleCollectionQuery',
-})
-export class SingleCollectionQueryPipe implements PipeTransform {
-  public transform(query: Query): boolean {
-    return isSingleCollectionQuery(query);
-  }
+export interface ViewCursor {
+  collectionId?: string;
+  documentId?: string;
+  attributeId?: string;
+}
+
+export function convertViewCursorToString(cursor: ViewCursor): string {
+  return encodeQueryParam(stringifyShortenedViewCursor(shortenViewCursor(cursor)));
+}
+
+export function convertStringToViewCursor(cursor: string): ViewCursor {
+  return prolongViewCursor(parseShortenedViewCursor(decodeQueryParam(cursor)));
 }

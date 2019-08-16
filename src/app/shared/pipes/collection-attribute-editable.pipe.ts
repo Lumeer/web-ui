@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {isCollectionAttributeEditable} from '../../core/store/collections/collection.util';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Pipe({

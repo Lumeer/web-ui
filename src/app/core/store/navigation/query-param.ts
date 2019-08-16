@@ -17,39 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as CRC32 from 'crc-32';
-import {Base64} from 'js-base64';
-
-export function encodeQuery(query: string): string {
-  if (!query || query === '{}') {
-    return '';
-  }
-
-  const base64 = Base64.encode(query, true);
-  const crc = calculateQueryCRC(base64);
-  return base64 + crc;
-}
-
-export function decodeQuery(query: string): string {
-  if (!query) {
-    return '';
-  }
-
-  const base64 = query.slice(0, -8);
-  const crc = query.slice(-8);
-
-  if (calculateQueryCRC(base64) !== crc) {
-    return '';
-  }
-
-  try {
-    return Base64.decode(base64);
-  } catch (e) {
-    return '';
-  }
-}
-
-function calculateQueryCRC(query: string): string {
-  const crcNumber = CRC32.str(query) + Math.pow(16, 8) / 2;
-  return crcNumber.toString(16).padStart(8, '0');
+export enum QueryParam {
+  Query = 'q',
+  ViewCursor = 'c',
 }

@@ -18,8 +18,8 @@
  */
 
 import {View} from './view';
-import {isQuerySubset, queryIsEmpty} from '../navigation/query.util';
-import {Query} from '../navigation/query';
+import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
+import {Query} from '../navigation/query/query';
 
 export function filterViewsByQuery(views: View[], query: Query): View[] {
   const filteredViews = (views || []).slice();

@@ -40,7 +40,7 @@ import {View} from './view';
 import {convertViewDtoToModel, convertViewModelToDto} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
-import {areQueriesEqual} from '../navigation/query.helper';
+import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';

@@ -21,8 +21,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {Query} from '../navigation/query';
-import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
+import {Query} from '../navigation/query/query';
+import {areQueriesEqualExceptPagination} from '../navigation/query/query.helper';
 import {DocumentData, DocumentModel} from './document.model';
 
 export interface DocumentsState extends EntityState<DocumentModel> {

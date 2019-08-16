@@ -51,7 +51,7 @@ import {
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
 } from '../../../../core/store/collections/collection.util';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';

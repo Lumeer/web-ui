@@ -22,7 +22,7 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 import {ConstraintType} from '../../model/data/constraint';
 
 const documents: DocumentModel[] = [

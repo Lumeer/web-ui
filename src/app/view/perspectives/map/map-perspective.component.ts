@@ -35,8 +35,8 @@ import {
   selectMapConfigPosition,
 } from '../../../core/store/maps/maps.state';
 import {selectMapPosition, selectQuery} from '../../../core/store/navigation/navigation.state';
-import {Query} from '../../../core/store/navigation/query';
-import {isAnyCollectionQuery} from '../../../core/store/navigation/query.util';
+import {Query} from '../../../core/store/navigation/query/query';
+import {isAnyCollectionQuery} from '../../../core/store/navigation/query/query.util';
 import {View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {

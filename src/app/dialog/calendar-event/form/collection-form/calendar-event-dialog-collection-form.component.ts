@@ -27,7 +27,7 @@ import {
   CalendarStemConfig,
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DEFAULT_EVENT_DURATION} from '../calendar-event-dialog-form.component';
 import * as moment from 'moment';

@@ -21,9 +21,9 @@ import {Collection} from './collection';
 import {DocumentModel} from '../documents/document.model';
 import {mergeCollections} from './collection.util';
 import {groupDocumentsByCollection} from '../documents/document.utils';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
-import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query.util';
+import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
 import {filterDocumentsByFulltexts} from '../documents/documents.filters';
 
 export function filterCollectionsByQuery(

@@ -34,7 +34,7 @@ import {debounceTime, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';

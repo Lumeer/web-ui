@@ -24,7 +24,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, mergeMap} from 'rxjs/operators';

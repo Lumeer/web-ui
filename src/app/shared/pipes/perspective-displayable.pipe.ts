@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 import {isNullOrUndefined} from '../utils/common.utils';
 
 @Pipe({

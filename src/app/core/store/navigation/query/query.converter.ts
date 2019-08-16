@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {QueryDto} from '../../dto';
-import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../dto/query.dto';
+import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {QueryDto} from '../../../dto';
+import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../../dto/query.dto';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
-import {decodeQuery, encodeQuery} from './query/query-encoding';
-import {prolongQuery, ShortenedQuery, shortenQuery} from './query/shortened-query';
+import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
+import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
@@ -99,7 +99,7 @@ function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkA
 }
 
 export function convertQueryModelToString(query: Query): string {
-  return encodeQuery(stringifyQuery(shortenQuery(query)));
+  return encodeQueryParam(stringifyQuery(shortenQuery(query)));
 }
 
 function stringifyQuery(query: ShortenedQuery): string {
@@ -116,7 +116,7 @@ function stringifyQuery(query: ShortenedQuery): string {
 }
 
 export function convertQueryStringToModel(stringQuery: string): Query {
-  return normalizeQueryModel(prolongQuery(parseStringQuery(decodeQuery(stringQuery))));
+  return normalizeQueryModel(prolongQuery(parseStringQuery(decodeQueryParam(stringQuery))));
 }
 
 function parseStringQuery(stringQuery: string): ShortenedQuery {

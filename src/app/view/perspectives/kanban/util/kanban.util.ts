@@ -21,15 +21,15 @@ import {KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from 
 import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query.util';
+} from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {normalizeQueryStem} from '../../../../core/store/navigation/query.converter';
+import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {

@@ -22,7 +22,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanStemConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
 import {checkOrTransformKanbanConfig, createDefaultKanbanStemConfig} from '../util/kanban.util';

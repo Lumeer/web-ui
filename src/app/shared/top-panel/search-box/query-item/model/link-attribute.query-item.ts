@@ -21,7 +21,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {LinkAttributeFilter} from '../../../../../core/store/navigation/query';
+import {LinkAttributeFilter} from '../../../../../core/store/navigation/query/query';
 
 export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;

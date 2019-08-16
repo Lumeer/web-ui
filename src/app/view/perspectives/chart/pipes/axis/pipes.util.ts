@@ -20,7 +20,7 @@
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';

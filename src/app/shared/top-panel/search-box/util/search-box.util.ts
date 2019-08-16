@@ -30,7 +30,7 @@ import {
   findStemIndexForCollection,
   findStemIndexForLinkType,
   findStemIndexForLinkTypeToJoin,
-} from '../../../../core/store/navigation/query.util';
+} from '../../../../core/store/navigation/query/query.util';
 import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-item';
 
 export function addQueryItemWithRelatedItems(

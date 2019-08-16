@@ -19,7 +19,7 @@
 
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {ViewDto} from '../../dto';
-import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query.converter';
+import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
 import {View, ViewConfig} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';

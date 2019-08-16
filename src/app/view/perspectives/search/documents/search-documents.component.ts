@@ -40,10 +40,10 @@ import {
 } from '../../../../core/store/common/permissions.selectors';
 import {PerspectiveService} from '../../../../core/service/perspective.service';
 import {Perspective} from '../../perspective';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Router} from '@angular/router';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {DurationUnitsMap} from '../../../../core/model/data/constraint';
 import {TranslationService} from '../../../../core/service/translation.service';
 

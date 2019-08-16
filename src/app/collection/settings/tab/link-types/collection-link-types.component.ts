@@ -35,7 +35,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {isNullOrUndefined} from 'util';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 
 @Component({
   templateUrl: './collection-link-types.component.html',

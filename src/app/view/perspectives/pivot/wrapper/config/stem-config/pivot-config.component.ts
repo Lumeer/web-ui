@@ -29,7 +29,7 @@ import {
 import {PivotStemData} from '../../../util/pivot-data';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../../core/store/navigation/query';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {cleanPivotAttribute, pivotAttributesAreSame} from '../../../util/pivot-util';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {generateId} from '../../../../../../shared/utils/resource.utils';

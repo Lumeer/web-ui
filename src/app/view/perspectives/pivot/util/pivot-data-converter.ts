@@ -29,7 +29,7 @@ import {Attribute, Collection} from '../../../../core/store/collections/collecti
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
 import {
   AggregatedData,

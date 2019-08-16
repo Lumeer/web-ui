@@ -18,7 +18,7 @@
  */
 
 import {LinkQueryItem} from './model/link.query-item';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {QueryData} from '../util/query-data';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {CollectionQueryItem} from './model/collection.query-item';
@@ -27,9 +27,9 @@ import {FulltextQueryItem} from './model/fulltext.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {DeletedQueryItem} from './model/deleted.query-item';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
-import {collectionIdsChainForStem} from '../../../../core/store/navigation/query.util';
+import {collectionIdsChainForStem} from '../../../../core/store/navigation/query/query.util';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../core/store/collections/collection';

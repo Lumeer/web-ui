@@ -32,7 +32,7 @@ import {
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute, isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {formatData} from '../../../../shared/utils/data.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
@@ -41,7 +41,7 @@ import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query.util';
+} from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {isArraySubset} from '../../../../shared/utils/array.utils';
 

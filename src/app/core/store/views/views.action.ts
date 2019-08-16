@@ -18,10 +18,10 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Permission, PermissionType} from '../permissions/permissions';
-import {SearchConfig, ViewConfig, ViewCursor, View} from './view';
 import {Workspace} from '../navigation/workspace';
+import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
+import {SearchConfig, View, ViewConfig} from './view';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -179,12 +179,6 @@ export namespace ViewsAction {
     public constructor(public payload: {config: SearchConfig}) {}
   }
 
-  export class SetCursor implements Action {
-    public readonly type = ViewsActionType.SET_CURSOR;
-
-    public constructor(public payload: {cursor: ViewCursor}) {}
-  }
-
   export class ResetViewGlobalConfig implements Action {
     public readonly type = ViewsActionType.RESET_VIEW_GLOBAL_CONFIG;
   }
@@ -217,7 +211,6 @@ export namespace ViewsAction {
     | DeleteFailure
     | ChangeConfig
     | ChangeSearchConfig
-    | SetCursor
     | ResetViewGlobalConfig
     | SetSidebarOpened
     | Clear;

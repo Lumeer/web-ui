@@ -21,9 +21,10 @@ import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {MapPosition} from '../maps/map.model';
-import {Query} from './query';
-import {queryWithoutLinks} from './query.util';
+import {Query} from './query/query';
+import {queryWithoutLinks} from './query/query.util';
 import {SearchTab} from './search-tab';
+import {ViewCursor} from './view-cursor/view-cursor';
 import {Workspace} from './workspace';
 
 export interface NavigationState {
@@ -33,6 +34,7 @@ export interface NavigationState {
   perspective?: Perspective;
   searchTab?: SearchTab;
   viewName?: string;
+  viewCursor?: ViewCursor;
   url: string;
   previousUrl?: string;
 }
@@ -75,9 +77,14 @@ export const selectPreviousUrl = createSelector(
   selectNavigation,
   state => state.previousUrl
 );
+
 export const selectViewCode = createSelector(
   selectWorkspace,
   workspace => workspace && workspace.viewCode
+);
+export const selectViewCursor = createSelector(
+  selectNavigation,
+  state => state && state.viewCursor
 );
 
 export const selectMapPosition = createSelector(

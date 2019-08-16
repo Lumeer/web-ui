@@ -21,7 +21,7 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 
 import {Observable, Subscription} from 'rxjs';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {getAllConditions} from '../../../../../core/store/navigation/query.util';
+import {getAllConditions} from '../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'condition-suggestions',

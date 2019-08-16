@@ -20,7 +20,7 @@
 import * as moment from 'moment';
 import {Constraint, ConstraintType} from '../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
-import {ConditionType} from '../../../core/store/navigation/query';
+import {ConditionType} from '../../../core/store/navigation/query/query';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {convertToBig, formatDataValue, parseMomentDate} from '../data.utils';
 

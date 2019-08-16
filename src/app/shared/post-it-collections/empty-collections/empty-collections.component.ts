@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 
 import {Project} from '../../../core/store/projects/project';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({

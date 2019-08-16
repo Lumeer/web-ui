@@ -19,7 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {Constraint} from '../../model/data/constraint';
-import {QueryStem} from '../navigation/query';
+import {QueryStem} from '../navigation/query/query';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';

@@ -40,7 +40,7 @@ import {
   QueryItemsConverter,
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {queryItemToForm} from '../../../core/store/navigation/query.util';
+import {queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -51,7 +51,7 @@ import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
-import {areQueriesEqual} from '../../../core/store/navigation/query.helper';
+import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
 

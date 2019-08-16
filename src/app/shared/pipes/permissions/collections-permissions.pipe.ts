@@ -28,7 +28,7 @@ import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCurrentUserIsManager} from '../../../core/store/common/permissions.selectors';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query.util';
+import {getAllCollectionIdsFromQuery} from '../../../core/store/navigation/query/query.util';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {View} from '../../../core/store/views/view';

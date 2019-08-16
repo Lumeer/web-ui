@@ -25,8 +25,10 @@ import {parseMapCoordinates} from '../maps/map-coordinates';
 import {MapPosition} from '../maps/map.model';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
-import {convertQueryStringToModel} from './query.converter';
+import {QueryParam} from './query-param';
+import {convertQueryStringToModel} from './query/query.converter';
 import {SearchTab, searchTabsMap} from './search-tab';
+import {convertStringToViewCursor} from './view-cursor/view-cursor';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
@@ -41,7 +43,9 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigatedActio
         }
       : null;
 
-  const query = convertQueryStringToModel(queryParams['q']);
+  const query = convertQueryStringToModel(queryParams[QueryParam.Query]);
+  const viewCursor = convertStringToViewCursor(queryParams[QueryParam.ViewCursor]);
+
   const workspace = {
     organizationCode: params['organizationCode'],
     projectCode: params['projectCode'],
@@ -55,6 +59,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigatedActio
     workspace: deepObjectsEquals(workspace, state.workspace) ? state.workspace : workspace,
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
+    viewCursor: deepObjectsEquals(viewCursor, state.viewCursor) ? state.viewCursor : viewCursor,
     searchTab: tryToParseSearchTabPath(url),
     previousUrl: state.url,
     url,

@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../core/store/collections/collection';
 import {isAttributeEditableWithQuery} from '../../core/store/collections/collection.util';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 
 @Pipe({
   name: 'attributeEditable',

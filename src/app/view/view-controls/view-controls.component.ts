@@ -48,7 +48,7 @@ import {
 } from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 

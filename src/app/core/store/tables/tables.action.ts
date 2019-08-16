@@ -24,7 +24,7 @@ import {LinkInstance} from '../link-instances/link.instance';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {EditedAttribute} from './tables.state';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',
@@ -89,6 +89,7 @@ export enum TablesActionType {
 
   SET_CURSOR = '[Tables] Set Cursor',
   MOVE_CURSOR = '[Tables] Move Cursor',
+  USE_VIEW_CURSOR = '[Tables] Use View Cursor',
 
   SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Attribute',
 
@@ -396,6 +397,10 @@ export namespace TablesAction {
     public constructor(public payload: {direction: Direction}) {}
   }
 
+  export class UseViewCursor implements Action {
+    public readonly type = TablesActionType.USE_VIEW_CURSOR;
+  }
+
   export class EditSelectedCell implements Action {
     public readonly type = TablesActionType.EDIT_SELECTED_CELL;
 
@@ -452,6 +457,7 @@ export namespace TablesAction {
     | ToggleLinkedRows
     | SetCursor
     | MoveCursor
+    | UseViewCursor
     | EditSelectedCell
     | RemoveSelectedCell
     | SetEditedAttribute;
