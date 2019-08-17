@@ -20,8 +20,12 @@
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {Constraint, ConstraintType} from '../../model/data/constraint';
 import {LinkType} from '../link-types/link.type';
-import {AttributeFilter, ConditionType, Query} from '../navigation/query';
-import {conditionFromString, getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query.util';
+import {AttributeFilter, ConditionType, Query} from '../navigation/query/query';
+import {
+  conditionFromString,
+  getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
+} from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
 
 export function isCollectionAttributeEditable(

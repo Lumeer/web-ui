@@ -36,7 +36,7 @@ import {
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {
   decimalUserToStore,

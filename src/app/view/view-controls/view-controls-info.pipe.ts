@@ -30,7 +30,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ViewConfig, View} from '../../core/store/views/view';
 import {userHasRoleInResource, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
-import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query.util';
+import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {ResourceType} from '../../core/model/resource-type';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourcePermissionsPipe} from '../../shared/pipes/permissions/resource-permissions.pipe';

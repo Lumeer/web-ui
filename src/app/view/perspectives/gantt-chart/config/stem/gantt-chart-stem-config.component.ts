@@ -27,11 +27,11 @@ import {
   GanttChartStemConfig,
 } from '../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../core/store/navigation/query';
+import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {Constraint} from '../../../../../core/model/data/constraint';
-import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query.util';
+import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 
 @Component({

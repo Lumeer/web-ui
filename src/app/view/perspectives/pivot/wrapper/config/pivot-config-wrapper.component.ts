@@ -22,7 +22,7 @@ import {PivotConfig, PivotStemConfig} from '../../../../../core/store/pivots/piv
 import {PivotData} from '../../util/pivot-data';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query, QueryStem} from '../../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 

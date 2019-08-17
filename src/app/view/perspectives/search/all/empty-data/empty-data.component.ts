@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {Project} from '../../../../../core/store/projects/project';
 import {ResourceType} from '../../../../../core/model/resource-type';
 

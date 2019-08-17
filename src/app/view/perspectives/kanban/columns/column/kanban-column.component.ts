@@ -38,7 +38,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
 import {generateId} from '../../../../../shared/utils/resource.utils';

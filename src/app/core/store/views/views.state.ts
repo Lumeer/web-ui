@@ -26,20 +26,19 @@ import {selectChartConfig} from '../charts/charts.state';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
+import {selectKanbanConfig} from '../kanbans/kanban.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navigation.state';
-import {areQueriesEqual} from '../navigation/query.helper';
-import {selectTableConfig} from '../tables/tables.selector';
-import {ViewGlobalConfig, View, ViewConfig, ViewCursor} from './view';
-import {isViewConfigChanged} from './view.utils';
-import {selectKanbanConfig} from '../kanbans/kanban.state';
+import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
+import {selectTableConfig} from '../tables/tables.selector';
+import {View, ViewConfig, ViewGlobalConfig} from './view';
+import {isViewConfigChanged} from './view.utils';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
   config: ViewConfig; // TODO remove
-  cursor: ViewCursor;
   globalConfig: ViewGlobalConfig;
 }
 
@@ -48,7 +47,6 @@ export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
   config: {},
-  cursor: null,
   globalConfig: {},
 });
 
@@ -87,11 +85,6 @@ export const selectViewConfig = createSelector(
 export const selectViewSearchConfig = createSelector(
   selectViewConfig,
   config => config.search
-);
-
-export const selectViewCursor = createSelector(
-  selectViewsState,
-  state => state.cursor
 );
 
 export const selectPerspectiveConfig = createSelector(

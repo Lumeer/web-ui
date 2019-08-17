@@ -23,7 +23,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, tap, mergeMap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
-import {convertQueryModelToString} from '../store/navigation/query.converter';
+import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';

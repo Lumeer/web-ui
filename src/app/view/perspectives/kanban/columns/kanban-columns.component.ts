@@ -34,7 +34,7 @@ import {KanbanAttribute, KanbanColumn, KanbanConfig} from '../../../../core/stor
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {User} from '../../../../core/store/users/user';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
@@ -52,7 +52,7 @@ import {generateDocumentData, groupDocumentsByCollection} from '../../../../core
 import {
   getQueryFiltersForCollection,
   queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query.util';
+} from '../../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {getSaveValue} from '../../../../shared/utils/data.utils';

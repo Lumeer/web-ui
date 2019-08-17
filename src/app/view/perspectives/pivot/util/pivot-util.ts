@@ -25,14 +25,14 @@ import {
   PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query.util';
+} from '../../../../core/store/navigation/query/query.util';
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';

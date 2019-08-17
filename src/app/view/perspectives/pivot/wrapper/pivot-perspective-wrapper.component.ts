@@ -31,7 +31,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {PivotDataConverter} from '../util/pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';

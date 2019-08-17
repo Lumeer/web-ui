@@ -17,36 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {decodeQuery, encodeQuery} from './query-encoding';
+import {decodeQueryParam, encodeQueryParam} from './query-param-encoding';
 
-describe('encodeQuery()', () => {
+describe('encodeQueryParam()', () => {
   it('should handle empty query', () => {
-    expect(encodeQuery('')).toEqual('');
+    expect(encodeQueryParam('')).toEqual('');
   });
 
   it('should handle empty query object', () => {
-    expect(encodeQuery('{}')).toEqual('');
+    expect(encodeQueryParam('{}')).toEqual('');
   });
 
   it('should handle query object', () => {
-    expect(encodeQuery('{"s":[{"c":"5d24b3632ec57b390456ed06"}]}')).toEqual(
+    expect(encodeQueryParam('{"s":[{"c":"5d24b3632ec57b390456ed06"}]}')).toEqual(
       'eyJzIjpbeyJjIjoiNWQyNGIzNjMyZWM1N2IzOTA0NTZlZDA2In1dfQc809164d'
     );
   });
 });
 
-describe('decodeQuery()', () => {
+describe('decodeQueryParam()', () => {
   it('should handle empty query', () => {
-    expect(decodeQuery('')).toEqual('');
+    expect(decodeQueryParam('')).toEqual('');
   });
 
   it('should handle single query stem', () => {
-    expect(decodeQuery('eyJzIjpbeyJjIjoiNWQyNGIzNjMyZWM1N2IzOTA0NTZlZDA2In1dfQc809164d')).toEqual(
+    expect(decodeQueryParam('eyJzIjpbeyJjIjoiNWQyNGIzNjMyZWM1N2IzOTA0NTZlZDA2In1dfQc809164d')).toEqual(
       '{"s":[{"c":"5d24b3632ec57b390456ed06"}]}'
     );
   });
 
   it('should handle invalid query', () => {
-    expect(decodeQuery('eyJzIjpbeyJjIjoiNWQyNGIzNjMyZWM1N2xzIzOTA0NTZlZDA2In1dfQc809164d')).toEqual('');
+    expect(decodeQueryParam('eyJzIjpbeyJjIjoiNWQyNGIzNjMyZWM1N2xzIzOTA0NTZlZDA2In1dfQc809164d')).toEqual('');
   });
 });

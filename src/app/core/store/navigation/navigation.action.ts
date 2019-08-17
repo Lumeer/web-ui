@@ -18,8 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
+import {Query} from './query/query';
 import {SearchTab} from './search-tab';
-import {Query} from './query';
+import {ViewCursor} from './view-cursor/view-cursor';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
@@ -34,6 +35,8 @@ export enum NavigationActionType {
   NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
 
   SET_QUERY = '[Navigation] Set query',
+
+  SET_VIEW_CURSOR = '[Navigation] Set View Cursor',
 
   REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL',
 }
@@ -55,6 +58,12 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.SET_QUERY;
 
     public constructor(public payload: {query: Query}) {}
+  }
+
+  export class SetViewCursor implements Action {
+    public readonly type = NavigationActionType.SET_VIEW_CURSOR;
+
+    public constructor(public payload: {cursor: ViewCursor}) {}
   }
 
   export class RemoveViewFromUrl implements Action {

@@ -18,11 +18,11 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryStem} from '../../core/store/navigation/query';
+import {QueryStem} from '../../core/store/navigation/query/query';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource} from '../../core/model/resource';
-import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query.util';
+import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'queryStemAttributesResources',

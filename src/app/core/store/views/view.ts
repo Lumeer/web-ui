@@ -23,7 +23,7 @@ import {Resource} from '../../model/resource';
 import {CalendarConfig} from '../calendars/calendar';
 import {ChartConfig} from '../charts/chart';
 import {GanttChartConfig} from '../gantt-charts/gantt-chart';
-import {Query} from '../navigation/query';
+import {Query} from '../navigation/query/query';
 import {TableConfig} from '../tables/table.model';
 import {KanbanConfig} from '../kanbans/kanban';
 import {PivotConfig} from '../pivots/pivot';
@@ -35,13 +35,6 @@ export interface View extends Resource {
   authorRights?: {[collectionId: string]: string[]};
   lastTimeUsed?: Date;
   favorite?: boolean;
-}
-
-export interface ViewCursor {
-  linkInstanceId?: string;
-  collectionId: string;
-  documentId: string;
-  attributeId?: string;
 }
 
 export interface ViewConfig {

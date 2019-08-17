@@ -30,7 +30,7 @@ import {
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {take, tap, withLatestFrom} from 'rxjs/operators';

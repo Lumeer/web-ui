@@ -18,7 +18,7 @@
  */
 
 import {Constraint, ConstraintType} from '../../model/data/constraint';
-import {QueryStem} from '../navigation/query';
+import {QueryStem} from '../navigation/query/query';
 import {AttributesResourceType} from '../../model/resource';
 
 export const DEFAULT_KANBAN_ID = 'default';

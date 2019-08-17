@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -63,13 +63,12 @@ import {
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
-import {selectQuery, selectViewCode} from '../navigation/navigation.state';
-import {Query} from '../navigation/query';
-import {convertQueryModelToString} from '../navigation/query.converter';
-import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query.util';
+import {NavigationAction} from '../navigation/navigation.action';
+import {selectQuery, selectViewCode, selectViewCursor} from '../navigation/navigation.state';
+import {Query} from '../navigation/query/query';
+import {convertQueryModelToString} from '../navigation/query/query.converter';
+import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
-import {ViewCursor} from '../views/view';
-import {ViewsAction} from '../views/views.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
 import {
   DEFAULT_TABLE_ID,
@@ -102,6 +101,7 @@ import {
 } from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {
+  selectDefaultTable,
   selectMoveTableCursorDown,
   selectTableById,
   selectTableCursor,
@@ -110,6 +110,8 @@ import {
   selectTableRows,
   selectTableRowsWithHierarchyLevels,
 } from './tables.selector';
+import {createTableCursorFromViewCursor} from './utils/cursor/create-table-cursor-from-view-cursor';
+import {createViewCursorFromTableCursor} from './utils/cursor/create-view-cursor-from-table-cursor';
 import {
   filterNewlyCreatedDocuments,
   filterNewlyCreatedLinkInstances,
@@ -136,9 +138,10 @@ export class TablesEffects {
         mergeMap(() => this.store$.select(selectLinkTypesDictionary))
       ),
       this.store$.pipe(select(selectDocumentsByQuery)),
-      this.store$.pipe(select(selectViewCode))
+      this.store$.pipe(select(selectViewCode)),
+      this.store$.pipe(select(selectViewCursor))
     ),
-    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
+    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode, viewCursor]) => {
       const {config, query, tableId} = action.payload;
 
       const queryStem = query.stems[0];
@@ -176,14 +179,12 @@ export class TablesEffects {
       );
 
       const actions: Action[] = [];
-      actions.push(
-        new TablesAction.AddTable({
-          table: {
-            id: action.payload.tableId,
-            config: {parts, rows},
-          },
-        })
-      );
+
+      const table = {
+        id: action.payload.tableId,
+        config: {parts, rows},
+      };
+      actions.push(new TablesAction.AddTable({table}));
 
       actions.push(new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query}));
 
@@ -199,28 +200,7 @@ export class TablesEffects {
   @Effect()
   public destroyTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
-    mergeMap(action =>
-      combineLatest(
-        this.store$.select(selectTableById(action.payload.tableId)),
-        this.store$.select(selectTableCursor)
-      ).pipe(first())
-    ),
-    filter(([table]) => !!table),
-    mergeMap(([table, tableCursor]) => {
-      if (tableCursor && tableCursor.tableId === table.id) {
-        return this.createViewCursorFromTable(table, tableCursor).pipe(map(viewCursor => ({table, viewCursor})));
-      }
-      return of({table, viewCursor: null});
-    }),
-    flatMap(({table, viewCursor}) => {
-      const actions: Action[] = [new TablesAction.RemoveTable({tableId: table.id})];
-
-      if (table.id === DEFAULT_TABLE_ID) {
-        actions.push(new ViewsAction.SetCursor({cursor: viewCursor}));
-      }
-
-      return actions;
-    })
+    map(action => new TablesAction.RemoveTable({tableId: action.payload.tableId}))
   );
 
   @Effect()
@@ -620,11 +600,12 @@ export class TablesEffects {
       combineLatest(
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
         this.store$.pipe(select(selectDocumentsByCustomQuery(queryWithoutLinks(action.payload.query), false, true))),
-        this.store$.pipe(select(selectMoveTableCursorDown))
+        this.store$.pipe(select(selectMoveTableCursorDown)),
+        this.store$.pipe(select(selectTableCursor))
       ).pipe(
-        first(),
+        take(1),
         filter(([table]) => !!table),
-        mergeMap(([table, documents, moveCursorDown]) => {
+        mergeMap(([table, documents, moveCursorDown, tableCursor]) => {
           const {collectionId} = table.config.parts[0];
           return this.store$.pipe(
             select(selectCollectionById(collectionId)),
@@ -688,6 +669,10 @@ export class TablesEffects {
                 unknownDocuments.length === 0
               ) {
                 actions.push(new TablesAction.RemoveRow({cursor: {...cursor, rowPath: [rows.length - 1]}}));
+              }
+
+              if (!tableCursor) {
+                actions.push(new TablesAction.UseViewCursor());
               }
 
               return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
@@ -1083,6 +1068,23 @@ export class TablesEffects {
   );
 
   @Effect()
+  public setCursor$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
+    mergeMap(action => {
+      const {cursor} = action.payload;
+      if (cursor && cursor.tableId !== DEFAULT_TABLE_ID) {
+        return [];
+      }
+
+      return this.store$.pipe(
+        select(selectTableById(cursor && cursor.tableId)),
+        take(1),
+        map(table => new NavigationAction.SetViewCursor({cursor: createViewCursorFromTableCursor(cursor, table)}))
+      );
+    })
+  );
+
+  @Effect()
   public moveCursor$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
     withLatestFrom(this.store$.select(selectTableCursor).pipe(filter(cursor => !!cursor))),
@@ -1102,6 +1104,24 @@ export class TablesEffects {
     })
   );
 
+  @Effect()
+  public useViewCursor$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.UseViewCursor>(TablesActionType.USE_VIEW_CURSOR),
+    withLatestFrom(
+      this.store$.pipe(select(selectViewCursor)),
+      this.store$.pipe(select(selectTableCursor)),
+      this.store$.pipe(select(selectDefaultTable))
+    ),
+    mergeMap(([, viewCursor, tableCursor, table]) => {
+      if (tableCursor || !viewCursor) {
+        return [];
+      }
+
+      const cursor = createTableCursorFromViewCursor(viewCursor, table);
+      return cursor ? [new TablesAction.SetCursor({cursor})] : [];
+    })
+  );
+
   public constructor(
     private actions$: Actions,
     private collectionPermissionsPipe: CollectionPermissionsPipe,
@@ -1116,49 +1136,6 @@ export class TablesEffects {
       filter(table => !!table),
       map(table => ({action, table}))
     );
-  }
-
-  private createViewCursorFromTable(table: TableModel, cursor: TableCursor): Observable<ViewCursor> {
-    if (!cursor || !cursor.rowPath) {
-      return of(null);
-    }
-
-    const part = table.config && table.config.parts && table.config.parts[cursor.partIndex];
-    if (!part || !part.collectionId) {
-      return of(null);
-    }
-
-    const column = part.columns[cursor.columnIndex];
-    if (column.type !== TableColumnType.COMPOUND) {
-      return of(null);
-    }
-
-    const attributeId = column.attributeIds[0];
-    const row = findTableRow(table.config.rows, cursor.rowPath);
-    if (!row || !row.documentId) {
-      return of(null);
-    }
-
-    if (cursor.rowPath.length > 1) {
-      const linkedRow = findTableRow(table.config.rows, cursor.rowPath);
-      const {linkTypeId} = table.config.parts[cursor.partIndex - 1];
-      const linkedDocumentId = linkedRow.documentId;
-      return this.store$.select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [linkedDocumentId])).pipe(
-        first(),
-        map(linkInstances => ({
-          linkInstanceId: linkInstances.length ? linkInstances[0].id : null,
-          collectionId: part.collectionId,
-          documentId: row.documentId,
-          attributeId,
-        }))
-      );
-    }
-
-    return of({
-      collectionId: part.collectionId,
-      documentId: row.documentId,
-      attributeId,
-    });
   }
 }
 

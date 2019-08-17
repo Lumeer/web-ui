@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Perspective} from '../../view/perspectives/perspective';
-import {Query} from '../../core/store/navigation/query';
-import {isAnyCollectionQuery, isSingleCollectionQuery} from '../../core/store/navigation/query.util';
+import {Query} from '../../core/store/navigation/query/query';
+import {isAnyCollectionQuery, isSingleCollectionQuery} from '../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'filterPerspectives',

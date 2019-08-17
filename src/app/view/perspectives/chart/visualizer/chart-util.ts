@@ -18,14 +18,14 @@
  */
 
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../core/store/charts/chart';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query.util';
+import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query/query.util';
 
 export function convertChartDateTickFormat(format: string): string {
   if (!format) {

@@ -37,7 +37,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {SelectionHelper} from './util/selection-helper';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentUi} from '../../../core/ui/document-ui';
 import {AppState} from '../../../core/store/app.state';
 import {NotificationService} from '../../../core/notifications/notification.service';

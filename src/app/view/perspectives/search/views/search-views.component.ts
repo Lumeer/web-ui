@@ -32,11 +32,11 @@ import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.s
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {filter, map} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {SizeType} from '../../../../shared/slider/size-type';

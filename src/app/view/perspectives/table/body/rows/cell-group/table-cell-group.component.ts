@@ -26,7 +26,7 @@ import {selectDocumentsByIds} from '../../../../../../core/store/documents/docum
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
-import {Query} from '../../../../../../core/store/navigation/query';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
   TableColumnType,

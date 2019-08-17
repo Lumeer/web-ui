@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 import {Collection} from '../../../core/store/collections/collection';
-import {Query} from '../../../core/store/navigation/query';
+import {Query} from '../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'empty-records',

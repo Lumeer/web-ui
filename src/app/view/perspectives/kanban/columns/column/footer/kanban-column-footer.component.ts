@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {AttributesResource} from '../../../../../../core/model/resource';
-import {QueryStem} from '../../../../../../core/store/navigation/query';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {KanbanAttribute} from '../../../../../../core/store/kanbans/kanban';
 import {DropdownOption} from '../../../../../../shared/dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../../../../shared/dropdown/options/options-dropdown.component';

@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../../view/perspectives/perspective';
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {filter, take} from 'rxjs/operators';
+import {Perspective} from '../../view/perspectives/perspective';
 import {AppState} from '../store/app.state';
 import {Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
-import {ViewsAction} from '../store/views/views.action';
-import {Router} from '@angular/router';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {filter, take} from 'rxjs/operators';
-import {selectViewCursor} from '../store/views/views.state';
+import {NavigationAction} from '../store/navigation/navigation.action';
+import {selectViewCursor, selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +44,7 @@ export class PerspectiveService {
       // do we have any document selected?
       // update cursor
       this.store.dispatch(
-        new ViewsAction.SetCursor({
+        new NavigationAction.SetViewCursor({
           cursor: {collectionId: collection.id, documentId: document.id},
         })
       );
@@ -54,7 +53,7 @@ export class PerspectiveService {
       this.store
         .select(selectViewCursor)
         .pipe(
-          filter(cursor => cursor.collectionId === collection.id && cursor.documentId === document.id),
+          filter(cursor => cursor && cursor.collectionId === collection.id && cursor.documentId === document.id),
           take(1)
         )
         .subscribe(cursor => {

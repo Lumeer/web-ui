@@ -36,8 +36,8 @@ import {FileAttachmentsAction} from '../file-attachments/file-attachments.action
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
-import {convertQueryModelToDto} from '../navigation/query.converter';
-import {areQueriesEqual} from '../navigation/query.helper';
+import {convertQueryModelToDto} from '../navigation/query/query.converter';
+import {areQueriesEqual} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {RouterAction} from '../router/router.action';

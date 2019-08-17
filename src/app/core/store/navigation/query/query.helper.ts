@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
+import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
 import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
 import {Query} from './query';
 import {getBaseCollectionIdsFromQuery} from './query.util';

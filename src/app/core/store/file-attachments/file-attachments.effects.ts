@@ -27,7 +27,7 @@ import {createFileApiPath, FileApiPath, FileAttachmentApiService} from '../../re
 import {CommonAction} from '../common/common.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
-import {getAllLinkTypeIdsFromQuery} from '../navigation/query.util';
+import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';

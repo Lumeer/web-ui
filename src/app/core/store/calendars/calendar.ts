@@ -18,7 +18,7 @@
  */
 
 import {AttributesResourceType} from '../../model/resource';
-import {QueryStem} from '../navigation/query';
+import {QueryStem} from '../navigation/query/query';
 
 export const DEFAULT_CALENDAR_ID = 'default';
 export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';

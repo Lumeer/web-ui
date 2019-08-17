@@ -44,7 +44,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectUrl, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {map, take} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query.converter';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {Project} from '../../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';

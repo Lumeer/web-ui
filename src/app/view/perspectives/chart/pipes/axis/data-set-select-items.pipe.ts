@@ -22,7 +22,7 @@ import {ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query} from '../../../../../core/store/navigation/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {createSelectItemsForAxisType} from './pipes.util';
 
 @Pipe({

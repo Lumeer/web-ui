@@ -19,15 +19,15 @@
 
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
-import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
+import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from './query';
-import {LinkType} from '../link-types/link.type';
-import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils';
-import {Collection} from '../collections/collection';
-import {AttributesResource} from '../../model/resource';
+import {LinkType} from '../../link-types/link.type';
+import {isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
+import {Collection} from '../../collections/collection';
+import {AttributesResource} from '../../../model/resource';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];

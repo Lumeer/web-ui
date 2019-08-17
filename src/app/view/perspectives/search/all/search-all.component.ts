@@ -36,7 +36,7 @@ import {selectAllViews, selectViewsLoaded} from '../../../../core/store/views/vi
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Project} from '../../../../core/store/projects/project';
 

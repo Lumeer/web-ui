@@ -28,7 +28,7 @@ import {DocumentsAction} from '../../store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../store/documents/documents.state';
 import {selectQuery} from '../../store/navigation/navigation.state';
 import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
-import {queryIsEmpty} from '../../store/navigation/query.util';
+import {queryIsEmpty} from '../../store/navigation/query/query.util';
 import {selectViewsLoaded} from '../../store/views/views.state';
 import {Project} from '../../store/projects/project';
 import {Organization} from '../../store/organizations/organization';

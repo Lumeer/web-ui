@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {Collection} from '../../../../core/store/collections/collection';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../core/store/charts/chart';
 import {Perspective} from '../../perspective';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';

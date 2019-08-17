@@ -21,7 +21,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {Query, QueryStem} from '../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {DataAggregatorAttribute, DataAggregator} from './data-aggregator';
 
 const documents: DocumentModel[] = [

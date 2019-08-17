@@ -37,8 +37,12 @@ import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {Query} from '../../../core/store/navigation/query';
-import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
+import {Query} from '../../../core/store/navigation/query/query';
+import {
+  areQueriesEqual,
+  getNewLinkTypeIdFromQuery,
+  hasQueryNewLink,
+} from '../../../core/store/navigation/query/query.helper';
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';

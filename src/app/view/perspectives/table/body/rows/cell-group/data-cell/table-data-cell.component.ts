@@ -52,7 +52,7 @@ import {LinkInstancesAction} from '../../../../../../../core/store/link-instance
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
-import {Query} from '../../../../../../../core/store/navigation/query';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';

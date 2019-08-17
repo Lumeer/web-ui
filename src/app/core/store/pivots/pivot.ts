@@ -20,7 +20,7 @@
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {Constraint} from '../../model/data/constraint';
-import {QueryStem} from '../navigation/query';
+import {QueryStem} from '../navigation/query/query';
 
 export const DEFAULT_PIVOT_ID = 'default';
 

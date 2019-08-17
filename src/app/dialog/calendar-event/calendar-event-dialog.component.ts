@@ -34,7 +34,7 @@ import {CalendarEventDialogFormComponent} from './form/calendar-event-dialog-for
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
-import {Query} from '../../core/store/navigation/query';
+import {Query} from '../../core/store/navigation/query/query';
 import {selectQuery} from '../../core/store/navigation/navigation.state';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';

@@ -18,9 +18,9 @@
  */
 
 import {PermissionType} from '../permissions/permissions';
+import {View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {View} from './view';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -38,8 +38,6 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return {...state, config: action.payload.config};
     case ViewsActionType.CHANGE_SEARCH_CONFIG:
       return {...state, config: {...state.config, search: action.payload.config}};
-    case ViewsActionType.SET_CURSOR:
-      return {...state, cursor: action.payload.cursor};
     case ViewsActionType.RESET_VIEW_GLOBAL_CONFIG:
       return {...state, globalConfig: {}};
     case ViewsActionType.SET_SIDEBAR_OPENED:

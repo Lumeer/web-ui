@@ -27,7 +27,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as Sentry from '@sentry/browser';
@@ -43,6 +43,7 @@ import {AuthService} from './auth/auth.service';
 import {superUserEmails} from './auth/super-user-emails';
 import {ServiceLevelType} from './core/dto/service-level-type';
 import {PusherService} from './core/pusher/pusher.service';
+import {ModuleLazyLoadingService} from './core/service/module-lazy-loading.service';
 import {AppState} from './core/store/app.state';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {selectCurrentUser} from './core/store/users/users.state';
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private changeDetector: ChangeDetectorRef,
     private i18n: I18n,
+    private moduleLazyLoadingService: ModuleLazyLoadingService,
     private router: Router,
     private snotifyService: SnotifyService,
     private store$: Store<AppState>,
@@ -76,6 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));
 
+    this.moduleLazyLoadingService.init();
     this.initPushNotifications();
     this.handleAuthentication();
     this.startAnalyticsTracking();
@@ -197,7 +200,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public ngAfterViewInit() {
     this.initSmartlook();
     this.bindBrowserWarningCloseCallback();
-    this.subscribeToRouterEvents();
+    this.subscribeToModuleLazyLoading();
   }
 
   private bindBrowserWarningCloseCallback() {
@@ -211,15 +214,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private subscribeToRouterEvents(): Subscription {
-    return this.router.events.subscribe(event => {
-      if (event instanceof RouteConfigLoadStart) {
-        this.lazyLoading$.next(true);
-      }
-      if (event instanceof RouteConfigLoadEnd) {
-        this.lazyLoading$.next(false);
-      }
-    });
+  private subscribeToModuleLazyLoading(): Subscription {
+    return this.moduleLazyLoadingService
+      .observeLazyLoading()
+      .subscribe(lazyLoading => this.lazyLoading$.next(lazyLoading));
   }
 
   public onHideLoadingIndicator() {

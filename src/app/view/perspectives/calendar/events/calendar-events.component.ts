@@ -42,7 +42,7 @@ import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {CalendarMetaData, checkOrTransformCalendarConfig, createCalendarEvents} from '../util/calendar-util';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {Query} from '../../../../core/store/navigation/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import * as moment from 'moment';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';

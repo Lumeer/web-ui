@@ -29,22 +29,21 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
-import {Collection} from '../../core/store/collections/collection';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {AppState} from '../../core/store/app.state';
+import {Collection} from '../../core/store/collections/collection';
+import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {selectViewCursor} from '../../core/store/views/views.state';
-import {ViewsAction} from '../../core/store/views/views.action';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
-import {Query, QueryStem} from '../../core/store/navigation/query';
-import {getQueryFiltersForCollection} from '../../core/store/navigation/query.util';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
+import {selectNavigation, selectViewCursor} from '../../core/store/navigation/navigation.state';
+import {Query, QueryStem} from '../../core/store/navigation/query/query';
+import {getQueryFiltersForCollection} from '../../core/store/navigation/query/query.util';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {generateCorrelationId} from '../utils/resource.utils';
 
 @Component({
@@ -236,7 +235,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   private updateCursor() {
     if (this.selectedCollection && this.selectedDocument) {
       this.store$.dispatch(
-        new ViewsAction.SetCursor({
+        new NavigationAction.SetViewCursor({
           cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id},
         })
       );
@@ -256,7 +255,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
         },
         callback: id => {
           this.store$.dispatch(
-            new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
+            new NavigationAction.SetViewCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
           );
         },
       })

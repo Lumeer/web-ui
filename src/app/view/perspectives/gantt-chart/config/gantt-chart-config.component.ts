@@ -22,7 +22,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {GanttChartStemConfig, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {Query, QueryStem} from '../../../../core/store/navigation/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
 
