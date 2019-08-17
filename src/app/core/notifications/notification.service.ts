@@ -21,17 +21,10 @@ import {Injectable, NgZone} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
 import {Observable} from 'rxjs';
-import {UserSettingsService} from '../service/user-settings.service';
-import {SnotifyType} from 'ng-snotify/snotify/types/snotify.type';
 
 @Injectable()
 export class NotificationService {
-  constructor(
-    private zone: NgZone,
-    private notifications: SnotifyService,
-    private userSettingsService: UserSettingsService,
-    private i18n: I18n
-  ) {}
+  constructor(private zone: NgZone, private notifications: SnotifyService, private i18n: I18n) {}
 
   public simple(message: string): void {
     if (this.areNotificationsDisabled()) {
@@ -149,6 +142,6 @@ export class NotificationService {
   }
 
   private areNotificationsDisabled(): boolean {
-    return this.userSettingsService.getUserSettings().notificationsDisabled;
+    return false;
   }
 }

@@ -39,6 +39,12 @@ export interface SearchDocumentsConfig {
 }
 
 export interface SearchViewsConfig {
-  expandedIds?: string[];
   size: SizeType;
+}
+
+export function createDefaultSearchConfig(): SearchConfig {
+  return {
+    documents: {size: SizeType.L},
+    views: {size: SizeType.L},
+  };
 }

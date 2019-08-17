@@ -1,21 +1,23 @@
-<div class="mt-2" *ngIf="documents?.length; else noDocuments" infiniteScroll
+<div class="mt-2 mb-5" *ngIf="documents?.length; else noDocuments" infiniteScroll
      [infiniteScrollDisabled]="maxDocuments > 0"
      [infiniteScrollDistance]="2"
      (scrolled)="onScrollDown()">
   <size-slider class="d-flex justify-content-end mb-2"
                [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
-  <div class="detail card p-2 mb-2"
+  <div class="detail card p-0 mb-2"
        (click)="toggleDocument(document)"
        (dblclick)="onDetailClick(document)"
        *ngFor="let document of (maxDocuments > 0 ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument">
 
     <search-document-header
+      class="p-2"
       (detail)="onDetailClick(document)"
       [size]="config?.size"
       [document]="document"
       [isOpened]="document | isDocumentOpened:config"
       [collection]="collections | collectionById:document.collectionId"
-      [constraintData]="constraintData">
+      [constraintData]="constraintData"
+      (toggleFavorite)="onFavoriteToggle(document)">
 
       <div *ngIf="!(document | isDocumentOpened:config) && config?.size === sizeType.M"
            [innerHTML]="document | createDocumentValuesHtml:collections:constraintData | safeHtml">

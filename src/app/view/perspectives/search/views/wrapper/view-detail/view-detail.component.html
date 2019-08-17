@@ -1,5 +1,4 @@
-<ng-container *ngIf="{queryItems: queryItems$ | async,
-                  clickable: !(queryItems$ | async | containsDeletedQueryItem)} as data">
+<ng-container *ngIf="{clickable: !(queryItems | containsDeletedQueryItem)} as data">
 
   <div class="card p-2 mb-2 view"
        [class.mb-2]="viewSize !== sizeType.S"
@@ -12,7 +11,7 @@
       <div class="flex-column align-self-center">
         <i [ngClass]="(viewSize === sizeType.XL || viewSize  === sizeType.L) ? 'fa-3x' : (viewSize === sizeType.M ? 'fa-2x' : '')"
            class="fa-fw mr-2 {{getIconForPerspective(view.perspective)}} align-self-center"
-           [ngStyle]="viewSize === sizeType.XL ? {} : {color: (queryItems$ | async | queryColor)}"
+           [ngStyle]="viewSize === sizeType.XL ? {} : {color: queryItems | queryColor}"
            aria-hidden="true"></i>&nbsp;
       </div>
       <div class="flex-column flex-fill" [class.align-self-center]="viewSize !== sizeType.XL">
@@ -22,13 +21,23 @@
             {{view.name}}
           </span>
 
-          <span class="text-right" *ngIf="view | permissions:viewType:'manage' | async">
-            <i class="fas fa-fw fa-share-alt mr-2 text-success ml-auto cursor-pointer"
+          <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
+             *ngIf="view | permissions:viewType:roleRead | async"
+             (click)="$event.stopPropagation(); onFavoriteToggle()"
+             [class.always-visible]="view.favorite"
+             title="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+             i18n-title="@@view.favorite"
+             [ngClass]="view.favorite ? 'fas' : 'far'"
+             aria-hidden="true">
+          </i>
+
+          <span class="text-right" *ngIf="view | permissions:viewType:roleManage | async">
+            <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
                (click)="$event.stopPropagation(); onShareClick()"
                title="Share" i18n-title="@@button.share"
                aria-hidden="true">
             </i>
-            <i class="fas fa-fw fa-trash text-danger ml-auto cursor-pointer"
+            <i class="fas fa-fw fa-trash text-danger cursor-pointer"
                (click)="$event.stopPropagation(); onDelete()"
                title="Delete" i18n-title="@@delete"
                aria-hidden="true">
@@ -38,7 +47,7 @@
         </div>
 
         <div class="d-flex flex-wrap" *ngIf="viewSize === sizeType.XL">
-          <query-item *ngFor="let queryItem of data.queryItems; trackBy:trackByQueryItem; let isLast = last"
+          <query-item *ngFor="let queryItem of queryItems; trackBy:trackByQueryItem; let isLast = last"
                       [queryItem]="queryItem"
                       [readonly]="true"
                       class="d-inline-flex mt-1 align-items-center"

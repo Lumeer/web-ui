@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit} from '@angular/core';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
@@ -31,14 +31,16 @@ import {Router} from '@angular/router';
 import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
+import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
 
 @Component({
   selector: 'search-documents-wrapper',
   templateUrl: './search-documents-wrapper.component.html',
   styleUrls: ['./search-documents-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DocumentFavoriteToggleService],
 })
-export class SearchDocumentsWrapperComponent {
+export class SearchDocumentsWrapperComponent implements OnInit {
   @Input()
   public documents: DocumentModel[];
 
@@ -68,7 +70,15 @@ export class SearchDocumentsWrapperComponent {
 
   public readonly sizeType = SizeType;
 
-  constructor(private perspectiveService: PerspectiveService, private router: Router) {}
+  constructor(
+    private perspectiveService: PerspectiveService,
+    private router: Router,
+    private toggleService: DocumentFavoriteToggleService
+  ) {}
+
+  public ngOnInit() {
+    this.toggleService.setWorkspace(this.workspace);
+  }
 
   public onDetailClick(document: DocumentModel) {
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
@@ -111,5 +121,13 @@ export class SearchDocumentsWrapperComponent {
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  public onFavoriteToggle(document: DocumentModel) {
+    this.toggleService.set(document.id, !document.favorite, document);
+  }
+
+  public ngOnDestroy() {
+    this.toggleService.onDestroy();
   }
 }

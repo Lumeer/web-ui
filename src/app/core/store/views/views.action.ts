@@ -45,7 +45,13 @@ export enum ViewsActionType {
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
-  SET_CURSOR = '[Views] Set Cursor',
+  ADD_FAVORITE = '[Views] Add Favorite',
+  ADD_FAVORITE_SUCCESS = '[Views] Add Favorite :: Success',
+  ADD_FAVORITE_FAILURE = '[Views] Add Favorite :: Failure',
+
+  REMOVE_FAVORITE = '[Views] Remove Favorite',
+  REMOVE_FAVORITE_SUCCESS = '[Views] Remove Favorite :: Success',
+  REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
 
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
@@ -174,6 +180,42 @@ export namespace ViewsAction {
     public constructor(public payload: {opened: boolean}) {}
   }
 
+  export class AddFavorite implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE;
+
+    public constructor(public payload: {viewId: string; workspace?: Workspace}) {}
+  }
+
+  export class AddFavoriteSuccess implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE_SUCCESS;
+
+    public constructor(public payload: {viewId: string}) {}
+  }
+
+  export class AddFavoriteFailure implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE_FAILURE;
+
+    public constructor(public payload: {viewId: string; error: any}) {}
+  }
+
+  export class RemoveFavorite implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE;
+
+    public constructor(public payload: {viewId: string; workspace?: Workspace}) {}
+  }
+
+  export class RemoveFavoriteSuccess implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE_SUCCESS;
+
+    public constructor(public payload: {viewId: string}) {}
+  }
+
+  export class RemoveFavoriteFailure implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE_FAILURE;
+
+    public constructor(public payload: {viewId: string; error: any}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -195,6 +237,12 @@ export namespace ViewsAction {
     | DeleteSuccess
     | DeleteFailure
     | ResetViewGlobalConfig
+    | AddFavorite
+    | AddFavoriteSuccess
+    | AddFavoriteFailure
+    | RemoveFavorite
+    | RemoveFavoriteSuccess
+    | RemoveFavoriteFailure
     | SetSidebarOpened
     | Clear;
 }

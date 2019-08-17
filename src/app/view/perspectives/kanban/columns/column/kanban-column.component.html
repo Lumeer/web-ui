@@ -29,12 +29,14 @@
       [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
       [index]="idx"
       [permissions]="permissions[card.dataResource.collectionId] || {}"
-      (remove)="onRemoveDocument(card.dataResource)">
+      (remove)="onRemoveDocument(card.dataResource)"
+      (toggleFavorite)="onToggleFavorite(card.dataResource)">
     </post-it-document>
 
   </div>
 
-  <div class="card-footer px-3 py-2" *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
+  <div class="card-footer px-3 py-2"
+       *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
     <kanban-column-footer *ngIf="footerData.resources.length > 0"
                           [resources]="footerData.resources"
                           (selectResource)="createObjectInResource($event)">

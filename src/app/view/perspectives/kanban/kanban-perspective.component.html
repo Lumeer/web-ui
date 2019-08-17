@@ -33,9 +33,9 @@
       [canManageConfig]="data.canManageConfig"
       [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
       [currentUser]="currentUser$ | async"
+      [workspace]="workspace$ | async"
       (configChange)="onConfigChanged($event)"
       (patchDocumentData)="onPatchDocumentData($event)"
-
       (removeDocument)="onRemoveDocument($event)">
 
     </kanban-columns>

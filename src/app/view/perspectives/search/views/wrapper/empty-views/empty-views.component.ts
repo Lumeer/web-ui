@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {Query} from '../../../../../core/store/navigation/query/query';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'empty-views',

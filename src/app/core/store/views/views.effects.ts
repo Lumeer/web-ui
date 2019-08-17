@@ -293,6 +293,65 @@ export class ViewsEffects {
     })
   );
 
+  @Effect()
+  public addFavorite$ = this.actions$.pipe(
+    ofType<ViewsAction.AddFavorite>(ViewsActionType.ADD_FAVORITE),
+    mergeMap(action =>
+      this.viewService.addFavorite(action.payload.viewId, action.payload.workspace).pipe(
+        mergeMap(() => of()),
+        catchError(error =>
+          of(
+            new ViewsAction.AddFavoriteFailure({
+              viewId: action.payload.viewId,
+              error: error,
+            })
+          )
+        )
+      )
+    )
+  );
+
+  @Effect()
+  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.AddFavoriteFailure>(ViewsActionType.ADD_FAVORITE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'view.add.favorite.fail', value: 'Could not add the view to favorites'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public removeFavorite$ = this.actions$.pipe(
+    ofType<ViewsAction.RemoveFavorite>(ViewsActionType.REMOVE_FAVORITE),
+    mergeMap(action =>
+      this.viewService.removeFavorite(action.payload.viewId, action.payload.workspace).pipe(
+        mergeMap(() => of()),
+        catchError(error =>
+          of(
+            new ViewsAction.RemoveFavoriteFailure({
+              viewId: action.payload.viewId,
+              error: error,
+            })
+          )
+        )
+      )
+    )
+  );
+
+  @Effect()
+  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.RemoveFavoriteFailure>(ViewsActionType.REMOVE_FAVORITE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'view.remove.favorite.fail',
+        value: 'Could not remove the view from favorites',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private i18n: I18n,

@@ -21,12 +21,30 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {CollectionAttributeFilter, Query, ConditionType} from '../navigation/query/query';
 import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query/query.util';
+import {DocumentModule} from '../../../shared/document/document.module';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
-  const sortedDocuments = [...documents];
-  return sortedDocuments.sort((a, b) => {
+  return [...documents].sort((a, b) => {
     const value = a.creationDate.getTime() - b.creationDate.getTime();
     return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
+  });
+}
+
+export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): DocumentModel[] {
+  return [...documents].sort((a, b) => {
+    const aLastUsed = a.updateDate || a.creationDate;
+    const bLastUsed = b.updateDate || b.creationDate;
+    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
+      if (aLastUsed && bLastUsed) {
+        return bLastUsed.getTime() - aLastUsed.getTime();
+      } else if (aLastUsed && !bLastUsed) {
+        return -1;
+      } else if (bLastUsed && !aLastUsed) {
+        return 1;
+      }
+      return b.id.localeCompare(a.id);
+    }
+    return a.favorite ? -1 : 1;
   });
 }
 

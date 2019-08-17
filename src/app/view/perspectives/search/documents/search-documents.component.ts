@@ -26,7 +26,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
-import {selectQuery, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
 import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -41,6 +41,8 @@ import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../.
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
+import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 
 const PAGE_SIZE = 40;
 
@@ -67,7 +69,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private searchId = DEFAULT_SEARCH_ID;
   private config: SearchConfig;
   private page = 0;
-  private documentsOrder: string[] = [];
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private translationService: TranslationService) {
@@ -80,7 +81,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.loaded$ = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded));
     this.query$ = this.store$.pipe(select(selectQuery));
-    this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
 
     this.subscribeData();
@@ -138,7 +139,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private clearDocumentsInfo() {
     this.page = 0;
-    this.documentsOrder = [];
   }
 
   private fetchDocuments(query: Query) {
@@ -155,30 +155,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     const customQuery = {...query, page: 0, pageSize};
     this.documents$ = this.store$.pipe(
       select(selectDocumentsByCustomQuery(customQuery, true)),
-      map(documents => this.mapNewDocuments(documents))
+      map(documents => sortDocumentsByFavoriteAndLastUsed(documents))
     );
-  }
-
-  private mapNewDocuments(documents: DocumentModel[]): DocumentModel[] {
-    const documentsMap = documents.reduce((acc, doc) => {
-      acc[doc.correlationId || doc.id] = doc;
-      return acc;
-    }, {});
-
-    const orderedDocuments = this.documentsOrder.reduce((acc, key) => {
-      const doc = documentsMap[key];
-      if (doc) {
-        acc.push(doc);
-        delete documentsMap[key];
-      }
-      return acc;
-    }, []);
-
-    for (const [key, value] of Object.entries(documentsMap)) {
-      orderedDocuments.push(value);
-      this.documentsOrder.push(key);
-    }
-
-    return orderedDocuments;
   }
 }

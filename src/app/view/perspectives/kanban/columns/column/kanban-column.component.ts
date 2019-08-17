@@ -100,6 +100,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   @Output()
   public removeColumn = new EventEmitter();
 
+  @Output()
+  public toggleFavorite = new EventEmitter();
+
   public selectionHelper: SelectionHelper;
   public columnSelectionId: string;
   public documentsIds$ = new BehaviorSubject<string[]>([]);
@@ -198,5 +201,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   public onRemoveColumn() {
     this.removeColumn.emit();
+  }
+
+  public onToggleFavorite(document: DocumentModel) {
+    this.toggleFavorite.emit(document);
   }
 }

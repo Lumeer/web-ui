@@ -28,15 +28,15 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import {perspectiveIconsMap} from '../../../perspective';
-import {View} from '../../../../../core/store/views/view';
-import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
-import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
-import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
-import {BehaviorSubject} from 'rxjs';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {SizeType} from '../../../../../shared/slider/size-type';
-import {DialogService} from '../../../../../dialog/dialog.service';
+import {perspectiveIconsMap} from '../../../../perspective';
+import {View} from '../../../../../../core/store/views/view';
+import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
+import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
+import {ResourceType} from '../../../../../../core/model/resource-type';
+import {SizeType} from '../../../../../../shared/slider/size-type';
+import {DialogService} from '../../../../../../dialog/dialog.service';
+import {Role} from '../../../../../../core/model/role';
 
 @Component({
   selector: 'view-detail',
@@ -60,13 +60,18 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Output()
   public delete = new EventEmitter();
 
-  public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
+  @Output()
+  public favoriteToggle = new EventEmitter();
+
+  public queryItems: QueryItem[] = [];
 
   public readonly viewType = ResourceType.View;
-
+  public readonly roleRead = Role.Read;
+  public readonly roleManage = Role.Manage;
   public readonly sizeType = SizeType;
 
-  public constructor(private dialogService: DialogService) {}
+  public constructor(private dialogService: DialogService) {
+  }
 
   public ngOnInit() {
     this.createQueryItems();
@@ -93,13 +98,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
 
   private createQueryItems() {
-    if (!this.queryData) {
-      return;
+    if (this.queryData) {
+      this.queryItems = new QueryItemsConverter(this.queryData).fromQuery(this.view.query);
     }
-    this.queryItems$.next(new QueryItemsConverter(this.queryData).fromQuery(this.view.query));
   }
 
   public onShareClick() {
     this.dialogService.openShareViewDialog(this.view.code);
+  }
+
+  public onFavoriteToggle() {
+    this.favoriteToggle.emit();
   }
 }

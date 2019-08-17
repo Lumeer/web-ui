@@ -143,7 +143,7 @@ export function getAttributesResourceType(attributesResource: AttributesResource
 }
 
 export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {
-  return (resources || []).sort((a, b) => {
+  return [...(resources || [])].sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
       if (a.lastTimeUsed && b.lastTimeUsed) {
         return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();

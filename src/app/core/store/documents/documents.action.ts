@@ -241,7 +241,7 @@ export namespace DocumentsAction {
   export class AddFavorite implements Action {
     public readonly type = DocumentsActionType.ADD_FAVORITE;
 
-    public constructor(public payload: {collectionId: string; documentId: string}) {}
+    public constructor(public payload: {collectionId: string; documentId: string; workspace?: Workspace}) {}
   }
 
   export class AddFavoriteSuccess implements Action {
@@ -259,7 +259,7 @@ export namespace DocumentsAction {
   export class RemoveFavorite implements Action {
     public readonly type = DocumentsActionType.REMOVE_FAVORITE;
 
-    public constructor(public payload: {collectionId: string; documentId: string}) {}
+    public constructor(public payload: {collectionId: string; documentId: string; workspace?: Workspace}) {}
   }
 
   export class RemoveFavoriteSuccess implements Action {

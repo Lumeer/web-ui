@@ -58,6 +58,8 @@ import {TranslationService} from '../../../core/service/translation.service';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -85,6 +87,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public query$: Observable<Query>;
   public users$: Observable<User[]>;
   public currentUser$: Observable<User>;
+  public workspace$: Observable<Workspace>;
 
   public readonly durationUnitsMap: DurationUnitsMap;
 
@@ -128,6 +131,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }
 
   private initKanban() {

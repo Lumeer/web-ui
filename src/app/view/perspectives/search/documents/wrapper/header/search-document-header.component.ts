@@ -24,6 +24,7 @@ import {ResourceType} from '../../../../../../core/model/resource-type';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {SizeType} from '../../../../../../shared/slider/size-type';
+import {Role} from '../../../../../../core/model/role';
 
 @Component({
   selector: 'search-document-header',
@@ -50,10 +51,18 @@ export class SearchDocumentHeaderComponent {
   @Output()
   public detail = new EventEmitter();
 
+  @Output()
+  public toggleFavorite = new EventEmitter();
+
   public readonly collectionType = ResourceType.Collection;
   public readonly sSize = SizeType.S;
+  public readonly readRole = Role.Read;
 
   public onDetail() {
     this.detail.emit();
+  }
+
+  public onToggleFavorite() {
+    this.toggleFavorite.emit();
   }
 }

@@ -17,22 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
-import {UserSettings} from '../dto/user.settings';
-import {LocalStorage} from '../../shared/utils/local-storage';
+import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemType} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 
-const USER_SETTINGS = 'user-settings';
-
-@Injectable({
-  providedIn: 'root',
+@Pipe({
+  name: 'containsDeletedQueryItem',
 })
-export class UserSettingsService {
-  public getUserSettings(): UserSettings {
-    return LocalStorage.get(USER_SETTINGS) || {};
-  }
-
-  public updateUserSettings(userSettings: UserSettings) {
-    LocalStorage.set(USER_SETTINGS, userSettings);
+export class ContainsDeletedQueryItemPipe implements PipeTransform {
+  public transform(queryItems: QueryItem[]): boolean {
+    return !!queryItems.find(queryItem => queryItem.type === QueryItemType.Deleted);
   }
 }

@@ -29,10 +29,11 @@ import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
-import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
+import {EmptyViewsComponent} from './views/wrapper/empty-views/empty-views.component';
 import {SearchViewsComponent} from './views/search-views.component';
-import {ViewDetailComponent} from './views/view-detail/view-detail.component';
-import {ContainsDeletedQueryItemPipe} from './views/view-detail/contains-deleted-query-item.pipe';
+import {ViewDetailComponent} from './views/wrapper/view-detail/view-detail.component';
+import {ContainsDeletedQueryItemPipe} from './views/wrapper/view-detail/contains-deleted-query-item.pipe';
+import {SearchViewsWrapperComponent} from './views/wrapper/search-views-wrapper.component';
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import {ContainsDeletedQueryItemPipe} from './views/view-detail/contains-deleted
     EmptyViewsComponent,
     ViewDetailComponent,
     ContainsDeletedQueryItemPipe,
+    SearchViewsWrapperComponent,
   ],
   entryComponents: [
     SearchAllComponent,

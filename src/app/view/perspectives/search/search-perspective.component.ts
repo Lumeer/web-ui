@@ -28,7 +28,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
-import {DEFAULT_SEARCH_ID} from '../../../core/store/searches/search';
+import {createDefaultSearchConfig, DEFAULT_SEARCH_ID} from '../../../core/store/searches/search';
 import {selectSearchById} from '../../../core/store/searches/searches.state';
 import {ViewConfig} from '../../../core/store/views/view';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
@@ -80,7 +80,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createSearch() {
-    const search = {id: this.searchId, config: {}};
+    const search = {id: this.searchId, config: createDefaultSearchConfig()};
     this.store$.dispatch(new SearchesAction.AddSearch({search}));
   }
 
