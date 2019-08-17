@@ -57,6 +57,8 @@ export class TemplateService {
         return this.createSupplyTemplate();
       case TemplateType.EDCAL:
         return this.createEdcalTemplate();
+      case TemplateType.TASK:
+        return this.createTaskTemplate();
       default:
         return null;
     }
@@ -173,7 +175,20 @@ export class TemplateService {
         id: 'template.edcal.description',
         value: 'Any editor picks are now easily planned and visualized.',
       }),
-      url: this.createUrlForType(TemplateType.SUPPLY),
+      url: this.createUrlForType(TemplateType.EDCAL),
+    };
+  }
+
+  private createTaskTemplate(): Template {
+    return {
+      type: TemplateType.TASK,
+      imagePath: 'assets/templates/task.jpg',
+      title: this.i18n({id: 'template.task.title', value: 'Task Tracker'}),
+      description: this.i18n({
+        id: 'template.task.description',
+        value: 'No more tasks will be ever missed when tracked and organized in Lumeer.',
+      }),
+      url: this.createUrlForType(TemplateType.TASK),
     };
   }
 
@@ -197,6 +212,8 @@ export class TemplateService {
         return this.getSupplyUrl();
       case TemplateType.EDCAL:
         return this.getEdcalUrl();
+      case TemplateType.TASK:
+        return this.getTaskUrl();
     }
   }
 
@@ -269,6 +286,15 @@ export class TemplateService {
         return this.createUrl('cs/editoruv-vyber');
       default:
         return this.createUrl('editorial-calendar');
+    }
+  }
+
+  private getTaskUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/rizeni-ukolu');
+      default:
+        return this.createUrl('task-tracker');
     }
   }
 
