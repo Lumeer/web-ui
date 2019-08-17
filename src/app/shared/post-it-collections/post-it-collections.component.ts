@@ -49,19 +49,17 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {NotificationService} from '../../core/notifications/notification.service';
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ActivatedRoute, Router} from '@angular/router';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {safeGetRandomIcon} from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
-import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
 import {ResourceType} from '../../core/model/resource-type';
 import {isNullOrUndefined} from '../utils/common.utils';
-import {generateCorrelationId} from '../utils/resource.utils';
+import {generateCorrelationId, sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -342,7 +340,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy, AfterViewC
       }
     }
 
-    return newCollections.concat(sortCollectionsByFavoriteAndLastUsed(collectionsCopy));
+    return newCollections.concat(sortResourcesByFavoriteAndLastUsed<Collection>(collectionsCopy));
   }
 
   private filterCorrelationIds(uncreatedCollections: Collection[], newCollections: Collection[]) {

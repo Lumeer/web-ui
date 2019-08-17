@@ -35,6 +35,8 @@ export interface Resource {
 
   correlationId?: string;
   nonRemovable?: boolean;
+  lastTimeUsed?: Date;
+  favorite?: boolean;
 }
 
 export enum AttributesResourceType {

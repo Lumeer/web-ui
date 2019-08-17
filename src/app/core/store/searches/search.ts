@@ -17,27 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {SizeType} from '../../../shared/slider/size-type';
+import {SearchTab} from '../navigation/search-tab';
 
-import {Collection} from '../../../../../core/store/collections/collection';
-import {Query} from '../../../../../core/store/navigation/query/query';
+export const DEFAULT_SEARCH_ID = 'default';
 
-@Component({
-  selector: 'empty-documents',
-  templateUrl: './empty-documents.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class EmptyDocumentsComponent {
-  @Input()
-  public query: Query;
+export interface Search {
+  id: string;
+  config?: SearchConfig;
+}
 
-  @Input()
-  public collections: Collection[];
+export interface SearchConfig {
+  documents?: SearchDocumentsConfig;
+  views?: SearchViewsConfig;
+  searchTab?: SearchTab;
+}
 
-  @Output()
-  public tablePerspective = new EventEmitter();
+export interface SearchDocumentsConfig {
+  expandedIds?: string[];
+  size: SizeType;
+}
 
-  public onSwitchToTablePerspective() {
-    this.tablePerspective.emit();
-  }
+export interface SearchViewsConfig {
+  expandedIds?: string[];
+  size: SizeType;
 }

@@ -41,7 +41,3 @@ export function filterViewsByQuery(views: View[], query: Query): View[] {
 function getViewsByFulltexts(views: View[], fulltexts: string[]): View[] {
   return views.filter(view => fulltexts.every(fulltext => view.name.toLowerCase().includes(fulltext.toLowerCase())));
 }
-
-export function sortViewsById(views: View[]): View[] {
-  return [...views].sort((a, b) => b.id.localeCompare(a.id));
-}

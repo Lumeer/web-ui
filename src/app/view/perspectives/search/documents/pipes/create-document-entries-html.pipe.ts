@@ -23,6 +23,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {Collection} from '../../../../../core/store/collections/collection';
 import {createSearchDocumentEntriesHtml} from '../search-document-html-helper';
 import {SizeType} from '../../../../../shared/slider/size-type';
+import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 
 @Pipe({
   name: 'createDocumentEntriesHtml',
@@ -30,13 +31,12 @@ import {SizeType} from '../../../../../shared/slider/size-type';
 export class CreateDocumentEntriesHtmlPipe implements PipeTransform {
   public transform(
     document: DocumentModel,
-    collectionsMap: Record<string, Collection>,
+    collections: Collection[],
     constraintData: ConstraintData,
-    expandedDocumentIds: string[],
-    size: SizeType
+    config: SearchDocumentsConfig
   ): any {
-    const collection = collectionsMap[document.collectionId];
-    const expanded = size === SizeType.XL || expandedDocumentIds.includes(document.id);
+    const collection = (collections || []).find(coll => coll.id === document.collectionId);
+    const expanded = config && (config.size === SizeType.XL || (config.size || []).includes(document.id));
     return createSearchDocumentEntriesHtml(document, collection, constraintData, expanded);
   }
 }

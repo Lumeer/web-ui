@@ -18,42 +18,26 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {ResourceType} from '../../../../../core/model/resource-type';
 
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
-  selector: 'search-document-header',
-  templateUrl: './search-document-header.component.html',
-  styleUrls: ['./search-document-header.component.scss'],
+  selector: 'empty-documents',
+  templateUrl: './empty-documents.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchDocumentHeaderComponent {
+export class EmptyDocumentsComponent {
   @Input()
-  public collection: Collection;
+  public query: Query;
 
   @Input()
-  public document: DocumentModel;
-
-  @Input()
-  public constraintData: ConstraintData;
-
-  @Input()
-  public isOpened: boolean;
-
-  @Input()
-  public size: SizeType;
+  public collections: Collection[];
 
   @Output()
-  public detail = new EventEmitter();
+  public tablePerspective = new EventEmitter();
 
-  public readonly collectionType = ResourceType.Collection;
-  public readonly sSize = SizeType.S;
-
-  public onDetail() {
-    this.detail.emit();
+  public onSwitchToTablePerspective() {
+    this.tablePerspective.emit();
   }
 }

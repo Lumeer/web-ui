@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
-import {SearchConfig, View, ViewConfig} from './view';
+import {View} from './view';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -44,9 +44,6 @@ export enum ViewsActionType {
   SET_USER_PERMISSIONS = '[Views] Set User Permission',
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
-
-  CHANGE_CONFIG = '[Views] Change Config',
-  CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
 
   SET_CURSOR = '[Views] Set Cursor',
 
@@ -167,18 +164,6 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class ChangeConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_CONFIG;
-
-    public constructor(public payload: {config: ViewConfig}) {}
-  }
-
-  export class ChangeSearchConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
-
-    public constructor(public payload: {config: SearchConfig}) {}
-  }
-
   export class ResetViewGlobalConfig implements Action {
     public readonly type = ViewsActionType.RESET_VIEW_GLOBAL_CONFIG;
   }
@@ -209,8 +194,6 @@ export namespace ViewsAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
-    | ChangeConfig
-    | ChangeSearchConfig
     | ResetViewGlobalConfig
     | SetSidebarOpened
     | Clear;

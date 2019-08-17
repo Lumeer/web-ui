@@ -1,0 +1,46 @@
+<div class="mt-2" *ngIf="documents?.length; else noDocuments" infiniteScroll
+     [infiniteScrollDisabled]="maxDocuments > 0"
+     [infiniteScrollDistance]="2"
+     (scrolled)="onScrollDown()">
+  <size-slider class="d-flex justify-content-end mb-2"
+               [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
+  <div class="detail card p-2 mb-2"
+       (click)="toggleDocument(document)"
+       (dblclick)="onDetailClick(document)"
+       *ngFor="let document of (maxDocuments > 0 ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument">
+
+    <search-document-header
+      (detail)="onDetailClick(document)"
+      [size]="config?.size"
+      [document]="document"
+      [isOpened]="document | isDocumentOpened:config"
+      [collection]="collections | collectionById:document.collectionId"
+      [constraintData]="constraintData">
+
+      <div *ngIf="!(document | isDocumentOpened:config) && config?.size === sizeType.M"
+           [innerHTML]="document | createDocumentValuesHtml:collections:constraintData | safeHtml">
+      </div>
+
+      <div *ngIf="(document | isDocumentOpened:config) || config?.size === sizeType.L"
+           [innerHTML]="document | createDocumentEntriesHtml:collections:constraintData:config | safeHtml">§
+      </div>
+
+    </search-document-header>
+  </div>
+
+  <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
+       *ngIf="maxDocuments > 0 && maxDocuments < documents?.length"
+       (click)="onShowAll()">
+    <i class="fas fa-angle-double-right mr-2 align-sub"></i>
+    <span i18n="@@search.result.more">See more</span>
+    <i class="fas fa-angle-double-right ml-2 align-sub"></i>
+  </div>
+</div>
+
+<ng-template #noDocuments>
+  <empty-documents
+    (tablePerspective)="switchPerspectiveToTable()"
+    [collections]="collections"
+    [query]="query">
+  </empty-documents>
+</ng-template>

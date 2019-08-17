@@ -17,248 +17,168 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
 import {selectAllUsers} from '../../../../core/store/users/users.state';
-import {ViewsAction} from '../../../../core/store/views/views.action';
-import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
-import {UserSettingsService} from '../../../../core/service/user-settings.service';
-import {SizeType} from '../../../../shared/slider/size-type';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
   selectDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
-import {PerspectiveService} from '../../../../core/service/perspective.service';
-import {Perspective} from '../../perspective';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {Router} from '@angular/router';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {DurationUnitsMap} from '../../../../core/model/data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../../../../core/model/data/constraint';
 import {TranslationService} from '../../../../core/service/translation.service';
+import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
+import {SearchesAction} from '../../../../core/store/searches/searches.action';
 
 const PAGE_SIZE = 40;
 
 @Component({
   selector: 'search-documents',
   templateUrl: './search-documents.component.html',
-  styleUrls: ['./search-documents.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @Input()
   public maxLines: number = -1;
 
-  @ViewChild('sTemplate', {static: false})
-  private sTempl: TemplateRef<any>;
-
-  @ViewChild('mTemplate', {static: false})
-  private mTempl: TemplateRef<any>;
-
-  @ViewChild('lTemplate', {static: false})
-  private lTempl: TemplateRef<any>;
-
-  @ViewChild('xlTemplate', {static: false})
-  private xlTempl: TemplateRef<any>;
-
-  public size: SizeType;
-  public documentsMap: Record<string, DocumentModel>;
-  public collectionsMap: Record<string, Collection>;
-  public expandedDocumentIds: string[] = [];
-  public documentsOrder: string[] = [];
+  public constraintData$: Observable<ConstraintData>;
+  public documentsConfig$: Observable<SearchDocumentsConfig>;
+  public documents$: Observable<DocumentModel[]>;
+  public collections$: Observable<Collection[]>;
   public loaded$: Observable<boolean>;
-  public query: Query;
-
+  public query$: Observable<Query>;
   public users$: Observable<User[]>;
+  public workspace$: Observable<Workspace>;
+
   public readonly durationUnitsMap: DurationUnitsMap;
 
+  private searchId = DEFAULT_SEARCH_ID;
+  private config: SearchConfig;
   private page = 0;
-  private workspace: Workspace;
+  private documentsOrder: string[] = [];
   private subscriptions = new Subscription();
-  private documentsSubscription = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private router: Router,
-    private userSettingsService: UserSettingsService,
-    private perspectiveService: PerspectiveService,
-    private translationService: TranslationService
-  ) {
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
     this.durationUnitsMap = translationService.createDurationUnitsMap();
   }
 
   public ngOnInit() {
-    this.initSettings();
-    this.subscribeData();
+    this.constraintData$ = this.selectConstraintData$();
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.loaded$ = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded));
+    this.query$ = this.store$.pipe(select(selectQuery));
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.documentsConfig$ = this.selectDocumentsConfig$();
+
+    this.subscribeData();
+  }
+
+  private selectConstraintData$(): Observable<ConstraintData> {
+    return this.store$.pipe(
+      select(selectAllUsers),
+      map(users => ({users, durationUnitsMap: this.durationUnitsMap}))
+    );
+  }
+
+  private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
+    return this.store$.pipe(
+      select(selectSearchConfig),
+      tap(config => (this.config = config)),
+      map(config => config && config.documents)
+    );
+  }
+
+  public configChange(documentsConfig: SearchDocumentsConfig) {
+    const config = {...this.config, documents: documentsConfig};
+    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
+  }
+
+  public onFetchNextPage() {
+    this.page++;
+    this.store$
+      .pipe(
+        select(selectQuery),
+        take(1)
+      )
+      .subscribe(query => {
+        this.fetchDocuments(query);
+      });
   }
 
   public ngOnDestroy() {
-    this.documentsSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
-  }
-
-  public getDocuments(): DocumentModel[] {
-    return Object.values(this.documentsMap);
-  }
-
-  public onSizeChange(newSize: SizeType) {
-    this.size = newSize;
-    const userSettings = this.userSettingsService.getUserSettings();
-    userSettings.searchSize = newSize;
-    this.userSettingsService.updateUserSettings(userSettings);
-  }
-
-  public getTemplate(document: DocumentModel): TemplateRef<any> {
-    if (this.isDocumentExplicitlyExpanded(document)) {
-      return this.xlTempl;
-    }
-    switch (this.size) {
-      case SizeType.S:
-        return this.sTempl;
-      case SizeType.M:
-        return this.mTempl;
-      case SizeType.L:
-        return this.lTempl;
-      case SizeType.XL:
-        return this.xlTempl;
-      default:
-        return this.mTempl;
-    }
-  }
-
-  private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {
-    return this.expandedDocumentIds.includes(document.id);
-  }
-
-  public toggleDocument(document: DocumentModel) {
-    const newIds = this.isDocumentExplicitlyExpanded(document)
-      ? this.expandedDocumentIds.filter(id => id !== document.id)
-      : [...this.expandedDocumentIds, document.id];
-    this.store$.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
-  }
-
-  public onScrollDown(event: any) {
-    this.page++;
-    this.fetchDocuments();
-  }
-
-  public onDetailClick(document: DocumentModel) {
-    this.perspectiveService.switchPerspective(Perspective.Detail, this.collectionsMap[document.collectionId], document);
-  }
-
-  public switchPerspectiveToTable() {
-    this.perspectiveService.switchPerspective(Perspective.Table);
-  }
-
-  public trackByDocument(index: number, document: DocumentModel): string {
-    return document.id;
-  }
-
-  public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {
-      queryParams: {q: convertQueryModelToString(this.query)},
-    });
-  }
-
-  private workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  private initSettings() {
-    const userSettings = this.userSettingsService.getUserSettings();
-    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
-  }
-
-  public getCollections() {
-    return this.collectionsMap ? Object.values(this.collectionsMap) : [];
   }
 
   private subscribeData() {
     const navigationSubscription = this.store$
-      .select(selectNavigation)
-      .pipe(filter(navigation => !!navigation.workspace && !!navigation.query))
-      .subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.query = navigation.query;
-        this.clearData();
-        this.fetchDocuments();
+      .pipe(
+        select(selectQuery),
+        filter(query => !!query),
+        distinctUntilChanged()
+      )
+      .subscribe(query => {
+        this.clearDocumentsInfo();
+        this.fetchDocuments(query);
       });
     this.subscriptions.add(navigationSubscription);
-
-    const searchConfigSubscription = this.store$
-      .select(selectViewSearchConfig)
-      .subscribe(config => (this.expandedDocumentIds = (config && config.expandedDocumentIds.slice()) || []));
-    this.subscriptions.add(searchConfigSubscription);
-
-    this.loaded$ = this.store$.select(selectCurrentQueryDocumentsLoaded);
-
-    const collectionSubscription = this.store$.select(selectCollectionsByQuery).subscribe(
-      collections =>
-        (this.collectionsMap = collections.reduce((acc, coll) => {
-          acc[coll.id] = coll;
-          return acc;
-        }, {}))
-    );
-    this.subscriptions.add(collectionSubscription);
   }
 
-  private clearData() {
+  private clearDocumentsInfo() {
     this.page = 0;
-    this.documentsMap = {};
     this.documentsOrder = [];
   }
 
-  private fetchDocuments() {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
-    this.subscribeDocuments();
+  private fetchDocuments(query: Query) {
+    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery(query)}));
+    this.subscribeDocuments(query);
   }
 
-  private getPaginationQuery(): Query {
-    return {...this.query, page: this.page, pageSize: PAGE_SIZE};
+  private getPaginationQuery(query: Query): Query {
+    return {...query, page: this.page, pageSize: PAGE_SIZE};
   }
 
-  private subscribeDocuments() {
-    this.documentsSubscription.unsubscribe();
+  private subscribeDocuments(query: Query) {
     const pageSize = PAGE_SIZE * (this.page + 1);
-    const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store$
-      .select(selectDocumentsByCustomQuery(query, true))
-      .pipe(filter(documents => !!documents))
-      .subscribe(documents => {
-        this.mapNewDocuments(documents);
-      });
+    const customQuery = {...query, page: 0, pageSize};
+    this.documents$ = this.store$.pipe(
+      select(selectDocumentsByCustomQuery(customQuery, true)),
+      map(documents => this.mapNewDocuments(documents))
+    );
   }
 
-  private mapNewDocuments(documents: DocumentModel[]) {
+  private mapNewDocuments(documents: DocumentModel[]): DocumentModel[] {
     const documentsMap = documents.reduce((acc, doc) => {
       acc[doc.correlationId || doc.id] = doc;
       return acc;
     }, {});
 
-    const newDocumentsMap = this.documentsOrder.reduce((acc, key) => {
+    const orderedDocuments = this.documentsOrder.reduce((acc, key) => {
       const doc = documentsMap[key];
       if (doc) {
-        acc[key] = doc;
+        acc.push(doc);
         delete documentsMap[key];
       }
       return acc;
-    }, {});
+    }, []);
 
     for (const [key, value] of Object.entries(documentsMap)) {
-      newDocumentsMap[key] = value;
+      orderedDocuments.push(value);
       this.documentsOrder.push(key);
     }
 
-    this.documentsMap = newDocumentsMap;
+    return orderedDocuments;
   }
 }

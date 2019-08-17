@@ -20,6 +20,7 @@ import {createSelector} from '@ngrx/store';
 import {isArraySubset} from '../../../shared/utils/array.utils';
 import {
   authorHasRoleInView,
+  sortResourcesByFavoriteAndLastUsed,
   userHasRoleInResource,
   userIsManagerInWorkspace,
 } from '../../../shared/utils/resource.utils';
@@ -37,7 +38,7 @@ import {Query} from '../navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {selectCurrentUser} from '../users/users.state';
 import {View} from '../views/view';
-import {filterViewsByQuery, sortViewsById} from '../views/view.filters';
+import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 
@@ -173,7 +174,7 @@ export const selectViewsByRead = createSelector(
 export const selectViewsByQuery = createSelector(
   selectViewsByRead,
   selectQuery,
-  (views, query): View[] => sortViewsById(filterViewsByQuery(views, query))
+  (views, query): View[] => sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
 );
 
 export const selectLinkInstancesByQuery = createSelector(

@@ -69,6 +69,7 @@ import {VideosEffects} from './videos/videos.effects';
 import {videosReducer} from './videos/videos.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
+import {searchesReducer} from './searches/searches.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -96,6 +97,7 @@ const reducers: ActionReducerMap<AppState> = {
   userNotifications: userNotificationsReducer,
   ganttCharts: ganttChartsReducer,
   kanbans: kanbansReducer,
+  searches: searchesReducer,
 };
 
 const effects = [
