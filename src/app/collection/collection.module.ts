@@ -26,7 +26,6 @@ import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
 import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 import {CollectionSettingsGuard} from './collection-settings.guard';
-import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
 import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
@@ -38,13 +37,12 @@ import {AddRuleFormComponent} from './settings/tab/rules/add-rule-form/add-rule-
 import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component';
 import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
 import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
-import {BlocklyEditorComponent} from '../shared/blockly/blockly-editor/blockly-editor.component';
 import {HasCreatePipe} from './settings/tab/rules/single-rule/has-create.pipe';
 import {HasUpdatePipe} from './settings/tab/rules/single-rule/has-update.pipe';
 import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule, PickerModule],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,

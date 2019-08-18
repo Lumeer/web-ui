@@ -18,21 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {shadeColor} from '../../utils/html-modifier';
+import {getPureIconName, searchIconsByMeta} from '../../../picker/icon-color/icon/icons';
 
 @Pipe({
-  name: 'highlightColor',
+  name: 'iconFilter',
 })
-export class HighlightColorPipe implements PipeTransform {
-  public transform(color: string, selected: string, current: string): string {
-    if (color === selected) {
-      return shadeColor(color, -0.3);
+export class IconFilterPipe implements PipeTransform {
+  public transform(icons: string[], filter: string): string[] {
+    if (filter) {
+      const iconsByMeta = searchIconsByMeta(filter);
+      return icons.filter(icon => iconsByMeta.indexOf(getPureIconName(icon)) >= 0);
+    } else {
+      return icons;
     }
-
-    if (color === current) {
-      return shadeColor(color, -0.2);
-    }
-
-    return 'transparent';
   }
 }

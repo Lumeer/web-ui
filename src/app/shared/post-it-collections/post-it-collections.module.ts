@@ -20,8 +20,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {PipesModule} from '../pipes/pipes.module';
+import {RouterModule} from '@angular/router';
 
+import {PipesModule} from '../pipes/pipes.module';
 import {PostItCollectionsComponent} from './post-it-collections.component';
 import {PostItCollectionNameComponent} from './post-it-collections-wrapper/collection-name/post-it-collection-name.component';
 import {PostItCollectionImportButtonComponent} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
@@ -29,16 +30,17 @@ import {PostItCollectionAddButtonComponent} from './post-it-collections-wrapper/
 import {PostItCollectionComponent} from './post-it-collections-wrapper/post-it/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
-import {RouterModule} from '@angular/router';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
 import {EmptyCollectionsComponent} from './post-it-collections-wrapper/empty-collections/empty-collections.component';
 import {PostItCollectionsWrapperComponent} from './post-it-collections-wrapper/post-it-collections-wrapper.component';
+import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     PickerModule,
+    PresenterModule,
     ClickOutsideModule,
     RouterModule,
     PipesModule,

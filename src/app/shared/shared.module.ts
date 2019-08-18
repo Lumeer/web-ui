@@ -51,6 +51,8 @@ import {TourComponent} from './tour/tour.component';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
 import {ModalModule} from './modal/modal.module';
+import {PresenterModule} from './presenter/presenter.module';
+import {DropdownModule} from './dropdown/dropdown.module';
 
 @NgModule({
   imports: [
@@ -79,6 +81,8 @@ import {ModalModule} from './modal/modal.module';
     DateTimeModule,
     ModalModule,
     BrowserWarningModule,
+    PresenterModule,
+    DropdownModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -123,6 +127,9 @@ import {ModalModule} from './modal/modal.module';
     DateTimeModule,
     ModalModule,
     BrowserWarningModule,
+    PresenterModule,
+    DropdownModule,
+    PickerModule,
   ],
 })
 export class SharedModule {}

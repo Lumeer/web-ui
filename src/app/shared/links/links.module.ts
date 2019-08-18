@@ -31,9 +31,18 @@ import {LinksListTableBodyComponent} from './links-list/links-list-table/links-l
 import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 import {DataInputModule} from '../data-input/data-input.module';
+import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, PickerModule, InputModule, PipesModule, DocumentHintsModule],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    PickerModule,
+    PresenterModule,
+    InputModule,
+    PipesModule,
+    DocumentHintsModule,
+  ],
   declarations: [
     LinksComponent,
     LinksListComponent,

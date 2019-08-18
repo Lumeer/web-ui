@@ -9,19 +9,23 @@
     </div>
     <div *ngIf="!collection.id"
          data-test="icon-picker-dropdown">
-      <a class="icon icon-edit"
+      <i class="fa-3x {{ collection.icon }} cursor-pointer"
          [style.color]="collection.color"
          [title]="collection.name"
-         [routerLink]="null"
-         [queryParams]="null">
-        <i class="fa-3x {{ collection.icon }}"
-           aria-hidden="true">
-        </i>
-      </a>
+         (click)="togglePicker()"
+         #pickerOrigin
+         aria-hidden="true">
+      </i>
+      <icon-color-picker [origin]="pickerOrigin"
+                           [color]="collection.color"
+                           [icon]="collection.icon"
+                           (preview)="onIconColorChange($event)"
+                           (selected)="onIconColorChange($event)"
+                           (cancel)="onIconColorChange($event)">
+      </icon-color-picker>
     </div>
 
     <a *ngIf="collection.id"
-       class="icon"
        [style.color]="collection.color"
        [title]="collection.name"
        [routerLink]="[workspacePath(), 'view', 'table']"
@@ -96,6 +100,8 @@
 
   <post-it-collection-name [collectionName]="collection.name"
                            [editable]="!collection.id || allowedPermissions.manage"
-                           (changed)="onNameChanged($event)">
+                           (changed)="onNameChanged($event)"
+                           (selected)="selected.emit()"
+                           (unselected)="unselected.emit()">
   </post-it-collection-name>
 </div>

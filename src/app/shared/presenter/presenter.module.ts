@@ -17,16 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {DropdownOptionDirective} from './options/dropdown-option.directive';
-import {DropdownComponent} from './dropdown.component';
-import {OptionsDropdownComponent} from './options/options-dropdown.component';
-import {PresenterModule} from '../presenter/presenter.module';
+import {CommonModule} from '@angular/common';
+import {IconsPresenterComponent} from './icons/icons-presenter.component';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule],
-  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
-  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
+  declarations: [IconsPresenterComponent],
+  imports: [CommonModule],
+  exports: [IconsPresenterComponent],
 })
-export class DropdownModule {}
+export class PresenterModule {}

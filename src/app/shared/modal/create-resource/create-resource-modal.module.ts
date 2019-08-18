@@ -31,6 +31,7 @@ import {CreateResourceDialogTemplatesComponent} from './form/templates/create-re
 import {CreateResourceDialogTemplateComponent} from './form/templates/template/create-resource-dialog-template.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PipesModule} from '../../pipes/pipes.module';
+import {PresenterModule} from '../../presenter/presenter.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,15 @@ import {PipesModule} from '../../pipes/pipes.module';
     CreateResourceDialogTemplatesComponent,
     CreateResourceDialogTemplateComponent,
   ],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalWrapperModule, PickerModule, PipesModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalWrapperModule,
+    PickerModule,
+    PresenterModule,
+    PipesModule,
+  ],
   exports: [CreateResourceModalComponent],
   entryComponents: [CreateResourceModalComponent],
 })

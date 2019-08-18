@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output, OnDestroy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {Project} from '../../../core/store/projects/project';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -29,11 +39,14 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ResourceType} from '../../../core/model/resource-type';
 import {CollectionImportData} from './import-button/post-it-collection-import-button.component';
-import {safeGetRandomIcon} from '../../picker/icon-picker/icons';
-import * as Colors from '../../picker/color-picker/colors';
+import {safeGetRandomIcon} from '../../picker/icon-color/icon/icons';
+import * as Colors from '../../picker/icon-color/color/colors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {BehaviorSubject} from 'rxjs';
+import {generateCorrelationId} from '../../utils/resource.utils';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -43,8 +56,20 @@ const UNCREATED_THRESHOLD = 5;
   styleUrls: ['./post-it-collections-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CollectionFavoriteToggleService],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({transform: 'translateX(-50%)', opacity: '0'}),
+        animate('.3s ease-out', style({transform: 'translateX(0%)', opacity: '1'})),
+      ]),
+      transition(':leave', [
+        style({transform: 'translateX(0%)', opacity: '1'}),
+        animate('.3s ease-out', style({transform: 'translateX(-50%)', opacity: '0'})),
+      ]),
+    ]),
+  ],
 })
-export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
+export class PostItCollectionsWrapperComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public maxCollections: number;
 
@@ -72,7 +97,12 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
   @Output()
   public import = new EventEmitter<{importData: CollectionImportData; emptyCollection: Collection}>();
 
+  public allCollections$ = new BehaviorSubject<Collection[]>([]);
+  public selectedCollections$ = new BehaviorSubject<string[]>([]);
+  public correlationIdsOrder = [];
+
   public readonly projectType = ResourceType.Project;
+
   private readonly colors = Colors.palette;
 
   constructor(
@@ -84,6 +114,35 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections) {
+      this.initCollections();
+    }
+  }
+
+  private initCollections() {
+    const currentCollections = this.allCollections$.getValue();
+    const newCollections = this.collections || [];
+    const collectionsWithCorrelationId: Collection[] = [];
+    for (const correlationId of this.correlationIdsOrder) {
+      let collection = newCollections.find(coll => coll.correlationId === correlationId);
+      if (newCollections.find(coll => coll.correlationId === correlationId)) {
+        collectionsWithCorrelationId.push(collection);
+      } else {
+        collection = currentCollections.find(coll => coll.correlationId === correlationId);
+        if (!collection.id) {
+          collectionsWithCorrelationId.push(collection);
+        }
+      }
+    }
+
+    const newCollectionsFiltered = newCollections.filter(
+      coll => !collectionsWithCorrelationId.find(c => c.id === coll.id)
+    );
+    this.allCollections$.next([...collectionsWithCorrelationId, ...newCollectionsFiltered]);
+    this.correlationIdsOrder = collectionsWithCorrelationId.map(coll => coll.correlationId);
   }
 
   public onShowAllClicked() {
@@ -120,12 +179,20 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
     if (collection.id) {
       this.delete.emit(collection);
     } else {
-      // TODO
+      this.correlationIdsOrder = this.correlationIdsOrder.filter(id => id !== collection.correlationId);
+      const collections = this.allCollections$
+        .getValue()
+        .filter(coll => coll.correlationId !== collection.correlationId);
+      this.allCollections$.next(collections);
     }
   }
 
   public createNewCollection() {
-    // TODO
+    const newCollection = {...this.emptyCollection(), correlationId: generateCorrelationId()};
+    this.correlationIdsOrder.unshift(newCollection.correlationId);
+    this.allCollections$.next([newCollection, ...this.allCollections$.getValue()]);
+
+    this.checkNumberOfUncreatedCollections();
   }
 
   public notifyOfError(error: string) {
@@ -147,7 +214,7 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
   }
 
   private checkNumberOfUncreatedCollections() {
-    const numUncreated = this.collections.filter(coll => isNullOrUndefined(coll.id)).length;
+    const numUncreated = this.allCollections$.getValue().filter(coll => isNullOrUndefined(coll.id)).length;
 
     if (numUncreated % UNCREATED_THRESHOLD === 0) {
       const message = this.i18n({
@@ -158,5 +225,18 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnDestroy {
 
       this.notificationService.info(message);
     }
+  }
+
+  public onCollectionSelected(collection: Collection) {
+    this.selectedCollections$.next([
+      collection.correlationId || collection.id,
+      ...this.selectedCollections$.getValue(),
+    ]);
+  }
+
+  public onCollectionUnselected(collection: Collection) {
+    this.selectedCollections$.next(
+      this.selectedCollections$.getValue().filter(id => id !== (collection.correlationId || collection.id))
+    );
   }
 }

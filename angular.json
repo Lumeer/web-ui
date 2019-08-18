@@ -45,11 +45,7 @@
               "node_modules/@angular/cdk/overlay-prebuilt.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/hammerjs/hammer.min.js",
-              "node_modules/muuri/dist/muuri.min.js",
-              "node_modules/pusher-js/dist/web/pusher.min.js"
-            ],
+            "scripts": ["node_modules/hammerjs/hammer.min.js", "node_modules/pusher-js/dist/web/pusher.min.js"],
             "vendorChunk": false
           },
           "configurations": {

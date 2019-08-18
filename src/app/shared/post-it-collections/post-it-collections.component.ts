@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@ang
 
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {take, tap} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
@@ -32,7 +32,6 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Project} from '../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {NotificationService} from '../../core/notifications/notification.service';
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -41,11 +40,11 @@ import {selectCollectionsByQuery} from '../../core/store/common/permissions.sele
 import {Query} from '../../core/store/navigation/query/query';
 import {CollectionImportData} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
 import {PostItCollectionsWrapperComponent} from './post-it-collections-wrapper/post-it-collections-wrapper.component';
+import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 
 @Component({
   selector: 'post-it-collections',
   templateUrl: './post-it-collections.component.html',
-  styleUrls: ['./post-it-collections.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItCollectionsComponent implements OnInit {
@@ -67,12 +66,14 @@ export class PostItCollectionsComponent implements OnInit {
     private i18n: I18n,
     private router: Router,
     private store$: Store<AppState>,
-    private activatedRoute: ActivatedRoute,
-    private notificationService: NotificationService
+    private activatedRoute: ActivatedRoute
   ) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.collections$ = this.store$.pipe(
+      select(selectCollectionsByQuery),
+      map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
+    );
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.query$ = this.store$.pipe(
       select(selectQuery),
@@ -80,6 +81,7 @@ export class PostItCollectionsComponent implements OnInit {
     );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.loaded$ = this.store$.pipe(select(selectCollectionsLoaded));
+    this.subscribeOnRoute();
   }
 
   public onDelete(collection: Collection) {
@@ -139,7 +141,7 @@ export class PostItCollectionsComponent implements OnInit {
       if (action && action === QueryAction.CreateCollection) {
         this.collectionsWrapperComponent.createNewCollection();
 
-        const myQueryParams = Object.assign({}, queryParams);
+        const myQueryParams = {...queryParams};
         delete myQueryParams.action;
         this.router.navigate([], {
           relativeTo: this.activatedRoute,

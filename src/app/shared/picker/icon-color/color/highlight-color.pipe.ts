@@ -17,16 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {DropdownOptionDirective} from './options/dropdown-option.directive';
-import {DropdownComponent} from './dropdown.component';
-import {OptionsDropdownComponent} from './options/options-dropdown.component';
-import {PresenterModule} from '../presenter/presenter.module';
+import {Pipe, PipeTransform} from '@angular/core';
+import {shadeColor} from '../../../utils/html-modifier';
 
-@NgModule({
-  imports: [CommonModule, PresenterModule],
-  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
-  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
+@Pipe({
+  name: 'highlightColor',
 })
-export class DropdownModule {}
+export class HighlightColorPipe implements PipeTransform {
+  public transform(color: string, selected: string,): string {
+    if (color === selected) {
+      return shadeColor(color, -0.3);
+    }
+
+    return 'transparent';
+  }
+}

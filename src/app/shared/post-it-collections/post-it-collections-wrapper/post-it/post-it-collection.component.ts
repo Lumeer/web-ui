@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 
 @Component({
   selector: 'post-it-collection',
@@ -47,6 +48,15 @@ export class PostItCollectionComponent {
 
   @Output()
   public favoriteToggle = new EventEmitter();
+
+  @Output()
+  public selected = new EventEmitter();
+
+  @Output()
+  public unselected = new EventEmitter();
+
+  @ViewChild(IconColorPickerComponent, {static: false})
+  public iconColorDropdownComponent: IconColorPickerComponent;
 
   public onNameChanged(name: string) {
     if (name === '') {
@@ -75,5 +85,15 @@ export class PostItCollectionComponent {
   public queryForCollectionDocuments(): string {
     const query: Query = {stems: [{collectionId: this.collection.id}]};
     return convertQueryModelToString(query);
+  }
+
+  public togglePicker() {
+    this.iconColorDropdownComponent.toggle();
+  }
+
+  public onIconColorChange(data: {icon: string; color: string}) {
+    // we know that uncreated collection is not in store
+    this.collection.icon = data.icon;
+    this.collection.color = data.color;
   }
 }

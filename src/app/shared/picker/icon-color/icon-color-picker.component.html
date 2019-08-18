@@ -1,0 +1,31 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [fitParent]="false">
+
+  <div class="d-flex flex-column card">
+
+    <color-picker class="d-block w-100 bg-white p-3" [color]="this.selectedColor$ | async"
+                  (selected)="onColorSelected($event)"
+                  (preview)="onColorPreview($event)">
+    </color-picker>
+    <hr/>
+
+    <icon-picker class="d-block w-100 bg-white p-3" [icon]="this.selectedIcon$ | async"
+                 (selected)="onIconSelected($event)"
+                 (preview)="onIconPreview($event)">
+    </icon-picker>
+    <hr/>
+
+    <div class="text-right p-3">
+      <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()" i18n="@@button.cancel">
+        Cancel
+      </button>
+      <button class="btn btn-primary btn-sm ml-2" (click)="onSave()" i18n="@@button.select">
+        Select
+      </button>
+    </div>
+
+  </div>
+
+</dropdown>

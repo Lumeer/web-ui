@@ -37,6 +37,7 @@ import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {PresenterModule} from '../shared/presenter/presenter.module';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     FormsModule,
     ReactiveFormsModule,
     PickerModule,
+    PresenterModule,
     DialogRoutingModule,
     DialogWrapperModule,
     ShareViewDialogModule,

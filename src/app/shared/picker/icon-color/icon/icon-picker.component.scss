@@ -1,0 +1,27 @@
+@import '../../../../../styles/variables';
+
+.tab-content-container {
+  height: 153px;
+  overflow: auto;
+}
+
+.tab-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 26px);
+  grid-auto-rows: 26px;
+  grid-gap: 5px;
+
+  .icon {
+    color: $primary;
+    padding: 5px 0;
+    width: 26px;
+    height: 26px;
+
+    &.selected,
+    &.active,
+    &:hover {
+      color: white;
+      background-color: $primary;
+    }
+  }
+}

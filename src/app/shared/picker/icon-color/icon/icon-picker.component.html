@@ -3,22 +3,21 @@
 </div>
 <div class="d-flex mx-3 my-1">
   <input class="form-control form-control-sm flex-fill"
-         (input)="filterInput($event)"
-         [(value)]="filter"
+         (input)="onInput($event.target.value)"
          placeholder="Search for icon..."
          i18n-placeholder="@@icon-picker.select.icon.search"
          data-test="icon-picker-search-input">
 </div>
-<div class="tab-content-container">
+<div class="tab-content-container mt-3">
   <div class="tab-content align-self-start justify-content-center">
-    <i *ngFor="let iconOption of filteredIcons"
+    <i *ngFor="let iconOption of icons | iconFilter:(text$ | async)"
        class="fa-fw {{ iconOption }} text-center rounded icon"
-       [class.selected]="iconOption === selected"
+       [class.selected]="iconOption === icon"
        [class.active]="iconOption === icon"
-       (mouseenter)="preview(iconOption)"
-       (mouseleave)="preview(null)"
-       (click)="select(iconOption)"
-       id="{{iconOption | iconId:dropdownId }}"
+       (mouseenter)="onPreview(iconOption)"
+       (mouseleave)="onPreview(null)"
+       (click)="onSelect(iconOption)"
+       id="{{iconOption | iconId:iconPickerId }}"
        aria-hidden="true"
        data-test="icon-picker-option">
     </i>

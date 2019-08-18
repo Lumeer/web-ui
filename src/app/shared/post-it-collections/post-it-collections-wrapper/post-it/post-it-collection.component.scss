@@ -97,20 +97,6 @@
   width: 25px;
 }
 
-.dropdown-menu {
-  width: 230px;
-  transform: translate3d(-195px, 71px, 0px) !important;
-
-  .dropdown-item {
-    padding-right: 0;
-    padding-left: 0;
-  }
-}
-
-.panel-visible {
-  opacity: 1 !important;
-}
-
 .uninitialized-dropdown {
   transform: translate3d(-8px, 120px, 0px) !important;
 }

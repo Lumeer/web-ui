@@ -17,51 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-
-declare let $: any;
+import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
 
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss'],
 })
-export class ResourceHeaderComponent implements AfterViewInit {
-  @Input() public resourceType: ResourceType;
-  @Input() public resource: Resource;
-  @Input() public restrictedValues: string[];
+export class ResourceHeaderComponent {
+  @Input()
+  public resourceType: ResourceType;
 
-  @Output() public codeChange: EventEmitter<string> = new EventEmitter();
-  @Output() public nameChange: EventEmitter<string> = new EventEmitter();
-  @Output() public descriptionChange: EventEmitter<string> = new EventEmitter();
-  @Output() public colorIconChange: EventEmitter<{color: string; icon: string}> = new EventEmitter();
-  @Output() public delete = new EventEmitter();
-  @Output() public back = new EventEmitter();
+  @Input()
+  public resource: Resource;
+
+  @Input()
+  public restrictedValues: string[];
+
+  @Output()
+  public codeChange: EventEmitter<string> = new EventEmitter();
+
+  @Output()
+  public nameChange: EventEmitter<string> = new EventEmitter();
+
+  @Output()
+  public descriptionChange: EventEmitter<string> = new EventEmitter();
+
+  @Output()
+  public colorIconChange: EventEmitter<{color: string; icon: string}> = new EventEmitter();
+
+  @Output()
+  public delete = new EventEmitter();
+
+  @Output()
+  public back = new EventEmitter();
+
+  @ViewChild(IconColorPickerComponent, {static: false})
+  public iconColorDropdownComponent: IconColorPickerComponent;
 
   public isDuplicate: boolean;
 
   private shouldEmitFirstLine: boolean;
-  private oldIcon: string;
-  private oldColor: string;
-  private clickedComponent: any;
-  private colorPickerVisible: boolean;
-
-  private savingColor = false;
 
   constructor(private i18n: I18n) {}
-
-  @HostListener('document:click', ['$event'])
-  public documentClicked(event): void {
-    if (this.colorPickerVisible && this.clickedComponent && event.target !== this.clickedComponent) {
-      this.resource.icon = this.oldIcon || this.resource.icon;
-      this.resource.color = this.oldColor || this.resource.color;
-      event.stopPropagation();
-    }
-  }
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
@@ -167,45 +170,24 @@ export class ResourceHeaderComponent implements AfterViewInit {
     });
   }
 
-  public saveSelectedColor(): void {
-    if (this.resource.color !== this.oldColor || this.resource.icon !== this.oldIcon) {
-      this.savingColor = true;
-      this.colorIconChange.emit({color: this.resource.color, icon: this.resource.icon});
-    }
-  }
-
-  public revertSelectedColor(): void {
-    this.resource.color = this.oldColor;
-    this.resource.icon = this.oldIcon;
-  }
-
-  public storeIconAndColor(event: MouseEvent): void {
-    this.clickedComponent = event.target;
-    this.oldColor = this.resource.color;
-    this.oldIcon = this.resource.icon;
-  }
-
-  public ngAfterViewInit(): void {
-    $('#dropdown-header').on('shown.bs.dropdown', () => {
-      this.colorPickerVisible = true;
-      this.savingColor = false;
-    });
-    $('#dropdown-header').on('hidden.bs.dropdown', () => {
-      this.colorPickerVisible = false;
-
-      if (!this.savingColor) {
-        this.revertSelectedColor();
-      }
-
-      this.savingColor = false;
-    });
-  }
-
   public getFilter(): RegExp {
     if (this.hasVisibleCode()) {
       return /[^_0-9A-Za-z]/g;
     } else {
       return /\./g;
     }
+  }
+
+  public togglePicker() {
+    this.iconColorDropdownComponent.toggle();
+  }
+
+  public onIconColorChange(data: {icon: string; color: string}) {
+    this.resource.icon = data.icon;
+    this.resource.color = data.color;
+  }
+
+  public onIconColorSubmit(data: {icon: string; color: string}) {
+    this.colorIconChange.emit(data);
   }
 }

@@ -27,12 +27,20 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
 export class PostItCollectionNameComponent {
   @ViewChild('collectionNameInput', {static: true}) public input: ElementRef;
 
-  @Input() public editable: boolean;
-  @Input() public collectionName: string;
+  @Input()
+  public editable: boolean;
 
-  @Output() public changed = new EventEmitter<string>();
-  @Output() public selected = new EventEmitter();
-  @Output() public unselected = new EventEmitter();
+  @Input()
+  public collectionName: string;
+
+  @Output()
+  public changed = new EventEmitter<string>();
+
+  @Output()
+  public selected = new EventEmitter();
+
+  @Output()
+  public unselected = new EventEmitter();
 
   public onNameBlurred(value: string) {
     this.unselected.emit();

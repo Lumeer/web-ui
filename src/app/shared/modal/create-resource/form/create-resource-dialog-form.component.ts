@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {ResourceType} from '../../../../core/model/resource-type';
-import {safeGetRandomIcon} from '../../../picker/icon-picker/icons';
+import {safeGetRandomIcon} from '../../../picker/icon-color/icon/icons';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
-import * as Colors from '../../../picker/color-picker/colors';
+import * as Colors from '../../../picker/icon-color/color/colors';
 import {Resource} from '../../../../core/model/resource';
 import {ProjectValidators} from '../../../../core/validators/project.validators';
 import {OrganizationValidators} from '../../../../core/validators/organization.validators';
@@ -32,6 +32,7 @@ import {Project} from '../../../../core/store/projects/project';
 import {BehaviorSubject} from 'rxjs';
 import {TemplateType} from '../../../../core/model/template';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 
 @Component({
   selector: 'create-resource-dialog-form',
@@ -53,6 +54,9 @@ export class CreateResourceDialogFormComponent implements OnInit {
 
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
+
+  @ViewChild(IconColorPickerComponent, {static: false})
+  public iconColorDropdownComponent: IconColorPickerComponent;
 
   public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.PROJ);
 
@@ -154,5 +158,14 @@ export class CreateResourceDialogFormComponent implements OnInit {
     if (!this.form.controls.code.touched) {
       this.form.controls.code.setValue(this.createCodeForTemplate(type));
     }
+  }
+
+  public togglePicker() {
+    this.iconColorDropdownComponent.toggle();
+  }
+
+  public onIconColorChange(data: {icon: string; color: string}) {
+    this.color = data.color;
+    this.icon = data.icon;
   }
 }
