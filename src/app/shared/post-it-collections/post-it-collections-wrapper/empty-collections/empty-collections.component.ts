@@ -48,8 +48,7 @@ export class EmptyCollectionsComponent {
 
   public readonly projectType = ResourceType.Project;
 
-  constructor(public i18n: I18n) {
-  }
+  constructor(public i18n: I18n) {}
 
   public onNewCollection() {
     this.newCollection.emit();

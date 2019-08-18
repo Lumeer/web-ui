@@ -24,7 +24,7 @@ import {shadeColor} from '../../../utils/html-modifier';
   name: 'highlightColor',
 })
 export class HighlightColorPipe implements PipeTransform {
-  public transform(color: string, selected: string,): string {
+  public transform(color: string, selected: string): string {
     if (color === selected) {
       return shadeColor(color, -0.3);
     }

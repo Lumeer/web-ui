@@ -70,8 +70,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public readonly roleManage = Role.Manage;
   public readonly sizeType = SizeType;
 
-  public constructor(private dialogService: DialogService) {
-  }
+  public constructor(private dialogService: DialogService) {}
 
   public ngOnInit() {
     this.createQueryItems();

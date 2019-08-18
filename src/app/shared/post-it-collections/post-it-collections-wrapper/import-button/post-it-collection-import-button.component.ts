@@ -42,8 +42,7 @@ export class PostItCollectionImportButtonComponent {
   @Input()
   public disabled: boolean;
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public dragging: boolean = false;
 
