@@ -69,8 +69,8 @@ export class IconColorPickerComponent implements OnDestroy {
   private initialIcon: string;
   private initialColor: string;
 
-  private selectedIcon$ = new BehaviorSubject('');
-  private selectedColor$ = new BehaviorSubject('');
+  public selectedIcon$ = new BehaviorSubject('');
+  public selectedColor$ = new BehaviorSubject('');
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
