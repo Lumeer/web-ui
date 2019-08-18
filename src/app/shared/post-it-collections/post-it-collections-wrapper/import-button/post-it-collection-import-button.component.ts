@@ -17,17 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+
+export interface CollectionImportData {
+  result: string;
+  name: string;
+  format: string;
+}
 
 @Component({
   selector: 'post-it-collection-import-button',
   templateUrl: './post-it-collection-import-button.component.html',
   styleUrls: ['./post-it-collection-import-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItCollectionImportButtonComponent {
   @Output()
-  public import = new EventEmitter<{result: string; name: string; format: string}>();
+  public import = new EventEmitter<CollectionImportData>();
 
   @Output()
   public error = new EventEmitter<string>();
@@ -35,7 +42,8 @@ export class PostItCollectionImportButtonComponent {
   @Input()
   public disabled: boolean;
 
-  constructor(private i18n: I18n) {}
+  constructor(private i18n: I18n) {
+  }
 
   public dragging: boolean = false;
 

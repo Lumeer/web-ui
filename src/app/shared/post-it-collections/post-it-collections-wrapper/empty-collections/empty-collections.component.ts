@@ -19,10 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Project} from '../../../core/store/projects/project';
+import {Project} from '../../../../core/store/projects/project';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Query} from '../../../core/store/navigation/query/query';
-import {ResourceType} from '../../../core/model/resource-type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {CollectionImportData} from '../import-button/post-it-collection-import-button.component';
 
 @Component({
   selector: 'empty-collections',
@@ -43,11 +44,12 @@ export class EmptyCollectionsComponent {
   public error = new EventEmitter<string>();
 
   @Output()
-  public import = new EventEmitter<{result: string; name: string; format: string}>();
+  public import = new EventEmitter<CollectionImportData>();
 
   public readonly projectType = ResourceType.Project;
 
-  constructor(public i18n: I18n) {}
+  constructor(public i18n: I18n) {
+  }
 
   public onNewCollection() {
     this.newCollection.emit();
@@ -57,7 +59,7 @@ export class EmptyCollectionsComponent {
     this.error.emit(message);
   }
 
-  public onImport(importInfo: {result: string; name: string; format: string}) {
+  public onImport(importInfo: CollectionImportData) {
     this.import.emit(importInfo);
   }
 }

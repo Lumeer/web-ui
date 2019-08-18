@@ -1,0 +1,51 @@
+  <ng-container *ngIf="collections.length; else noCollections">
+
+    <div class="d-flex mt-2"
+         *ngIf="{write : project | permissions:projectType:'write' | async} as projectPermissions">
+      <post-it-collection-add-button class="ml-1"
+                                     [disabled]="!projectPermissions.write"
+                                     (clicked)="createNewCollection()">
+      </post-it-collection-add-button>
+
+      <post-it-collection-import-button class="ml-2"
+                                        [disabled]="!projectPermissions.write"
+                                        (error)="notifyOfError($event)"
+                                        (import)="onImportCollection($event)">
+      </post-it-collection-import-button>
+    </div>
+
+    <div class="post-it-collection-layout my-2">
+
+      <post-it-collection class="layout-item"
+                          *ngFor="let collection of (maxCollections > 0 ? (collections | slice:0:maxCollections) : collections); trackBy:trackByCollection; let idx = index"
+                          [collection]="collection"
+                          [workspace]="workspace"
+                          (update)="updateCollection($event)"
+                          (create)="createCollection($event)"
+                          (delete)="deleteCollection(collection)"
+                          (favoriteToggle)="onFavoriteToggle(collection)"
+                          data-test="collection-card">
+      </post-it-collection>
+
+
+      <div class="layout-item"
+           *ngIf="maxCollections > 0 && maxCollections < collections.length"
+           (click)="onShowAllClicked()">
+        <div class="see-all d-flex align-items-center justify-content-center cursor-pointer clickable text-center"
+             i18n="@@search.result.more">
+          See more
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+<ng-template #noCollections>
+  <empty-collections [project]="project"
+                     [query]="query"
+                     (newCollection)="createNewCollection()"
+                     (import)="onImportCollection($event)"
+                     (error)="notifyOfError($event)">
+  </empty-collections>
+</ng-template>

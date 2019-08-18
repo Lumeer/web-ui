@@ -69,6 +69,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private searchId = DEFAULT_SEARCH_ID;
   private config: SearchConfig;
   private page = 0;
+  private documentsOrder = [];
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private translationService: TranslationService) {
@@ -139,6 +140,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private clearDocumentsInfo() {
     this.page = 0;
+    this.documentsOrder = [];
   }
 
   private fetchDocuments(query: Query) {
@@ -155,7 +157,31 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     const customQuery = {...query, page: 0, pageSize};
     this.documents$ = this.store$.pipe(
       select(selectDocumentsByCustomQuery(customQuery, true)),
-      map(documents => sortDocumentsByFavoriteAndLastUsed(documents))
+      map(documents => sortDocumentsByFavoriteAndLastUsed(documents)),
+      map(documents => this.mapNewDocuments(documents))
     );
+  }
+
+  private mapNewDocuments(documents: DocumentModel[]): DocumentModel[] {
+    const documentsMap = documents.reduce((acc, doc) => {
+      acc[doc.correlationId || doc.id] = doc;
+      return acc;
+    }, {});
+
+    const orderedDocuments = this.documentsOrder.reduce((acc, key) => {
+      const doc = documentsMap[key];
+      if (doc) {
+        acc.push(doc);
+        delete documentsMap[key];
+      }
+      return acc;
+    }, []);
+
+    for (const [key, value] of Object.entries(documentsMap)) {
+      orderedDocuments.push(value);
+      this.documentsOrder.push(key);
+    }
+
+    return orderedDocuments;
   }
 }

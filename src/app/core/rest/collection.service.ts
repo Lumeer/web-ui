@@ -49,12 +49,12 @@ export class CollectionService extends PermissionService {
       .pipe(map(() => collectionId));
   }
 
-  public addFavorite(collectionId: string): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/favorite`, {});
+  public addFavorite(collectionId: string, workspace?: Workspace): Observable<any> {
+    return this.httpClient.post(`${this.apiPrefix(workspace)}/${collectionId}/favorite`, {});
   }
 
-  public removeFavorite(collectionId: string): Observable<any> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionId}/favorite`);
+  public removeFavorite(collectionId: string, workspace?: Workspace): Observable<any> {
+    return this.httpClient.delete(`${this.apiPrefix(workspace)}/${collectionId}/favorite`);
   }
 
   public getCollection(collectionId: string): Observable<CollectionDto> {

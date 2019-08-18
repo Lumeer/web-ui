@@ -23,16 +23,16 @@ import {FormsModule} from '@angular/forms';
 import {PipesModule} from '../pipes/pipes.module';
 
 import {PostItCollectionsComponent} from './post-it-collections.component';
-import {PostItCollectionNameComponent} from './collection-name/post-it-collection-name.component';
-import {PostItCollectionImportButtonComponent} from './import-button/post-it-collection-import-button.component';
-import {PostItCollectionAddButtonComponent} from './add-button/post-it-collection-add-button.component';
-import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
+import {PostItCollectionNameComponent} from './post-it-collections-wrapper/collection-name/post-it-collection-name.component';
+import {PostItCollectionImportButtonComponent} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
+import {PostItCollectionAddButtonComponent} from './post-it-collections-wrapper/add-button/post-it-collection-add-button.component';
+import {PostItCollectionComponent} from './post-it-collections-wrapper/post-it/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
-import {LayoutItemDirective} from '../utils/layout/layout-item.directive';
 import {RouterModule} from '@angular/router';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
-import {EmptyCollectionsComponent} from './empty-collections/empty-collections.component';
+import {EmptyCollectionsComponent} from './post-it-collections-wrapper/empty-collections/empty-collections.component';
+import {PostItCollectionsWrapperComponent} from './post-it-collections-wrapper/post-it-collections-wrapper.component';
 
 @NgModule({
   imports: [
@@ -45,14 +45,14 @@ import {EmptyCollectionsComponent} from './empty-collections/empty-collections.c
     WarningMessageModule,
   ],
   declarations: [
-    LayoutItemDirective,
     PostItCollectionsComponent,
     PostItCollectionComponent,
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
     PostItCollectionImportButtonComponent,
     EmptyCollectionsComponent,
+    PostItCollectionsWrapperComponent,
   ],
-  exports: [PostItCollectionsComponent, LayoutItemDirective],
+  exports: [PostItCollectionsComponent],
 })
 export class PostItCollectionsModule {}

@@ -17,26 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
-import {PostItLayout} from './post-it-layout';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-@Directive({
-  selector: '[layout-item]',
+@Component({
+  selector: 'post-it-collection-add-button',
+  templateUrl: './post-it-collection-add-button.component.html',
+  styleUrls: ['./post-it-collection-add-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutItemDirective implements AfterViewInit, OnDestroy {
-  @Input()
-  public layout: PostItLayout;
+export class PostItCollectionAddButtonComponent {
+  @Output()
+  public clicked = new EventEmitter();
 
   @Input()
-  public forceLayoutIndex: number;
+  public disabled: boolean;
 
-  constructor(private element: ElementRef) {}
-
-  public ngAfterViewInit(): void {
-    this.layout.addItem(this.element.nativeElement, this.forceLayoutIndex);
-  }
-
-  public ngOnDestroy(): void {
-    this.layout.removeItem(this.element.nativeElement);
+  public add() {
+    this.clicked.emit();
   }
 }

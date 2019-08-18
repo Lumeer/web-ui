@@ -1,6 +1,5 @@
 <div class="card post-it"
      *ngIf="collection | collectionPermissions | async as allowedPermissions"
-     [class.selected]="selected"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id">
   <div class="card-body text-center">
@@ -9,46 +8,16 @@
          i18n="@@collection.document.icon.set">Click icon to set it
     </div>
     <div *ngIf="!collection.id"
-         id="{{newDropdownId}}"
          data-test="icon-picker-dropdown">
       <a class="icon icon-edit"
          [style.color]="collection.color"
          [title]="collection.name"
          [routerLink]="null"
-         [queryParams]="null"
-         [attr.data-target]="'#' + newDropdownId"
-         [attr.data-toggle]="'dropdown'">
+         [queryParams]="null">
         <i class="fa-3x {{ collection.icon }}"
-           aria-hidden="true"
-           (click)="togglePanelVisible($event, false);"
-           (clickOutside)="onPickerBlur(false)">
+           aria-hidden="true">
         </i>
       </a>
-      <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
-        <color-picker [dropdownId]="newDropdownId"
-                      class="dropdown-item"
-                      [(color)]="collection.color">
-        </color-picker>
-        <div class="dropdown-divider"></div>
-        <icon-picker [dropdownId]="newDropdownId"
-                     class="dropdown-item"
-                     [(icon)]="collection.icon">
-        </icon-picker>
-        <div class="dropdown-divider"></div>
-        <div class="text-right mx-2">
-          <button class="btn btn-outline-secondary btn-sm"
-                  data-toggle="dropdown"
-                  (click)="revertSelectedColor($event)"
-                  i18n="@@button.cancel">Cancel
-          </button>
-          <button class="btn btn-primary btn-sm mx-2"
-                  data-toggle="dropdown"
-                  (click)="saveSelectedColor($event)"
-                  i18n="@@button.select"
-                  data-test="icon-picker-select-button">Select
-          </button>
-        </div>
-      </div>
     </div>
 
     <a *ngIf="collection.id"
@@ -59,15 +28,12 @@
        [queryParams]="{ q: queryForCollectionDocuments() }"
        data-test="collection-card-icon">
       <i class="fa-3x {{ collection.icon }}"
-         aria-hidden="true"
-         (click)="togglePanelVisible($event, false);"
-         (clickOutside)="onPickerBlur(false)">
+         aria-hidden="true">
       </i>
     </a>
 
     <div *ngIf="collection.id"
-         class="document-count opacity-content clickable"
-         [ngClass]="{'panel-visible' : focused}">
+         class="document-count opacity-content clickable">
       <a title="Record Count"
          i18n-title="@@collection.document.count"
          [routerLink]="[workspacePath(), 'view', 'table']"
@@ -81,7 +47,6 @@
 
     <div *ngIf="collection.id && allowedPermissions.read"
          class="toggle-favorite opacity-content clickable text-warning"
-         [ngClass]="{'panel-visible' : focused}"
          [class.always-visible]="collection.favorite">
       <a *ngIf="collection.favorite"
          title="Remove from favorites"
@@ -102,8 +67,7 @@
     </div>
 
     <div *ngIf="collection.id"
-         class="buttons opacity-content d-flex flex-column"
-         [ngClass]="{'panel-visible' : focused}">
+         class="buttons opacity-content d-flex flex-column">
       <div id="dropdown-{{collection.id}}">
         <a title="Configure"
            i18n-title="@@collection.button.configure"
@@ -117,8 +81,7 @@
       </div>
     </div>
     <div *ngIf="!collection.id"
-         class="button-remove opacity-content d-flex flex-column"
-         [class.panel-visible]="focused">
+         class="button-remove opacity-content d-flex flex-column">
       <a (click)="onDelete()"
          class="text-danger rounded-left"
          title="Delete Table"
@@ -133,8 +96,6 @@
 
   <post-it-collection-name [collectionName]="collection.name"
                            [editable]="!collection.id || allowedPermissions.manage"
-                           (changed)="onNameChanged($event)"
-                           (selected)="onNameSelect()"
-                           (unselected)="onNameUnselect()">
+                           (changed)="onNameChanged($event)">
   </post-it-collection-name>
 </div>
