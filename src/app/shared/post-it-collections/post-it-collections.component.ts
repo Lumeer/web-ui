@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {map, take, tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
@@ -34,12 +34,10 @@ import {Project} from '../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {ActivatedRoute, Router} from '@angular/router';
-import {QueryAction} from '../../core/model/query-action';
+import {Router} from '@angular/router';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
 import {CollectionImportData} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
-import {PostItCollectionsWrapperComponent} from './post-it-collections-wrapper/post-it-collections-wrapper.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 
 @Component({
@@ -48,9 +46,6 @@ import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItCollectionsComponent implements OnInit {
-  @ViewChild(PostItCollectionsWrapperComponent, {static: false})
-  public collectionsWrapperComponent: PostItCollectionsWrapperComponent;
-
   @Input()
   public maxShown: number = -1;
 
@@ -62,12 +57,7 @@ export class PostItCollectionsComponent implements OnInit {
 
   private query: Query;
 
-  constructor(
-    private i18n: I18n,
-    private router: Router,
-    private store$: Store<AppState>,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(
@@ -81,7 +71,6 @@ export class PostItCollectionsComponent implements OnInit {
     );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.loaded$ = this.store$.pipe(select(selectCollectionsLoaded));
-    this.subscribeOnRoute();
   }
 
   public onDelete(collection: Collection) {
@@ -133,21 +122,5 @@ export class PostItCollectionsComponent implements OnInit {
         callback: collection => this.onCreateCollection(collection),
       })
     );
-  }
-
-  private subscribeOnRoute() {
-    this.activatedRoute.queryParams.pipe(take(1)).subscribe(queryParams => {
-      const action = queryParams['action'];
-      if (action && action === QueryAction.CreateCollection) {
-        this.collectionsWrapperComponent.createNewCollection();
-
-        const myQueryParams = {...queryParams};
-        delete myQueryParams.action;
-        this.router.navigate([], {
-          relativeTo: this.activatedRoute,
-          queryParams: myQueryParams,
-        });
-      }
-    });
   }
 }

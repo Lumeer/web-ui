@@ -32,7 +32,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {Project} from '../../../core/store/projects/project';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {CollectionFavoriteToggleService} from '../../toggle/collection-favorite-toggle.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -47,6 +47,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {take} from 'rxjs/operators';
+import {QueryAction} from '../../../core/model/query-action';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -109,11 +111,13 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnChanges, OnD
     private toggleService: CollectionFavoriteToggleService,
     private notificationService: NotificationService,
     private i18n: I18n,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
+    this.subscribeOnRoute();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -238,5 +242,21 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnChanges, OnD
     this.selectedCollections$.next(
       this.selectedCollections$.getValue().filter(id => id !== (collection.correlationId || collection.id))
     );
+  }
+
+  private subscribeOnRoute() {
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe(queryParams => {
+      const action = queryParams['action'];
+      if (action && action === QueryAction.CreateCollection) {
+        this.createNewCollection();
+
+        const myQueryParams = {...queryParams};
+        delete myQueryParams.action;
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: myQueryParams,
+        });
+      }
+    });
   }
 }

@@ -8,11 +8,11 @@
          i18n="@@collection.document.icon.set">Click icon to set it
     </div>
     <div *ngIf="!collection.id"
-         data-test="icon-picker-dropdown">
+         data-test="icon-picker-dropdown"
+         (click)="togglePicker()">
       <i class="fa-3x {{ collection.icon }} cursor-pointer"
          [style.color]="collection.color"
          [title]="collection.name"
-         (click)="togglePicker()"
          #pickerOrigin
          aria-hidden="true">
       </i>
