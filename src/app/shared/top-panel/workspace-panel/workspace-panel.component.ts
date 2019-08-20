@@ -47,7 +47,7 @@ export class WorkspacePanelComponent implements OnInit {
   public project$: Observable<Project>;
 
   constructor(
-    public element: ElementRef,
+    public element: ElementRef<HTMLElement>,
     private router: Router,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>

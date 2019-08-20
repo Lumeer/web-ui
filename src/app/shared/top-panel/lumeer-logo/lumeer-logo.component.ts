@@ -35,5 +35,5 @@ export class LumeerLogoComponent {
   @Input()
   public text: string;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef<HTMLElement>) {}
 }
