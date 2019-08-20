@@ -17,15 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -49,16 +41,11 @@ import {selectServiceLimitsByWorkspace} from './core/store/organizations/service
 import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
 
-declare let $: any;
-
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  @ViewChild('browserWarning', {static: false})
-  public browserWarning: ElementRef;
-
   public isChrome = true;
 
   public lazyLoading$ = new BehaviorSubject(false);
@@ -199,19 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     this.initSmartlook();
-    this.bindBrowserWarningCloseCallback();
     this.subscribeToModuleLazyLoading();
-  }
-
-  private bindBrowserWarningCloseCallback() {
-    if (!this.browserWarning || !this.browserWarning.nativeElement) {
-      return;
-    }
-
-    $('#browserAlert').on('closed.bs.alert', () => {
-      // the rest of the page needs to adapt its height
-      this.changeDetector.detectChanges();
-    });
   }
 
   private subscribeToModuleLazyLoading(): Subscription {

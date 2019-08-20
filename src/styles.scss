@@ -134,8 +134,7 @@ color-picker .color-picker .preset-area {
   }
 }
 
-.tmp-invisible {
-  visibility: hidden;
+.white-space-pre {
   white-space: pre;
 }
 
@@ -160,4 +159,8 @@ color-picker .color-picker .preset-area {
 
 .text-gray-700 {
   color: $gray-700;
+}
+
+.min-height-1 {
+  min-height: 1px; // typically used as flex height fix (e.g. Firefox)
 }

@@ -105,10 +105,14 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (!this.tempElement) {
       this.tempElement = this.createTempElement();
       document.body.appendChild(this.tempElement);
+    } else {
+      this.tempElement.classList.remove('d-none');
     }
 
     this.tempElement.innerHTML = formatDataValue(value, this.constraint, this.constraintData);
     const textWidth = this.tempElement.getBoundingClientRect().width;
+
+    this.tempElement.classList.add('d-none');
 
     if (this.constraint && this.constraint.type === ConstraintType.User) {
       return (
@@ -121,7 +125,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private createTempElement(): HTMLElement {
     const tmp = document.createElement('span');
-    tmp.className = 'px-2 tmp-invisible';
+    tmp.classList.add('px-2', 'invisible', 'white-space-pre');
     tmp.id = generateCorrelationId();
     return tmp;
   }

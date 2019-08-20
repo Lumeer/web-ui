@@ -24,10 +24,14 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {BsDropdownModule, ModalModule, PopoverModule, TimepickerModule} from 'ngx-bootstrap';
+import {AlertModule} from 'ngx-bootstrap/alert';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {csLocale} from 'ngx-bootstrap/locale';
+import {ModalModule} from 'ngx-bootstrap/modal';
+import {PopoverModule} from 'ngx-bootstrap/popover';
+import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import {environment} from '../../environments/environment';
@@ -38,6 +42,7 @@ import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
+import {RedirectComponent} from './redirect.component';
 import {
   CollectionService,
   DocumentService,
@@ -57,7 +62,6 @@ import {UserNotificationsService} from './rest/user-notifications.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
-import {RedirectComponent} from './redirect.component';
 
 if (environment.locale === 'cs') {
   defineLocale('cs', csLocale);
@@ -75,6 +79,7 @@ if (environment.locale === 'cs') {
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule,
+    AlertModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
     PopoverModule.forRoot(),
