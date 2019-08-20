@@ -254,22 +254,12 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
-    this.allMarkers = markers.reduce((markersMap, properties) => {
-      const marker = createMapMarker(properties);
-      marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
-      markersMap[properties.document.id] = marker;
-      return markersMap;
-    }, {});
+    this.allMarkers = this.createAllMakers(markers);
 
     if (this.mapboxMap.getSource(MAP_SOURCE_ID)) {
-      this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
-      this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
-      this.mapboxMap.removeSource(MAP_SOURCE_ID);
+      this.removeSourceAndLayers();
     }
-
-    this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
-    this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
-    this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+    this.addSourceAndLayers(markers);
 
     this.redrawMarkers();
     this.mapboxMap.once('idle', () => {
@@ -278,10 +268,32 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     });
   }
 
+  private createAllMakers(markers: MapMarkerProperties[]) {
+    return markers.reduce((markersMap, properties) => {
+      const marker = createMapMarker(properties);
+      marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
+      markersMap[properties.document.id] = marker;
+      return markersMap;
+    }, {});
+  }
+
+  private addSourceAndLayers(markers: MapMarkerProperties[]) {
+    this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
+    this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
+    this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+  }
+
+  private removeSourceAndLayers() {
+    this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
+    this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
+    this.mapboxMap.removeSource(MAP_SOURCE_ID);
+  }
+
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
     if (!this.map.config.position || !this.map.config.position.center) {
       const bounds = createMapMarkersBounds(markers);
       this.mapboxMap.fitBounds(bounds, {padding: 100});
+      this.mapboxMap.once('idle', () => this.redrawMarkers());
     }
   }
 
