@@ -89,7 +89,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  public onOptionMouseDown(event: MouseEvent, option: DropdownOption) {
+  public onOptionClick(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
     this.selectOption.emit(option);
     this.close();

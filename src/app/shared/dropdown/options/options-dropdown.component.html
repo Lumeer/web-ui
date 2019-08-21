@@ -7,7 +7,7 @@
     <a *ngFor="let option of options"
        dropdownOption
        [value]="option.value"
-       (click)="onOptionMouseDown($event, option)"
+       (click)="onOptionClick($event, option)"
        class="dropdown-item text-truncate"
        data-test="select-item-option"
        tabindex>
