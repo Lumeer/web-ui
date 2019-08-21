@@ -49,6 +49,12 @@ export class SelectItemComponent implements OnChanges {
   public placeholderIcon: string;
 
   @Input()
+  public placeholderColor: string;
+
+  @Input()
+  public placeholderTitle: string;
+
+  @Input()
   public placeholderText: string = '';
 
   @Input()

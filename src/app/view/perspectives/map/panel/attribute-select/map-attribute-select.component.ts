@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'map-attribute-select',
@@ -26,7 +27,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
   styleUrls: ['./map-attribute-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapAttributeSelectComponent {
+export class MapAttributeSelectComponent implements OnChanges {
   @Input()
   public attributeId: string;
 
@@ -36,7 +37,23 @@ export class MapAttributeSelectComponent {
   @Output()
   public select = new EventEmitter<string>();
 
-  public onChange(event: Event) {
-    this.select.emit(event.target['value']);
+  public items: SelectItemModel[];
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.collection && this.collection) {
+      this.items = this.createSelectItems();
+    }
+  }
+
+  private createSelectItems(): SelectItemModel[] {
+    return this.collection.attributes.map(attribute => ({id: attribute.id, value: attribute.name}));
+  }
+
+  public onSelect(attributeId: string) {
+    this.select.emit(attributeId);
+  }
+
+  public onRemove() {
+    this.select.emit(null);
   }
 }

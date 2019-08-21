@@ -2,14 +2,16 @@
      #selectItemParent>
   <div *ngIf="placeholderIcon || placeholderText"
        class="input-group-prepend">
-    <span class="input-group-text">
+    <span [style.color]="placeholderColor"
+          [title]="placeholderTitle"
+          class="input-group-text">
       <i *ngIf="placeholderIcon"
          class="fa-fw {{placeholderIcon}}"></i>
       {{placeholderText}}
     </span>
   </div>
 
-  <button class="btn btn-outline-gray-600 dropdown-toggle d-flex align-items-center {{buttonClasses}}"
+  <button class="btn btn-outline-gray-600 dropdown-toggle flex-grow-1 d-flex align-items-center {{buttonClasses}}"
           [class.sharp-top-left]="placeholderIcon || placeholderText"
           [class.sharp-bottom-left]="placeholderIcon || placeholderText"
           [disabled]="disabled"
