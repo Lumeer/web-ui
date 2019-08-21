@@ -23,7 +23,6 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {SharedModule} from '../shared/shared.module';
 import {DialogBaseComponent} from './dialog-base.component';
 import {DialogRoutingModule} from './dialog-routing.module';
-import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
@@ -54,7 +53,6 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
     ClickOutsideModule,
   ],
   declarations: [
-    CreateCollectionDialogComponent,
     CollectionNameInputComponent,
     LinkNameInputComponent,
     CreateLinkDialogComponent,
@@ -65,7 +63,7 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
     AttributeFunctionDialogComponent,
     FullscreenDialogComponent,
   ],
-  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent],
+  entryComponents: [CreateLinkDialogComponent],
   exports: [DialogBaseComponent, FullscreenDialogComponent],
 })
 export class DialogModule {}
