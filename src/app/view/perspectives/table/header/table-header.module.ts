@@ -21,8 +21,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {ResizableModule} from 'angular-resizable-element';
 import {ContextMenuModule} from 'ngx-contextmenu';
-import {DropdownModule} from '../../../../shared/dropdown/dropdown.module';
-import {PickerModule} from '../../../../shared/picker/picker.module';
 import {SharedModule} from '../../../../shared/shared.module';
 import {TableRowGroupHeaderComponent} from '../body/row-group/header/table-row-group-header.component';
 import {TableSharedModule} from '../shared/table-shared.module';
@@ -36,22 +34,13 @@ import {TableColumnIconsComponent} from './column-group/single-column/icons/tabl
 import {TableColumnInputComponent} from './column-group/single-column/input/table-column-input.component';
 import {TableSingleColumnComponent} from './column-group/single-column/table-single-column.component';
 import {TableColumnGroupComponent} from './column-group/table-column-group.component';
-import {TableHiddenInputComponent} from '../shared/hidden-input/table-hidden-input.component';
 import {TableHierarchyColumnComponent} from './hierarchy-column/table-hierarchy-column.component';
 import {TableLinkInfoComponent} from './link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './link/table-header-link.component';
 import {TableHeaderComponent} from './table-header.component';
 
 @NgModule({
-  imports: [
-    ContextMenuModule,
-    DragDropModule,
-    ResizableModule,
-    SharedModule,
-    TableSharedModule,
-    PickerModule,
-    DropdownModule,
-  ],
+  imports: [ContextMenuModule, DragDropModule, ResizableModule, SharedModule, TableSharedModule],
   declarations: [
     TableAttributeSuggestionsComponent,
     TableCaptionComponent,

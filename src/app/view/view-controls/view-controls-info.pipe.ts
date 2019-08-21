@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {combineLatest as observableCombineLatest, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
 import {Role} from '../../core/model/role';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
@@ -34,6 +34,7 @@ import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/qu
 import {ResourceType} from '../../core/model/resource-type';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {ResourcePermissionsPipe} from '../../shared/pipes/permissions/resource-permissions.pipe';
+import {User} from '../../core/store/users/user';
 
 @Pipe({
   name: 'viewControlsInfo',
@@ -52,43 +53,55 @@ export class ViewControlsInfoPipe implements PipeTransform {
       return this.canWriteInProject().pipe(map(canWrite => ({canClone: false, canManage: canWrite, canShare: false})));
     }
 
-    return observableCombineLatest(
-      this.hasDirectAccessToView(view),
-      this.canWriteInProject(),
-      this.permissionsPipe.transform(view, ResourceType.View)
-    ).pipe(
-      map(([canClone, canWriteProject, permissions]) => ({
-        canClone: canClone && canWriteProject,
-        canManage: permissions.manage,
-        canShare: permissions.share,
-      }))
-    );
-  }
-
-  private hasDirectAccessToView(view: View): Observable<boolean> {
-    return observableCombineLatest(
+    return combineLatest([
       this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-      this.store$.pipe(select(selectCollectionsDictionary))
-    ).pipe(
-      map(([currentUser, linkTypes, collectionsMap]) => {
-        return getAllCollectionIdsFromQuery(view.query, linkTypes)
-          .map(collectionId => collectionsMap[collectionId])
-          .every(collection => collection && userHasRoleInResource(currentUser, collection, Role.Read));
+      this.store$.pipe(select(selectWorkspaceModels)),
+    ]).pipe(
+      mergeMap(([currentUser, models]) => {
+        if (userIsManagerInWorkspace(currentUser, models.organization, models.project)) {
+          return of({canClone: true, canManage: true, canShare: true});
+        }
+
+        return combineLatest([
+          this.hasDirectAccessToView(view, currentUser),
+          this.permissionsPipe.transform(view, ResourceType.View),
+        ]).pipe(
+          map(([canClone, permissions]) => {
+            const canWriteInProject = userHasRoleInResource(currentUser, models.project, Role.Write);
+            return {
+              canClone: canClone && canWriteInProject,
+              canManage: permissions.manage,
+              canShare: permissions.share,
+            };
+          })
+        );
       })
     );
   }
 
   private canWriteInProject(): Observable<boolean> {
-    return observableCombineLatest(
+    return combineLatest([
       this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectWorkspaceModels))
-    ).pipe(
+      this.store$.pipe(select(selectWorkspaceModels)),
+    ]).pipe(
       map(
         ([currentUser, models]) =>
           userIsManagerInWorkspace(currentUser, models.organization, models.project) ||
           userHasRoleInResource(currentUser, models.project, Role.Write)
       )
+    );
+  }
+
+  private hasDirectAccessToView(view: View, currentUser: User): Observable<boolean> {
+    return combineLatest([
+      this.store$.pipe(select(selectAllLinkTypes)),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+    ]).pipe(
+      map(([linkTypes, collectionsMap]) => {
+        return getAllCollectionIdsFromQuery(view.query, linkTypes)
+          .map(collectionId => collectionsMap[collectionId])
+          .every(collection => collection && userHasRoleInResource(currentUser, collection, Role.Read));
+      })
     );
   }
 }

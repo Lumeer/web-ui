@@ -244,17 +244,19 @@ export class DocumentsEffects {
   public addFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action =>
-      this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-        mergeMap(() => of()),
-        catchError(error =>
-          of(
-            new DocumentsAction.AddFavoriteFailure({
-              documentId: action.payload.documentId,
-              error: error,
-            })
+      this.documentService
+        .addFavorite(action.payload.collectionId, action.payload.documentId, action.payload.workspace)
+        .pipe(
+          mergeMap(() => of()),
+          catchError(error =>
+            of(
+              new DocumentsAction.AddFavoriteFailure({
+                documentId: action.payload.documentId,
+                error: error,
+              })
+            )
           )
         )
-      )
     )
   );
 
@@ -272,17 +274,19 @@ export class DocumentsEffects {
   public removeFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
     mergeMap(action =>
-      this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-        mergeMap(() => of()),
-        catchError(error =>
-          of(
-            new DocumentsAction.RemoveFavoriteFailure({
-              documentId: action.payload.documentId,
-              error: error,
-            })
+      this.documentService
+        .removeFavorite(action.payload.collectionId, action.payload.documentId, action.payload.workspace)
+        .pipe(
+          mergeMap(() => of()),
+          catchError(error =>
+            of(
+              new DocumentsAction.RemoveFavoriteFailure({
+                documentId: action.payload.documentId,
+                error: error,
+              })
+            )
           )
         )
-      )
     )
   );
 

@@ -26,7 +26,6 @@ import {SharedModule} from '../shared/shared.module';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
-import {PickerModule} from '../shared/picker/picker.module';
 import {WorkspaceService} from './workspace.service';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
@@ -42,7 +41,7 @@ import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, PickerModule, ClickOutsideModule],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,

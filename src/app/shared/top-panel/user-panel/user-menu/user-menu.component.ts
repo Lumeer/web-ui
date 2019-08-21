@@ -104,13 +104,11 @@ export class UserMenuComponent {
         filter(
           ([timerVal, user, collections, views, url]) => timerVal > 0 && !!user && !!collections && !!views && !!url
         ),
-        filter(([timerVal, user, collections, views, url]) => this.isViewSearchAll(url)),
-        filter(([timerVal, user, collections, views, url]) => !user.wizardDismissed),
+        filter(([, , , , url]) => this.isViewSearchAll(url)),
+        filter(([, user, , ,]) => !user.wizardDismissed),
         first()
       )
-      .subscribe(([timerVal, user, collections, views, url]) =>
-        this.startTour(false, collections.length, views.length)
-      );
+      .subscribe(([, , collections, views]) => this.startTour(false, collections.length, views.length));
   }
 
   private isViewSearchAll(url: string): boolean {

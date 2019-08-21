@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
@@ -48,16 +47,6 @@ const routes: Routes = [
   {
     path: `${DialogPath.LINK_ATTRIBUTE_TYPE}/:linkTypeId/:attributeId`,
     component: AttributeTypeDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.CREATE_COLLECTION}/:linkedCollectionId`,
-    component: CreateCollectionDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: DialogPath.CREATE_COLLECTION,
-    component: CreateCollectionDialogComponent,
     outlet: 'dialog',
   },
   {

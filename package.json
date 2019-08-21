@@ -76,7 +76,6 @@
     "mapbox-gl": "^1.2.0",
     "mixpanel-browser": "^2.29.0",
     "moment": "^2.24.0",
-    "muuri": "^0.8.0",
     "ng-click-outside": "^4.0.0",
     "ng-snotify": "^4.3.1",
     "ngx-bootstrap": "^5.1.0",

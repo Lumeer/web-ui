@@ -37,15 +37,6 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const [, viewCode] = nextState.url.match(/vc=([0-9a-z]*)/) || [null, null];
-    const perspective =
-      currentRoute.firstChild &&
-      currentRoute.firstChild.url &&
-      currentRoute.firstChild.url[0] &&
-      currentRoute.firstChild.url[0].path;
-    if (perspective && !nextState.url.includes(perspective) && !viewCode) {
-      this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
-    }
     this.store$.dispatch(new ViewsAction.ResetViewGlobalConfig());
     return true;
   }

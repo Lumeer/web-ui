@@ -17,91 +17,72 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {selectViewsLoaded} from '../../../../core/store/views/views.state';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
-import {filter, map} from 'rxjs/operators';
-import {Perspective} from '../../perspective';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
+import {map, tap} from 'rxjs/operators';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
-import {SizeType} from '../../../../shared/slider/size-type';
-import {UserSettingsService} from '../../../../core/service/user-settings.service';
+import {DEFAULT_SEARCH_ID, SearchConfig, SearchViewsConfig} from '../../../../core/store/searches/search';
+import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
+import {SearchesAction} from '../../../../core/store/searches/searches.action';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 
 @Component({
   selector: 'search-views',
   templateUrl: './search-views.component.html',
-  styleUrls: ['./search-views.component.scss'],
 })
-export class SearchViewsComponent implements OnInit, OnDestroy {
+export class SearchViewsComponent {
   @Input()
   public maxLines: number = -1;
 
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;
-  public query: Query;
+  public query$: Observable<Query>;
+  public workspace$: Observable<Workspace>;
+  public loaded$: Observable<boolean>;
+  public viewsConfig$: Observable<SearchViewsConfig>;
 
-  public size: SizeType;
-  private subscriptions = new Subscription();
-  private viewsLoaded: boolean;
-  private workspace: Workspace;
+  private config: SearchConfig;
+  private searchId = DEFAULT_SEARCH_ID;
 
-  constructor(
-    private router: Router,
-    private i18n: I18n,
-    private notificationService: NotificationService,
-    private userSettingsService: UserSettingsService,
-    private store$: Store<AppState>
-  ) {}
+  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
-    this.subscribeToNavigation();
-    this.subscribeToData();
-    this.initSettings();
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
-  private subscribeToNavigation() {
-    const navigationSubscription = this.store$
-      .pipe(
-        select(selectNavigation),
-        filter(navigation => !!navigation.workspace && !!navigation.query)
-      )
-      .subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.query = navigation.query;
-      });
-    this.subscriptions.add(navigationSubscription);
-  }
-
-  private subscribeToData() {
+    this.query$ = this.store$.pipe(select(selectQuery));
+    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+    this.loaded$ = this.store$.pipe(select(selectViewsLoaded));
     this.queryData$ = combineLatest(
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes))
     ).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
+    this.viewsConfig$ = this.selectViewsConfig$();
+  }
 
-    const loadedSubscription = this.store$
-      .pipe(select(selectViewsLoaded))
-      .subscribe(loaded => (this.viewsLoaded = loaded));
-    this.subscriptions.add(loadedSubscription);
+  private selectViewsConfig$(): Observable<SearchViewsConfig> {
+    return this.store$.pipe(
+      select(selectSearchConfig),
+      tap(config => (this.config = config)),
+      map(config => config && config.views)
+    );
+  }
+
+  public onConfigChange(viewsConfig: SearchViewsConfig) {
+    const config = {...this.config, views: viewsConfig};
+    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
   }
 
   public onDeleteView(view: View) {
@@ -121,39 +102,5 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   public deleteView(view: View) {
     this.store$.dispatch(new ViewsAction.Delete({viewId: view.id}));
-  }
-
-  public isLoading(): boolean {
-    return isNullOrUndefined(this.viewsLoaded) || isNullOrUndefined(this.query);
-  }
-
-  public showView(view: View) {
-    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
-  }
-
-  public trackByView(index: number, view: View): string {
-    return view.id;
-  }
-
-  public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {
-      queryParams: {q: convertQueryModelToString(this.query)},
-    });
-  }
-
-  private workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public onSizeChange(newSize: SizeType) {
-    this.size = newSize;
-    const userSettings = this.userSettingsService.getUserSettings();
-    userSettings.viewSize = newSize;
-    this.userSettingsService.updateUserSettings(userSettings);
-  }
-
-  private initSettings() {
-    const userSettings = this.userSettingsService.getUserSettings();
-    this.size = userSettings.viewSize ? userSettings.viewSize : SizeType.XL;
   }
 }

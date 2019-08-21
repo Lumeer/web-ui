@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of} from 'rxjs';
-import {filter, first, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, pairwise, startWith, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
@@ -75,8 +75,7 @@ export class ViewComponent implements OnInit {
           return this.store$.pipe(
             filter(() => !previousNavigation || previousNavigation.workspace.viewCode !== workspace.viewCode),
             select(selectViewByCode(workspace.viewCode)),
-            filter(view => !!view),
-            tap(view => this.store$.dispatch(new ViewsAction.ChangeConfig({config: view.config})))
+            filter(view => !!view)
           );
         } else {
           return of({name: viewName || '', query, perspective: null, config: {}});

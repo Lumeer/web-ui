@@ -87,12 +87,12 @@ export class DocumentService extends BaseService {
     });
   }
 
-  public addFavorite(collectionId: string, documentId: string): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix({collectionId})}/${documentId}/favorite`, {});
+  public addFavorite(collectionId: string, documentId: string, workspace?: Workspace): Observable<any> {
+    return this.httpClient.post(`${this.apiPrefix({...workspace, collectionId})}/${documentId}/favorite`, {});
   }
 
-  public removeFavorite(collectionId: string, documentId: string): Observable<any> {
-    return this.httpClient.delete(`${this.apiPrefix({collectionId})}/${documentId}/favorite`);
+  public removeFavorite(collectionId: string, documentId: string, workspace?: Workspace): Observable<any> {
+    return this.httpClient.delete(`${this.apiPrefix({...workspace, collectionId})}/${documentId}/favorite`);
   }
 
   public getDocument(collectionId: string, documentId: string): Observable<DocumentDto> {

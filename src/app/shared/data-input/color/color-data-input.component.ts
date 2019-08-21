@@ -34,7 +34,7 @@ import {formatColorDataValue, isColorValid} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {ColorPickerDirective} from 'ngx-color-picker';
-import {greyscale, palette, saturated} from '../../picker/color-picker/colors';
+import {greyscale, palette, saturated} from '../../picker/icon-color/color/colors';
 
 @Component({
   selector: 'color-data-input',

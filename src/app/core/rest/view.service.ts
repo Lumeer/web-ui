@@ -54,6 +54,14 @@ export class ViewService extends BaseService {
     return this.http.get<ViewDto[]>(this.apiPrefix(null, workspace));
   }
 
+  public addFavorite(id: string, workspace?: Workspace): Observable<any> {
+    return this.http.post(`${this.apiPrefix(id, workspace)}/favorite`, {});
+  }
+
+  public removeFavorite(id: string, workspace?: Workspace): Observable<any> {
+    return this.http.delete(`${this.apiPrefix(id, workspace)}/favorite`);
+  }
+
   public getPermissions(viewId: string): Observable<PermissionsDto> {
     return this.http.get<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`);
   }

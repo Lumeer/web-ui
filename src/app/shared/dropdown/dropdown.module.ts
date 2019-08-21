@@ -19,13 +19,13 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {PickerModule} from '../picker/picker.module';
 import {DropdownOptionDirective} from './options/dropdown-option.directive';
 import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
+import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
-  imports: [CommonModule, PickerModule],
+  imports: [CommonModule, PresenterModule],
   declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
   exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
 })

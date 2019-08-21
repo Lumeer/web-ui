@@ -20,39 +20,41 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {PipesModule} from '../pipes/pipes.module';
+import {RouterModule} from '@angular/router';
 
+import {PipesModule} from '../pipes/pipes.module';
 import {PostItCollectionsComponent} from './post-it-collections.component';
-import {PostItCollectionNameComponent} from './collection-name/post-it-collection-name.component';
-import {PostItCollectionImportButtonComponent} from './import-button/post-it-collection-import-button.component';
-import {PostItCollectionAddButtonComponent} from './add-button/post-it-collection-add-button.component';
-import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
+import {PostItCollectionNameComponent} from './content/collection-name/post-it-collection-name.component';
+import {PostItCollectionImportButtonComponent} from './content/import-button/post-it-collection-import-button.component';
+import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
+import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
-import {LayoutItemDirective} from '../utils/layout/layout-item.directive';
-import {RouterModule} from '@angular/router';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
-import {EmptyCollectionsComponent} from './empty-collections/empty-collections.component';
+import {EmptyCollectionsComponent} from './content/empty-collections/empty-collections.component';
+import {PostItCollectionsContentComponent} from './content/post-it-collections-content.component';
+import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     PickerModule,
+    PresenterModule,
     ClickOutsideModule,
     RouterModule,
     PipesModule,
     WarningMessageModule,
   ],
   declarations: [
-    LayoutItemDirective,
     PostItCollectionsComponent,
     PostItCollectionComponent,
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
     PostItCollectionImportButtonComponent,
     EmptyCollectionsComponent,
+    PostItCollectionsContentComponent,
   ],
-  exports: [PostItCollectionsComponent, LayoutItemDirective],
+  exports: [PostItCollectionsComponent],
 })
 export class PostItCollectionsModule {}

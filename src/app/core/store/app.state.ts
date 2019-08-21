@@ -43,6 +43,7 @@ import {initialUserNotificationsState, UserNotificationsState} from './user-noti
 import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';
 import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
 import {initialPivotsState, PivotsState} from './pivots/pivots.state';
+import {initialSearchesState, SearchesState} from './searches/searches.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -70,6 +71,7 @@ export interface AppState {
   userNotifications: UserNotificationsState;
   ganttCharts: GanttChartsState;
   kanbans: KanbansState;
+  searches: SearchesState;
 }
 
 export function initialAppState(): AppState {
@@ -99,5 +101,6 @@ export function initialAppState(): AppState {
     userNotifications: initialUserNotificationsState,
     ganttCharts: initialGanttChartsState,
     kanbans: initialKanbansState,
+    searches: initialSearchesState,
   };
 }

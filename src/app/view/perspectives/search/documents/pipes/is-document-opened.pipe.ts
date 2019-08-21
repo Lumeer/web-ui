@@ -19,12 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {SizeType} from '../../../../../shared/slider/size-type';
 
 @Pipe({
   name: 'isDocumentOpened',
 })
 export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(expandedIds: string[], document: DocumentModel): boolean {
-    return expandedIds.includes(document.id);
+  public transform(document: DocumentModel, config: SearchDocumentsConfig): boolean {
+    if (config && config.size === SizeType.XL) {
+      return true;
+    }
+    return ((config && config.expandedIds) || []).includes(document.id);
   }
 }

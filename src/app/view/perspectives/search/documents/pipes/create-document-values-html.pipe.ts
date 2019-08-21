@@ -27,12 +27,8 @@ import {Collection} from '../../../../../core/store/collections/collection';
   name: 'createDocumentValuesHtml',
 })
 export class CreateDocumentValuesHtmlPipe implements PipeTransform {
-  public transform(
-    document: DocumentModel,
-    collectionsMap: Record<string, Collection>,
-    constraintData: ConstraintData
-  ): any {
-    const collection = collectionsMap[document.collectionId];
+  public transform(document: DocumentModel, collections: Collection[], constraintData: ConstraintData): any {
+    const collection = (collections || []).find(coll => coll.id === document.collectionId);
     return createSearchDocumentValuesHtml(document, collection, constraintData);
   }
 }

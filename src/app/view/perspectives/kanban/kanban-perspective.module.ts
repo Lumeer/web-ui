@@ -43,6 +43,7 @@ import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/cho
 import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 import {ModalWrapperModule} from '../../../shared/modal/wrapper/modal-wrapper.module';
+import {PresenterModule} from '../../../shared/presenter/presenter.module';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {ModalWrapperModule} from '../../../shared/modal/wrapper/modal-wrapper.mo
     DragDropModule,
     DropdownModule,
     PickerModule,
+    PresenterModule,
     PreviewResultsModule,
     ModalWrapperModule,
     NgxModalModule.forRoot(),

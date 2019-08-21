@@ -81,7 +81,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectViewsLoaded)),
       this.store$.pipe(select(selectCurrentQueryDocumentsLoaded))
     ).pipe(
-      tap(([collectionsLoaded, viewLoaded, documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
+      tap(([, , documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );
 

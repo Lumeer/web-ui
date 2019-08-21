@@ -17,51 +17,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {withLatestFrom} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {createDefaultSearchConfig, DEFAULT_SEARCH_ID} from '../../../core/store/searches/search';
+import {selectSearchById} from '../../../core/store/searches/searches.state';
+import {ViewConfig} from '../../../core/store/views/view';
+import {SearchesAction} from '../../../core/store/searches/searches.action';
 
 @Component({
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
 })
-export class SearchPerspectiveComponent {
-  public query: Query = {};
+export class SearchPerspectiveComponent implements OnInit, OnDestroy {
+  private query: Query = {};
+  private subscriptions = new Subscription();
+  private searchId = DEFAULT_SEARCH_ID;
 
-  private workspace: Workspace;
-
-  constructor(private store: Store<AppState>, private activatedRoute: ActivatedRoute) {}
+  constructor(private store$: Store<AppState>, private activatedRoute: ActivatedRoute) {}
 
   public ngOnInit() {
-    this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.query = navigation.query;
-    });
+    this.initConfig();
+    this.store$.pipe(select(selectQuery)).subscribe(query => (this.query = query));
   }
 
   public isLinkActive(url: string): boolean {
     return this.activatedRoute.firstChild.snapshot.url.join('/').includes(url);
   }
 
-  public viewPath(searchTab: string): string[] {
-    return [
-      'w',
-      this.workspace.organizationCode,
-      this.workspace.projectCode,
-      'view',
-      this.workspace.viewCode,
-      'search',
-      searchTab,
-    ];
-  }
-
   public stringifyQuery(): string {
     return convertQueryModelToString(this.query);
+  }
+
+  private initConfig() {
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        withLatestFrom(this.store$.pipe(select(selectSearchById(this.searchId))))
+      )
+      .subscribe(([view, search]) => {
+        if (search) {
+          this.refreshSearch(view && view.config);
+        } else {
+          this.createSearch();
+        }
+      });
+    this.subscriptions.add(subscription);
+  }
+
+  private refreshSearch(viewConfig: ViewConfig) {
+    if (viewConfig && viewConfig.search) {
+      this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: viewConfig.search}));
+    }
+  }
+
+  private createSearch() {
+    const search = {id: this.searchId, config: createDefaultSearchConfig()};
+    this.store$.dispatch(new SearchesAction.AddSearch({search}));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+    this.store$.dispatch(new SearchesAction.RemoveSearch({searchId: this.searchId}));
   }
 }

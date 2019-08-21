@@ -23,7 +23,6 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {SharedModule} from '../shared/shared.module';
 import {DialogBaseComponent} from './dialog-base.component';
 import {DialogRoutingModule} from './dialog-routing.module';
-import {CreateCollectionDialogComponent} from './create-collection/create-collection-dialog.component';
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
@@ -37,6 +36,7 @@ import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.
 import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {PresenterModule} from '../shared/presenter/presenter.module';
 
 @NgModule({
   imports: [
@@ -44,6 +44,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     FormsModule,
     ReactiveFormsModule,
     PickerModule,
+    PresenterModule,
     DialogRoutingModule,
     DialogWrapperModule,
     ShareViewDialogModule,
@@ -52,7 +53,6 @@ import {ClickOutsideModule} from 'ng-click-outside';
     ClickOutsideModule,
   ],
   declarations: [
-    CreateCollectionDialogComponent,
     CollectionNameInputComponent,
     LinkNameInputComponent,
     CreateLinkDialogComponent,
@@ -63,7 +63,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     AttributeFunctionDialogComponent,
     FullscreenDialogComponent,
   ],
-  entryComponents: [CreateCollectionDialogComponent, CreateLinkDialogComponent],
+  entryComponents: [CreateLinkDialogComponent],
   exports: [DialogBaseComponent, FullscreenDialogComponent],
 })
 export class DialogModule {}

@@ -76,14 +76,16 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
-  @Output() public remove = new EventEmitter();
-  @Output() public sizeChange = new EventEmitter<number>();
+  @Output()
+  public remove = new EventEmitter();
+
+  @Output()
+  public toggleFavorite = new EventEmitter();
 
   public state: DocumentUi;
   public unusedAttributes$: Observable<Attribute[]>;
 
   public initedDocumentKey: string;
-  private currentRowsLength: number;
 
   public constructor(
     private store$: Store<AppState>,
@@ -102,10 +104,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    const changed = this.initDocumentServiceIfNeeded();
-    if (changed) {
-      this.sizeChange.emit(this.state.rows$.getValue().length);
-    }
+    this.initDocumentServiceIfNeeded();
   }
 
   public onRemove() {
@@ -117,9 +116,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onToggleFavorite() {
-    if (this.state) {
-      this.state.onToggleFavorite();
-    }
+    this.toggleFavorite.emit();
   }
 
   public onUpdateRow(index: number, attribute: string, value: string) {
@@ -142,15 +139,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
   public getTrackBy(index: number, row: UiRow): string {
     return row.correlationId || row.id;
-  }
-
-  private checkRowsLength(length: number) {
-    const changed = this.currentRowsLength && this.currentRowsLength !== length;
-    this.currentRowsLength = length;
-
-    if (changed) {
-      this.sizeChange.emit(length);
-    }
   }
 
   public onParentKeyDown(event: KeyboardEvent) {
@@ -185,10 +173,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
         this.i18n,
         this.notificationService
       );
-
-      this.state.length$.subscribe(length => {
-        this.checkRowsLength(length);
-      });
 
       this.unusedAttributes$ = this.state.rows$
         .asObservable()

@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: row;
+
+  .bigger-icon {
+    font-size: 200%;
+    margin-top: 0.25em;
+  }
+}
+
+:host:hover {
+  .hiding-icon {
+    opacity: 1;
+  }
+}
+
+.hiding-icon {
+  opacity: 0;
+}
+
+.always-visible {
+  opacity: 1 !important;
+}

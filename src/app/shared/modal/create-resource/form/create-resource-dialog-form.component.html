@@ -16,11 +16,18 @@
           </span>
       </label>
 
-      <icon-chooser [(color)]="color"
-                    [(icon)]="icon"
-                    [label]="iconChooserLabel"
-                    class="d-block col-8 mb-3">
-      </icon-chooser>
+      <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="togglePicker()">
+        <div class="text-muted small my-2">{{iconChooserLabel}}</div>
+        <i class="fa-fw {{ icon }} fa-3x"
+           [style.color]="color" #pickerOrigin></i>
+        <icon-color-picker [origin]="pickerOrigin"
+                           [color]="color"
+                           [icon]="icon"
+                           (preview)="onIconColorChange($event)"
+                           (selected)="onIconColorChange($event)"
+                           (cancel)="onIconColorChange($event)">
+        </icon-color-picker>
+      </div>
 
       <div class="col-2"></div>
     </div>

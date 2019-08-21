@@ -21,6 +21,8 @@ import {PermissionType} from '../permissions/permissions';
 import {View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
+import {DocumentsActionType} from '../documents/documents.action';
+import {documentsAdapter} from '../documents/documents.state';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -34,14 +36,18 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.removeOne(action.payload.viewId, state);
     case ViewsActionType.SET_PERMISSIONS_SUCCESS:
       return onSetPermissions(state, action);
-    case ViewsActionType.CHANGE_CONFIG:
-      return {...state, config: action.payload.config};
-    case ViewsActionType.CHANGE_SEARCH_CONFIG:
-      return {...state, config: {...state.config, search: action.payload.config}};
     case ViewsActionType.RESET_VIEW_GLOBAL_CONFIG:
       return {...state, globalConfig: {}};
     case ViewsActionType.SET_SIDEBAR_OPENED:
       return {...state, globalConfig: {...state.globalConfig, sidebarOpened: action.payload.opened}};
+    case ViewsActionType.ADD_FAVORITE_SUCCESS:
+      return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
+    case ViewsActionType.REMOVE_FAVORITE_SUCCESS:
+      return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
+    case ViewsActionType.ADD_FAVORITE_FAILURE:
+      return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
+    case ViewsActionType.REMOVE_FAVORITE_FAILURE:
+      return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:

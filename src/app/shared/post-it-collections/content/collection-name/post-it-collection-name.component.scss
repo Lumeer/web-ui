@@ -1,0 +1,48 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/bootstrap_var';
+
+:host {
+  display: block;
+}
+
+.card-footer {
+  border: none;
+  outline: none;
+  padding-top: 0;
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+
+  width: 100%;
+  color: inherit;
+}
+
+.name {
+  transition: max-height $animation-duration;
+  font-size: 1rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: $post-it-name-collapsed;
+  max-height: $post-it-name-collapsed;
+  white-space: nowrap;
+  cursor: text;
+
+  padding: 0.175rem;
+
+  &:hover,
+  &:focus {
+    height: auto;
+    max-height: $post-it-name-expanded;
+    white-space: normal;
+    text-overflow: unset;
+  }
+}
+
+[contenteditable='true']:empty::before {
+  content: attr(placeholder) !important;
+  display: block; /* For Firefox */
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}

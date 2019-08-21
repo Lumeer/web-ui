@@ -1,59 +1,11 @@
-<ng-container *ngIf="{users: users$ | async, durationUnitsMap: durationUnitsMap} as constraintData">
-<ng-container *ngIf="loaded$ | async">
-
-  <div class="mt-2 mb-5" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
-       [infiniteScrollDisabled]="maxLines > 0"
-       [infiniteScrollDistance]="2"
-       (scrolled)="onScrollDown($event)">
-    <size-slider class="d-flex justify-content-end mb-2"
-                 [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
-    <div class="detail card p-2 mb-2"
-         (click)="toggleDocument(document)"
-         (dblclick)="onDetailClick(document)"
-         *ngFor="let document of (maxLines > 0 ? (getDocuments() | slice:0:maxLines) : getDocuments()); trackBy:trackByDocument">
-
-      <search-document-header
-        (detail)="onDetailClick(document)"
-        [size]="size"
-        [document]="document"
-        [isOpened]="(expandedDocumentIds | isDocumentOpened:document) || size === 'XL'"
-        [collection]="collectionsMap[document.collectionId]"
-        [constraintData]="constraintData">
-        <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
-      </search-document-header>
-    </div>
-
-    <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
-         *ngIf="maxLines > 0 && maxLines < documentsOrder.length"
-         (click)="onShowAll()">
-      <i class="fas fa-angle-double-right mr-2 align-sub"></i>
-      <span i18n="@@search.result.more">See more</span>
-      <i class="fas fa-angle-double-right ml-2 align-sub"></i>
-    </div>
-  </div>
-
-</ng-container>
-
-<ng-template #sTemplate let-document>
-</ng-template>
-
-<ng-template #mTemplate let-document>
-  <div [innerHTML]="document | createDocumentValuesHtml:collectionsMap:constraintData | safeHtml"></div>
-</ng-template>
-
-<ng-template #lTemplate let-document>
-  <div [innerHTML]="document | createDocumentEntriesHtml:collectionsMap:constraintData:expandedDocumentIds:size | safeHtml"></div>
-</ng-template>
-
-<ng-template #xlTemplate let-document>
-  <ng-container *ngTemplateOutlet="lTemplate; context: { $implicit: document}"></ng-container>
-</ng-template>
-
-<ng-template #noDocuments>
-  <empty-documents
-    (tablePerspective)="switchPerspectiveToTable()"
-    [collections]="getCollections()"
-    [query]="query">
-  </empty-documents>
-</ng-template>
-</ng-container>
+<search-documents-wrapper *ngIf="loaded$ | async"
+                          [constraintData]="constraintData$ | async"
+                          [query]="query$ | async"
+                          [config]="documentsConfig$ | async"
+                          [maxDocuments]="maxLines"
+                          [collections]="collections$ | async"
+                          [workspace]="workspace$ | async"
+                          [documents]="documents$ | async"
+                          (configChange)="configChange($event)"
+                          (scrollDown)="onFetchNextPage()">
+</search-documents-wrapper>

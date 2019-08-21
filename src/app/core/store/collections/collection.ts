@@ -45,11 +45,8 @@ export interface AttributeFunction {
 export interface Collection extends Resource {
   attributes?: Attribute[];
   defaultAttributeId?: string;
-  lastTimeUsed?: Date;
 
   documentsCount?: number;
-
-  favorite?: boolean;
 
   rules?: Rule[];
 }

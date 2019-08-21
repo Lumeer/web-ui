@@ -30,9 +30,10 @@ import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
 import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
 
 import {SelectItemComponent} from './select-item/select-item.component';
+import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
-  imports: [CommonModule, PickerModule, PipesModule, OverlayModule, DropdownModule],
+  imports: [CommonModule, PickerModule, PresenterModule, PipesModule, OverlayModule, DropdownModule],
   declarations: [
     SelectItemComponent,
     GetSelectItemPipe,

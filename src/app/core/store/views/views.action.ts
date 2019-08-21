@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
-import {SearchConfig, View, ViewConfig} from './view';
+import {View} from './view';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -45,10 +45,13 @@ export enum ViewsActionType {
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
-  CHANGE_CONFIG = '[Views] Change Config',
-  CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
+  ADD_FAVORITE = '[Views] Add Favorite',
+  ADD_FAVORITE_SUCCESS = '[Views] Add Favorite :: Success',
+  ADD_FAVORITE_FAILURE = '[Views] Add Favorite :: Failure',
 
-  SET_CURSOR = '[Views] Set Cursor',
+  REMOVE_FAVORITE = '[Views] Remove Favorite',
+  REMOVE_FAVORITE_SUCCESS = '[Views] Remove Favorite :: Success',
+  REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
 
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
@@ -167,18 +170,6 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class ChangeConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_CONFIG;
-
-    public constructor(public payload: {config: ViewConfig}) {}
-  }
-
-  export class ChangeSearchConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
-
-    public constructor(public payload: {config: SearchConfig}) {}
-  }
-
   export class ResetViewGlobalConfig implements Action {
     public readonly type = ViewsActionType.RESET_VIEW_GLOBAL_CONFIG;
   }
@@ -187,6 +178,42 @@ export namespace ViewsAction {
     public readonly type = ViewsActionType.SET_SIDEBAR_OPENED;
 
     public constructor(public payload: {opened: boolean}) {}
+  }
+
+  export class AddFavorite implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE;
+
+    public constructor(public payload: {viewId: string; workspace?: Workspace}) {}
+  }
+
+  export class AddFavoriteSuccess implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE_SUCCESS;
+
+    public constructor(public payload: {viewId: string}) {}
+  }
+
+  export class AddFavoriteFailure implements Action {
+    public readonly type = ViewsActionType.ADD_FAVORITE_FAILURE;
+
+    public constructor(public payload: {viewId: string; error: any}) {}
+  }
+
+  export class RemoveFavorite implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE;
+
+    public constructor(public payload: {viewId: string; workspace?: Workspace}) {}
+  }
+
+  export class RemoveFavoriteSuccess implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE_SUCCESS;
+
+    public constructor(public payload: {viewId: string}) {}
+  }
+
+  export class RemoveFavoriteFailure implements Action {
+    public readonly type = ViewsActionType.REMOVE_FAVORITE_FAILURE;
+
+    public constructor(public payload: {viewId: string; error: any}) {}
   }
 
   export class Clear implements Action {
@@ -209,9 +236,13 @@ export namespace ViewsAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
-    | ChangeConfig
-    | ChangeSearchConfig
     | ResetViewGlobalConfig
+    | AddFavorite
+    | AddFavoriteSuccess
+    | AddFavoriteFailure
+    | RemoveFavorite
+    | RemoveFavoriteSuccess
+    | RemoveFavoriteFailure
     | SetSidebarOpened
     | Clear;
 }

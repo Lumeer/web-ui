@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SizeType} from '../../../shared/slider/size-type';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Resource} from '../../model/resource';
 import {CalendarConfig} from '../calendars/calendar';
@@ -27,6 +26,7 @@ import {Query} from '../navigation/query/query';
 import {TableConfig} from '../tables/table.model';
 import {KanbanConfig} from '../kanbans/kanban';
 import {PivotConfig} from '../pivots/pivot';
+import {SearchConfig} from '../searches/search';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -39,7 +39,6 @@ export interface View extends Resource {
 
 export interface ViewConfig {
   detail?: DetailConfig;
-  postit?: PostItConfig;
   search?: SearchConfig;
   table?: TableConfig;
   ganttChart?: GanttChartConfig;
@@ -53,19 +52,8 @@ export interface DetailConfig {
   whateverConfig?: string;
 }
 
-export interface PostItConfig {
-  size?: SizeType;
-  documentIdsOrder?: string[];
-}
-
-export interface SearchConfig {
-  expandedDocumentIds?: string[];
-  searchTab?: string; // TODO maybe create enum
-}
-
 export type PerspectiveConfig =
   | DetailConfig
-  | PostItConfig
   | SearchConfig
   | TableConfig
   | GanttChartConfig

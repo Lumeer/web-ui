@@ -18,7 +18,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PickerModule} from '../../../shared/picker/picker.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {MapContentComponent} from './content/map-content.component';
 import {EmptyMapComponent} from './content/empty/empty-map.component';
@@ -33,7 +32,7 @@ import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-positi
 import {MapLoadingComponent} from './content/loading/map-loading.component';
 
 @NgModule({
-  imports: [PickerModule, SharedModule, MapPerspectiveRoutingModule],
+  imports: [SharedModule, MapPerspectiveRoutingModule],
   declarations: [
     MapPerspectiveComponent,
     MapContentComponent,

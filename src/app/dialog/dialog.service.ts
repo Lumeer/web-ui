@@ -24,10 +24,7 @@ import {Observable} from 'rxjs';
 import {distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {AppState} from '../core/store/app.state';
-import {Collection} from '../core/store/collections/collection';
 import {LinkType} from '../core/store/link-types/link.type';
-import {Organization} from '../core/store/organizations/organization';
-import {Project} from '../core/store/projects/project';
 import {VideosAction} from '../core/store/videos/videos.action';
 import {getAllVideos} from '../core/store/videos/videos.data';
 import {DialogPath} from './dialog-path';
@@ -92,28 +89,6 @@ export class DialogService {
 
   public openLinkTypeAttributeConfigDialog(linkTypeId: string, attributeId: string) {
     this.navigateToDialog([DialogPath.LINK_ATTRIBUTE_TYPE, linkTypeId, attributeId]);
-  }
-
-  public openCreateOrganizationDialog(callback?: (organization: Organization) => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);
-  }
-
-  public openCreateProjectDialog(organizationId: string, templateId?: string, callback?: (project: Project) => void) {
-    this.callback = callback;
-    const path = [DialogPath.CREATE_PROJECT, organizationId];
-    templateId && path.push(templateId);
-    this.navigateToDialog(path);
-  }
-
-  public openCreateCollectionDialog(callback?: (collection: Collection) => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_COLLECTION]);
-  }
-
-  public openCreateCollectionAndLinkDialog(linkedCollectionId: string, callback?: (linkType: LinkType) => void) {
-    this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_COLLECTION, linkedCollectionId]);
   }
 
   public openCreateLinkDialog(linkCollectionIds: string, callback?: (linkType: LinkType) => void) {

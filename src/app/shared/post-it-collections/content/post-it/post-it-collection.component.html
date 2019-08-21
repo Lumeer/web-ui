@@ -1,0 +1,107 @@
+<div class="card post-it"
+     *ngIf="collection | collectionPermissions | async as allowedPermissions"
+     [class.uninitialized]="!collection.id"
+     [class.initialized]="collection.id">
+  <div class="card-body text-center">
+    <div *ngIf="!collection.id"
+         class="text-center small text-muted"
+         i18n="@@collection.document.icon.set">Click icon to set it
+    </div>
+    <div *ngIf="!collection.id"
+         data-test="icon-picker-dropdown"
+         (click)="togglePicker()">
+      <i class="fa-3x {{ collection.icon }} cursor-pointer"
+         [style.color]="collection.color"
+         [title]="collection.name"
+         #pickerOrigin
+         aria-hidden="true">
+      </i>
+      <icon-color-picker [origin]="pickerOrigin"
+                           [color]="collection.color"
+                           [icon]="collection.icon"
+                           (preview)="onIconColorChange($event)"
+                           (selected)="onIconColorChange($event)"
+                           (cancel)="onIconColorChange($event)">
+      </icon-color-picker>
+    </div>
+
+    <a *ngIf="collection.id"
+       [style.color]="collection.color"
+       [title]="collection.name"
+       [routerLink]="[workspacePath(), 'view', 'table']"
+       [queryParams]="{ q: queryForCollectionDocuments() }"
+       data-test="collection-card-icon">
+      <i class="fa-3x {{ collection.icon }}"
+         aria-hidden="true">
+      </i>
+    </a>
+
+    <div *ngIf="collection.id"
+         class="document-count opacity-content clickable">
+      <a title="Record Count"
+         i18n-title="@@collection.document.count"
+         [routerLink]="[workspacePath(), 'view', 'table']"
+         [queryParams]="{ q: queryForCollectionDocuments() }">
+        <i class="far fa-file"
+           aria-hidden="true">
+        </i>
+        &nbsp;{{ collection.documentsCount }}
+      </a>
+    </div>
+
+    <div *ngIf="collection.id && allowedPermissions.read"
+         class="toggle-favorite opacity-content clickable text-warning"
+         [class.always-visible]="collection.favorite">
+      <a *ngIf="collection.favorite"
+         title="Remove from favorites"
+         i18n-title="@@collection.favorite.remove"
+         (click)="toggleFavorite()">
+        <i class="fas fa-star"
+           aria-hidden="true">
+        </i>
+      </a>
+      <a *ngIf="!collection.favorite"
+         title="Add to favorites"
+         i18n-title="@@collection.favorite.add"
+         (click)="toggleFavorite()">
+        <i class="far fa-star"
+           aria-hidden="true">
+        </i>
+      </a>
+    </div>
+
+    <div *ngIf="collection.id"
+         class="buttons opacity-content d-flex flex-column">
+      <div id="dropdown-{{collection.id}}">
+        <a title="Configure"
+           i18n-title="@@collection.button.configure"
+           class="rounded-left"
+           *ngIf="allowedPermissions.manage"
+           [routerLink]="[workspacePath(), 'c', collection.id, 'attributes']">
+          <i class="fas fa-fw fa-cog"
+             aria-hidden="true">
+          </i>
+        </a>
+      </div>
+    </div>
+    <div *ngIf="!collection.id"
+         class="button-remove opacity-content d-flex flex-column">
+      <a (click)="onDelete()"
+         class="text-danger rounded-left"
+         title="Delete Table"
+         i18n-title="@@collection.button.remove">
+        <i class="fas fa-fw fa-trash"
+           aria-hidden="true">
+        </i>
+      </a>
+    </div>
+
+  </div>
+
+  <post-it-collection-name [collectionName]="collection.name"
+                           [editable]="!collection.id || allowedPermissions.manage"
+                           (changed)="onNameChanged($event)"
+                           (selected)="selected.emit()"
+                           (unselected)="unselected.emit()">
+  </post-it-collection-name>
+</div>

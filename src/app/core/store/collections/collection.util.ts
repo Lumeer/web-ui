@@ -27,6 +27,7 @@ import {
   getQueryFiltersForLinkType,
 } from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
+import {Resource} from '../../model/resource';
 
 export function isCollectionAttributeEditable(
   attributeId: string,
@@ -121,15 +122,6 @@ export function getDefaultAttributeId(collection: Collection): string {
   }
 
   return '';
-}
-
-export function sortCollectionsByFavoriteAndLastUsed(collections: Collection[]): Collection[] {
-  return collections.sort((a, b) => {
-    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
-    }
-    return a.favorite ? -1 : 1;
-  });
 }
 
 export function mergeCollections(collectionsA: Collection[], collectionsB: Collection[]): Collection[] {

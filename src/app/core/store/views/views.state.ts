@@ -33,12 +33,12 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {View, ViewConfig, ViewGlobalConfig} from './view';
+import {View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
+import {selectSearchConfig} from '../searches/searches.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
-  config: ViewConfig; // TODO remove
   globalConfig: ViewGlobalConfig;
 }
 
@@ -46,7 +46,6 @@ export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id
 
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
-  config: {},
   globalConfig: {},
 });
 
@@ -76,19 +75,7 @@ export const selectViewsLoaded = createSelector(
   state => state.loaded
 );
 
-export const selectViewConfig = createSelector(
-  selectViewsState,
-  views => views.config
-);
-
-// TODO refactor search perspective so this selector is no longer needed
-export const selectViewSearchConfig = createSelector(
-  selectViewConfig,
-  config => config.search
-);
-
-export const selectPerspectiveConfig = createSelector(
-  selectPerspective,
+const selectConfigs = createSelector(
   selectTableConfig,
   selectChartConfig,
   selectMapConfig,
@@ -96,7 +83,26 @@ export const selectPerspectiveConfig = createSelector(
   selectCalendarConfig,
   selectKanbanConfig,
   selectPivotConfig,
-  (perspective, tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig) =>
+  selectSearchConfig,
+  (tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig) => ({
+    tableConfig,
+    chartConfig,
+    mapConfig,
+    ganttChartConfig,
+    calendarConfig,
+    kanbanConfig,
+    pivotConfig,
+    searchConfig,
+  })
+);
+
+export const selectPerspectiveConfig = createSelector(
+  selectPerspective,
+  selectConfigs,
+  (
+    perspective,
+    {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig}
+  ) =>
     ({
       [Perspective.Map]: mapConfig,
       [Perspective.Table]: tableConfig,
@@ -105,8 +111,10 @@ export const selectPerspectiveConfig = createSelector(
       [Perspective.Calendar]: calendarConfig,
       [Perspective.Kanban]: kanbanConfig,
       [Perspective.Pivot]: pivotConfig,
+      [Perspective.Search]: searchConfig,
     }[perspective])
 );
+
 export const selectPerspectiveViewConfig = createSelector(
   selectCurrentView,
   selectPerspective,

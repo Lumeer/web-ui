@@ -1,0 +1,36 @@
+@import '../../../../../../../styles/variables';
+@import '../../../../../../../styles/bootstrap_var';
+
+.view {
+  &.card {
+    border: $card-border-width solid transparent;
+  }
+}
+
+.always-visible {
+  opacity: 1 !important;
+}
+
+.hiding-icon {
+  opacity: 0;
+}
+
+.view:hover {
+  .hiding-icon {
+    opacity: 1;
+  }
+}
+
+.view-hover {
+  &:hover {
+    border: $card-border-width solid $card-border-color;
+    box-shadow: $shadow-default;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  cursor: pointer;
+  transition: box-shadow $animation-duration;
+}

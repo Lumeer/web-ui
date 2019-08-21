@@ -1,28 +1,10 @@
-<div class="mt-2 mb-5" *ngIf="{views: views$ | async, queryData: queryData$ | async} as data" data-tour="search-views">
-  <size-slider class="d-flex justify-content-end mb-2"
-               [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
-
-  <ng-container *ngIf="!isLoading() && data.views">
-
-    <ng-container *ngIf="data.views.length; else noViews">
-      <view-detail *ngFor="let view of (maxLines > 0 ? (data.views | slice:0:maxLines) : data.views); trackBy:trackByView"
-                   [view]="view"
-                   [queryData]="data.queryData"
-                   [viewSize]="size"
-                   (delete)="onDeleteView(view)"
-                   (clicked)="showView(view)">
-      </view-detail>
-      <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
-           *ngIf="maxLines > 0 && maxLines < data.views.length"
-           (click)="onShowAll()">
-        <span class="see-more" i18n="@@search.result.more">See more</span>
-      </div>
-    </ng-container>
-
-  </ng-container>
-
-</div>
-
-<ng-template #noViews>
-  <empty-views [query]="query"></empty-views>
-</ng-template>
+<search-views-wrapper [workspace]="workspace$ | async"
+                      [config]="viewsConfig$ | async"
+                      [views]="views$ | async"
+                      [maxViews]="maxLines"
+                      [loaded]="loaded$ | async"
+                      [query]="query$ | async"
+                      [queryData]="queryData$ | async"
+                      (configChange)="onConfigChange($event)"
+                      (deleteView)="onDeleteView($event)">
+</search-views-wrapper>

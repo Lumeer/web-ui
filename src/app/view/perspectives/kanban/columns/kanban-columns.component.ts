@@ -27,6 +27,8 @@ import {
   SimpleChanges,
   ViewChildren,
   QueryList,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -58,14 +60,17 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {KanbanColumnComponent} from './column/kanban-column.component';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
 
 @Component({
   selector: 'kanban-columns',
   templateUrl: './kanban-columns.component.html',
   styleUrls: ['./kanban-columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DocumentFavoriteToggleService],
 })
-export class KanbanColumnsComponent implements OnChanges {
+export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('kanbanColumn')
   public columns: QueryList<KanbanColumnComponent>;
 
@@ -96,6 +101,9 @@ export class KanbanColumnsComponent implements OnChanges {
   @Input()
   public currentUser: User;
 
+  @Input()
+  public workspace: Workspace;
+
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 
@@ -111,8 +119,13 @@ export class KanbanColumnsComponent implements OnChanges {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private toggleService: DocumentFavoriteToggleService
   ) {}
+
+  public ngOnInit() {
+    this.toggleService.setWorkspace(this.workspace);
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collections) {
@@ -258,5 +271,13 @@ export class KanbanColumnsComponent implements OnChanges {
     const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
     const config = {...this.config, columns: filteredColumns};
     this.configChange.next(config);
+  }
+
+  public onFavoriteToggle(document: DocumentModel) {
+    this.toggleService.set(document.id, !document.favorite, document);
+  }
+
+  public ngOnDestroy() {
+    this.toggleService.onDestroy();
   }
 }

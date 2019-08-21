@@ -34,6 +34,7 @@ import {SearchBoxPipesModule} from './query-item/pipes/search-box-pipes.module';
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
 import {DataInputModule} from '../../data-input/data-input.module';
+import {PresenterModule} from '../../presenter/presenter.module';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import {DataInputModule} from '../../data-input/data-input.module';
     ReactiveFormsModule,
     FormsModule,
     PickerModule,
+    PresenterModule,
     PipesModule,
     SearchBoxPipesModule,
     DataInputModule,
