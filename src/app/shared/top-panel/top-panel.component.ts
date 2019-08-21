@@ -32,14 +32,17 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
+import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
+
+declare let ResizeObserver: ResizeObserver;
 
 @Component({
   selector: 'top-panel',
@@ -60,14 +63,19 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   @ViewChild(WorkspacePanelComponent, {static: false})
   public workspacePanel: WorkspacePanelComponent;
 
+  @ViewChild(UserPanelComponent, {static: false})
+  public userPanel: UserPanelComponent;
+
   public readonly lineHeight = 36;
 
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
 
+  private resizeObserver: ResizeObserver;
+
   private subscriptions = new Subscription();
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
@@ -75,7 +83,11 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     this.store$.dispatch(new OrganizationsAction.Get());
     this.store$.dispatch(new OrganizationsAction.GetCodes());
 
-    this.subscriptions.add(this.subscribeToWorkspaceChanges());
+    if (window['ResizeObserver']) {
+      this.resizeObserver = new ResizeObserver(entries => this.onSideElementResize(entries));
+    } else {
+      this.subscriptions.add(this.subscribeToWorkspaceChanges());
+    }
   }
 
   private subscribeToWorkspaceChanges(): Subscription {
@@ -83,7 +95,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
       this.store$.pipe(select(selectOrganizationByWorkspace)),
       this.store$.pipe(select(selectProjectByWorkspace))
     ).subscribe(() => {
-      setTimeout(() => this.setTopPanelSideWidth()); // TODO use ResizeObserver instead
+      setTimeout(() => this.setTopPanelSideWidth(), 100);
     });
   }
 
@@ -94,20 +106,35 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   }
 
   public ngAfterViewInit() {
-    this.setTopPanelLineHeight();
+    if (this.resizeObserver) {
+      this.resizeObserver.observe(this.logo.element.nativeElement);
+      this.resizeObserver.observe(this.workspacePanel.element.nativeElement);
+      this.resizeObserver.observe(this.userPanel.element.nativeElement);
+    } else {
+      setTimeout(() => this.setTopPanelLineHeight(), 100);
+    }
   }
 
   public ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
     this.subscriptions.unsubscribe();
   }
 
   @HostListener('window:resize')
   public onWindowResize() {
+    if (!this.resizeObserver) {
+      this.setTopPanelSideWidth();
+    }
+  }
+
+  private onSideElementResize(entries: ResizeObserverEntry[]) {
     this.setTopPanelSideWidth();
   }
 
   private setTopPanelLineHeight() {
-    const element = this.element.nativeElement as HTMLElement;
+    const element = this.element.nativeElement;
     element.style.setProperty('--top-panel-line-height', `${this.lineHeight}px`);
   }
 
@@ -116,10 +143,25 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
       return;
     }
 
+    const leftWidth = this.calculateLeftSideWidth();
+    const rightWidth = this.calculateRightSideWidth();
+
+    // when resizing from mobile view to the larger one, rightWidth is very wide since search box is on another row
+    const correctedRightWidth = rightWidth > 400 ? 0 : rightWidth;
+
+    const width = Math.max(leftWidth, correctedRightWidth);
+
+    document.body.style.setProperty('--top-panel-side-width', `${width}px`);
+  }
+
+  private calculateLeftSideWidth(): number {
     const logoWidth = this.logo.element.nativeElement.clientWidth;
     const workspacePanelWidth = this.workspacePanel ? this.workspacePanel.element.nativeElement.clientWidth : 0;
-    const width = logoWidth + 10 + workspacePanelWidth;
-    document.body.style.setProperty('--top-panel-side-width', `${width}px`);
+    return logoWidth + 10 + workspacePanelWidth;
+  }
+
+  private calculateRightSideWidth(): number {
+    return this.userPanel ? this.userPanel.element.nativeElement.clientWidth : 0;
   }
 
   public onToggleControls() {

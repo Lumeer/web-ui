@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
@@ -38,4 +38,6 @@ export class UserPanelComponent {
 
   @Output()
   public toggleControls = new EventEmitter();
+
+  constructor(public element: ElementRef<HTMLElement>) {}
 }
