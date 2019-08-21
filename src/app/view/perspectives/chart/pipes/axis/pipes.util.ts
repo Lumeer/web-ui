@@ -22,7 +22,6 @@ import {Attribute, Collection} from '../../../../../core/store/collections/colle
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 
@@ -33,21 +32,13 @@ export function createSelectItemsForAxisType(
   config: ChartConfig,
   collections: Collection[],
   linkTypes: LinkType[],
-  query: Query,
-  isDataSet?: boolean
+  query: Query
 ): SelectItemModel[] {
   const items: SelectItemModel[] = [];
 
-  const restrictedResourceIndexes = isDataSet
-    ? getRestrictedCollectionIndexesForDataset(config, axisType)
-    : getRestrictedResourceIndexes(config, axisType);
   const axisResourcesChain: AxisResource[] = createAxisResourceChain(query, collections, linkTypes);
 
   for (let i = 0; i < axisResourcesChain.length; i++) {
-    if (restrictedResourceIndexes.includes(i)) {
-      continue;
-    }
-
     const axisResource = axisResourcesChain[i];
     if (i % 2 === 0) {
       // chain is always: Collection, LinkType, Collection, LinkType, Collection...
@@ -90,26 +81,6 @@ function createAxisResourceChain(query: Query, collections: Collection[], linkTy
   }
 
   return chain;
-}
-
-function getRestrictedResourceIndexes(config: ChartConfig, axisType: ChartAxisType): number[] {
-  if (axisType === ChartAxisType.X) {
-    const y1Name = config.names && config.names[ChartAxisType.Y1];
-    const y2Name = config.names && config.names[ChartAxisType.Y2];
-    return [y1Name && y1Name.resourceIndex, y2Name && y2Name.resourceIndex].filter(value =>
-      isNotNullOrUndefined(value)
-    );
-  }
-
-  const yName = config.names && config.names[axisType];
-  return (yName && [yName.resourceIndex]) || [];
-}
-
-function getRestrictedCollectionIndexesForDataset(config: ChartConfig, axisType: ChartAxisType): number[] {
-  const xAxis = config.axes[ChartAxisType.X];
-  const yAxis = config.axes[axisType];
-
-  return [xAxis && xAxis.resourceIndex, yAxis && yAxis.resourceIndex].filter(value => isNotNullOrUndefined(value));
 }
 
 export function collectionAttributeToItem(

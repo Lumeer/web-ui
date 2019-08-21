@@ -24,7 +24,6 @@ import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
 import {DataSetSelectPlaceholderPipe} from './axis/data-set-select-placeholder.pipe';
 import {AxisSelectItemsPipe} from './axis/axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
-import {DataSetSelectItemsPipe} from './axis/data-set-select-items.pipe';
 import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
 import {ChartDraggable} from './chart-draggable';
 import {SortTypeSelectItemsPipe} from './sort/sort-type-select-items.pipe';
@@ -38,7 +37,6 @@ import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeh
     DataSetSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
-    DataSetSelectItemsPipe,
     SortSelectItemsPipe,
     ChartDraggable,
     SortTypeSelectItemsPipe,
@@ -50,7 +48,6 @@ import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeh
     DataSetSelectPlaceholderPipe,
     AxisSelectItemsPipe,
     ConfigAxisByTypePipe,
-    DataSetSelectItemsPipe,
     SortSelectItemsPipe,
     ChartDraggable,
     SortTypeSelectItemsPipe,
