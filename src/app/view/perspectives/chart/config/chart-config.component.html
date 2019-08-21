@@ -64,7 +64,7 @@
 
       <select-item class="d-block w-100 mt-2"
                    *ngIf="collections.length > 1"
-                   [items]="yAxisType | dataSetSelectItems:config:collections:linkTypes:query"
+                   [items]="yAxisType | axisSelectItems:config:collections:linkTypes:query:true"
                    [selectedId]="config.names && config.names[yAxisType]"
                    [placeholderText]="yAxisType | dataSetSelectPlaceholder"
                    [emptyValue]="axisEmptyValue"

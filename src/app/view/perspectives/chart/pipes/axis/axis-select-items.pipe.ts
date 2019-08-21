@@ -35,11 +35,26 @@ export class AxisSelectItemsPipe implements PipeTransform {
     config: ChartConfig,
     collections: Collection[],
     linkTypes: LinkType[],
-    query: Query
+    query: Query,
+    isDataSet?: boolean
   ): SelectItemModel[] {
-    const restrictedAxes = Object.entries(config.axes)
-      .filter(entry => entry[0] !== axisType)
-      .map(entry => entry[1]);
+    let restrictedAxes = [];
+
+    if (isDataSet) {
+      restrictedAxes = [
+        ...Object.entries(config.names || {})
+          .filter(entry => entry[0] !== axisType)
+          .map(entry => entry[1]),
+        ...Object.values(config.axes || {}),
+      ];
+    } else {
+      restrictedAxes = [
+        ...Object.entries(config.axes || {})
+          .filter(entry => entry[0] !== axisType)
+          .map(entry => entry[1]),
+        ...Object.values(config.names || {}),
+      ];
+    }
 
     return createSelectItemsForAxisType(axisType, config, collections, linkTypes, query).filter(
       item => !restrictedAxes.find(restrictedItem => deepObjectsEquals(item.id, restrictedItem))

@@ -37,6 +37,7 @@ import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
+import {deepObjectsEquals} from '../../utils/common.utils';
 
 @Component({
   selector: 'options-dropdown',
@@ -88,7 +89,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  public onOptionMouseDown(event: MouseEvent, option: DropdownOption) {
+  public onOptionClick(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
     this.selectOption.emit(option);
     this.close();
@@ -103,7 +104,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
 
   private highlightSelectedValue() {
     if ((this.listKeyManager && this.selectedValue) || this.selectedValue === 0) {
-      const activeIndex = (this.options || []).findIndex(option => option.value === this.selectedValue);
+      const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
       this.listKeyManager.setActiveItem(activeIndex);
     }
   }
