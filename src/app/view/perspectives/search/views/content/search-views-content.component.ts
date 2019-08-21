@@ -31,12 +31,12 @@ import {ViewFavoriteToggleService} from '../../../../../shared/toggle/view-favor
 
 @Component({
   selector: 'search-views-wrapper',
-  templateUrl: './search-views-wrapper.component.html',
-  styleUrls: ['./search-views-wrapper.component.scss'],
+  templateUrl: './search-views-content.component.html',
+  styleUrls: ['./search-views-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ViewFavoriteToggleService],
 })
-export class SearchViewsWrapperComponent implements OnInit, OnDestroy {
+export class SearchViewsContentComponent implements OnInit, OnDestroy {
   @Input()
   public config: SearchViewsConfig;
 

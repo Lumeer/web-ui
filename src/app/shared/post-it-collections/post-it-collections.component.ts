@@ -37,7 +37,7 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Router} from '@angular/router';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
-import {CollectionImportData} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
+import {CollectionImportData} from './content/import-button/post-it-collection-import-button.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 
 @Component({

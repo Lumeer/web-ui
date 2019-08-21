@@ -25,15 +25,14 @@ import {EmptyDataComponent} from './all/empty-data/empty-data.component';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {SearchDocumentsModule} from './documents/search-documents.module';
-import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
-import {EmptyViewsComponent} from './views/wrapper/empty-views/empty-views.component';
+import {EmptyViewsComponent} from './views/content/empty-views/empty-views.component';
 import {SearchViewsComponent} from './views/search-views.component';
-import {ViewDetailComponent} from './views/wrapper/view-detail/view-detail.component';
-import {ContainsDeletedQueryItemPipe} from './views/wrapper/view-detail/contains-deleted-query-item.pipe';
-import {SearchViewsWrapperComponent} from './views/wrapper/search-views-wrapper.component';
+import {ViewDetailComponent} from './views/content/view-detail/view-detail.component';
+import {ContainsDeletedQueryItemPipe} from './views/content/view-detail/contains-deleted-query-item.pipe';
+import {SearchViewsContentComponent} from './views/content/search-views-content.component';
 
 @NgModule({
   imports: [
@@ -47,7 +46,6 @@ import {SearchViewsWrapperComponent} from './views/wrapper/search-views-wrapper.
   declarations: [
     SearchAllComponent,
     SearchCollectionsComponent,
-    SearchLinksComponent,
     SearchPerspectiveComponent,
     SearchResultsDirective,
     SearchViewsComponent,
@@ -55,15 +53,9 @@ import {SearchViewsWrapperComponent} from './views/wrapper/search-views-wrapper.
     EmptyViewsComponent,
     ViewDetailComponent,
     ContainsDeletedQueryItemPipe,
-    SearchViewsWrapperComponent,
+    SearchViewsContentComponent,
   ],
-  entryComponents: [
-    SearchAllComponent,
-    SearchCollectionsComponent,
-    SearchLinksComponent,
-    SearchPerspectiveComponent,
-    SearchViewsComponent,
-  ],
+  entryComponents: [SearchAllComponent, SearchCollectionsComponent, SearchPerspectiveComponent, SearchViewsComponent],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
 })
 export class SearchPerspectiveModule {}

@@ -1,4 +1,4 @@
-<post-it-collections-wrapper *ngIf="loaded$ | async"
+<post-it-collections-content *ngIf="loaded$ | async"
                              [workspace]="workspace$ | async"
                              [query]="query$ | async"
                              [collections]="collections$ | async"
@@ -8,4 +8,4 @@
                              (update)="onUpdate($event)"
                              (create)="onCreate($event)"
                              (import)="onImport($event)">
-</post-it-collections-wrapper>
+</post-it-collections-content>

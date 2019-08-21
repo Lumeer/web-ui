@@ -24,15 +24,15 @@ import {RouterModule} from '@angular/router';
 
 import {PipesModule} from '../pipes/pipes.module';
 import {PostItCollectionsComponent} from './post-it-collections.component';
-import {PostItCollectionNameComponent} from './post-it-collections-wrapper/collection-name/post-it-collection-name.component';
-import {PostItCollectionImportButtonComponent} from './post-it-collections-wrapper/import-button/post-it-collection-import-button.component';
-import {PostItCollectionAddButtonComponent} from './post-it-collections-wrapper/add-button/post-it-collection-add-button.component';
-import {PostItCollectionComponent} from './post-it-collections-wrapper/post-it/post-it-collection.component';
+import {PostItCollectionNameComponent} from './content/collection-name/post-it-collection-name.component';
+import {PostItCollectionImportButtonComponent} from './content/import-button/post-it-collection-import-button.component';
+import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
+import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
-import {EmptyCollectionsComponent} from './post-it-collections-wrapper/empty-collections/empty-collections.component';
-import {PostItCollectionsWrapperComponent} from './post-it-collections-wrapper/post-it-collections-wrapper.component';
+import {EmptyCollectionsComponent} from './content/empty-collections/empty-collections.component';
+import {PostItCollectionsContentComponent} from './content/post-it-collections-content.component';
 import {PresenterModule} from '../presenter/presenter.module';
 
 @NgModule({
@@ -53,7 +53,7 @@ import {PresenterModule} from '../presenter/presenter.module';
     PostItCollectionAddButtonComponent,
     PostItCollectionImportButtonComponent,
     EmptyCollectionsComponent,
-    PostItCollectionsWrapperComponent,
+    PostItCollectionsContentComponent,
   ],
   exports: [PostItCollectionsComponent],
 })

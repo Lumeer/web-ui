@@ -53,9 +53,9 @@ import {QueryAction} from '../../../core/model/query-action';
 const UNCREATED_THRESHOLD = 5;
 
 @Component({
-  selector: 'post-it-collections-wrapper',
-  templateUrl: './post-it-collections-wrapper.component.html',
-  styleUrls: ['./post-it-collections-wrapper.component.scss'],
+  selector: 'post-it-collections-content',
+  templateUrl: './post-it-collections-content.component.html',
+  styleUrls: ['./post-it-collections-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CollectionFavoriteToggleService],
   animations: [
@@ -71,7 +71,7 @@ const UNCREATED_THRESHOLD = 5;
     ]),
   ],
 })
-export class PostItCollectionsWrapperComponent implements OnInit, OnChanges, OnDestroy {
+export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public maxCollections: number;
 
@@ -245,13 +245,17 @@ export class PostItCollectionsWrapperComponent implements OnInit, OnChanges, OnD
   }
 
   private subscribeOnRoute() {
-    this.activatedRoute.queryParams.pipe(take(1)).subscribe(queryParams => {
-      const action = queryParams['action'];
+    this.activatedRoute.queryParamMap.pipe(take(1)).subscribe(queryParamsMap => {
+      const action = queryParamsMap.get('action');
       if (action && action === QueryAction.CreateCollection) {
         this.createNewCollection();
 
-        const myQueryParams = {...queryParams};
-        delete myQueryParams.action;
+        const myQueryParams = queryParamsMap.keys.reduce((acc, key) => {
+          if (key !== 'action') {
+            acc[key] = queryParamsMap.get(key);
+          }
+          return acc;
+        }, {});
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
           queryParams: myQueryParams,

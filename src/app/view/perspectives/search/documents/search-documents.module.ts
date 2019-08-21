@@ -22,13 +22,13 @@ import {CommonModule} from '@angular/common';
 
 import {SharedModule} from '../../../../shared/shared.module';
 import {SearchDocumentsComponent} from './search-documents.component';
-import {EmptyDocumentsComponent} from './wrapper/empty-documents/empty-documents.component';
-import {SearchDocumentHeaderComponent} from './wrapper/header/search-document-header.component';
+import {EmptyDocumentsComponent} from './content/empty-documents/empty-documents.component';
+import {SearchDocumentHeaderComponent} from './content/header/search-document-header.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {CreateDocumentValuesHtmlPipe} from './pipes/create-document-values-html.pipe';
 import {CreateDocumentEntriesHtmlPipe} from './pipes/create-document-entries-html.pipe';
 import {DocumentDefaultAttributeHtmlPipe} from './pipes/document-default-attribute-html.pipe';
-import {SearchDocumentsWrapperComponent} from './wrapper/search-documents-wrapper.component';
+import {SearchDocumentsContentComponent} from './content/search-documents-content.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
@@ -40,7 +40,7 @@ import {SearchDocumentsWrapperComponent} from './wrapper/search-documents-wrappe
     CreateDocumentValuesHtmlPipe,
     CreateDocumentEntriesHtmlPipe,
     DocumentDefaultAttributeHtmlPipe,
-    SearchDocumentsWrapperComponent,
+    SearchDocumentsContentComponent,
   ],
   exports: [SearchDocumentsComponent],
 })

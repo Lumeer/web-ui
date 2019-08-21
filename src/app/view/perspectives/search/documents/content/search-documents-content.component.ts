@@ -35,12 +35,12 @@ import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/docume
 
 @Component({
   selector: 'search-documents-wrapper',
-  templateUrl: './search-documents-wrapper.component.html',
-  styleUrls: ['./search-documents-wrapper.component.scss'],
+  templateUrl: './search-documents-content.component.html',
+  styleUrls: ['./search-documents-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class SearchDocumentsWrapperComponent implements OnInit {
+export class SearchDocumentsContentComponent implements OnInit {
   @Input()
   public documents: DocumentModel[];
 
