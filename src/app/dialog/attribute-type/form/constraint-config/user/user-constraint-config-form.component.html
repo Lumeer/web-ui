@@ -1,7 +1,7 @@
 <div [formGroup]="form">
   <p class="text-muted"
      i18n="@@constraint.user.description">
-    Allows you to specify an user by email. The user might be either registered within the organization or an external user.
+    Allows you to specify a colleague by email. You may allow only registered users or any valid email.
   </p>
 
   <div class="form-group">
@@ -13,7 +13,7 @@
       <label [for]="formControlName.ExternalUsers"
              class="form-check-label"
              i18n="@@constraint.user.externalUsers.label">
-        Enable external users
+        Allow unregistered users (any valid email)
       </label>
     </div>
   </div>

@@ -14,7 +14,7 @@
   <div class="body p-3">
 
     <div class="d-block">
-      <h5>First enter colleague's email:</h5>
+      <h5 i18n="@@inviteUser.dialog.headline">First enter colleague's email:</h5>
     </div>
 
     <ng-container *ngIf="managers.isOrganizationManager; else projectManager">
@@ -37,7 +37,7 @@
     <ng-container *ngIf="managers.isOrganizationManager || managers.isProjectManager; else managerWarning">
 
       <div class="d-block mt-2 lh-2" *ngIf="newUsers$ | async as users">
-        <span i18n="@@InviteUser.dialog.users.list">Colleagues to invite: </span>
+        <span i18n="@@inviteUser.dialog.users.list">Colleagues to invite: </span>
         <span *ngIf="!users || users.length === 0">&mdash;</span>
 
         <ng-container *ngFor="let user of users;">
@@ -49,7 +49,7 @@
       </div>
 
       <div class="d-block mt-3">
-        <h5>Invited colleagues can:</h5>
+        <h5 i18n="@@inviteUser.dialog.userRights.headline">Invited colleagues can:</h5>
       </div>
       <invitation-type-select [selectedInvitationType]="accessType" (onInvitationTypeSelect)="accessType = $event"></invitation-type-select>
 
