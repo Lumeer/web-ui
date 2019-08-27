@@ -23,6 +23,7 @@ import {convertToBig} from '../data.utils';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
+import {uniqueValues} from '../array.utils';
 
 export enum DataAggregationType {
   Sum = 'sum',
@@ -30,6 +31,7 @@ export enum DataAggregationType {
   Max = 'max',
   Avg = 'avg',
   Count = 'count',
+  Unique = 'unique',
 }
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
@@ -68,6 +70,8 @@ export function aggregateDataValues(
       return maxInValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Count:
       return countValues(nonNullValues);
+    case DataAggregationType.Unique:
+      return uniqueValuesCount(nonNullValues);
     default:
       return sumAnyValues(nonNullValues, onlyNumeric);
   }
@@ -237,4 +241,9 @@ function maxInAnyValues(values: any[], onlyNumeric: boolean): any {
 function countValues(values: any[], onlyNumeric?: boolean) {
   const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)) : values;
   return filteredValues.length;
+}
+
+function uniqueValuesCount(values: any[], onlyNumeric?: boolean) {
+  const filteredValues = onlyNumeric ? values.filter(value => isNumeric(value)) : values;
+  return uniqueValues(filteredValues).length;
 }

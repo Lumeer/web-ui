@@ -4624,7 +4624,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>

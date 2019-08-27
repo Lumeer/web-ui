@@ -957,7 +957,7 @@
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/calendar-event/form/collection-form/calendar-event-dialog-collection-form.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
-            
+
             <trans-unit id="link.new.dialog.title" datatype="html">
                 <source>Create new link</source>
                 <target>Vytvořit nové propojení</target>
@@ -3544,7 +3544,7 @@
             <trans-unit id="collections.postit.empty.info" datatype="html">
                 <source>Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.</source>
                 <target>Zdá se, že máte hodně prázných tabulek. To chcete? Navrhoval bych vyplnit jejich jména, nebo je smazat.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="query.item.deleted.file" datatype="html">
                 <source>Deleted table</source>
@@ -3795,7 +3795,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet}}</target>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.placeholder" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source><target>{VAR_SELECT, select, y1 {Agregace osy Y1} y2 {Agregace osy Y2} }</target>
@@ -4076,13 +4076,13 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable1" datatype="html">
         <source>Create and open a Table. Switch the Perspective</source>
         <target>Vytvořte a otevřete tabulku. Přepněte perspektivu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable2" datatype="html">
         <source>and save the View</source><target>a uložte nový pohled</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="@@files.input.button.empty" datatype="html">
         <source>File input is empty</source><target>Jméno souboru je prázdné</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/import-button/post-it-collection-import-button.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="view.changes.not.saved" datatype="html">
         <source>Changes are not saved yet</source><target>Změny nejsou uloženy</target>
 
