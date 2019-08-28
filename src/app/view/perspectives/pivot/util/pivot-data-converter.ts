@@ -138,7 +138,7 @@ export class PivotDataConverter {
     return {data: data, constraintData, ableToMerge, mergeTables: config.mergeTables};
   }
 
-  private filterEmptyConfigs(config: PivotConfig, query: Query): { stemsConfigs: PivotStemConfig[]; stems: QueryStem[] } {
+  private filterEmptyConfigs(config: PivotConfig, query: Query): {stemsConfigs: PivotStemConfig[]; stems: QueryStem[]} {
     return (config.stemsConfigs || []).reduce(
       ({stemsConfigs, stems}, stemConfig, index) => {
         if (!pivotStemConfigIsEmpty(stemConfig)) {
@@ -406,7 +406,7 @@ export class PivotDataConverter {
     constraints: Constraint[],
     valueTitles?: string[],
     additionalNum: number = 0
-  ): { headers: PivotDataHeader[]; maxIndex: number } {
+  ): {headers: PivotDataHeader[]; maxIndex: number} {
     const headers = [];
     const data = {maxIndex: 0};
     if (levels === 0) {
@@ -427,7 +427,7 @@ export class PivotDataConverter {
           headers.push({title, targetIndex: currentIndex, color: colors[0], constraint: constraints[0]});
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
-          headers.push({title, color: colors[0]});
+          headers.push({title, color: colors[0], constraint: constraints[0]});
         }
 
         this.iterateThroughPivotDataHeader(
@@ -459,7 +459,7 @@ export class PivotDataConverter {
     valueColors: string[],
     valueTitles: string[],
     constraints: Constraint[],
-    additionalData: { maxIndex: number }
+    additionalData: {maxIndex: number}
   ) {
     if (level === maxLevels) {
       if ((valueTitles || []).length > 1) {
@@ -480,7 +480,7 @@ export class PivotDataConverter {
         header.children.push({title, targetIndex: currentIndex, color: colors[level], constraint: constraints[level]});
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
-        header.children.push({title, color: colors[level]});
+        header.children.push({title, color: colors[level], constraint: constraints[level]});
       }
 
       this.iterateThroughPivotDataHeader(
@@ -531,7 +531,7 @@ export class PivotDataConverter {
     return keys.reduce((sum, key) => sum + this.numChildrenRecursive(map[key], level + 1, maxLevels), 0);
   }
 
-  private createValueTitles(valueAttributes: PivotValueAttribute[]): { titles: string[]; constraints: Constraint[] } {
+  private createValueTitles(valueAttributes: PivotValueAttribute[]): {titles: string[]; constraints: Constraint[]} {
     return (valueAttributes || []).reduce(
       ({titles, constraints}, pivotAttribute) => {
         const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
