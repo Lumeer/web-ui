@@ -144,7 +144,7 @@ export class PivotDataConverter {
     const {stemsConfigs, stems} = this.filterEmptyConfigs(config, query);
 
     const mergeData = this.createPivotMergeData(config.mergeTables, stemsConfigs, stems);
-    const ableToMerge = mergeData.length === 1;
+    const ableToMerge = mergeData.length <= 1;
     const data = this.mergePivotData(mergeData);
     return {data: data, constraintData, ableToMerge, mergeTables: config.mergeTables};
   }
