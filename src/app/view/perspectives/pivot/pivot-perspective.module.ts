@@ -27,7 +27,6 @@ import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrap
 import {PivotConfigComponent} from './wrapper/config/stem-config/pivot-config.component';
 import {PivotTableComponent} from './wrapper/table/pivot-table.component';
 import {PivotAttributeConfigComponent} from './wrapper/config/stem-config/attribute/pivot-attribute-config.component';
-import {PivotHeaderSelectedAttributesPipe} from './pipe/pivot-header-selected-attributes.pipe';
 import {PivotSelectItemsPipe} from './pipe/pivot-select-items.pipe';
 import {PivotCleanAttributePipe} from './pipe/pivot-clean-attribute.pipe';
 import {PivotValueAttributeConfigComponent} from './wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component';
@@ -51,7 +50,6 @@ import {PivotTableCellHasValuePipe} from './pipe/pivot-table-value.pipe';
     PivotConfigComponent,
     PivotTableComponent,
     PivotAttributeConfigComponent,
-    PivotHeaderSelectedAttributesPipe,
     PivotSelectItemsPipe,
     PivotCleanAttributePipe,
     PivotValueAttributeConfigComponent,
