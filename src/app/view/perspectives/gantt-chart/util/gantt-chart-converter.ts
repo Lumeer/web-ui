@@ -181,7 +181,7 @@ export class GanttChartConverter {
   }
 
   private convertGanttProperty(property: GanttChartBarModel): DataAggregatorAttribute {
-    return {attributeId: property.attributeId, resourceIndex: property.resourceIndex};
+    return {attributeId: property.attributeId, resourceIndex: property.resourceIndex, data: property.constraint};
   }
 
   private convertSimple(properties: Record<string, GanttChartBarModel>, usedTaskIds: Set<string>): GanttChartTask[] {

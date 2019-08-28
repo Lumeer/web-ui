@@ -28,6 +28,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import Big from 'big.js';
 import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {ConstraintData} from '../../../../core/model/data/constraint';
+import {compareDataValues} from '../../../../shared/utils/data/data-compare.utils';
 
 interface HeaderGroupInfo {
   background: string;
@@ -831,7 +832,7 @@ function sortPivotDataHeadersRecursive(
   isRows: boolean
 ): PivotDataHeader[] {
   const sort = sorts && sorts[index];
-  const multiplier = !sort || sort.asc ? 1 : -1;
+  const constraint = (headers || [])[0] && (headers || [])[0].constraint;
   const valuesMap = createHeadersValuesMap(headers, sort, otherSideHeaders, values, valueTitles, isRows);
   return headers
     .map(header => ({
@@ -840,13 +841,7 @@ function sortPivotDataHeadersRecursive(
         header.children &&
         sortPivotDataHeadersRecursive(header.children, index + 1, sorts, otherSideHeaders, values, valueTitles, isRows),
     }))
-    .sort((r1, r2) =>
-      valuesMap[r1.title] > valuesMap[r2.title]
-        ? multiplier
-        : valuesMap[r1.title] < valuesMap[r2.title]
-        ? -multiplier
-        : 0
-    );
+    .sort((r1, r2) => compareDataValues(valuesMap[r1.title], valuesMap[r2.title], constraint, !sort || sort.asc));
 }
 
 function createHeadersValuesMap(

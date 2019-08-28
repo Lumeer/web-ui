@@ -31,7 +31,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
         <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
                                        [pivotAttribute]="attribute"
                                        [attributesResources]="data.attributesResources"
-                                       [selectedAttributes]="config | pivotHeaderSelectedAttributes"
+                                       [selectedAttributes]="config.rowAttributes || []"
                                        [pivotData]="pivotData"
                                        [isRow]="true"
                                        (attributeSelect)="onRowAttributeSelect($event, attribute)"
@@ -48,7 +48,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
   <pivot-header-attribute-config class="d-block"
                                  [pivotAttribute]="null"
                                  [attributesResources]="data.attributesResources"
-                                 [selectedAttributes]="config | pivotHeaderSelectedAttributes"
+                                 [selectedAttributes]="config.rowAttributes || []"
                                  [isRow]="true"
                                  (attributeSelect)="onRowAttributeSelect($event)">
   </pivot-header-attribute-config>
@@ -84,7 +84,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
         <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
                                        [pivotAttribute]="attribute"
                                        [attributesResources]="data.attributesResources"
-                                       [selectedAttributes]="config | pivotHeaderSelectedAttributes"
+                                       [selectedAttributes]="config.columnAttributes || []"
                                        [pivotData]="pivotData"
                                        (attributeSelect)="onColumnAttributeSelect($event, attribute)"
                                        (attributeRemove)="onColumnAttributeRemove(index)"
@@ -100,7 +100,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
   <pivot-header-attribute-config class="d-block"
                                  [pivotAttribute]="null"
                                  [attributesResources]="data.attributesResources"
-                                 [selectedAttributes]="config | pivotHeaderSelectedAttributes"
+                                 [selectedAttributes]="config.columnAttributes || []"
                                  (attributeSelect)="onColumnAttributeSelect($event)">
   </pivot-header-attribute-config>
 

@@ -70,6 +70,8 @@ interface PivotConfigData {
   rowSorts: PivotSort[];
   columnShowSums: boolean[];
   columnSorts: PivotSort[];
+  rowConstraints: Constraint[];
+  columnConstraints: Constraint[];
 }
 
 export class PivotDataConverter {
@@ -97,23 +99,10 @@ export class PivotDataConverter {
     constraintData: ConstraintData,
     aggregatorAttribute: DataAggregatorAttribute
   ) {
-    const pivotAttribute = this.findPivotAttributeByAggregatorAttribute(aggregatorAttribute);
+    const pivotConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
     const overrideConstraint =
-      pivotAttribute &&
-      pivotAttribute.constraint &&
-      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
-
+      pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
     return formatDataValue(value, overrideConstraint || constraint, constraintData);
-  }
-
-  private findPivotAttributeByAggregatorAttribute(
-    aggregatorAttribute: DataAggregatorAttribute
-  ): PivotRowColumnAttribute {
-    return [...(this.config.rowAttributes || []), ...(this.config.columnAttributes || [])].find(
-      attribute =>
-        attribute.attributeId === aggregatorAttribute.attributeId &&
-        attribute.resourceIndex === aggregatorAttribute.resourceIndex
-    );
   }
 
   private updateData(
@@ -215,8 +204,12 @@ export class PivotDataConverter {
         queryStem,
         this.constraintData
       );
-      const rowAttributes = (config.rowAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
-      const columnAttributes = (config.columnAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
+      const rowAttributes = (config.rowAttributes || []).map(attribute =>
+        this.convertPivotRowColumnAttribute(attribute)
+      );
+      const columnAttributes = (config.columnAttributes || []).map(attribute =>
+        this.convertPivotRowColumnAttribute(attribute)
+      );
       const valueAttributes = (config.valueAttributes || []).map(attribute => this.convertPivotAttribute(attribute));
 
       pivotColors.rows.push(...this.getAttributesColors(config.rowAttributes));
@@ -235,13 +228,24 @@ export class PivotDataConverter {
         additionalData = {
           rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
           rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
+          rowConstraints: (config.rowAttributes || []).map(attr => this.pivotRowColumnAttributeConstraint(attr)),
           columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
           columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
+          columnConstraints: (config.columnAttributes || []).map(attr => this.pivotRowColumnAttributeConstraint(attr)),
         };
       }
     }
 
     return this.convertAggregatedData(mergedAggregatedData, mergedValueAttributes, pivotColors, additionalData);
+  }
+
+  private pivotRowColumnAttributeConstraint(pivotAttribute: PivotRowColumnAttribute): Constraint {
+    const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
+    const constraint = attribute && attribute.constraint;
+    const overrideConstraint =
+      pivotAttribute.constraint &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
+    return overrideConstraint || constraint;
   }
 
   private mergeAggregatedData(a1: AggregatedData, a2: AggregatedData): AggregatedData {
@@ -280,6 +284,10 @@ export class PivotDataConverter {
     });
   }
 
+  private convertPivotRowColumnAttribute(pivotAttribute: PivotRowColumnAttribute): DataAggregatorAttribute {
+    return {...this.convertPivotAttribute(pivotAttribute), data: pivotAttribute.constraint};
+  }
+
   private convertPivotAttribute(pivotAttribute: PivotAttribute): DataAggregatorAttribute {
     return {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
@@ -304,7 +312,7 @@ export class PivotDataConverter {
         allData.titles.push(...titles);
         allData.constraints.push(...constraints);
 
-        const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueColors, titles, allData.headers.length);
+        const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueColors, [], titles, allData.headers.length);
         allData.headers.push(...headers);
 
         const values = (valueAttributes || []).map(valueAttribute => {
@@ -354,7 +362,8 @@ export class PivotDataConverter {
       aggregatedData.map,
       aggregatedData.rowLevels,
       pivotColors.rows,
-      pivotColors.values
+      pivotColors.values,
+      additionalData.rowConstraints
     );
 
     const {titles, constraints} = this.createValueTitles(valueAttributes);
@@ -363,6 +372,7 @@ export class PivotDataConverter {
       aggregatedData.columnLevels,
       pivotColors.columns,
       pivotColors.values,
+      additionalData.columnConstraints,
       titles
     );
 
@@ -393,47 +403,48 @@ export class PivotDataConverter {
     levels: number,
     colors: string[],
     valueColors: string[],
+    constraints: Constraint[],
     valueTitles?: string[],
     additionalNum: number = 0
   ): {headers: PivotDataHeader[]; maxIndex: number} {
+    const headers = [];
+    const data = {maxIndex: 0};
     if (levels === 0) {
       if ((valueTitles || []).length > 0) {
-        return {
-          headers: valueTitles.map((title, index) => ({
+        headers.push(
+          ...valueTitles.map((title, index) => ({
             title,
             targetIndex: index + additionalNum,
             color: valueColors[index],
-          })),
-          maxIndex: valueTitles.length - 1 + additionalNum,
-        };
+          }))
+        );
+        data.maxIndex = valueTitles.length - 1 + additionalNum;
       }
-      return {headers: [], maxIndex: 0};
+    } else {
+      let currentIndex = additionalNum;
+      Object.keys(map).forEach((title, index) => {
+        if (levels === 1 && (valueTitles || []).length <= 1) {
+          headers.push({title, targetIndex: currentIndex, color: colors[0], constraint: constraints[0]});
+          data.maxIndex = Math.max(data.maxIndex, currentIndex);
+        } else {
+          headers.push({title, color: colors[0]});
+        }
+
+        this.iterateThroughPivotDataHeader(
+          map[title],
+          headers[index],
+          currentIndex,
+          1,
+          levels,
+          colors,
+          valueColors,
+          valueTitles,
+          constraints,
+          data
+        );
+        currentIndex += this.numChildren(map[title], levels - 1, (valueTitles && valueTitles.length) || 1);
+      });
     }
-
-    const headers = [];
-    const data = {maxIndex: 0};
-    let currentIndex = additionalNum;
-    Object.keys(map).forEach((title, index) => {
-      if (levels === 1 && (valueTitles || []).length <= 1) {
-        headers.push({title, targetIndex: currentIndex, color: colors[0]});
-        data.maxIndex = Math.max(data.maxIndex, currentIndex);
-      } else {
-        headers.push({title, color: colors[0]});
-      }
-
-      this.iterateThroughPivotDataHeader(
-        map[title],
-        headers[index],
-        currentIndex,
-        1,
-        levels,
-        colors,
-        valueColors,
-        valueTitles,
-        data
-      );
-      currentIndex += this.numChildren(map[title], levels - 1, (valueTitles && valueTitles.length) || 1);
-    });
 
     return {headers, maxIndex: data.maxIndex};
   }
@@ -447,6 +458,7 @@ export class PivotDataConverter {
     colors: string[],
     valueColors: string[],
     valueTitles: string[],
+    constraints: Constraint[],
     additionalData: {maxIndex: number}
   ) {
     if (level === maxLevels) {
@@ -465,7 +477,7 @@ export class PivotDataConverter {
     let currentIndex = headerIndex;
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
-        header.children.push({title, targetIndex: currentIndex, color: colors[level]});
+        header.children.push({title, targetIndex: currentIndex, color: colors[level], constraint: constraints[level]});
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
         header.children.push({title, color: colors[level]});
@@ -480,6 +492,7 @@ export class PivotDataConverter {
         colors,
         valueColors,
         valueTitles,
+        constraints,
         additionalData
       );
 
