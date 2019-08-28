@@ -1,6 +1,8 @@
 <select-item class="d-block w-100"
              [emptyValue]="emptyValueString"
              [placeholderIcon]="icon"
+             placeholderTitle="Select displayed value"
+             i18n-placeholderTitle="@@perspective.pivot.config.value"
              [items]="availableAttributes"
              [selectedId]="pivotAttribute | pivotCleanAttribute"
              [removable]="!!pivotAttribute"

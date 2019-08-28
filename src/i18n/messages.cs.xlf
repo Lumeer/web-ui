@@ -1118,7 +1118,7 @@
         <source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source><target>{VAR_SELECT, select, weekly {[T]W YYYY} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
-        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }</source>
+        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
         <target>{VAR_SELECT, select, yearly {Roky} quarterly {Kvartály} weekly {Týdny} monthYear {Měsíce a roky} month {Měsíce} dayMonth {Dny a měsíce} day {Dny} dayMonthYear {Dny, měsíce a roky} hour {Hodiny} hourMinutes {Hodiny a minuty} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -2450,13 +2450,41 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>Please configure your view in the sidebar on the left first.</source><target>Nejdříve si prosím nastavte pohled v panelu nalevo.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value" datatype="html">
+        <source>Select displayed value</source><target>Zvolte zobrazovanou hodnotu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/pivot-attribute-config.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
+        <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
+        <source>Select absolute or relative display</source><target>Zvolte absolutní nebo relativní zobrazení</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
         <source>Show summary</source><target>Zobrazovat shrnutí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.order" datatype="html">
+        <source>Select values order</source><target>Zvolte pořadí hodnot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
         <source>Toggle sort</source><target>Změnit pořadí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.merge" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.merge" datatype="html">
         <source>Merge tables</source><target>Sloučit tabulky</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config-wrapper.component.html</context>
@@ -4066,6 +4094,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
           <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.select.selectConstraintItem.headerAttribute" datatype="html">
+        <source>Select header attribute</source><target>Zvolte atribut záhlaví</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/select/select-constraint-item/select-item-with-constraint.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.select.selectConstraintItem.headerValuesAggregation" datatype="html">
+        <source>Select values aggregation</source><target>Zvolte způsob agregace hodnot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/select/select-constraint-item/select-item-with-constraint.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>Your first task is to create a view!</source><target>Nemáte ještě žádné pohledy!</target>
