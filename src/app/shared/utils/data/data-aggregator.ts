@@ -35,6 +35,7 @@ interface AttributesResourceChain {
   resource: AttributesResource;
   index: number;
   attributeId?: string;
+  data?: any;
   isRow?: boolean;
   isColumn?: boolean;
 }
@@ -61,6 +62,7 @@ export interface AggregatedDataValues {
 export interface DataAggregatorAttribute {
   attributeId: string;
   resourceIndex: number;
+  data?: any;
 }
 
 export class DataAggregator {
@@ -233,6 +235,7 @@ export class DataAggregator {
       chain.push({
         resource: this.attributesResourcesOrder[index],
         attributeId: aggregationAttribute.attributeId,
+        data: aggregationAttribute.data,
         index,
         isRow,
         isColumn,
@@ -306,6 +309,7 @@ export class DataAggregator {
           const formattedValue = this.formatAggregationValue(value, constraint, {
             resourceIndex: stage.index,
             attributeId: stage.attributeId,
+            data: stage.data,
           });
 
           if (index === chain.length - 1) {

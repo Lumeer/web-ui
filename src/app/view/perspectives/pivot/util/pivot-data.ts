@@ -48,4 +48,5 @@ export interface PivotDataHeader {
   children?: PivotDataHeader[];
   targetIndex?: number;
   color: string;
+  constraint?: Constraint;
 }
