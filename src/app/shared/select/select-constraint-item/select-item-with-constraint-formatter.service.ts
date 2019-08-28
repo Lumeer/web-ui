@@ -34,6 +34,7 @@ export enum DateReadableFormatType {
   DayMonth = 'dayMonth',
   Day = 'day',
   DayMonthYear = 'dayMonthYear',
+  WeekDay = 'weekDay',
   Hour = 'hour',
   HourMinutes = 'hourMinutes',
 }
@@ -47,6 +48,7 @@ export const dateReadableFormatsMap: Record<string, string> = {
   [DateReadableFormatType.DayMonth]: 'DD.MM',
   [DateReadableFormatType.Day]: 'DD',
   [DateReadableFormatType.DayMonthYear]: 'DD.MM.YYYY',
+  [DateReadableFormatType.WeekDay]: 'ddd',
   [DateReadableFormatType.Hour]: 'HH',
   [DateReadableFormatType.HourMinutes]: 'HH:mm',
 };
@@ -133,7 +135,7 @@ export class SelectItemWithConstraintFormatter {
       {
         id: 'select.constraint.items.date.formatType',
         value:
-          '{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }',
+          '{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }',
       },
       {type}
     );
@@ -151,20 +153,18 @@ function createDateConstraintOverrideFormatTypes(config: DateTimeConstraintConfi
       DateReadableFormatType.MonthYear,
       DateReadableFormatType.Month,
       DateReadableFormatType.DayMonth,
-      DateReadableFormatType.Day
+      DateReadableFormatType.Day,
+      DateReadableFormatType.WeekDay
     );
   }
   if (options.year && options.month && options.day && (options.hours || options.minutes)) {
     formats.push(DateReadableFormatType.DayMonthYear);
   }
-
-  if (!(options.year || options.month || options.day)) {
-    if (options.hours && options.minutes) {
-      formats.push(DateReadableFormatType.Hour);
-    }
-    if (options.hours && options.minutes && options.seconds) {
-      formats.push(DateReadableFormatType.HourMinutes);
-    }
+  if (options.hours && options.minutes) {
+    formats.push(DateReadableFormatType.Hour);
+  }
+  if (options.hours && options.minutes && options.seconds) {
+    formats.push(DateReadableFormatType.HourMinutes);
   }
 
   return formats;

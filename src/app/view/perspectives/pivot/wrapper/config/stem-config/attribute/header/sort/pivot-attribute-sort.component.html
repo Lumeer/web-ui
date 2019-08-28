@@ -1,6 +1,8 @@
 <div class="d-flex w-100 mt-2 align-items-center" *ngIf="{selectItems: pivotAttribute | pivotSortSelectItems:attributeSelectItem:pivotData} as data">
   <select-item class="flex-grow-1 pr-2 sort-attribute"
                [placeholderIcon]="'far fa-sort'"
+               placeholderTitle="Select values order"
+               i18n-placeholderTitle="@@perspective.pivot.config.sort.order"
                [items]="data.selectItems"
                [selectedId]="pivotAttribute | pivotSortSelectedId:data.selectItems"
                [removable]="false"
@@ -21,6 +23,8 @@
   <select-item class="w-100 mt-1 d-block"
                *ngFor="let value of (pivotAttribute | pivotSubSortValues:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders)); let index = index"
                [placeholderIcon]="'far fa-sort'"
+               placeholderTitle="Select values order"
+               i18n-placeholderTitle="@@perspective.pivot.config.sort.order"
                [emptyValue]="subSortPlaceholder"
                [items]="pivotAttribute | pivotSubSortSelectItems:(isRow ? pivotData?.columnHeaders : pivotData?.rowHeaders):index:summaryTitle"
                [selectedId]="value"

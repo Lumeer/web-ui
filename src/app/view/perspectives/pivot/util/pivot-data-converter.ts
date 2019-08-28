@@ -103,7 +103,7 @@ export class PivotDataConverter {
       pivotAttribute.constraint &&
       this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
 
-    return formatDataValue(value, overrideConstraint || constraint, constraintData);
+    return formatDataValue(value, overrideConstraint || constraint, constraintData, constraint);
   }
 
   private findPivotAttributeByAggregatorAttribute(

@@ -39,7 +39,7 @@ export function createDateTimeOptions(format: string): DateTimeOptions {
       hours: format.includes('H') || format.includes('h') || format.includes('k'),
       minutes: format.includes('m'),
       seconds: format.includes('s'),
-      meridian: format.includes('a'),
+      meridian: format.includes('a') || format.includes('A'),
       milliseconds: format.includes('S'),
     }
   );

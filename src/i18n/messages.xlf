@@ -485,6 +485,18 @@
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
+      </trans-unit><trans-unit id="shared.select.selectConstraintItem.headerAttribute" datatype="html">
+        <source>Select header attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/select/select-constraint-item/select-item-with-constraint.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.select.selectConstraintItem.headerValuesAggregation" datatype="html">
+        <source>Select values aggregation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/select/select-constraint-item/select-item-with-constraint.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source>
         <context-group purpose="location">
@@ -2643,17 +2655,45 @@
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.value" datatype="html">
+        <source>Select displayed value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/pivot-attribute-config.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
+        <source>Select value aggregation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
+        <source>Select absolute or relative display</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
         <source>Show summary</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.sort.order" datatype="html">
+        <source>Select values order</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.sort.toggle" datatype="html">
         <source>Toggle sort</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.merge" datatype="html">
         <source>Merge tables</source>
@@ -4687,7 +4727,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="select.constraint.items.date.formatType" datatype="html">
-        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} hour {Hours} hourMinutes {Hours and minutes} }</source>
+        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4949,6 +4989,41 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
+        <source>View mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.empty.placeholder" datatype="html">
+        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8b1b986e9c1817839ecfd715e1658a87e1dccdde" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ganttChart.bar.placeholder" datatype="html">
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.gantt.config.mode" datatype="html">
+        <source>{VAR_SELECT, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="perspective.chart.config.sort.placeholder" datatype="html">
         <source>Sort</source>
         <context-group purpose="location">
@@ -4995,41 +5070,6 @@
         <source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
-        <source>View mode</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.empty.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8b1b986e9c1817839ecfd715e1658a87e1dccdde" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
