@@ -475,16 +475,16 @@ describe('Pivot data converter', () => {
       {
         title: 'abc',
         children: [
-          {title: 'a', targetIndex: 0, color: undefined},
-          {title: 'c', targetIndex: 1, color: undefined},
-          {title: 'b', targetIndex: 2, color: undefined},
+          {title: 'a', targetIndex: 0, color: undefined, constraint: undefined},
+          {title: 'c', targetIndex: 1, color: undefined, constraint: undefined},
+          {title: 'b', targetIndex: 2, color: undefined, constraint: undefined},
         ],
         color: undefined,
         constraint: undefined,
       },
       {
         title: 'def',
-        children: [{title: 'c', targetIndex: 3, color: undefined}],
+        children: [{title: 'c', targetIndex: 3, color: undefined, constraint: undefined}],
         color: undefined,
         constraint: undefined,
       },

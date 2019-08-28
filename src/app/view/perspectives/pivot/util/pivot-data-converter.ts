@@ -427,7 +427,7 @@ export class PivotDataConverter {
           headers.push({title, targetIndex: currentIndex, color: colors[0], constraint: constraints[0]});
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
-          headers.push({title, color: colors[0]});
+          headers.push({title, color: colors[0], constraint: constraints[0]});
         }
 
         this.iterateThroughPivotDataHeader(
@@ -480,7 +480,7 @@ export class PivotDataConverter {
         header.children.push({title, targetIndex: currentIndex, color: colors[level], constraint: constraints[level]});
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
-        header.children.push({title, color: colors[level]});
+        header.children.push({title, color: colors[level], constraint: constraints[level]});
       }
 
       this.iterateThroughPivotDataHeader(
