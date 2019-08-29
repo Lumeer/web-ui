@@ -74,6 +74,6 @@ export class PivotValueAttributeConfigComponent {
 
   public onValueTypeSelected(valueType: PivotValueType) {
     const valueAttribute: PivotValueAttribute = {...this.pivotAttribute, valueType};
-    this.attributeSelect.emit(valueAttribute);
+    this.attributeChange.emit(valueAttribute);
   }
 }
