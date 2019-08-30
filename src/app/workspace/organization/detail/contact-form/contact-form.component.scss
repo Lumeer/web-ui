@@ -2,7 +2,7 @@ button {
   box-shadow: none !important;
 }
 
-.form-control.ng-dirty.ng-invalid {
+.form-control.ng-dirty.ng-invalid.ng-touched {
   border: solid 1px #dc3545;
 }
 

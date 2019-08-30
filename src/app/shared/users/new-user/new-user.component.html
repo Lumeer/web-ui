@@ -11,7 +11,7 @@
     <span class="font-weight-bold" i18n="@@users.add.button">Invite user</span>
   </button>
 </form>
-<small id="emailValid" class="invalid-message" *ngIf="emailField.invalid" i18n="@@users.user.email.invalid">
+<small id="emailValid" class="invalid-message" *ngIf="emailField.invalid && emailField.touched" i18n="@@users.user.email.invalid">
   Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
 </small>
 <small class="invalid-message" *ngIf="isDuplicate" i18n="@@users.user.email.duplicate">

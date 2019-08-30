@@ -116,8 +116,8 @@ export class AttributeTypeFormComponent implements OnChanges {
         return {
           format: undefined, // TODO
           decimals: this.configForm.get('decimals').value,
-          minValue: this.configForm.get('minValue').value,
-          maxValue: this.configForm.get('maxValue').value,
+          minValue: this.configForm.get('minValue').value / 100,
+          maxValue: this.configForm.get('maxValue').value / 100,
         };
       case ConstraintType.Select:
         return {

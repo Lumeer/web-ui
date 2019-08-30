@@ -92,7 +92,9 @@ export class PercentageDataInputComponent implements OnChanges {
     if (changes.value) {
       this.initValue();
     }
-    this.valid = isPercentageValid(this.value, this.constraintConfig);
+    if (this.value) {
+      this.valid = isPercentageValid(this.value, this.constraintConfig);
+    }
   }
 
   private initValue() {
@@ -111,8 +113,9 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.percentageInput;
+        const value = this.transformValue(input.nativeElement.value);
 
-        if (!this.skipValidation && input && !isPercentageValid(input.nativeElement.value, this.constraintConfig)) {
+        if (!this.skipValidation && input && !isPercentageValid(value, this.constraintConfig)) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -120,7 +123,7 @@ export class PercentageDataInputComponent implements OnChanges {
 
         this.preventSave = true;
         // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(this.transformValue(input.nativeElement.value)));
+        setTimeout(() => input && this.save.emit(value));
         return;
       case KeyCode.Escape:
         this.preventSave = true;
@@ -133,7 +136,7 @@ export class PercentageDataInputComponent implements OnChanges {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
-    this.valid = isPercentageValid(element.value, this.constraintConfig);
+    this.valid = isPercentageValid(value, this.constraintConfig);
 
     this.valueChange.emit(value);
   }
