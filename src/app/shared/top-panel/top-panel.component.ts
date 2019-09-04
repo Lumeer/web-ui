@@ -108,7 +108,9 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   public ngAfterViewInit() {
     if (this.resizeObserver) {
       this.resizeObserver.observe(this.logo.element.nativeElement);
-      this.resizeObserver.observe(this.workspacePanel.element.nativeElement);
+      if (this.workspacePanel) {
+        this.resizeObserver.observe(this.workspacePanel.element.nativeElement);
+      }
       this.resizeObserver.observe(this.userPanel.element.nativeElement);
     } else {
       setTimeout(() => this.setTopPanelLineHeight(), 100);

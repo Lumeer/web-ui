@@ -41,7 +41,7 @@
     <div class="form-row">
       <div class="form-group col-6">
         <input type="text" ngModel name="email" i18n-placeholder="@@organizations.tab.detail.contact.email" placeholder="E-mail" class="form-control form-control-sm" id="email" #email="ngModel" email>
-        <small id="emailValid" class="invalid-message" *ngIf="email.invalid" i18n="@@organizations.tab.detail.contact.email.invalid">
+        <small id="emailValid" class="invalid-message" *ngIf="email.invalid && email.touched" i18n="@@organizations.tab.detail.contact.email.invalid">
           Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
         </small>
       </div>
