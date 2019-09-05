@@ -117,6 +117,25 @@ export const selectDocumentsByQueryAndIds = (ids: string[]) =>
     documents => documents.filter(doc => ids.includes(doc.id))
   );
 
+export const selectDocumentsByQueryIncludingChildren = createSelector(
+  selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectQuery,
+  selectCurrentUser,
+  (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
+    sortDocumentsByCreationDate(
+      filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, true)
+    )
+);
+
+export const selectDocumentsByQueryIncludingChildrenAndIds = (ids: string[]) =>
+  createSelector(
+    selectDocumentsByQueryIncludingChildren,
+    documents => documents.filter(doc => ids.includes(doc.id))
+  );
+
 export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,

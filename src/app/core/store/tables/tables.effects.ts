@@ -49,6 +49,7 @@ import {
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
   selectDocumentsByQueryAndIds,
+  selectDocumentsByQueryIncludingChildrenAndIds,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -716,7 +717,7 @@ export class TablesEffects {
                 return ids;
               }, []);
               return this.store$.pipe(
-                select(selectDocumentsByQueryAndIds(documentIds)),
+                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
                 take(1),
                 map(documents =>
                   documents.map(document => {
