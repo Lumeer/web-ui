@@ -229,9 +229,9 @@ export class TemplateService {
   private getHRUrl(): string {
     switch (environment.locale) {
       case 'cs':
-        return this.createUrl('cs/koordinace-kandidatu');
+        return this.createUrl('cs/sablona-koordinacia-kandidatov');
       default:
-        return this.createUrl('tracking-job-candidates');
+        return this.createUrl('template-candidates-coordination');
     }
   }
 
@@ -247,9 +247,9 @@ export class TemplateService {
   private getWORKUrl(): string {
     switch (environment.locale) {
       case 'cs':
-        return this.createUrl('cs/vykazy-prace');
+        return this.createUrl('cs/sablona-vykazy-prace');
       default:
-        return this.createUrl('work-tracker');
+        return this.createUrl('template-work-tracker');
     }
   }
 
