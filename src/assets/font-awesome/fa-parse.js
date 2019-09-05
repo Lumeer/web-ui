@@ -60,7 +60,7 @@ Object.keys(loadJsonFile).forEach(function(key) {
 
   registerVocab(key, key);
 
-  if (icon.search.terms) {
+  if (icon.search && icon.search.terms) {
     Object.keys(icon.search.terms).forEach(function(value) {
       registerVocab(key, icon.search.terms[value]);
     });
