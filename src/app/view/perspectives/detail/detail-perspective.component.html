@@ -6,17 +6,21 @@
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
-    <document-detail *ngIf="selected.collection && selected.document"
-                     [collection]="selected.collection"
-                     [document]="selected.document"
-                     [query]="query$ | async"
-                     [permissions]="collectionPermission$ | async">
-    </document-detail>
-    <links-list
-      *ngIf="selected.collection && selected.document"
-      [document]="selected.document"
-      [collection]="selected.collection"
-      (documentSelect)="selectCollectionAndDocument($event)">
-    </links-list>
+
+    <div class="detail-card">
+      <document-detail *ngIf="selected.collection && selected.document"
+                       [collection]="selected.collection"
+                       [document]="selected.document"
+                       [query]="query$ | async"
+                       [permissions]="collectionPermission$ | async">
+      </document-detail>
+      <links-list
+        *ngIf="selected.collection && selected.document"
+        [document]="selected.document"
+        [collection]="selected.collection"
+        (documentSelect)="selectCollectionAndDocument($event)">
+      </links-list>
+    </div>
+
   </ng-container>
 </div>

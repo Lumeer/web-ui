@@ -1,32 +1,6 @@
-<div class="row mt-2 mb-4">
-  <div class="col" *ngIf="selectedCollection | collectionPermissions | async as allowedPermissions">
-    <button type="button"
-            class="btn btn-sm btn-primary"
-            title="Add Record"
-            i18n-title="@@shared.preview.results.addDocument"
-            [ngClass]="allowedPermissions.writeWithView ? 'cursor-pointer' : 'cursor-not-allowed'"
-            [disabled]="!allowedPermissions.writeWithView"
-            (click)="onNewDocument()">
-      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
-      <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>
-    </button>
-  </div>
-</div>
 <ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async, loaded: loaded$ | async } as data">
   <ng-container *ngIf="data.collections && data.documents">
-    <div class="row" *ngIf="data.collections.length > 1 || data.documents.length > 1">
-      <div class="col">
-        <p class="text-muted mb-0">
-          <a href="#preview-collapse"
-             data-toggle="collapse"
-             class="preview"
-             i18n="@@shared.preview.results.moreResults">
-            Search results
-          </a>
-        </p>
-      </div>
-    </div>
-    <div class="p-0 m-0 collapse show" id="preview-collapse" *ngIf="data.collections.length > 1 || data.documents.length > 1">
+    <div class="p-0 m-0 show" id="preview-collapse" *ngIf="data.collections.length > 1 || data.documents.length > 1">
       <div class="row justify-content-center" *ngIf="data.collections.length > 1">
         <div class="col">
           <preview-results-tabs
