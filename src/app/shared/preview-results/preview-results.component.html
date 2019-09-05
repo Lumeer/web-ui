@@ -39,7 +39,7 @@
       <div class="row justify-content-center">
         <div class="col mb-3">
           <preview-results-table
-            [documents]="data.documents"
+            [documents]="data.documents | documentsByCollection:selectedCollection.id"
             [selectedDocumentId]="selectedDocument?.id"
             [loaded]="data.loaded"
             [collection]="selectedCollection"

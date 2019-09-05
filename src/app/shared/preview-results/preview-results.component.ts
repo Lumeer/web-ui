@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';

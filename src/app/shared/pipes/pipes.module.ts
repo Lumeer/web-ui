@@ -74,6 +74,7 @@ import {ArrayDifferencePipe} from './array/array-difference.pipe';
 import {ConcatPipe} from './concat.pipe';
 import {PerspectiveDisplayablePipe} from './perspective-displayable.pipe';
 import {QueryColorPipe} from './query-color.pipe';
+import {DocumentsByCollectionPipe} from './documents-by-collection.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -131,6 +132,7 @@ import {QueryColorPipe} from './query-color.pipe';
     ConcatPipe,
     PerspectiveDisplayablePipe,
     QueryColorPipe,
+    DocumentsByCollectionPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -188,6 +190,7 @@ import {QueryColorPipe} from './query-color.pipe';
     ConcatPipe,
     PerspectiveDisplayablePipe,
     QueryColorPipe,
+    DocumentsByCollectionPipe,
   ],
 })
 export class PipesModule {}
