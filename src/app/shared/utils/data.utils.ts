@@ -49,6 +49,7 @@ import {
   getDurationSaveValue,
   isDurationDataValueValid,
 } from './constraint/duration-constraint.utils';
+import {isString} from 'util';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -163,7 +164,12 @@ export function isValueValid(
   }
 }
 
-export function formatDataValue(value: any, constraint?: Constraint, constraintData?: ConstraintData): any {
+export function formatDataValue(
+  value: any,
+  constraint?: Constraint,
+  constraintData?: ConstraintData,
+  originalConstraint?: Constraint
+): any {
   if (!constraint) {
     return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }
@@ -178,7 +184,11 @@ export function formatDataValue(value: any, constraint?: Constraint, constraintD
     case ConstraintType.Coordinates:
       return formatCoordinatesDataValue(value, constraint.config as CoordinatesConstraintConfig);
     case ConstraintType.DateTime:
-      return formatDateTimeDataValue(value, constraint.config as DateTimeConstraintConfig);
+      return reformatDateTimeDataValue(
+        value,
+        originalConstraint && (originalConstraint.config as DateTimeConstraintConfig),
+        constraint.config as DateTimeConstraintConfig
+      );
     case ConstraintType.Duration:
       return formatDurationDataValue(
         value,
@@ -252,6 +262,25 @@ export function formatCoordinatesDataValue(value: any, config: CoordinatesConstr
 
 export function getCoordinatesSaveValue(coordinates: MapCoordinates): string {
   return coordinates ? formatCoordinates(coordinates, CoordinatesFormat.DecimalDegrees, 6) : '';
+}
+
+export function reformatDateTimeDataValue(
+  value: any,
+  inputConfig: Partial<DateTimeConstraintConfig>,
+  outputConfig: Partial<DateTimeConstraintConfig>,
+  showInvalid = true
+): string {
+  if ([undefined, null, ''].includes(value)) {
+    return '';
+  }
+
+  const momentDate = parseMomentDate(value, inputConfig && inputConfig.format);
+
+  if (!momentDate.isValid()) {
+    return showInvalid ? formatUnknownDataValue(value, true) : '';
+  }
+
+  return outputConfig && outputConfig.format ? momentDate.format(outputConfig.format) : formatUnknownDataValue(value);
 }
 
 export function formatDateTimeDataValue(

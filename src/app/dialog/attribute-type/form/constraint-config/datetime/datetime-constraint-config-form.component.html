@@ -25,15 +25,10 @@
            formControlName="format"
            type="text">
   </div>
-  <div class="mb-3 text-secondary">
-    Example: {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}
+  <div class="mb-3">
+    <em><span i18n="@@constraint.address.example">Example:</span> {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}</em>
   </div>
 
-  <div *ngIf="form.errors && form.errors['minMaxInvalid']"
-       class="alert alert-danger"
-       i18n="@@form.errors.minMaxInvalid">
-    Minimum must be less or equal than maximum.
-  </div>
   <div class="d-flex">
     <div class="form-group">
       <label for="dateTimeMinValue"
@@ -60,5 +55,11 @@
                        (valueChange)="maxValueControl.setValue($event)">
       </date-time-input>
     </div>
+  </div>
+
+  <div *ngIf="form.errors && form.errors['minMaxInvalid']"
+       class="text-danger"
+       i18n="@@form.errors.minMaxInvalid">
+    Minimum must be less or equal than maximum.
   </div>
 </div>

@@ -110,7 +110,8 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
     return this.i18n(
       {
         id: 'perspective.pivot.data.aggregation',
-        value: '{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of}}',
+        value:
+          '{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of}}',
       },
       {aggregation}
     );

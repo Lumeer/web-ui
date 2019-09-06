@@ -86,6 +86,14 @@ export class UserMenuComponent {
         id: 'button.onward',
         value: 'Onward!',
       }),
+      nextBtnText: this.i18n({
+        id: 'button.next',
+        value: 'Next',
+      }),
+      prevBtnText: this.i18n({
+        id: 'button.previous',
+        value: 'Previous',
+      }),
       onReset: () => this.dismissWizard(),
     });
 

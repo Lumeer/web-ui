@@ -49,6 +49,7 @@ import {
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
   selectDocumentsByQueryAndIds,
+  selectDocumentsByQueryIncludingChildrenAndIds,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -119,6 +120,7 @@ import {
   filterUnknownLinkInstances,
 } from './utils/table-row-sync.utils';
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
+import {QueryParam} from '../navigation/query-param';
 
 @Injectable()
 export class TablesEffects {
@@ -268,11 +270,11 @@ export class TablesEffects {
       const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds}]};
 
       return [
-        new TablesAction.SetCursor({cursor: null}),
         new RouterAction.Go({
           path: [],
           queryParams: {
-            q: convertQueryModelToString(newQuery),
+            [QueryParam.Query]: convertQueryModelToString(newQuery),
+            [QueryParam.ViewCursor]: null,
           },
           extras: {
             queryParamsHandling: 'merge',
@@ -716,7 +718,7 @@ export class TablesEffects {
                 return ids;
               }, []);
               return this.store$.pipe(
-                select(selectDocumentsByQueryAndIds(documentIds)),
+                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
                 take(1),
                 map(documents =>
                   documents.map(document => {

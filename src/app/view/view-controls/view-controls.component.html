@@ -13,7 +13,7 @@
         </div>
         <div *ngVar="perspective$ | async as perspective"
              (click)="onPerspectiveChooserClick($event)"
-             title="Perspective" i18n-title="@@view.perspective">
+             title="{{perspective | perspectiveName}}" i18n-title="@@view.perspective">
           <button aria-expanded="false"
                   aria-haspopup="true"
                   class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
@@ -29,8 +29,8 @@
             <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query | sortPerspectives"
                [class.active]="perspective === aperspective.perspective"
                (click)="onSelectPerspective(aperspective.perspective, state.permissions.canManage)"
-               class="dropdown-item">
-              <i class="fa-fw {{aperspective.perspective | perspectiveIcon}}"></i>
+               class="dropdown-item" [title]="aperspective.perspective | perspectiveName">
+              <i class="{{aperspective.perspective | perspectiveIcon}}"></i>
               <span class="ml-1 text-nowrap">{{aperspective.name}}</span>
             </a>
           </div>

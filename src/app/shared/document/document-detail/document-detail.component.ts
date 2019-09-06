@@ -154,19 +154,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     return row.correlationId || row.id;
   }
 
-  public goToTablePerspective(): void {
-    let collectionQuery: string = null;
-    if (!isSingleCollectionQuery(this.query)) {
-      collectionQuery = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
-    }
-    this.perspective.switchPerspective(
-      perspectivesMap[Perspective.Table],
-      this.collection,
-      this.document,
-      collectionQuery
-    );
-  }
-
   public fireConstraintConfig(id: string) {
     this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
   }

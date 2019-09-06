@@ -45,7 +45,7 @@ export const perspectivesMap: Record<string, Perspective> = {
 };
 
 export const perspectiveIconsMap: Record<string, string> = {
-  [Perspective.Detail]: 'far fa-fw fa-map-marker-alt',
+  [Perspective.Detail]: 'far fa-fw fa-file-search',
   postit: 'far fa-fw fa-columns',
   [Perspective.Kanban]: 'far fa-fw fa-columns',
   [Perspective.Pivot]: 'far fa-fw fa-calculator-alt',

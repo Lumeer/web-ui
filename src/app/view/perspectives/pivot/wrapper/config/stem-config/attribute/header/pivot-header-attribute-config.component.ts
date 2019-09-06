@@ -88,7 +88,7 @@ export class PivotHeaderAttributeConfigComponent {
 
   public onSelectedConstraint(constraint: Constraint) {
     const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, constraint};
-    this.attributeSelect.emit(headerAttribute);
+    this.attributeChange.emit(headerAttribute);
   }
 
   public onRemoved() {

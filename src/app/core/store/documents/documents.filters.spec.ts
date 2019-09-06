@@ -18,6 +18,8 @@
  */
 
 import {} from 'jasmine';
+import {LinkInstance} from '../link-instances/link.instance';
+import {LinkType} from '../link-types/link.type';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
@@ -141,6 +143,28 @@ const musicUser: User = {
   email: 'music@lumeer.io',
   groupsMap: {},
 };
+
+const linkTypes: LinkType[] = [
+  {
+    id: 'lt1',
+    collectionIds: ['c1', 'c2'],
+    attributes: [],
+    name: 'link',
+  },
+];
+
+const linkInstances: LinkInstance[] = [
+  {
+    id: 'li1',
+    linkTypeId: 'lt1',
+    documentIds: ['d2', 'd7'],
+  },
+  {
+    id: 'li2',
+    linkTypeId: 'lt1',
+    documentIds: ['d3', 'd8'],
+  },
+];
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
@@ -297,6 +321,28 @@ describe('Document filters', () => {
         true
       ).map(document => document.id)
     ).toEqual(['d2', 'd3']);
+  });
+
+  it('should filter two linked documents by attribute value with userEmail() function', () => {
+    expect(
+      filterDocumentsByQuery(
+        documents,
+        collections,
+        linkTypes,
+        linkInstances,
+        {
+          stems: [
+            {
+              collectionId: 'c1',
+              linkTypeIds: ['lt1'],
+              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+            },
+          ],
+        },
+        turingUser,
+        true
+      ).map(document => document.id)
+    ).toEqual(['d2', 'd3', 'd7', 'd8']);
   });
 
   it('should filter children together with parent document by attribute values', () => {

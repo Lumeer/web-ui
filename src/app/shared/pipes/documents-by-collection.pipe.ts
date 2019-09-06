@@ -17,14 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {PivotRowColumnAttribute, PivotStemConfig} from '../../../../core/store/pivots/pivot';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {DocumentModel} from '../../core/store/documents/document.model';
 
 @Pipe({
-  name: 'pivotHeaderSelectedAttributes',
+  name: 'documentsByCollection',
 })
-export class PivotHeaderSelectedAttributesPipe implements PipeTransform {
-  public transform(config: PivotStemConfig): PivotRowColumnAttribute[] {
-    return [...(config.rowAttributes || []), ...(config.columnAttributes || [])];
+@Injectable({
+  providedIn: 'root',
+})
+export class DocumentsByCollectionPipe implements PipeTransform {
+  public transform(documents: DocumentModel[], collectionId: string): DocumentModel[] {
+    return documents && documents.filter(d => d.collectionId === collectionId);
   }
 }

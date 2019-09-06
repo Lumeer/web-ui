@@ -17,28 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../select/select-item/select-item.model';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DataAggregationType} from '../../utils/data/data-aggregation';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'perspectiveName',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
+@Injectable({
+  providedIn: 'root',
+})
+export class PerspectiveNamePipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: this.chartAggregationName(aggregation)}));
-  }
-
-  private chartAggregationName(type: DataAggregationType): string {
+  public transform(perspective: string): string {
     return this.i18n(
       {
-        id: 'perspective.chart.config.aggregation.name',
-        value: '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique}}',
+        id: 'view.perspective.name',
+        value:
+          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document}}',
       },
-      {type}
+      {
+        perspective,
+      }
     );
   }
 }
