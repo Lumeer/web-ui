@@ -20,10 +20,57 @@
     </select>
   </div>
   <div *ngIf="!selectFormatControl?.value"
-       class="form-group">
-    <input class="form-control"
-           formControlName="format"
-           type="text">
+       class="d-flex">
+    <div class="form-group flex-fill">
+      <input class="form-control"
+             formControlName="format"
+             type="text">
+    </div>
+    <div class="align-baseline">
+      <i class="help fa-fw far fa-question-circle ml-1" [popover]="popTemplate" popoverTitle="Date format help"></i>
+      <ng-template #popTemplate>
+        <table class="table table-borderless table-responsive-sm">
+          <tbody>
+            <tr>
+              <td>YYYY, YY</td><td>Years 2021, 21</td>
+            </tr>
+            <tr>
+              <td>MM, M</td><td>Months 00-12, 0-12</td>
+            </tr>
+            <tr>
+              <td>DD, D</td><td>Days 00-31, 0-31</td>
+            </tr>
+            <tr>
+              <td>HH, H</td><td>Hours 00-24, 0-24</td>
+            </tr>
+            <tr>
+              <td>hh, h</td><td>Hours 00-12, 0-12</td>
+            </tr>
+            <tr>
+              <td>mm</td><td>Minutes 00-59</td>
+            </tr>
+            <tr>
+              <td>ss</td><td>Seconds 00-59</td>
+            </tr>
+            <tr>
+              <td>a, A</td><td>am/pm, AM/PM</td>
+            </tr>
+            <tr>
+              <td>DDD, DDDD</td><td>Day of year 1-365</td>
+            </tr>
+            <tr>
+              <td>ddd, dddd</td><td>Day of week Mon, Monday</td>
+            </tr>
+            <tr>
+              <td>W, WW</td><td>Week of year 1-53, 01-53</td>
+            </tr>
+            <tr>
+              <td>x, X</td><td>Timestamp 1410715640579, 1410715640.579</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </div>
   </div>
   <div class="mb-3 text-secondary">
     Example: {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}
