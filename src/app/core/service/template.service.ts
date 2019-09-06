@@ -298,6 +298,15 @@ export class TemplateService {
     }
   }
 
+  public getDateTimeConstraintHelpUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/typ-sloupce-datum');
+      default:
+        return this.createUrl('date-column-type');
+    }
+  }
+
   private createUrl(suffix: string): string {
     return `${this.baseUrl}/${suffix}`;
   }

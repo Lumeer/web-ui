@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
+import {environment} from '../../../../../../environments/environment';
+import {TemplateService} from '../../../../../core/service/template.service';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -28,12 +30,14 @@ import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
   styleUrls: ['./datetime-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatetimeConstraintConfigFormComponent implements OnChanges {
+export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges {
   @Input()
   public config: DateTimeConstraintConfig;
 
   @Input()
   public form: FormGroup;
+
+  public helpUrl: string;
 
   public readonly now = new Date().toISOString();
   public readonly formats = [
@@ -48,6 +52,12 @@ export class DatetimeConstraintConfigFormComponent implements OnChanges {
     'H:mm',
     'h:mm a',
   ];
+
+  constructor(private templateService: TemplateService) {}
+
+  public ngOnInit(): void {
+    this.helpUrl = this.templateService.getDateTimeConstraintHelpUrl();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {

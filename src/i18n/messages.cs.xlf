@@ -444,14 +444,14 @@
         </source><target>
           Zaokrouhlit na počet desetinných míst:
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="constraint.percentage.decimals.description" datatype="html">
         <source>
           Leave empty for no rounding.
         </source><target>
           Pokud nechcete zaokrouhlovat, ponechejte pole prázdné.
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
         <source>
     Keeps a predefined set of valid values from which one can be selected. At least two values must be configured.
@@ -1113,7 +1113,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
         <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
-        <target>{VAR_SELECT, select, yearly {Roky} quarterly {Kvartály} weekly {Týdny} monthYear {Měsíce a roky} month {Měsíce} dayMonth {Dny a měsíce} day {Dny} dayMonthYear {Dny, měsíce a roky} hour {Hodiny} hourMinutes {Hodiny a minuty} }</target>
+        <target>{VAR_SELECT, select, yearly {Roky} quarterly {Kvartály} weekly {Týdny} monthYear {Měsíce a roky} month {Měsíce} dayMonth {Dny a měsíce} day {Dny} dayMonthYear {Dny, měsíce a roky} weekDay {Den v týdnu} hour {Hodiny} hourMinutes {Hodiny a minuty} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="collection.delete.dialog.message" datatype="html">
