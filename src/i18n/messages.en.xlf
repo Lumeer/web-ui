@@ -88,52 +88,33 @@
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
         <source>Remove Record</source><target state="final">Remove Record</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
         <source>Remove from favorites</source><target state="final">Remove from favorites</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
         <source>Add to favorites</source><target state="final">Add to favorites</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="document.detail.view.in" datatype="html">
-        <source>View in:</source><target state="final">View in:</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="document.detail.perspective.name.table" datatype="html">
-        <source>Table</source><target state="final">Table</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="document.detail.version" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="document.detail.version" datatype="html">
         <source>Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></source><target state="final">Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
         <source>Created on <x id="INTERPOLATION" equiv-text="{{document.creationDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></source><target state="final">Created on <x id="INTERPOLATION" equiv-text="{{document.creationDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
         <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></source><target state="final"><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
         <source>Add Row</source><target state="final">Add Row</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
         <source>Create New Record</source><target state="final">Create New Record</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.preview.results.addDocument" datatype="html">
-        <source>Add Record</source><target state="final">Add Record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.preview.results.moreResults" datatype="html">
-        <source>
-            Search results
-          </source><target state="final">
-            Search results
-          </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
         <source>No records found!</source><target state="final">No records found!</target>
         
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="search.result.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="search.result.empty" datatype="html">
         <source>
     I am sorry but I did not find anything. Please try a more general search.
   </source><target state="final">
@@ -2626,9 +2607,11 @@
             </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="create.new.link" datatype="html">
-        <source>Create new linked Record</source><target state="final">Create new linked Record</target>
+        <source>Create new link
+            </source><target state="final">Create new link
+            </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="select" datatype="html">
         <source>Select</source><target state="final">Select</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table-body/links-list-table-body.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="unlink" datatype="html">

@@ -25,8 +25,8 @@
            formControlName="format"
            type="text">
   </div>
-  <div class="mb-3 text-secondary">
-    Example: {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}
+  <div class="mb-3">
+    <em><span i18n="@@constraint.address.example">Example:</span> {{ now | dateTimeDataValue : {format: formatControl.value || selectFormatControl.value} }}</em>
   </div>
 
   <div class="d-flex">
