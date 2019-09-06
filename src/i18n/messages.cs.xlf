@@ -104,7 +104,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source><target>Přidat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
         <source>
       Please select one of the colleagues who are already in your organization.
     </source><target>
@@ -121,14 +121,14 @@
   Prosím zadejte platnou emailovou adresu (např. alan.turing@lumeerio.com).
 </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
         <source>
-      A colleague with this email is already invited. Try another!
+      A colleague with this email is already invited. Try another one!
     </source><target>
   Kolega s tímto emailem je už pozvaný. Zkuste jiného!
 </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
         <source>new</source><target>nová</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/notifications-menu-wrapper/notifications-menu-wrapper.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="userNotifications.readOn" datatype="html">
@@ -631,11 +631,8 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.address.example" datatype="html">
         <source>Example:</source><target>Příklad:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.address.part" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
     <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </source><target>
@@ -741,7 +738,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="view.perspective" datatype="html">
-                <source>Perspective</source>
+                <source><x id="INTERPOLATION" equiv-text="{{perspective | perspectiveName}}"/></source>
                 <target>Pohled</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
@@ -1642,7 +1639,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="resource.value.error.duplicity" datatype="html">
         <source>
-  This <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> is already taken. Try another!
+  This <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> is already taken. Try another one!
 </source><target>
   <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> je již použité, zkuste něco jiného!
 </target>
@@ -3206,7 +3203,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="users.user.email.duplicate" datatype="html">
         <source>
-  This user email is already invited. Try another!
+  This user email is already invited. Try another one!
 </source><target>
   Uživatel s tímto e-mailem již má pozvánku. Zadejte někoho dalšího!
 </target>
@@ -3399,7 +3396,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
                 <source>
-            Sorry, this code is already taken. Try another!
+            Sorry, this code is already taken. Try another one!
           </source>
                 <target>Je mi líto, tento kód už někdo používá. Zkuste jiný!</target>
 
