@@ -327,7 +327,7 @@
         </context-group>
       </trans-unit><trans-unit id="users.user.email.duplicate" datatype="html">
         <source>
-  This user email is already invited. Try another!
+  This user email is already invited. Try another one!
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context>
@@ -581,7 +581,7 @@
         </context-group>
       </trans-unit><trans-unit id="resource.value.error.duplicity" datatype="html">
         <source>
-  This <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> is already taken. Try another!
+  This <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> is already taken. Try another one!
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
@@ -1016,7 +1016,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
         <source>
@@ -1032,15 +1032,15 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
         <source>
-      A colleague with this email is already invited. Try another!
+      A colleague with this email is already invited. Try another one!
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user-dialog/new-user/new-user.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source>
@@ -1278,7 +1278,7 @@
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
         <source>
-            Sorry, this code is already taken. Try another!
+            Sorry, this code is already taken. Try another one!
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
@@ -1941,6 +1941,16 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.address.example" datatype="html">
+        <source>Example:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
       </trans-unit><trans-unit id="constraint.dateTime.minValue.label" datatype="html">
         <source>
         Minimum value
@@ -2152,12 +2162,6 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.address.example" datatype="html">
-        <source>Example:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
       </trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
     <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
@@ -2290,7 +2294,7 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective" datatype="html">
-        <source>Perspective</source>
+        <source><x id="INTERPOLATION" equiv-text="{{perspective | perspectiveName}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">16</context>
