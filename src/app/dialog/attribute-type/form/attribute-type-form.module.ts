@@ -40,9 +40,18 @@ import {DurationConstraintConfigFormComponent} from './constraint-config/duratio
 import {DurationConstraintConfigFormConversionsComponent} from './constraint-config/duration/conversion/duration-constraint-config-form-conversions.component';
 import {DurationConstraintUnitEditablePipe} from './constraint-config/duration/conversion/duration-constraint-unit-editable.pipe';
 import {DurationConstraintUnitMaxValuePipe} from './constraint-config/duration/conversion/duration-constraint-unit-max-value.pipe';
+import {PopoverModule} from 'ngx-bootstrap';
 
 @NgModule({
-  imports: [CommonModule, DateTimeModule, DragDropModule, PipesModule, ReactiveFormsModule, SelectModule],
+  imports: [
+    CommonModule,
+    DateTimeModule,
+    DragDropModule,
+    PipesModule,
+    ReactiveFormsModule,
+    SelectModule,
+    PopoverModule,
+  ],
   declarations: [
     AttributeTypeFormComponent,
     NumberConstraintConfigFormComponent,
