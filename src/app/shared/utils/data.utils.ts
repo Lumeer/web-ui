@@ -587,7 +587,7 @@ function checkNumberRange(n: Big, config?: NumberConstraintConfig): boolean {
 
 export function isPercentageValid(value: any, config?: PercentageConstraintConfig): boolean {
   if (!value || typeof value === 'number') {
-    return true;
+    return checkPercentageNumber(value, config);
   }
 
   if (typeof value === 'string') {
@@ -622,10 +622,10 @@ function checkPercentageNumber(value: string, config?: PercentageConstraintConfi
 function checkPercentageRange(n: number, config?: PercentageConstraintConfig): boolean {
   let passed = true;
   if (config && (config.minValue || config.minValue === 0)) {
-    passed = n >= config.minValue;
+    passed = n >= config.minValue / 100;
   }
   if (config && (config.maxValue || config.maxValue === 0)) {
-    passed = passed && n <= config.maxValue;
+    passed = passed && n <= config.maxValue / 100;
   }
 
   return passed;

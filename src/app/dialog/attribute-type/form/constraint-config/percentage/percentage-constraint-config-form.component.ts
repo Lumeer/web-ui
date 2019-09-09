@@ -50,8 +50,8 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
 
   private createForm() {
     this.form.addControl('decimals', new FormControl(this.config && this.config.decimals));
-    this.form.addControl('minValue', new FormControl(this.config && this.config.minValue * 100));
-    this.form.addControl('maxValue', new FormControl(this.config && this.config.maxValue * 100));
+    this.form.addControl('minValue', new FormControl(this.config && this.config.minValue));
+    this.form.addControl('maxValue', new FormControl(this.config && this.config.maxValue));
     this.form.setValidators(minMaxValidator('minValue', 'maxValue'));
   }
 }

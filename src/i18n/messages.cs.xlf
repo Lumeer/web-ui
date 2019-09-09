@@ -347,7 +347,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
         <source>
         Minimum value
       </source><target>
@@ -419,14 +419,14 @@
         Minimální hodnota
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
         <source>
         Maximum value
       </source><target>
         Maximální hodnota
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
         <source>
       Format any recognizable values as percentages.
       There is no need to enter the percent (%) character. It is added automatically.
@@ -631,8 +631,8 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.address.example" datatype="html">
         <source>Example:</source><target>Příklad:</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="constraint.address.part" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="constraint.address.part" datatype="html">
         <source>
     <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
   </source><target>
@@ -1627,7 +1627,7 @@
                 <target>Přidat řádek</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit>
-            
+
             <trans-unit id="resource.settings.back" datatype="html">
                 <source>Back</source>
                 <target>Zpět</target>
@@ -3142,9 +3142,9 @@
                 <target>Přidat k oblíbeným</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
-            
 
-            
+
+
             <trans-unit id="icon-picker.select.icon" datatype="html">
                 <source>2. Choose icon
 </source>
@@ -3177,7 +3177,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
             <trans-unit id="users.header.search.placeholder" datatype="html">
                 <source>Search user...</source>
-                <target>Hledat uživatele...</target>
+                <target>Vyhledat uživatele...</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
             <trans-unit id="users.header.search.title" datatype="html">
@@ -4549,7 +4549,7 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.linkTypes.search.placeholder" datatype="html">
-        <source>Link type name...</source><target>Název propojení...</target>
+        <source>Search link type...</source><target>Vyhledat propojení...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
           <context context-type="linenumber">12</context>
