@@ -212,6 +212,10 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   }
 
   public onSelect(event: TypeaheadMatch) {
+    if (this.preventSave) {
+      return; // value has already been saved in onKeyDown method
+    }
+
     this.preventSave = true;
     this.save.emit(event.item.email);
   }
