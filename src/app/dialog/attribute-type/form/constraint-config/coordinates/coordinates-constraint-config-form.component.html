@@ -15,7 +15,8 @@
             class="custom-select"
             data-test="coordinates-constraint-format-select">
       <option *ngFor="let format of formats"
-              [value]="format">
+              [value]="format"
+              i18n="@@constraint.coordinates.format.types">
         {format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds}}
       </option>
     </select>

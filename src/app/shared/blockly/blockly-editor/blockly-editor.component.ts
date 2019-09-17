@@ -33,11 +33,13 @@ import {Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {DOCUMENT} from '@angular/common';
 import {
+  COLOR_CYAN,
   COLOR_DARK,
   COLOR_GRAY200,
   COLOR_GRAY300,
   COLOR_GRAY400,
   COLOR_GREEN,
+  COLOR_INDIGO,
   COLOR_PINK,
   COLOR_PRIMARY,
   COLOR_RED,
@@ -75,6 +77,12 @@ const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
 const VALUE_CONTAINER = 'value_container';
 const LINK_CONTAINER = 'link_container';
+const SEQUENCE_BLOCK = 'sequence_block';
+const MS_TO_DATE = 'ms_to_date';
+const DATE_TO_MS = 'date_to_ms';
+const DATE_NOW = 'date_now';
+const MS_TO_UNIT = 'ms_to_unit';
+const CURRENT_USER = 'current_user';
 
 export const enum MasterBlockType {
   Function = 'Function',
@@ -327,7 +335,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         this_.attribute.id +
         "', " +
         value +
-        ')' +
+        ');' +
         '\n'
       );
     };
@@ -383,7 +391,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         this_.attribute.id +
         "', " +
         value +
-        ')' +
+        ');' +
         '\n'
       );
     };
@@ -525,7 +533,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         return '';
       }
 
-      const code = this_.lumeerVar + '.setDocumentAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ')';
+      const code = this_.lumeerVar + '.setDocumentAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ');\n';
 
       return code;
     };
@@ -603,7 +611,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         return '';
       }
 
-      const code = this_.lumeerVar + '.setLinkAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ')';
+      const code = this_.lumeerVar + '.setLinkAttribute(' + argument0 + ", '" + attrId + "', " + argument1 + ');\n';
 
       return code;
     };
@@ -643,11 +651,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
 
-    Blockly.Blocks['date_to_ms'] = {
+    Blockly.Blocks[DATE_TO_MS] = {
       init: function() {
         this.jsonInit({
-          type: 'date_to_ms',
-          message0: '%{BKY_BLOCK_DATE_TO_MS}', // date to ms %1
+          type: DATE_TO_MS,
+          message0: '%{BKY_BLOCK_DATE_TO_MS}', // date to millis %1
           args0: [
             {
               type: 'input_value',
@@ -661,7 +669,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript['date_to_ms'] = function(block) {
+    Blockly.JavaScript[DATE_TO_MS] = function(block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {
@@ -673,11 +681,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
 
-    Blockly.Blocks['ms_to_date'] = {
+    Blockly.Blocks[MS_TO_DATE] = {
       init: function() {
         this.jsonInit({
-          type: 'ms_to_date',
-          message0: '%{BKY_BLOCK_MS_TO_DATE}', // ms to date %1
+          type: MS_TO_DATE,
+          message0: '%{BKY_BLOCK_MS_TO_DATE}', // millis to date %1
           args0: [
             {
               type: 'input_value',
@@ -691,7 +699,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript['ms_to_date'] = function(block) {
+    Blockly.JavaScript[MS_TO_DATE] = function(block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {
@@ -703,10 +711,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
 
-    Blockly.Blocks['date_now'] = {
+    Blockly.Blocks[DATE_NOW] = {
       init: function() {
         this.jsonInit({
-          type: 'date_now',
+          type: DATE_NOW,
           message0: '%{BKY_BLOCK_DATE_NOW}', // ms to date %1
           output: '',
           colour: COLOR_PINK,
@@ -715,8 +723,113 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript['date_now'] = function(block) {
+    Blockly.JavaScript[DATE_NOW] = function(block) {
       const code = '(+(new Date()))';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[CURRENT_USER] = {
+      init: function() {
+        this.jsonInit({
+          type: CURRENT_USER,
+          message0: '%{BKY_BLOCK_CURRENT_USER}', // current user
+          output: '',
+          colour: COLOR_CYAN,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[CURRENT_USER] = function(block) {
+      const code = this_.lumeerVar + '.getCurrentUser()';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[MS_TO_UNIT] = {
+      init: function() {
+        this.jsonInit({
+          type: MS_TO_UNIT,
+          message0: '%{BKY_BLOCK_DATE_MILLIS_TO_UNIT}', // milliseconds to %1 %2
+          args0: [
+            {
+              type: 'field_dropdown',
+              name: 'UNIT',
+              options: [
+                [Blockly.Msg['SEQUENCE_OPTIONS_DAYS'], 'DAYS'],
+                [Blockly.Msg['SEQUENCE_OPTIONS_HOURS'], 'HOURS'],
+                [Blockly.Msg['SEQUENCE_OPTIONS_MINUTES'], 'MINUTES'],
+                [Blockly.Msg['SEQUENCE_OPTIONS_SECONDS'], 'SECONDS'],
+              ],
+            },
+            {
+              type: 'input_value',
+              name: 'NAME',
+              check: 'Number',
+            },
+          ],
+          output: 'Number',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[MS_TO_UNIT] = function(block) {
+      const dropdown_unit = block.getFieldValue('UNIT');
+      const value_ms = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ATOMIC);
+      let code = '(' + value_ms + '/';
+
+      switch (dropdown_unit) {
+        case 'SECONDS':
+          code += '1000)';
+          break;
+        case 'MINUTES':
+          code += '60000)';
+          break;
+        case 'HOURS':
+          code += '3600000)';
+          break;
+        case 'DAYS':
+          code += '86400000)';
+          break;
+      }
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[SEQUENCE_BLOCK] = {
+      init: function() {
+        this.jsonInit({
+          type: SEQUENCE_BLOCK,
+          message0: '%{BKY_BLOCK_SEQUENCE_NEXT}', // next no. from %1 align to %2 digit(s)
+          args0: [
+            {
+              type: 'field_input',
+              name: 'SEQUENCE',
+              text: 'sequenceName',
+            },
+            {
+              type: 'field_number',
+              name: 'DIGITS',
+              value: 1,
+              min: 1,
+              max: 99,
+            },
+          ],
+          output: 'String',
+          colour: COLOR_CYAN,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[SEQUENCE_BLOCK] = function(block) {
+      const sequence = block.getFieldValue('SEQUENCE');
+      const digits = block.getFieldValue('DIGITS');
+
+      const code = this_.lumeerVar + ".getSequenceNumber('" + sequence + "', " + digits + ')';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
@@ -1402,6 +1515,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_unit"></block></xml>').firstChild);
 
     return xmlList;
   }
