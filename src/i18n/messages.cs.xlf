@@ -1113,7 +1113,19 @@
         <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
         <target>{VAR_SELECT, select, yearly {Roky} quarterly {Kvartály} weekly {Týdny} monthYear {Měsíce a roky} month {Měsíce} dayMonth {Dny a měsíce} day {Dny} dayMonthYear {Dny, měsíce a roky} weekDay {Den v týdnu} hour {Hodiny} hourMinutes {Hodiny a minuty} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="sequence.item.delete.message" datatype="html">
+        <source>Do you want to permanently remove this sequence?</source><target>Chcete skutečně trvale odstranit tuto posloupnost?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.item.delete.title" datatype="html">
+        <source>Remove sequence?</source><target>Odstranit posloupnost?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="collection.delete.dialog.message" datatype="html">
                 <source>Do you really want to delete this table?</source>
                 <target>Opravdu chcete smazat tuto tabulku?</target>
@@ -1384,7 +1396,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="button.no" datatype="html">
                 <source>No</source>
                 <target state="final">Ne</target>
@@ -1395,7 +1407,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organizations.get.fail" datatype="html">
                 <source>Could not get organizations</source>
                 <target state="translated">Organizace nelze načíst</target>
@@ -1906,7 +1918,13 @@
                 <source>Users</source>
                 <target>Uživatelé</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
+        <source>Sequences</source><target>Posloupnosti</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
 
             <trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
                 <source>Keep your Lumeer for Business active!</source>
@@ -2250,7 +2268,20 @@
                     Všechny funcke jsou přístupné<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
                 </target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
+        <source>The sequences listed here can be used in Table rules and Attribute functions.</source><target>Tyto posloupnosti lze použít v Pravidlech tabulek a ve Funkcích atributů.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
+        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</source>
+        <target>Použijte blok <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>další číslo<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> z palety <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Pomůcky<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> v editoru funkce nebo pravidla.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="page.title" datatype="html">
         <source>Lumeer - Visual Project&amp;Team Management</source><target>Lumeer - Vizuální řízení projektů a týmů</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
@@ -2941,6 +2972,24 @@
           <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="sequences.get.fail" datatype="html">
+        <source>Could not read sequences</source><target>Nemohu načíst posloupnosti</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequences.update.fail" datatype="html">
+        <source>Could not update sequence</source><target>Nemohu upravit posloupnost</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.delete.fail" datatype="html">
+        <source>Could not delete sequence</source><target>Nemohu smazat posloupnost</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="userNotifications.get.fail" datatype="html">
         <source>Could not read notifications</source><target>Nelze načíst upomínky</target>
         <context-group purpose="location">
@@ -3160,7 +3209,35 @@
 </source>
                 <target>1. Zvolte barvu</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/color/color-picker.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/color/color-picker.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
+        <source>Sequence Name</source><target>Název posloupnosti</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.list.sequenceValue" datatype="html">
+        <source>Counter</source><target>Počitadlo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.list.createNew.info" datatype="html">
+        <source>
+            To create a new sequence, just use its name in the sequence block in a function or a rule.
+          </source><target>
+            Novou posloupnost vytvoříte tak, že použijete její název v bloku pro posloupnosti v editoru funkce nebo pravidla.
+          </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.item.remove.button.title" datatype="html">
+        <source>Remove sequence</source><target>Odstranit posloupnost</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-item/sequence-item.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="users.header.inviteUser" datatype="html">
                 <source>Invite a colleague or a friend</source>
                 <target>Pozvat kolegu nebo známého</target>
