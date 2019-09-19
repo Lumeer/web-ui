@@ -53,6 +53,8 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
 import {ModalModule} from './modal/modal.module';
 import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
+import {SequenceListComponent} from './sequences/sequence-list/sequence-list.component';
+import {SequencesModule} from './sequences/sequences.module';
 
 @NgModule({
   imports: [
@@ -130,6 +132,7 @@ import {DropdownModule} from './dropdown/dropdown.module';
     PresenterModule,
     DropdownModule,
     PickerModule,
+    SequencesModule,
   ],
 })
 export class SharedModule {}

@@ -29,6 +29,7 @@ import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {UsersGuard} from '../core/guards/data/users.guard';
+import {ProjectSequencesComponent} from './project/project-sequences/project-sequences.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -42,6 +43,10 @@ const workspaceRoutes: Routes = [
       {
         path: 'users',
         component: ProjectUsersComponent,
+      },
+      {
+        path: 'sequences',
+        component: ProjectSequencesComponent,
       },
       {
         path: '',

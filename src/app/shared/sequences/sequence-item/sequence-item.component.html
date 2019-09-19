@@ -1,0 +1,13 @@
+<td class="align-middle">
+  {{sequence.name}}
+</td>
+<td nowrap>
+  <div class="d-flex align-items-baseline">
+    <input type="number" class="form-control form-control-sm" (change)="updateValue($event)" (blur)="updateValue($event)" [value]="sequence.seq" />
+    <i class="fas fa-trash text-danger cursor-pointer ml-2 mr-1"
+       title="Remove sequence"
+       i18n-title="@@sequence.item.remove.button.title"
+       (click)="remove()">
+    </i>
+  </div>
+</td>

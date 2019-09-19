@@ -62,6 +62,7 @@ import {UserNotificationsService} from './rest/user-notifications.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
+import {SequenceService} from './rest/sequence.service';
 
 if (environment.locale === 'cs') {
   defineLocale('cs', csLocale);
@@ -112,6 +113,7 @@ if (environment.locale === 'cs') {
     PusherService,
     VideoService,
     UserNotificationsService,
+    SequenceService,
   ],
   exports: [HomeComponent, NotificationsModule, RedirectComponent],
 })

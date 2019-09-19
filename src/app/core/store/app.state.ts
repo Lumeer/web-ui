@@ -44,6 +44,7 @@ import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-ch
 import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
 import {initialPivotsState, PivotsState} from './pivots/pivots.state';
 import {initialSearchesState, SearchesState} from './searches/searches.state';
+import {initialSequencesState, SequencesState} from './sequences/sequences.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -72,6 +73,7 @@ export interface AppState {
   ganttCharts: GanttChartsState;
   kanbans: KanbansState;
   searches: SearchesState;
+  sequences: SequencesState;
 }
 
 export function initialAppState(): AppState {
@@ -102,5 +104,6 @@ export function initialAppState(): AppState {
     ganttCharts: initialGanttChartsState,
     kanbans: initialKanbansState,
     searches: initialSearchesState,
+    sequences: initialSequencesState,
   };
 }

@@ -67,6 +67,8 @@ import {View} from '../store/views/view';
 import {convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
+import {SequencesAction} from '../store/sequences/sequences.action';
+import {SequenceConverter} from '../store/sequences/sequence.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -127,6 +129,7 @@ export class PusherService implements OnDestroy {
     this.bindOtherEvents();
     this.bindFavoriteEvents();
     this.bindUserEvents();
+    this.bindSequenceEvents();
     this.bindTemplateEvents();
   }
 
@@ -639,6 +642,27 @@ export class PusherService implements OnDestroy {
             this.store$.dispatch(new ViewsAction.Get({force: true}));
           }
         });
+    });
+  }
+
+  private bindSequenceEvents() {
+    this.channel.bind('Sequence:update', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new SequencesAction.UpdateSuccess({
+            sequence: SequenceConverter.fromDto(data.object),
+          })
+        );
+      }
+    });
+    this.channel.bind('Sequence:remove', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new SequencesAction.DeleteSuccess({
+            id: data.id,
+          })
+        );
+      }
     });
   }
 

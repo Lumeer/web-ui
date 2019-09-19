@@ -567,6 +567,32 @@
           <context context-type="sourcefile">app/shared/picker/icon-color/color/color-picker.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
+      </trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
+        <source>Sequence Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.list.sequenceValue" datatype="html">
+        <source>Counter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.list.createNew.info" datatype="html">
+        <source>
+            To create a new sequence, just use its name in the sequence block in a function or a rule.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="sequence.item.remove.button.title" datatype="html">
+        <source>Remove sequence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/sequences/sequence-item/sequence-item.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.settings.back" datatype="html">
         <source>Back</source>
         <context-group purpose="location">
@@ -2106,13 +2132,27 @@
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.format.types" datatype="html">
+        <source>
+        <x id="ICU" equiv-text="{format, select, DD {...} DMS {...}}"/>
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="cbb3ddba725d9dc19476c4ee1ae23fa7cc861185" datatype="html">
+        <source>{VAR_SELECT, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
       </trans-unit><trans-unit id="constraint.coordinates.precision.label" datatype="html">
         <source>
       Precision
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
         <source>
@@ -2120,13 +2160,13 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="c67cdd21e868a43fb776065d8ea04cd16206ae09" datatype="html">
         <source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.coordinates.precisions.dms" datatype="html">
         <source>
@@ -2134,13 +2174,13 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="908215aa52ade63a923b43a7d391d0584918aa87" datatype="html">
         <source>{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.address.description" datatype="html">
         <source>
@@ -2959,6 +2999,12 @@
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
+      </trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
+        <source>Sequences</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">
         <source>Invoicing Contact</source>
         <context-group purpose="location">
@@ -3433,6 +3479,18 @@
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
+      </trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
+        <source>The sequences listed here can be used in Table rules and Attribute functions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
+        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> palette in the function/rule editor.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="page.title" datatype="html">
         <source>Lumeer - Visual Project&amp;Team Management</source>
@@ -3542,6 +3600,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -3594,6 +3656,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/dialog/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
@@ -4339,6 +4405,27 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="sequences.get.fail" datatype="html">
+        <source>Could not read sequences</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sequences.update.fail" datatype="html">
+        <source>Could not update sequence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sequence.delete.fail" datatype="html">
+        <source>Could not delete sequence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="userNotifications.get.fail" datatype="html">
         <source>Could not read notifications</source>
         <context-group purpose="location">
@@ -4701,6 +4788,20 @@
         <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/select-item-with-constraint-formatter.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sequence.item.delete.message" datatype="html">
+        <source>Do you want to permanently remove this sequence?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sequence.item.delete.title" datatype="html">
+        <source>Remove sequence?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
