@@ -25,7 +25,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: '[sequence-item]',
   templateUrl: './sequence-item.component.html',
-  styleUrls: ['./sequence-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SequenceItemComponent {

@@ -12,3 +12,7 @@ cypress/screenshots/
 
 .env.json
 environment.ts
+
+.classpath
+.project
+.settings/

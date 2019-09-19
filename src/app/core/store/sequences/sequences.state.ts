@@ -26,18 +26,18 @@ export interface SequencesState extends EntityState<Sequence> {
   loaded: boolean;
 }
 
-export const SequencesAdapter = createEntityAdapter<Sequence>({
+export const sequencesAdapter = createEntityAdapter<Sequence>({
   selectId: sequence => sequence.id,
 });
 
-export const initialSequencesState: SequencesState = SequencesAdapter.getInitialState({
+export const initialSequencesState: SequencesState = sequencesAdapter.getInitialState({
   loaded: false,
 });
 
 export const selectSequencesState = (state: AppState) => state.sequences;
 export const selectAllSequences = createSelector(
   selectSequencesState,
-  SequencesAdapter.getSelectors().selectAll
+  sequencesAdapter.getSelectors().selectAll
 );
 
 export const selectAllSequencesSorted = createSelector(

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialSequencesState, SequencesAdapter, SequencesState} from './sequences.state';
+import {initialSequencesState, sequencesAdapter, SequencesState} from './sequences.state';
 import {SequencesAction, SequencesActionType} from './sequences.action';
 
 export function sequencesReducer(
@@ -27,13 +27,13 @@ export function sequencesReducer(
   switch (action.type) {
     case SequencesActionType.GET_SUCCESS:
       return {
-        ...SequencesAdapter.upsertMany(action.payload.sequences, state),
+        ...sequencesAdapter.upsertMany(action.payload.sequences, state),
         loaded: true,
       };
     case SequencesActionType.UPDATE_SUCCESS:
-      return SequencesAdapter.upsertOne(action.payload.sequence, state);
+      return sequencesAdapter.upsertOne(action.payload.sequence, state);
     case SequencesActionType.DELETE_SUCCESS:
-      return SequencesAdapter.removeOne(action.payload.id, state);
+      return sequencesAdapter.removeOne(action.payload.id, state);
     default:
       return state;
   }
