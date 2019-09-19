@@ -70,6 +70,8 @@ import {videosReducer} from './videos/videos.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
 import {searchesReducer} from './searches/searches.reducer';
+import {SequencesEffects} from './sequences/sequences.effects';
+import {sequencesReducer} from './sequences/sequences.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -98,6 +100,7 @@ const reducers: ActionReducerMap<AppState> = {
   ganttCharts: ganttChartsReducer,
   kanbans: kanbansReducer,
   searches: searchesReducer,
+  sequences: sequencesReducer,
 };
 
 const effects = [
@@ -122,6 +125,7 @@ const effects = [
   ViewsEffects,
   VideosEffects,
   UserNotificationsEffects,
+  SequencesEffects,
 ];
 
 @NgModule({
