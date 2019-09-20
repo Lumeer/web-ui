@@ -32,13 +32,7 @@ import {
 import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {
-  decimalUserToStore,
-  filterNumber,
-  formatNumberDataValue,
-  getNumberSaveValue,
-  isNumberValid,
-} from '../../utils/data.utils';
+import {formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'number-data-input',
