@@ -1,0 +1,27 @@
+<modal-wrapper
+  [type]="dialogType.Primary"
+  (close)="hideDialog()"
+  [showSubmit]="false"
+  [showHeader]="false"
+  (submit)="hideDialog()">
+
+  <div class="body p-3">
+        <document-detail *ngIf="collection && document"
+                         [collection]="collection"
+                         [document]="document"
+                         [query]="query$ | async"
+                         [permissions]="collection | collectionPermissions">
+        </document-detail>
+        <links-list
+          *ngIf="collection && document"
+          [document]="document"
+          [collection]="collection"
+          (documentSelect)="selectCollectionAndDocument($event)">
+        </links-list>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.close">Close</span>
+  </span>
+
+</modal-wrapper>

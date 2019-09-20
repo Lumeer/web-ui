@@ -55,6 +55,7 @@ import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
 import {SequenceListComponent} from './sequences/sequence-list/sequence-list.component';
 import {SequencesModule} from './sequences/sequences.module';
+import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
 
 @NgModule({
   imports: [
@@ -95,6 +96,7 @@ import {SequencesModule} from './sequences/sequences.module';
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
     TourComponent,
+    DetailDialogComponent,
   ],
   exports: [
     CommonModule,
@@ -133,6 +135,8 @@ import {SequencesModule} from './sequences/sequences.module';
     DropdownModule,
     PickerModule,
     SequencesModule,
+    DetailDialogComponent,
   ],
+  entryComponents: [DetailDialogComponent],
 })
 export class SharedModule {}

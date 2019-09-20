@@ -28,7 +28,7 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, first, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View, ViewConfig} from '../../../core/store/views/view';
@@ -47,6 +47,11 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
 import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
+import {BsModalService} from 'ngx-bootstrap';
+import {ChooseLinkDocumentModalComponent} from '../kanban/modal/choose-link-document/choose-link-document-modal.component';
+import {DetailDialogComponent} from '../../../shared/detail-dialog/detail-dialog.component';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'calendar',
@@ -73,7 +78,8 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
     private dialogService: DialogService,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private modalService: BsModalService
   ) {
     this.durationUnitsMap = translationService.createDurationUnitsMap();
   }
@@ -167,8 +173,16 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.dialogService.openCalendarEventDialog(this.calendarId, time);
   }
 
-  public onUpdateEvent(data: {documentId: string; stemIndex: number}) {
-    this.dialogService.openCalendarEventDialog(this.calendarId, 0, data.documentId, data.stemIndex);
+  public onUpdateEvent(data: {documentId: string; collectionId: string; stemIndex: number}) {
+    combineLatest([
+      this.store$.pipe(select(selectDocumentById(data.documentId))),
+      this.store$.pipe(select(selectCollectionById(data.collectionId))),
+    ])
+      .pipe(first())
+      .subscribe(([document, collection]) => {
+        const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
+        this.modalService.show(DetailDialogComponent, config);
+      });
   }
 
   public onSidebarToggle() {

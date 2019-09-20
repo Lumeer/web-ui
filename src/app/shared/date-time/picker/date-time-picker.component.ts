@@ -105,6 +105,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     if (changes.options && this.options) {
       this.datePickerConfig = {
         containerClass: 'box-shadow-none theme-default',
+        customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
       };
     }

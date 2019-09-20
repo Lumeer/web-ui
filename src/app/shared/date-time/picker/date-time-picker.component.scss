@@ -1,0 +1,12 @@
+@import '../../../../styles/variables';
+
+::ng-deep span.date-time-today {
+  border: 2px solid $danger;
+  background-color: $danger;
+  color: white;
+  box-sizing: content-box;
+
+  &:hover {
+    color: $primary;
+  }
+}
