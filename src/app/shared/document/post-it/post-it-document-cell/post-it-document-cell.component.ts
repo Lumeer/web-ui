@@ -25,15 +25,24 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {DataCursor} from '../../../data-input/data-cursor';
 import {SelectionHelper} from '../util/selection-helper';
 import {KeyCode} from '../../../key-code';
-import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
+import {Constraint, ConstraintType, DurationUnitsMap} from '../../../../core/model/data/constraint';
+import {formatDataValue} from '../../../utils/data.utils';
+import {TranslationService} from '../../../../core/service/translation.service';
+import {select, Store} from '@ngrx/store';
+import {selectAllUsers} from '../../../../core/store/users/users.state';
+import {AppState} from '../../../../core/store/app.state';
+import {first} from 'rxjs/operators';
+import {User} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -41,7 +50,7 @@ import {Constraint, ConstraintType} from '../../../../core/model/data/constraint
   styleUrls: ['./post-it-document-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItDocumentCellComponent implements OnChanges {
+export class PostItDocumentCellComponent implements OnChanges, OnInit, OnDestroy {
   @Input() public perspectiveId: string;
   @Input() public suggestionListId: string;
   @Input() public additionalClasses: string;
@@ -73,6 +82,14 @@ export class PostItDocumentCellComponent implements OnChanges {
   public constraintTypeBoolean = ConstraintType.Boolean;
 
   public editing$ = new BehaviorSubject(false);
+
+  private readonly durationUnitsMap: DurationUnitsMap;
+  private users: User[];
+  private subscriptions = new Subscription();
+
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   @HostListener('focus', ['$event'])
   public hostFocus(event: FocusEvent) {
@@ -132,10 +149,25 @@ export class PostItDocumentCellComponent implements OnChanges {
     }
   }
 
+  public ngOnInit(): void {
+    this.subscriptions.add(this.store$.pipe(select(selectAllUsers)).subscribe(users => (this.users = users)));
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     this.id = `${this.perspectiveId}#${this.key}#${this.column}#${this.row}`;
     this.tabindex = this.index * 1000 + this.row * 2 + this.column;
-    this.title = this.model;
+    if (this.constraint) {
+      this.title = formatDataValue(this.model, this.constraint, {
+        users: this.users,
+        durationUnitsMap: this.durationUnitsMap,
+      });
+    } else {
+      this.title = this.model;
+    }
   }
 
   public onRemove() {
