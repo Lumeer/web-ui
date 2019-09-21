@@ -20,6 +20,7 @@
 import {Constraint, ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {formatDataValue} from '../data.utils';
 import {generateId} from '../resource.utils';
+import {FileTypeIconPipe} from '../../data-input/files/file-type-icon.pipe';
 
 export function createDataValueHtml(
   value: any,
@@ -37,6 +38,8 @@ export function createDataValueHtml(
       return createDataColorValueHtml(formattedValue, className);
     case ConstraintType.Boolean:
       return createDataBooleanValueHtml(formattedValue, className);
+    case ConstraintType.Files:
+      return createDataFilesValueHtml(formattedValue, className);
     default:
       return createDataAnyValueHtml(formattedValue, className);
   }
@@ -64,4 +67,20 @@ function createDataBooleanValueHtml(value: boolean, className?: string) {
              style="cursor: unset;"
              class="custom-control-label">
           </label></div>`;
+}
+
+function createDataFilesValueHtml(value: string, className?: string) {
+  const fileTypeIconPipe = new FileTypeIconPipe();
+  let result = `<span class="${className || ''}">`;
+
+  value
+    .split(',')
+    .map(s => s.trim())
+    .forEach(file => {
+      result += `<i title="${file}" class="far fa-fw ${fileTypeIconPipe.transform(file)}"></i>`;
+    });
+
+  result += `</span>`;
+
+  return result;
 }
