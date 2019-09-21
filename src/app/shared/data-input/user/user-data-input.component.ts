@@ -92,7 +92,7 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
 
   public name: string;
 
-  private preventSave: boolean;
+  private preventSave: boolean = false;
   private setFocus: boolean;
   private triggerInput: boolean;
 
@@ -102,6 +102,7 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.preventSave = false;
       this.setFocus = true;
     }
     if (changes.value) {
@@ -168,10 +169,14 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
+      this.dataBlur.emit();
     } else {
-      this.saveValue();
+      // needs to be executed after parent event handlers
+      setTimeout(() => {
+        this.saveValue();
+        this.dataBlur.emit();
+      }, 250);
     }
-    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])

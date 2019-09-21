@@ -29,11 +29,8 @@ import {selectAllUsers, selectUserById} from '../../../core/store/users/users.st
 import {filter, first, map} from 'rxjs/operators';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
-import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/service/perspective.service';
-import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
-import {isSingleCollectionQuery} from '../../../core/store/navigation/query/query.util';
 import {DialogService} from '../../../dialog/dialog.service';
 import {DocumentUi} from '../../../core/ui/document-ui';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -44,6 +41,7 @@ import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {User} from '../../../core/store/users/user';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {TranslationService} from '../../../core/service/translation.service';
 
 @Component({
   selector: 'document-detail',
@@ -77,8 +75,11 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspective: PerspectiveService,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private translationService: TranslationService
+  ) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectAllUsers));

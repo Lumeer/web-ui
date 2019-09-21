@@ -106,7 +106,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public newEvent = new EventEmitter<number>();
 
   @Output()
-  public updateEvent = new EventEmitter<{documentId: string; stemIndex: number}>();
+  public updateEvent = new EventEmitter<{documentId: string; collectionId: string; stemIndex: number}>();
 
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());

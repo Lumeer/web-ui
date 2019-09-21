@@ -4,6 +4,7 @@ node_modules/
 engine/
 cypress/videos/
 cypress/screenshots/
+bin/
 
 .vscode/
 .idea/

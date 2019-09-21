@@ -120,6 +120,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.preventSave = false;
       setTimeout(() => {
         if (this.addressInput) {
           HtmlModifier.setCursorAtTextContentEnd(this.addressInput.nativeElement);
@@ -147,10 +148,20 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
+      this.blurCleanup();
     } else {
-      this.saveValue(this.addressInput);
+      const value = this.addressInput.nativeElement.value;
+      setTimeout(() => {
+        if (!this.preventSave) {
+          this.preventSave = true;
+          this.saveValue(value);
+        }
+        this.blurCleanup();
+      }, 250);
     }
+  }
 
+  private blurCleanup() {
     if (this.dropdown) {
       this.dropdown.close();
     }
@@ -160,6 +171,11 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   }
 
   public onSelectOption(option: DropdownOption) {
+    if (this.preventSave) {
+      return;
+    }
+
+    this.preventSave = true;
     this.save.emit(option.value);
   }
 
@@ -173,11 +189,12 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         const selectedOption = this.dropdown.getActiveOption();
         this.preventSave = true;
         // needs to be executed after parent event handlers
+        const value = input.nativeElement.value;
         setTimeout(() => {
           if (selectedOption) {
             this.save.emit(selectedOption.value);
           } else {
-            input && this.saveValue(input);
+            input && this.saveValue(value);
           }
         });
         return;
@@ -191,7 +208,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     this.dropdown.onKeyDown(event);
   }
 
-  private saveValue(input: ElementRef) {
-    this.save.emit(input.nativeElement.value);
+  private saveValue(value: string) {
+    this.save.emit(value);
   }
 }

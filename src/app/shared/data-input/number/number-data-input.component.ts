@@ -32,7 +32,7 @@ import {
 import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
-import {decimalUserToStore, formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';
+import {formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'number-data-input',
@@ -82,7 +82,7 @@ export class NumberDataInputComponent implements OnChanges {
       setTimeout(() => {
         if (this.value && !this.numberInput.nativeElement.value) {
           this.refreshValid(this.value);
-          this.numberInput.nativeElement.value = decimalUserToStore(
+          this.numberInput.nativeElement.value = this.transformValue(
             formatNumberDataValue(this.value, this.constraintConfig)
           );
         }

@@ -26,6 +26,8 @@ import {GeoCodingApiService} from '../../rest/geocoding-api.service';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
+import {GeocodingConverter} from './geocoding.converter';
+import fromDto = GeocodingConverter.fromDto;
 
 @Injectable()
 export class GeocodingEffects {
@@ -72,7 +74,7 @@ export class GeocodingEffects {
             mergeMap(location => [
               new GeocodingAction.GetLocationSuccess({
                 coordinates,
-                location,
+                location: GeocodingConverter.fromDto(location),
               }),
               ...createCallbackActions(onSuccess, location),
             ]),
@@ -98,7 +100,12 @@ export class GeocodingEffects {
 
           return this.geocodingApiService
             .findLocations(query)
-            .pipe(map(locations => new GeocodingAction.GetLocationsSuccess({query, locations})));
+            .pipe(
+              map(
+                locations =>
+                  new GeocodingAction.GetLocationsSuccess({query, locations: GeocodingConverter.fromDtos(locations)})
+              )
+            );
         })
       );
     })

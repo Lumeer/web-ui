@@ -30,6 +30,8 @@ export interface AddressDto {
   postalCode: string;
   state: string;
   street: string;
+  cityDistrict: string;
+  suburb: string;
 }
 
 export interface CoordinatesDto {
