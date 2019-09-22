@@ -22,7 +22,7 @@ import {TableCursor} from '../../table-cursor';
 import {TableModel} from '../../table.model';
 
 export function createTableCursorFromViewCursor(viewCursor: ViewCursor, table: TableModel): TableCursor {
-  if (!viewCursor) {
+  if (!viewCursor || !table) {
     return null;
   }
 
