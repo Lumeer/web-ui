@@ -70,15 +70,18 @@ function createDataBooleanValueHtml(value: boolean, className?: string) {
 }
 
 function createDataFilesValueHtml(value: string, className?: string) {
-  const fileTypeIconPipe = new FileTypeIconPipe();
   let result = `<span class="${className || ''}">`;
 
-  value
-    .split(',')
-    .map(s => s.trim())
-    .forEach(file => {
-      result += `<i title="${file}" class="far fa-fw ${fileTypeIconPipe.transform(file)}"></i>`;
-    });
+  if (value) {
+    const fileTypeIconPipe = new FileTypeIconPipe();
+
+    value
+      .split(',')
+      .map(s => s.trim())
+      .forEach(file => {
+        result += `<i title="${file}" class="far fa-fw ${fileTypeIconPipe.transform(file)}"></i>`;
+      });
+  }
 
   result += `</span>`;
 
