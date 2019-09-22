@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
@@ -223,23 +223,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     this.unsubscribeAll();
-    this.updateCursor();
   }
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
     this.dataSubscription.unsubscribe();
     this.collectionSubscription.unsubscribe();
-  }
-
-  private updateCursor() {
-    if (this.selectedCollection && this.selectedDocument) {
-      this.store$.dispatch(
-        new NavigationAction.SetViewCursor({
-          cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id},
-        })
-      );
-    }
   }
 
   public onNewDocument() {

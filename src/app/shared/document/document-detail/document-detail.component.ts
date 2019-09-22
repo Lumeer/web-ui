@@ -40,8 +40,10 @@ import {RouterAction} from '../../../core/store/router/router.action';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {User} from '../../../core/store/users/user';
-import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {TranslationService} from '../../../core/service/translation.service';
+import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 
 @Component({
   selector: 'document-detail',
@@ -63,6 +65,7 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   public permissions: AllowedPermissions;
 
   public readonly durationUnitsMap: DurationUnitsMap;
+  public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public users$: Observable<User[]>;
 
   public state: DocumentUi;
@@ -74,7 +77,7 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
-    private perspective: PerspectiveService,
+    private perspectiveService: PerspectiveService,
     private dialogService: DialogService,
     private translationService: TranslationService
   ) {
@@ -206,5 +209,12 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
           })
         );
       });
+  }
+
+  public onSwitchToTable() {
+    if (this.collection && this.document) {
+      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
+      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
+    }
   }
 }

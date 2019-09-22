@@ -97,6 +97,12 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(selected => this.emit(selected));
+
+    this.store$.dispatch(
+      new NavigationAction.SetViewCursor({
+        cursor: {collectionId: collection.id, documentId: document && document.id},
+      })
+    );
   }
 
   private emit(selected: {collection: Collection; document?: DocumentModel}) {
