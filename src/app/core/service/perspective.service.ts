@@ -19,20 +19,21 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {filter, take} from 'rxjs/operators';
+import {select, Store} from '@ngrx/store';
+import {take} from 'rxjs/operators';
 import {Perspective} from '../../view/perspectives/perspective';
 import {AppState} from '../store/app.state';
 import {Collection} from '../store/collections/collection';
 import {DocumentModel} from '../store/documents/document.model';
-import {NavigationAction} from '../store/navigation/navigation.action';
-import {selectViewCursor, selectWorkspace} from '../store/navigation/navigation.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {QueryParam} from '../store/navigation/query-param';
+import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PerspectiveService {
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router) {}
 
   public switchPerspective(
     perspective: Perspective,
@@ -41,39 +42,32 @@ export class PerspectiveService {
     queryToSet?: string
   ): void {
     if (collection && document) {
-      // do we have any document selected?
-      // update cursor
-      this.store.dispatch(
-        new NavigationAction.SetViewCursor({
-          cursor: {collectionId: collection.id, documentId: document.id},
-        })
-      );
+      const cursor: ViewCursor = {collectionId: collection.id, documentId: document.id};
+      const cursorString = convertViewCursorToString(cursor);
 
-      // wait for the cursor to get updated
-      this.store
-        .select(selectViewCursor)
-        .pipe(
-          filter(cursor => cursor && cursor.collectionId === collection.id && cursor.documentId === document.id),
-          take(1)
-        )
-        .subscribe(cursor => {
-          this.navigateToPerspective(perspective, queryToSet);
-        });
+      this.navigateToPerspective(perspective, cursorString, queryToSet);
     } else {
-      this.navigateToPerspective(perspective, queryToSet);
+      this.navigateToPerspective(perspective, null, queryToSet);
     }
   }
 
-  private navigateToPerspective(perspective: Perspective, queryToSet?: string): void {
-    this.store
-      .select(selectWorkspace)
-      .pipe(take(1))
+  private navigateToPerspective(perspective: Perspective, cursor: string, queryToSet?: string) {
+    this.store$
+      .pipe(
+        select(selectWorkspace),
+        take(1)
+      )
       .subscribe(workspace => {
         const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
         viewPath.push(perspective.toString());
 
         if (queryToSet) {
-          this.router.navigate(viewPath, {queryParams: {q: queryToSet}});
+          this.router.navigate(viewPath, {
+            queryParams: {
+              [QueryParam.Query]: queryToSet,
+              [QueryParam.ViewCursor]: cursor,
+            },
+          });
         } else {
           this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
         }
