@@ -5,6 +5,7 @@
        [value]="value | textDataValue: constraintConfig"
        (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
+       [class.invalid-value]="!valid"
        data-test="text-data-input"
        type="text">
 
@@ -15,7 +16,8 @@
          [value]="value | textDataValue: constraintConfig"
          (blur)="onBlur()"
          (input)="onInput($event)"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
+         class="border-0 w-100 h-100 px-1"
+         [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
          data-test="text-data-input"
          type="text">
 </ng-template>
