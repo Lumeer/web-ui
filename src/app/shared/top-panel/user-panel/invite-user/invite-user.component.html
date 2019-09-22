@@ -1,4 +1,4 @@
-<div class="panel-item invite ml-2"
+<div class="panel-item invite ml-2 mr-1"
      *ngIf="((organization$ | async) | permissions:organizationType:'manage' | async) ||
             ((project$ | async) | permissions:projectType:'manage' | async)">
   <button *ngIf="!mobile; else mobileIcon"
