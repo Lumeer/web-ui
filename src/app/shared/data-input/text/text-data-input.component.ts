@@ -33,7 +33,7 @@ import {TextConstraintConfig} from '../../../core/model/data/constraint-config';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {KeyCode} from '../../key-code';
 import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
-import {formatTextDataValue} from '../../utils/data.utils';
+import {formatTextDataValue, isTextValid} from '../../utils/data.utils';
 
 @Component({
   selector: 'text-data-input',
@@ -75,6 +75,7 @@ export class TextDataInputComponent implements OnChanges {
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
+  public valid = true;
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -85,11 +86,15 @@ export class TextDataInputComponent implements OnChanges {
         input.nativeElement.focus();
       });
     }
+
+    this.refreshValid(this.value);
   }
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const value = this.transformValue(element.value);
+    this.refreshValid(element.value);
+
     this.valueChange.emit(value);
   }
 
@@ -100,6 +105,10 @@ export class TextDataInputComponent implements OnChanges {
       this.saveValue(this.textInput);
     }
     this.dataBlur.emit();
+  }
+
+  private refreshValid(value: any) {
+    this.valid = isTextValid(value, this.constraintConfig);
   }
 
   @HostListener('keydown', ['$event'])

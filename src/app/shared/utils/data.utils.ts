@@ -562,6 +562,23 @@ export function convertToBig(value: any): Big {
   }
 }
 
+export function isTextValid(value: any, config?: TextConstraintConfig): boolean {
+  if (!value) {
+    return true;
+  }
+
+  if (config) {
+    if (config.minLength && ('' + value).length < config.minLength) {
+      return false;
+    }
+    if (config.maxLength && ('' + value).length > config.maxLength) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function isNumberValid(value: any, config?: NumberConstraintConfig): boolean {
   if (!value) {
     return true;
