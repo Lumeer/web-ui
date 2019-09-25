@@ -15,7 +15,7 @@
         <source>Close</source><target state="final">Close</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/detail-dialog/detail-dialog.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target state="final">Help</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
@@ -88,13 +88,13 @@
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
         <source>Remove Record</source><target state="final">Remove Record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
         <source>Remove from favorites</source><target state="final">Remove from favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
         <source>Add to favorites</source><target state="final">Add to favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="document.detail.version" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="document.detail.version" datatype="html">
         <source>Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></source><target state="final">Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
@@ -103,13 +103,25 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
         <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></source><target state="final"><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
+        <source>Switch to Table perspective</source><target state="final">Switch to Table perspective</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
         <source>Add Row</source><target state="final">Add Row</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
         <source>Create New Record</source><target state="final">Create New Record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source><target state="final">{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
         <source>No records found!</source><target state="final">No records found!</target>
 
 
@@ -1596,13 +1608,13 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="document.button.remove" datatype="html">
         <source>Delete Record</source><target state="final">Delete Record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="document.button.edit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="document.button.edit" datatype="html">
         <source>Edit Record</source><target state="final">Edit Record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.document.favorite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
         <source>Number of users</source><target state="final">Number of users</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="organization.settings.projects.count" datatype="html">
@@ -4033,7 +4045,47 @@
       </trans-unit><trans-unit id="kanban.config.collection.attribute.empty" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.content.location.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.dueDate.empty" datatype="html">
+        <source>Select due date</source><target state="final">Select due date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.dueDate" datatype="html">
+        <source>Due date</source><target state="final">Due date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
+        <source>Select done state</source><target state="final">Select done state</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
+        <source>Done state</source><target state="final">Done state</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.dueHours.tag.pastDue" datatype="html">
+        <source>Past due</source><target state="final">Past due</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-due-hours-tag.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.dueHours.tag.dueSoon" datatype="html">
+        <source>Due soon</source><target state="final">Due soon</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-due-hours-tag.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.content.location.error" datatype="html">
         <source>I could not save the new location.</source><target state="final">I could not save the new location.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>

@@ -76,29 +76,35 @@
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
+      </trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
+        <source>Switch to Table perspective</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
       </trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
         <source>Remove from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
         <source>Add to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
         <source>Remove Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
         <source>Add Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit><trans-unit id="remove.row" datatype="html">
         <source>Remove Row</source>
@@ -218,19 +224,19 @@
         <source>Delete Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="document.button.edit" datatype="html">
         <source>Edit Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit><trans-unit id="collection.document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/post-it/post-it-document-header/post-it-document-header.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="icon-picker.select.icon" datatype="html">
         <source>2. Choose icon
@@ -536,6 +542,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
           <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/detail-dialog/detail-dialog.component.html</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/play-video/play-video.component.html</context>
@@ -2588,7 +2598,13 @@
         <source>Create New Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
         <source>Choose a record</source>
@@ -5163,6 +5179,52 @@
         <source>Select attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.config.collection.dueDate.empty" datatype="html">
+        <source>Select due date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.config.collection.dueDate" datatype="html">
+        <source>Due date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
+        <source>Select done state</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
+        <source>Done state</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.dueHours.tag.pastDue" datatype="html">
+        <source>Past due</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-due-hours-tag.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.dueHours.tag.dueSoon" datatype="html">
+        <source>Due soon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-due-hours-tag.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

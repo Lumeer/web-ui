@@ -59,10 +59,6 @@ export class KanbanDueDateSelectItemsPipe implements PipeTransform {
       }
     }
 
-    /*const collectionIds = collectionIdsChainForStem(stem, linkTypes);
-    const index = collectionIds.indexOf(attribute.resourceId);
-    const collection = collections.find(c => c.id === attribute.resourceId);*/
-
     return [];
   }
 

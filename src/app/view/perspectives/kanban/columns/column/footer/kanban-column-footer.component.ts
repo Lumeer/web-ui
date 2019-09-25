@@ -50,6 +50,9 @@ export class KanbanColumnFooterComponent implements OnChanges {
   @Input()
   public resources: KanbanResourceCreate[];
 
+  @Input()
+  public count: number = 0;
+
   @Output()
   public selectResource = new EventEmitter<KanbanResourceCreate>();
 

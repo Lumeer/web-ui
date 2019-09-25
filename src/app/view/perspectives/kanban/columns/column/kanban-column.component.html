@@ -43,6 +43,7 @@
        *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
     <kanban-column-footer *ngIf="footerData.resources.length > 0"
                           [resources]="footerData.resources"
+                          [count]="cards?.length"
                           (selectResource)="createObjectInResource($event)">
     </kanban-column-footer>
   </div>
