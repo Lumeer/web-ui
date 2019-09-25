@@ -44,6 +44,10 @@ import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 import {ModalWrapperModule} from '../../../shared/modal/wrapper/modal-wrapper.module';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
+import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items.pipe';
+import {KanbanDueHoursTagPipe} from './pipes/kanban-due-hours-tag.pipe';
+import {KanbanColumnTitlesPipe} from './pipes/kanban-column-titles.pipe';
+import {KanbanSelectDataItemsPipe} from './pipes/kanban-select-data-items.pipe';
 
 @NgModule({
   declarations: [
@@ -61,6 +65,10 @@ import {PresenterModule} from '../../../shared/presenter/presenter.module';
     KanbanSelectedItemPipe,
     KanbanRestrictedSelectItemIdsPipe,
     ChooseLinkDocumentModalComponent,
+    KanbanDueDateSelectItemsPipe,
+    KanbanDueHoursTagPipe,
+    KanbanColumnTitlesPipe,
+    KanbanSelectDataItemsPipe,
   ],
   imports: [
     SharedModule,

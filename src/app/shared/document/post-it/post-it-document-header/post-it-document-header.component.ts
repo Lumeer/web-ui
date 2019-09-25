@@ -37,6 +37,10 @@ export class PostItDocumentHeaderComponent {
 
   @Input() public directRead: boolean;
 
+  @Input() public tag: string;
+
+  @Input() public tagColor: string;
+
   @Output() public remove = new EventEmitter();
 
   @Output() public edit = new EventEmitter();

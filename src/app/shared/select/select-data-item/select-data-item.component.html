@@ -1,0 +1,50 @@
+<div class="input-group flex-nowrap"
+     #selectItemParent>
+  <div *ngIf="placeholderIcon || placeholderText"
+       class="input-group-prepend">
+    <span [style.color]="placeholderColor"
+          [title]="placeholderTitle"
+          class="input-group-text">
+      <i *ngIf="placeholderIcon"
+         [title]="placeholderTitle"
+         class="fa-fw {{placeholderIcon}}"></i>
+      {{placeholderText}}
+    </span>
+  </div>
+
+  <button class="btn btn-outline-gray-600 dropdown-toggle flex-grow-1 d-flex align-items-center {{buttonClasses}}"
+          [class.sharp-top-left]="placeholderIcon || placeholderText"
+          [class.sharp-bottom-left]="placeholderIcon || placeholderText"
+          [disabled]="disabled"
+          [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
+          (click)="onDropdownClick()"
+          (keydown)="onKeyDown($event)">
+
+    <span class="flex-grow-1 text-left empty-text text-truncate"
+          *ngIf="!(selectedId | getSelectDataItem:items)"
+          [title]="emptyValue">{{emptyValue}}</span>
+
+    <ng-container *ngIf="selectedId | getSelectDataItem:items as selectedItem">
+
+      <data-input
+        [constraint]="selectedItem.constraint"
+        [focus]="true"
+        [readonly]="true"
+        [value]="selectedItem.value"
+        class="ml-2 text-nowrap flex-grow-1 text-left text-truncate">
+      </data-input>
+      <i *ngIf="removable && !disabled"
+         class="fa-fw fal fa-times mx-1 clear"
+         (click)="onRemove($event)"></i>
+    </ng-container>
+  </button>
+
+  <data-options-dropdown [closeOnClickOutside]="true"
+                    [fitParent]="fitParent"
+                    [options]="dropdownOptions"
+                    [origin]="selectItemParent"
+                    [selectedValue]="selectedId"
+                    (selectOption)="onSelect($event)">
+  </data-options-dropdown>
+
+</div>

@@ -53,9 +53,9 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
 import {ModalModule} from './modal/modal.module';
 import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
-import {SequenceListComponent} from './sequences/sequence-list/sequence-list.component';
 import {SequencesModule} from './sequences/sequences.module';
 import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
+import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 
 @NgModule({
   imports: [
@@ -86,6 +86,7 @@ import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
     BrowserWarningModule,
     PresenterModule,
     DropdownModule,
+    DataDropdownModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -136,6 +137,7 @@ import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
     PickerModule,
     SequencesModule,
     DetailDialogComponent,
+    DataDropdownModule,
   ],
   entryComponents: [DetailDialogComponent],
 })

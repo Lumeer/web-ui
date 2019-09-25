@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -27,6 +27,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'kanban-collection-config',
@@ -46,18 +47,46 @@ export class KanbanStemConfigComponent {
   @Input()
   public stem: QueryStem;
 
+  @Input()
+  public columnTitles: string[];
+
   @Output()
   public configChange = new EventEmitter<KanbanStemConfig>();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly emptyValueString: string;
+  public readonly dueDateEmptyValueString: string;
+  public readonly dueDateString: string;
+  public readonly doneAttributeEmptyValueString: string;
+  public readonly doneAttributeString: string;
+  public readonly doneValueString: string;
 
   constructor(private i18n: I18n) {
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
+    this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
+    this.dueDateString = i18n({id: 'kanban.config.collection.dueDate', value: 'Due date'});
+    this.doneAttributeEmptyValueString = i18n({
+      id: 'kanban.config.collection.doneAttribute.empty',
+      value: 'Select done state',
+    });
+    this.doneAttributeString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done state'});
+    this.doneValueString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done value'});
   }
 
   public onAttributeRemoved() {
-    this.configChange.emit({attribute: null});
+    this.configChange.emit({...this.config, attribute: null});
+  }
+
+  public onDueDateRemoved() {
+    this.configChange.emit({...this.config, dueDate: null});
+  }
+
+  public onDoneColumnRemoved(index: number) {
+    const newTitles = [
+      ...(this.config.doneColumnTitles.slice(0, index) || []),
+      ...(this.config.doneColumnTitles.slice(index + 1) || []),
+    ];
+    this.configChange.emit({...this.config, doneColumnTitles: newTitles});
   }
 
   public onConstraintSelected(constraint: Constraint) {
@@ -66,13 +95,38 @@ export class KanbanStemConfigComponent {
   }
 
   public onAttributeSelected(selectId: SelectItemWithConstraintId) {
+    this.configElementSelected(selectId, 'attribute');
+  }
+
+  public onDueDateSelected(selectId: SelectItemWithConstraintId) {
+    this.configElementSelected(selectId, 'dueDate');
+  }
+
+  public onDoneColumnSelected(selectId: string, index: number) {
+    if (index === -1) {
+      const newTitles = [...(this.config.doneColumnTitles || []), selectId];
+      this.configChange.emit({...this.config, doneColumnTitles: newTitles});
+    } else {
+      this.configChange.emit({
+        ...this.config,
+        doneColumnTitles: this.config.doneColumnTitles.splice(index, 1, selectId),
+      });
+    }
+  }
+
+  private configElementSelected(selectId: SelectItemWithConstraintId, element: string) {
     const {attributeId, resourceIndex} = selectId;
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[resourceIndex];
+    const constraint = findAttributeConstraint(resource.attributes, attributeId);
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
-      const attribute = {attributeId, resourceIndex, resourceType, resourceId: resource.id};
-      this.configChange.emit({...this.config, attribute});
+      const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id, constraint};
+
+      const config = {...this.config, doneColumnTitles: []};
+      config[element] = selection;
+
+      this.configChange.emit(config);
     }
   }
 }

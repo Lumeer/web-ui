@@ -42,10 +42,12 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 export interface KanbanCard {
   dataResource: DataResource;
   attributeId: string;
+  dueHours?: number;
 }
 
 @Component({
@@ -75,6 +77,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
 
   @Input()
   public canManageConfig: boolean;

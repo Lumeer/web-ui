@@ -1,0 +1,13 @@
+@import '../../../../styles/variables';
+
+.clear {
+  color: $primary;
+
+  &:hover {
+    color: $primary-hover;
+  }
+}
+
+.empty-text {
+  color: $text-light;
+}
