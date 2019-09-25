@@ -1,0 +1,10 @@
+a.active,
+a:active {
+  color: white !important;
+
+  ::ng-deep input,
+  textarea,
+  select {
+    color: white !important;
+  }
+}

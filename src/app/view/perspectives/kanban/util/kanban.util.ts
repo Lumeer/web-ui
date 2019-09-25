@@ -17,7 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
+import {
+  KanbanAttribute,
+  KanbanColumn,
+  KanbanConfig,
+  KanbanConfigVersion,
+  KanbanStemConfig,
+} from '../../../../core/store/kanbans/kanban';
 import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -30,6 +36,7 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
+import {AttributesResource} from '../../../../core/model/resource';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
@@ -118,34 +125,49 @@ function checkOrTransformKanbanStemConfig(
     return createDefaultKanbanStemConfig(stem);
   }
 
-  const kanbanAttribute = stemConfig.attribute;
+  const result = {attribute: null, stem, dueDate: null, doneColumnTitles: stemConfig.doneColumnTitles};
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-  const attributesResource = attributesResourcesOrder[kanbanAttribute.resourceIndex];
+
+  result.attribute = findKanbanAttribute(stemConfig.attribute, attributesResourcesOrder);
+
+  if (stemConfig.dueDate) {
+    result.dueDate = findKanbanAttribute(stemConfig.dueDate, attributesResourcesOrder);
+  }
+
+  return result;
+}
+
+function findKanbanAttribute(
+  attribute: KanbanAttribute,
+  attributesResourcesOrder: AttributesResource[]
+): KanbanAttribute {
+  const attributeResource = attributesResourcesOrder[attribute.resourceIndex];
+
   if (
-    attributesResource &&
-    attributesResource.id === kanbanAttribute.resourceId &&
-    getAttributesResourceType(attributesResource) === kanbanAttribute.resourceType
+    attributeResource &&
+    attributeResource.id === attribute.resourceId &&
+    getAttributesResourceType(attributeResource) === attribute.resourceType
   ) {
-    const attribute = findAttribute(attributesResource.attributes, kanbanAttribute.attributeId);
-    if (attribute) {
-      return {attribute: kanbanAttribute, stem};
+    const existingAttribute = findAttribute(attributeResource.attributes, attribute.attributeId);
+    if (existingAttribute) {
+      return {...attribute, constraint: existingAttribute.constraint};
     }
   } else {
-    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-      ar => ar.id === kanbanAttribute.resourceId && getAttributesResourceType(ar) === kanbanAttribute.resourceType
+    const newAttributeResourceIndex = attributesResourcesOrder.findIndex(
+      ar => ar.id === attribute.resourceId && getAttributesResourceType(ar) === attribute.resourceType
     );
-    if (newAttributesResourceIndex >= 0) {
-      const attribute = findAttribute(
-        attributesResourcesOrder[newAttributesResourceIndex].attributes,
-        kanbanAttribute.attributeId
+    if (newAttributeResourceIndex >= 0) {
+      const existingAttribute = findAttribute(
+        attributesResourcesOrder[newAttributeResourceIndex].attributes,
+        attribute.attributeId
       );
-      if (attribute) {
-        return {attribute: {...kanbanAttribute, resourceIndex: newAttributesResourceIndex}, stem};
+      if (existingAttribute) {
+        return {...attribute, resourceIndex: newAttributeResourceIndex, constraint: existingAttribute.constraint};
       }
     }
   }
 
-  return {attribute: null, stem};
+  return null;
 }
 
 function createDefaultConfig(query: Query): KanbanConfig {
@@ -155,9 +177,9 @@ function createDefaultConfig(query: Query): KanbanConfig {
 }
 
 export function createDefaultKanbanStemConfig(stem?: QueryStem): KanbanStemConfig {
-  return {attribute: null, stem};
+  return {attribute: null, stem, dueDate: null, doneColumnTitles: []};
 }
 
-export function kanbanConfigIsEmpty(kanbanCOnfig: KanbanConfig): boolean {
-  return kanbanCOnfig && kanbanCOnfig.stemsConfigs.filter(config => !!config.attribute).length === 0;
+export function kanbanConfigIsEmpty(kanbanConfig: KanbanConfig): boolean {
+  return kanbanConfig && kanbanConfig.stemsConfigs.filter(config => !!config.attribute).length === 0;
 }

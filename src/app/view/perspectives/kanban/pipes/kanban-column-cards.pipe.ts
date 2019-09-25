@@ -18,21 +18,33 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {KanbanCard} from '../columns/column/kanban-column.component';
+import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import * as moment from 'moment';
+import {Collection} from '../../../../core/store/collections/collection';
+import {ConstraintType} from '../../../../core/model/data/constraint';
+import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 
 @Pipe({
   name: 'kanbanColumnCards',
 })
 export class KanbanColumnCardsPipe implements PipeTransform {
-  public transform(column: KanbanColumn, documents: DocumentModel[]): KanbanCard[] {
+  public transform(
+    column: KanbanColumn,
+    documents: DocumentModel[],
+    collections: Collection[],
+    config: KanbanConfig
+  ): KanbanCard[] {
     if (!column || !column.resourcesOrder || column.resourcesOrder.length === 0) {
       return [];
     }
 
-    const documentMap = (documents || []).reduce((docsMap, doc) => {
+    const documentMap = (documents || []).reduce<Record<string, DocumentModel>>((docsMap, doc) => {
       docsMap[doc.id] = doc;
       return docsMap;
     }, {});
@@ -40,9 +52,46 @@ export class KanbanColumnCardsPipe implements PipeTransform {
     return column.resourcesOrder.reduce<KanbanCard[]>((arr, order) => {
       // for now we support only documents
       if (order.resourceType === AttributesResourceType.Collection && documentMap[order.id]) {
-        arr.push({attributeId: order.attributeId, dataResource: documentMap[order.id]});
+        const document = documentMap[order.id];
+        const stemsConfigs = (config && config.stemsConfigs) || [];
+
+        arr.push({
+          attributeId: order.attributeId,
+          dataResource: document,
+          dueHours:
+            isNotNullOrUndefined(order.stemIndex) &&
+            stemsConfigs[order.stemIndex] &&
+            stemsConfigs[order.stemIndex].doneColumnTitles &&
+            stemsConfigs[order.stemIndex].doneColumnTitles.indexOf(column.title) < 0 &&
+            this.getDueHours(document, collections, stemsConfigs[order.stemIndex]),
+        });
       }
       return arr;
     }, []);
+  }
+
+  private getDueHours(document: DocumentModel, collections: Collection[], stemConfig: KanbanStemConfig): number {
+    if (
+      stemConfig &&
+      stemConfig.dueDate &&
+      stemConfig.dueDate.attributeId &&
+      document.data[stemConfig.dueDate.attributeId]
+    ) {
+      const collection = collections.find(c => c.id === document.collectionId);
+
+      if (collection) {
+        let expectedFormat = null;
+        const constraint = findAttributeConstraint(collection.attributes, stemConfig.dueDate.attributeId);
+        if (constraint && constraint.type === ConstraintType.DateTime) {
+          expectedFormat = (constraint.config as DateTimeConstraintConfig).format;
+        }
+
+        const dueDate = parseDateTimeDataValue(document.data[stemConfig.dueDate.attributeId], expectedFormat);
+
+        return moment(dueDate).diff(moment(), 'hours');
+      }
+    }
+
+    return null;
   }
 }

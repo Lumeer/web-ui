@@ -7,6 +7,8 @@
     [directRead]="allowedPermissions.read"
     [favorite]="state.favorite$ | async"
     [initialized]="documentModel.id"
+    [tag]="tag"
+    [tagColor]="tagColor"
     (remove)="onRemove()"
     (toggleFavorite)="onToggleFavorite()"
     (edit)="onEdit()">

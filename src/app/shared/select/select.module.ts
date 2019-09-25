@@ -31,9 +31,22 @@ import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
 
 import {SelectItemComponent} from './select-item/select-item.component';
 import {PresenterModule} from '../presenter/presenter.module';
+import {SelectDataItemComponent} from './select-data-item/select-data-item.component';
+import {DataInputModule} from '../data-input/data-input.module';
+import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pipe';
+import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
 
 @NgModule({
-  imports: [CommonModule, PickerModule, PresenterModule, PipesModule, OverlayModule, DropdownModule],
+  imports: [
+    CommonModule,
+    PickerModule,
+    PresenterModule,
+    PipesModule,
+    OverlayModule,
+    DropdownModule,
+    DataInputModule,
+    DataDropdownModule,
+  ],
   declarations: [
     SelectItemComponent,
     GetSelectItemPipe,
@@ -41,8 +54,10 @@ import {PresenterModule} from '../presenter/presenter.module';
     SelectItemWithConstraint,
     SelectItemWithConstraintPipe,
     SelectItemWithConstraintConfigPipe,
+    SelectDataItemComponent,
+    GetSelectDataItemPipe,
   ],
   providers: [AreIdsEqualPipe],
-  exports: [SelectItemComponent, SelectItemWithConstraint],
+  exports: [SelectItemComponent, SelectItemWithConstraint, SelectDataItemComponent],
 })
 export class SelectModule {}

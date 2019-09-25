@@ -1,4 +1,10 @@
 <div class="d-inline-flex flex-nowrap w-100">
+  <span *ngIf="tag" class="d-flex align-items-center mr-2">
+    <span class="text-white badge badge-pill align-text-bottom tag" [style.background-color]="tagColor">
+      {{tag}}
+    </span>
+  </span>
+
   <span class="mr-1 d-flex overflow-hidden align-items-center"
         [style.color]="collection?.color"
         [title]="collection?.name">

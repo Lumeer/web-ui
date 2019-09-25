@@ -1,0 +1,23 @@
+<dropdown [closeOnClickOutside]="closeOnClickOutside"
+          [fitParent]="fitParent"
+          [origin]="origin"
+          [positions]="dropdownPositions">
+  <div *ngIf="options?.length > 0"
+       class="dropdown-menu show position-static w-100">
+    <a *ngFor="let option of options"
+       dropdownOption
+       [value]="option.value"
+       (click)="onOptionClick($event, option)"
+       class="dropdown-item text-truncate"
+       data-test="select-item-option"
+       tabindex>
+      <data-input
+          [constraint]="option.constraint"
+          [focus]="true"
+          [readonly]="true"
+          [value]="option.value"
+          class="text-nowrap">
+      </data-input>
+    </a>
+  </div>
+</dropdown>

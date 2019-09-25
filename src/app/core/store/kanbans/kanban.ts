@@ -52,11 +52,14 @@ export interface KanbanResource {
   id: string;
   attributeId?: string;
   resourceType: AttributesResourceType;
+  stemIndex?: number;
 }
 
 export interface KanbanStemConfig {
   stem?: QueryStem;
   attribute: KanbanAttribute;
+  dueDate?: KanbanAttribute;
+  doneColumnTitles?: string[];
 }
 
 export interface KanbanAttribute {

@@ -76,6 +76,15 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Input()
+  public dueHours: number;
+
+  @Input()
+  public tag: string;
+
+  @Input()
+  public tagColor: string;
+
   @Output()
   public remove = new EventEmitter();
 

@@ -87,7 +87,10 @@ export class KanbanConverter {
   ): {columnsMap: Record<string, KanbanColumnData>; otherResourcesOrder: KanbanResource[]} {
     const columnsMap: Record<string, KanbanColumnData> = {};
     const otherResourcesOrder: KanbanResource[] = [];
+    let stemIndex = -1;
     for (const stemConfig of stemsConfigs) {
+      stemIndex++;
+
       const collection =
         stemConfig.attribute && (collections || []).find(coll => coll.id === stemConfig.attribute.resourceId);
       const attribute = collection && findAttribute(collection.attributes, stemConfig.attribute.attributeId);
@@ -121,6 +124,7 @@ export class KanbanConverter {
             id: document.id,
             attributeId: attribute.id,
             resourceType: AttributesResourceType.Collection,
+            stemIndex,
           };
           if (columnsMap[stringValue]) {
             const columnData = columnsMap[stringValue];
@@ -146,7 +150,7 @@ export class KanbanConverter {
             };
           }
         } else {
-          otherResourcesOrder.push({id: document.id, resourceType: AttributesResourceType.Collection});
+          otherResourcesOrder.push({id: document.id, resourceType: AttributesResourceType.Collection, stemIndex});
         }
       }
     }
