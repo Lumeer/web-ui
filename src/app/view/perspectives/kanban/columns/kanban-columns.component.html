@@ -32,7 +32,7 @@
                    [collections]="collections"
                    [canManageConfig]="canManageConfig"
                    [permissions]="data.permissions"
-                   [cards]="config.otherColumn | kanbanColumnCards:documents"
+                   [cards]="config.otherColumn | kanbanColumnCards:documents:collections:config"
                    [query]="query"
                    (createResource)="createObjectInResource($event, config.otherColumn)"
                    (updateDocument)="onUpdateDocument($event)"
