@@ -47,11 +47,13 @@ import {isAttributeEditableWithQuery} from '../../../../../../../core/store/coll
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {generateDocumentDataByCollectionQuery} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
+import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
@@ -63,6 +65,7 @@ import {
   selectTablePart,
   selectTableRow,
 } from '../../../../../../../core/store/tables/tables.selector';
+import {selectCurrentUser} from '../../../../../../../core/store/users/users.state';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
@@ -691,16 +694,18 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             rowPath: this.cursor.rowPath.slice(0, -1),
           })
         )
-      )
+      ),
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCurrentUser))
     )
       .pipe(take(1))
-      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}]) =>
+      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, currentUser]) =>
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: {
               collectionId,
               correlationId,
-              data: {},
+              data: generateDocumentDataByCollectionQuery(collectionId, query, currentUser),
             },
             callback: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
