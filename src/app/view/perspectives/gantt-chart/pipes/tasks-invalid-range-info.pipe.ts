@@ -18,8 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GANTT_DATE_FORMAT, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
 import * as moment from 'moment';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 
 @Pipe({
   name: 'tasksInvalidRangeInfo',

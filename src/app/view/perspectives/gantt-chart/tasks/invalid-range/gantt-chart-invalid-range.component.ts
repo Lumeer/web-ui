@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 
 @Component({
   selector: 'gantt-chart-invalid-range',

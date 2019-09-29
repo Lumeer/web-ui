@@ -20,28 +20,59 @@
 import {AttributesResourceType} from '../../model/resource';
 import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartStemConfig} from './gantt-chart';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
-import {GanttChartCollectionConfigV0, GanttChartConfigV0} from './gantt-chart-old';
+import {
+  GanttChartCollectionConfigV0,
+  GanttChartConfigV0,
+  GanttChartConfigV1,
+  GanttChartStemConfigV1,
+} from './gantt-chart-old';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {
     return config;
   }
 
-  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
-  switch (version) {
-    case GanttChartConfigVersion.V1:
-      return convertGanttChartDtoToModelV1(config);
-    default:
-      return convertGanttChartDtoToModelV0(config);
+  let version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  let convertedConfig = config;
+
+  while (version !== GanttChartConfigVersion.V2) {
+    switch (version) {
+      case GanttChartConfigVersion.V1:
+        convertedConfig = convertGanttChartDtoToModelV1(convertedConfig);
+        break;
+      default:
+        convertedConfig = convertGanttChartDtoToModelV0(convertedConfig);
+        break;
+    }
+
+    version = isNotNullOrUndefined(convertedConfig.version) ? String(convertedConfig.version) : '';
   }
+
+  return convertedConfig;
 }
 
-function convertGanttChartDtoToModelV1(config: GanttChartConfig): GanttChartConfig {
-  return config;
+function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartConfig {
+  const stemsConfigs: GanttChartStemConfig[] = (config.stemsConfigs || []).map(stemConfig => {
+    const newConfig: GanttChartStemConfig = {};
+    Object.entries(stemConfig.barsProperties || {}).forEach(([key, bar]) => {
+      if (key !== 'category' && key !== 'subCategory') {
+        newConfig[key] = bar;
+      }
+    });
+
+    const category = stemConfig.barsProperties['category'];
+    const subCategory = stemConfig.barsProperties['subCategory'];
+
+    newConfig.categories = [category, subCategory].filter(cat => !!cat);
+    newConfig.stem = stemConfig.stem;
+    return newConfig;
+  });
+
+  return {...config, stemsConfigs, lockResize: true, version: GanttChartConfigVersion.V2};
 }
 
-function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartConfig {
-  const stemConfigsMap: Record<string, GanttChartStemConfig> = {};
+function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartConfigV1 {
+  const stemConfigsMap: Record<string, GanttChartStemConfigV1> = {};
   for (const [collectionId, collectionConfig] of Object.entries<GanttChartCollectionConfigV0>(
     config.collections || {}
   )) {

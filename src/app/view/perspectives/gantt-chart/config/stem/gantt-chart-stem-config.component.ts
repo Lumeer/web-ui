@@ -17,15 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {
-  GanttChartBarModel,
-  GanttChartBarProperty,
-  GanttChartBarPropertyOptional,
-  GanttChartBarPropertyRequired,
-  GanttChartStemConfig,
-} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
@@ -33,13 +27,14 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 import {Constraint} from '../../../../../core/model/data/constraint';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'gantt-chart-collection-config',
   templateUrl: './gantt-chart-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartStemConfigComponent {
+export class GanttChartStemConfigComponent implements OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -58,45 +53,53 @@ export class GanttChartStemConfigComponent {
   @Output()
   public configChange = new EventEmitter<GanttChartStemConfig>();
 
-  public readonly propertiesRequired = Object.values(GanttChartBarPropertyRequired);
-  public readonly propertiesOptionalSimple = [
-    GanttChartBarPropertyOptional.Progress,
-    GanttChartBarPropertyOptional.Color,
-  ];
-  public readonly propertiesOptionalConstraint = [
-    GanttChartBarPropertyOptional.Category,
-    GanttChartBarPropertyOptional.SubCategory,
-  ];
+  @Output()
+  public categoryRemove = new EventEmitter<number>();
+
+  public readonly properties = ['name', 'start', 'end', 'progress', 'color'];
+
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  public onBarConstraintPropertySelect(type: GanttChartBarProperty, itemId: SelectItemWithConstraintId) {
+  public categories: GanttChartBarModel[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.categories = [...(this.config.categories || []), null];
+  }
+
+  public onBarCategorySelect(itemId: SelectItemWithConstraintId, index: number) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[itemId.resourceIndex];
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
       const bar: GanttChartBarModel = {...itemId, resourceType, resourceId: resource.id};
-      this.onBarPropertySelect(type, bar);
+      const newConfig = deepObjectCopy(this.config);
+      newConfig.categories[index] = bar;
+      this.configChange.emit(newConfig);
     }
   }
 
-  public onBarConstraintSelect(type: GanttChartBarProperty, constraint: Constraint) {
-    const bar = this.config.barsProperties[type];
+  public onBarCategoryConstraintSelect(constraint: Constraint, index: number) {
+    const bar = this.config.categories[index];
     if (bar) {
       const newBar = {...bar, constraint};
-      this.onBarPropertySelect(type, newBar);
+      const newConfig: GanttChartStemConfig = deepObjectCopy(this.config);
+      newConfig.categories[index] = newBar;
+      this.configChange.emit(newConfig);
     }
   }
 
-  public onBarPropertySelect(type: GanttChartBarProperty, bar: GanttChartBarModel) {
-    const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig = {...this.config, barsProperties: bars};
+  public onBarCategoryRemoved(index: number) {
+    this.categoryRemove.emit(index);
+  }
+
+  public onBarPropertySelect(type: string, bar: GanttChartBarModel) {
+    const newConfig = {...this.config, [type]: bar};
     this.configChange.emit(newConfig);
   }
 
-  public onBarPropertyRemoved(type: GanttChartBarProperty) {
-    const bars = {...this.config.barsProperties};
-    delete bars[type];
-    const newConfig = {...this.config, barsProperties: bars};
+  public onBarPropertyRemoved(type: string) {
+    const newConfig = {...this.config};
+    delete newConfig[type];
     this.configChange.emit(newConfig);
   }
 }

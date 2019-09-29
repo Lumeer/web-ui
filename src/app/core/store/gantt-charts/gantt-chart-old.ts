@@ -17,7 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GanttChartBarModel, GanttChartMode} from './gantt-chart';
+import {GanttChartBarModel, GanttChartConfigVersion, GanttChartMode} from './gantt-chart';
+import {QueryStem} from '../navigation/query/query';
+
+/*
+ Version 1
+ */
+
+export interface GanttChartConfigV1 {
+  mode: GanttChartMode;
+  stemsConfigs: GanttChartStemConfigV1[];
+  version?: GanttChartConfigVersion;
+}
+
+export interface GanttChartStemConfigV1 {
+  stem?: QueryStem;
+  barsProperties: Record<string, GanttChartBarModel>;
+}
 
 /*
  Version 0

@@ -25,3 +25,18 @@ export interface AllowedPermissions {
   write?: boolean;
   manage?: boolean;
 }
+
+export function mergeAllowedPermissions(a1: AllowedPermissions, a2: AllowedPermissions): AllowedPermissions {
+  if (!a1 || !a2) {
+    return a1 || a2;
+  }
+
+  return {
+    manage: a1.manage && a2.manage,
+    manageWithView: a1.manageWithView && a2.manageWithView,
+    read: a1.read && a2.read,
+    readWithView: a1.readWithView && a2.readWithView,
+    write: a1.write && a2.write,
+    writeWithView: a1.writeWithView && a2.writeWithView,
+  };
+}

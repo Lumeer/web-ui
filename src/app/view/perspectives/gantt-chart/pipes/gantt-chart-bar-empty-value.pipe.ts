@@ -18,7 +18,6 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarProperty} from '../../../../core/store/gantt-charts/gantt-chart';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Pipe({
@@ -27,7 +26,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class GanttChartBarEmptyValuePipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
-  public transform(emptyProperty: GanttChartBarProperty): string {
+  public transform(emptyProperty: string): string {
     return this.i18n(
       {
         id: 'ganttChart.empty.placeholder',

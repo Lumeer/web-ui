@@ -30,7 +30,7 @@ import {
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttChartConfig, GanttChartMode, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {GanttChartConverter} from '../util/gantt-chart-converter';
@@ -45,6 +45,8 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
 import {GanttChartValueChange} from './visualization/gantt-chart-visualization.component';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
 
 interface Data {
   collections: Collection[];
@@ -108,7 +110,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private readonly converter: GanttChartConverter;
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
-  public tasks$: Observable<GanttChartTask[]>;
+  public data$: Observable<{options: GanttOptions; tasks: GanttChartTask[]}>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter) {
@@ -116,10 +118,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    this.tasks$ = this.subscribeTasks$();
+    this.data$ = this.subscribeTasks$();
   }
 
-  private subscribeTasks$(): Observable<GanttChartTask[]> {
+  private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttChartTask[]}> {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
@@ -127,7 +129,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     );
   }
 
-  private handleData(data: Data): GanttChartTask[] {
+  private handleData(data: Data): {options: GanttOptions; tasks: GanttChartTask[]} {
     const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
