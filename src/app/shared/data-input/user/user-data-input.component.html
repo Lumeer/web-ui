@@ -11,7 +11,7 @@
              [value]="value | userDataValue: constraintConfig | async"
              (focus)="onFocus.emit($event)"
              [class.invalid-value]="!skipValidation && (constraintConfig?.externalUsers ? !(value | emailValid) : !state.user)"
-             class="border-0 h-100 px-1 bg-transparent flex-grow-1"
+             class="border-0 h-100 px-1 bg-transparent flex-grow-1 cursor-inherit"
              data-test="user-data-input"
              type="text">
     </ng-container>
