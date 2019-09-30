@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Collection} from '../collections/collection';
-import {User} from '../users/user';
-import {DocumentModel} from './document.model';
-import {CollectionAttributeFilter, Query, ConditionType} from '../navigation/query/query';
+import {CollectionAttributeFilter, ConditionType, Query} from '../navigation/query/query';
 import {conditionFromString, getQueryFiltersForCollection} from '../navigation/query/query.util';
-import {DocumentModule} from '../../../shared/document/document.module';
+import {User} from '../users/user';
+import {DocumentData, DocumentModel} from './document.model';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -109,6 +108,14 @@ export function generateDocumentData(
 
 export function generateDocumentDataByQuery(query: Query, currentUser: User): Record<string, any> {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
+  return generateDocumentDataByCollectionQuery(collectionId, query, currentUser);
+}
+
+export function generateDocumentDataByCollectionQuery(
+  collectionId: string,
+  query: Query,
+  currentUser: User
+): DocumentData {
   const collection: Collection = {
     id: collectionId,
     name: '',
