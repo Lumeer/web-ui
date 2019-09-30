@@ -33,7 +33,7 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
     config: CalendarStemConfig
   ): SelectItemModel[] {
     const restrictedIds = this.getSelectedAttributesIdsInsteadBar(property, config);
-    return collection.attributes
+    return ((collection && collection.attributes) || [])
       .filter(attribute => !restrictedIds.includes(attribute.id))
       .map(attribute => this.attributeToItem(collection, attribute));
   }

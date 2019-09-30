@@ -3,7 +3,7 @@
   <div class="card p-2 mb-2 view"
        [class.mb-2]="viewSize !== sizeType.S"
        [class.mb-1]="viewSize === sizeType.S"
-       [class.pb-3]="viewSize !== sizeType.S"
+       [class.pb-3]="viewSize == sizeType.XL"
        [class.view-hover]="data.clickable"
        (click)="data.clickable && onClicked()">
 
