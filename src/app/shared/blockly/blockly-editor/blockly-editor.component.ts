@@ -765,7 +765,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             },
             {
               type: 'input_value',
-              name: 'NAME',
+              name: 'MS',
               check: 'Number',
             },
           ],
