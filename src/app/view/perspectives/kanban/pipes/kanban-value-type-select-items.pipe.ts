@@ -37,7 +37,7 @@ export class KanbanValueTypeSelectItemsPipe implements PipeTransform {
     return this.i18n(
       {
         id: 'perspective.kanban.config.value.type',
-        value: '{type, select, default {Default} row {% of row} column {% of column} all {% of all values}}',
+        value: '{type, select, default {Default} all {% of all columns}}',
       },
       {type}
     );

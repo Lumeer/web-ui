@@ -109,6 +109,10 @@ export class KanbanConfigComponent implements OnChanges {
       }
     }
 
+    this.rebuildConfigChange(newConfig);
+  }
+
+  private rebuildConfigChange(newConfig: KanbanConfig) {
     const config = this.converter.buildKanbanConfig(
       newConfig,
       this.collections,
@@ -121,10 +125,10 @@ export class KanbanConfigComponent implements OnChanges {
   }
 
   public onAggregateAttributeSelect(attribute: KanbanValueAttribute) {
-    this.configChange.emit({...this.config, aggregation: attribute});
+    this.rebuildConfigChange({...this.config, aggregation: attribute});
   }
 
   public onAggregateAttributeRemove() {
-    this.configChange.emit({...this.config, aggregation: null});
+    this.rebuildConfigChange({...this.config, aggregation: null});
   }
 }

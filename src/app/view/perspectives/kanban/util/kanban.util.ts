@@ -78,6 +78,7 @@ function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boo
   return (
     column1.title !== column2.title ||
     column1.width !== column2.width ||
+    column1.summary !== column2.summary ||
     !areArraysSame(
       ((column1 && column1.resourcesOrder) || []).map(order => order.id),
       ((column2 && column2.resourcesOrder) || []).map(order => order.id)

@@ -49,6 +49,7 @@ export interface KanbanColumn {
   resourcesOrder: KanbanResource[];
   createdFromAttributes?: KanbanAttribute[];
   constraintType?: ConstraintType;
+  summary?: string;
 }
 
 export interface KanbanResource {
@@ -75,8 +76,6 @@ export interface KanbanAttribute {
 
 export enum KanbanValueType {
   Default = 'default',
-  ColumnPercentage = 'column',
-  RowPercentage = 'row',
   AllPercentage = 'all',
 }
 
