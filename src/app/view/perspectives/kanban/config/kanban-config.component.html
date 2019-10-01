@@ -3,7 +3,7 @@
                           [stem]="stem"
                           [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
                           [collections]="collections"
-                          [columnTitles]="config | kanbanColumnTitles:config?.stemsConfigs[index].attribute"
+                          [columnTitles]="config | kanbanColumnTitles:config?.stemsConfigs[index]?.attribute"
                           [linkTypes]="linkTypes"
                           (configChange)="onConfigChange($event, stem, index)">
 </kanban-collection-config>

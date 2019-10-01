@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanStemConfig, KanbanConfig, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
+import {KanbanConfig, KanbanStemConfig, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
@@ -29,6 +29,7 @@ import {checkOrTransformKanbanConfig, createDefaultKanbanStemConfig} from '../ut
 import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Component({
   selector: 'kanban-config',
@@ -95,6 +96,19 @@ export class KanbanConfigComponent implements OnChanges {
   public onConfigChange(stemConfig: KanbanStemConfig, stem: QueryStem, index: number) {
     const newConfig = deepObjectCopy<KanbanConfig>(this.config);
     newConfig.stemsConfigs[index] = {...stemConfig, stem};
+
+    // remove aggregation when the cards are from different collection
+    if (newConfig && newConfig.aggregation) {
+      const existingResources = (newConfig.stemsConfigs || [])
+        .map(_stemConfig => _stemConfig.attribute)
+        .filter(attribute => attribute.resourceType === AttributesResourceType.Collection)
+        .map(attribute => attribute.resourceId);
+
+      if (existingResources.indexOf(this.config.aggregation.resourceId) < 0) {
+        newConfig.aggregation = null;
+      }
+    }
+
     const config = this.converter.buildKanbanConfig(
       newConfig,
       this.collections,

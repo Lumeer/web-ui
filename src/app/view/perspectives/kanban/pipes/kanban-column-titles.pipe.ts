@@ -33,6 +33,6 @@ export class KanbanColumnTitlesPipe implements PipeTransform {
   }
 
   private containsAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {
-    return (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
+    return !attribute || (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
   }
 }
