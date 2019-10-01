@@ -19,13 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import * as moment from 'moment';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {environment} from '../../../../../../environments/environment';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import Gantt from '@lumeer/lumeer-gantt';
-import {GanttOptions, GanttMode} from '@lumeer/lumeer-gantt/dist/model/options';
-import {GanttChartMode} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttChartTaskMetadata} from '../../util/gantt-chart-converter';
 
 export interface GanttChartValueChange {
   dataResourceId: string;
@@ -66,6 +64,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
 
+  @Output()
+  public swimlaneResize = new EventEmitter<{index: number; width: number}>();
+
+  @Output()
+  public swimlaneDrag = new EventEmitter<{id: string; resourceType: AttributesResourceType; swimlanes: string[]}>();
+
   public ganttChart: Gantt;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -93,88 +97,86 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private createChart() {
-    this.createChartAndInitListeners(this.tasks);
+    this.createChartAndInitListeners();
   }
 
   private refreshMode(mode: string) {
     this.ganttChart.changeViewMode(mode as any);
   }
 
-  private createChartAndInitListeners(tasks: GanttChartTask[]) {
+  public scrollToToday() {
+    this.ganttChart && this.ganttChart.scrollToToday();
+  }
+
+  private createChartAndInitListeners() {
     const ganttElement = document.getElementById(`ganttChart-${this.ganttChartId}`);
     if (!ganttElement) {
       return;
     }
 
-    this.ganttChart = new Gantt(ganttElement, tasks, {
-      language: environment.locale,
-      viewMode: this.currentMode as any,
-      columnWidth: 50,
-    });
+    this.ganttChart = new Gantt(ganttElement, this.tasks, this.options);
+    this.ganttChart.onSwimlaneResized = (index, width) => this.onSwimlaneResized(index, width);
+    this.ganttChart.onTaskProgressChanged = task => this.onProgressChanged(task);
+    this.ganttChart.onTaskDatesChanged = task => this.onDatesChanged(task);
+    this.ganttChart.onTaskDependencyAdded = (fromTask, toTask) => this.onDependencyAdded(fromTask, toTask);
+    this.ganttChart.onTaskDependencyRemoved = (fromTask, toTask) => this.onDependencyRemoved(fromTask, toTask);
+    this.ganttChart.onTaskSwimlanesChanged = task => this.onTaskSwimlaneChange(task);
   }
 
-  public scrollToToday() {
-    this.ganttChart && this.ganttChart.scrollToToday();
+  private onSwimlaneResized(index: number, width: number) {
+    this.swimlaneResize.emit({index, width});
   }
 
-  // {
-  //   on_date_change: (task: GanttChartTask, start, end) => {
-  //     if (!task.editable) {
-  //     return;
-  //   }
-  //
-  //   const startTimeTask = moment(task.start);
-  //   const startTime = moment(start);
-  //
-  //   const endTimeTask = moment(task.end);
-  //   const endTime = moment(end);
-  //
-  //   const changes = [];
-  //   const metadata = task.metadata;
-  //
-  //   //start time changed
-  //   if (metadata.startAttributeId && !startTimeTask.isSame(startTime)) {
-  //   changes.push({attributeId: metadata.startAttributeId, value: startTime.toDate()});
-  // }
-  //
-  // //end time changed
-  // if (metadata.endAttributeId && !endTimeTask.isSame(endTime)) {
-  //   changes.push({attributeId: metadata.endAttributeId, value: endTime.toDate()});
-  // }
-  //
-  // if (changes) {
-  //   this.datesChange.emit({...metadata, changes});
-  // }
-  // },
-  //
-  // on_progress_change: (task: GanttChartTask, progress) => {
-  //   if (!task.editable) {
-  //     return;
-  //   }
-  //
-  //   const metadata = task.metadata;
-  //   const progressAttributeId = metadata.progressAttributeId;
-  //   if (progressAttributeId) {
-  //     this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: progress}]});
-  //   }
-  // },
-  //   on_dependency_added: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
-  //   if (this.canEditDependency(fromTask, toTask)) {
-  //     this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
-  //   }
-  // },
-  //   on_dependency_deleted: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
-  //   if (this.canEditDependency(fromTask, toTask)) {
-  //     this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
-  //   }
-  // },
-  //
-  //   private canEditDependency(fromTask: GanttTask, toTask: GanttTask): boolean {
-  //     return (
-  //       fromTask.metadata.resourceType === AttributesResourceType.Collection &&
-  //       fromTask.metadata.resourceType === toTask.metadata.resourceType &&
-  //       fromTask.metadata.resourceId === toTask.metadata.resourceId &&
-  //       fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
-  //     );
-  //   }
+  private onProgressChanged(task: GanttChartTask) {
+    const metadata: GanttChartTaskMetadata = task.metadata;
+    const progressAttributeId = metadata.progressAttributeId;
+    if (progressAttributeId) {
+      this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: task.progress}]});
+    }
+  }
+
+  private onDatesChanged(task: GanttChartTask) {
+    const start = moment(task.start, this.options.dateFormat);
+    const end = moment(task.end, this.options.dateFormat);
+
+    const changes = [];
+    const metadata: GanttChartTaskMetadata = task.metadata;
+
+    if (metadata.startAttributeId) {
+      changes.push({attributeId: metadata.startAttributeId, value: start.toDate()});
+    }
+
+    if (metadata.endAttributeId) {
+      changes.push({attributeId: metadata.endAttributeId, value: end.toDate()});
+    }
+
+    if (changes.length) {
+      this.datesChange.emit({...metadata, changes});
+    }
+  }
+
+  private onDependencyAdded(fromTask: GanttChartTask, toTask: GanttChartTask) {
+    if (this.canEditDependency(fromTask, toTask)) {
+      this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+    }
+  }
+
+  private onDependencyRemoved(fromTask: GanttChartTask, toTask: GanttChartTask) {
+    if (this.canEditDependency(fromTask, toTask)) {
+      this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+    }
+  }
+
+  private canEditDependency(fromTask: GanttChartTask, toTask: GanttChartTask): boolean {
+    return (
+      fromTask.metadata.resourceType === AttributesResourceType.Collection &&
+      fromTask.metadata.resourceType === toTask.metadata.resourceType &&
+      fromTask.metadata.resourceId === toTask.metadata.resourceId &&
+      fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
+    );
+  }
+
+  private onTaskSwimlaneChange(task: GanttChartTask) {
+    this.swimlaneDrag.emit({id: task.id, resourceType: task.metadata.resourceType, swimlanes: task.swimlanes});
+  }
 }

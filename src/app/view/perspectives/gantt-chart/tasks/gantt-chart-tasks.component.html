@@ -16,6 +16,8 @@
         (progressChange)="onProgressChanged($event)"
         (addDependency)="onAddDependency($event)"
         (removeDependency)="onRemoveDependency($event)"
+        (swimlaneResize)="onSwimlaneResize($event)"
+        (swimlaneDrag)="onDataSwimlaneChanged($event)"
         #visualizationComponent>
       </gantt-chart-visualization>
     </ng-container>

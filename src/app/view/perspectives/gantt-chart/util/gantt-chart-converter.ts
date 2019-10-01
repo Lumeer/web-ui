@@ -17,8 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
-import {ColorConstraintConfig} from '../../../../core/model/data/constraint-config';
+export interface GanttChartTaskMetadata {
+  dataResourceId: string;
+  startAttributeId: string;
+  endAttributeId: string;
+  progressAttributeId: string;
+  resourceId?: string;
+  resourceType: AttributesResourceType;
+}
+
+import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {ColorConstraintConfig, DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {
   GANTT_DATE_FORMAT,
   GanttChartBarModel,
@@ -100,13 +109,21 @@ export class GanttChartConverter {
 
     const options = this.createGanttOptions(config);
 
-    const tasks = ((query && query.stems) || []).reduce((allTasks, stem, index) => {
-      this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
-      allTasks.push(...this.convertByStem(index));
-      return allTasks;
-    }, []);
+    const tasks = ((query && query.stems) || [])
+      .reduce((allTasks, stem, index) => {
+        this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
+        allTasks.push(...this.convertByStem(index));
+        return allTasks;
+      }, [])
+      .sort((t1, t2) => this.compareTasks(t1, t2));
 
     return {options, tasks};
+  }
+
+  private compareTasks(t1: GanttChartTask, t2: GanttChartTask): number {
+    const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
+    const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
+    return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
   private updateData(
@@ -137,7 +154,7 @@ export class GanttChartConverter {
       resizeTaskRight: true,
       resizeProgress: true,
       resizeTaskLeft: true,
-      resizeTaskSwimlanes: true,
+      resizeSwimLanes: true,
       dragTaskSwimlanes: isOnlyOneCollection,
       createTasks: isOnlyOneCollection,
       language: environment.locale,
@@ -307,9 +324,11 @@ export class GanttChartConverter {
 
       const start = stemConfig.start && dataResource.data[stemConfig.start.attributeId];
       const startEditable = this.isPropertyEditable(stemConfig.start);
+      const startConstraint = stemConfig.start && this.getConstraint(stemConfig.start);
 
       const end = stemConfig.end && dataResource.data[stemConfig.end.attributeId];
       const endEditable = this.isPropertyEditable(stemConfig.end);
+      const endConstraint = stemConfig.end && this.getConstraint(stemConfig.end);
 
       if (!isTaskValid(start, end)) {
         return arr;
@@ -318,8 +337,10 @@ export class GanttChartConverter {
       const interval = createInterval(
         start,
         startEditable && stemConfig.start.attributeId,
+        startConstraint,
         end,
-        endEditable && stemConfig.end.attributeId
+        endEditable && stemConfig.end.attributeId,
+        endConstraint
       );
       const progress = stemConfig.progress && (formattedData[stemConfig.progress.attributeId] || 0);
       const progressEditable = stemConfig.progress && this.isPropertyEditable(stemConfig.progress);
@@ -345,6 +366,15 @@ export class GanttChartConverter {
         datesSwimlanes.push(...[startString, endString]);
       }
 
+      const metadata: GanttChartTaskMetadata = {
+        dataResourceId: dataResource.id,
+        startAttributeId: interval[0].attrId,
+        endAttributeId: interval[1].attrId,
+        progressAttributeId: progressEditable && stemConfig.progress && stemConfig.progress.attributeId,
+        resourceId: resource.id,
+        resourceType: stemConfig.start.resourceType,
+      };
+
       arr.push({
         id: dataResource.id,
         name: formatDataValue(name, nameAttribute && nameAttribute.constraint, this.constraintData),
@@ -362,14 +392,7 @@ export class GanttChartConverter {
         textColor: contrastColor(shadeColor(taskColor, 0.5)),
         swimlanes: [...(dataResource.swimlanes || []), ...datesSwimlanes],
 
-        metadata: {
-          dataResourceId: dataResource.id,
-          startAttributeId: interval[0].attrId,
-          endAttributeId: interval[1].attrId,
-          progressAttributeId: progressEditable && stemConfig.progress && stemConfig.progress.attributeId,
-          resourceId: resource.id,
-          resourceType: stemConfig.start.resourceType,
-        },
+        metadata,
       });
 
       return arr;
@@ -468,11 +491,13 @@ function createProgress(progress: any): number {
 function createInterval(
   start: string,
   startAttributeId: string,
+  startConstraint: Constraint,
   end: string,
-  endAttributeId: string
+  endAttributeId: string,
+  endConstraint: Constraint
 ): [{value: string; attrId: string}, {value: string; attrId: string}] {
-  const startDate = parseDateTimeDataValue(start);
-  const endDate = parseDateTimeDataValue(end);
+  const startDate = parseDateTimeDataValue(start, getFormatFromConstraint(startConstraint));
+  const endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
 
   const startDateObj = {value: moment(startDate).format(GANTT_DATE_FORMAT), attrId: startAttributeId};
   const endDateObj = {value: moment(endDate).format(GANTT_DATE_FORMAT), attrId: endAttributeId};
@@ -481,6 +506,14 @@ function createInterval(
     return [startDateObj, endDateObj];
   }
   return [endDateObj, startDateObj];
+}
+
+function getFormatFromConstraint(constraint: Constraint): string {
+  if (constraint && constraint.type === ConstraintType.DateTime) {
+    const config = constraint.config as DateTimeConstraintConfig;
+    return config.format;
+  }
+  return null;
 }
 
 function isOnlyOneResourceConfig(config: GanttChartConfig): boolean {

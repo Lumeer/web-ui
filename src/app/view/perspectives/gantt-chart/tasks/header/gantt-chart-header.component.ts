@@ -41,6 +41,7 @@ export class GanttChartHeaderComponent {
   public readonly ganttChartModes = Object.values(GanttChartMode);
 
   public onModeSelect(mode: GanttChartMode) {
+    this.currentMode = mode;
     this.modeChange.next(mode);
   }
 

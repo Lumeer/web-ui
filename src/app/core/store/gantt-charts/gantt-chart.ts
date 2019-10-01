@@ -20,10 +20,11 @@
 import {AttributesResourceType} from '../../model/resource';
 import {Constraint} from '../../model/data/constraint';
 import {QueryStem} from '../navigation/query/query';
-import {Task} from '@lumeer/lumeer-gantt/dist/model/task';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
+export const GANTT_COLUMN_WIDTH = 40;
+export const GANTT_PADDING = 20;
 
 export interface GanttChart {
   id: string;
@@ -64,15 +65,6 @@ export interface GanttChartBarModel {
   resourceIndex?: number;
   resourceType: AttributesResourceType;
   constraint?: Constraint;
-}
-
-export interface GanttChartTaskMetadata {
-  dataResourceId: string;
-  startAttributeId: string;
-  endAttributeId: string;
-  progressAttributeId: string;
-  resourceId?: string;
-  resourceType: AttributesResourceType;
 }
 
 export enum GanttChartMode {

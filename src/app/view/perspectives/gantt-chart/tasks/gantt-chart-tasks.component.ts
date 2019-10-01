@@ -160,9 +160,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
-    if (changes.config && this.config) {
-      this.currentMode$.next(this.config.mode);
-    }
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -220,6 +217,14 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
+    this.emitPatchData(patchData, resourceType, dataResource);
+  }
+
+  private emitPatchData(
+    patchData: Record<string, any>,
+    resourceType: AttributesResourceType,
+    dataResource: DataResource
+  ) {
     if (Object.keys(patchData).length > 0) {
       if (resourceType === AttributesResourceType.Collection) {
         this.patchDocumentData.emit({...(<DocumentModel>dataResource), data: patchData});
@@ -275,5 +280,40 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
     const metaData = {parentId: null};
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
+  }
+
+  public onSwimlaneResize(data: {index: number; width: number}) {
+    if (this.canManageConfig) {
+      const swimlaneWidths = [...(this.config.swimlaneWidths || [])];
+      swimlaneWidths[data.index] = data.width;
+      const config = {...this.config, swimlaneWidths};
+      this.configChange.emit(config);
+    }
+  }
+
+  public onDataSwimlaneChanged(data: {id: string; resourceType: AttributesResourceType; swimlanes: string[]}) {
+    const dataResource = this.getDataResource(data.id, data.resourceType);
+    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support drag swimlanes only in this situation
+    if (!dataResource || !stemConfig) {
+      return;
+    }
+
+    const resource = this.getResource(dataResource, data.resourceType);
+    const patchData = {};
+    for (let i = 0; i < (stemConfig.categories || []).length; i++) {
+      const category = stemConfig.categories[i];
+
+      const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
+      const saveValue = constraint
+        ? getSaveValue(data.swimlanes[i], constraint, this.constraintData)
+        : data.swimlanes[i];
+
+      const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
+      if (changed) {
+        patchData[category.attributeId] = saveValue;
+      }
+    }
+
+    this.emitPatchData(patchData, data.resourceType, dataResource);
   }
 }
