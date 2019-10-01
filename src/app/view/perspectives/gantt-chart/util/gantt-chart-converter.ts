@@ -154,7 +154,7 @@ export class GanttChartConverter {
       resizeTaskRight: true,
       resizeProgress: true,
       resizeTaskLeft: true,
-      resizeSwimLanes: true,
+      resizeSwimlanes: true,
       dragTaskSwimlanes: isOnlyOneCollection,
       createTasks: isOnlyOneCollection,
       language: environment.locale,
@@ -521,5 +521,7 @@ function isOnlyOneResourceConfig(config: GanttChartConfig): boolean {
     return false;
   }
 
-  return config.stemsConfigs[0].stem && (config.stemsConfigs[0].stem.linkTypeIds || []).length === 0;
+  const stemConfig = config.stemsConfigs[0];
+
+  return stemConfig.stem && (stemConfig.stem.linkTypeIds || []).length === 0 && !!stemConfig.start && !!stemConfig.end;
 }

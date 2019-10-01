@@ -12,12 +12,12 @@
         [currentMode]="data.mode"
         [tasks]="data.tasksData?.tasks"
         [options]="data.tasksData?.options"
-        (datesChange)="onDatesChanged($event)"
-        (progressChange)="onProgressChanged($event)"
+        (taskChange)="onTaskChanged($event)"
         (addDependency)="onAddDependency($event)"
         (removeDependency)="onRemoveDependency($event)"
         (swimlaneResize)="onSwimlaneResize($event)"
-        (swimlaneDrag)="onDataSwimlaneChanged($event)"
+        (taskCreate)="onTaskCreated($event)"
+        (taskDetail)="onTaskDetail($event)"
         #visualizationComponent>
       </gantt-chart-visualization>
     </ng-container>

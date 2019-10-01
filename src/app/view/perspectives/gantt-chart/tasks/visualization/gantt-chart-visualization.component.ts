@@ -18,18 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import Gantt from '@lumeer/lumeer-gantt';
 import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
-import {GanttChartTaskMetadata} from '../../util/gantt-chart-converter';
-
-export interface GanttChartValueChange {
-  dataResourceId: string;
-  resourceType: AttributesResourceType;
-  changes: {attributeId: string; value: any}[];
-}
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -53,10 +45,7 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public currentMode: string;
 
   @Output()
-  public datesChange = new EventEmitter<GanttChartValueChange>();
-
-  @Output()
-  public progressChange = new EventEmitter<GanttChartValueChange>();
+  public taskChange = new EventEmitter<GanttChartTask>();
 
   @Output()
   public addDependency = new EventEmitter<{fromId: string; toId: string}>();
@@ -68,7 +57,10 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public swimlaneResize = new EventEmitter<{index: number; width: number}>();
 
   @Output()
-  public swimlaneDrag = new EventEmitter<{id: string; resourceType: AttributesResourceType; swimlanes: string[]}>();
+  public taskCreate = new EventEmitter<GanttChartTask>();
+
+  @Output()
+  public taskDetail = new EventEmitter<GanttChartTask>();
 
   public ganttChart: Gantt;
 
@@ -116,43 +108,27 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
     this.ganttChart = new Gantt(ganttElement, this.tasks, this.options);
     this.ganttChart.onSwimlaneResized = (index, width) => this.onSwimlaneResized(index, width);
-    this.ganttChart.onTaskProgressChanged = task => this.onProgressChanged(task);
-    this.ganttChart.onTaskDatesChanged = task => this.onDatesChanged(task);
+    this.ganttChart.onTaskChanged = task => this.onTaskChanged(task);
     this.ganttChart.onTaskDependencyAdded = (fromTask, toTask) => this.onDependencyAdded(fromTask, toTask);
     this.ganttChart.onTaskDependencyRemoved = (fromTask, toTask) => this.onDependencyRemoved(fromTask, toTask);
-    this.ganttChart.onTaskSwimlanesChanged = task => this.onTaskSwimlaneChange(task);
+    this.ganttChart.onTaskCreated = task => this.onTaskCreated(task);
+    this.ganttChart.onTaskDetail = task => this.onTaskDetail(task);
   }
 
   private onSwimlaneResized(index: number, width: number) {
     this.swimlaneResize.emit({index, width});
   }
 
-  private onProgressChanged(task: GanttChartTask) {
-    const metadata: GanttChartTaskMetadata = task.metadata;
-    const progressAttributeId = metadata.progressAttributeId;
-    if (progressAttributeId) {
-      this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: task.progress}]});
-    }
+  private onTaskChanged(task: GanttChartTask) {
+    this.taskChange.emit(task);
   }
 
-  private onDatesChanged(task: GanttChartTask) {
-    const start = moment(task.start, this.options.dateFormat);
-    const end = moment(task.end, this.options.dateFormat);
+  private onTaskDetail(task: GanttChartTask) {
+    this.taskDetail.emit(task);
+  }
 
-    const changes = [];
-    const metadata: GanttChartTaskMetadata = task.metadata;
-
-    if (metadata.startAttributeId) {
-      changes.push({attributeId: metadata.startAttributeId, value: start.toDate()});
-    }
-
-    if (metadata.endAttributeId) {
-      changes.push({attributeId: metadata.endAttributeId, value: end.toDate()});
-    }
-
-    if (changes.length) {
-      this.datesChange.emit({...metadata, changes});
-    }
+  private onTaskCreated(task: GanttChartTask) {
+    this.taskCreate.emit(task);
   }
 
   private onDependencyAdded(fromTask: GanttChartTask, toTask: GanttChartTask) {
@@ -174,9 +150,5 @@ export class GanttChartVisualizationComponent implements OnChanges {
       fromTask.metadata.resourceId === toTask.metadata.resourceId &&
       fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
     );
-  }
-
-  private onTaskSwimlaneChange(task: GanttChartTask) {
-    this.swimlaneDrag.emit({id: task.id, resourceType: task.metadata.resourceType, swimlanes: task.swimlanes});
   }
 }
