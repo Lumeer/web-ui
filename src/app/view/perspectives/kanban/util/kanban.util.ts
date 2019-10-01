@@ -37,9 +37,14 @@ import {
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {AttributesResource} from '../../../../core/model/resource';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(viewConfig.aggregation, currentConfig.aggregation)) {
     return true;
   }
 
@@ -182,4 +187,14 @@ export function createDefaultKanbanStemConfig(stem?: QueryStem): KanbanStemConfi
 
 export function kanbanConfigIsEmpty(kanbanConfig: KanbanConfig): boolean {
   return kanbanConfig && kanbanConfig.stemsConfigs.filter(config => !!config.attribute).length === 0;
+}
+
+export function cleanKanbanAttribute(attribute: KanbanAttribute): KanbanAttribute {
+  return {
+    resourceIndex: attribute.resourceIndex,
+    attributeId: attribute.attributeId,
+    resourceId: attribute.resourceId,
+    resourceType: attribute.resourceType,
+    constraint: attribute.constraint,
+  };
 }

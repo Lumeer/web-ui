@@ -1,0 +1,32 @@
+<kanban-attribute-config [availableAttributes]="availableAttributes"
+                        [kanbanAttribute]="kanbanAttribute"
+                        [icon]="'far fa-function'"
+                        (attributeSelect)="onAttributeSelected($event)"
+                        (attributeRemove)="onAttributeRemoved()">
+
+  <select-item class="d-block w-100 mt-1"
+               *ngIf="kanbanAttribute"
+               [items]="aggregations | aggregationSelectItems"
+               [placeholderText]="aggregationPlaceholder"
+               placeholderTitle="Select value aggregation"
+               i18n-placeholderTitle="@@perspective.pivot.config.valueAggregation"
+               [buttonClasses]="buttonClasses"
+               [removable]="false"
+               [selectedId]="kanbanAttribute.aggregation"
+               (select)="onAggregationSelect($event)">
+  </select-item>
+
+</kanban-attribute-config>
+
+<select-item *ngIf="kanbanAttribute"
+             class="d-block w-100 mt-2"
+             [emptyValue]="''"
+             [placeholderIcon]="'far fa-badge-percent'"
+             placeholderTitle="Select absolute or relative display"
+             i18n-placeholderTitle="@@perspective.kanban.config.valueAbsOrRel"
+             [items]="valueTypes | kanbanValueTypeSelectItems"
+             [selectedId]="kanbanAttribute.valueType || valueType.Default"
+             [removable]="false"
+             [buttonClasses]="buttonClasses"
+             (select)="onValueTypeSelected($event)">
+</select-item>

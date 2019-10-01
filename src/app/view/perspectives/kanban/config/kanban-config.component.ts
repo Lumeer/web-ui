@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanStemConfig, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanStemConfig, KanbanConfig, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
@@ -104,5 +104,13 @@ export class KanbanConfigComponent implements OnChanges {
       this.constraintData
     );
     this.configChange.emit(config);
+  }
+
+  public onAggregateAttributeSelect(attribute: KanbanValueAttribute) {
+    this.configChange.emit({...this.config, aggregation: attribute});
+  }
+
+  public onAggregateAttributeRemove() {
+    this.configChange.emit({...this.config, aggregation: null});
   }
 }

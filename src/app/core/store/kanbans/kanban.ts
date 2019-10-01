@@ -20,6 +20,8 @@
 import {Constraint, ConstraintType} from '../../model/data/constraint';
 import {QueryStem} from '../navigation/query/query';
 import {AttributesResourceType} from '../../model/resource';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {PivotAttribute} from '../pivots/pivot';
 
 export const DEFAULT_KANBAN_ID = 'default';
 
@@ -33,6 +35,7 @@ export interface KanbanConfig {
   otherColumn?: KanbanColumn;
   stemsConfigs: KanbanStemConfig[];
   version?: KanbanConfigVersion;
+  aggregation?: KanbanValueAttribute;
 }
 
 export enum KanbanConfigVersion {
@@ -68,4 +71,16 @@ export interface KanbanAttribute {
   resourceIndex?: number;
   resourceType: AttributesResourceType;
   constraint?: Constraint;
+}
+
+export enum KanbanValueType {
+  Default = 'default',
+  ColumnPercentage = 'column',
+  RowPercentage = 'row',
+  AllPercentage = 'all',
+}
+
+export interface KanbanValueAttribute extends KanbanAttribute {
+  aggregation: DataAggregationType;
+  valueType?: KanbanValueType;
 }
