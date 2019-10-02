@@ -228,10 +228,10 @@ export class PivotDataConverter {
         additionalData = {
           rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
           rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
-          rowConstraints: (config.rowAttributes || []).map(attr => this.pivotRowColumnAttributeConstraint(attr)),
+          rowConstraints: (config.rowAttributes || []).map(attr => this.pivotAttributeConstraint(attr)),
           columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
           columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
-          columnConstraints: (config.columnAttributes || []).map(attr => this.pivotRowColumnAttributeConstraint(attr)),
+          columnConstraints: (config.columnAttributes || []).map(attr => this.pivotAttributeConstraint(attr)),
         };
       }
     }
@@ -239,7 +239,7 @@ export class PivotDataConverter {
     return this.convertAggregatedData(mergedAggregatedData, mergedValueAttributes, pivotColors, additionalData);
   }
 
-  private pivotRowColumnAttributeConstraint(pivotAttribute: PivotRowColumnAttribute): Constraint {
+  private pivotAttributeConstraint(pivotAttribute: PivotAttribute): Constraint {
     const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
     const constraint = attribute && attribute.constraint;
     const overrideConstraint =
@@ -535,7 +535,7 @@ export class PivotDataConverter {
     return (valueAttributes || []).reduce(
       ({titles, constraints}, pivotAttribute) => {
         const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-        constraints.push(attribute && attribute.constraint);
+        constraints.push(this.pivotAttributeConstraint(pivotAttribute));
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);
 

@@ -22,6 +22,10 @@ import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../.
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {DataAggregationType} from '../../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {AttributesResource} from '../../../../../../../../core/model/resource';
+import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {Constraint} from '../../../../../../../../core/model/data/constraint';
+import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'pivot-value-attribute-config',
@@ -31,6 +35,9 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class PivotValueAttributeConfigComponent {
   @Input()
   public pivotAttribute: PivotValueAttribute;
+
+  @Input()
+  public attributesResources: AttributesResource[];
 
   @Input()
   public availableAttributes: SelectItemModel[];
@@ -49,9 +56,11 @@ export class PivotValueAttributeConfigComponent {
   public readonly aggregations = Object.values(DataAggregationType);
   public readonly valueTypes = Object.values(PivotValueType);
   public readonly valueType = PivotValueType;
+  public readonly emptyValueString: string;
 
   constructor(private i18n: I18n) {
     this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
+    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
   }
 
   public onAggregationSelect(aggregation: DataAggregationType) {
@@ -59,13 +68,20 @@ export class PivotValueAttributeConfigComponent {
     this.attributeChange.emit(newAttribute);
   }
 
-  public onAttributeSelected(attribute: PivotAttribute) {
-    const valueAttribute: PivotValueAttribute = {
+  public onAttributeSelected(itemId: SelectItemWithConstraintId) {
+    const resource = this.attributesResources[itemId.resourceIndex];
+    if (!resource) {
+      return;
+    }
+
+    const resourceType = getAttributesResourceType(resource);
+    const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
+    const headerAttribute: PivotValueAttribute = {
       ...attribute,
       aggregation: DataAggregationType.Sum,
       valueType: PivotValueType.Default,
     };
-    this.attributeSelect.emit(valueAttribute);
+    this.attributeSelect.emit(headerAttribute);
   }
 
   public onAttributeRemoved() {
@@ -75,5 +91,10 @@ export class PivotValueAttributeConfigComponent {
   public onValueTypeSelected(valueType: PivotValueType) {
     const valueAttribute: PivotValueAttribute = {...this.pivotAttribute, valueType};
     this.attributeChange.emit(valueAttribute);
+  }
+
+  public onSelectedConstraint(constraint: Constraint) {
+    const headerAttribute: PivotValueAttribute = {...this.pivotAttribute, constraint};
+    this.attributeChange.emit(headerAttribute);
   }
 }

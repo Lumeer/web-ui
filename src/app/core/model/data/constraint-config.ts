@@ -46,6 +46,7 @@ export interface DateTimeConstraintConfig {
 export interface DurationConstraintConfig {
   type: DurationType;
   conversions: Record<DurationUnit, number>;
+  maxUnit?: DurationUnit;
 }
 
 export enum DurationUnit {

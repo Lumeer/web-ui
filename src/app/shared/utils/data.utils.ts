@@ -49,7 +49,6 @@ import {
   getDurationSaveValue,
   isDurationDataValueValid,
 } from './constraint/duration-constraint.utils';
-import {isString} from 'util';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
