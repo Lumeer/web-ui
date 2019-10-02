@@ -34,7 +34,7 @@ import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/
 import {formatDataValue, isSelectDataValueValid} from '../../../../shared/utils/data.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {filterDocumentsByStem} from '../../../../core/store/documents/documents.filters';
+import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
@@ -114,7 +114,7 @@ export class KanbanConverter {
         continue;
       }
 
-      const {pipelineDocuments} = filterDocumentsByStem(
+      const {pipelineDocuments} = filterDocumentsAndLinksByStem(
         documentsByCollection,
         collections,
         linkTypes,

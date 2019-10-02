@@ -43,8 +43,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   selectCollectionsByQuery,
-  selectDocumentsByQuery,
-  selectLinkInstancesByQuery,
+  selectDocumentsAndLinksByQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
@@ -80,9 +79,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
 
   public config$: Observable<KanbanConfig>;
   public currentView$: Observable<View>;
-  public documents$: Observable<DocumentModel[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
-  public linkInstances$: Observable<LinkInstance[]>;
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
   public users$: Observable<User[]>;
@@ -125,8 +123,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));

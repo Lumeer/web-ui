@@ -49,7 +49,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {KanbanResourceCreate} from './column/footer/kanban-column-footer.component';
 import {ChooseLinkDocumentModalComponent} from '../modal/choose-link-document/choose-link-document-modal.component';
-import {filterDocumentsByStem} from '../../../../core/store/documents/documents.filters';
+import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {generateDocumentData, groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
 import {
   getQueryFiltersForCollection,
@@ -194,7 +194,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
-    const {pipelineDocuments} = filterDocumentsByStem(
+    const {pipelineDocuments} = filterDocumentsAndLinksByStem(
       groupDocumentsByCollection(this.documents),
       this.collections,
       this.linkTypes,

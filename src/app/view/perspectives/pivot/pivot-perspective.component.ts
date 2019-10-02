@@ -34,8 +34,7 @@ import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
-  selectDocumentsByQuery,
-  selectLinkInstancesByQuery,
+  selectDocumentsAndLinksByQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {selectAllUsers} from '../../../core/store/users/users.state';
@@ -57,10 +56,9 @@ import {TranslationService} from '../../../core/service/translation.service';
 export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<PivotConfig>;
   public currentView$: Observable<View>;
-  public documents$: Observable<DocumentModel[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
-  public linkInstances$: Observable<LinkInstance[]>;
   public query$ = new BehaviorSubject<Query>(null);
   public users$: Observable<User[]>;
   public readonly durationUnitsMap: DurationUnitsMap;
@@ -148,10 +146,9 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.users$ = this.store$.pipe(select(selectAllUsers));
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
   }
 
   public onConfigChange(config: PivotConfig) {

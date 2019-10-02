@@ -26,8 +26,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
-  selectDocumentsByQuery,
-  selectLinkInstancesByQuery,
+  selectDocumentsAndLinksByQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
@@ -64,14 +63,13 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   @ViewChild(ChartDataComponent, {static: false})
   public chartDataComponent: ChartDataComponent;
 
-  public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
-  public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -160,13 +158,12 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByQuery),
+    this.documentsAndLinks$ = this.store$.pipe(
+      select(selectDocumentsAndLinksByQuery),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
