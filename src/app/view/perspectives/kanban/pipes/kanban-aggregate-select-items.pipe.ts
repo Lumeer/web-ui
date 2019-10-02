@@ -35,7 +35,7 @@ export class KanbanAggregateSelectItemsPipe implements PipeTransform {
     const result: SelectItemModel[] = [];
 
     let index = 0;
-    config.stemsConfigs.forEach(stemConfig => {
+    (config.stemsConfigs || []).forEach(stemConfig => {
       if (stemConfig.attribute && stemConfig.attribute.resourceType === AttributesResourceType.Collection) {
         const collection = collections.find(c => c.id === stemConfig.attribute.resourceId);
 

@@ -223,39 +223,37 @@ export class KanbanConverter {
     config: KanbanConfig,
     otherAggregator: KanbanSummary
   ) {
-    if (config && config.aggregation) {
-      const values: Record<string, number> = {};
-      let otherValue = 0;
-      let total = 0;
+    const values: Record<string, number> = {};
+    let otherValue = 0;
+    let total = 0;
 
-      Object.keys(columnsMap).forEach(key => {
-        if (columnsMap[key].summary) {
-          values[key] = +aggregateDataValues(
-            config.aggregation.aggregation,
-            columnsMap[key].summary.values,
-            config.aggregation.constraint
-          );
-          total += values[key];
-        }
-      });
-
-      if (otherAggregator) {
-        otherValue = +aggregateDataValues(
+    Object.keys(columnsMap).forEach(key => {
+      if (columnsMap[key].summary) {
+        values[key] = +aggregateDataValues(
           config.aggregation.aggregation,
-          otherAggregator.values,
+          columnsMap[key].summary.values,
           config.aggregation.constraint
         );
-        total += otherValue;
-
-        otherAggregator.summary = new Big((otherValue / total) * 100).toFixed(2) + '%';
+        total += values[key];
       }
+    });
 
-      Object.keys(columnsMap).forEach(key => {
-        if (columnsMap[key].summary) {
-          columnsMap[key].summary.summary = new Big((values[key] / total) * 100).toFixed(2) + '%';
-        }
-      });
+    if (otherAggregator) {
+      otherValue = +aggregateDataValues(
+        config.aggregation.aggregation,
+        otherAggregator.values,
+        config.aggregation.constraint
+      );
+      total += otherValue;
+
+      otherAggregator.summary = new Big((otherValue / total) * 100).toFixed(2) + '%';
     }
+
+    Object.keys(columnsMap).forEach(key => {
+      if (columnsMap[key].summary) {
+        columnsMap[key].summary.summary = new Big((values[key] / total) * 100).toFixed(2) + '%';
+      }
+    });
   }
 
   private formatAggregatedValue(aggregator: KanbanSummary, config: KanbanConfig): any {
