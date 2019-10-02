@@ -83,5 +83,6 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
       resourceIndex: 0,
       resourceType: AttributesResourceType.Collection,
     })),
+    summary: null,
   };
 }

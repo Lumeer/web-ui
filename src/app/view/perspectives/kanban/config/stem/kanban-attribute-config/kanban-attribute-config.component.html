@@ -1,0 +1,13 @@
+<select-item class="d-block w-100"
+             [emptyValue]="emptyValueString"
+             [placeholderIcon]="icon"
+             placeholderTitle="Select displayed value"
+             i18n-placeholderTitle="@@perspective.kanban.config.value"
+             [items]="availableAttributes"
+             [selectedId]="kanbanAttribute | kanbanCleanAttribute"
+             [removable]="!!kanbanAttribute"
+             [buttonClasses]="buttonClasses"
+             (select)="onAttributeSelected($event)"
+             (remove)="onAttributeRemoved()">
+</select-item>
+<ng-content></ng-content>

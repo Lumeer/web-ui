@@ -18,21 +18,28 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PivotValueType} from '../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {KanbanValueType} from '../../../../core/store/kanbans/kanban';
 
 @Pipe({
-  name: 'kanbanColumnTitles',
+  name: 'kanbanValueTypeSelectItems',
 })
-export class KanbanColumnTitlesPipe implements PipeTransform {
-  public transform(config: KanbanConfig, attribute: KanbanAttribute): string[] {
-    const res = ((config && config.columns) || [])
-      .filter(column => this.containsAttribute(column.createdFromAttributes, attribute))
-      .map(c => c.title);
+export class KanbanValueTypeSelectItemsPipe implements PipeTransform {
+  constructor(private i18n: I18n) {}
 
-    return res;
+  public transform(types: KanbanValueType[]): SelectItemModel[] {
+    return (types || []).map(type => ({id: type, value: this.translateValueType(type)}));
   }
 
-  private containsAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {
-    return !attribute || (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
+  private translateValueType(type: KanbanValueType): string {
+    return this.i18n(
+      {
+        id: 'perspective.kanban.config.value.type',
+        value: '{type, select, default {Default} all {% of all columns}}',
+      },
+      {type}
+    );
   }
 }

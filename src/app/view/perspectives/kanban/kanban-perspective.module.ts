@@ -48,6 +48,11 @@ import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items
 import {KanbanDueHoursTagPipe} from './pipes/kanban-due-hours-tag.pipe';
 import {KanbanColumnTitlesPipe} from './pipes/kanban-column-titles.pipe';
 import {KanbanSelectDataItemsPipe} from './pipes/kanban-select-data-items.pipe';
+import {KanbanAttributeConfigComponent} from './config/stem/kanban-attribute-config/kanban-attribute-config.component';
+import {KanbanValueAttributeConfigComponent} from './config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component';
+import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-items.pipe';
+import {KanbanAggregateSelectItemsPipe} from './pipes/kanban-aggregate-select-items.pipe';
+import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
 
 @NgModule({
   declarations: [
@@ -69,6 +74,11 @@ import {KanbanSelectDataItemsPipe} from './pipes/kanban-select-data-items.pipe';
     KanbanDueHoursTagPipe,
     KanbanColumnTitlesPipe,
     KanbanSelectDataItemsPipe,
+    KanbanAttributeConfigComponent,
+    KanbanValueAttributeConfigComponent,
+    KanbanValueTypeSelectItemsPipe,
+    KanbanAggregateSelectItemsPipe,
+    KanbanCleanAttributePipe,
   ],
   imports: [
     SharedModule,
