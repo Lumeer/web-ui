@@ -26,13 +26,13 @@ import {KanbanAttribute, KanbanConfig} from '../../../../core/store/kanbans/kanb
 export class KanbanColumnTitlesPipe implements PipeTransform {
   public transform(config: KanbanConfig, attribute: KanbanAttribute): string[] {
     const res = ((config && config.columns) || [])
-      .filter(column => this.containsAttribute(column.createdFromAttributes, attribute))
+      .filter(column => !attribute || this.containsAttribute(column.createdFromAttributes, attribute))
       .map(c => c.title);
 
     return res;
   }
 
   private containsAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {
-    return !attribute || (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
+    return (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
   }
 }
