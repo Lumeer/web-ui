@@ -1,5 +1,4 @@
-<ng-container *ngIf="{items: stem | pivotSelectItems:collections:linkTypes,
-attributesResources: stem | queryStemAttributesResources:collections:linkTypes} as data">
+<ng-container *ngIf="{attributesResources: stem | queryStemAttributesResources:collections:linkTypes} as data">
 
   <h6 class="font-weight-bold" i18n="@@perspective.pivot.config.row.header">
     Rows
@@ -133,7 +132,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
 
         <pivot-value-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
                                       [pivotAttribute]="attribute"
-                                      [availableAttributes]="data.items"
+                                      [attributesResources]="data.attributesResources"
                                       (attributeSelect)="onValueAttributeSelect($event, attribute)"
                                       (attributeRemove)="onValueAttributeRemove(index)"
                                       (attributeChange)="onValueAttributeChange(index, $event)">
@@ -147,7 +146,7 @@ attributesResources: stem | queryStemAttributesResources:collections:linkTypes} 
 
   <pivot-value-attribute-config class="d-block"
                                 [pivotAttribute]="null"
-                                [availableAttributes]="data.items"
+                                [attributesResources]="data.attributesResources"
                                 (attributeSelect)="onValueAttributeSelect($event)">
   </pivot-value-attribute-config>
 

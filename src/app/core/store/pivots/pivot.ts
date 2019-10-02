@@ -51,12 +51,12 @@ export interface PivotAttribute {
   attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+  constraint?: Constraint;
 }
 
 export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;
   sort?: PivotSort;
-  constraint?: Constraint;
 }
 
 export interface PivotRowAttribute extends PivotRowColumnAttribute {}

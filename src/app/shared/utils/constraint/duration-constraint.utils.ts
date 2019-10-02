@@ -200,7 +200,13 @@ export function formatDurationDataValue(
     let usedNumUnits = 0;
     const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
 
-    const reducedValue = sortedDurationUnits.reduce((result, unit) => {
+    let durationUnits = [...sortedDurationUnits];
+    if (config.maxUnit) {
+      const index = durationUnits.indexOf(config.maxUnit);
+      durationUnits = durationUnits.slice(index, index + 2);
+    }
+
+    const reducedValue = durationUnits.reduce((result, unit) => {
       const unitToMillis = durationToMillisMap[unit];
       if (unitToMillis) {
         const unitToMillisBig = new Big(unitToMillis);
