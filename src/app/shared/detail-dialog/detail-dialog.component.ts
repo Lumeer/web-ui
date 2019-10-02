@@ -40,7 +40,7 @@ export class DetailDialogComponent implements OnInit {
   public collection: Collection;
 
   @Input()
-  public document: Document;
+  public document: DocumentModel;
 
   public readonly dialogType = DialogType;
 

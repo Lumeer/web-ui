@@ -29,12 +29,23 @@ export class GanttChartHeaderComponent {
   @Input()
   public currentMode: GanttChartMode;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public modeChange = new EventEmitter<GanttChartMode>();
+
+  @Output()
+  public scrollToToday = new EventEmitter();
 
   public readonly ganttChartModes = Object.values(GanttChartMode);
 
   public onModeSelect(mode: GanttChartMode) {
+    this.currentMode = mode;
     this.modeChange.next(mode);
+  }
+
+  public onScrollToTodayClick() {
+    this.scrollToToday.emit();
   }
 }

@@ -1,19 +1,24 @@
-<ng-container *ngIf="{mode: currentMode$ | async, tasks: tasks$ | async} as data">
-  <ng-container *ngIf="{range: data.tasks | tasksInvalidRangeInfo} as invalidInfo">
+<ng-container *ngIf="{mode: currentMode$ | async, tasksData: data$ | async} as data">
+  <ng-container *ngIf="{range: data.tasksData?.tasks | tasksInvalidRangeInfo} as invalidInfo">
     <ng-container *ngIf="!invalidInfo.range">
-      <gantt-chart-header class="d-flex justify-content-end"
-                          [currentMode]="data.mode"
+      <gantt-chart-header [currentMode]="data.mode"
+                          [canManageConfig]="canManageConfig"
+                          (scrollToToday)="visualizationComponent.scrollToToday()"
                           (modeChange)="onModeChanged($event)">
       </gantt-chart-header>
       <gantt-chart-visualization
         [canManageConfig]="canManageConfig"
         [ganttChartId]="ganttChartId"
         [currentMode]="data.mode"
-        [tasks]="data.tasks"
-        (datesChange)="onDatesChanged($event)"
-        (progressChange)="onProgressChanged($event)"
+        [tasks]="data.tasksData?.tasks"
+        [options]="data.tasksData?.options"
+        (taskChange)="onTaskChanged($event)"
         (addDependency)="onAddDependency($event)"
-        (removeDependency)="onRemoveDependency($event)">
+        (removeDependency)="onRemoveDependency($event)"
+        (swimlaneResize)="onSwimlaneResize($event)"
+        (taskCreate)="onTaskCreated($event)"
+        (taskDetail)="onTaskDetail($event)"
+        #visualizationComponent>
       </gantt-chart-visualization>
     </ng-container>
 

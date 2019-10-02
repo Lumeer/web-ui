@@ -170,6 +170,9 @@ export function formatDataValue(
   constraintData?: ConstraintData,
   originalConstraint?: Constraint
 ): any {
+  if (value === '') {
+    return value;
+  }
   if (!constraint) {
     return isNumeric(value) ? toNumber(value) : formatUnknownDataValue(value);
   }

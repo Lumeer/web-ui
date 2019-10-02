@@ -18,23 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {GanttChartMode, GanttChartTask} from '../../../../../core/store/gantt-charts/gantt-chart';
-import * as frappeGantt from '@lumeer/frappe-gantt-lumeer';
-import * as moment from 'moment';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {environment} from '../../../../../../environments/environment';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-
-export interface GanttChartValueChange {
-  dataResourceId: string;
-  resourceType: AttributesResourceType;
-  changes: {attributeId: string; value: any}[];
-}
+import Gantt from '@lumeer/lumeer-gantt';
+import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
-  styleUrls: ['./gantt-chart-visualization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartVisualizationComponent implements OnChanges {
@@ -48,13 +39,13 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public ganttChartId: string;
 
   @Input()
-  public currentMode: GanttChartMode;
+  public options: GanttOptions;
+
+  @Input()
+  public currentMode: string;
 
   @Output()
-  public datesChange = new EventEmitter<GanttChartValueChange>();
-
-  @Output()
-  public progressChange = new EventEmitter<GanttChartValueChange>();
+  public taskChange = new EventEmitter<GanttChartTask>();
 
   @Output()
   public addDependency = new EventEmitter<{fromId: string; toId: string}>();
@@ -62,14 +53,27 @@ export class GanttChartVisualizationComponent implements OnChanges {
   @Output()
   public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
 
-  public ganttChart: frappeGantt;
+  @Output()
+  public swimlaneResize = new EventEmitter<{index: number; width: number}>();
+
+  @Output()
+  public taskCreate = new EventEmitter<GanttChartTask>();
+
+  @Output()
+  public taskDetail = new EventEmitter<GanttChartTask>();
+
+  public ganttChart: Gantt;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.tasks && this.tasks) {
+    if (changes.tasks || changes.options) {
       this.visualize();
     } else if (this.modeChanged(changes)) {
       this.refreshMode(this.currentMode);
     }
+  }
+
+  private modeChanged(changes: SimpleChanges): boolean {
+    return changes.currentMode && changes.currentMode.previousValue !== changes.currentMode.currentValue;
   }
 
   private visualize() {
@@ -81,86 +85,62 @@ export class GanttChartVisualizationComponent implements OnChanges {
   }
 
   private refreshChart() {
-    const scrollLeft = this.ganttChart.$svg.parentElement && this.ganttChart.$svg.parentElement.scrollLeft;
-    this.ganttChart.refresh(this.tasks);
-    if (this.ganttChart.view_is(this.currentMode)) {
-      isNotNullOrUndefined(scrollLeft) && (this.ganttChart.$svg.parentElement.scrollLeft = scrollLeft);
-    } else {
-      this.refreshMode(this.currentMode);
-    }
+    this.ganttChart.changeTasks(this.tasks, this.options);
   }
 
   private createChart() {
-    this.createChartAndInitListeners(this.tasks);
+    this.createChartAndInitListeners();
   }
 
-  private modeChanged(changes: SimpleChanges): boolean {
-    return changes.currentMode && this.ganttChart && !this.ganttChart.view_is(this.currentMode);
+  private refreshMode(mode: string) {
+    this.ganttChart.changeViewMode(mode as any);
   }
 
-  private refreshMode(mode: GanttChartMode) {
-    this.ganttChart.change_view_mode(mode);
+  public scrollToToday() {
+    this.ganttChart && this.ganttChart.scrollToToday();
   }
 
-  private createChartAndInitListeners(tasks: GanttChartTask[]) {
+  private createChartAndInitListeners() {
     const ganttElement = document.getElementById(`ganttChart-${this.ganttChartId}`);
     if (!ganttElement) {
       return;
     }
-    this.ganttChart = new frappeGantt.default(ganttElement, tasks, {
-      on_date_change: (task: GanttChartTask, start, end) => {
-        if (!task.editable) {
-          return;
-        }
 
-        const startTimeTask = moment(task.start);
-        const startTime = moment(start);
+    this.ganttChart = new Gantt(ganttElement, this.tasks, this.options);
+    this.ganttChart.onSwimlaneResized = (index, width) => this.onSwimlaneResized(index, width);
+    this.ganttChart.onTaskChanged = task => this.onTaskChanged(task);
+    this.ganttChart.onTaskDependencyAdded = (fromTask, toTask) => this.onDependencyAdded(fromTask, toTask);
+    this.ganttChart.onTaskDependencyRemoved = (fromTask, toTask) => this.onDependencyRemoved(fromTask, toTask);
+    this.ganttChart.onTaskCreated = task => this.onTaskCreated(task);
+    this.ganttChart.onTaskDetail = task => this.onTaskDetail(task);
+  }
 
-        const endTimeTask = moment(task.end);
-        const endTime = moment(end);
+  private onSwimlaneResized(index: number, width: number) {
+    this.swimlaneResize.emit({index, width});
+  }
 
-        const changes = [];
-        const metadata = task.metadata;
+  private onTaskChanged(task: GanttChartTask) {
+    this.taskChange.emit(task);
+  }
 
-        //start time changed
-        if (metadata.startAttributeId && !startTimeTask.isSame(startTime)) {
-          changes.push({attributeId: metadata.startAttributeId, value: startTime.toDate()});
-        }
+  private onTaskDetail(task: GanttChartTask) {
+    this.taskDetail.emit(task);
+  }
 
-        //end time changed
-        if (metadata.endAttributeId && !endTimeTask.isSame(endTime)) {
-          changes.push({attributeId: metadata.endAttributeId, value: endTime.toDate()});
-        }
+  private onTaskCreated(task: GanttChartTask) {
+    this.taskCreate.emit(task);
+  }
 
-        if (changes) {
-          this.datesChange.emit({...metadata, changes});
-        }
-      },
+  private onDependencyAdded(fromTask: GanttChartTask, toTask: GanttChartTask) {
+    if (this.canEditDependency(fromTask, toTask)) {
+      this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+    }
+  }
 
-      on_progress_change: (task: GanttChartTask, progress) => {
-        if (!task.editable) {
-          return;
-        }
-
-        const metadata = task.metadata;
-        const progressAttributeId = metadata.progressAttributeId;
-        if (progressAttributeId) {
-          this.progressChange.emit({...metadata, changes: [{attributeId: progressAttributeId, value: progress}]});
-        }
-      },
-      on_dependency_added: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
-        if (this.canEditDependency(fromTask, toTask)) {
-          this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
-        }
-      },
-      on_dependency_deleted: (fromTask: GanttChartTask, toTask: GanttChartTask) => {
-        if (this.canEditDependency(fromTask, toTask)) {
-          this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
-        }
-      },
-      language: environment.locale,
-      view_mode: this.currentMode,
-    });
+  private onDependencyRemoved(fromTask: GanttChartTask, toTask: GanttChartTask) {
+    if (this.canEditDependency(fromTask, toTask)) {
+      this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+    }
   }
 
   private canEditDependency(fromTask: GanttChartTask, toTask: GanttChartTask): boolean {

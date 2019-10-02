@@ -470,7 +470,7 @@ export class DataAggregator {
   private getValues(object: DataResource, attributeId: string): any[] {
     const value = object.data[attributeId];
     if (isNullOrUndefined(value)) {
-      return [];
+      return [''];
     }
 
     return Array.isArray(value) ? value : [value];

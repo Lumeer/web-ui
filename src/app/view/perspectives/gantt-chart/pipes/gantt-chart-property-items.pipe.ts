@@ -18,33 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {
-  GanttChartBarModel,
-  GanttChartBarProperty,
-  GanttChartBarPropertyOptional,
-  GanttChartBarPropertyRequired,
-  GanttChartStemConfig,
-} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
-const sameCollectionProperties = [
-  GanttChartBarPropertyRequired.Start.toString(),
-  GanttChartBarPropertyRequired.End.toString(),
-  GanttChartBarPropertyRequired.Name.toString(),
-  GanttChartBarPropertyOptional.Color.toString(),
-  GanttChartBarPropertyOptional.Progress.toString(),
-];
+const sameCollectionProperties = ['start', 'end', 'name', 'color', 'progress'];
 
 @Pipe({
   name: 'ganttChartPropertyItems',
 })
 export class GanttChartPropertyItemsPipe implements PipeTransform {
-  public transform(
-    selectItems: SelectItemModel[],
-    property: GanttChartBarProperty,
-    config: GanttChartStemConfig
-  ): SelectItemModel[] {
+  public transform(selectItems: SelectItemModel[], property: string, config: GanttChartStemConfig): SelectItemModel[] {
     if (sameCollectionProperties.includes(property)) {
       return this.filterSameResourceItems(selectItems, property, config);
     }
@@ -54,24 +38,21 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
 
   private filterSameResourceItems(
     selectItems: SelectItemModel[],
-    property: GanttChartBarProperty,
+    property: string,
     config: GanttChartStemConfig
   ): SelectItemModel[] {
-    const sameCollectionModels = Object.entries(config.barsProperties || {})
-      .filter(([prop]) => sameCollectionProperties.includes(prop) && prop !== property)
-      .map(([, model]) => model);
+    const sameCollectionModels = sameCollectionProperties
+      .filter(prop => prop !== property)
+      .map(prop => config[prop])
+      .filter(model => !!model);
 
     if (sameCollectionModels.length > 0) {
-      const definedModels = Object.entries(config.barsProperties || {})
-        .filter(([prop]) => prop !== property)
-        .map(([, model]) => model);
-
       return selectItems.filter(item => {
         const model = item.id as GanttChartBarModel;
         return (
           model.resourceIndex === sameCollectionModels[0].resourceIndex &&
           model.resourceId === sameCollectionModels[0].resourceId &&
-          !definedModels.some(definedModel => deepObjectsEquals(definedModel, item.id))
+          !sameCollectionModels.some(definedModel => deepObjectsEquals(definedModel, item.id))
         );
       });
     }
@@ -81,12 +62,13 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
 
   private filterAnyResourceItems(
     selectItems: SelectItemModel[],
-    property: GanttChartBarProperty,
+    property: string,
     config: GanttChartStemConfig
   ): SelectItemModel[] {
-    const definedModels = Object.entries(config.barsProperties || {})
-      .filter(([prop]) => prop !== property)
-      .map(([, model]) => model);
+    const definedModels = sameCollectionProperties
+      .filter(prop => prop !== property)
+      .map(prop => config[prop])
+      .filter(model => !!model);
 
     if (definedModels.length > 0) {
       return selectItems.filter(item => !definedModels.some(model => deepObjectsEquals(model, item.id)));

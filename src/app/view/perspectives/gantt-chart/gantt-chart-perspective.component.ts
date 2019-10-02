@@ -31,7 +31,7 @@ import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/doc
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 
@@ -65,6 +65,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
+  public currentUser$: Observable<User>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public users$: Observable<User[]>;
   public readonly durationUnitsMap: DurationUnitsMap;
@@ -162,6 +163,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
@@ -194,5 +196,9 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+  }
+
+  public createDocument(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.Create({document}));
   }
 }

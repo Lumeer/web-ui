@@ -18,6 +18,9 @@
  */
 
 import {
+  GANTT_COLUMN_WIDTH,
+  GANTT_PADDING,
+  GanttChartBarModel,
   GanttChartConfig,
   GanttChartConfigVersion,
   GanttChartMode,
@@ -25,7 +28,7 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   collectionIdsChainForStem,
@@ -33,33 +36,45 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {isArraySubset} from '../../../../shared/utils/array.utils';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {ConstraintType} from '../../../../core/model/data/constraint';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
-  if (viewConfig.mode !== currentConfig.mode) {
+  if (!deepObjectsEquals({...viewConfig, stemsConfigs: null}, {...currentConfig, stemsConfigs: null})) {
     return true;
   }
 
-  return ganttConfigCollectionsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
+  return ganttStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
-function ganttConfigCollectionsChanged(c1: GanttChartStemConfig[], c2: GanttChartStemConfig[]): boolean {
+function ganttStemsConfigsChanged(c1: GanttChartStemConfig[], c2: GanttChartStemConfig[]): boolean {
   if (c1.length !== c2.length) {
     return true;
   }
 
-  return c1.some((config, index) => ganttConfigCollectionChanged(config, c2[index]));
+  return c1.some((config, index) => ganttStemConfigChanged(config, c2[index]));
 }
 
-function ganttConfigCollectionChanged(config1: GanttChartStemConfig, config2: GanttChartStemConfig): boolean {
-  if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
+function ganttStemConfigChanged(config1: GanttChartStemConfig, config2: GanttChartStemConfig): boolean {
+  const config1DefinedProperties = ganttStemConfigDefinedProperties(config1);
+  const config2DefinedProperties = ganttStemConfigDefinedProperties(config2);
+  if (config1DefinedProperties.length !== config2DefinedProperties.length) {
     return true;
   }
 
-  return Object.entries(config1.barsProperties).some(([key, value]) => {
-    return !config2.barsProperties[key] || !deepObjectsEquals(value, config2.barsProperties[key]);
+  const config2Properties = ganttStemConfigProperties(config2);
+  return ganttStemConfigProperties(config1).some((bar, index) => {
+    return !deepObjectsEquals(bar, config2Properties[index]);
   });
+}
+
+function ganttStemConfigProperties(config: GanttChartStemConfig): GanttChartBarModel[] {
+  return [config.start, config.end, config.name, config.color, config.progress, ...(config.categories || [])];
+}
+
+function ganttStemConfigDefinedProperties(config: GanttChartStemConfig): GanttChartBarModel[] {
+  return ganttStemConfigProperties(config).filter(bar => !!bar);
 }
 
 export function checkOrTransformGanttConfig(
@@ -69,7 +84,7 @@ export function checkOrTransformGanttConfig(
   linkTypes: LinkType[]
 ): GanttChartConfig {
   if (!config) {
-    return createDefaultConfig(query);
+    return createDefaultConfig(query, collections, linkTypes);
   }
 
   return {
@@ -103,58 +118,113 @@ function checkOrTransformGanttStemConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): GanttChartStemConfig {
-  if (!stemConfig || !stemConfig.barsProperties) {
+  if (!stemConfig) {
     return createDefaultGanttChartStemConfig(stem);
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-  const barsProperties = Object.entries(stemConfig.barsProperties)
-    .filter(([, bar]) => !!bar)
-    .reduce((map, [type, bar]) => {
-      const attributesResource = attributesResourcesOrder[bar.resourceIndex];
-      if (
-        attributesResource &&
-        attributesResource.id === bar.resourceId &&
-        getAttributesResourceType(attributesResource) === bar.resourceType
-      ) {
-        const attribute = findAttribute(attributesResource.attributes, bar.attributeId);
-        if (attribute) {
-          map[type] = bar;
-        }
-      } else {
-        const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-          ar => ar.id === bar.resourceId && getAttributesResourceType(ar) === bar.resourceType
-        );
-        if (newAttributesResourceIndex >= 0) {
-          const attribute = findAttribute(
-            attributesResourcesOrder[newAttributesResourceIndex].attributes,
-            bar.attributeId
-          );
-          if (attribute) {
-            map[type] = {...bar, resourceIndex: newAttributesResourceIndex};
-          }
-        }
+  return {
+    stem,
+    start: checkOrTransformGanttBarModel(stemConfig.start, attributesResourcesOrder),
+    end: checkOrTransformGanttBarModel(stemConfig.end, attributesResourcesOrder),
+    name: checkOrTransformGanttBarModel(stemConfig.name, attributesResourcesOrder),
+    progress: checkOrTransformGanttBarModel(stemConfig.progress, attributesResourcesOrder),
+    color: checkOrTransformGanttBarModel(stemConfig.color, attributesResourcesOrder),
+    categories: (stemConfig.categories || [])
+      .map(category => checkOrTransformGanttBarModel(category, attributesResourcesOrder))
+      .filter(val => !!val),
+  };
+}
+
+function checkOrTransformGanttBarModel(
+  bar: GanttChartBarModel,
+  attributesResourcesOrder: AttributesResource[]
+): GanttChartBarModel {
+  if (!bar) {
+    return bar;
+  }
+
+  const attributesResource = attributesResourcesOrder[bar.resourceIndex];
+  if (
+    attributesResource &&
+    attributesResource.id === bar.resourceId &&
+    getAttributesResourceType(attributesResource) === bar.resourceType
+  ) {
+    const attribute = findAttribute(attributesResource.attributes, bar.attributeId);
+    if (attribute) {
+      return bar;
+    }
+  } else {
+    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+      ar => ar.id === bar.resourceId && getAttributesResourceType(ar) === bar.resourceType
+    );
+    if (newAttributesResourceIndex >= 0) {
+      const attribute = findAttribute(attributesResourcesOrder[newAttributesResourceIndex].attributes, bar.attributeId);
+      if (attribute) {
+        return {...bar, resourceIndex: newAttributesResourceIndex};
       }
-      return map;
-    }, {});
-
-  return {barsProperties, stem};
+    }
+  }
+  return null;
 }
 
-function createDefaultConfig(query: Query): GanttChartConfig {
+function createDefaultConfig(query: Query, collections: Collection[], linkTypes: LinkType[]): GanttChartConfig {
   const stems = (query && query.stems) || [];
-  const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem));
-  return {mode: GanttChartMode.Month, version: GanttChartConfigVersion.V1, stemsConfigs: stemsConfigs};
+  const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem, collections, linkTypes));
+  return {
+    mode: GanttChartMode.Month,
+    version: GanttChartConfigVersion.V2,
+    stemsConfigs: stemsConfigs,
+    lockResize: true,
+    columnWidth: GANTT_COLUMN_WIDTH,
+    padding: GANTT_PADDING,
+  };
 }
 
-export function createDefaultGanttChartStemConfig(stem?: QueryStem): GanttChartStemConfig {
-  return {barsProperties: {}, stem};
+export function createDefaultGanttChartStemConfig(
+  stem?: QueryStem,
+  collections?: Collection[],
+  linkTypes?: LinkType[]
+): GanttChartStemConfig {
+  if (stem && collections && linkTypes) {
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+    const {index, startAttribute, endAttribute} = findBestInitialAttributes(attributesResourcesOrder);
+    if (attributesResourcesOrder[index]) {
+      const defaultAttributeId = getDefaultAttributeId(attributesResourcesOrder[index]);
+      const defaultAttribute = findAttribute(attributesResourcesOrder[index].attributes, defaultAttributeId);
+      const resourceId = attributesResourcesOrder[index].id;
+      const resourceType = getAttributesResourceType(attributesResourcesOrder[index]);
+      const resourceIndex = index;
+      const name = defaultAttribute && {attributeId: defaultAttribute.id, resourceId, resourceType, resourceIndex};
+      const start = startAttribute && {attributeId: startAttribute.id, resourceId, resourceType, resourceIndex};
+      const end = endAttribute && {attributeId: endAttribute.id, resourceId, resourceType, resourceIndex};
+      return {stem, name, start, end};
+    }
+
+    return {stem};
+  }
+  return {};
+}
+
+function findBestInitialAttributes(
+  attributesResourcesOrder: AttributesResource[]
+): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
+  for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
+    if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
+      continue;
+    }
+
+    const dateAttributes = (attributesResourcesOrder[i].attributes || []).filter(
+      attribute => attribute.constraint && attribute.constraint.type === ConstraintType.DateTime
+    );
+    if (dateAttributes.length >= 2) {
+      return {index: i, startAttribute: dateAttributes[0], endAttribute: dateAttributes[1]};
+    }
+  }
+
+  return {index: 0};
 }
 
 export function ganttConfigIsEmpty(config: GanttChartConfig) {
-  return (
-    config &&
-    config.stemsConfigs.filter(value => Object.values(value.barsProperties || {}).filter(bar => !!bar).length > 0)
-      .length === 0
-  );
+  return config && config.stemsConfigs.filter(value => ganttStemConfigDefinedProperties(value).length > 0).length === 0;
 }

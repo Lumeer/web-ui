@@ -30,9 +30,11 @@
                        [config]="data.config"
                        [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
                        [query]="data.query"
+                       [currentUser]="currentUser$ | async"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"
+                       (createDocument)="createDocument($event)"
                        (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>
 

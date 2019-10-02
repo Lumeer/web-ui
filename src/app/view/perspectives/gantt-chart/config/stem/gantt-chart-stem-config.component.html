@@ -3,43 +3,28 @@
   <b>{{collection.name}}</b>
 </div>
 
-<select-item *ngFor="let propertyRequired of propertiesRequired"
+<select-item *ngFor="let property of properties"
              class="d-block w-100 mt-2"
-             [items]="selectItems | ganttChartPropertyItems:propertyRequired:config"
-             [selectedId]="config.barsProperties && config.barsProperties[propertyRequired]"
-             [placeholderText]="propertyRequired | ganttChartBarPlaceholder"
-             [emptyValue]="propertyRequired | ganttChartBarEmptyValue"
+             [items]="selectItems | ganttChartPropertyItems:property:config"
+             [selectedId]="config[property]"
+             [placeholderText]="property | ganttChartBarPlaceholder"
+             [emptyValue]="property | ganttChartBarEmptyValue"
              [removable]="true"
              [buttonClasses]="buttonClasses"
-             (select)="onBarPropertySelect(propertyRequired, $event)"
-             (remove)="onBarPropertyRemoved(propertyRequired)">
-</select-item>
-
-
-<select-item class="d-block w-100 mt-2"
-             *ngFor="let propertyOptional of propertiesOptionalSimple"
-             [items]="selectItems | ganttChartPropertyItems:propertyOptional:config"
-             [selectedId]="config.barsProperties && config.barsProperties[propertyOptional]"
-             [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
-             [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
-             [buttonClasses]="buttonClasses"
-             [removable]="true"
-             (select)="onBarPropertySelect(propertyOptional, $event)"
-             (remove)="onBarPropertyRemoved(propertyOptional)">
+             (select)="onBarPropertySelect(property, $event)"
+             (remove)="onBarPropertyRemoved(property)">
 </select-item>
 
 <select-item-with-constraint class="d-block w-100 mt-2"
-                             *ngFor="let propertyOptional of propertiesOptionalConstraint"
+                             *ngFor="let category of categories; let index = index"
                              [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
-                             [restrictedIds]="propertyOptional | ganttChartRestrictedItemsWithConstraint:config"
-                             [selectedId]="(config.barsProperties && config.barsProperties[propertyOptional]) | ganttChartSelectedItemWithConstraint"
-                             [placeholderText]="propertyOptional | ganttChartBarPlaceholder"
-                             [selectedConstraint]="config.barsProperties && config.barsProperties[propertyOptional]?.constraint"
-                             [emptyValue]="propertyOptional | ganttChartBarEmptyValue"
+                             [selectedId]="category | ganttChartSelectedItemWithConstraint"
+                             [placeholderText]="'category' | ganttChartBarPlaceholder"
+                             [selectedConstraint]="category?.constraint"
+                             [emptyValue]="'category' | ganttChartBarEmptyValue"
                              [buttonClasses]="buttonClasses"
                              [removable]="true"
-                             (select)="onBarConstraintPropertySelect(propertyOptional, $event)"
-                             (selectConstraint)="onBarConstraintSelect(propertyOptional, $event)"
-                             (remove)="onBarPropertyRemoved(propertyOptional)">
-
+                             (select)="onBarCategorySelect($event, index)"
+                             (selectConstraint)="onBarCategoryConstraintSelect($event, index)"
+                             (remove)="onBarCategoryRemoved(index)">
 </select-item-with-constraint>

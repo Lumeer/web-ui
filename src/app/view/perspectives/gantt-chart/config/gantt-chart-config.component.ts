@@ -25,6 +25,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
+import {generateId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -47,6 +48,9 @@ export class GanttChartConfigComponent {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
+  public readonly showDatesId = generateId();
+  public readonly lockResizeId = generateId();
+
   public readonly viewModePlaceholder: string;
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
 
@@ -62,5 +66,38 @@ export class GanttChartConfigComponent {
 
   public trackByStem(index: number, stem: QueryStem): string {
     return stem.collectionId + index;
+  }
+
+  public onCategoryRemoved(index: number, stemIndex: number) {
+    const config = deepObjectCopy<GanttChartConfig>(this.config);
+    config.stemsConfigs[stemIndex].categories.splice(index, 1);
+
+    const maxCategories = config.stemsConfigs.reduce(
+      (max, stemConfig) => Math.max(max, (stemConfig.categories || []).length),
+      0
+    );
+    if ((config.swimlaneWidths || []).length > maxCategories) {
+      config.swimlaneWidths.splice(index, 1);
+    }
+    this.configChange.emit(config);
+  }
+
+  public onShowDatesChange(checked: boolean) {
+    this.onBooleanPropertyChange('showDates', checked);
+  }
+
+  public onLockResizeChange(checked: boolean) {
+    this.onBooleanPropertyChange('lockResize', checked);
+  }
+
+  private onBooleanPropertyChange(property: string, checked: boolean) {
+    const config = deepObjectCopy<GanttChartConfig>(this.config);
+    if (checked) {
+      config[property] = true;
+    } else {
+      delete config[property];
+    }
+
+    this.configChange.emit(config);
   }
 }

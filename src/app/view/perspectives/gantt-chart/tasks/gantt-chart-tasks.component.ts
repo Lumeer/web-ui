@@ -30,10 +30,10 @@ import {
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttChartConfig, GanttChartMode, GanttChartTask} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map} from 'rxjs/operators';
-import {GanttChartConverter} from '../util/gantt-chart-converter';
+import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
 import {getSaveValue} from '../../../../shared/utils/data.utils';
@@ -44,7 +44,13 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
-import {GanttChartValueChange} from './visualization/gantt-chart-visualization.component';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
+import * as moment from 'moment';
+import {BsModalService} from 'ngx-bootstrap';
+import {DetailDialogComponent} from '../../../../shared/detail-dialog/detail-dialog.component';
+import {generateDocumentDataByQuery} from '../../../../core/store/documents/document.utils';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -93,6 +99,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Input()
   public query: Query;
 
+  @Input()
+  public currentUser: User;
+
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
 
@@ -105,29 +114,38 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
+  @Output()
+  public createDocument = new EventEmitter<DocumentModel>();
+
   private readonly converter: GanttChartConverter;
 
+  private options: GanttOptions;
+
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
-  public tasks$: Observable<GanttChartTask[]>;
+  public data$: Observable<{options: GanttOptions; tasks: GanttChartTask[]}>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
-  constructor(private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter) {
+  constructor(
+    private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
+    private modalService: BsModalService
+  ) {
     this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
   }
 
   public ngOnInit() {
-    this.tasks$ = this.subscribeTasks$();
+    this.data$ = this.subscribeTasks$();
   }
 
-  private subscribeTasks$(): Observable<GanttChartTask[]> {
+  private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttChartTask[]}> {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data => this.handleData(data))
+      map(data => this.handleData(data)),
+      tap(data => (this.options = data.options))
     );
   }
 
-  private handleData(data: Data): GanttChartTask[] {
+  private handleData(data: Data): {options: GanttOptions; tasks: GanttChartTask[]} {
     const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
@@ -158,9 +176,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
-    if (changes.config && this.config) {
-      this.currentMode$.next(this.config.mode);
-    }
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -186,38 +201,75 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onProgressChanged(valueChange: GanttChartValueChange) {
-    this.onValueChanged(valueChange, true);
-  }
-
-  public onDatesChanged(valueChange: GanttChartValueChange) {
-    this.onValueChanged(valueChange);
-  }
-
-  public onValueChanged(valueChange: GanttChartValueChange, isProgress?: boolean) {
-    const {dataResourceId, resourceType, changes} = valueChange;
-    const dataResource = this.getDataResource(dataResourceId, resourceType);
+  public onTaskChanged(task: GanttChartTask) {
+    const metadata = task.metadata as GanttChartTaskMetadata;
+    const dataResource = this.getDataResource(metadata.dataResourceId, metadata.resourceType);
     if (!dataResource) {
       return;
     }
 
-    const resource = this.getResource(dataResource, resourceType);
+    const patchData = this.createTaskPatchData(task, dataResource);
+    this.emitPatchData(patchData, metadata.resourceType, dataResource);
+  }
 
+  private createTaskPatchData(task: GanttChartTask, dataResource: DataResource): Record<string, any> {
+    const metadata = task.metadata as GanttChartTaskMetadata;
+    const resource = this.getResource(dataResource, metadata.resourceType);
     const patchData = {};
-    for (const {attributeId, value} of changes) {
-      const constraint = findAttributeConstraint(resource && resource.attributes, attributeId);
-      const saveValue = constraint
-        ? getSaveValue(value, constraint, this.constraintData)
-        : isProgress
-        ? this.formatPercentage(dataResource, attributeId, value)
-        : value;
 
-      const changed = (dataResource.data && dataResource.data[attributeId] !== saveValue) || false;
-      if (changed) {
-        patchData[attributeId] = saveValue;
+    if (metadata.startAttributeId) {
+      const start = moment(task.start, this.options && this.options.dateFormat);
+      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.startAttributeId);
+      const saveValue = constraint ? getSaveValue(start, constraint, this.constraintData) : start.toISOString();
+      if (saveValue !== dataResource[metadata.startAttributeId]) {
+        patchData[metadata.startAttributeId] = saveValue;
       }
     }
 
+    if (metadata.endAttributeId) {
+      const end = moment(task.end, this.options && this.options.dateFormat);
+      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.endAttributeId);
+      const saveValue = constraint ? getSaveValue(end, constraint, this.constraintData) : end.toISOString();
+      if (saveValue !== dataResource[metadata.endAttributeId]) {
+        patchData[metadata.endAttributeId] = saveValue;
+      }
+    }
+
+    if (metadata.progressAttributeId) {
+      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.progressAttributeId);
+      const saveValue = constraint
+        ? getSaveValue(task.progress, constraint, this.constraintData)
+        : this.formatPercentage(dataResource, metadata.progressAttributeId, task.progress);
+      if (saveValue !== dataResource[metadata.progressAttributeId]) {
+        patchData[metadata.progressAttributeId] = saveValue;
+      }
+    }
+
+    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support drag swimlanes only in this situation
+    if (task.swimlanes && stemConfig) {
+      for (let i = 0; i < (stemConfig.categories || []).length; i++) {
+        const category = stemConfig.categories[i];
+
+        const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
+        const saveValue = constraint
+          ? getSaveValue(task.swimlanes[i], constraint, this.constraintData)
+          : task.swimlanes[i];
+
+        const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
+        if (changed) {
+          patchData[category.attributeId] = saveValue;
+        }
+      }
+    }
+
+    return patchData;
+  }
+
+  private emitPatchData(
+    patchData: Record<string, any>,
+    resourceType: AttributesResourceType,
+    dataResource: DataResource
+  ) {
     if (Object.keys(patchData).length > 0) {
       if (resourceType === AttributesResourceType.Collection) {
         this.patchDocumentData.emit({...(<DocumentModel>dataResource), data: patchData});
@@ -273,5 +325,53 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
     const metaData = {parentId: null};
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
+  }
+
+  public onSwimlaneResize(data: {index: number; width: number}) {
+    if (this.canManageConfig) {
+      const swimlaneWidths = [...(this.config.swimlaneWidths || [])];
+      swimlaneWidths[data.index] = data.width;
+      const config = {...this.config, swimlaneWidths};
+      this.configChange.emit(config);
+    }
+  }
+
+  public onTaskCreated(task: GanttChartTask) {
+    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support create tasks only in this situation
+    if (!stemConfig || !stemConfig.stem) {
+      return;
+    }
+    const document: DocumentModel = {collectionId: stemConfig.stem.collectionId, data: {}, id: null};
+    const metadata: GanttChartTaskMetadata = {
+      dataResourceId: document.id,
+      endAttributeId: stemConfig.end && stemConfig.end.attributeId,
+      progressAttributeId: stemConfig.progress && stemConfig.progress.attributeId,
+      startAttributeId: stemConfig.start && stemConfig.start.attributeId,
+      resourceId: document.collectionId,
+      resourceType: AttributesResourceType.Collection,
+    };
+    const taskWithMetadata = {...task, metadata};
+
+    const data = generateDocumentDataByQuery(this.query, this.currentUser);
+    const patchData = this.createTaskPatchData(taskWithMetadata, document);
+    Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
+    document.data = data;
+
+    this.createDocument.emit(document);
+  }
+
+  public onTaskDetail(task: GanttChartTask) {
+    const metadata = task.metadata as GanttChartTaskMetadata;
+    if (metadata.resourceType !== AttributesResourceType.Collection) {
+      return; // TODO support links in detail dialog
+    }
+    const document = this.getDataResource(metadata.dataResourceId, metadata.resourceType);
+    if (!document) {
+      return;
+    }
+
+    const collection = this.getResource(document, metadata.resourceType);
+    const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
+    this.modalService.show(DetailDialogComponent, config);
   }
 }
