@@ -23,8 +23,7 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
-  selectDocumentsByCustomQuery,
-  selectLinkInstancesByQuery,
+  selectDocumentsAndLinksByCustomQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
@@ -60,9 +59,8 @@ import {TranslationService} from '../../../core/service/translation.service';
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
-  public documents$: Observable<DocumentModel[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
-  public linkInstances$: Observable<LinkInstance[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
   public currentUser$: Observable<User>;
@@ -147,7 +145,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
       this.fetchDocuments(query);
       this.query$.next(query);
-      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query, false, true)));
+      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuery(query, false, true)));
     });
     this.subscriptions.add(subscription);
   }
@@ -160,7 +158,6 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
-    this.linkInstances$ = this.store$.pipe(select(selectLinkInstancesByQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));

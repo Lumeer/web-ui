@@ -29,7 +29,7 @@ import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
-import {filterDocumentsByQuery} from '../documents/documents.filters';
+import {filterDocumentsAndLinksByQuery} from '../documents/documents.filters';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
@@ -41,6 +41,7 @@ import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
+import {LinkInstance} from '../link-instances/link.instance';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -98,17 +99,29 @@ export const selectDocumentsByReadPermission = createSelector(
   }
 );
 
-export const selectDocumentsByQuery = createSelector(
+export const selectDocumentsAndLinksByQuery = createSelector(
   selectDocumentsByReadPermission,
   selectCollectionsByReadPermission,
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectQuery,
   selectCurrentUser,
-  (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
-    sortDocumentsByCreationDate(
-      filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser)
-    )
+  (
+    documents,
+    collections,
+    linkTypes,
+    linkInstances,
+    query,
+    currentUser
+  ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
+    const data = filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, currentUser);
+    return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+  }
+);
+
+export const selectDocumentsByQuery = createSelector(
+  selectDocumentsAndLinksByQuery,
+  (data): DocumentModel[] => data.documents
 );
 
 export const selectDocumentsByQueryAndIds = (ids: string[]) =>
@@ -126,7 +139,8 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
   selectCurrentUser,
   (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
     sortDocumentsByCreationDate(
-      filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, true)
+      filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, true)
+        .documents
     )
 );
 
@@ -136,18 +150,31 @@ export const selectDocumentsByQueryIncludingChildrenAndIds = (ids: string[]) =>
     documents => documents.filter(doc => ids.includes(doc.id))
   );
 
-export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
+export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,
     selectCollectionsByReadPermission,
     selectAllLinkTypes,
     selectAllLinkInstances,
     selectCurrentUser,
-    (documents, collections, linkTypes, linkInstances, currentUser) =>
-      sortDocumentsByCreationDate(
-        filterDocumentsByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, includeChildren),
-        desc
-      )
+    (documents, collections, linkTypes, linkInstances, currentUser) => {
+      const data = filterDocumentsAndLinksByQuery(
+        documents,
+        collections,
+        linkTypes,
+        linkInstances,
+        query,
+        currentUser,
+        includeChildren
+      );
+      return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+    }
+  );
+
+export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
+  createSelector(
+    selectDocumentsAndLinksByCustomQuery(query, desc, includeChildren),
+    data => data.documents
   );
 
 export const selectLinkTypesByReadPermission = createSelector(
@@ -168,15 +195,6 @@ export const selectLinkTypesByQuery = createSelector(
   }
 );
 
-export const selectLinkTypesByCustomQuery = (query: Query) =>
-  createSelector(
-    selectLinkTypesByReadPermission,
-    linkTypes => {
-      const linkTypesIds = new Set(getAllLinkTypeIdsFromQuery(query));
-      return linkTypes.filter(linkType => linkTypesIds.has(linkType.id));
-    }
-  );
-
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
   createSelector(
     selectLinkTypesByReadPermission,
@@ -194,13 +212,4 @@ export const selectViewsByQuery = createSelector(
   selectViewsByRead,
   selectQuery,
   (views, query): View[] => sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
-);
-
-export const selectLinkInstancesByQuery = createSelector(
-  selectLinkTypesByQuery,
-  selectAllLinkInstances,
-  (linkTypes, linkInstances) => {
-    const linkTypeIds = linkTypes.map(linkType => linkType.id);
-    return linkInstances.filter(linkInstance => linkTypeIds.includes(linkInstance.linkTypeId));
-  }
 );

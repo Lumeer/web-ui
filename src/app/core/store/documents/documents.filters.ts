@@ -30,8 +30,9 @@ import {arrayIntersection} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint} from '../collections/collection.util';
 import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
+import {mergeLinkInstances} from '../link-instances/link-instance.utils';
 
-export function filterDocumentsByQuery(
+export function filterDocumentsAndLinksByQuery(
   documents: DocumentModel[],
   collections: Collection[],
   linkTypes: LinkType[],
@@ -39,14 +40,15 @@ export function filterDocumentsByQuery(
   query: Query,
   currentUser: User,
   includeChildren?: boolean
-): DocumentModel[] {
+): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
   const filteredDocuments = documents.filter(document => document && typeof document === 'object');
 
   if (!query || queryIsEmptyExceptPagination(query)) {
-    return paginate(filteredDocuments, query);
+    return {documents: paginate(filteredDocuments, query), linkInstances};
   }
 
   let documentsByStems: DocumentModel[] = [];
+  let linkInstancesByStems: LinkInstance[] = [];
 
   const documentsByCollectionsMap = groupDocumentsByCollection(filteredDocuments);
   const queryWithFunctions = applyFunctionsToFilters(query, currentUser);
@@ -66,9 +68,13 @@ export function filterDocumentsByQuery(
         documentsByStems.push(...documentsByCollection);
       }
     });
+    linkTypes.forEach(linkType => {
+      const linkInstancesByLinkType = filterLinksByFulltexts(linkInstances, linkType, queryWithFunctions.fulltexts);
+      linkInstancesByStems.push(...linkInstancesByLinkType);
+    });
   } else if (queryWithFunctions.stems) {
     queryWithFunctions.stems.forEach(stem => {
-      const {allDocuments} = filterDocumentsByStem(
+      const {allDocuments, allLinkInstances} = filterDocumentsAndLinksByStem(
         documentsByCollectionsMap,
         collections,
         linkTypes,
@@ -78,10 +84,11 @@ export function filterDocumentsByQuery(
         includeChildren
       );
       documentsByStems = mergeDocuments(documentsByStems, allDocuments);
+      linkInstancesByStems = mergeLinkInstances(linkInstancesByStems, allLinkInstances);
     });
   }
 
-  return paginate(documentsByStems, queryWithFunctions);
+  return {documents: paginate(documentsByStems, queryWithFunctions), linkInstances: linkInstancesByStems};
 }
 
 function applyFunctionsToFilters(query: Query, currentUser: User): Query {
@@ -128,7 +135,7 @@ function getDocumentsWithChildren(currentDocuments: DocumentModel[], allDocument
   return documentsWithChildren;
 }
 
-export function filterDocumentsByStem(
+export function filterDocumentsAndLinksByStem(
   documentsByCollectionMap: Record<string, DocumentModel[]>,
   collections: Collection[],
   linkTypes: LinkType[],
@@ -136,12 +143,13 @@ export function filterDocumentsByStem(
   stem: QueryStem,
   fulltexts: string[],
   includeChildren?: boolean
-): {allDocuments: DocumentModel[]; pipelineDocuments: DocumentModel[][]} {
+): {allDocuments: DocumentModel[]; pipelineDocuments: DocumentModel[][]; allLinkInstances: LinkInstance[]} {
   const allDocuments = [];
   const pipelineDocuments = [];
+  const allLinkInstances = [];
   const baseCollection = collections.find(collection => collection.id === stem.collectionId);
   if (!baseCollection) {
-    return {allDocuments, pipelineDocuments};
+    return {allDocuments, pipelineDocuments, allLinkInstances};
   }
 
   const baseStem = cleanStemForBaseCollection(stem, documentsByCollectionMap[stem.collectionId] || []);
@@ -176,7 +184,7 @@ export function filterDocumentsByStem(
     const filteredLinkInstances = filterLinksByFiltersAndFulltexts(
       stageLinkInstances,
       linkType,
-      currentStageStem,
+      currentStageStem.linkFilters,
       fulltexts
     );
 
@@ -210,10 +218,11 @@ export function filterDocumentsByStem(
 
     allDocuments.push(...currentStageDocuments);
     pipelineDocuments[i + 1] = currentStageDocuments;
+    allLinkInstances.push(...filteredLinkInstances);
     lastStageDocuments = currentStageDocuments;
   }
 
-  return {allDocuments, pipelineDocuments};
+  return {allDocuments, pipelineDocuments, allLinkInstances};
 }
 
 function cleanStemForBaseCollection(stem: QueryStem, documents: DocumentModel[]): QueryStem {
@@ -327,10 +336,18 @@ function matchAttributesByFulltexts(attributes: Attribute[], fulltexts: string[]
   );
 }
 
+function filterLinksByFulltexts(
+  linkInstances: LinkInstance[],
+  linkType: LinkType,
+  fulltexts: string[]
+): LinkInstance[] {
+  return filterLinksByFiltersAndFulltexts(linkInstances, linkType, [], fulltexts);
+}
+
 function filterLinksByFiltersAndFulltexts(
   linkInstances: LinkInstance[],
   linkType: LinkType,
-  stem: QueryStem,
+  filters: LinkAttributeFilter[],
   fulltexts: string[]
 ): LinkInstance[] {
   const fulltextsLowerCase = (fulltexts && fulltexts.map(fulltext => fulltext.toLowerCase())) || [];
@@ -338,7 +355,7 @@ function filterLinksByFiltersAndFulltexts(
 
   return linkInstances.filter(
     linkInstance =>
-      linkMeetsFilters(linkInstance, linkType, stem.linkFilters) &&
+      linkMeetsFilters(linkInstance, linkType, filters) &&
       dataMeetsFulltexts(linkInstance.data, fulltextsLowerCase, matchedAttributesIds)
   );
 }

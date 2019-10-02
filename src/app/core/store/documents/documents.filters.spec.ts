@@ -22,7 +22,7 @@ import {LinkInstance} from '../link-instances/link.instance';
 import {LinkType} from '../link-types/link.type';
 import {User} from '../users/user';
 import {DocumentModel} from './document.model';
-import {filterDocumentsByQuery} from './documents.filters';
+import {filterDocumentsAndLinksByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
 import {Query} from '../navigation/query/query';
 import {ConstraintType} from '../../model/data/constraint';
@@ -168,24 +168,24 @@ const linkInstances: LinkInstance[] = [
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
-    expect(filterDocumentsByQuery([], [], [], [], undefined, undefined)).toEqual([]);
+    expect(filterDocumentsAndLinksByQuery([], [], [], [], undefined, undefined)).toEqual([]);
   });
 
   it('should filter empty documents by empty query', () => {
-    expect(filterDocumentsByQuery([], [], [], [], {}, undefined)).toEqual([]);
+    expect(filterDocumentsAndLinksByQuery([], [], [], [], {}, undefined)).toEqual([]);
   });
 
   it('should not filter documents by empty query', () => {
-    expect(filterDocumentsByQuery(documents, [], [], [], {}, undefined)).toEqual(documents);
+    expect(filterDocumentsAndLinksByQuery(documents, [], [], [], {}, undefined)).toEqual(documents);
   });
 
   it('should not filter documents by empty collections', () => {
-    expect(filterDocumentsByQuery(documents, collections, [], [], {stems: []}, undefined)).toEqual(documents);
+    expect(filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: []}, undefined)).toEqual(documents);
   });
 
   it('should not filter documents by all collections', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -198,13 +198,13 @@ describe('Document filters', () => {
 
   it('should filter documents by single collection', () => {
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, undefined).length
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, undefined).length
     ).toBe(6);
   });
 
   it('should filter document by attribute value', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -224,7 +224,7 @@ describe('Document filters', () => {
 
   it('should filter by attribute value with userEmail() function and not existing user', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -244,7 +244,7 @@ describe('Document filters', () => {
 
   it('should filter document by attribute value with userEmail() function', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -264,7 +264,7 @@ describe('Document filters', () => {
 
   it('should not filter document by attribute value from other collection with userEmail() function', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -284,7 +284,7 @@ describe('Document filters', () => {
 
   it('should filter two documents by attribute value with userEmail() function', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -304,7 +304,7 @@ describe('Document filters', () => {
 
   it('should filter child documents by attribute value with userEmail() function', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -325,7 +325,7 @@ describe('Document filters', () => {
 
   it('should filter two linked documents by attribute value with userEmail() function', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         linkTypes,
@@ -347,7 +347,7 @@ describe('Document filters', () => {
 
   it('should filter children together with parent document by attribute values', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -368,7 +368,7 @@ describe('Document filters', () => {
 
   it('should filter children together with nested parent document by attribute values', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -389,7 +389,7 @@ describe('Document filters', () => {
 
   it('should filter documents from both collections by fulltext', () => {
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['link']}, undefined).map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['link']}, undefined).map(
         document => document.id
       )
     ).toEqual(['d6', 'd8']);
@@ -397,7 +397,7 @@ describe('Document filters', () => {
 
   it('should filter documents from single collection by collection and fulltext', () => {
     expect(
-      filterDocumentsByQuery(
+      filterDocumentsAndLinksByQuery(
         documents,
         collections,
         [],
@@ -410,7 +410,7 @@ describe('Document filters', () => {
 
   it('should filter children together with parent document by fulltext', () => {
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['IBM']}, undefined, true).map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['IBM']}, undefined, true).map(
         document => document.id
       )
     ).toEqual(['d1', 'd2', 'd3', 'd4']);
@@ -418,7 +418,7 @@ describe('Document filters', () => {
 
   it('should filter only matching document without children by fulltext', () => {
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined).map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined).map(
         document => document.id
       )
     ).toEqual(['d2', 'd7']);
@@ -426,7 +426,7 @@ describe('Document filters', () => {
 
   it('should filter children together with nested parent document by fulltext', () => {
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined, true).map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined, true).map(
         document => document.id
       )
     ).toEqual(['d2', 'd3', 'd7']);
@@ -437,7 +437,9 @@ describe('Document filters', () => {
       stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '=', value: '-10'}]}],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d3']);
 
     query = {
@@ -446,21 +448,27 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d1', 'd2', 'd4', 'd5', 'd6']);
 
     query = {
       stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '>', value: '40'}]}],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d2', 'd4', 'd6']);
 
     query = {
       stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '<=', value: '40'}]}],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d1', 'd3']);
   });
 
@@ -474,7 +482,9 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d5']);
 
     query = {
@@ -486,7 +496,9 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d1', 'd2', 'd3', 'd4', 'd6']);
 
     query = {
@@ -498,7 +510,9 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d1', 'd2']);
 
     query = {
@@ -510,7 +524,9 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual(['d3', 'd5', 'd6']);
 
     query = {
@@ -522,7 +538,9 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsByQuery(documents, collections, [], [], query, undefined, false).map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).map(
+        document => document.id
+      )
     ).toEqual([]);
   });
 });

@@ -32,3 +32,9 @@ export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstance, .
   const {documentIds} = linkInstance;
   return otherDocumentIds.includes(documentIds[0]) ? documentIds[1] : documentIds[0];
 }
+
+export function mergeLinkInstances(linkInstancesA: LinkInstance[], linkInstancesB: LinkInstance[]): LinkInstance[] {
+  const documentsAIds = linkInstancesA.map(collection => collection.id);
+  const documentsBToAdd = linkInstancesB.filter(collection => !documentsAIds.includes(collection.id));
+  return linkInstancesA.concat(documentsBToAdd);
+}

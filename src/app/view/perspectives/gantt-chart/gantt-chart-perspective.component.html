@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
   canManageConfig: currentView$ | async | canManageConfig | async, linkTypes: linkTypes$ | async,
-  query: query$ | async} as data">
+  query: query$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig"
                          [collapsed]="!(sidebarOpened$ | async)"
@@ -24,9 +24,9 @@
                        [collections]="data.collections"
                        [ganttChartId]="ganttChartId"
                        [permissions]="permissions$ | async"
-                       [documents]="documents$ | async"
+                       [documents]="data.documentsAndLinks.documents"
                        [linkTypes]="data.linkTypes"
-                       [linkInstances]="linkInstances$ | async"
+                       [linkInstances]="data.documentsAndLinks.linkInstances"
                        [config]="data.config"
                        [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
                        [query]="data.query"

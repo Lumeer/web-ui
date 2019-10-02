@@ -1,8 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async, linkTypes: linkTypes$ | async,
-                canManageConfig: currentView$ | async | canManageConfig | async, linkInstances: linkInstances$ | async,
-                documents: documents$ | async, query: query$ | async,
+                canManageConfig: currentView$ | async | canManageConfig | async, documentsAndLinks: documentsAndLinks$ | async, query: query$ | async,
                 users: users$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig"
@@ -13,8 +12,8 @@
         class="d-block m-3"
         [collections]="data.collections"
         [linkTypes]="data.linkTypes"
-        [documents]="data.documents"
-        [linkInstances]="data.linkInstances"
+        [documents]="data.documentsAndLinks.documents"
+        [linkInstances]="data.documentsAndLinks.linkInstances"
         [config]="data.config"
         [query]="data.query"
         (configChange)="onConfigChanged($event)"
@@ -25,9 +24,9 @@
     <kanban-columns
       class="flex-grow-1 h-100"
       [collections]="data.collections"
-      [documents]="data.documents"
+      [documents]="data.documentsAndLinks.documents"
       [linkTypes]="data.linkTypes"
-      [linkInstances]="data.linkInstances"
+      [linkInstances]="data.documentsAndLinks.linkInstances"
       [config]="data.config"
       [query]="data.query"
       [canManageConfig]="data.canManageConfig"
