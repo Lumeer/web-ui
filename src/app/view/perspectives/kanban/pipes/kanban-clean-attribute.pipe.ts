@@ -18,21 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
+import {cleanKanbanAttribute} from '../util/kanban.util';
 
 @Pipe({
-  name: 'kanbanColumnTitles',
+  name: 'kanbanCleanAttribute',
 })
-export class KanbanColumnTitlesPipe implements PipeTransform {
-  public transform(config: KanbanConfig, attribute: KanbanAttribute): string[] {
-    const res = ((config && config.columns) || [])
-      .filter(column => !attribute || this.containsAttribute(column.createdFromAttributes, attribute))
-      .map(c => c.title);
-
-    return res;
-  }
-
-  private containsAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {
-    return (attributes || []).map(a => a.attributeId).indexOf(attribute.attributeId) >= 0;
+export class KanbanCleanAttributePipe implements PipeTransform {
+  public transform(attribute: KanbanAttribute): KanbanAttribute {
+    return attribute && cleanKanbanAttribute(attribute);
   }
 }

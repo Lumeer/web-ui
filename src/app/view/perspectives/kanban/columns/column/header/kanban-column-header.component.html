@@ -45,3 +45,7 @@
     <span class="font-italic" i18n="@@kanban.perspective.header.other">Other</span>
   </div>
 </ng-template>
+
+<div *ngIf="column.summary" class="align-self-center flex-fill text-right small text-muted mr-2">
+  {{column.summary}}
+</div>
