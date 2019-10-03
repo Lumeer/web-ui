@@ -25,7 +25,7 @@ import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {
   dateReadableFormatsMap,
   DateReadableFormatType,
-} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+} from '../../../../../shared/select/select-constraint-item/constraint/date-time';
 
 export interface ChartData {
   sets: ChartDataSet[];
