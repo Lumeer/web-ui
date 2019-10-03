@@ -48,7 +48,6 @@ import {
 import {
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
-  selectDocumentsByQueryAndIds,
   selectDocumentsByQueryIncludingChildrenAndIds,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';

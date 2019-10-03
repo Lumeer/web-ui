@@ -26,10 +26,19 @@ import {ChartConfigComponent} from './config/chart-config.component';
 import {ChartPipesModule} from './pipes/chart-pipes.module';
 import {ChartDataComponent} from './data/chart-data.component';
 import {ChartVisualizerComponent} from './data/visualizer/chart-visualizer.component';
+import {ChartMainConfigComponent} from './config/chart-main-config/chart-main-config.component';
+import {ChartYAxisConfigComponent} from './config/chart-y-axis-config/chart-y-axis-config.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, ChartPerspectiveRoutingModule, ChartPipesModule],
-  declarations: [ChartPerspectiveComponent, ChartConfigComponent, ChartDataComponent, ChartVisualizerComponent],
+  declarations: [
+    ChartPerspectiveComponent,
+    ChartConfigComponent,
+    ChartDataComponent,
+    ChartVisualizerComponent,
+    ChartMainConfigComponent,
+    ChartYAxisConfigComponent,
+  ],
   entryComponents: [ChartPerspectiveComponent],
   exports: [ChartPerspectiveComponent],
 })

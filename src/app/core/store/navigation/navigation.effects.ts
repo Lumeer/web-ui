@@ -102,6 +102,7 @@ export class NavigationEffects {
             [QueryParam.ViewCursor]: convertViewCursorToString(action.payload.cursor) || null,
           },
           extras: {
+            replaceUrl: true,
             queryParamsHandling: 'merge',
           },
         })

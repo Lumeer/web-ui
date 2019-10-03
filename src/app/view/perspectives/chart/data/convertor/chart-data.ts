@@ -22,6 +22,10 @@ import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {
+  dateReadableFormatsMap,
+  DateReadableFormatType,
+} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 export interface ChartData {
   sets: ChartDataSet[];
@@ -67,24 +71,68 @@ export function convertChartDateFormat(format: string): string {
   if (!format) {
     return 'YYYY-MM-DD';
   }
-  const options = createDateTimeOptions(format);
-  let chartFormat = 'YYYY-MM';
 
-  if (options.day || hasTimeOption(options)) {
-    chartFormat = `${chartFormat}-DD`;
+  const knowFormatEntry = checkKnownOverrideFormatEntry(format);
+  if (knowFormatEntry) {
+    return knowFormatEntry[1];
+  }
+
+  const options = createDateTimeOptions(format);
+  let chartFormat = '';
+
+  if (options.year) {
+    chartFormat += 'YYYY';
+    if (options.month || options.day) {
+      chartFormat += '-';
+    }
+  }
+
+  if (options.month) {
+    chartFormat += 'MM';
+    if (options.day) {
+      chartFormat += '-';
+    }
+  }
+
+  if (options.day) {
+    chartFormat += 'DD';
   }
 
   if (hasTimeOption(options)) {
-    chartFormat = `${chartFormat} HH`;
+    chartFormat += ' ';
   }
 
-  if (options.minutes || options.seconds) {
-    chartFormat = `${chartFormat}:mm`;
+  if (options.hours) {
+    chartFormat += 'HH';
+    if (options.minutes || options.seconds) {
+      chartFormat += ':';
+    }
+  }
+
+  if (options.minutes) {
+    chartFormat += 'mm';
+    if (options.seconds) {
+      chartFormat += ':';
+    }
   }
 
   if (options.seconds) {
-    chartFormat = `${chartFormat}:ss`;
+    chartFormat += 'ss';
   }
 
   return chartFormat;
+}
+
+export function checkKnownOverrideFormatEntry(format: string): [string, string] {
+  return Object.entries(dateReadableFormatsMap).find(([type, knownFormat]) => {
+    if (knownFormat === format) {
+      const notSafeTypes = [
+        DateReadableFormatType.MonthYear,
+        DateReadableFormatType.DayMonth,
+        DateReadableFormatType.DayMonthYear,
+      ];
+      return !notSafeTypes.map(t => t.toString()).includes(type);
+    }
+    return false;
+  });
 }

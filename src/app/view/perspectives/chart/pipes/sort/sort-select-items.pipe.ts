@@ -20,20 +20,29 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.util';
-import {AttributesResourceType} from '../../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'sortSelectItems',
 })
 export class SortSelectItemsPipe implements PipeTransform {
-  public transform(config: ChartConfig, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
+  public transform(config: ChartConfig, attributesResources: AttributesResource[]): SelectItemModel[] {
     const xAxis = config.axes && config.axes[ChartAxisType.X];
     if (!xAxis) {
       return [];
     }
+
+    const collections = (attributesResources || []).filter(
+      resource => getAttributesResourceType(resource) === AttributesResourceType.Collection
+    ) as Collection[];
+    const linkTypes = (attributesResources || []).filter(
+      resource => getAttributesResourceType(resource) === AttributesResourceType.LinkType
+    ) as LinkType[];
+
     if (xAxis.resourceType === AttributesResourceType.Collection) {
       const collection = collections.find(coll => xAxis.resourceId === coll.id);
       return (
