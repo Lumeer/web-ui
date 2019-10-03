@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of} from 'rxjs';
-import {filter, first, map, mergeMap, pairwise, startWith, take} from 'rxjs/operators';
+import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
@@ -70,7 +70,7 @@ export class ViewComponent implements OnInit {
       ),
       startWith(null),
       pairwise(),
-      mergeMap(([previousNavigation, {workspace, query, viewName}]) => {
+      switchMap(([previousNavigation, {workspace, query, viewName}]) => {
         if (workspace.viewCode) {
           return this.store$.pipe(
             filter(() => !previousNavigation || previousNavigation.workspace.viewCode !== workspace.viewCode),
