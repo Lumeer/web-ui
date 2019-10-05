@@ -39,6 +39,7 @@
           <button class="btn btn-sm btn-primary ml-2"
                   data-test="date-time-picker-save-button"
                   i18n="@@button.save"
+                  [disabled]="!dateControl.value"
                   (click)="onSaveClick()">
             Save
           </button>
