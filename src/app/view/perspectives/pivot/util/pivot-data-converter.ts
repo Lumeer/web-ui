@@ -98,7 +98,7 @@ export class PivotDataConverter {
     constraint: Constraint,
     constraintData: ConstraintData,
     aggregatorAttribute: DataAggregatorAttribute
-  ) {
+  ): any {
     const pivotConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);

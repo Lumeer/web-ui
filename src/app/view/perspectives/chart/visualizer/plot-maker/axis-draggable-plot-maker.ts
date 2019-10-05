@@ -29,6 +29,7 @@ import {
   ChartAxisCategory,
   ChartDataSetAxis,
   ChartYAxisType,
+  checkKnownOverrideFormatEntry,
   convertChartDateFormat,
 } from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
@@ -42,8 +43,7 @@ import {
 } from '../../../../../shared/utils/constraint/duration-constraint.utils';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {formatDateTimeDataValue} from '../../../../../shared/utils/data.utils';
-
-const dateTicksLimit = 5;
+import {createDateTimeOptions} from '../../../../../shared/date-time/date-time-options';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -62,21 +62,22 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     if (category === ChartAxisCategory.Date) {
       const dateConfig = config as DateTimeConstraintConfig;
       const {values, titles} = this.createXDateTicks(dateConfig);
-      if (values.length > dateTicksLimit) {
-        const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
+      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
         return {
           xaxis: {
-            type: 'date',
-            tickformat: tickFormat,
-            hoverformat: tickFormat,
+            tickmode: 'array',
+            tickvals: values,
+            ticktext: titles,
           },
         };
       }
+
+      const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
       return {
         xaxis: {
-          tickmode: 'array',
-          tickvals: values,
-          ticktext: titles,
+          type: 'date',
+          tickformat: tickFormat,
+          hoverformat: tickFormat,
         },
       };
     } else if (category === ChartAxisCategory.Percentage) {
@@ -98,14 +99,43 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return {};
   }
 
+  private shouldShowDateAsArrayTicks(numValues: number, format: string): boolean {
+    if (numValues < 1) {
+      return false;
+    }
+
+    const knowFormatEntry = checkKnownOverrideFormatEntry(format);
+    const options = createDateTimeOptions(format);
+    if (knowFormatEntry || !options.year) {
+      // plotly needs year in format in order to show correctly as interval
+      return true;
+    }
+
+    return false;
+  }
+
   private createXDateTicks(config: DateTimeConstraintConfig): {values: number[]; titles: string[]} {
+    return this.createDateTicks(config, 'x');
+  }
+
+  private createYDateTicks(config: DateTimeConstraintConfig, yAxisType: ChartYAxisType) {
+    return this.createDateTicks(config, 'y', yAxisType);
+  }
+
+  private createDateTicks(
+    config: DateTimeConstraintConfig,
+    param: string,
+    yAxisType?: ChartYAxisType
+  ): {values: number[]; titles: string[]} {
+    const chartFormat = convertChartDateFormat(config.format);
     const values = this.chartData.sets
       .reduce((allValues, set) => {
+        if (yAxisType && set.yAxisType !== yAxisType) {
+          return allValues;
+        }
+
         const setValues = set.points
-          .map(point => {
-            const momentDate = isNotNullOrUndefined(point.x) && moment(point.x);
-            return momentDate && momentDate.isValid() && momentDate.toDate().getTime();
-          })
+          .map(point => this.createDateValue(point[param], chartFormat))
           .filter(value => isNotNullOrUndefined(value));
         allValues.push(...setValues);
         return uniqueValues<number>(allValues);
@@ -114,6 +144,11 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
     const titles = values.map(value => formatDateTimeDataValue(new Date(value), config));
     return {values, titles};
+  }
+
+  protected createDateValue(value: any, format: string): number {
+    const momentDate = isNotNullOrUndefined(value) ? moment(value, format) : null;
+    return momentDate && momentDate.isValid() ? momentDate.toDate().getTime() : null;
   }
 
   private createXDurationTicks(config: DurationConstraintConfig): {values: number[]; titles: string[]} {
@@ -155,6 +190,18 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       };
     } else if (category === ChartAxisCategory.Date) {
       const dateConfig = config as DateTimeConstraintConfig;
+      const {values, titles} = this.createYDateTicks(dateConfig, ChartAxisType.Y1);
+      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
+        return {
+          yaxis: {
+            range: [values[0], values[values.length - 1]],
+            tickmode: 'array',
+            tickvals: values,
+            ticktext: titles,
+          },
+        };
+      }
+
       const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
       return {
         yaxis: {
@@ -250,6 +297,20 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       };
     } else if (category === ChartAxisCategory.Date) {
       const dateConfig = config as DateTimeConstraintConfig;
+      const {values, titles} = this.createYDateTicks(dateConfig, ChartAxisType.Y2);
+      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
+        return {
+          yaxis2: {
+            overlaying: 'y',
+            side: 'right',
+            range: [values[0], values[values.length - 1]],
+            tickmode: 'array',
+            tickvals: values,
+            ticktext: titles,
+          },
+        };
+      }
+
       const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
       return {
         yaxis2: {
@@ -288,10 +349,9 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     if (axis.category === ChartAxisCategory.Date) {
       const layout = this.xAxisLayout();
       if (layout && layout.xaxis && layout.xaxis.tickmode === 'array') {
-        return trace.map(value => {
-          const momentDate = isNotNullOrUndefined(value) && moment(value);
-          return momentDate && momentDate.isValid() && momentDate.toDate().getTime();
-        });
+        const config = axis.config as DateTimeConstraintConfig;
+        const chartFormat = convertChartDateFormat(config.format);
+        return trace.map(value => this.createDateValue(value, chartFormat));
       }
     }
 

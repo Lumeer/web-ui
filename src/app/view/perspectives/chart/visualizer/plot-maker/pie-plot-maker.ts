@@ -25,7 +25,7 @@ import {PlotMaker} from './plot-maker';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import * as moment from 'moment';
-import {formatDateTimeDataValue, formatPercentageDataValue} from '../../../../../shared/utils/data.utils';
+import {formatDateTimeDataValue} from '../../../../../shared/utils/data.utils';
 
 const MAX_COLUMNS = 3;
 

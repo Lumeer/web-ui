@@ -24,7 +24,7 @@ import {SelectItemModel} from '../../select-item/select-item.model';
 import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 
-enum DateReadableFormatType {
+export enum DateReadableFormatType {
   Yearly = 'yearly',
   Quarterly = 'quarterly',
   Weekly = 'weekly',
@@ -38,7 +38,7 @@ enum DateReadableFormatType {
   HourMinutes = 'hourMinutes',
 }
 
-const dateReadableFormatsMap: Record<string, string> = {
+export const dateReadableFormatsMap: Record<string, string> = {
   [DateReadableFormatType.Yearly]: 'YYYY',
   [DateReadableFormatType.Quarterly]: '[Q]Q YYYY',
   [DateReadableFormatType.Weekly]: '[W]W YYYY',

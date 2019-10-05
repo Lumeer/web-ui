@@ -17,71 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartAxis} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-
-type AxisResource = Collection | LinkType;
-
-export function createSelectItemsForAxisType(
-  axisType: ChartAxisType,
-  config: ChartConfig,
-  collections: Collection[],
-  linkTypes: LinkType[],
-  query: Query
-): SelectItemModel[] {
-  const items: SelectItemModel[] = [];
-
-  const axisResourcesChain: AxisResource[] = createAxisResourceChain(query, collections, linkTypes);
-
-  for (let i = 0; i < axisResourcesChain.length; i++) {
-    const axisResource = axisResourcesChain[i];
-    if (i % 2 === 0) {
-      // chain is always: Collection, LinkType, Collection, LinkType, Collection...
-      const collection = axisResource as Collection;
-      items.push(...collection.attributes.map(attribute => collectionAttributeToItem(collection, attribute, i)));
-    } else {
-      const linkType = axisResource as LinkType;
-      const collection1 = axisResourcesChain[i - 1] as Collection;
-      const collection2 = axisResourcesChain[i + 1] as Collection;
-      items.push(
-        ...linkType.attributes.map(attribute =>
-          linkTypeAttributeToItem(linkType, [collection1, collection2], attribute, i)
-        )
-      );
-    }
-  }
-
-  return items;
-}
-
-function createAxisResourceChain(query: Query, collections: Collection[], linkTypes: LinkType[]): AxisResource[] {
-  const stem = query.stems[0];
-  const baseCollection = collections.find(collection => collection.id === stem.collectionId);
-  if (!baseCollection) {
-    return [];
-  }
-  const chain = [baseCollection];
-  let previousCollectionId = baseCollection.id;
-  for (let i = 0; i < (stem.linkTypeIds || []).length; i++) {
-    const linkType = linkTypes.find(lt => lt.id === stem.linkTypeIds[i]);
-    const otherCollectionId = getOtherLinkedCollectionId(linkType, previousCollectionId);
-    const otherCollection = collections.find(collection => collection.id === otherCollectionId);
-
-    if (otherCollection && linkType) {
-      chain.push(linkType, otherCollection);
-      previousCollectionId = otherCollection.id;
-    } else {
-      break;
-    }
-  }
-
-  return chain;
-}
 
 export function collectionAttributeToItem(
   collection: Collection,

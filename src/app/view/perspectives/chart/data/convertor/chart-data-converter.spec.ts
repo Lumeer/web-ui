@@ -29,6 +29,11 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {TestBed} from '@angular/core/testing';
+import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {environment} from '../../../../../../environments/environment';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 const documents: DocumentModel[] = [
   {
@@ -72,9 +77,34 @@ const permissions: Record<string, AllowedPermissions> = {C1: {writeWithView: tru
 const query: Query = {stems: [{collectionId: 'C1'}]};
 
 describe('Chart data converter single collection', () => {
+  let constraintReadableFormatter: SelectItemWithConstraintFormatter;
+  let converter: ChartDataConverter;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: LOCALE_ID,
+          useFactory: () => environment.locale,
+        },
+        {
+          provide: TRANSLATIONS,
+          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`),
+          deps: [LOCALE_ID],
+        },
+        {
+          provide: TRANSLATIONS_FORMAT,
+          useFactory: () => environment.i18nFormat,
+        },
+        I18n,
+      ],
+    });
+    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    converter = new ChartDataConverter(constraintReadableFormatter);
+  });
+
   it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
-    const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({
       sets: [
@@ -122,7 +152,6 @@ describe('Chart data converter single collection', () => {
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
-    const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
   });
@@ -158,7 +187,6 @@ describe('Chart data converter single collection', () => {
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
-    const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
   });
@@ -201,7 +229,6 @@ describe('Chart data converter single collection', () => {
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
-    const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
     expect(converter.convert(config)).toEqual({sets: [set], type: ChartType.Line, constraintData: undefined});
 
@@ -259,7 +286,6 @@ describe('Chart data converter single collection', () => {
       {id: null, x: 'Sport', y: 'Mama'},
     ];
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections, documents, permissions, query, config);
     const chartData1 = converter.convert(config);
     expect(chartData1.sets.length).toEqual(2);
@@ -639,9 +665,34 @@ const linkInstances2: LinkInstance[] = [
 const query2: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
 describe('Chart data converter linked collections', () => {
+  let constraintReadableFormatter: SelectItemWithConstraintFormatter;
+  let converter: ChartDataConverter;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: LOCALE_ID,
+          useFactory: () => environment.locale,
+        },
+        {
+          provide: TRANSLATIONS,
+          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`),
+          deps: [LOCALE_ID],
+        },
+        {
+          provide: TRANSLATIONS_FORMAT,
+          useFactory: () => environment.i18nFormat,
+        },
+        I18n,
+      ],
+    });
+    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    converter = new ChartDataConverter(constraintReadableFormatter);
+  });
+
   it('should return empty data', () => {
     const config: ChartConfig = {type: ChartType.Line, axes: {}};
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     expect(converter.convert(config)).toEqual({
       sets: [
@@ -685,7 +736,6 @@ describe('Chart data converter linked collections', () => {
       },
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -725,7 +775,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -764,7 +813,6 @@ describe('Chart data converter linked collections', () => {
       {id: null, x: 'Sport', y: 'Zet'},
     ];
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -791,7 +839,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Min},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -823,7 +870,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Max},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -855,7 +901,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Avg},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
@@ -895,7 +940,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(6);
@@ -935,7 +979,6 @@ describe('Chart data converter linked collections', () => {
       aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
     };
 
-    const converter = new ChartDataConverter();
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(5);
@@ -946,9 +989,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[3].points).toContain({id: null, x: 'Lxx', y: 777});
     expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: 951});
   });
-});
 
-describe('Chart data converter constraints', () => {
   it('should return data with percentage constraint', () => {
     const collections3 = [
       {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx'}]},
@@ -1014,7 +1055,6 @@ describe('Chart data converter constraints', () => {
       {id: null, x: 'Martin', y: '30'},
       {id: null, x: 'Tomas', y: '25'},
     ];
-    const converter = new ChartDataConverter();
     converter.updateData(
       collections3,
       [...documentsC1, ...documentsC2],

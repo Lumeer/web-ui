@@ -61,7 +61,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     }
 
     set.name && (data['name'] = set.name);
-    data['x'] = traceX;
+    data['x'] = this.formatXTrace(traceX, set.xAxis);
     data['y'] = traceY;
     data['text'] = this.getYTraceTexts(traceY, set.yAxis);
     data['textinfo'] = 'text';

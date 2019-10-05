@@ -18,28 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartAxis} from '../../../../../core/store/charts/chart';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
-  name: 'axisRestrictedIds',
+  name: 'chartAxisSelectItemId',
 })
-export class AxisRestrictedIdsPipe implements PipeTransform {
-  public transform(axisType: ChartAxisType, config: ChartConfig, isDataSet?: boolean): SelectItemWithConstraintId[] {
-    if (isDataSet) {
-      return [
-        ...Object.entries(config.names || {})
-          .filter(entry => entry[0] !== axisType)
-          .map(entry => entry[1]),
-        ...Object.values(config.axes || {}),
-      ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
-    } else {
-      return [
-        ...Object.entries(config.axes || {})
-          .filter(entry => entry[0] !== axisType)
-          .map(entry => entry[1]),
-        ...Object.values(config.names || {}),
-      ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
-    }
+export class ChartAxisSelectItemIdPipe implements PipeTransform {
+  public transform(axis: ChartAxis): SelectItemWithConstraintId {
+    return axis && {resourceIndex: axis.resourceIndex, attributeId: axis.attributeId};
   }
 }

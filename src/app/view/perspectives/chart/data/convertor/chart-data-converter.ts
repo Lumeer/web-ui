@@ -56,10 +56,16 @@ import {
   ChartYAxisType,
   convertChartDateFormat,
 } from './chart-data';
-import {AggregatedData, AggregatedDataValues, DataAggregator} from '../../../../../shared/utils/data/data-aggregator';
+import {
+  AggregatedData,
+  AggregatedDataValues,
+  DataAggregator,
+  DataAggregatorAttribute,
+} from '../../../../../shared/utils/data/data-aggregator';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
+import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 @Injectable()
 export class ChartDataConverter {
@@ -75,10 +81,22 @@ export class ChartDataConverter {
   private y1Sets: ChartDataSet[];
   private y2Sets: ChartDataSet[];
 
-  constructor() {
-    this.dataAggregator = new DataAggregator((value, constraint, data) =>
-      this.formatChartValue(value, constraint, data)
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+    this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
+      this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
     );
+  }
+
+  private formatDataAggregatorValue(
+    value: any,
+    constraint: Constraint,
+    constraintData: ConstraintData,
+    aggregatorAttribute: DataAggregatorAttribute
+  ): any {
+    const overrideConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
+    const chartConstraint =
+      overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
+    return this.formatChartValue(value, chartConstraint || constraint, constraintData);
   }
 
   public updateData(
@@ -202,7 +220,7 @@ export class ChartDataConverter {
 
     for (const dataObject of dataResources) {
       let value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
-      value = this.formatChartValue(value, constraint, this.constraintData);
+      value = this.formatChartAxisValue(value, definedAxis);
       if (isNullOrUndefined(value) || actualValues.has(value)) {
         continue;
       }
@@ -252,7 +270,12 @@ export class ChartDataConverter {
 
   private constraintForAxis(axis: ChartAxis): Constraint {
     const attribute = this.attributeForAxis(axis);
-    return attribute && attribute.constraint;
+    const constraint = attribute && attribute.constraint;
+    const overrideConstraint = axis.constraint;
+    const chartConstraint =
+      overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
+
+    return chartConstraint || constraint;
   }
 
   private convertAxisWithAggregation(config: ChartConfig, yAxisType: ChartYAxisType): ChartDataSet[] {
@@ -321,9 +344,7 @@ export class ChartDataConverter {
         const values = valueObjects.map(obj => obj.value);
         const aggregation = config.aggregations && config.aggregations[yAxisType];
         let yValue = aggregateDataValues(aggregation, values, yConstraint);
-        yValue = isValueAggregation(aggregation)
-          ? this.formatChartValue(yValue, yConstraint, this.constraintData)
-          : yValue;
+        yValue = isValueAggregation(aggregation) ? this.formatChartAxisValue(yValue, yAxis) : yValue;
         if (isNotNullOrUndefined(yValue)) {
           const id =
             canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
@@ -377,6 +398,11 @@ export class ChartDataConverter {
     return collectionResource && collectionResource.color;
   }
 
+  private formatChartAxisValue(value: any, axis: ChartAxis): any {
+    const constraint = this.constraintForAxis(axis);
+    return this.formatChartValue(value, constraint, this.constraintData);
+  }
+
   private formatChartValue(value: any, constraint: Constraint, constraintData: ConstraintData): any {
     if (isNullOrUndefined(value)) {
       return value;
@@ -407,8 +433,7 @@ export class ChartDataConverter {
   private formatDateTimeValue(value: any, config: DateTimeConstraintConfig): string {
     const format = config && config.format;
     const momentDate = parseMomentDate(value, format);
-    const resetDate = resetUnusedMomentPart(momentDate, format);
-    return resetDate.format(convertChartDateFormat(format));
+    return momentDate.format(convertChartDateFormat(format));
   }
 
   private formatPercentageValue(value: any, config: PercentageConstraintConfig): string {

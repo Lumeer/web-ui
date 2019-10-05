@@ -19,6 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {Constraint} from '../../model/data/constraint';
 
 export const DEFAULT_CHART_ID = 'default';
 
@@ -41,6 +42,7 @@ export interface ChartAxis {
   attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+  constraint?: Constraint;
 }
 
 export enum ChartType {
