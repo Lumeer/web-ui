@@ -130,12 +130,18 @@ export function filterValidSavedRows(
 }
 
 export function areAllSavedRowsPresent(savedRows: TableConfigRow[], shownRows: TableConfigRow[]): boolean {
-  if (savedRows.length > shownRows.length) {
-    return false;
-  }
+  let showIndex = -1;
+  return savedRows.reduce((present, savedRow) => {
+    showIndex = shownRows.findIndex(
+      (row, index) =>
+        row.documentId === savedRow.documentId && row.linkInstanceId === savedRow.linkInstanceId && index > showIndex
+    );
 
-  return savedRows.reduce((present, savedRow, index) => {
-    const shownRow = shownRows[index];
+    const shownRow = shownRows[showIndex];
+    if (!shownRow) {
+      return present;
+    }
+
     return (
       present &&
       savedRow.documentId === shownRow.documentId &&
