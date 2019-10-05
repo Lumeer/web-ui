@@ -134,6 +134,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.data$ = this.subscribeTasks$();
+    if (this.config) {
+      this.currentMode$.next(this.config.mode);
+    }
   }
 
   private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttChartTask[]}> {
