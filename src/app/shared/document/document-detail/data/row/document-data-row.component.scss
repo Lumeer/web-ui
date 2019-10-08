@@ -1,0 +1,26 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  .button-remove,
+  .button-config,
+  .button-function {
+    opacity: 0;
+    transition: opacity $animation-color-duration;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    .button-remove,
+    .button-config,
+    .button-function {
+      opacity: 1;
+    }
+  }
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background: transparent !important;
+  border: 0 !important;
+}

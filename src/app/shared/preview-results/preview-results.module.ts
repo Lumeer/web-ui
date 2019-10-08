@@ -24,9 +24,10 @@ import {PreviewResultsComponent} from './preview-results.component';
 import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
 import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
 import {DataInputModule} from '../data-input/data-input.module';
+import {WarningMessageModule} from '../warning-message/warning-message.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, PipesModule],
+  imports: [CommonModule, DataInputModule, PipesModule, WarningMessageModule],
   declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
   exports: [PreviewResultsComponent, PreviewResultsTableComponent],
 })

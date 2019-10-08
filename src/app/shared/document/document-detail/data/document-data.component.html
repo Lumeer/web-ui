@@ -1,0 +1,6 @@
+<document-data-row *ngFor="let row of rows"
+                   [row]="row"
+                   [permissions]="permissions"
+                   [cursor]="document | dataCursor : row.attribute?.id"
+                   [constraintData]="constraintData">
+</document-data-row>

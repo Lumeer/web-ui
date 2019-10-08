@@ -10,6 +10,6 @@
   }
 
   &::ng-deep input[readonly] {
-    cursor: default;
+    cursor: inherit;
   }
 }

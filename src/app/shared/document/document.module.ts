@@ -25,10 +25,19 @@ import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PostItDocumentModule} from './post-it/post-it-document.module';
+import {DocumentDetailHeaderComponent} from './document-detail/header/document-detail-header.component';
+import {DocumentDataComponent} from './document-detail/data/document-data.component';
+import {DocumentDataRowComponent} from './document-detail/data/row/document-data-row.component';
 
 @NgModule({
   imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
-  declarations: [DocumentDetailComponent, KeyValueComponent],
+  declarations: [
+    DocumentDetailComponent,
+    KeyValueComponent,
+    DocumentDetailHeaderComponent,
+    DocumentDataComponent,
+    DocumentDataRowComponent,
+  ],
   exports: [DocumentDetailComponent, PostItDocumentModule],
 })
 export class DocumentModule {}

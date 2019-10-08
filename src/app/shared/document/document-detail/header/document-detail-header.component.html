@@ -1,0 +1,51 @@
+<div class="d-flex flex-column flex-lg-row">
+  <div class="flex-grow-1 pr-lg-2">
+    <div [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</div>
+    <h3>
+      <data-input class="flex-fill"
+                  [readonly]="true"
+                  [value]="document?.data && defaultAttribute && document.data[defaultAttribute.id]"
+                  [constraint]="defaultAttribute?.constraint"
+                  [constraintData]="constraintData">
+      </data-input>
+    </h3>
+
+  </div>
+
+  <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right">
+    <div class="small text-notice">
+      <span i18n="@@document.detail.version">Version {{document?.dataVersion}}</span><br/>
+      <span i18n="@@document.detail.createdBy">Created on {{document?.creationDate | date : 'mediumDate'}}
+        by {{createdBy$ | async}}</span>
+      <span *ngIf="document.updateDate"
+            i18n="@@document.detail.modifiedBy"><br/>Last modified on {{document.updateDate | date : 'mediumDate'}}
+        by {{updatedBy$ | async}}</span>
+    </div>
+
+    <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
+      <i class="{{tableIcon}} mr-2 clickable"
+         aria-hidden="true"
+         *ngIf="permissions?.writeWithView"
+         title="Switch to Table perspective"
+         i18n-title="@@document.detail.switch.table"
+         (click)="onSwitchToTable()"></i>
+      <ng-container *ngIf="permissions?.read">
+        <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
+           title="Remove from favorites"
+           i18n-title="@@document.detail.favorite.remove"
+           (click)="onFavoriteToggle()"></i>
+        <i *ngIf="!document.favorite"
+           class="far fa-fw fa-star text-warning clickable mr-2"
+           title="Add to favorites"
+           i18n-title="@@document.detail.favorite.add"
+           (click)="onFavoriteToggle()"></i>
+      </ng-container>
+      <i class="fas fa-fw fa-trash text-danger clickable"
+         aria-hidden="true"
+         *ngIf="permissions?.writeWithView"
+         title="Remove Record"
+         i18n-title="@@document.detail.remove"
+         (click)="onRemoveDocument()"
+      ></i>
+    </div>
+  </div>

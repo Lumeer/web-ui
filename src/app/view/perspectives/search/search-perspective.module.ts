@@ -21,7 +21,6 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared/shared.module';
 import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
-import {EmptyDataComponent} from './all/empty-data/empty-data.component';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {SearchDocumentsModule} from './documents/search-documents.module';
@@ -49,7 +48,6 @@ import {SearchViewsContentComponent} from './views/content/search-views-content.
     SearchPerspectiveComponent,
     SearchResultsDirective,
     SearchViewsComponent,
-    EmptyDataComponent,
     EmptyViewsComponent,
     ViewDetailComponent,
     ContainsDeletedQueryItemPipe,

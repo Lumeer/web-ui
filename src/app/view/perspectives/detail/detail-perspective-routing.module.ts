@@ -20,11 +20,15 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {DetailPerspectiveComponent} from './detail-perspective.component';
+import {DetailGuard} from './detail-guard';
 
 const chartRoutes: Routes = [
   {
     path: '',
     component: DetailPerspectiveComponent,
+    resolve: {
+      documents: DetailGuard,
+    },
   },
 ];
 

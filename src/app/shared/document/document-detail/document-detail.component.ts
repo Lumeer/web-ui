@@ -21,29 +21,30 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit,
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
-import {AppState} from '../../../core/store/app.state';
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {Query} from '../../../core/store/navigation/query/query';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {Query} from '../../../core/store/navigation/query/query';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
-import {RouterAction} from '../../../core/store/router/router.action';
-import {User} from '../../../core/store/users/user';
-import {selectUserById} from '../../../core/store/users/users.state';
-import {DocumentUi} from '../../../core/ui/document-ui';
-import {UiRow} from '../../../core/ui/ui-row';
-import {DialogService} from '../../../dialog/dialog.service';
-import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {User} from '../../../core/store/users/user';
+import {AppState} from '../../../core/store/app.state';
+import {DialogService} from '../../../dialog/dialog.service';
+import {selectAllUsers} from '../../../core/store/users/users.state';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {RouterAction} from '../../../core/store/router/router.action';
 
 @Component({
   selector: 'document-detail',
@@ -64,13 +65,11 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public permissions: AllowedPermissions;
 
-  public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public users$: Observable<User[]>;
+  public readonly durationUnitsMap: DurationUnitsMap;
+  public workspace$: Observable<Workspace>;
 
-  public state: DocumentUi;
-
-  public createdBy$: Observable<string>;
-  public updatedBy$: Observable<string>;
+  public defaultAttribute: Attribute;
 
   public constraintData$: Observable<ConstraintData>;
 
@@ -81,61 +80,27 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private perspectiveService: PerspectiveService,
     private dialogService: DialogService,
     private constraintDataService: ConstraintDataService
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document) {
-      this.renewSubscriptions();
+    if (changes.collection) {
+      this.initDefaultAttribute();
     }
   }
 
-  private renewSubscriptions(): void {
-    if (this.state) {
-      this.state.destroy();
-    }
-
-    if (this.collection && this.document) {
-      this.state = new DocumentUi(this.collection, this.document, this.store$, this.i18n, this.notificationService);
-
-      this.createdBy$ = this.store$.pipe(
-        select(selectUserById(this.document.createdBy)),
-        filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
-      );
-      this.updatedBy$ = this.store$.pipe(
-        select(selectUserById(this.document.updatedBy)),
-        filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
-      );
-    }
+  private initDefaultAttribute() {
+    const defaultAttributeId = this.collection && getDefaultAttributeId(this.collection);
+    this.defaultAttribute = defaultAttributeId && findAttribute(this.collection.attributes, defaultAttributeId);
   }
 
   public ngOnDestroy() {
-    if (this.state) {
-      this.state.destroy();
-    }
-  }
-
-  public addAttrRow() {
-    if (this.state) {
-      this.state.onAddRow();
-    }
-  }
-
-  public onRemoveRow(idx: number) {
-    if (this.state) {
-      this.state.onRemoveRow(idx);
-    }
-  }
-
-  public submitRowChange(idx: number, $event: [string, string]) {
-    if (this.state) {
-      this.state.onUpdateRow(idx, $event);
-    }
   }
 
   public onRemoveDocument() {
@@ -147,14 +112,11 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public onToggleFavorite() {
-    if (this.state) {
-      this.state.onToggleFavorite();
+  public onSwitchToTable() {
+    if (this.collection && this.document) {
+      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
+      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
     }
-  }
-
-  public getTrackBy(index: number, row: UiRow): string {
-    return row.correlationId || row.id;
   }
 
   public fireConstraintConfig(id: string) {
@@ -208,12 +170,5 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
           })
         );
       });
-  }
-
-  public onSwitchToTable() {
-    if (this.collection && this.document) {
-      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
-      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
-    }
   }
 }

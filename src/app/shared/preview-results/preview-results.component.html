@@ -1,32 +1,35 @@
-<ng-container *ngIf="{collections: collections$ | async, documents: documents$ | async, loaded: loaded$ | async } as data">
+<ng-container
+  *ngIf="{collections: collections$ | async, documents: documents$ | async, loaded: loaded$ | async } as data">
   <ng-container *ngIf="data.collections && data.documents">
-    <div class="p-0 m-0 show" id="preview-collapse" *ngIf="data.collections.length > 1 || data.documents.length > 1">
-      <div class="row justify-content-center" *ngIf="data.collections.length > 1">
-        <div class="col">
-          <preview-results-tabs
-            [collections]="data.collections"
-            [selectedCollection]="selectedCollection?.id"
-            (select)="setActiveCollection($event)">
-          </preview-results-tabs>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col mb-3">
-          <preview-results-table
-            [documents]="data.documents | documentsByCollection:selectedCollection.id"
-            [selectedDocumentId]="selectedDocument?.id"
-            [loaded]="data.loaded"
-            [collection]="selectedCollection"
-            [constraintData]="constraintData$ | async"
-            (selectDocument)="setActiveDocument($event)">
-          </preview-results-table>
-        </div>
-      </div>
+
+    <div *ngIf="data.collections.length; else noData">
+      <ng-container *ngIf="data.collections.length > 1 || data.documents.length > 1">
+        <preview-results-tabs
+          *ngIf="data.collections.length > 1"
+          [collections]="data.collections"
+          [selectedCollection]="selectedCollection?.id"
+          (select)="setActiveCollection($event)">
+        </preview-results-tabs>
+        <preview-results-table
+          [documents]="data.documents | documentsByCollection:selectedCollection?.id"
+          [selectedDocumentId]="selectedDocument?.id"
+          [loaded]="data.loaded"
+          [collection]="selectedCollection"
+          [constraintData]="constraintData$ | async"
+          (selectDocument)="setActiveDocument($event)">
+        </preview-results-table>
+
+      </ng-container>
     </div>
-    <div class="row" *ngIf="data.loaded && data.collections.length === 1 && data.documents.length === 0">
-      <div class="col justify-content-center text-lg-center">
-        <p class="lead font-weight-bold" i18n="@@shared.preview.results.noResults">No records found!</p>
-      </div>
-    </div>
+
   </ng-container>
 </ng-container>
+
+
+<ng-template #noData>
+  <empty-data
+    [project]="project$ | async"
+    [query]="query"
+    (collectionsTab)="switchToCollectionsTab()">
+  </empty-data>
+</ng-template>
