@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {CaseStyle, TextConstraintConfig} from '../../../core/model/data/constraint-config';
-import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
-import {formatTextDataValue} from '../../utils/data.utils';
+import {UserDataValue} from '../data-value/user.data-value';
+import {ConstraintData, ConstraintType} from '../data/constraint';
+import {UserConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'textDataValue',
-})
-export class TextDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: TextConstraintConfig): string {
-    return formatTextDataValue(value, config);
+export class UserConstraint implements Constraint {
+  public readonly type = ConstraintType.User;
+
+  constructor(public readonly config: UserConstraintConfig) {}
+
+  public createDataValue(value: any, constraintData?: ConstraintData): UserDataValue {
+    return new UserDataValue(value, this.config, constraintData);
   }
 }

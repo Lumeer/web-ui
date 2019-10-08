@@ -33,6 +33,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {Constraint} from '../../../../core/model/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CalendarBarPropertyRequired, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
@@ -41,11 +42,10 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {CalendarMetaData, checkOrTransformCalendarConfig, createCalendarEvents} from '../util/calendar-util';
-import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {Query} from '../../../../core/store/navigation/query/query';
 import * as moment from 'moment';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
-import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 
@@ -205,7 +205,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: any, constraint: Constraint): any {
     if (constraint) {
-      return getSaveValue(value, constraint, this.constraintData);
+      return constraint.createDataValue(value, this.constraintData).serialize();
     } else if (isDateValid(value)) {
       return moment(value).toISOString();
     } else {

@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintType} from '../../model/data/constraint';
-import {QueryStem} from '../navigation/query/query';
+import {Constraint} from '../../model/constraint';
+import {ConstraintType} from '../../model/data/constraint';
 import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {PivotAttribute} from '../pivots/pivot';
+import {QueryStem} from '../navigation/query/query';
 
 export const DEFAULT_KANBAN_ID = 'default';
 

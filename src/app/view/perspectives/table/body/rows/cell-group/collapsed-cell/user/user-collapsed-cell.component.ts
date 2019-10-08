@@ -18,7 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {UserConstraintConfig} from '../../../../../../../../core/model/data/constraint-config';
+import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
+import {ConstraintData} from '../../../../../../../../core/model/data/constraint';
 import {USER_AVATAR_SIZE} from '../../../../../../../../shared/data-input/user/user-data-input.component';
 import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {isEmailValid} from '../../../../../../../../shared/utils/email.utils';
@@ -31,7 +32,10 @@ import {isEmailValid} from '../../../../../../../../shared/utils/email.utils';
 })
 export class UserCollapsedCellComponent implements OnChanges {
   @Input()
-  public constraintConfig: UserConstraintConfig;
+  public constraint: UserConstraint;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public values: any[];

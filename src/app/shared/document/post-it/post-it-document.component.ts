@@ -33,6 +33,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {SelectionHelper} from './util/selection-helper';
@@ -60,6 +61,9 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public perspectiveId: string;

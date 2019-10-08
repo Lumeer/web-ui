@@ -1,6 +1,7 @@
 <div [formGroup]="form">
   <div class="d-flex mb-3">
-    <span class="text-muted" i18n="@@constraint.percentage.description">
+    <span class="text-muted"
+          i18n="@@constraint.percentage.description">
       Format any recognizable values as percentages.
       There is no need to enter the percent (%) character. It is added automatically.
     </span>
@@ -9,7 +10,8 @@
   <div class="d-flex">
     <div class="form-group flex-grow-1">
       <label for="numberDecimals">
-        <span class="d-inline-block" i18n="@@constraint.percentage.decimals.label">
+        <span class="d-inline-block"
+              i18n="@@constraint.percentage.decimals.label">
           Round to no. of decimal digits:
         </span>
       </label>
@@ -17,9 +19,15 @@
              formControlName="decimals"
              id="numberDecimals"
              type="number">
-        <span class="d-inline-block text-muted small"  i18n="@@constraint.percentage.decimals.description">
+      <span class="d-inline-block text-muted small"
+            i18n="@@constraint.percentage.decimals.description">
           Leave empty for no rounding.
         </span>
+      <div *ngIf="decimalsControl.errors?.min"
+           class="text-danger"
+           i18n="@@constraint.percentage.decimals.error">
+        The value must be greater than or equal to zero.
+      </div>
     </div>
   </div>
 

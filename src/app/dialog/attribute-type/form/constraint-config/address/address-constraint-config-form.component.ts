@@ -20,8 +20,11 @@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {AddressesMap, AddressField} from '../../../../../core/store/geocoding/address';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {AddressDataValue} from '../../../../../core/model/data-value/address.data-value';
 import {AddressConstraintConfig} from '../../../../../core/model/data/constraint-config';
+import {AddressesMap, AddressField} from '../../../../../core/store/geocoding/address';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
 import {ADDRESS_DEFAULT_FIELDS, EXAMPLE_ADDRESS} from './address-constraint.constants';
@@ -36,7 +39,7 @@ export class AddressConstraintConfigFormComponent {
   public readonly controls = AddressConstraintFormControl;
   public readonly fields = Object.values(AddressField);
 
-  public readonly exampleAddressesMap: AddressesMap = {
+  private readonly exampleAddressesMap: AddressesMap = {
     example: [EXAMPLE_ADDRESS],
   };
 
@@ -46,16 +49,26 @@ export class AddressConstraintConfigFormComponent {
   @Input()
   public form: FormGroup;
 
+  public exampleValue$: Observable<AddressDataValue>;
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
       this.resetForm();
       this.createForm();
+      this.exampleValue$ = this.bindExampleValue();
     }
   }
 
   private resetForm() {
     this.form.clearValidators();
     removeAllFormControls(this.form);
+  }
+
+  private bindExampleValue(): Observable<AddressDataValue> {
+    return this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map(config => new AddressDataValue('example', config, {addressesMap: this.exampleAddressesMap}))
+    );
   }
 
   private createForm() {

@@ -146,7 +146,7 @@ function parseValueToDurationValue(value: any, unitToMillisMap: Record<string, n
   return millis.toFixed(0);
 }
 
-function convertToBig(value: any, defaultValue?: number): Big {
+export function convertToBig(value: any, defaultValue?: number): Big {
   try {
     return new Big(String(value));
   } catch (e) {

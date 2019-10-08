@@ -1,6 +1,6 @@
 <input *ngIf="readonly; else numberEditing"
-       [title]="value | numberDataValue"
-       [value]="value | numberDataValue"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
        (focus)="onFocus.emit($event)"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
@@ -11,8 +11,8 @@
 <ng-template #numberEditing>
   <input #numberInput
          number
-         [title]="value | numberDataValue"
-         [value]="value | numberDataValue"
+         [title]="value | formatDataValue"
+         [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

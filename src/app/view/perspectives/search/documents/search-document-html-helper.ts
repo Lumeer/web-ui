@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {formatDataValue} from '../../../../shared/utils/data.utils';
 import {createDataValueHtml} from '../../../../shared/utils/data/data-html.utils';
 
 export function createSearchDocumentValuesHtml(
@@ -91,7 +91,8 @@ export function searchDocumentDefaultAttributeHtml(
 
   const defaultAttributeId = getDefaultAttributeId(collection);
   const value = document.data[defaultAttributeId];
-  return formatDataValue(value, findAttributeConstraint(collection.attributes, defaultAttributeId), constraintData);
+  const constraint = findAttributeConstraint(collection.attributes, defaultAttributeId) || new UnknownConstraint();
+  return constraint.createDataValue(value, constraintData).format();
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: Collection) {

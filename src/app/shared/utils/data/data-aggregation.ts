@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintType} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
 import Big from 'big.js';
 import {convertToBig} from '../data.utils';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';

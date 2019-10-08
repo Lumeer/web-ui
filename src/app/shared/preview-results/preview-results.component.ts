@@ -32,6 +32,8 @@ import {
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {ConstraintData} from '../../core/model/data/constraint';
+import {ConstraintDataService} from '../../core/service/constraint-data.service';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
@@ -68,17 +70,20 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   public documents$: Observable<DocumentModel[]>;
   public loaded$ = new BehaviorSubject<boolean>(false);
 
+  public constraintData$: Observable<ConstraintData>;
+
   private allSubscriptions = new Subscription();
   private dataSubscription = new Subscription();
   private collectionSubscription = new Subscription();
 
   private query: Query;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private constraintDataService: ConstraintDataService) {}
 
   public ngOnInit() {
     this.subscribeAll();
     this.updateDefaultCollectionSubscription();
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
   private subscribeAll() {

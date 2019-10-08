@@ -29,8 +29,10 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {Constraint, ConstraintData, ConstraintType} from '../../core/model/data/constraint';
-import {checkValidUser, formatDataValue} from '../utils/data.utils';
+import {Constraint} from '../../core/model/constraint';
+import {DataValue} from '../../core/model/data-value';
+import {UnknownDataValue} from '../../core/model/data-value/unknown.data-value';
+import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
@@ -81,23 +83,34 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Output()
   public onFocus = new EventEmitter<any>();
 
+  public dataValue: DataValue;
+
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value && this.resizeToContent) {
-      this.recalculateWidth(this.value);
+    if (changes.value || changes.constraint || changes.constraintData) {
+      this.dataValue = this.createDataValue();
+      if (this.resizeToContent) {
+        this.recalculateWidth(this.dataValue);
+      }
     }
   }
 
-  private recalculateWidth(value: any) {
-    const width = this.getWidthOfInput(value);
+  private createDataValue(): DataValue {
+    return this.constraint
+      ? this.constraint.createDataValue(this.value, this.constraintData)
+      : new UnknownDataValue(this.value);
+  }
+
+  private recalculateWidth(value: DataValue, raw?: boolean) {
+    const width = this.getWidthOfInput(value, raw);
     this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
   }
 
-  private getWidthOfInput(value: any): number {
+  private getWidthOfInput(value: DataValue, raw?: boolean): number {
     if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
       return 34;
     }
@@ -109,15 +122,13 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       this.tempElement.classList.remove('d-none');
     }
 
-    this.tempElement.innerHTML = formatDataValue(value, this.constraint, this.constraintData);
+    this.tempElement.innerHTML = raw ? String(value.value) : value.format();
     const textWidth = this.tempElement.getBoundingClientRect().width;
 
     this.tempElement.classList.add('d-none');
 
     if (this.constraint && this.constraint.type === ConstraintType.User) {
-      return (
-        textWidth + (checkValidUser(value, this.constraintData && this.constraintData.users) ? USER_AVATAR_SIZE : 0)
-      );
+      return textWidth + (value.isValid() ? USER_AVATAR_SIZE : 0);
     }
 
     return textWidth;
@@ -137,23 +148,23 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onSaveValue(value: any) {
+  public onSaveValue(dataValue: DataValue) {
     if (this.resizeToContent) {
-      this.recalculateWidth(value);
+      this.recalculateWidth(dataValue);
     }
-    this.save.emit(value);
+    this.save.emit(dataValue.serialize());
   }
 
-  public onValueChange(value: any) {
+  public onValueChange(dataValue: DataValue) {
     if (this.resizeToContent) {
-      this.recalculateWidth(value);
+      this.recalculateWidth(dataValue, true);
     }
-    this.valueChange.emit(value);
+    this.valueChange.emit(dataValue.serialize());
   }
 
   public onCancel() {
     if (this.resizeToContent) {
-      this.recalculateWidth(this.value);
+      this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();
   }

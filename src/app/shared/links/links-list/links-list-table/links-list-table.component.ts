@@ -24,25 +24,27 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
-import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {Observable, Subscription, BehaviorSubject} from 'rxjs';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
+import {AppState} from '../../../../core/store/app.state';
+import {Collection} from '../../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
 import {LinkRowModel} from './link-row.model';
-import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {LinksListTableHeaderComponent} from './links-list-table-header/links-list-table-header.component';
 
 const PAGE_SIZE = 100;
@@ -53,7 +55,7 @@ const PAGE_SIZE = 100;
   styleUrls: ['./links-list-table.component.scss', './links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableComponent implements OnChanges, OnDestroy {
+export class LinksListTableComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(LinksListTableHeaderComponent, {static: false})
   public headerComponent: LinksListTableHeaderComponent;
 
@@ -70,10 +72,16 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   public page = 0;
   public readonly pageSize = PAGE_SIZE;
 
+  public constraintData$: Observable<ConstraintData>;
+
   private lastSelection: {linkType: LinkType; document: DocumentModel};
   private linksSubscription = new Subscription();
 
-  public constructor(private store: Store<AppState>) {}
+  public constructor(private constraintDataService: ConstraintDataService, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
+  }
 
   public ngOnDestroy() {
     this.linksSubscription.unsubscribe();
@@ -85,7 +93,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   private renewSubscriptions() {
     if (this.linkType && this.document) {
-      this.otherCollection$ = this.store.select(selectCollectionsDictionary).pipe(
+      this.otherCollection$ = this.store$.select(selectCollectionsDictionary).pipe(
         map(collectionsMap => {
           const collectionId = getOtherLinkedCollectionId(this.linkType, this.document.collectionId);
           return collectionsMap[collectionId];
@@ -93,7 +101,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
       );
 
       this.linksSubscription.unsubscribe();
-      this.linksSubscription = this.store
+      this.linksSubscription = this.store$
         .select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id]))
         .pipe(
           mergeMap(linkInstances =>
@@ -108,7 +116,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   private fetchDocumentsForLinkInstances(linkInstances: LinkInstance[]): Observable<DocumentModel[]> {
     const documentsIds = this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id);
-    return this.store.select(selectDocumentsByIds(documentsIds));
+    return this.store$.select(selectDocumentsByIds(documentsIds));
   }
 
   private convertLinkInstancesToDocumentIds(linkInstances: LinkInstance[], documentId: string): string[] {

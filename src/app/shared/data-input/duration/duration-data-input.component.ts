@@ -18,28 +18,20 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
+  Component,
   ElementRef,
-  OnChanges,
-  SimpleChanges,
+  EventEmitter,
   HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {DurationConstraintConfig} from '../../../core/model/data/constraint-config';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {DurationDataValue} from '../../../core/model/data-value/duration.data-value';
 import {KeyCode} from '../../key-code';
-import {
-  formatDurationDataValue,
-  getDurationSaveValue,
-  isDurationDataValueValid,
-} from '../../utils/constraint/duration-constraint.utils';
-import {TranslationService} from '../../../core/service/translation.service';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {isNumeric} from '../../utils/common.utils';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'duration-data-input',
@@ -49,25 +41,22 @@ import {isNumeric} from '../../utils/common.utils';
 })
 export class DurationDataInputComponent implements OnChanges {
   @Input()
-  public constraintConfig: DurationConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: DurationDataValue;
 
   @Input()
   public skipValidation: boolean;
 
   @Output()
-  public valueChange = new EventEmitter<number | string>();
+  public valueChange = new EventEmitter<DurationDataValue>();
 
   @Output()
-  public save = new EventEmitter<number | string>();
+  public save = new EventEmitter<DurationDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -81,41 +70,24 @@ export class DurationDataInputComponent implements OnChanges {
   @ViewChild('durationInput', {static: false})
   public durationInput: ElementRef<HTMLInputElement>;
 
-  public readonly durationUnitsMap: DurationUnitsMap;
-
   public valid = true;
 
   private preventSave: boolean;
 
-  constructor(private translationService: TranslationService) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
-        this.initValue();
         HtmlModifier.setCursorAtTextContentEnd(this.durationInput.nativeElement);
         this.durationInput.nativeElement.focus();
       });
     }
-    if (changes.value) {
-      this.initValue();
+    if (changes.value && this.value) {
+      this.valid = this.value.isValid();
     }
-    this.valid = isDurationDataValueValid(this.value, this.durationUnitsMap);
-  }
-
-  private initValue() {
-    const input = this.durationInput;
-    setTimeout(() => {
-      if (input && input.nativeElement) {
-        if ((!input.nativeElement.value || input.nativeElement.value === '0') && isNumeric(this.value)) {
-          input.nativeElement.value = String(this.value);
-        } else {
-          input.nativeElement.value = formatDurationDataValue(this.value, this.constraintConfig, this.durationUnitsMap);
-        }
-      }
-    });
+    if (changes.readonly && !this.readonly && String(this.value.value).length === 1) {
+      // show value entered into hidden input without any changes
+      setTimeout(() => this.durationInput && (this.durationInput.nativeElement.value = String(this.value.value)));
+    }
   }
 
   @HostListener('keydown', ['$event'])
@@ -125,12 +97,9 @@ export class DurationDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.durationInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        if (
-          !this.skipValidation &&
-          input &&
-          !isDurationDataValueValid(input.nativeElement.value, this.durationUnitsMap)
-        ) {
+        if (!this.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -138,11 +107,11 @@ export class DurationDataInputComponent implements OnChanges {
 
         this.preventSave = true;
         // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(this.transformValue(input.nativeElement.value)));
+        setTimeout(() => input && this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.durationInput.nativeElement.value = this.value || '';
+        this.durationInput.nativeElement.value = this.value.format();
         this.cancel.emit();
         return;
     }
@@ -150,10 +119,10 @@ export class DurationDataInputComponent implements OnChanges {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    const value = this.transformValue(element.value);
-    this.valid = isDurationDataValueValid(element.value, this.durationUnitsMap);
+    const dataValue = this.value.parseInput(element.value);
+    this.valid = dataValue.isValid();
 
-    this.valueChange.emit(value);
+    this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
@@ -161,12 +130,9 @@ export class DurationDataInputComponent implements OnChanges {
       this.cancel.emit();
       this.preventSave = false;
     } else {
-      this.save.emit(this.transformValue(this.durationInput.nativeElement.value));
+      const dataValue = this.value.parseInput(this.durationInput.nativeElement.value);
+      this.save.emit(dataValue);
     }
     this.dataBlur.emit();
-  }
-
-  private transformValue(value: any): number | string {
-    return getDurationSaveValue(value, this.constraintConfig, this.durationUnitsMap);
   }
 }

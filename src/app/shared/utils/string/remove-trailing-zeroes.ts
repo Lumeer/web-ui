@@ -17,15 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatNumberDataValue} from '../../utils/data.utils';
-
-@Pipe({
-  name: 'numberDataValue',
-})
-export class NumberDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: NumberConstraintConfig): string {
-    return formatNumberDataValue(value, config);
+export function removeTrailingZeroes(value: string): string {
+  if (!value) {
+    return value;
   }
+
+  const [integerPart, fractionalPart] = String(value).split('.');
+  if (!fractionalPart) {
+    return integerPart;
+  }
+
+  const fractionalDigits = fractionalPart
+    .split('')
+    .reverse()
+    .reduce((reversedPart, digit) => (digit === '0' && !reversedPart ? '' : reversedPart + digit), '')
+    .split('')
+    .reverse()
+    .join('');
+
+  return fractionalDigits ? `${integerPart}.${fractionalDigits}` : integerPart;
 }

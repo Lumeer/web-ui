@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {isSelectDataValueValid} from '../../../utils/data.utils';
+import {TextDataValue} from '../data-value/text.data-value';
+import {ConstraintData, ConstraintType} from '../data/constraint';
+import {TextConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'isSelectDataValueValid',
-})
-export class IsSelectDataValueValidPipe implements PipeTransform {
-  public transform(value: any, config?: SelectConstraintConfig): boolean {
-    return isSelectDataValueValid(value, config);
+export class TextConstraint implements Constraint {
+  public readonly type = ConstraintType.Text;
+
+  constructor(public readonly config: TextConstraintConfig) {}
+
+  public createDataValue(value: any, constraintDate?: ConstraintData): TextDataValue {
+    return new TextDataValue(value, this.config);
   }
 }

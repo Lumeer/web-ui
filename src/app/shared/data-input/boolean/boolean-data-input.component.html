@@ -2,7 +2,7 @@
      (click)="onDivClick($event)">
   <input #booleanInput
          [id]="inputId"
-         [attr.checked]="(value | booleanDataValue) || null"
+         [attr.checked]="(value | serializeDataValue) || null"
          [readonly]="readonly || null"
          [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"

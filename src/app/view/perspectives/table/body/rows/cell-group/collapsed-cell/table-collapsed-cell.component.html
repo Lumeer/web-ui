@@ -12,6 +12,7 @@
                 [ngSwitch]="data.constraint?.type">
 
     <boolean-collapsed-cell *ngSwitchCase="constraintType.Boolean"
+                            [constraint]="data.constraint"
                             [values]="values"
                             class="h-100">
     </boolean-collapsed-cell>
@@ -29,7 +30,8 @@
     </files-collapsed-cell>
 
     <user-collapsed-cell *ngSwitchCase="constraintType.User"
-                         [constraintConfig]="data.constraint?.config"
+                         [constraint]="data.constraint"
+                         [constraintData]="constraintData"
                          [stringValues]="data.stringValues"
                          [values]="values"
                          [title]="data.stringValues | join"

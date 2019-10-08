@@ -18,7 +18,8 @@
  */
 
 import {AllowedPermissions} from '../../model/allowed-permissions';
-import {Constraint, ConstraintType} from '../../model/data/constraint';
+import {Constraint} from '../../model/constraint';
+import {ConstraintType} from '../../model/data/constraint';
 import {LinkType} from '../link-types/link.type';
 import {AttributeFilter, ConditionType, Query} from '../navigation/query/query';
 import {
@@ -27,7 +28,6 @@ import {
   getQueryFiltersForLinkType,
 } from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
-import {Resource} from '../../model/resource';
 
 export function isCollectionAttributeEditable(
   attributeId: string,

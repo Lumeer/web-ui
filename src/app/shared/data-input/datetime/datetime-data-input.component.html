@@ -1,8 +1,8 @@
 <input #dateTimeInput
        [readonly]="readonly"
-       [title]="value | dateTimeDataValue: constraintConfig"
-       [value]="value | dateTimeDataValue: constraintConfig"
-       [class.invalid-value]="!(value | dateTimeValid:constraintConfig)"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
+       [class.invalid-value]="!(value | isDataValueValid)"
        (input)="onInput($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        autocomplete="off"
@@ -10,11 +10,11 @@
        type="text">
 
 <date-time-picker *ngIf="!readonly"
-                  [min]="skipValidation ? null : constraintConfig?.minValue"
-                  [max]="skipValidation ? null : constraintConfig?.maxValue"
+                  [min]="skipValidation ? null : value?.config?.minValue"
+                  [max]="skipValidation ? null : value?.config?.maxValue"
                   [options]="options"
                   [origin]="element"
-                  [value]="value | parseDate: constraintConfig?.format"
+                  [value]="date"
                   (valueChange)="onValueChange($event)"
                   (save)="onSave($event)"
                   (cancel)="onCancel()">

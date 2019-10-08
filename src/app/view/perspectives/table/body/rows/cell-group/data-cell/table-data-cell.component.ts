@@ -39,6 +39,7 @@ import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {UnknownDataValue} from '../../../../../../../core/model/data-value/unknown.data-value';
 import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -70,7 +71,6 @@ import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
-import {isValueValid} from '../../../../../../../shared/utils/data.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
@@ -239,11 +239,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           this.attribute$.pipe(first()).subscribe(attribute => {
             if (this.editedValue) {
               if (attribute && attribute.constraint) {
-                if (isValueValid(this.editedValue, attribute.constraint, this.constraintData)) {
-                  this.onValueSave(this.editedValue);
+                const dataValue = attribute.constraint.createDataValue(this.editedValue);
+                if (dataValue.isValid()) {
+                  this.onValueSave(dataValue);
                 }
               } else {
-                this.onValueSave(this.editedValue);
+                const dataValue = new UnknownDataValue(this.editedValue);
+                this.onValueSave(dataValue);
               }
             }
             this.editing$.next(false);

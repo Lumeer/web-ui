@@ -29,11 +29,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint-config';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {PercentageDataValue} from '../../../core/model/data-value/percentage.data-value';
 import {KeyCode} from '../../key-code';
-import {getPercentageSaveValue, isPercentageValid} from '../../utils/data.utils';
-import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pipe';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'percentage-data-input',
@@ -43,25 +41,22 @@ import {PercentageDataValuePipe} from '../../pipes/data/percentage-data-value.pi
 })
 export class PercentageDataInputComponent implements OnChanges {
   @Input()
-  public constraintConfig: PercentageConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: PercentageDataValue;
 
   @Input()
   public skipValidation: boolean;
 
   @Output()
-  public valueChange = new EventEmitter<number | string>();
+  public valueChange = new EventEmitter<PercentageDataValue>();
 
   @Output()
-  public save = new EventEmitter<number | string>();
+  public save = new EventEmitter<PercentageDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -79,8 +74,6 @@ export class PercentageDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
 
-  private percentageDataValue = new PercentageDataValuePipe();
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
@@ -92,16 +85,14 @@ export class PercentageDataInputComponent implements OnChanges {
     if (changes.value) {
       this.initValue();
     }
-    if (this.value) {
-      this.valid = isPercentageValid(this.value, this.constraintConfig);
-    }
+    this.valid = this.value.isValid();
   }
 
   private initValue() {
     const input = this.percentageInput;
     setTimeout(() => {
       if (input && input.nativeElement) {
-        input.nativeElement.value = this.percentageDataValue.transform(this.value, this.constraintConfig);
+        input.nativeElement.value = this.value.format('');
       }
     });
   }
@@ -113,9 +104,9 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.percentageInput;
-        const value = this.transformValue(input.nativeElement.value);
+        const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        if (!this.skipValidation && input && !isPercentageValid(value, this.constraintConfig)) {
+        if (!this.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -123,11 +114,11 @@ export class PercentageDataInputComponent implements OnChanges {
 
         this.preventSave = true;
         // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(value));
+        setTimeout(() => input && this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.percentageInput.nativeElement.value = this.value || '';
+        this.percentageInput.nativeElement.value = this.value.format('');
         this.cancel.emit();
         return;
     }
@@ -135,10 +126,10 @@ export class PercentageDataInputComponent implements OnChanges {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    const value = this.transformValue(element.value);
-    this.valid = isPercentageValid(value, this.constraintConfig);
+    const dataValue = this.value.parseInput(element.value);
+    this.valid = dataValue.isValid();
 
-    this.valueChange.emit(value);
+    this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
@@ -146,12 +137,9 @@ export class PercentageDataInputComponent implements OnChanges {
       this.cancel.emit();
       this.preventSave = false;
     } else {
-      this.save.emit(this.transformValue(this.percentageInput.nativeElement.value));
+      const dataValue = this.value.parseInput(this.percentageInput.nativeElement.value);
+      this.save.emit(dataValue);
     }
     this.dataBlur.emit();
-  }
-
-  private transformValue(value: any): number | string {
-    return getPercentageSaveValue(value);
   }
 }

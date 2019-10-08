@@ -18,11 +18,13 @@
  */
 
 import * as moment from 'moment';
-import {Constraint, ConstraintType} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
 import {ConditionType} from '../../../core/store/navigation/query/query';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
-import {convertToBig, formatDataValue, parseMomentDate} from '../data.utils';
+import {convertToBig, parseMomentDate} from '../data.utils';
 
 export function compareDataValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
@@ -226,8 +228,8 @@ function dataValuesMeetConditionByUser(a: any, b: any, condition: ConditionType)
 }
 
 function dataValuesMeetConditionByAny(a: any, b: any, condition: ConditionType, constraint?: Constraint): boolean {
-  const aValue = formatDataValue(a, constraint);
-  const bValue = formatDataValue(b, constraint);
+  const aValue = (constraint || new UnknownConstraint()).createDataValue(a).format();
+  const bValue = (constraint || new UnknownConstraint()).createDataValue(b).format();
   switch (condition) {
     case ConditionType.Equals:
       return aValue === bValue;

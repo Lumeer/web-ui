@@ -32,6 +32,7 @@
         [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
         [index]="idx"
         [permissions]="permissions[card.dataResource.collectionId] || {}"
+        [constraintData]="constraintData"
         (remove)="onRemoveDocument(card.dataResource)"
         (toggleFavorite)="onToggleFavorite(card.dataResource)">
       </post-it-document>

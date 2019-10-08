@@ -18,6 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
+import {UserConstraint} from '../../../../../../core/model/constraint/user.constraint';
 import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
@@ -35,6 +37,9 @@ export class KanbanColumnHeaderComponent {
   public remove = new EventEmitter();
 
   public readonly constraintTypes = ConstraintType;
+
+  public readonly booleanConstraint = new BooleanConstraint();
+  public readonly userConstraint = new UserConstraint({externalUsers: true});
 
   public onRemove() {
     this.remove.emit();

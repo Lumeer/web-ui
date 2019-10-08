@@ -34,7 +34,7 @@ import {findAttribute, isCollectionAttributeEditable} from '../../../../core/sto
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
-import {formatData} from '../../../../shared/utils/data.utils';
+import {formatData} from '../../../../shared/utils/data/format-data';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {

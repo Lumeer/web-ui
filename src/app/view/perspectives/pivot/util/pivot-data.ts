@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {Constraint} from '../../../../core/model/constraint';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 
 export interface PivotData {

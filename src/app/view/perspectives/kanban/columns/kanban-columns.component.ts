@@ -57,7 +57,6 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {getSaveValue} from '../../../../shared/utils/data.utils';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -252,7 +251,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
     const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
     const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
-    data[kanbanAttribute.attributeId] = getSaveValue(value, constraint, this.constraintData);
+    data[kanbanAttribute.attributeId] = constraint.createDataValue(value).serialize();
     return {collectionId: collection.id, data};
   }
 
@@ -261,7 +260,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      const value = getSaveValue(newValue, constraint, this.constraintData);
+      const value = constraint.createDataValue(newValue).serialize();
       const data = {...document.data, [attributeId]: value};
       this.patchDocumentData.emit({...document, data});
     }

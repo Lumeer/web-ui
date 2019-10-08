@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
-import {formatDataValue} from '../data.utils';
-import {generateId} from '../resource.utils';
+import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {FileTypeIconPipe} from '../../data-input/files/file-type-icon.pipe';
+import {generateId} from '../resource.utils';
 
 export function createDataValueHtml(
   value: any,
@@ -28,12 +29,9 @@ export function createDataValueHtml(
   constraintData: ConstraintData,
   className?: string
 ): string {
-  const formattedValue = formatDataValue(value, constraint, constraintData);
-  if (!constraint) {
-    return createDataAnyValueHtml(formattedValue);
-  }
+  const formattedValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData).format();
 
-  switch (constraint.type) {
+  switch (constraint && constraint.type) {
     case ConstraintType.Color:
       return createDataColorValueHtml(formattedValue, className);
     case ConstraintType.Boolean:
@@ -54,7 +52,7 @@ function createDataColorValueHtml(value: string, className?: string) {
           style="width: 60px; background: ${value}">&nbsp;</div>`;
 }
 
-function createDataBooleanValueHtml(value: boolean, className?: string) {
+function createDataBooleanValueHtml(value: string, className?: string) {
   const inputId = `search-document-input-${generateId()}`;
   return `<div class="d-inline-block custom-control custom-checkbox ${className || ''}"><input 
              id="${inputId}"

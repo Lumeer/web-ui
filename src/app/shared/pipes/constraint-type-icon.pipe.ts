@@ -18,7 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint, constraintIconsMap} from '../../core/model/data/constraint';
+import {Constraint} from '../../core/model/constraint';
+import {constraintIconsMap} from '../../core/model/data/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',

@@ -27,30 +27,29 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
-import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
-import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import * as moment from 'moment';
 import {BsModalService} from 'ngx-bootstrap';
-import {DetailDialogComponent} from '../../../../shared/detail-dialog/detail-dialog.component';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
 import {generateDocumentDataByQuery} from '../../../../core/store/documents/document.utils';
+import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {User} from '../../../../core/store/users/user';
+import {DetailDialogComponent} from '../../../../shared/detail-dialog/detail-dialog.component';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
+import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
 
 interface Data {
   collections: Collection[];
@@ -223,7 +222,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (metadata.startAttributeId) {
       const start = moment(task.start, this.options && this.options.dateFormat);
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.startAttributeId);
-      const saveValue = constraint ? getSaveValue(start, constraint, this.constraintData) : start.toISOString();
+      const saveValue = constraint
+        ? constraint.createDataValue(start, this.constraintData).serialize()
+        : start.toISOString();
       if (saveValue !== dataResource[metadata.startAttributeId]) {
         patchData[metadata.startAttributeId] = saveValue;
       }
@@ -232,7 +233,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (metadata.endAttributeId) {
       const end = moment(task.end, this.options && this.options.dateFormat);
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.endAttributeId);
-      const saveValue = constraint ? getSaveValue(end, constraint, this.constraintData) : end.toISOString();
+      const saveValue = constraint
+        ? constraint.createDataValue(end, this.constraintData).serialize()
+        : end.toISOString();
       if (saveValue !== dataResource[metadata.endAttributeId]) {
         patchData[metadata.endAttributeId] = saveValue;
       }
@@ -241,7 +244,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (metadata.progressAttributeId) {
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.progressAttributeId);
       const saveValue = constraint
-        ? getSaveValue(task.progress, constraint, this.constraintData)
+        ? constraint.createDataValue(task.progress, this.constraintData).serialize()
         : this.formatPercentage(dataResource, metadata.progressAttributeId, task.progress);
       if (saveValue !== dataResource[metadata.progressAttributeId]) {
         patchData[metadata.progressAttributeId] = saveValue;
@@ -255,7 +258,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
         const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
         const saveValue = constraint
-          ? getSaveValue(task.swimlanes[i], constraint, this.constraintData)
+          ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
           : task.swimlanes[i];
 
         const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;

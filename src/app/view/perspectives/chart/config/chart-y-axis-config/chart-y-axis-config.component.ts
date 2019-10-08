@@ -18,6 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Constraint} from '../../../../../core/model/constraint';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {ChartYAxisType} from '../../data/convertor/chart-data';
@@ -25,7 +26,6 @@ import {DataAggregationType} from '../../../../../shared/utils/data/data-aggrega
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {Constraint} from '../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'chart-y-axis-config',

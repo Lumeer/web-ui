@@ -1,48 +1,46 @@
-<ng-container *ngIf="{users: users$ | async} as data">
-  <ng-container *ngIf="readonly; else textEditing">
-    <ng-container *ngIf="{user: value | userByEmail : data.users} as state">
-      <img *ngIf="value | emailValid"
-           ngxGravatar
-           [email]="value"
-           [size]="avatarSize"
-           class="ml-1">
-      <input [readonly]="readonly"
-             [title]="value | userDataValue: constraintConfig | async"
-             [value]="value | userDataValue: constraintConfig | async"
-             (focus)="onFocus.emit($event)"
-             [class.invalid-value]="!skipValidation && (constraintConfig?.externalUsers ? !(value | emailValid) : !state.user)"
-             class="border-0 h-100 px-1 bg-transparent flex-grow-1 cursor-inherit"
-             data-test="user-data-input"
-             type="text">
-    </ng-container>
-  </ng-container>
-
-  <ng-template #textEditing>
-    <input #textInput
-           [(ngModel)]="name"
-           [typeahead]="data.users"
-           [typeaheadItemTemplate]="suggestionItem"
-           [typeaheadLatinize]="true"
-           [typeaheadOptionField]="'name'"
-           [typeaheadScrollable]="true"
-           [typeaheadOptionsInScrollableView]="10"
-           [adaptivePosition]="true"
-           [container]="'body'"
-           (typeaheadOnSelect)="onSelect($event)"
-           (blur)="onBlur()"
-           (ngModelChange)="onInputChange()"
-           class="border-0 w-100 h-100 px-1 bg-transparent"
+<ng-container *ngIf="readonly; else textEditing">
+  <ng-container *ngIf="{user: value | serializeDataValue | userByEmail : value?.constraintData?.users} as state">
+    <img *ngIf="value | isDataValueValid"
+         ngxGravatar
+         [email]="value | serializeDataValue"
+         [size]="avatarSize"
+         class="ml-1">
+    <input [readonly]="readonly"
+           [title]="value | formatDataValue"
+           [value]="value | formatDataValue"
+           (focus)="onFocus.emit($event)"
+           [class.invalid-value]="!skipValidation && (value?.config?.externalUsers ? !(value | isDataValueValid) : !state.user)"
+           class="border-0 h-100 px-1 bg-transparent flex-grow-1 cursor-inherit"
            data-test="user-data-input"
            type="text">
-  </ng-template>
-
-  <ng-template #suggestionItem
-               let-model="item"
-               let-index="index">
-    <img ngxGravatar
-         [email]="model.email"
-         [size]="avatarSize"
-         class="mr-2">
-    <span>{{ model.name || model.email }}</span>
-  </ng-template>
+  </ng-container>
 </ng-container>
+
+<ng-template #textEditing>
+  <input #textInput
+         [(ngModel)]="name"
+         [typeahead]="value?.constraintData?.users"
+         [typeaheadItemTemplate]="suggestionItem"
+         [typeaheadLatinize]="true"
+         [typeaheadOptionField]="'name'"
+         [typeaheadScrollable]="true"
+         [typeaheadOptionsInScrollableView]="10"
+         [adaptivePosition]="true"
+         [container]="'body'"
+         (typeaheadOnSelect)="onSelect($event)"
+         (blur)="onBlur()"
+         (ngModelChange)="onInputChange()"
+         class="border-0 w-100 h-100 px-1 bg-transparent"
+         data-test="user-data-input"
+         type="text">
+</ng-template>
+
+<ng-template #suggestionItem
+             let-model="item"
+             let-index="index">
+  <img ngxGravatar
+       [email]="model.email"
+       [size]="avatarSize"
+       class="mr-2">
+  <span>{{ model.name || model.email }}</span>
+</ng-template>

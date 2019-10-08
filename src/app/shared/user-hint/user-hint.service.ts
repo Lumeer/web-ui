@@ -19,13 +19,13 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {PercentageConstraint} from '../../core/model/constraint/percentage.constraint';
 import {AppState} from '../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {EMPTY, Observable, of} from 'rxjs';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {ConstraintType} from '../../core/model/data/constraint';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +72,7 @@ export class UserHintService {
               new CollectionsAction.ChangeAttribute({
                 collectionId: collection.id,
                 attributeId: attribute.id,
-                attribute: {...attribute, constraint: {type: ConstraintType.Percentage, config: {}}},
+                attribute: {...attribute, constraint: new PercentageConstraint({})},
               })
             );
           },

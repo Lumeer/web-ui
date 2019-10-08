@@ -17,15 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatSelectDataValue} from '../../utils/data.utils';
+import Big from 'big.js';
+import {convertStringToNumberSafely} from '../string/convert-string-to-number-safely';
+import {removeTrailingZeroes} from '../string/remove-trailing-zeroes';
 
-@Pipe({
-  name: 'selectDataValue',
-})
-export class SelectDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: SelectConstraintConfig): string {
-    return formatSelectDataValue(value, config);
-  }
+export function convertBigToNumberSafely(big: Big, decimals = 0): number | string {
+  const value = big && removeTrailingZeroes(big.toFixed(decimals > 0 ? decimals : 0));
+  return value && !value.includes('.') ? convertStringToNumberSafely(value) : value;
 }

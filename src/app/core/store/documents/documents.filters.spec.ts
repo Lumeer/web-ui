@@ -18,6 +18,9 @@
  */
 
 import {} from 'jasmine';
+import {DateTimeConstraint} from '../../model/constraint/datetime.constraint';
+import {NumberConstraint} from '../../model/constraint/number.constraint';
+import {DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkType} from '../link-types/link.type';
 import {User} from '../users/user';
@@ -123,8 +126,8 @@ const collections: Collection[] = [
     attributes: [
       {id: 'a1', name: 'a1'},
       {id: 'a2', name: 'a2'},
-      {id: 'a100', name: 'a100', constraint: {type: ConstraintType.Number, config: {}}},
-      {id: 'a101', name: 'a101', constraint: {type: ConstraintType.DateTime, config: {}}},
+      {id: 'a100', name: 'a100', constraint: new NumberConstraint({} as NumberConstraintConfig)},
+      {id: 'a101', name: 'a101', constraint: new DateTimeConstraint({} as DateTimeConstraintConfig)},
     ],
   },
   {

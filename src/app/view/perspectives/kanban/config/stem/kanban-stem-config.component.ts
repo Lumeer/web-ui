@@ -18,10 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../../../core/model/data/constraint';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';

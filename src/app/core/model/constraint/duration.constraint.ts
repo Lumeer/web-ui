@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatPercentageDataValue} from '../../utils/data.utils';
+import {DurationDataValue} from '../data-value/duration.data-value';
+import {ConstraintData, ConstraintType} from '../data/constraint';
+import {DurationConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'percentageDataValue',
-})
-export class PercentageDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: PercentageConstraintConfig, suffix = ''): any {
-    return formatPercentageDataValue(value, config, suffix);
+export class DurationConstraint implements Constraint {
+  public readonly type = ConstraintType.Duration;
+
+  constructor(public readonly config: DurationConstraintConfig) {}
+
+  public createDataValue(value: any, constraintData?: ConstraintData): DurationDataValue {
+    return new DurationDataValue(value, this.config, constraintData);
   }
 }

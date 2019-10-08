@@ -29,10 +29,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberConstraintConfig} from '../../../core/model/data/constraint-config';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {NumberDataValue} from '../../../core/model/data-value/number.data-value';
 import {KeyCode} from '../../key-code';
-import {formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../utils/data.utils';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'number-data-input',
@@ -42,25 +41,22 @@ import {formatNumberDataValue, getNumberSaveValue, isNumberValid} from '../../ut
 })
 export class NumberDataInputComponent implements OnChanges {
   @Input()
-  public constraintConfig: NumberConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: NumberDataValue;
 
   @Input()
   public skipValidation: boolean;
 
   @Output()
-  public valueChange = new EventEmitter<number | string>();
+  public valueChange = new EventEmitter<NumberDataValue>();
 
   @Output()
-  public save = new EventEmitter<number | string>();
+  public save = new EventEmitter<NumberDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -82,9 +78,7 @@ export class NumberDataInputComponent implements OnChanges {
       setTimeout(() => {
         if (this.value && !this.numberInput.nativeElement.value) {
           this.refreshValid(this.value);
-          this.numberInput.nativeElement.value = this.transformValue(
-            formatNumberDataValue(this.value, this.constraintConfig)
-          );
+          this.numberInput.nativeElement.value = this.value.format();
         }
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
@@ -93,8 +87,8 @@ export class NumberDataInputComponent implements OnChanges {
     this.refreshValid(this.value);
   }
 
-  private refreshValid(value: any) {
-    this.valid = isNumberValid(value, this.constraintConfig);
+  private refreshValid(value: NumberDataValue) {
+    this.valid = value.isValid();
   }
 
   @HostListener('keydown', ['$event'])
@@ -104,8 +98,9 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.numberInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        if (!this.skipValidation && !isNumberValid(input.nativeElement.value, this.constraintConfig)) {
+        if (!this.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           event.preventDefault();
           return;
@@ -113,11 +108,11 @@ export class NumberDataInputComponent implements OnChanges {
 
         this.preventSave = true;
         // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(this.transformValue(input.nativeElement.value)));
+        setTimeout(() => input && this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.numberInput.nativeElement.value = this.value || '';
+        this.numberInput.nativeElement.value = this.value.format();
         this.cancel.emit();
         return;
     }
@@ -125,22 +120,19 @@ export class NumberDataInputComponent implements OnChanges {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    const value = this.transformValue(element.value);
-    this.refreshValid(element.value);
+    const dataValue = this.value.parseInput(element.value);
+    this.refreshValid(dataValue);
 
-    this.valueChange.emit(value);
+    this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.save.emit(this.transformValue(this.numberInput.nativeElement.value));
+      const dataValue = this.value.parseInput(this.numberInput.nativeElement.value);
+      this.save.emit(dataValue);
     }
     this.dataBlur.emit();
-  }
-
-  private transformValue(value: any): string {
-    return getNumberSaveValue(value);
   }
 }
