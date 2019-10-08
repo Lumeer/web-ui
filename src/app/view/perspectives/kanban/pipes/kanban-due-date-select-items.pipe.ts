@@ -63,7 +63,7 @@ export class KanbanDueDateSelectItemsPipe implements PipeTransform {
   }
 
   private collectionSelectItem(collection: Collection, index: number): SelectItemModel[] {
-    return (collection.attributes || []).map(attribute => {
+    return ((collection && collection.attributes) || []).map(attribute => {
       const id: KanbanAttribute = {
         resourceType: AttributesResourceType.Collection,
         resourceId: collection.id,

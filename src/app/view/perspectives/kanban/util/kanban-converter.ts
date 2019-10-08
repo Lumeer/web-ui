@@ -229,21 +229,22 @@ export class KanbanConverter {
 
     Object.keys(columnsMap).forEach(key => {
       if (columnsMap[key].summary) {
-        values[key] = +aggregateDataValues(
-          config.aggregation.aggregation,
-          columnsMap[key].summary.values,
-          config.aggregation.constraint
-        );
+        values[key] =
+          +aggregateDataValues(
+            config.aggregation.aggregation,
+            columnsMap[key].summary.values,
+            config.aggregation.constraint
+          ) || 0;
+
         total += values[key];
       }
     });
 
     if (otherAggregator) {
-      otherValue = +aggregateDataValues(
-        config.aggregation.aggregation,
-        otherAggregator.values,
-        config.aggregation.constraint
-      );
+      otherValue =
+        +aggregateDataValues(config.aggregation.aggregation, otherAggregator.values, config.aggregation.constraint) ||
+        0;
+
       total += otherValue;
 
       otherAggregator.summary = new Big((otherValue / total) * 100).toFixed(2) + '%';
