@@ -229,34 +229,21 @@ export class KanbanConverter {
 
     Object.keys(columnsMap).forEach(key => {
       if (columnsMap[key].summary) {
-        const tmp = aggregateDataValues(
-          config.aggregation.aggregation,
-          columnsMap[key].summary.values,
-          config.aggregation.constraint
-        );
-
-        if (tmp) {
-          values[key] = +tmp;
-        } else {
-          values[key] = 0;
-        }
+        values[key] =
+          +aggregateDataValues(
+            config.aggregation.aggregation,
+            columnsMap[key].summary.values,
+            config.aggregation.constraint
+          ) || 0;
 
         total += values[key];
       }
     });
 
     if (otherAggregator) {
-      const tmp = aggregateDataValues(
-        config.aggregation.aggregation,
-        otherAggregator.values,
-        config.aggregation.constraint
-      );
-
-      if (tmp) {
-        otherValue = +tmp;
-      } else {
-        otherValue = 0;
-      }
+      otherValue =
+        +aggregateDataValues(config.aggregation.aggregation, otherAggregator.values, config.aggregation.constraint) ||
+        0;
 
       total += otherValue;
 
