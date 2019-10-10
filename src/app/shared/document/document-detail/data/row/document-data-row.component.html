@@ -3,13 +3,20 @@
   <div class="flex-grow-1 row m-0">
 
     <div class="col-6 p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
-      <input class="form-control"
-             type="text" #keyInput
-             [value]="row.attribute.name"
-             [readOnly]="!(keyEditing$ | async)"
-             [placeholder]="placeholder"
-             (dblclick)="onKeyDblClick()"
-             (blur)="onKeyBlur()"/>
+      <data-input [cursor]="cursor"
+                  [value]="row.attribute.name"
+                  [constraintData]="constraintData"
+                  [focus]="true"
+                  [readonly]="!(keyEditing$ | async)"
+                  (save)="onNewKey($event)"
+                  (dblclick)="onKeyInputDblClick($event)"
+                  (cancel)="onKeyInputCancel()"
+                  (dataBlur)="onKeyInputBlur()"
+                  class="h-100 w-100 p-1 data-input"
+                  [class.cursor-pointer]="!data.readonly"
+                  [class.read-only]="data.readonly">
+      </data-input>
+
     </div>
 
     <div class="col-6 p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
@@ -19,10 +26,10 @@
                   [value]="row.value"
                   [constraintData]="constraintData"
                   [focus]="true"
-                  [readonly]="!(editing$ | async)"
+                  [readonly]="!((editing$ | async) || row.attribute?.constraint?.type === constraintType.Boolean)"
                   (save)="onNewValue($event)"
-                  (keydown)="dataInputKeyDown($event)"
-                  (dblclick)="onDataInputDblClick()"
+                  (keydown)="onDataInputKeyDown($event)"
+                  (dblclick)="onDataInputDblClick($event)"
                   (cancel)="onDataInputCancel()"
                   (dataBlur)="onDataInputBlur()"
                   class="h-100 w-100 p-1 data-input"

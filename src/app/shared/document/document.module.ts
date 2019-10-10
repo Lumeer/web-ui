@@ -20,7 +20,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DocumentDetailComponent} from './document-detail/document-detail.component';
-import {KeyValueComponent} from './document-detail/key-value/key-value.component';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
@@ -33,7 +32,6 @@ import {DocumentDataRowComponent} from './document-detail/data/row/document-data
   imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
   declarations: [
     DocumentDetailComponent,
-    KeyValueComponent,
     DocumentDetailHeaderComponent,
     DocumentDataComponent,
     DocumentDataRowComponent,

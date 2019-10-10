@@ -19,8 +19,19 @@
   }
 }
 
-.form-control:disabled,
-.form-control[readonly] {
-  background: transparent !important;
-  border: 0 !important;
+.border-top {
+  min-height: 40px;
+}
+
+.data-input:not(.read-only) {
+  &::ng-deep > * {
+    &:focus-within {
+      border: 1px solid $gray-400;
+      border-radius: 0.25rem;
+    }
+  }
+
+  &::ng-deep > boolean-data-input {
+    justify-content: flex-start;
+  }
 }

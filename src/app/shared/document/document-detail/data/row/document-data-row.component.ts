@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, EventEmitter, Output} from '@angular/core';
 import {DetailDataRow} from '../document-data.component';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -25,6 +25,7 @@ import {DataCursor} from '../../../../data-input/data-cursor';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {KeyCode} from '../../../../key-code';
+import {HtmlModifier} from '../../../../utils/html-modifier';
 
 @Component({
   selector: 'document-data-row',
@@ -45,12 +46,16 @@ export class DocumentDataRowComponent {
   @Input()
   public constraintData: ConstraintData;
 
+  @Output()
+  public newValue = new EventEmitter<any>();
+
   @ViewChild('keyInput', {static: false})
   public keyInput: ElementRef<HTMLInputElement>;
 
   public placeholder: string;
 
   public keyEditing$ = new BehaviorSubject(false);
+
   public editing$ = new BehaviorSubject(false);
 
   public readonly constraintType = ConstraintType;
@@ -59,26 +64,23 @@ export class DocumentDataRowComponent {
     this.placeholder = i18n({id: 'document.key-value.attribute.placeholder', value: 'Enter attribute name'});
   }
 
-  public onNewKey(value: string) {}
+  public onRemove() {}
 
-  public onNewValue(value: any) {}
+  public onAttributeType() {}
 
-  public dataInputKeyDown(event: KeyboardEvent) {
+  public onAttributeFunction() {}
+
+  public onNewKey(value: string) {
+    this.keyEditing$.next(false);
+  }
+
+  public onNewValue(value: any) {
+    this.newValue.emit(value);
+    this.editing$.next(false);
+  }
+
+  public onDataInputKeyDown(event: KeyboardEvent) {
     switch (event.code) {
-      case KeyCode.NumpadEnter:
-      case KeyCode.Enter:
-        const constraint = this.row.attribute && this.row.attribute.constraint;
-        console.log('enter', constraint);
-        if (constraint && constraint.type === ConstraintType.Boolean) {
-          this.onNewValue(!this.row.value);
-        } else {
-          this.editing$.next(!this.editing$.value);
-        }
-        return;
-      case KeyCode.Escape:
-        console.log('escape');
-        this.editing$.next(false);
-        return;
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
       case KeyCode.ArrowLeft:
@@ -93,21 +95,26 @@ export class DocumentDataRowComponent {
   }
 
   public onDataInputCancel() {
+    console.log('cancel');
     this.editing$.next(false);
+  }
+
+  public onKeyInputCancel() {
+    this.keyEditing$.next(false);
   }
 
   public onDataInputBlur() {
+    console.log('blur');
     this.editing$.next(false);
   }
 
-  public onRemove() {}
+  public onKeyInputBlur() {
+    this.editing$.next(false);
+  }
 
-  public onAttributeType() {}
-
-  public onAttributeFunction() {}
-
-  public onDataInputDblClick() {
-    if (this.isEditable()) {
+  public onDataInputDblClick(event: MouseEvent) {
+    event.preventDefault();
+    if (this.isEditable() && !this.editing$.getValue()) {
       this.editing$.next(true);
     }
   }
@@ -116,12 +123,14 @@ export class DocumentDataRowComponent {
     return this.permissions && this.permissions.writeWithView;
   }
 
-  public onKeyDblClick() {
-    this.keyEditing$.next(true);
-    setTimeout(() => this.keyInput.nativeElement.focus());
+  public onKeyInputDblClick(event: MouseEvent) {
+    event.preventDefault();
+    if (this.isManageable() && !this.keyEditing$.getValue()) {
+      this.keyEditing$.next(true);
+    }
   }
 
-  public onKeyBlur() {
-    this.keyEditing$.next(false);
+  private isManageable(): boolean {
+    return this.permissions && this.permissions.manageWithView;
   }
 }

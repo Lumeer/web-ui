@@ -2,5 +2,6 @@
                    [row]="row"
                    [permissions]="permissions"
                    [cursor]="document | dataCursor : row.attribute?.id"
-                   [constraintData]="constraintData">
+                   [constraintData]="constraintData"
+                   (newValue)="onNewValue($event, row)">
 </document-data-row>

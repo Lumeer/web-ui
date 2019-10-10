@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
@@ -52,6 +52,9 @@ export class DocumentDataComponent implements OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Output()
+  public patchData = new EventEmitter<Document>();
+
   public rows: DetailDataRow[];
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -67,6 +70,7 @@ export class DocumentDataComponent implements OnChanges {
       value: data[attribute.id],
       isDefault: this.defaultAttribute && this.defaultAttribute.id === attribute.id,
     }));
-    console.log(this.rows);
   }
+
+  public onNewValue(value: any, row: DetailDataRow) {}
 }
