@@ -20,6 +20,7 @@
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
 import {AttributesResourceType} from '../../model/resource';
+import {convertAttributeConstraintDtoToModel} from '../collections/attribute.converter';
 
 export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
   if (!config) {
@@ -34,7 +35,22 @@ export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
 }
 
 function convertKanbanConfigDtoToModelV1(config: KanbanConfig): KanbanConfig {
-  return config;
+  const newConfig = {...config};
+
+  if (config && config.aggregation && config.aggregation.constraint) {
+    newConfig.aggregation = {
+      ...config.aggregation,
+      constraint: convertAttributeConstraintDtoToModel(config.aggregation.constraint),
+    };
+  }
+
+  ((newConfig && newConfig.stemsConfigs) || []).forEach(stem => {
+    if (stem && stem.dueDate && stem.dueDate.constraint) {
+      stem.dueDate.constraint = convertAttributeConstraintDtoToModel(stem.dueDate.constraint);
+    }
+  });
+
+  return newConfig;
 }
 
 function convertKanbanConfigDtoToModelV0(config: KanbanConfigV0): KanbanConfig {

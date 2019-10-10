@@ -43,7 +43,7 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
   };
 }
 
-function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
+export function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
   if (!dto) {
     return null;
   }

@@ -98,6 +98,13 @@ export function checkOrTransformKanbanConfig(
 
   return {
     ...config,
+    aggregation:
+      (config.aggregation && {
+        ...config.aggregation,
+        ...findKanbanAttribute(config.aggregation, collections),
+        resourceIndex: config.aggregation.resourceIndex,
+      }) ||
+      null,
     stemsConfigs: checkOrTransformKanbanStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
   };
 }
