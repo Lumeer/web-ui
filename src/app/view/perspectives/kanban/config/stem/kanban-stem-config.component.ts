@@ -28,6 +28,7 @@ import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'kanban-collection-config',
@@ -99,7 +100,7 @@ export class KanbanStemConfigComponent {
   }
 
   public onDueDateSelected(selectId: SelectItemWithConstraintId) {
-    this.configElementSelected(selectId, 'dueDate');
+    this.configElementSelected(selectId, 'dueDate', true);
   }
 
   public onDoneColumnSelected(selectId: string, index: number) {
@@ -114,11 +115,11 @@ export class KanbanStemConfigComponent {
     }
   }
 
-  private configElementSelected(selectId: SelectItemWithConstraintId, element: string) {
+  private configElementSelected(selectId: SelectItemWithConstraintId, element: string, skipConstraint?: boolean) {
     const {attributeId, resourceIndex} = selectId;
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[resourceIndex];
-    const constraint = findAttributeConstraint(resource.attributes, attributeId);
+    const constraint = skipConstraint ? null : findAttributeConstraint(resource.attributes, attributeId);
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
       const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id, constraint};

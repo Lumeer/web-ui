@@ -69,7 +69,6 @@ export class KanbanDueDateSelectItemsPipe implements PipeTransform {
         resourceId: collection.id,
         resourceIndex: index,
         attributeId: attribute.id,
-        constraint: attribute.constraint,
       };
       return {
         id,
@@ -92,7 +91,6 @@ export class KanbanDueDateSelectItemsPipe implements PipeTransform {
         resourceId: linkType.id,
         resourceIndex: index,
         attributeId: attribute.id,
-        constraint: attribute.constraint,
       };
       return {
         id,

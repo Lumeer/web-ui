@@ -55,7 +55,6 @@ export class KanbanAggregateSelectItemsPipe implements PipeTransform {
         resourceId: collection.id,
         resourceIndex: index,
         attributeId: attribute.id,
-        constraint: attribute.constraint,
       };
       return {
         id,
