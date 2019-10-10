@@ -26,7 +26,7 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {findAttribute, findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
@@ -209,15 +209,11 @@ export function findOriginalAttributeConstraint(
   if (attribute) {
     if (attribute.resourceType === AttributesResourceType.Collection) {
       const collection = collections.find(c => c.id === attribute.resourceId);
-      const attr = findAttributeById((collection && collection.attributes) || [], attribute.attributeId);
-
-      return attr && attr.constraint;
+      return findAttributeConstraint((collection && collection.attributes) || [], attribute.attributeId);
     }
     if (attribute.resourceType === AttributesResourceType.LinkType) {
       const linkType = linkTypes.find(l => l.id === attribute.resourceId);
-      const attr = findAttributeById((linkType && linkType.attributes) || [], attribute.attributeId);
-
-      return attr && attr.constraint;
+      return findAttributeConstraint((linkType && linkType.attributes) || [], attribute.attributeId);
     }
   }
 
