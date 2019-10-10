@@ -28,7 +28,6 @@ import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'kanban-collection-config',
