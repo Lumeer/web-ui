@@ -17,26 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  EventEmitter,
+  Output,
+  SimpleChange, OnDestroy
+} from '@angular/core';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-
-export interface DetailDataRow {
-  attribute?: Attribute;
-  key?: string;
-  value: any;
-  isDefault?: boolean;
-}
+import {DataRow, DataRowService} from '../../../data/data-row.service';
+import {getSaveValue} from '../../../utils/data.utils';
 
 @Component({
   selector: 'document-data',
   templateUrl: './document-data.component.html',
   styleUrls: ['./document-data.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DataRowService],
 })
-export class DocumentDataComponent implements OnChanges {
+export class DocumentDataComponent implements OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
@@ -55,22 +60,31 @@ export class DocumentDataComponent implements OnChanges {
   @Output()
   public patchData = new EventEmitter<Document>();
 
-  public rows: DetailDataRow[];
+  constructor(public dataRowService: DataRowService) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection || changes.document || changes.constraintData) {
-      this.createRows();
+    if (this.objectChanged(changes.collection) || this.objectChanged(changes.document)) {
+      if (this.collection && this.document) {
+        this.dataRowService.init(this.collection, this.document);
+      }
     }
   }
 
-  private createRows() {
-    const data = (this.document && this.document.data) || {};
-    this.rows = ((this.collection && this.collection.attributes) || []).map(attribute => ({
-      attribute,
-      value: data[attribute.id],
-      isDefault: this.defaultAttribute && this.defaultAttribute.id === attribute.id,
-    }));
+  private objectChanged(change: SimpleChange): boolean {
+    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
-  public onNewValue(value: any, row: DetailDataRow) {}
+  public onNewKey(value: string, index: number) {
+    this.dataRowService.updateRow(index, value);
+  }
+
+  public onNewValue(value: any, row: DataRow, index: number) {
+    const saveValue = getSaveValue(value, row.attribute && row.attribute.constraint, this.constraintData);
+    this.dataRowService.updateRow(index, null, saveValue);
+  }
+
+  public ngOnDestroy() {
+    this.dataRowService.destroy();
+  }
 }

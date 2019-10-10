@@ -1,7 +1,8 @@
-<document-data-row *ngFor="let row of rows"
+<document-data-row *ngFor="let row of (dataRowService.rows$ | async); let index = index"
                    [row]="row"
                    [permissions]="permissions"
                    [cursor]="document | dataCursor : row.attribute?.id"
                    [constraintData]="constraintData"
-                   (newValue)="onNewValue($event, row)">
+                   (newValue)="onNewValue($event, row, index)"
+                   (newKey)="onNewKey($event, index)">
 </document-data-row>

@@ -18,14 +18,13 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, EventEmitter, Output} from '@angular/core';
-import {DetailDataRow} from '../document-data.component';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {KeyCode} from '../../../../key-code';
-import {HtmlModifier} from '../../../../utils/html-modifier';
+import {DataRow} from '../../../../data/data-row.service';
 
 @Component({
   selector: 'document-data-row',
@@ -35,7 +34,7 @@ import {HtmlModifier} from '../../../../utils/html-modifier';
 })
 export class DocumentDataRowComponent {
   @Input()
-  public row: DetailDataRow;
+  public row: DataRow;
 
   @Input()
   public cursor: DataCursor;
@@ -48,6 +47,9 @@ export class DocumentDataRowComponent {
 
   @Output()
   public newValue = new EventEmitter<any>();
+
+  @Output()
+  public newKey = new EventEmitter<string>();
 
   @ViewChild('keyInput', {static: false})
   public keyInput: ElementRef<HTMLInputElement>;
@@ -64,13 +66,17 @@ export class DocumentDataRowComponent {
     this.placeholder = i18n({id: 'document.key-value.attribute.placeholder', value: 'Enter attribute name'});
   }
 
-  public onRemove() {}
+  public onRemove() {
+  }
 
-  public onAttributeType() {}
+  public onAttributeType() {
+  }
 
-  public onAttributeFunction() {}
+  public onAttributeFunction() {
+  }
 
   public onNewKey(value: string) {
+    this.newKey.emit(value);
     this.keyEditing$.next(false);
   }
 

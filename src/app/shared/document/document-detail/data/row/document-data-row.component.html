@@ -4,7 +4,7 @@
 
     <div class="col-6 p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
       <data-input [cursor]="cursor"
-                  [value]="row.attribute.name"
+                  [value]="row.attribute && row.attribute.name || row.key"
                   [constraintData]="constraintData"
                   [focus]="true"
                   [readonly]="!(keyEditing$ | async)"
