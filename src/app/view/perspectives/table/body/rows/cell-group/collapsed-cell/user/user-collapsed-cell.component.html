@@ -4,9 +4,8 @@
   </ng-container>
 
   <user-data-input *ngSwitchCase="1"
-                   [constraintConfig]="constraintConfig"
                    [readonly]="true"
-                   [value]="validValues[0]"
+                   [value]="validValues[0] | dataValue : constraint : constraintData"
                    class="h-100">
   </user-data-input>
 

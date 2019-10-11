@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 
@@ -35,6 +36,9 @@ export class PreviewResultsTableComponent implements OnChanges {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public selectedDocumentId: string;

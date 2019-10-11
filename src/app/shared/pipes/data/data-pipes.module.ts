@@ -19,66 +19,14 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {BooleanDataValuePipe} from './boolean-data.pipe';
-import {ColorValidPipe} from './valid/color-valid.pipe';
-import {ColorValuePipe} from './color-value.pipe';
 import {DataValuePipe} from './data-value.pipe';
-import {DateTimeDataValuePipe} from './datetime-data-value.pipe';
-import {DateTimeValidPipe} from './valid/datetime-valid.pipe';
-import {NumberDataValuePipe} from './number-data-value.pipe';
-import {PercentageDataValuePipe} from './percentage-data-value.pipe';
-import {TextDataValuePipe} from './text-data-value.pipe';
-import {UserDataValuePipe} from './user-data-value.pipe';
-import {SelectDataValuePipe} from './select-data-value.pipe';
-import {IsSelectDataValueValidPipe} from './valid/is-select-data-value-valid.pipe';
-import {CoordinatesDataValuePipe} from './coordinates-data-value.pipe';
-import {CoordinatesDataValueValidPipe} from './valid/coordinates-data-value-valid.pipe';
-import {AddressDataValuePipe} from './address-data-value.pipe';
-import {DurationDataValuePipe} from './duration-data-value.pipe';
-import {NumberValidPipe} from './valid/number-valid.pipe';
-import {PercentageValidPipe} from './valid/percentage-valid.pipe';
+import {FormatDataValuePipe} from './format-data-value.pipe';
+import {IsDataValueValidPipe} from './is-data-value-valid.pipe';
+import {SerializeDataValuePipe} from './serialize-data-value.pipe';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [
-    TextDataValuePipe,
-    DateTimeDataValuePipe,
-    DateTimeValidPipe,
-    DataValuePipe,
-    BooleanDataValuePipe,
-    NumberDataValuePipe,
-    PercentageDataValuePipe,
-    ColorValidPipe,
-    ColorValuePipe,
-    UserDataValuePipe,
-    SelectDataValuePipe,
-    IsSelectDataValueValidPipe,
-    CoordinatesDataValuePipe,
-    CoordinatesDataValueValidPipe,
-    AddressDataValuePipe,
-    DurationDataValuePipe,
-    NumberValidPipe,
-    PercentageValidPipe,
-  ],
-  exports: [
-    TextDataValuePipe,
-    DateTimeDataValuePipe,
-    DateTimeValidPipe,
-    DataValuePipe,
-    BooleanDataValuePipe,
-    NumberDataValuePipe,
-    PercentageDataValuePipe,
-    ColorValidPipe,
-    ColorValuePipe,
-    UserDataValuePipe,
-    SelectDataValuePipe,
-    IsSelectDataValueValidPipe,
-    CoordinatesDataValuePipe,
-    CoordinatesDataValueValidPipe,
-    AddressDataValuePipe,
-    DurationDataValuePipe,
-    NumberValidPipe,
-    PercentageValidPipe,
-  ],
+  declarations: [DataValuePipe, FormatDataValuePipe, IsDataValueValidPipe, SerializeDataValuePipe],
+  exports: [DataValuePipe, FormatDataValuePipe, IsDataValueValidPipe, SerializeDataValuePipe],
 })
 export class DataPipesModule {}

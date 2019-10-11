@@ -32,6 +32,7 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {DRAG_DELAY} from '../../../../../core/constants';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -89,6 +90,9 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public removeDocument = new EventEmitter<DocumentModel>();

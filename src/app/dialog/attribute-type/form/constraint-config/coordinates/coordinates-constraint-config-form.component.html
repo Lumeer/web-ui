@@ -50,6 +50,6 @@
   </div>
 
   <div class="text-secondary">
-    Example: {{ '49.2331315, 16.5701833' | coordinatesDataValue : form.value }}
+    Example: {{ exampleValue$ | async | formatDataValue }}
   </div>
 </div>

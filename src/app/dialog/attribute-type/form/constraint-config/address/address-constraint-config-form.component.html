@@ -40,7 +40,7 @@
 
 <p class="text-secondary">
   <span i18n="@@constraint.address.example">Example:</span>&nbsp;
-  <span>{{ 'example' | addressDataValue : form.value : exampleAddressesMap }}</span>
+  <span>{{ exampleValue$ | async | formatDataValue }}</span>
 </p>
 
 <ng-template #addressField

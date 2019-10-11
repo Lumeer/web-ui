@@ -22,8 +22,10 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {AddressConstraint} from '../../../../core/model/constraint/address.constraint';
+import {CoordinatesConstraint} from '../../../../core/model/constraint/coordinates.constraint';
 import {ConstraintType} from '../../../../core/model/data/constraint';
-import {AddressConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {CoordinatesConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
@@ -42,8 +44,8 @@ import {
 } from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
+import {ADDRESS_DEFAULT_FIELDS} from '../../../../dialog/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
-import {getAddressSaveValue, getCoordinatesSaveValue} from '../../../../shared/utils/data.utils';
 import {
   areMapMarkerListsEqual,
   createMarkerPropertiesList,
@@ -216,10 +218,9 @@ export class MapContentComponent implements OnInit, OnDestroy {
     }
 
     const attribute = properties.collection.attributes.find(attr => attr.id === properties.attributeId);
-    const value = getAddressSaveValue(
-      location.address,
-      attribute.constraint && (attribute.constraint.config as AddressConstraintConfig)
-    );
+    const value = (attribute.constraint || new AddressConstraint({fields: ADDRESS_DEFAULT_FIELDS}))
+      .createDataValue(location.address)
+      .serialize();
     this.store$.dispatch(new GeocodingAction.GetCoordinatesSuccess({coordinatesMap: {[value]: location.coordinates}}));
     this.saveAttributeValue(properties, value);
   }
@@ -234,7 +235,7 @@ export class MapContentComponent implements OnInit, OnDestroy {
   }
 
   private saveCoordinatesAttribute(properties: MapMarkerProperties, coordinates: MapCoordinates) {
-    const value = getCoordinatesSaveValue(coordinates);
+    const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig).createDataValue(coordinates).serialize();
     this.saveAttributeValue(properties, value);
   }
 

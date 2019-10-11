@@ -1,9 +1,9 @@
 <input *ngIf="readonly; else textEditing"
        [readonly]="readonly"
-       [title]="value | selectDataValue: constraintConfig"
-       [value]="value | selectDataValue: constraintConfig"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
        (focus)="onFocus.emit($event)"
-       [class.invalid-value]="!valid"
+       [class.invalid-value]="!(value | isDataValueValid)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        data-test="select-data-input"
        type="text">

@@ -31,12 +31,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
+import {DateTimeDataValue} from '../../../core/model/data-value/datetime.data-value';
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid} from '../../utils/common.utils';
-import {formatDateTimeDataValue, getDateTimeSaveValue, parseDateTimeDataValue} from '../../utils/data.utils';
 import {resetUnusedDatePart} from '../../utils/date.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
@@ -48,9 +47,6 @@ import {HtmlModifier} from '../../utils/html-modifier';
 })
 export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @Input()
-  public constraintConfig: DateTimeConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
@@ -60,13 +56,13 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: DateTimeDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<DateTimeDataValue>();
 
   @Output()
-  public save = new EventEmitter<string>();
+  public save = new EventEmitter<DateTimeDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -77,6 +73,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @ViewChild(DateTimePickerComponent, {static: false})
   public dateTimePicker: DateTimePickerComponent;
 
+  public date: Date;
   public options: DateTimeOptions;
 
   private preventSaving: boolean;
@@ -88,7 +85,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
-          this.dateTimeInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
+          this.dateTimeInput.nativeElement.value = this.value.format(false);
         }
 
         HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
@@ -101,13 +98,14 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
         this.dateTimePicker.close();
       }
     }
-    if (changes.value && String(this.value).length === 1) {
+    if (changes.value && this.value) {
+      this.date = this.value.toDate();
+      this.options = createDateTimeOptions(this.value.config && this.value.config.format);
+    }
+    if (changes.value && String(this.value.value).length === 1) {
       // show value entered into hidden input without any changes
       const input = this.dateTimeInput;
-      setTimeout(() => input && (input.nativeElement.value = this.value));
-    }
-    if (changes.constraintConfig && this.constraintConfig) {
-      this.options = createDateTimeOptions(this.constraintConfig.format);
+      setTimeout(() => input && (input.nativeElement.value = String(this.value.value)));
     }
   }
 
@@ -119,14 +117,14 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       case KeyCode.Tab:
         if (this.dateTimeInput) {
           this.preventSaving = true;
-          const value = this.transformValue(this.dateTimeInput.nativeElement.value);
+          const dataValue = this.value.parseInput(this.dateTimeInput.nativeElement.value);
           // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(value));
+          setTimeout(() => this.save.emit(dataValue));
         }
         return;
       case KeyCode.Escape:
         this.preventSaving = true;
-        this.dateTimeInput.nativeElement.value = formatDateTimeDataValue(this.value, this.constraintConfig, false);
+        this.dateTimeInput.nativeElement.value = this.value.format(false);
         this.cancel.emit();
         return;
     }
@@ -134,12 +132,13 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    this.valueChange.emit(element.value);
+    const dataValue = this.value.parseInput(element.value);
+    this.valueChange.emit(dataValue);
   }
 
   public onValueChange(date: Date) {
-    const value = date && date.toISOString();
-    this.valueChange.emit(value);
+    const dataValue = this.value.copy(date && date.toISOString());
+    this.valueChange.emit(dataValue);
   }
 
   public onSave(date: Date) {
@@ -153,12 +152,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       return;
     }
 
-    const previousDate = parseDateTimeDataValue(this.value, this.constraintConfig.format);
-    const previousValue = previousDate && previousDate.toISOString();
-    const value = date && resetUnusedDatePart(date, this.constraintConfig.format).toISOString();
+    const dataValue = this.value.copy(date);
 
-    if (value !== previousValue) {
-      this.save.emit(value);
+    if (dataValue.serialize() !== this.value.serialize()) {
+      this.save.emit(dataValue);
     } else {
       this.cancel.emit();
     }
@@ -166,10 +163,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public onCancel() {
     this.cancel.emit();
-  }
-
-  private transformValue(value: string): string {
-    return getDateTimeSaveValue(value, this.constraintConfig);
   }
 
   public ngAfterViewInit(): void {

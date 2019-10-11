@@ -21,7 +21,9 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {Constraint} from '../../../../../../../core/model/constraint';
+import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -31,7 +33,6 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigColumn} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
-import {formatDataValue} from '../../../../../../../shared/utils/data.utils';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
 @Component({
@@ -133,8 +134,8 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     return constraintObservable$.pipe(
       map(constraint =>
         values
-          .map(value => formatDataValue(value, constraint, this.constraintData))
-          .filter(value => !!value || value === 0)
+          .map(value => (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).format())
+          .filter(value => !!value)
       )
     );
   }

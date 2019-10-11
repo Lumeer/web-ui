@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Constraint} from '../../model/constraint';
 import {Resource} from '../../model/resource';
-import {Constraint} from './../../model/data/constraint';
 import {Rule} from '../../model/rule';
 
 export interface Attribute {

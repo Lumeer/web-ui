@@ -17,6 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Constraint} from '../../../../core/model/constraint';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {
   PivotAttribute,
   PivotConfig,
@@ -25,25 +34,17 @@ import {
   PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Constraint, ConstraintData} from '../../../../core/model/data/constraint';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {
   AggregatedData,
-  DataAggregatorAttribute,
-  DataAggregator,
   AggregatedDataMap,
   AggregatedDataValues,
+  DataAggregator,
+  DataAggregatorAttribute,
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {pivotStemConfigIsEmpty} from './pivot-util';
 
 interface PivotMergeData {
@@ -102,7 +103,9 @@ export class PivotDataConverter {
     const pivotConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
-    return formatDataValue(value, overrideConstraint || constraint, constraintData, constraint);
+    return (overrideConstraint || constraint || new UnknownConstraint())
+      .createDataValue(value, constraintData)
+      .format();
   }
 
   private updateData(

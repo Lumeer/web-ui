@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ColorConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {isColorValid} from '../../../utils/data.utils';
+import {BooleanDataValue} from '../data-value/boolean.data-value';
+import {ConstraintType} from '../data/constraint';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'colorValid',
-})
-export class ColorValidPipe implements PipeTransform {
-  public transform(value: any, config?: ColorConstraintConfig): boolean {
-    return isColorValid(value, config);
+export class BooleanConstraint implements Constraint {
+  public readonly type = ConstraintType.Boolean;
+  public readonly config = {};
+
+  public createDataValue(value: any): BooleanDataValue {
+    return new BooleanDataValue(value, this.config);
   }
 }

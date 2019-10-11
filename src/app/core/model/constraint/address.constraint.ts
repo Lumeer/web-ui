@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatDateTimeDataValue} from '../../utils/data.utils';
+import {AddressDataValue} from '../data-value/address.data-value';
+import {ConstraintData, ConstraintType} from '../data/constraint';
+import {AddressConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'dateTimeDataValue',
-})
-export class DateTimeDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: Partial<DateTimeConstraintConfig>): string {
-    return formatDateTimeDataValue(value, config);
+export class AddressConstraint implements Constraint {
+  public readonly type = ConstraintType.Address;
+
+  constructor(public readonly config: AddressConstraintConfig) {}
+
+  public createDataValue(value: any, constraintData?: ConstraintData): AddressDataValue {
+    return new AddressDataValue(value, this.config, constraintData);
   }
 }

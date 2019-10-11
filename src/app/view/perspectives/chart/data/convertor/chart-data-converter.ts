@@ -19,13 +19,16 @@
 
 import {Injectable} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
+import {Constraint} from '../../../../../core/model/constraint';
+import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {
   ConstraintConfig,
   DateTimeConstraintConfig,
   DurationConstraintConfig,
-  PercentageConstraintConfig,
 } from '../../../../../core/model/data/constraint-config';
+import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {
@@ -37,15 +40,18 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
+import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
+import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
+import {decimalUserToStore, parseMomentDate} from '../../../../../shared/utils/data.utils';
+import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {
-  decimalUserToStore,
-  formatDataValue,
-  formatPercentageDataValue,
-  parseMomentDate,
-} from '../../../../../shared/utils/data.utils';
+  AggregatedData,
+  AggregatedDataValues,
+  DataAggregator,
+  DataAggregatorAttribute,
+} from '../../../../../shared/utils/data/data-aggregator';
 import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
-import {resetUnusedMomentPart} from '../../../../../shared/utils/date.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {mergePermissions} from '../../../../../shared/utils/resource.utils';
 import {
@@ -56,16 +62,6 @@ import {
   ChartYAxisType,
   convertChartDateFormat,
 } from './chart-data';
-import {
-  AggregatedData,
-  AggregatedDataValues,
-  DataAggregator,
-  DataAggregatorAttribute,
-} from '../../../../../shared/utils/data/data-aggregator';
-import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
-import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
-import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
-import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 
 @Injectable()
 export class ChartDataConverter {
@@ -408,15 +404,11 @@ export class ChartDataConverter {
       return value;
     }
 
-    if (!constraint) {
-      return formatDataValue(value);
-    }
-
-    switch (constraint.type) {
+    switch (constraint && constraint.type) {
       case ConstraintType.DateTime:
         return this.formatDateTimeValue(value, constraint.config as DateTimeConstraintConfig);
       case ConstraintType.Percentage:
-        return this.formatPercentageValue(value, constraint.config as PercentageConstraintConfig);
+        return this.formatPercentageValue(value, constraint as PercentageConstraint);
       case ConstraintType.Duration:
         const durationUnitsMap = constraintData && constraintData.durationUnitsMap;
         const durationValue = getDurationSaveValue(
@@ -426,7 +418,9 @@ export class ChartDataConverter {
         );
         return isNumeric(durationValue) && toNumber(durationValue) >= 0 ? toNumber(durationValue) : null;
       default:
-        return formatDataValue(value, constraint, constraintData || this.constraintData);
+        return (constraint || new UnknownConstraint())
+          .createDataValue(value, constraintData || this.constraintData)
+          .serialize();
     }
   }
 
@@ -436,8 +430,8 @@ export class ChartDataConverter {
     return momentDate.format(convertChartDateFormat(format));
   }
 
-  private formatPercentageValue(value: any, config: PercentageConstraintConfig): string {
-    const percentageValue = formatPercentageDataValue(value, config);
+  private formatPercentageValue(value: any, constraint: PercentageConstraint): string {
+    const percentageValue = constraint.createDataValue(value).format('');
     return decimalUserToStore(percentageValue);
   }
 

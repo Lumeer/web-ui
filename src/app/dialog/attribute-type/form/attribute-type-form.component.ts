@@ -20,13 +20,16 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint, ConstraintType, constraintTypesMap} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/constraint';
+import {ConstraintType, constraintTypesMap} from '../../../core/model/data/constraint';
 import {ConstraintConfig, SelectConstraintConfig} from '../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Attribute} from '../../../core/store/collections/collection';
+import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
 import {convertToBig} from '../../../shared/utils/data.utils';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
+import {PercentageConstraintFormControl} from './constraint-config/percentage/percentage-constraint-form-control';
 import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
 import {
   isSelectConstraintOptionValueRemoved,
@@ -63,6 +66,8 @@ export class AttributeTypeFormComponent implements OnChanges {
   }
 
   public onSubmit() {
+    this.form.markAllAsTouched();
+
     if (this.form.invalid) {
       return;
     }
@@ -73,7 +78,8 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   private createModifiedAttribute(): Attribute {
     const type = constraintTypesMap[this.typeControl.value];
-    const constraint: Constraint = type ? {type, config: this.createConstraintConfig(type)} : null;
+    const config = this.createConstraintConfig(type);
+    const constraint: Constraint = type ? createConstraint(type, config) : null;
     return {...this.attribute, constraint};
   }
 
@@ -115,9 +121,9 @@ export class AttributeTypeFormComponent implements OnChanges {
       case ConstraintType.Percentage:
         return {
           format: undefined, // TODO
-          decimals: this.configForm.get('decimals').value,
-          minValue: this.configForm.get('minValue').value,
-          maxValue: this.configForm.get('maxValue').value,
+          decimals: this.configForm.get(PercentageConstraintFormControl.Decimals).value,
+          minValue: this.configForm.get(PercentageConstraintFormControl.MinValue).value,
+          maxValue: this.configForm.get(PercentageConstraintFormControl.MaxValue).value,
         };
       case ConstraintType.Select:
         return {

@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkRowModel} from '../link-row.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -58,6 +59,9 @@ export class LinksListTableBodyComponent {
 
   @Input()
   public readonly: boolean;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 

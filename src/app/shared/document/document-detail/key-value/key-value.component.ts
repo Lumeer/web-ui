@@ -19,7 +19,8 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
+import {Constraint} from '../../../../core/model/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
 import {DataCursor} from '../../../data-input/data-cursor';
@@ -38,6 +39,9 @@ export class KeyValueComponent {
 
   @Input()
   public constraint: Constraint;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public dataCursor: DataCursor;

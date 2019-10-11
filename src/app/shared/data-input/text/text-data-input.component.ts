@@ -29,11 +29,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TextConstraintConfig} from '../../../core/model/data/constraint-config';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {DataValue} from '../../../core/model/data-value';
+import {TextDataValue} from '../../../core/model/data-value/text.data-value';
+import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {KeyCode} from '../../key-code';
-import {transformTextBasedOnCaseStyle} from '../../utils/string.utils';
-import {formatTextDataValue, isTextValid} from '../../utils/data.utils';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'text-data-input',
@@ -42,9 +42,6 @@ import {formatTextDataValue, isTextValid} from '../../utils/data.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextDataInputComponent implements OnChanges {
-  @Input()
-  public constraintConfig: TextConstraintConfig;
-
   @Input()
   public focus: boolean;
 
@@ -55,13 +52,13 @@ export class TextDataInputComponent implements OnChanges {
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: TextDataValue | UnknownDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<DataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -92,10 +89,9 @@ export class TextDataInputComponent implements OnChanges {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    const value = this.transformValue(element.value);
-    this.refreshValid(element.value);
-
-    this.valueChange.emit(value);
+    const dataValue = this.value.parseInput(element.value);
+    this.refreshValid(dataValue);
+    this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
@@ -107,8 +103,8 @@ export class TextDataInputComponent implements OnChanges {
     this.dataBlur.emit();
   }
 
-  private refreshValid(value: any) {
-    this.valid = isTextValid(value, this.constraintConfig);
+  private refreshValid(value: DataValue) {
+    this.valid = value.isValid();
   }
 
   @HostListener('keydown', ['$event'])
@@ -124,19 +120,14 @@ export class TextDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.textInput.nativeElement.value = formatTextDataValue(this.value);
+        this.textInput.nativeElement.value = this.value.format();
         this.cancel.emit();
         return;
     }
   }
 
   private saveValue(input: ElementRef) {
-    const value = this.transformValue(input.nativeElement.value);
-    this.save.emit(value);
-  }
-
-  private transformValue(value: string) {
-    const caseStyle = this.constraintConfig && this.constraintConfig.caseStyle;
-    return transformTextBasedOnCaseStyle(value, caseStyle);
+    const dataValue = this.value.parseInput(input.nativeElement.value);
+    this.save.emit(dataValue);
   }
 }

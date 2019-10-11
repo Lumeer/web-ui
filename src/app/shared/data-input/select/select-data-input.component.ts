@@ -31,9 +31,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
+import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
-import {isSelectDataValueValid} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -44,9 +44,6 @@ import {HtmlModifier} from '../../utils/html-modifier';
 })
 export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
-  public constraintConfig: SelectConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
@@ -56,13 +53,13 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: SelectDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<SelectDataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<SelectDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -83,8 +80,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   public text = '';
 
-  public valid = true;
-
   private preventSave: boolean;
   private setFocus: boolean;
   private triggerInput: boolean;
@@ -94,17 +89,12 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.resetSearchInput();
       this.setFocus = true;
     }
-    if (changes.value) {
-      if (this.value && String(this.value).length === 1) {
-        this.text = this.value;
+    if (changes.value && this.value) {
+      if (String(this.value.format()).length === 1) {
+        this.text = this.value.format();
         this.triggerInput = true; // show suggestions when typing the first letter in readonly mode
       }
-    }
-    if (changes.constraintConfig && this.constraintConfig) {
-      this.options = this.createDisplayOptions(this.constraintConfig);
-    }
-    if (changes.value || changes.constraintConfig) {
-      this.valid = isSelectDataValueValid(this.value, this.constraintConfig);
+      this.options = this.createDisplayOptions(this.value.config);
     }
   }
 
@@ -167,7 +157,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     const selectedOption = this.options.find(option => option.displayValue === this.text);
 
     if (selectedOption || !this.text) {
-      this.save.emit(selectedOption ? selectedOption.value : '');
+      const dataValue = this.value.copy(selectedOption ? selectedOption.value : '');
+      this.save.emit(dataValue);
     }
     this.resetSearchInput();
   }
@@ -178,7 +169,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   public onSelect(event: TypeaheadMatch) {
     this.preventSave = true;
-    this.save.emit(event.item.value);
+    const dataValue = this.value.copy(event.item.value);
+    this.save.emit(dataValue);
   }
 
   public onBlur() {

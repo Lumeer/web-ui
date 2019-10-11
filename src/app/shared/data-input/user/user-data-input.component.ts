@@ -26,21 +26,13 @@ import {
   HostListener,
   Input,
   OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {map, take} from 'rxjs/operators';
-import {UserConstraintConfig} from '../../../core/model/data/constraint-config';
-import {User} from '../../../core/store/users/user';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
-import {formatUserDataValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 export const USER_AVATAR_SIZE = 22;
@@ -51,10 +43,7 @@ export const USER_AVATAR_SIZE = 22;
   styleUrls: ['./user-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserDataInputComponent implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
-  @Input()
-  public constraintConfig: UserConstraintConfig;
-
+export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -65,13 +54,13 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: UserDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<UserDataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<UserDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -87,49 +76,23 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
-  public users$: Observable<User[]>;
-  private email$ = new BehaviorSubject('');
-
   public name: string;
 
   private preventSave: boolean = false;
   private setFocus: boolean;
   private triggerInput: boolean;
 
-  private subscriptions = new Subscription();
-
-  constructor(private store$: Store<{}>) {}
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.preventSave = false;
       this.setFocus = true;
     }
-    if (changes.value) {
-      this.email$.next(this.value);
-
-      if (this.value && String(this.value).length === 1) {
+    if (changes.value && this.value) {
+      if (String(this.value.format()).length === 1) {
         this.triggerInput = true; // show suggestions when typing the first letter in readonly mode
       }
+      this.resetSearchInput();
     }
-  }
-
-  public ngOnInit() {
-    this.users$ = this.bindUsers();
-    this.subscriptions.add(this.subscribeToUserName());
-  }
-
-  private bindUsers(): Observable<User[]> {
-    return this.store$.pipe(
-      select(selectAllUsers),
-      map(users => users.map(user => (user.name ? user : {...user, name: user.email})))
-    );
-  }
-
-  private subscribeToUserName(): Subscription {
-    return combineLatest(this.users$, this.email$).subscribe(
-      ([users, email]) => (this.name = formatUserDataValue(email, this.constraintConfig, users))
-    );
   }
 
   public ngAfterViewChecked(): void {
@@ -162,10 +125,6 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
     }
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
@@ -191,29 +150,28 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.users$.pipe(take(1)).subscribe(users => {
-          this.resetSearchInput(users);
-          this.cancel.emit();
-        });
+        this.resetSearchInput();
+        this.cancel.emit();
         return;
     }
   }
 
   private saveValue() {
-    this.users$.pipe(take(1)).subscribe(users => {
-      const user = users.find(u => u.name === this.name);
-      if (user || !this.name) {
-        this.save.emit(user ? user.email : '');
-      } else if (this.skipValidation) {
-        this.save.emit(this.name);
-      } else {
-        this.resetSearchInput(users);
-      }
-    });
+    const {users} = this.value.constraintData;
+    const user = users.find(u => u.name === this.name);
+    if (user || !this.name) {
+      const dataValue = this.value.copy(user ? user.email : '');
+      this.save.emit(dataValue);
+    } else if (this.skipValidation) {
+      const dataValue = this.value.parseInput(this.name);
+      this.save.emit(dataValue);
+    } else {
+      this.resetSearchInput();
+    }
   }
 
-  private resetSearchInput(users: User[]) {
-    this.name = formatUserDataValue(this.value, this.constraintConfig, users);
+  private resetSearchInput() {
+    this.name = this.value.format();
   }
 
   public onSelect(event: TypeaheadMatch) {
@@ -222,10 +180,12 @@ export class UserDataInputComponent implements OnInit, OnChanges, AfterViewCheck
     }
 
     this.preventSave = true;
-    this.save.emit(event.item.email);
+    const dataValue = this.value.copy(event.item.email);
+    this.save.emit(dataValue);
   }
 
   public onInputChange() {
-    this.valueChange.emit(this.name);
+    const dataValue = this.value.parseInput(this.name);
+    this.valueChange.emit(dataValue);
   }
 }

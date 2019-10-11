@@ -33,13 +33,12 @@ import {
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {debounceTime, map, mergeMap} from 'rxjs/operators';
-import {AddressConstraintConfig} from '../../../core/model/data/constraint-config';
+import {AddressDataValue} from '../../../core/model/data-value/address.data-value';
 import {GeocodingAction} from '../../../core/store/geocoding/geocoding.action';
 import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.state';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
-import {formatAddressDataValue, formatTextDataValue, getAddressSaveValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -50,9 +49,6 @@ import {HtmlModifier} from '../../utils/html-modifier';
 })
 export class AddressDataInputComponent implements OnInit, OnChanges {
   @Input()
-  public constraintConfig: AddressConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
@@ -62,13 +58,13 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: AddressDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<AddressDataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<AddressDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -110,7 +106,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
           select(selectLocationsByQuery(value)),
           map(locations =>
             (locations || []).map(location => ({
-              value: getAddressSaveValue(location.address, this.constraintConfig),
+              value: this.value.copy(location.address).serialize(),
             }))
           )
         );
@@ -129,14 +125,16 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
       });
     }
     if (changes.value) {
-      this.value$.next(this.value || this.value === 0 ? String(this.value) : '');
+      this.value$.next(this.value.format());
     }
   }
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    this.valueChange.emit(element.value);
-    this.value$.next(element.value);
+    const dataValue = this.value.parseInput(element.value);
+
+    this.valueChange.emit(dataValue);
+    this.value$.next(dataValue.format());
   }
 
   public onFocus() {
@@ -176,7 +174,8 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     }
 
     this.preventSave = true;
-    this.save.emit(option.value);
+    const dataValue = this.value.copy(option.value);
+    this.save.emit(dataValue);
   }
 
   @HostListener('keydown', ['$event'])
@@ -192,7 +191,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         const value = input.nativeElement.value;
         setTimeout(() => {
           if (selectedOption) {
-            this.save.emit(selectedOption.value);
+            this.saveValue(selectedOption.value);
           } else {
             input && this.saveValue(value);
           }
@@ -200,7 +199,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.addressInput.nativeElement.value = formatTextDataValue(this.value);
+        this.addressInput.nativeElement.value = this.value.format();
         this.cancel.emit();
         return;
     }
@@ -209,6 +208,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   }
 
   private saveValue(value: string) {
-    this.save.emit(value);
+    const dataValue = this.value.parseInput(value);
+    this.save.emit(dataValue);
   }
 }

@@ -19,9 +19,10 @@
 
 import {AddressesMap} from '../../store/geocoding/address';
 import {User} from '../../store/users/user';
-import {ConstraintConfig, DurationUnit} from './constraint-config';
+import {DurationUnit} from './constraint-config';
 
 export enum ConstraintType {
+  Unknown = 'None',
   Text = 'Text',
   Number = 'Number',
   Address = 'Address',
@@ -58,6 +59,7 @@ export const constraintTypesMap = {
   [ConstraintType.Select]: ConstraintType.Select,
   [ConstraintType.Tag]: ConstraintType.Tag,
   [ConstraintType.Text]: ConstraintType.Text,
+  [ConstraintType.Unknown]: ConstraintType.Unknown,
   [ConstraintType.User]: ConstraintType.User,
 };
 
@@ -78,6 +80,7 @@ export const constraintIconsMap = {
   [ConstraintType.Select]: 'fas fa-caret-square-down',
   [ConstraintType.Tag]: 'fas fa-tag',
   [ConstraintType.Text]: 'fas fa-font',
+  [ConstraintType.Unknown]: 'fas fa-times',
   [ConstraintType.User]: 'fas fa-user',
 };
 
@@ -94,6 +97,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Percentage:
     case ConstraintType.Select:
     case ConstraintType.Text:
+    case ConstraintType.Unknown:
     case ConstraintType.User:
       return true;
     default:
@@ -101,15 +105,10 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
   }
 }
 
-export interface Constraint {
-  type: ConstraintType;
-  config: Partial<ConstraintConfig>;
-}
-
 export interface ConstraintData {
   addressesMap?: AddressesMap;
-  users: User[];
-  durationUnitsMap: DurationUnitsMap;
+  users?: User[];
+  durationUnitsMap?: DurationUnitsMap;
 }
 
 export type DurationUnitsMap = Record<DurationUnit, string>;

@@ -1,6 +1,7 @@
 <data-input *ngIf="constraint; else basicInput"
             class="d-flex flex-grow-1"
             [constraint]="constraint"
+            [constraintData]="constraintData"
             [cursor]="dataCursor"
             [readonly]="readonly || !((editing$ | async) || constraint?.type === constraintTypeBoolean)"
             [value]="model"

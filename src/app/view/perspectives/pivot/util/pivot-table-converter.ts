@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Big from 'big.js';
+import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
+import {uniqueValues} from '../../../../shared/utils/array.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
+import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {compareDataValues} from '../../../../shared/utils/data/data-compare.utils';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
-import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
-import {uniqueValues} from '../../../../shared/utils/array.utils';
-import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import Big from 'big.js';
-import {formatDataValue} from '../../../../shared/utils/data.utils';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {compareDataValues} from '../../../../shared/utils/data/data-compare.utils';
 
 interface HeaderGroupInfo {
   background: string;
@@ -271,7 +270,7 @@ export class PivotTableConverter {
   private formatValueByConstraint(value: any, valueIndex: number): any {
     const constraint = this.data.valuesConstraints && this.data.valuesConstraints[valueIndex];
     if (constraint) {
-      return formatDataValue(value, constraint, this.constraintData);
+      return constraint.createDataValue(value, this.constraintData).format();
     }
     return value;
   }

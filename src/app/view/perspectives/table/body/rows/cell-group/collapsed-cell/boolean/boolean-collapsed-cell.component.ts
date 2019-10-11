@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {BooleanConstraint} from '../../../../../../../../core/model/constraint/boolean.constraint';
 
 @Component({
   selector: 'boolean-collapsed-cell',
@@ -26,6 +27,9 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooleanCollapsedCellComponent implements OnChanges {
+  @Input()
+  public constraint: BooleanConstraint;
+
   @Input()
   public values: any[];
 

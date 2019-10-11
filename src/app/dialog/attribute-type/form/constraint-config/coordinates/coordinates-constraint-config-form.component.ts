@@ -17,8 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {CoordinatesDataValue} from '../../../../../core/model/data-value/coordinates.data-value';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
@@ -29,7 +32,7 @@ import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-co
   styleUrls: ['./coordinates-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CoordinatesConstraintConfigFormComponent {
+export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   public readonly controls = CoordinatesConstraintFormControl;
   public readonly formats = Object.values(CoordinatesFormat);
   public readonly coordinatesFormat = CoordinatesFormat;
@@ -44,6 +47,8 @@ export class CoordinatesConstraintConfigFormComponent {
 
   @Input()
   public form: FormGroup;
+
+  public exampleValue$: Observable<CoordinatesDataValue>;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -65,6 +70,15 @@ export class CoordinatesConstraintConfigFormComponent {
     this.form.addControl(
       CoordinatesConstraintFormControl.Precision,
       new FormControl(this.config ? this.config.precision : getDefaultPrecision(this.config && this.config.format))
+    );
+
+    this.exampleValue$ = this.bindExampleValue();
+  }
+
+  private bindExampleValue(): Observable<CoordinatesDataValue> {
+    return this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map(config => new CoordinatesDataValue('49.2331315, 16.5701833', config))
     );
   }
 

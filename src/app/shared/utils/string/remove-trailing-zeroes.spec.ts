@@ -17,14 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {parseCoordinates} from '../../../utils/map/coordinates.utils';
+import {removeTrailingZeroes} from './remove-trailing-zeroes';
 
-@Pipe({
-  name: 'coordinatesDataValueValid',
-})
-export class CoordinatesDataValueValidPipe implements PipeTransform {
-  public transform(value: any): boolean {
-    return !!parseCoordinates(String(value));
-  }
-}
+describe('removeTrailingZeroes()', () => {
+  it('should not remove zeroes in the middle', () => {
+    expect(removeTrailingZeroes('8.505')).toEqual('8.505');
+  });
+
+  it('should not remove zero in the integer part', () => {
+    expect(removeTrailingZeroes('10')).toEqual('10');
+  });
+
+  it('should not remove zero', () => {
+    expect(removeTrailingZeroes('0')).toEqual('0');
+  });
+
+  it('should remove all fractional part zeroes', () => {
+    expect(removeTrailingZeroes('90.00')).toEqual('90');
+  });
+
+  it('should remove only trailing zeroes', () => {
+    expect(removeTrailingZeroes('1.0500')).toEqual('1.05');
+  });
+});

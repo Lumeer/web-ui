@@ -18,13 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../../../../../../../core/model/constraint';
+import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../../core/store/pivots/pivot';
+import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {DataAggregationType} from '../../../../../../../../shared/utils/data/data-aggregation';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {AttributesResource} from '../../../../../../../../core/model/resource';
-import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {Constraint} from '../../../../../../../../core/model/data/constraint';
 import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 
 @Component({

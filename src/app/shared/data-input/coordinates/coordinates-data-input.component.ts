@@ -28,11 +28,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {CoordinatesConstraintConfig} from '../../../core/model/data/constraint-config';
+import {CoordinatesDataValue} from '../../../core/model/data-value/coordinates.data-value';
 import {KeyCode} from '../../key-code';
-import {formatCoordinatesDataValue, getCoordinatesSaveValue} from '../../utils/data.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {parseCoordinates} from '../../utils/map/coordinates.utils';
 
 @Component({
   selector: 'coordinates-data-input',
@@ -41,9 +39,6 @@ import {parseCoordinates} from '../../utils/map/coordinates.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoordinatesDataInputComponent {
-  @Input()
-  public constraintConfig: CoordinatesConstraintConfig;
-
   @Input()
   public focus: boolean;
 
@@ -54,13 +49,13 @@ export class CoordinatesDataInputComponent {
   public skipValidation: boolean;
 
   @Input()
-  public value: any;
+  public value: CoordinatesDataValue;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<CoordinatesDataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<CoordinatesDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -88,8 +83,8 @@ export class CoordinatesDataInputComponent {
 
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
-    const value = this.transformValue(element.value);
-    this.valueChange.emit(value);
+    const dataValue = this.value.parseInput(element.value);
+    this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
@@ -114,19 +109,14 @@ export class CoordinatesDataInputComponent {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.coordinatesInput.nativeElement.value = formatCoordinatesDataValue(this.value, this.constraintConfig);
+        this.coordinatesInput.nativeElement.value = this.value.format();
         this.cancel.emit();
         return;
     }
   }
 
   private saveValue(input: ElementRef) {
-    const value = this.transformValue(input.nativeElement.value);
-    this.save.emit(value);
-  }
-
-  private transformValue(value: string) {
-    const coordinates = parseCoordinates(value);
-    return getCoordinatesSaveValue(coordinates);
+    const dataValue = this.value.parseInput(input.nativeElement.value);
+    this.save.emit(dataValue);
   }
 }

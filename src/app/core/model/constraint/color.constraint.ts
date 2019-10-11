@@ -17,25 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
-import {UserConstraintConfig} from '../../../core/model/data/constraint-config';
-import {selectAllUsers} from '../../../core/store/users/users.state';
-import {formatUserDataValue} from '../../utils/data.utils';
+import {ColorDataValue} from '../data-value/color.data-value';
+import {ConstraintType} from '../data/constraint';
+import {ColorConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'userDataValue',
-})
-export class UserDataValuePipe implements PipeTransform {
-  constructor(private store$: Store<{}>) {}
+export class ColorConstraint implements Constraint {
+  public readonly type = ConstraintType.Color;
 
-  public transform(value: any, config?: UserConstraintConfig): Observable<string> {
-    return this.store$.pipe(
-      select(selectAllUsers),
-      map(users => formatUserDataValue(value, config, users)),
-      distinctUntilChanged()
-    );
+  constructor(public readonly config: ColorConstraintConfig) {}
+
+  public createDataValue(value: any): ColorDataValue {
+    return new ColorDataValue(value, this.config);
   }
 }

@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
+import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -997,7 +999,7 @@ describe('Chart data converter linked collections', () => {
         id: 'C2',
         name: 'C2',
         color: '',
-        attributes: [{id: 'a1', name: 'Lala', constraint: {type: ConstraintType.Percentage, config: {}}}],
+        attributes: [{id: 'a1', name: 'Lala', constraint: new PercentageConstraint({} as PercentageConstraintConfig)}],
       },
     ];
     const linkTypes3: LinkType[] = [{id: 'LT1', name: 'LinkType1', collectionIds: ['C1', 'C2'], attributes: []}];

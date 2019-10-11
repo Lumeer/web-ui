@@ -27,6 +27,7 @@
                  [readonly]="!allowedPermissions.writeWithView"
                  [otherCollection]="data.otherCollection"
                  [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
+                 [constraintData]="constraintData$ | async"
                  (documentSelect)="documentSelect.emit($event)"
                  (removeLinkRow)="removeLinkRowByCorrelationId($event)"
                  (unlink)="unlink.emit($event)">

@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {isPercentageValid} from '../../../utils/data.utils';
-
-@Pipe({
-  name: 'percentageValid',
-})
-export class PercentageValidPipe implements PipeTransform {
-  public transform(value: any, config?: PercentageConstraintConfig): boolean {
-    return isPercentageValid(value, config);
+export function prolongShortHexColor(shortHex: string): string {
+  if (!shortHex) {
+    return '';
   }
+
+  return (
+    '#' +
+    String(shortHex)
+      .slice(shortHex.startsWith('#') ? 1 : 0)
+      .split('')
+      .map(letter => letter + letter)
+      .join('')
+  );
 }

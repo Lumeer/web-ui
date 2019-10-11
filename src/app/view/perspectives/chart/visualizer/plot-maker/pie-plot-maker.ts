@@ -18,14 +18,13 @@
  */
 
 import {Data, Layout} from 'plotly.js';
-import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
-import {ChartAxisCategory, ChartDataSet, convertChartDateFormat} from '../../data/convertor/chart-data';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {PlotMaker} from './plot-maker';
+import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
+import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
-import * as moment from 'moment';
-import {formatDateTimeDataValue} from '../../../../../shared/utils/data.utils';
+import {ChartAxisCategory, ChartDataSet, convertChartDateFormat} from '../../data/convertor/chart-data';
+import {PlotMaker} from './plot-maker';
 
 const MAX_COLUMNS = 3;
 
@@ -113,7 +112,8 @@ export class PiePlotMaker extends PlotMaker {
     if (category === ChartAxisCategory.Date) {
       const dateConfig = config as DateTimeConstraintConfig;
       const format = convertChartDateFormat(dateConfig && dateConfig.format);
-      return formatDateTimeDataValue(moment(value, format).toDate(), dateConfig);
+      const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
+      return constraint.createDataValue(value).format();
     } else if (category === ChartAxisCategory.Percentage) {
       return value + '%';
     }

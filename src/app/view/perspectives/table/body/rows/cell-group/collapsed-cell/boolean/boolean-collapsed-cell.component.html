@@ -1,4 +1,4 @@
 <boolean-data-input [indeterminate]="booleanValue === 'indeterminate'"
-                    [value]="booleanValue === 'true'"
+                    [value]="booleanValue | dataValue : constraint"
                     class="h-100">
 </boolean-data-input>
