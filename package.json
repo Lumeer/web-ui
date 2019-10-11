@@ -58,7 +58,7 @@
     "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@sentry/browser": "^5.5.0",
     "angular-calendar": "^0.27.14",
-    "angular-resizable-element": "^3.2.4",
+    "angular-resizable-element": "^3.2.6",
     "angulartics2": "^7.5.2",
     "auth0-js": "^9.11.2",
     "big.js": "^5.2.2",
