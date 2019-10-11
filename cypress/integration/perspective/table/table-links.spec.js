@@ -52,7 +52,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(2)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('s');
@@ -89,7 +89,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(1)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('l');
@@ -121,7 +121,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(4)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('l');

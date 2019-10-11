@@ -11,7 +11,7 @@ describe('Table perspective :: Single cell', () => {
     // select the only table body cell
     cy.get('[data-test="text-data-input"]')
       .should('have.value', '')
-      .click();
+      .click({force: true});
 
     // switch to edit mode by pressing Enter
     cy.focused()
@@ -56,7 +56,7 @@ describe('Table perspective :: Single cell', () => {
     cy.get('[data-test="text-data-input"]')
       .first()
       .should('have.value', firstValue)
-      .click();
+      .click({force: true});
 
     // switch to edit mode by typing a special character
     cy.focused()
