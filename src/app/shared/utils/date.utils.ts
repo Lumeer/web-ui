@@ -90,3 +90,31 @@ function resetSeconds(date: moment.Moment): moment.Moment {
 function resetMilliseconds(date: moment.Moment): moment.Moment {
   return date.clone().milliseconds(0);
 }
+
+export function getSmallestDateUnit(format: string): moment.unitOfTime.Base {
+  if (/[Sx]/.test(format)) {
+    return 'millisecond';
+  }
+  if (/[sX]/.test(format)) {
+    return 'second';
+  }
+  if (/[m]/.test(format)) {
+    return 'minute';
+  }
+  if (/[H]/.test(format)) {
+    return 'hour';
+  }
+  if (/[dDeE]/.test(format)) {
+    return 'day';
+  }
+  if (/[gGwW]/.test(format)) {
+    return 'week';
+  }
+  if (/[M]/.test(format)) {
+    return 'month';
+  }
+  if (/[QY]/.test(format)) {
+    return 'year';
+  }
+  return undefined;
+}

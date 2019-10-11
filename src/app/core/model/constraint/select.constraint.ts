@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DurationConstraintConfig, DurationUnit} from '../../../core/model/data/constraint-config';
-import {formatDurationDataValue} from '../../utils/constraint/duration-constraint.utils';
+import {SelectDataValue} from '../data-value/select.data-value';
+import {ConstraintType} from '../data/constraint';
+import {SelectConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'durationDataValue',
-})
-export class DurationDataValuePipe implements PipeTransform {
-  public transform(value: any, config: DurationConstraintConfig, durationMap: Record<DurationUnit, string>): string {
-    return formatDurationDataValue(value, config, durationMap);
+export class SelectConstraint implements Constraint {
+  public readonly type = ConstraintType.Select;
+
+  constructor(public readonly config: SelectConstraintConfig) {}
+
+  public createDataValue(value: any): SelectDataValue {
+    return new SelectDataValue(value, this.config);
   }
 }

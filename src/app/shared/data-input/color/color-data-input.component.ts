@@ -18,23 +18,22 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
+  Component,
   ElementRef,
-  SimpleChanges,
+  EventEmitter,
   HostListener,
+  Input,
   OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {ColorConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatColorDataValue, isColorValid} from '../../utils/data.utils';
-import {HtmlModifier} from '../../utils/html-modifier';
-import {KeyCode} from '../../key-code';
 import {ColorPickerDirective} from 'ngx-color-picker';
+import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
+import {KeyCode} from '../../key-code';
 import {greyscale, palette, saturated} from '../../picker/icon-color/color/colors';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'color-data-input',
@@ -44,25 +43,22 @@ import {greyscale, palette, saturated} from '../../picker/icon-color/color/color
 })
 export class ColorDataInputComponent implements OnChanges {
   @Input()
-  public constraintConfig: ColorConstraintConfig;
-
-  @Input()
   public focus: boolean;
 
   @Input()
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: ColorDataValue;
 
   @Input()
   public skipValidation: boolean;
 
   @Output()
-  public valueChange = new EventEmitter<string>();
+  public valueChange = new EventEmitter<ColorDataValue>();
 
   @Output()
-  public save = new EventEmitter<string>();
+  public save = new EventEmitter<ColorDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -81,7 +77,7 @@ export class ColorDataInputComponent implements OnChanges {
   private colorPicker: ColorPickerDirective;
 
   private refreshValid(value: any) {
-    this.valid = !value || isColorValid(value, this.constraintConfig);
+    this.valid = !value || this.value.copy(value).isValid();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -92,7 +88,7 @@ export class ColorDataInputComponent implements OnChanges {
         this.refreshValid(this.value);
 
         if (changes.value) {
-          this.colorInput.nativeElement.value = formatColorDataValue(this.value, this.constraintConfig, false);
+          this.colorInput.nativeElement.value = this.value.format();
         }
 
         HtmlModifier.setCursorAtTextContentEnd(this.colorInput.nativeElement);
@@ -105,10 +101,10 @@ export class ColorDataInputComponent implements OnChanges {
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
     }
-    if (changes.value && String(this.value).length === 1) {
+    if (changes.value && this.value.format().length === 1) {
       // show value entered into hidden input without any changes
       const input = this.colorInput;
-      setTimeout(() => input && (input.nativeElement.value = this.value));
+      setTimeout(() => input && (input.nativeElement.value = this.value.format()));
     }
 
     this.refreshValid(this.value);
@@ -133,20 +129,17 @@ export class ColorDataInputComponent implements OnChanges {
         const input = this.colorInput;
 
         if (input) {
-          if (
-            !this.skipValidation &&
-            input.nativeElement.value &&
-            !isColorValid(input.nativeElement.value, this.constraintConfig)
-          ) {
+          const dataValue = this.value.parseInput(input.nativeElement.value);
+
+          if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
             event.stopImmediatePropagation();
             event.preventDefault();
             return;
           }
 
           this.preventSaving = true;
-          const value = this.transformValue(input.nativeElement.value);
           // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(value));
+          setTimeout(() => this.save.emit(dataValue));
         }
         return;
       case KeyCode.Escape:
@@ -156,9 +149,8 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onInput(value: string) {
-    this.value = this.transformValue(value);
-    this.refreshValid(value);
-    this.valueChange.emit(value);
+    const dataValue = this.value.parseInput(value);
+    this.valueChange.emit(dataValue);
   }
 
   public onValueChange(color: string) {
@@ -177,10 +169,8 @@ export class ColorDataInputComponent implements OnChanges {
       return;
     }
 
-    this.value = this.transformValue(color);
-    this.refreshValid(this.value);
-
-    this.save.emit(this.value);
+    const dataValue = this.value.copy(color);
+    this.save.emit(dataValue);
 
     this.closeColorPicker();
     this.colorInput.nativeElement.blur();
@@ -190,12 +180,10 @@ export class ColorDataInputComponent implements OnChanges {
     if (this.preventSaving) {
       this.preventSaving = false;
     } else {
-      this.save.emit(this.transformValue(this.colorInput.nativeElement.value));
+      const {value} = this.colorInput.nativeElement;
+      const dataValue = this.value.parseInput(value);
+      this.save.emit(dataValue);
     }
-  }
-
-  private transformValue(value: string): string {
-    return formatColorDataValue(value, this.constraintConfig);
   }
 
   public onTextInput(event: Event) {
@@ -212,7 +200,7 @@ export class ColorDataInputComponent implements OnChanges {
 
   public onCancel() {
     this.preventSaving = true;
-    this.colorInput.nativeElement.value = formatColorDataValue(this.value, this.constraintConfig, false);
+    this.colorInput.nativeElement.value = this.value.format();
     this.cancel.emit();
   }
 }

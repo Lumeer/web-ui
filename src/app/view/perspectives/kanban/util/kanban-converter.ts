@@ -17,8 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import Big from 'big.js';
+import {Constraint} from '../../../../core/model/constraint';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
+import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {
   KanbanAttribute,
   KanbanColumn,
@@ -26,21 +34,13 @@ import {
   KanbanResource,
   KanbanValueType,
 } from '../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {generateId} from '../../../../shared/utils/resource.utils';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {formatDataValue, isSelectDataValueValid} from '../../../../shared/utils/data.utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import Big from 'big.js';
 import {findOriginalAttributeConstraint} from './kanban.util';
+import {generateId} from '../../../../shared/utils/resource.utils';
 
 interface KanbanColumnData {
   resourcesOrder: KanbanResource[];
@@ -278,20 +278,15 @@ export class KanbanConverter {
     collections: Collection[],
     linkTypes: LinkType[]
   ): any {
-    const value = aggregateDataValues(
-      config.aggregation.aggregation,
-      aggregator.values,
-      findOriginalAttributeConstraint(config.aggregation, collections, linkTypes)
-    );
+    const constraint = findOriginalAttributeConstraint(config.aggregation, collections, linkTypes);
 
-    if (
-      config.aggregation.aggregation === DataAggregationType.Count ||
-      config.aggregation.aggregation === DataAggregationType.Unique
-    ) {
+    const value = aggregateDataValues(config.aggregation.aggregation, aggregator.values, constraint);
+
+    if ([DataAggregationType.Count, DataAggregationType.Unique].includes(config.aggregation.aggregation)) {
       return value;
     }
 
-    return formatDataValue(value, findOriginalAttributeConstraint(config.aggregation, collections, linkTypes));
+    return (constraint || new UnknownConstraint()).createDataValue(value).format();
   }
 
   private formatKanbanColumnValue(
@@ -305,10 +300,7 @@ export class KanbanConverter {
     if (constraint) {
       if (constraint.type === ConstraintType.User) {
         return value;
-      } else if (
-        constraint.type === ConstraintType.Select &&
-        !isSelectDataValueValid(value, constraint.config as SelectConstraintConfig)
-      ) {
+      } else if (constraint.type === ConstraintType.Select && !constraint.createDataValue(value).isValid()) {
         return null;
       }
     }
@@ -319,7 +311,9 @@ export class KanbanConverter {
       kanbanAttributeConstraint &&
       this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanAttributeConstraint);
 
-    return formatDataValue(value, overrideConstraint || constraint, constraintData);
+    return (overrideConstraint || constraint || new UnknownConstraint())
+      .createDataValue(value, constraintData)
+      .format();
   }
 }
 
@@ -403,8 +397,7 @@ function selectedAttributeIsInvalid(
   }
 
   if (attribute.constraint && attribute.constraint.type === ConstraintType.Select) {
-    const config = attribute.constraint.config as SelectConstraintConfig;
-    if (!isSelectDataValueValid(title, config)) {
+    if (!attribute.constraint.createDataValue(title).isValid()) {
       return true;
     }
   }

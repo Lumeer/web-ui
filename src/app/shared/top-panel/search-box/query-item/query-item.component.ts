@@ -18,12 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Constraint} from '../../../../core/model/constraint';
 
 import {QueryItem} from './model/query-item';
 import {FormGroup} from '@angular/forms';
 import {AttributeValueComponent} from './attribute-value/attribute-value.component';
 import {AttributeConditionComponent} from './attribute-condition/attribute-condition.component';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';

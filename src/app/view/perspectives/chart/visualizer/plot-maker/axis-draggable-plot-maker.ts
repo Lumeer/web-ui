@@ -17,14 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Layout} from 'plotly.js';
 import * as d3 from 'd3';
+import * as moment from 'moment';
+import {Layout} from 'plotly.js';
+import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
 import {
   ConstraintConfig,
   DateTimeConstraintConfig,
   DurationConstraintConfig,
 } from '../../../../../core/model/data/constraint-config';
-import {DraggablePlotMaker} from './draggable-plot-maker';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {createDateTimeOptions} from '../../../../../shared/date-time/date-time-options';
+import {uniqueValues} from '../../../../../shared/utils/array.utils';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
+import {
+  formatDurationDataValue,
+  getDurationSaveValue,
+} from '../../../../../shared/utils/constraint/duration-constraint.utils';
 import {
   ChartAxisCategory,
   ChartDataSetAxis,
@@ -32,18 +41,9 @@ import {
   checkKnownOverrideFormatEntry,
   convertChartDateFormat,
 } from '../../data/convertor/chart-data';
-import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
-import {createRange} from './plot-util';
-import * as moment from 'moment';
 import {convertChartDateTickFormat} from '../chart-util';
-import {
-  formatDurationDataValue,
-  getDurationSaveValue,
-} from '../../../../../shared/utils/constraint/duration-constraint.utils';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
-import {formatDateTimeDataValue} from '../../../../../shared/utils/data.utils';
-import {createDateTimeOptions} from '../../../../../shared/date-time/date-time-options';
+import {DraggablePlotMaker} from './draggable-plot-maker';
+import {createRange} from './plot-util';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -142,7 +142,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       }, [])
       .sort();
 
-    const titles = values.map(value => formatDateTimeDataValue(new Date(value), config));
+    const constraint = new DateTimeConstraint(config);
+    const titles = values.map(value => constraint.createDataValue(value).format());
     return {values, titles};
   }
 

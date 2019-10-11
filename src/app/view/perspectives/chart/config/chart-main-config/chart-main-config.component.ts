@@ -18,11 +18,11 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Constraint} from '../../../../../core/model/constraint';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
 import {Perspective} from '../../../perspective';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../../../core/model/data/constraint';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 

@@ -17,6 +17,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {GanttOptions, GanttSwimlaneInfo} from '@lumeer/lumeer-gantt/dist/model/options';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import * as moment from 'moment';
+import {environment} from '../../../../../environments/environment';
+import {COLOR_PRIMARY} from '../../../../core/constants';
+import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Constraint} from '../../../../core/model/constraint';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
+import {
+  findAttribute,
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+  isLinkTypeAttributeEditable,
+} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {
+  GANTT_DATE_FORMAT,
+  GanttChartBarModel,
+  GanttChartConfig,
+  GanttChartStemConfig,
+} from '../../../../core/store/gantt-charts/gantt-chart';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {contrastColor} from '../../../../shared/utils/color.utils';
+import {
+  isDateValid,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  toNumber,
+} from '../../../../shared/utils/common.utils';
+import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {
+  AggregatedDataValues,
+  DataAggregator,
+  DataAggregatorAttribute,
+} from '../../../../shared/utils/data/data-aggregator';
+import {formatData} from '../../../../shared/utils/data/format-data';
+import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+
+const MIN_PROGRESS = 0.001;
+const MAX_PROGRESS = 1000;
+
+type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
+
 export interface GanttChartTaskMetadata {
   dataResourceId: string;
   startAttributeId: string;
@@ -25,61 +77,6 @@ export interface GanttChartTaskMetadata {
   resourceId?: string;
   resourceType: AttributesResourceType;
 }
-
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {ColorConstraintConfig, DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {
-  GANTT_DATE_FORMAT,
-  GanttChartBarModel,
-  GanttChartConfig,
-  GanttChartStemConfig,
-} from '../../../../core/store/gantt-charts/gantt-chart';
-import {Collection} from '../../../../core/store/collections/collection';
-import {
-  isDateValid,
-  isNotNullOrUndefined,
-  isNullOrUndefined,
-  isNumeric,
-  toNumber,
-} from '../../../../shared/utils/common.utils';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {
-  formatColorDataValue,
-  formatData,
-  formatDataValue,
-  isColorValid,
-  parseDateTimeDataValue,
-} from '../../../../shared/utils/data.utils';
-import {
-  findAttribute,
-  findAttributeConstraint,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {contrastColor} from '../../../../shared/utils/color.utils';
-import * as moment from 'moment';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {
-  AggregatedDataValues,
-  DataAggregator,
-  DataAggregatorAttribute,
-} from '../../../../shared/utils/data/data-aggregator';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
-import {GanttOptions, GanttSwimlaneInfo} from '@lumeer/lumeer-gantt/dist/model/options';
-import {environment} from '../../../../../environments/environment';
-import {COLOR_PRIMARY} from '../../../../core/constants';
-
-const MIN_PROGRESS = 0.001;
-const MAX_PROGRESS = 1000;
-
-type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
 
 export class GanttChartConverter {
   private collections: Collection[];
@@ -349,20 +346,24 @@ export class GanttChartConverter {
       const dataResourceColor = stemConfig.color && dataResource.data[stemConfig.color.attributeId];
       const colorConstraint =
         stemConfig.color && findAttributeConstraint(resource.attributes, stemConfig.color.attributeId);
-      const formattedColor =
-        stemConfig.color &&
-        formatColorDataValue(dataResourceColor, colorConstraint && (colorConstraint.config as ColorConstraintConfig));
+      const dataValue = colorConstraint && colorConstraint.createDataValue(dataResourceColor);
       const taskColor =
-        dataResourceColor && isColorValid(formattedColor)
+        dataResourceColor && dataValue && dataValue.isValid()
           ? validDataColors[dataResourceColor] || dataResourceColor
           : resourceColor;
+
+      const constraint = (nameAttribute && nameAttribute.constraint) || new UnknownConstraint();
 
       const permission = this.getPermission(stemConfig.start);
 
       const datesSwimlanes = [];
       if (showDatesAsSwimlanes) {
-        const startString = formatDataValue(start, this.getConstraint(stemConfig.start), this.constraintData);
-        const endString = formatDataValue(end, this.getConstraint(stemConfig.end), this.constraintData);
+        const startString = (this.getConstraint(stemConfig.start) || new UnknownConstraint())
+          .createDataValue(start, this.constraintData)
+          .format();
+        const endString = (this.getConstraint(stemConfig.end) || new UnknownConstraint())
+          .createDataValue(end, this.constraintData)
+          .format();
         datesSwimlanes.push(...[startString, endString]);
       }
 
@@ -377,7 +378,7 @@ export class GanttChartConverter {
 
       arr.push({
         id: dataResource.id,
-        name: formatDataValue(name, nameAttribute && nameAttribute.constraint, this.constraintData),
+        name: constraint.createDataValue(name, this.constraintData).format(),
         start: interval[0].value,
         end: interval[1].value,
         progress: createProgress(progress),
@@ -463,7 +464,9 @@ export class GanttChartConverter {
     const overrideConstraint =
       barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
-    const formattedValue = formatDataValue(value, overrideConstraint || constraint, this.constraintData);
+    const formattedValue = (overrideConstraint || constraint || new UnknownConstraint())
+      .createDataValue(value, this.constraintData)
+      .format();
     return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
   }
 }

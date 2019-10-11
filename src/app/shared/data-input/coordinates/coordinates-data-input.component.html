@@ -1,8 +1,8 @@
 <input *ngIf="readonly; else textEditing"
        [readonly]="readonly"
-       [title]="value | coordinatesDataValue: constraintConfig"
-       [value]="value | coordinatesDataValue: constraintConfig"
-       [class.invalid-value]="!(value | coordinatesDataValueValid)"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
+       [class.invalid-value]="!(value | isDataValueValid)"
        (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        data-test="coordinates-data-input"
@@ -10,8 +10,8 @@
 
 <ng-template #textEditing>
   <input #coordinatesInput
-         [title]="value | coordinatesDataValue: constraintConfig"
-         [value]="value | coordinatesDataValue: constraintConfig"
+         [title]="value | formatDataValue"
+         [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          class="border-0 w-100 h-100 px-1 bg-transparent"

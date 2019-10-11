@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {Collection} from '../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
@@ -27,7 +29,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {isNullOrUndefined} from '../common.utils';
-import {formatDataValue} from '../data.utils';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -480,7 +481,7 @@ export class DataAggregator {
     if (this.formatValue) {
       return this.formatValue(value, constraint, this.constraintData, attribute);
     }
-    return formatDataValue(value, constraint, this.constraintData);
+    return (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).format();
   }
 }
 

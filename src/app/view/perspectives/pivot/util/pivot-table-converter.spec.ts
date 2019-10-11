@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
+import {PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {PivotTableConverter} from './pivot-table-converter';
 import {PivotData} from './pivot-data';
 import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
@@ -529,8 +531,8 @@ describe('Pivot table converter', () => {
           ],
           values: [['10%', '20%'], ['20%', null], ['30%', '50%'], ['80%', '90%'], ['10%', '90%'], [null, '40%']],
           valuesConstraints: [
-            {type: ConstraintType.Percentage, config: {}},
-            {type: ConstraintType.Percentage, config: {}},
+            new PercentageConstraint({} as PercentageConstraintConfig),
+            new PercentageConstraint({} as PercentageConstraintConfig),
           ],
           rowShowSums: [true, true],
           columnShowSums: [],

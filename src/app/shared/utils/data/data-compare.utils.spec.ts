@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DateTimeConstraint} from '../../../core/model/constraint/datetime.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
 import {dataValuesMeetCondition} from './data-compare.utils';
 import {ConditionType} from '../../../core/store/navigation/query/query';
 
 describe('Data values meet condition', () => {
   it('should compare by date only year constraint', () => {
-    const constraint = {type: ConstraintType.DateTime, config: {format: 'YYYY'}};
+    const constraint = new DateTimeConstraint({format: 'YYYY'} as DateTimeConstraintConfig);
 
     expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, ConditionType.Equals, constraint)).toEqual(
       false
@@ -98,7 +100,7 @@ describe('Data values meet condition', () => {
     const formats = ['YYYY/MM', 'MM.YYYY', 'MMM.YYYY', 'MMMM YYYY', 'MM-YYYY', 'YYYY-MM'];
 
     for (const format of formats) {
-      const constraint = {type: ConstraintType.DateTime, config: {format}};
+      const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
       expect(
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",

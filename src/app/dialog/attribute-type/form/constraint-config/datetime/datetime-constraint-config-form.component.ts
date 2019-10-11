@@ -19,10 +19,13 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
+import {DateTimeDataValue} from '../../../../../core/model/data-value/datetime.data-value';
 import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
-import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
-import {environment} from '../../../../../../environments/environment';
 import {TemplateService} from '../../../../../core/service/template.service';
+import {removeAllFormControls} from '../../../../../shared/utils/form.utils';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -40,6 +43,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   public helpUrl: string;
 
   public readonly now = new Date().toISOString();
+
   public readonly formats = [
     'DD.MM.YYYY',
     'DD.MM.YYYY H:mm',
@@ -53,10 +57,28 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
     'h:mm a',
   ];
 
+  public exampleValue$: Observable<DateTimeDataValue>;
+
   constructor(private templateService: TemplateService) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
+    this.exampleValue$ = this.bindExampleValue();
     this.helpUrl = this.templateService.getDateTimeConstraintHelpUrl();
+  }
+
+  private bindExampleValue(): Observable<DateTimeDataValue> {
+    return this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map(value => {
+        const config: DateTimeConstraintConfig = {
+          format: value.format || value.selectFormat,
+          minValue: undefined,
+          maxValue: undefined,
+          range: undefined,
+        };
+        return new DateTimeDataValue(new Date().toISOString(), config);
+      })
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

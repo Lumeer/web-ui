@@ -13,14 +13,14 @@
 
   <div *ngSwitchCase="constraintTypes.Boolean" class="d-flex py-1">
     <boolean-data-input class="px-3 py-1 flex-grow-1"
-                        [value]="column.title"
+                        [value]="column.title | dataValue : booleanConstraint"
                         [readonly]="true">
     </boolean-data-input>
   </div>
 
   <user-data-input *ngSwitchCase="constraintTypes.User"
                    class="px-3 py-2 flex-grow-1"
-                   [value]="column.title"
+                   [value]="column.title | dataValue : userConstraint"
                    [readonly]="true"
                    [focus]="false">
   </user-data-input>

@@ -17,15 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {NumberConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {isNumberValid} from '../../../utils/data.utils';
-
-@Pipe({
-  name: 'numberValid',
-})
-export class NumberValidPipe implements PipeTransform {
-  public transform(value: any, config?: NumberConstraintConfig): boolean {
-    return isNumberValid(value, config);
-  }
+export function convertStringToNumberSafely(value: string): number | string {
+  return !value || String(value).length >= String(Number.MAX_SAFE_INTEGER).length ? value : parseInt(value, 10);
 }

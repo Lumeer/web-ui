@@ -19,11 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
+import {Constraint} from '../../../../../core/model/constraint';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
 import {BehaviorSubject} from 'rxjs';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {KeyCode} from '../../../../key-code';
 
 @Component({

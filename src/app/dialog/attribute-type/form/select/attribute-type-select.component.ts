@@ -44,15 +44,15 @@ export class AttributeTypeSelectComponent implements OnInit {
   }
 
   private createSelectItems(): SelectItemModel[] {
-    const result: SelectItemModel[] = ['None']
-      .concat(Object.values(ConstraintType).filter(type => isConstraintTypeEnabled(type)))
+    const result: SelectItemModel[] = Object.values(ConstraintType)
+      .filter(type => isConstraintTypeEnabled(type))
       .map(type => ({
         id: type,
         value: this.i18n(
           '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User}}',
           {type}
         ),
-        icons: [constraintIconsMap[type] || 'fas fa-times'],
+        icons: [constraintIconsMap[type]],
       }));
 
     result.sort((a, b) => {

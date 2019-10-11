@@ -28,9 +28,9 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as moment from 'moment';
+import {Constraint} from '../../../core/model/constraint';
 import {Collection} from '../../../core/store/collections/collection';
 import {
   CalendarBarPropertyOptional,
@@ -46,8 +46,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {User} from '../../../core/store/users/user';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {getSaveValue} from '../../../shared/utils/data.utils';
-import {Constraint, ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
 
 export const DEFAULT_EVENT_DURATION = 60;
 
@@ -317,7 +316,7 @@ export class CalendarEventDialogFormComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: Date, constraint: Constraint): string {
     if (constraint) {
-      return getSaveValue(value, constraint, this.constraintData);
+      return constraint.createDataValue(value, this.constraintData).serialize();
     } else {
       return moment(value).toISOString();
     }

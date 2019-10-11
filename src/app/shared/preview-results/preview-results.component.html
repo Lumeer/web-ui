@@ -17,6 +17,7 @@
             [selectedDocumentId]="selectedDocument?.id"
             [loaded]="data.loaded"
             [collection]="selectedCollection"
+            [constraintData]="constraintData$ | async"
             (selectDocument)="setActiveDocument($event)">
           </preview-results-table>
         </div>

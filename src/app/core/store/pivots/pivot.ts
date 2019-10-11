@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {Constraint} from '../../model/data/constraint';
+import {Constraint} from '../../model/constraint';
+import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
 
 export const DEFAULT_PIVOT_ID = 'default';

@@ -49,6 +49,7 @@
             [selectionHelper]="selectionHelper"
             [model]="row.newValue || row.value"
             [constraint]="(collection | collectionAttribute : row.id)?.constraint"
+            [constraintData]="constraintData"
             [dataCursor]="documentModel | dataCursor : row.id"
             (remove)="onUpdateRow(idx, row.newName || row.name, '')"
             (update)="onUpdateRow(idx, row.newName || row.name, $event)"

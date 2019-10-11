@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {CoordinatesConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatCoordinatesDataValue} from '../../utils/data.utils';
+import {convertRgbColorToHex} from './convert-rgb-color-to-hex';
 
-@Pipe({
-  name: 'coordinatesDataValue',
-})
-export class CoordinatesDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: CoordinatesConstraintConfig): string {
-    return formatCoordinatesDataValue(value, config);
-  }
-}
+describe('convertRgbColorToHex()', () => {
+  it('should be medium turquoise', () => {
+    expect(convertRgbColorToHex('rgb(64, 191, 191)')).toEqual('#40bfbf');
+  });
+
+  it('should be white', () => {
+    expect(convertRgbColorToHex('rgb(255, 255, 255)')).toEqual('#ffffff');
+  });
+});

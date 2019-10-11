@@ -28,6 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {Constraint} from '../../../../core/model/constraint';
 import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -43,8 +44,7 @@ import {ChartDataConverter} from './convertor/chart-data-converter';
 import {ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
-import {getSaveValue} from '../../../../shared/utils/data.utils';
-import {Constraint, ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
@@ -295,16 +295,16 @@ export class ChartDataComponent implements OnInit, OnChanges {
   }
 
   private convertSaveValue(value: any, constraint: Constraint): any {
-    if (!value || !constraint) {
-      return getSaveValue(value, constraint, this.constraintData);
+    if (!constraint) {
+      return value;
     }
 
-    if (constraint.type === ConstraintType.DateTime) {
+    if (value && constraint.type === ConstraintType.DateTime) {
       const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
       return moment(value, convertChartDateFormat(config && config.format)).toISOString();
     }
 
-    return getSaveValue(value, constraint, this.constraintData);
+    return constraint.createDataValue(value, this.constraintData).serialize();
   }
 
   private onLinkValueChange(valueChange: ValueChange) {

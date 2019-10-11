@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintConfigOverrideService} from './constraint-config-override-service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../../../core/model/constraint';
+import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
 import {DurationConstraintConfig, DurationUnit} from '../../../../core/model/data/constraint-config';
 import {SelectItemModel} from '../../select-item/select-item.model';
-import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 
 const maxDurationUnits = [DurationUnit.Days, DurationUnit.Hours, DurationUnit.Minutes, DurationUnit.Seconds];
 
@@ -38,7 +39,7 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
     return [
       defaultItem,
       ...maxDurationUnits.map(unit => ({
-        id: {type: ConstraintType.Duration, config: {maxUnit: unit}} as Constraint,
+        id: new DurationConstraint({maxUnit: unit} as DurationConstraintConfig),
         value: this.translateDurationUnit(unit),
       })),
     ];
@@ -55,10 +56,11 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
   }
 
   public isValidOverride(constraint: Constraint, overrideConstraint: Constraint): Constraint {
+    const config = constraint.config as DurationConstraintConfig;
     const overrideConfig = overrideConstraint.config as DurationConstraintConfig;
     if (overrideConfig.maxUnit) {
       const maxUnit = maxDurationUnits.includes(overrideConfig.maxUnit) ? overrideConfig.maxUnit : null;
-      return maxUnit && {...constraint, config: {...constraint.config, maxUnit}};
+      return maxUnit && new DurationConstraint({...config, maxUnit});
     }
     return constraint;
   }

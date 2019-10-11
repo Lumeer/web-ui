@@ -39,6 +39,7 @@
               (click)="activate(document)">
             <td *ngFor="let attr of collection.attributes">
               <data-input [constraint]="attr.constraint"
+                          [constraintData]="constraintData"
                           [cursor]="document | dataCursor : attr.id"
                           [value]="document.data[attr.id]"
                           [readonly]="true">

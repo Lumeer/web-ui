@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ColorConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatColorDataValue} from '../../utils/data.utils';
+import Big, {BigSource} from 'big.js';
 
-@Pipe({
-  name: 'colorValue',
-})
-export class ColorValuePipe implements PipeTransform {
-  public transform(value: any, constraint?: ColorConstraintConfig): string {
-    return formatColorDataValue(value, constraint);
+export function createBigWithoutTrailingZeros(value: BigSource): Big {
+  if (!value) {
+    return null;
   }
+
+  const big = new Big(value);
+  while (big.c[big.c.length - 1] === 0 && big.c.length > 1) {
+    big.c.pop();
+  }
+  return big;
 }

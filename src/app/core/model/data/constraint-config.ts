@@ -24,6 +24,8 @@ export interface AddressConstraintConfig {
   fields: AddressField[];
 }
 
+export interface BooleanConstraintConfig {}
+
 export interface ColorConstraintConfig {}
 
 export enum CoordinatesFormat {
@@ -63,6 +65,8 @@ export enum DurationType {
   Custom = 'Custom',
 }
 
+export interface FilesConstraintConfig {}
+
 export interface NumberConstraintConfig {
   decimal: boolean;
   format: string;
@@ -72,10 +76,10 @@ export interface NumberConstraintConfig {
 }
 
 export interface PercentageConstraintConfig {
-  format: string;
-  decimals: number;
-  minValue: number;
-  maxValue: number;
+  format?: string;
+  decimals?: number;
+  minValue?: number;
+  maxValue?: number;
 }
 
 export interface RatingConstraintConfig {

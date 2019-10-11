@@ -1,8 +1,8 @@
 <input *ngIf="readonly; else textEditing"
-       [attr.maxlength]="constraintConfig?.maxLength"
+       [attr.maxlength]="value?.config?.maxLength"
        [readonly]="readonly"
-       [title]="value | textDataValue: constraintConfig"
-       [value]="value | textDataValue: constraintConfig"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
        (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!valid"
@@ -11,9 +11,9 @@
 
 <ng-template #textEditing>
   <input #textInput
-         [attr.maxlength]="skipValidation ? null : constraintConfig?.maxLength"
-         [title]="value | textDataValue: constraintConfig"
-         [value]="value | textDataValue: constraintConfig"
+         [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
+         [title]="value | formatDataValue"
+         [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          class="border-0 w-100 h-100 px-1"

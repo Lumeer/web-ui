@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../../../core/model/constraint';
+import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
 import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {createDateTimeOptions} from '../../../date-time/date-time-options';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../select-item/select-item.model';
-import {Constraint, ConstraintType} from '../../../../core/model/data/constraint';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 
 export enum DateReadableFormatType {
@@ -69,22 +70,21 @@ export class DateTimeConfigOverrideService extends ConstraintConfigOverrideServi
         .map(type => ({type, format: dateReadableFormatsMap[type]}))
         .filter(({format}) => format !== config.format)
         .map(({type, format}) => ({
-          id: {type: ConstraintType.DateTime, config: {format}} as Constraint,
+          id: new DateTimeConstraint({format} as DateTimeConstraintConfig),
           value: this.translateDateReadableFormatType(type),
         })),
     ];
   }
 
   public isValidOverride(constraint: Constraint, overrideConstraint: Constraint): Constraint {
+    const config = constraint.config as DateTimeConstraintConfig;
     const overrideConfig = overrideConstraint.config as DateTimeConstraintConfig;
     if (overrideConfig.format) {
-      const validFormats = createDateConstraintOverrideFormatTypes(constraint.config as DateTimeConstraintConfig).map(
-        type => dateReadableFormatsMap[type]
-      );
+      const validFormats = createDateConstraintOverrideFormatTypes(config).map(type => dateReadableFormatsMap[type]);
       const overrideFormat = validFormats.includes(overrideConfig.format)
         ? this.translateDateReadableFormat(overrideConfig.format)
         : null;
-      return overrideFormat && {...constraint, config: {...constraint.config, format: overrideFormat}};
+      return overrideFormat && new DateTimeConstraint({...config, format: overrideFormat});
     }
     return constraint;
   }

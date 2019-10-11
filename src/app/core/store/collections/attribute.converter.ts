@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
 import {convertToBig} from '../../../shared/utils/data.utils';
 import {AttributeDto, AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
-import {Constraint, ConstraintType, constraintTypesMap} from '../../model/data/constraint';
-import {DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
+import {Constraint} from '../../model/constraint';
+import {ConstraintType} from '../../model/data/constraint';
+import {ConstraintConfig, DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
 import {Attribute, AttributeFunction} from './collection';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
@@ -48,44 +50,36 @@ function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
     return null;
   }
 
-  switch (dto.type) {
+  const config = convertConstraintConfigDtoToModel(dto.type, dto.config);
+  return createConstraint(dto.type, config);
+}
+
+function convertConstraintConfigDtoToModel(type: string, config: any): ConstraintConfig {
+  switch (type) {
     case ConstraintType.DateTime:
-      return convertDateTimeConstraintDtoToModel(dto);
+      return convertDateTimeConstraintConfigDtoToModel(config);
     case ConstraintType.Number:
-      return convertNumberConstraintDtoToModel(dto);
+      return convertNumberConstraintConfigDtoToModel(config);
     default:
-      return convertAnyConstraintDtoToModel(dto);
+      return config;
   }
 }
 
-function convertDateTimeConstraintDtoToModel(dto: ConstraintDto): Constraint {
+function convertDateTimeConstraintConfigDtoToModel(config: any): ConstraintConfig {
   return {
-    type: ConstraintType.DateTime,
-    config: {
-      format: dto.config.format,
-      minValue: dto.config.minValue && new Date(dto.config.minValue),
-      maxValue: dto.config.maxValue && new Date(dto.config.maxValue),
-    },
+    format: config.format,
+    minValue: config.minValue && new Date(config.minValue),
+    maxValue: config.maxValue && new Date(config.maxValue),
   };
 }
 
-function convertNumberConstraintDtoToModel(dto: ConstraintDto): Constraint {
+function convertNumberConstraintConfigDtoToModel(config: any): ConstraintConfig {
   return {
-    type: ConstraintType.Number,
-    config: {
-      decimal: dto.config.decimal,
-      format: dto.config.format,
-      precision: dto.config.precision,
-      minValue: convertToBig(dto.config.minValue),
-      maxValue: convertToBig(dto.config.maxValue),
-    },
-  };
-}
-
-function convertAnyConstraintDtoToModel(dto: ConstraintDto): Constraint {
-  return {
-    type: constraintTypesMap[dto.type],
-    config: dto.config,
+    decimal: config.decimal,
+    format: config.format,
+    precision: config.precision,
+    minValue: convertToBig(config.minValue),
+    maxValue: convertToBig(config.maxValue),
   };
 }
 

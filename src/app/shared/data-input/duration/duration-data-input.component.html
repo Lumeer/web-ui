@@ -1,6 +1,6 @@
 <input *ngIf="readonly; else durationEditing"
-       [title]="value | durationDataValue:constraintConfig:durationUnitsMap"
-       [value]="value | durationDataValue:constraintConfig:durationUnitsMap"
+       [title]="value | formatDataValue"
+       [value]="value | formatDataValue"
        (focus)="onFocus.emit($event)"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
@@ -10,8 +10,8 @@
 
 <ng-template #durationEditing>
   <input #durationInput
-         [title]="value | durationDataValue:constraintConfig:durationUnitsMap"
-         [value]="value | durationDataValue:constraintConfig:durationUnitsMap"
+         [title]="value | formatDataValue"
+         [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

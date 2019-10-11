@@ -34,6 +34,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {FileApiService} from '../../../core/api/file-api.service';
+import {FilesDataValue} from '../../../core/model/data-value/files.data-value';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
@@ -57,10 +58,10 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: FilesDataValue;
 
   @Output()
-  public save = new EventEmitter<string>();
+  public save = new EventEmitter<FilesDataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -205,7 +206,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   private addFileNameToData(fileName: string) {
     const value = !this.value || String(this.value).endsWith(fileName) ? fileName : `${this.value},${fileName}`;
-    this.save.emit(value);
+    const dataValue = this.value.copy(value);
+    this.save.emit(dataValue);
   }
 
   private removeFileNameFromData(fileId: string, fileAttachments: FileAttachment[]) {
@@ -213,7 +215,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
       .filter(file => file.id !== fileId)
       .map(file => file.fileName)
       .join(',');
-    this.save.emit(value);
+    const dataValue = this.value.copy(value);
+    this.save.emit(dataValue);
   }
 
   public onCancel() {

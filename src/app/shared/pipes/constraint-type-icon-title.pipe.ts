@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Constraint} from '../../core/model/constraint';
 
 @Pipe({
   name: 'constraintTypeIconTitle',

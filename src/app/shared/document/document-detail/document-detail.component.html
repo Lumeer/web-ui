@@ -1,15 +1,15 @@
 <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
+<ng-container *ngIf="{constraintData: constraintData$ | async} as data">
   <div class="row mt-3 mb-4">
     <div class="col-8 d-flex align-bottom align-self-end">
       <div class="align-text-bottom w-100">
         <h4 class="mb-0 d-flex">
           <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
-          <data-input *ngIf="users$ | async as users"
-            class="flex-fill"
+          <data-input class="flex-fill"
             [readonly]="true"
             [value]="state?.summary$ | async"
             [constraint]="(state?.attribute$ | async)?.constraint"
-            [constraintData]="{users: users, durationUnitsMap: durationUnitsMap}">
+            [constraintData]="data.constraintData">
           </data-input>
         </h4>
       </div>
@@ -56,6 +56,7 @@
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"
                [constraint]="(collection | collectionAttribute : row.id)?.constraint"
+               [constraintData]="data.constraintData"
                [dataCursor]="document | dataCursor : row.id"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
                [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id: permissions: query)"
@@ -75,4 +76,5 @@
       </button>
     </div>
   </div>
+</ng-container>
 </ng-container>

@@ -18,16 +18,16 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {Constraint} from '../../../../../core/model/data/constraint';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'gantt-chart-collection-config',

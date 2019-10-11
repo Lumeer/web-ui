@@ -18,32 +18,32 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs';
+import {filter, first, map} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {PerspectiveService} from '../../../core/service/perspective.service';
+import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {selectAllUsers, selectUserById} from '../../../core/store/users/users.state';
-import {filter, first, map} from 'rxjs/operators';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {UiRow} from '../../../core/ui/ui-row';
-import {PerspectiveService} from '../../../core/service/perspective.service';
 import {Query} from '../../../core/store/navigation/query/query';
-import {DialogService} from '../../../dialog/dialog.service';
-import {DocumentUi} from '../../../core/ui/document-ui';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
-import {RouterAction} from '../../../core/store/router/router.action';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
+import {RouterAction} from '../../../core/store/router/router.action';
 import {User} from '../../../core/store/users/user';
-import {TranslationService} from '../../../core/service/translation.service';
+import {selectUserById} from '../../../core/store/users/users.state';
+import {DocumentUi} from '../../../core/ui/document-ui';
+import {UiRow} from '../../../core/ui/ui-row';
+import {DialogService} from '../../../dialog/dialog.service';
 import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
-import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 
 @Component({
   selector: 'document-detail',
@@ -64,7 +64,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public permissions: AllowedPermissions;
 
-  public readonly durationUnitsMap: DurationUnitsMap;
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public users$: Observable<User[]>;
 
@@ -73,19 +72,19 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
+  public constraintData$: Observable<ConstraintData>;
+
   constructor(
     private i18n: I18n,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private dialogService: DialogService,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
   public ngOnChanges(changes: SimpleChanges) {

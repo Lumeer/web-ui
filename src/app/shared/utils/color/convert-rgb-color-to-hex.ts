@@ -17,14 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {parseBooleanDataValue} from '../../utils/data.utils';
-
-@Pipe({
-  name: 'booleanDataValue',
-})
-export class BooleanDataValuePipe implements PipeTransform {
-  public transform(value: any): boolean {
-    return parseBooleanDataValue(value);
+export function convertRgbColorToHex(rgb: string): string {
+  if (!rgb) {
+    return '';
   }
+
+  const value =
+    '#' +
+    rgb
+      .slice(4, -1)
+      .split(',')
+      .map(val =>
+        Number(val.trim())
+          .toString(16)
+          .padStart(2, '0')
+      )
+      .join('');
+  return /^#?[0-9a-f]{6}$/.test(value) ? value : '';
 }

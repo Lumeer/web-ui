@@ -38,8 +38,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {findAttributeById} from '../../../../shared/utils/attribute.utils';
-import {Constraint} from '../../../../core/model/data/constraint';
+import {Constraint} from '../../../../core/model/constraint';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {

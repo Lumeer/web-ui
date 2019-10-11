@@ -32,7 +32,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {parseBooleanDataValue} from '../../utils/data.utils';
+import {DataValue} from '../../../core/model/data-value';
 
 @Component({
   selector: 'boolean-data-input',
@@ -48,13 +48,13 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   public readonly: boolean;
 
   @Input()
-  public value: any;
+  public value: DataValue;
 
   @Output()
-  public valueChange = new EventEmitter<boolean>();
+  public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<boolean>();
+  public save = new EventEmitter<DataValue>();
 
   @Output()
   public onFocus = new EventEmitter<any>();
@@ -92,8 +92,8 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
     if (!this.readonly) {
-      const value = parseBooleanDataValue(this.value);
-      this.save.emit(!value);
+      const dataValue = this.value.copy(!this.value.serialize());
+      this.save.emit(dataValue);
     }
   }
 

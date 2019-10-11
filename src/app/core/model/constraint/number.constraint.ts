@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {AddressesMap} from '../../../core/store/geocoding/address';
-import {AddressConstraintConfig} from '../../../core/model/data/constraint-config';
-import {formatAddressDataValue} from '../../utils/data.utils';
+import {NumberDataValue} from '../data-value/number.data-value';
+import {ConstraintType} from '../data/constraint';
+import {NumberConstraintConfig} from '../data/constraint-config';
+import {Constraint} from './index';
 
-@Pipe({
-  name: 'addressDataValue',
-})
-export class AddressDataValuePipe implements PipeTransform {
-  public transform(value: any, config?: AddressConstraintConfig, addressesMap?: AddressesMap): string {
-    return formatAddressDataValue(value, config, addressesMap);
+export class NumberConstraint implements Constraint {
+  public readonly type = ConstraintType.Number;
+
+  constructor(public readonly config: NumberConstraintConfig) {}
+
+  public createDataValue(value: any): NumberDataValue {
+    return new NumberDataValue(value, this.config);
   }
 }

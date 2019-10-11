@@ -30,19 +30,18 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import {select, Store} from '@ngrx/store';
 
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {DataCursor} from '../../../data-input/data-cursor';
-import {SelectionHelper} from '../util/selection-helper';
-import {KeyCode} from '../../../key-code';
-import {Constraint, ConstraintType, DurationUnitsMap} from '../../../../core/model/data/constraint';
-import {formatDataValue} from '../../../utils/data.utils';
+import {Constraint} from '../../../../core/model/constraint';
+import {ConstraintData, ConstraintType, DurationUnitsMap} from '../../../../core/model/data/constraint';
 import {TranslationService} from '../../../../core/service/translation.service';
-import {select, Store} from '@ngrx/store';
-import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {AppState} from '../../../../core/store/app.state';
-import {first} from 'rxjs/operators';
 import {User} from '../../../../core/store/users/user';
+import {selectAllUsers} from '../../../../core/store/users/users.state';
+import {DataCursor} from '../../../data-input/data-cursor';
+import {KeyCode} from '../../../key-code';
+import {SelectionHelper} from '../util/selection-helper';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -64,6 +63,9 @@ export class PostItDocumentCellComponent implements OnChanges, OnInit, OnDestroy
 
   @Input()
   public constraint: Constraint;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public dataCursor: DataCursor;
@@ -161,10 +163,12 @@ export class PostItDocumentCellComponent implements OnChanges, OnInit, OnDestroy
     this.id = `${this.perspectiveId}#${this.key}#${this.column}#${this.row}`;
     this.tabindex = this.index * 1000 + this.row * 2 + this.column;
     if (this.constraint) {
-      this.title = formatDataValue(this.model, this.constraint, {
-        users: this.users,
-        durationUnitsMap: this.durationUnitsMap,
-      });
+      this.title = this.constraint
+        .createDataValue(this.model, {
+          users: this.users,
+          durationUnitsMap: this.durationUnitsMap,
+        })
+        .format();
     } else {
       this.title = this.model;
     }
