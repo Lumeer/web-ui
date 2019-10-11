@@ -53,6 +53,7 @@ import {KanbanValueAttributeConfigComponent} from './config/stem/kanban-value-at
 import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-items.pipe';
 import {KanbanAggregateSelectItemsPipe} from './pipes/kanban-aggregate-select-items.pipe';
 import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
+import {KanbanCleanValueAttributePipe} from './pipes/kanban-clean-value-attribute.pipe';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
     KanbanValueTypeSelectItemsPipe,
     KanbanAggregateSelectItemsPipe,
     KanbanCleanAttributePipe,
+    KanbanCleanValueAttributePipe,
   ],
   imports: [
     SharedModule,
