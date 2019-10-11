@@ -117,7 +117,7 @@ describe('Kanban converter', () => {
         },
         {
           provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../src/i18n/messages.en.xlf`),
+          useFactory: () => require(`raw-loader!../../../../../../src/i18n/messages.en.xlf`).default,
           deps: [LOCALE_ID],
         },
         {

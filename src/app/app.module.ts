@@ -69,7 +69,7 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     },
     {
       provide: TRANSLATIONS,
-      useFactory: locale => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`), // TODO ${environment.i18nPath}
+      useFactory: locale => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`).default, // TODO ${environment.i18nPath}
       deps: [LOCALE_ID],
     },
     {

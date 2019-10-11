@@ -33,7 +33,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
       .should('have.value', 'A')
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .should('have.value', '')
@@ -80,7 +80,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="text-data-input"]')
       .eq(1)
       .should('be.empty')
-      .click();
+      .click({force: true});
     cy.get('[data-test="table-column-input"]')
       .eq(1)
       .should('not.have.class', 'selected');
@@ -127,7 +127,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"]')
       .eq(2)
       .should('have.value', 'A')
-      .click();
+      .click({force: true});
     cy.focused().trigger('keydown', {code: 'Backspace'});
     cy.focused()
       .should('have.attr', 'data-test', 'table-column-input')
@@ -171,7 +171,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(3)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
@@ -191,7 +191,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(5)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
@@ -257,7 +257,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(10)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
@@ -308,7 +308,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="text-data-input"]')
       .eq(15)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
@@ -374,7 +374,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .first()
       .should('have.value', 'Name')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
     cy.waitForModalShown();
@@ -412,7 +412,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"]')
       .eq(1)
       .should('have.value', 'Active')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
     cy.waitForModalShown();
@@ -459,7 +459,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"]')
       .eq(2)
       .should('have.value', 'First flight')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
     cy.waitForModalShown();
@@ -514,7 +514,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="datetime-data-input"]')
       .eq(2)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
@@ -536,7 +536,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="datetime-data-input"]')
       .eq(3)
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('2');
@@ -572,7 +572,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="table-column-input"]')
       .eq(3)
       .should('have.value', 'Number of flights')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-change-constraint"]').click();
 
     cy.waitForModalShown();
@@ -609,7 +609,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="number-data-input"]')
       .first()
       .should('have.value', 'four')
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('4');
@@ -630,7 +630,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="number-data-input"]')
       .eq(2)
       .should('have.value', '')
-      .click();
+      .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('1');

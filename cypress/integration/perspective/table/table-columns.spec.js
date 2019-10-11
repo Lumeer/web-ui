@@ -6,7 +6,7 @@ describe('Table perspective :: Columns', () => {
     // select first column
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .should('have.value', 'A')
-      .click();
+      .click({force: true});
 
     // rename first column
     cy.focused()
@@ -33,7 +33,7 @@ describe('Table perspective :: Columns', () => {
     // add new column left
     cy.get('[data-test="table-column-input"]')
       .first()
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click();
 
     // verify column count and names
@@ -41,7 +41,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .first()
       .should('have.value', 'B')
-      .click();
+      .click({force: true});
 
     // rename newly added column
     cy.focused().type('Z');
@@ -63,7 +63,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
       .should('have.value', 'First')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click();
 
     // verify column count and names
@@ -76,7 +76,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.value', 'A')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click();
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
 
@@ -84,7 +84,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.value', 'C')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-edit-name"]').click();
     cy.focused().trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute')
@@ -109,7 +109,7 @@ describe('Table perspective :: Columns', () => {
     // select first column
     cy.get('[data-test="table-column-input"]', {timeout: 10000})
       .should('have.value', 'A')
-      .click();
+      .click({force: true});
 
     // init first column
     cy.focused().trigger('keydown', {code: 'Enter'});
@@ -155,7 +155,7 @@ describe('Table perspective :: Columns', () => {
     // init column in the second table
     cy.get('[data-test="table-column-input"]')
       .last()
-      .click();
+      .click({force: true});
     cy.focused().trigger('keydown', {code: 'Enter'});
     cy.focused()
       .should('have.attr', 'data-test', 'table-column-input')
@@ -169,12 +169,12 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.value', 'B')
-      .click();
+      .click({force: true});
 
     // add new column left in first table
     cy.get('[data-test="table-column-input"]')
       .first()
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click();
 
     // verify column count and names
@@ -182,7 +182,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .first()
       .should('have.value', 'B')
-      .click();
+      .click({force: true});
 
     // init first column by renaming it
     cy.focused().type('0');
@@ -203,7 +203,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .last()
       .should('have.value', 'A')
-      .trigger('contextmenu');
+      .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click();
 
     // verify column count and names
@@ -211,7 +211,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]')
       .eq(2)
       .should('have.value', 'C')
-      .click();
+      .click({force: true});
 
     // init first column in the second table
     cy.focused().type('C');
