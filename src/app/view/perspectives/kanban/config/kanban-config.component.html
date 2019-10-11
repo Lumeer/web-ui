@@ -11,7 +11,7 @@
 <ng-container *ngIf="config?.stemsConfigs.length > 0 && config?.stemsConfigs[0].attribute">
   <h6 class="font-weight-bold mt-4" i18n="@@perspective.kanban.config.column.summary">Column Summary</h6>
   <kanban-value-attribute-config class="d-block"
-                                 [kanbanAttribute]="config?.aggregation"
+                                 [kanbanAttribute]="config?.aggregation | kanbanCleanValueAttribute"
                                  [availableAttributes]="config | kanbanAggregateSelectItems:collections"
                                  (attributeSelect)="onAggregateAttributeSelect($event)"
                                  (attributeChange)="onAggregateAttributeSelect($event)"

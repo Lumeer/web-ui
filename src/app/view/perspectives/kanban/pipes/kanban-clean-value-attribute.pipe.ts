@@ -18,14 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
-import {SelectDataItemModel} from '../../../../shared/select/select-data-item/select-data-item.model';
+import {KanbanAttribute, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
+import {cleanKanbanAttribute} from '../util/kanban.util';
 
 @Pipe({
-  name: 'kanbanSelectDataItems',
+  name: 'kanbanCleanValueAttribute',
 })
-export class KanbanSelectDataItemsPipe implements PipeTransform {
-  public transform(items: string[], attribute: KanbanAttribute): SelectDataItemModel[] {
-    return items.map(item => ({id: item, value: item}));
+export class KanbanCleanValueAttributePipe implements PipeTransform {
+  public transform(attribute: KanbanValueAttribute): KanbanValueAttribute {
+    return (
+      attribute && {
+        ...cleanKanbanAttribute(attribute),
+        aggregation: attribute.aggregation,
+        valueType: attribute.valueType,
+      }
+    );
   }
 }

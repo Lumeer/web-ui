@@ -23,7 +23,7 @@
                              [items]="stem | kanbanDueDateSelectItems:collections:linkTypes:config?.attribute"
                              [emptyValue]="dueDateEmptyValueString"
                              [placeholderText]="dueDateString"
-                             [selectedId]="config?.dueDate"
+                             [selectedId]="config?.dueDate | kanbanCleanAttribute"
                              [removable]="true"
                              [fitParent]="true"
                              [buttonClasses]="buttonClasses"

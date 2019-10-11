@@ -25,8 +25,8 @@ import {
   KanbanStemConfig,
 } from '../../../../core/store/kanbans/kanban';
 import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
-import {Collection} from '../../../../core/store/collections/collection';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute, findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
@@ -36,8 +36,9 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
-import {AttributesResource} from '../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {Constraint} from '../../../../core/model/constraint';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
@@ -156,7 +157,7 @@ function findKanbanAttribute(
   ) {
     const existingAttribute = findAttribute(attributeResource.attributes, attribute.attributeId);
     if (existingAttribute) {
-      return {...attribute, constraint: existingAttribute.constraint};
+      return {...attribute};
     }
   } else {
     const newAttributeResourceIndex = attributesResourcesOrder.findIndex(
@@ -168,7 +169,7 @@ function findKanbanAttribute(
         attribute.attributeId
       );
       if (existingAttribute) {
-        return {...attribute, resourceIndex: newAttributeResourceIndex, constraint: existingAttribute.constraint};
+        return {...attribute, resourceIndex: newAttributeResourceIndex};
       }
     }
   }
@@ -196,6 +197,24 @@ export function cleanKanbanAttribute(attribute: KanbanAttribute): KanbanAttribut
     attributeId: attribute.attributeId,
     resourceId: attribute.resourceId,
     resourceType: attribute.resourceType,
-    constraint: attribute.constraint,
   };
+}
+
+export function findOriginalAttributeConstraint(
+  attribute: KanbanAttribute,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): Constraint {
+  if (attribute) {
+    if (attribute.resourceType === AttributesResourceType.Collection) {
+      const collection = collections.find(c => c.id === attribute.resourceId);
+      return findAttributeConstraint((collection && collection.attributes) || [], attribute.attributeId);
+    }
+    if (attribute.resourceType === AttributesResourceType.LinkType) {
+      const linkType = linkTypes.find(l => l.id === attribute.resourceId);
+      return findAttributeConstraint((linkType && linkType.attributes) || [], attribute.attributeId);
+    }
+  }
+
+  return null;
 }

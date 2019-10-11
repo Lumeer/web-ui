@@ -91,7 +91,7 @@ describe('Chart data converter single collection', () => {
         },
         {
           provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`),
+          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`).default,
           deps: [LOCALE_ID],
         },
         {
@@ -679,7 +679,7 @@ describe('Chart data converter linked collections', () => {
         },
         {
           provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`),
+          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`).default,
           deps: [LOCALE_ID],
         },
         {

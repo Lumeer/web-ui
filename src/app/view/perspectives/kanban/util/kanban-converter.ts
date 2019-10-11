@@ -39,6 +39,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {findOriginalAttributeConstraint} from './kanban.util';
 import {generateId} from '../../../../shared/utils/resource.utils';
 
 interface KanbanColumnData {
@@ -130,7 +131,9 @@ export class KanbanConverter {
           value,
           attribute.constraint,
           constraintData,
-          stemConfig.attribute
+          stemConfig.attribute,
+          collections,
+          linkTypes
         );
         if (isNotNullOrUndefined(formattedValue) && String(formattedValue).trim() !== '') {
           const createdByAttribute = {...stemConfig.attribute};
@@ -182,9 +185,9 @@ export class KanbanConverter {
     }
 
     if (config && config.aggregation && config.aggregation.valueType === KanbanValueType.AllPercentage) {
-      this.computeRelativeValue(columnsMap, config, otherAggregator);
+      this.computeRelativeValue(columnsMap, config, otherAggregator, collections, linkTypes);
     } else {
-      this.injectSummaries(columnsMap, config, otherAggregator);
+      this.injectSummaries(columnsMap, config, otherAggregator, collections, linkTypes);
     }
 
     return {columnsMap, otherResourcesOrder, otherAggregator};
@@ -203,17 +206,24 @@ export class KanbanConverter {
   private injectSummaries(
     columnsMap: Record<string, KanbanColumnData>,
     config: KanbanConfig,
-    otherAggregator: KanbanSummary
+    otherAggregator: KanbanSummary,
+    collections: Collection[],
+    linkTypes: LinkType[]
   ) {
     if (config && config.aggregation) {
       Object.keys(columnsMap).forEach(key => {
         if (columnsMap[key].summary) {
-          columnsMap[key].summary.summary = this.formatAggregatedValue(columnsMap[key].summary, config);
+          columnsMap[key].summary.summary = this.formatAggregatedValue(
+            columnsMap[key].summary,
+            config,
+            collections,
+            linkTypes
+          );
         }
       });
 
       if (otherAggregator) {
-        otherAggregator.summary = this.formatAggregatedValue(otherAggregator, config);
+        otherAggregator.summary = this.formatAggregatedValue(otherAggregator, config, collections, linkTypes);
       }
     }
   }
@@ -221,7 +231,9 @@ export class KanbanConverter {
   private computeRelativeValue(
     columnsMap: Record<string, KanbanColumnData>,
     config: KanbanConfig,
-    otherAggregator: KanbanSummary
+    otherAggregator: KanbanSummary,
+    collections: Collection[],
+    linkTypes: LinkType[]
   ) {
     const values: Record<string, number> = {};
     let otherValue = 0;
@@ -233,7 +245,7 @@ export class KanbanConverter {
           +aggregateDataValues(
             config.aggregation.aggregation,
             columnsMap[key].summary.values,
-            config.aggregation.constraint
+            findOriginalAttributeConstraint(config.aggregation, collections, linkTypes)
           ) || 0;
 
         total += values[key];
@@ -242,8 +254,11 @@ export class KanbanConverter {
 
     if (otherAggregator) {
       otherValue =
-        +aggregateDataValues(config.aggregation.aggregation, otherAggregator.values, config.aggregation.constraint) ||
-        0;
+        +aggregateDataValues(
+          config.aggregation.aggregation,
+          otherAggregator.values,
+          findOriginalAttributeConstraint(config.aggregation, collections, linkTypes)
+        ) || 0;
 
       total += otherValue;
 
@@ -257,12 +272,17 @@ export class KanbanConverter {
     });
   }
 
-  private formatAggregatedValue(aggregator: KanbanSummary, config: KanbanConfig): any {
-    const {aggregation, constraint} = config.aggregation;
+  private formatAggregatedValue(
+    aggregator: KanbanSummary,
+    config: KanbanConfig,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): any {
+    const constraint = findOriginalAttributeConstraint(config.aggregation, collections, linkTypes);
 
-    const value = aggregateDataValues(aggregation, aggregator.values, constraint);
+    const value = aggregateDataValues(config.aggregation.aggregation, aggregator.values, constraint);
 
-    if ([DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation)) {
+    if ([DataAggregationType.Count, DataAggregationType.Unique].includes(config.aggregation.aggregation)) {
       return value;
     }
 
@@ -273,7 +293,9 @@ export class KanbanConverter {
     value: any,
     constraint: Constraint,
     constraintData: ConstraintData,
-    kanbanAttribute: KanbanAttribute
+    kanbanAttribute: KanbanAttribute,
+    collections: Collection[],
+    linkTypes: LinkType[]
   ): any {
     if (constraint) {
       if (constraint.type === ConstraintType.User) {
@@ -283,10 +305,11 @@ export class KanbanConverter {
       }
     }
 
+    const kanbanAttributeConstraint = findOriginalAttributeConstraint(kanbanAttribute, collections, linkTypes);
     const overrideConstraint =
       kanbanAttribute &&
-      kanbanAttribute.constraint &&
-      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanAttribute.constraint);
+      kanbanAttributeConstraint &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanAttributeConstraint);
 
     return (overrideConstraint || constraint || new UnknownConstraint())
       .createDataValue(value, constraintData)
