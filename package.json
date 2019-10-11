@@ -107,7 +107,7 @@
     "@types/js-base64": "^2.3.1",
     "@types/jssha": "^2.0.0",
     "@types/mapbox-gl": "^0.54.0",
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.7.12",
     "@types/plotly.js": "^1.44.9",
     "angular-http-server": "^1.9.0",
     "bundlesize": "^0.18.0",
