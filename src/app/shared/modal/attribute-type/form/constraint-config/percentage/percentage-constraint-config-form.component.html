@@ -1,0 +1,70 @@
+<div [formGroup]="form">
+  <div class="d-flex mb-3">
+    <span class="text-muted"
+          i18n="@@constraint.percentage.description">
+      Format any recognizable values as percentages.
+      There is no need to enter the percent (%) character. It is added automatically.
+    </span>
+  </div>
+
+  <div class="d-flex">
+    <div class="form-group flex-grow-1">
+      <label for="numberDecimals">
+        <span class="d-inline-block"
+              i18n="@@constraint.percentage.decimals.label">
+          Round to no. of decimal digits:
+        </span>
+      </label>
+      <input class="form-control"
+             formControlName="decimals"
+             id="numberDecimals"
+             type="number">
+      <span class="d-inline-block text-muted small"
+            i18n="@@constraint.percentage.decimals.description">
+          Leave empty for no rounding.
+        </span>
+      <div *ngIf="decimalsControl.errors?.min"
+           class="text-danger"
+           i18n="@@constraint.percentage.decimals.error">
+        The value must be greater than or equal to zero.
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex">
+    <div class="form-group flex-grow-1">
+      <label for="numberMinValue"
+             i18n="@@constraint.number.minValue.label">
+        Minimum value
+      </label>
+      <div class="d-flex">
+        <input class="form-control"
+               formControlName="minValue"
+               id="numberMinValue"
+               type="number">
+        <span class="ml-2 percent-mark">%</span>
+      </div>
+    </div>
+
+    <div class="form-group ml-3 flex-grow-1">
+      <label for="numberMaxValue"
+             i18n="@@constraint.number.maxValue.label">
+        Maximum value
+      </label>
+      <div class="d-flex">
+        <input class="form-control"
+               formControlName="maxValue"
+               id="numberMaxValue"
+               type="number">
+        <span class="ml-2 percent-mark">%</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="form.errors && form.errors['minMaxInvalid'] && form.controls['maxValue'].touched && form.controls['minValue'].touched"
+       class="text-danger"
+       i18n="@@form.errors.minMaxInvalid">
+    Minimum must be less or equal than maximum.
+  </div>
+
+</div>

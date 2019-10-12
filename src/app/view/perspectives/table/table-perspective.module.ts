@@ -27,6 +27,7 @@ import {TableHeaderModule} from './header/table-header.module';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TableSharedModule} from './shared/table-shared.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
+import {ModalModule} from '../../../shared/modal/modal.module';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     PipesModule,
     TablePipesModule,
     ScrollingModule,
+    ModalModule,
   ],
   declarations: [TablePerspectiveComponent],
   entryComponents: [TablePerspectiveComponent],

@@ -32,7 +32,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataRow, DataRowService} from '../../../data/data-row.service';
-import {getSaveValue} from '../../../utils/data.utils';
+import {Query} from '../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'document-data',
@@ -57,8 +57,14 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Input()
+  public query: Query;
+
   @Output()
-  public patchData = new EventEmitter<Document>();
+  public attributeTypeClick = new EventEmitter<Attribute>();
+
+  @Output()
+  public attributeFunctionCLick = new EventEmitter<Attribute>();
 
   constructor(public dataRowService: DataRowService) {
   }
@@ -80,11 +86,30 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
   }
 
   public onNewValue(value: any, row: DataRow, index: number) {
-    const saveValue = getSaveValue(value, row.attribute && row.attribute.constraint, this.constraintData);
-    this.dataRowService.updateRow(index, null, saveValue);
+    this.dataRowService.updateRow(index, null, value);
   }
 
   public ngOnDestroy() {
     this.dataRowService.destroy();
+  }
+
+  public onRemoveRow(index: number) {
+    this.dataRowService.deleteRow(index);
+  }
+
+  public onCreateRow() {
+    this.dataRowService.addRow();
+  }
+
+  public onAttributeFunction(row: DataRow) {
+    if (row.attribute) {
+      this.attributeFunctionCLick.emit(row.attribute);
+    }
+  }
+
+  public onAttributeType(row: DataRow) {
+    if (row.attribute) {
+      this.attributeTypeClick.emit(row.attribute);
+    }
   }
 }

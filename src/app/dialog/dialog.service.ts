@@ -75,22 +75,6 @@ export class DialogService {
     this.closeFullscreenDialog();
   }
 
-  public openCollectionAttributeFunction(collectionId: string, attributeId: string) {
-    this.navigateToFullscreenDialog([DialogPath.COLLECTION_ATTRIBUTE_FUNCTION, collectionId, attributeId]);
-  }
-
-  public openLinkTypeAttributeFunction(linkTypeId: string, attributeId: string) {
-    this.navigateToFullscreenDialog([DialogPath.LINK_ATTRIBUTE_FUNCTION, linkTypeId, attributeId]);
-  }
-
-  public openCollectionAttributeConfigDialog(collectionId: string, attributeId: string) {
-    this.navigateToDialog([DialogPath.COLLECTION_ATTRIBUTE_TYPE, collectionId, attributeId]);
-  }
-
-  public openLinkTypeAttributeConfigDialog(linkTypeId: string, attributeId: string) {
-    this.navigateToDialog([DialogPath.LINK_ATTRIBUTE_TYPE, linkTypeId, attributeId]);
-  }
-
   public openCreateLinkDialog(linkCollectionIds: string, callback?: (linkType: LinkType) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_LINK, linkCollectionIds]);

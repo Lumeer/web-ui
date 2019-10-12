@@ -49,7 +49,7 @@ import {TranslationService} from '../../../core/service/translation.service';
 import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
 import {BsModalService} from 'ngx-bootstrap';
 import {ChooseLinkDocumentModalComponent} from '../kanban/modal/choose-link-document/choose-link-document-modal.component';
-import {DetailDialogComponent} from '../../../shared/detail-dialog/detail-dialog.component';
+import {DocumentDetailModalComponent} from '../../../shared/modal/document-detail/document-detail-modal.component';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 
@@ -181,7 +181,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(([document, collection]) => {
         const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
-        this.modalService.show(DetailDialogComponent, config);
+        this.modalService.show(DocumentDetailModalComponent, config);
       });
   }
 

@@ -74,21 +74,24 @@ export class ModalWrapperComponent implements AfterViewInit {
   @Input()
   public fitToScreen: boolean;
 
-  @Output()
-  public close = new EventEmitter();
+  @Input()
+  public customHeader: boolean;
 
   @Output()
-  public submit = new EventEmitter();
+  public onClose = new EventEmitter();
+
+  @Output()
+  public onSubmit = new EventEmitter();
 
   constructor(private renderer: Renderer2) {}
 
   public onCloseClick() {
-    this.close.next();
+    this.onClose.next();
   }
 
   public onSubmitClick() {
     if (!this.submitDisabled) {
-      this.submit.emit();
+      this.onSubmit.emit();
     }
   }
 

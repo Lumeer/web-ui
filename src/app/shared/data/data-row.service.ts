@@ -27,11 +27,14 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {debounce, debounceTime, skip} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/operators';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
 import {isNotNullOrUndefined} from '../utils/common.utils';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {deepArrayEquals} from '../utils/array.utils';
+import {findAttributeByName} from '../utils/attribute.utils';
 
 export interface DataRow {
   id: string;
@@ -118,7 +121,9 @@ export class DataRowService {
       }
     }
 
-    this.rows$.next(rows);
+    if (!deepArrayEquals(rows, this.rows$.getValue())) {
+      this.rows$.next(rows);
+    }
   }
 
   public addRow() {
@@ -128,26 +133,38 @@ export class DataRowService {
 
   public deleteRow(index: number) {
     const row = this.rows$.getValue()[index];
-    if (row && row.attribute) {
-      const data = {...this.document.data};
-      delete data[row.attribute.id];
-      const action = new DocumentsAction.UpdateData({document: {...this.document, data}});
-
-      const message = this.i18n({
-        id: 'document.detail.attribute.remove.confirm',
-        value: 'Are you sure you want to delete this row?',
-      });
-      const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
-      const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-      const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-      this.notificationService.confirm(message, title, [
-        {text: noButtonText},
-        {text: yesButtonText, action: () => this.store$.dispatch(action), bold: false},
-      ]);
-
-
+    if (row) {
+      if (row.attribute) {
+        this.deleteExistingRow(row);
+      } else {
+        this.deleteNewRow(index);
+      }
     }
+  }
+
+  private deleteExistingRow(row: DataRow) {
+    const data = {...this.document.data};
+    delete data[row.attribute.id];
+    const action = new DocumentsAction.UpdateData({document: {...this.document, data}});
+
+    const message = this.i18n({
+      id: 'document.detail.attribute.remove.confirm',
+      value: 'Are you sure you want to delete this row?',
+    });
+    const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+    this.notificationService.confirm(message, title, [
+      {text: noButtonText},
+      {text: yesButtonText, action: () => this.store$.dispatch(action), bold: false},
+    ]);
+  }
+
+  private deleteNewRow(index: number) {
+    const rows = [...this.rows$.getValue()];
+    rows.splice(index, 1);
+    this.rows$.next(rows);
   }
 
   public updateRow(index: number, key?: string, value?: any) {
@@ -156,17 +173,68 @@ export class DataRowService {
       if ((key || '').trim().length > 0) {
         this.updateAttribute(row, key.trim());
       } else if (isNotNullOrUndefined(value)) {
-        this.updateValue(row, value);
+        this.updateValue(row, index, value);
       }
     }
   }
 
   private updateAttribute(row: DataRow, name: string) {
-
+    const existingAttribute = findAttributeByName(this.collection && this.collection.attributes, name);
+    if (existingAttribute) {
+      this.updateExistingAttribute(row, existingAttribute);
+    } else {
+      this.updateNewAttribute(row, name);
+    }
   }
 
-  private updateValue(row: DataRow, value: any) {
+  private updateExistingAttribute(row: DataRow, attribute: Attribute) {
+    const usedKeys = Object.keys(this.document && this.document.data || {});
+    if (!this.document || usedKeys.includes(attribute.id)) {
+      return; // attribute is already used in document
+    }
 
+    const patchData = {[attribute.id]: row.value || ''};
+    const document = {...this.document, data: patchData};
+    this.store$.dispatch(new DocumentsAction.PatchData({document}))
+  }
+
+  private updateNewAttribute(row: DataRow, name: string) {
+    const newData = {[name]: {value: row.value}};
+    let documentAction = null;
+    if (row.attribute) {
+      const data = {...this.document.data};
+      delete data[row.attribute.id];
+      const newDocument = {...this.document, newData, data};
+      documentAction = new DocumentsAction.UpdateData({document: newDocument})
+    }
+    this.store$.dispatch(
+      new CollectionsAction.CreateAttributes({
+        collectionId: this.document.collectionId,
+        attributes: [{name}],
+        nextAction: documentAction,
+      })
+    );
+  }
+
+  private updateValue(row: DataRow, index: number, value: any) {
+    if (row.attribute) {
+      this.updateExistingValue(row, value);
+    } else {
+      this.updateNewValue(row, index, value);
+    }
+  }
+
+  private updateExistingValue(row: DataRow, value: any) {
+    const patchData = {[row.attribute.id]: value};
+    const document = {...this.document, data: patchData};
+    this.store$.dispatch(new DocumentsAction.PatchData({document}))
+  }
+
+  private updateNewValue(row: DataRow, index: number, value: any) {
+    const newRow = {...row, value};
+    const rows = [...this.rows$.getValue()];
+    rows[index] = newRow;
+    this.rows$.next(rows);
   }
 
   public destroy() {

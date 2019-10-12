@@ -1,4 +1,4 @@
-<div class="d-flex flex-nowrap flex-row border-top" *ngIf="{readonly: !permissions?.writeWithView} as data">
+<div class="d-flex flex-nowrap flex-row border-top wrapper" *ngIf="{readonly: !permissions?.writeWithView} as data">
 
   <div class="flex-grow-1 row m-0">
 
@@ -26,7 +26,7 @@
                   [value]="row.value"
                   [constraintData]="constraintData"
                   [focus]="true"
-                  [readonly]="!((editing$ | async) || row.attribute?.constraint?.type === constraintType.Boolean)"
+                  [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === constraintType.Boolean)"
                   (save)="onNewValue($event)"
                   (keydown)="onDataInputKeyDown($event)"
                   (dblclick)="onDataInputDblClick($event)"
@@ -41,32 +41,12 @@
 
   </div>
 
-  <div class="d-flex flex-row flex-nowrap align-items-center justify-content-center">
-    <i *ngIf="(row.attribute?.constraint | constraintTypeIcon) as iconName"
-       [ngClass]="iconName"
-       [title]="row.attribute?.constraint | constraintTypeIconTitle"
-       class="text-muted small"></i>
-    <i class="fas fa-fw fa-trash text-danger mx-2 clickable text-danger button-remove"
-       aria-hidden="true"
-       *ngIf="!data.readonly"
-       title="Remove Row"
-       i18n-title="@@remove.row"
-       (click)="onRemove()">
-    </i>
-    <i class="fa fa-fw fa-shapes mr-2 clickable text-success button-config"
-       aria-hidden="true"
-       *ngIf="permissions?.manageWithView"
-       i18n-title="@@keyValue.configure.constraint"
-       title="Set Attribute Type"
-       (click)="onAttributeType()">
-    </i>&nbsp;
-    <i class="fa fa-fw fa-function mr-2 clickable text-success button-function"
-       aria-hidden="true"
-       *ngIf="permissions?.manageWithView"
-       i18n-title="@@keyValue.configure.function"
-       title="Set Attribute Function"
-       (click)="onAttributeFunction()">
-    </i>&nbsp;
-  </div>
+  <document-data-row-icons class="d-flex flex-row flex-nowrap align-items-center justify-content-center"
+                           [row]="row"
+                           [permissions]="permissions"
+                           (delete)="deleteRow.emit()"
+                           (attributeFunctionClick)="attributeFunctionClick.emit()"
+                           (attributeTypeClick)="attributeTypeClick.emit()">
+  </document-data-row-icons>
 
 </div>

@@ -52,12 +52,13 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public collectionPermission$: Observable<AllowedPermissions>;
   public workspace$: Observable<Workspace>;
 
-  public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
+  public selected$ = new BehaviorSubject<{ collection?: Collection; document?: DocumentModel }>({});
 
   private collectionSubscription = new Subscription();
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {
+  }
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
@@ -98,6 +99,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    console.log('destroyyy');
     this.collectionSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
   }
@@ -135,7 +137,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     this.loadLinkInstances(document);
   }
 
-  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
+  public selectCollectionAndDocument(data: { collection: Collection; document: DocumentModel }) {
     this.setQueryWithCollection(data.collection);
     this.select(data.collection, data.document);
   }
@@ -146,29 +148,32 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
 
     this.collectionSubscription.unsubscribe();
-    this.collectionSubscription = this.store$
-      .pipe(
-        select(selectCollectionById(collection.id)),
-        mergeMap(coll => {
-          if (document) {
-            return this.store$.pipe(
-              select(selectDocumentById(document.id)),
-              startWith(null),
-              pairwise(),
-              map(doc => ({collection: coll, document: doc[1], previousDocument: doc[0]}))
-            );
-          }
-          return of({collection: coll, document, previousDocument: null});
-        })
-      )
-      .subscribe(({collection, document, previousDocument}) => {
-        if (!document && previousDocument) {
-          this.collectionSubscription.unsubscribe();
-          this.selectCollection(collection);
-        } else {
-          this.selected$.next({collection, document});
-        }
-      });
+
+    let documentObservable: Observable<{ document: DocumentModel, previousDocument: DocumentModel }>;
+    if (document) {
+      documentObservable = this.store$.pipe(
+        select(selectDocumentById(document.id)),
+        startWith(null),
+        pairwise(),
+        map(doc => ({document: doc[1], previousDocument: doc[0]}))
+      );
+    } else {
+      documentObservable = of({document, previousDocument: null});
+    }
+
+    this.collectionSubscription = combineLatest([
+      this.store$.pipe(select(selectCollectionById(collection.id))),
+      documentObservable,
+    ]).subscribe(([collection, {document, previousDocument}]) => {
+      if (!document && previousDocument) {
+        this.collectionSubscription.unsubscribe();
+        collection && this.selectCollection(collection);
+      } else {
+        this.selected$.next({collection, document});
+      }
+    });
+
+    console.log('select collection', collection, document);
 
     this.store$.dispatch(
       new NavigationAction.SetViewCursor({

@@ -1,0 +1,62 @@
+<modal-wrapper
+  *ngIf="{collection: collection$ | async, linkType: linkType$ | async, linkCollections: linkTypeCollections$ | async, attribute: attribute$ | async} as data"
+  [type]="'primary'"
+  [performingAction]="performingAction$ | async"
+  [customHeader]="true"
+  (onSubmit)="onSubmit(data.attribute)"
+  (onClose)="hideDialog()">
+
+  <div class="custom-header p-3 bg-success text-white w-100 rounded-top">
+    <h5 class="modal-title break-all">
+      <span i18n="@@dialog.attribute.function.title">Configure function of</span>
+      <icons-presenter
+        class="ml-2"
+        [colors]="data.collection ? [data.collection.color] : [data.linkCollections[0]?.color, data.linkCollections[1]?.color]"
+        [icons]="data.collection ? [data.collection.icon] : [data.linkCollections[0]?.icon, data.linkCollections[1]?.icon]">
+      </icons-presenter>
+      <span class="ml-1">{{data.attribute.name}}</span>
+    </h5>
+  </div>
+
+  <div class="body p-4">
+    <div class="d-flex pb-1">
+      <div class="flex-grow-1 text-right">
+        <div class="form-check mr-3 d-inline-block" (click)="switchEditable()">
+          <input class="form-check-input" type="checkbox" [checked]="editable$ | async" id="editable">
+          <label class="form-check-label" for="editable" i18n="@@dialog.attrtibute.function.editable">
+            Allow manual value overwrite
+          </label>
+        </div>
+        <blockly-debugger-remote
+          (displayEvent)="display($event)"
+          [displayButtons]="debugButtons">
+        </blockly-debugger-remote>
+      </div>
+    </div>
+    <blockly-debugger
+      (displayEvent)="display($event)"
+      [blocklyJs]="js"
+      [blocklyResultTimestamp]="data.attribute.function?.timestamp"
+      [blocklyError]="data.attribute.function?.errorReport"
+      [displayDebug]="displayDebug">
+    </blockly-debugger>
+
+    <blockly-editor
+      (onJsUpdate)="onJsUpdate($event)"
+      (onXmlUpdate)="onXmlUpdate($event)"
+      [toolbox]="valueToolbox"
+      [masterType]="data.collection ? masterValueType : masterLinkType"
+      [collections]="collections$ | async"
+      [linkTypes]="linkTypes$ | async"
+      [variables]="variables"
+      [attribute]="data.attribute"
+      [thisCollectionId]="data.collection?.id"
+      [thisLinkTypeId]="data.linkType?.id"
+      [xml]="data.attribute.function?.xml">
+    </blockly-editor>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.save">Save</span>
+
+</modal-wrapper>

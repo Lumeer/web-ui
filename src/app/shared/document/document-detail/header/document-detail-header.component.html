@@ -2,7 +2,7 @@
   <div class="flex-grow-1 pr-lg-2">
     <div [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</div>
     <h3>
-      <data-input class="flex-fill"
+      <data-input class="flex-fill d-block ml-n1"
                   [readonly]="true"
                   [value]="document?.data && defaultAttribute && document.data[defaultAttribute.id]"
                   [constraint]="defaultAttribute?.constraint"

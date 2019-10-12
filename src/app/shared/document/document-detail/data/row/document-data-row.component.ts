@@ -45,11 +45,23 @@ export class DocumentDataRowComponent {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public readonly: boolean;
+
   @Output()
   public newValue = new EventEmitter<any>();
 
   @Output()
   public newKey = new EventEmitter<string>();
+
+  @Output()
+  public deleteRow = new EventEmitter();
+
+  @Output()
+  public attributeTypeClick = new EventEmitter();
+
+  @Output()
+  public attributeFunctionClick = new EventEmitter();
 
   @ViewChild('keyInput', {static: false})
   public keyInput: ElementRef<HTMLInputElement>;
@@ -64,15 +76,6 @@ export class DocumentDataRowComponent {
 
   constructor(private i18n: I18n) {
     this.placeholder = i18n({id: 'document.key-value.attribute.placeholder', value: 'Enter attribute name'});
-  }
-
-  public onRemove() {
-  }
-
-  public onAttributeType() {
-  }
-
-  public onAttributeFunction() {
   }
 
   public onNewKey(value: string) {

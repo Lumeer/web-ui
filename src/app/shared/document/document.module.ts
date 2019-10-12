@@ -27,15 +27,20 @@ import {PostItDocumentModule} from './post-it/post-it-document.module';
 import {DocumentDetailHeaderComponent} from './document-detail/header/document-detail-header.component';
 import {DocumentDataComponent} from './document-detail/data/document-data.component';
 import {DocumentDataRowComponent} from './document-detail/data/row/document-data-row.component';
+import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/document-data-row-icons.component';
+import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
+import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
+  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule, AttributeTypeModalModule, AttributeFunctionModalModule,],
   declarations: [
     DocumentDetailComponent,
     DocumentDetailHeaderComponent,
     DocumentDataComponent,
     DocumentDataRowComponent,
+    DocumentDataRowIconsComponent,
   ],
   exports: [DocumentDetailComponent, PostItDocumentModule],
 })
-export class DocumentModule {}
+export class DocumentModule {
+}

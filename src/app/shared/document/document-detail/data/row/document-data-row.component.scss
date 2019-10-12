@@ -1,6 +1,6 @@
 @import '../../../../../../styles/variables';
 
-:host {
+:host::ng-deep {
   .button-remove,
   .button-config,
   .button-function {
@@ -19,7 +19,7 @@
   }
 }
 
-.border-top {
+.wrapper {
   min-height: 40px;
 }
 

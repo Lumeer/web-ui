@@ -3,6 +3,17 @@
                    [permissions]="permissions"
                    [cursor]="document | dataCursor : row.attribute?.id"
                    [constraintData]="constraintData"
+                   [readonly]="!(collection | collectionAttributeEditable : row.id: permissions: query)"
                    (newValue)="onNewValue($event, row, index)"
-                   (newKey)="onNewKey($event, index)">
+                   (newKey)="onNewKey($event, index)"
+                   (deleteRow)="onRemoveRow(index)"
+                   (attributeFunctionClick)="onAttributeFunction(row)"
+                   (attributeTypeClick)="onAttributeType(row)">
 </document-data-row>
+
+<div *ngIf="permissions?.writeWithView" class="pt-2 border-top">
+  <button class="btn btn-sm btn-light btn-block" (click)="onCreateRow()">
+    <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
+    <span i18n="@@document.detail.attribute.add">Add Row</span>
+  </button>
+</div>

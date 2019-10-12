@@ -30,7 +30,6 @@ import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DocumentModule} from './document/document.module';
-import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
@@ -54,7 +53,6 @@ import {ModalModule} from './modal/modal.module';
 import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
 import {SequencesModule} from './sequences/sequences.module';
-import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
 import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 
 @NgModule({
@@ -64,7 +62,6 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     ReactiveFormsModule,
     RouterModule,
     PickerModule,
-    DragAndDropModule,
     UsersModule,
     TagModule,
     InputModule,
@@ -97,11 +94,9 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
     TourComponent,
-    DetailDialogComponent,
   ],
   exports: [
     CommonModule,
-    DragAndDropModule,
     FormsModule,
     ReactiveFormsModule,
     PostItCollectionsModule,
@@ -136,9 +131,7 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     DropdownModule,
     PickerModule,
     SequencesModule,
-    DetailDialogComponent,
     DataDropdownModule,
-  ],
-  entryComponents: [DetailDialogComponent],
+  ]
 })
 export class SharedModule {}

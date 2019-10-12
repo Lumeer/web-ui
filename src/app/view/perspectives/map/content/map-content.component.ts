@@ -44,7 +44,6 @@ import {
 } from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
-import {ADDRESS_DEFAULT_FIELDS} from '../../../../dialog/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {
   areMapMarkerListsEqual,
@@ -55,6 +54,7 @@ import {
 } from './map-content.utils';
 import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
+import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 
 @Component({
   selector: 'map-content',

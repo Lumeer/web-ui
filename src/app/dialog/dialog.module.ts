@@ -30,10 +30,7 @@ import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 import {PlayVideoComponent} from './play-video/play-video.component';
-import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
-import {AttributeTypeFormModule} from './attribute-type/form/attribute-type-form.module';
 import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.module';
-import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PresenterModule} from '../shared/presenter/presenter.module';
@@ -48,7 +45,6 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
     DialogRoutingModule,
     DialogWrapperModule,
     ShareViewDialogModule,
-    AttributeTypeFormModule,
     CalendarEventDialogModule,
     ClickOutsideModule,
   ],
@@ -59,8 +55,6 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
     DialogBaseComponent,
     FeedbackDialogComponent,
     PlayVideoComponent,
-    AttributeTypeDialogComponent,
-    AttributeFunctionDialogComponent,
     FullscreenDialogComponent,
   ],
   entryComponents: [CreateLinkDialogComponent],

@@ -14,7 +14,10 @@
                  [collection]="collection"
                  [document]="document"
                  [permissions]="permissions"
-                 [constraintData]="constraintData">
+                 [constraintData]="constraintData"
+                 [query]="query"
+                 (attributeTypeClick)="onAttributeTypeClick($event)"
+                 (attributeFunctionCLick)="onAttributeFunctionClick($event)">
   </document-data>
 
 </ng-container>

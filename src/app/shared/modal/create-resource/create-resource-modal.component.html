@@ -3,15 +3,15 @@
                [submitDisabled]="formInvalid$ | async"
                [showClose]="!(preventClose$ | async)"
                [fitToScreen]="true"
-               (submit)="onSubmit()"
-               (close)="onClose()">
+               (onSubmit)="onSubmit()"
+               (onClose)="onClose()">
   <span class="title" i18n="@@resource.new.dialog.title">
   Create new {resourceType, select, organization {Organization} project {Project}}
   </span>
 
   <div class="body h-100">
     <create-resource-dialog-form
-      class="d-block h-100 p-4"
+      class="d-block h-100 p-3"
       *ngIf="contentValid$ | async; else contentInvalid"
       [parentId]="parentId"
       [resourceType]="resourceType"

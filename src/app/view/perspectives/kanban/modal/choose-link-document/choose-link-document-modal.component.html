@@ -1,7 +1,7 @@
 <modal-wrapper
   [type]="dialogType.Primary"
-  (close)="hideDialog()"
-  (submit)="onSubmit()"
+  (onClose)="hideDialog()"
+  (onSubmit)="onSubmit()"
   [submitDisabled]="!(selectedDocumentId$ | async)">
 
   <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>

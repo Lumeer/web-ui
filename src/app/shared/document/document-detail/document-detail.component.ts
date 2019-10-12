@@ -20,8 +20,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs';
-import {first, map} from 'rxjs/operators';
+import {combineLatest, Observable} from 'rxjs';
+import {first, map, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData, DurationUnitsMap} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -41,10 +41,14 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {User} from '../../../core/store/users/user';
 import {AppState} from '../../../core/store/app.state';
-import {DialogService} from '../../../dialog/dialog.service';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {RouterAction} from '../../../core/store/router/router.action';
+import {BsModalService} from 'ngx-bootstrap';
+import {AttributeTypeModalComponent} from '../../modal/attribute-type/attribute-type-modal.component';
+import {userHasManageRoleInResource} from '../../utils/resource.utils';
+import {Organization} from '../../../core/store/organizations/organization';
+import {AttributeFunctionModalComponent} from '../../modal/attribute-function/attribute-function-modal.component';
 
 @Component({
   selector: 'document-detail',
@@ -78,7 +82,7 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
-    private dialogService: DialogService,
+    private modalService: BsModalService,
     private constraintDataService: ConstraintDataService
   ) {
   }
@@ -119,11 +123,14 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public fireConstraintConfig(id: string) {
-    this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
+  public onAttributeTypeClick(attribute: Attribute) {
+    const initialState = {attributeId: attribute.id, collectionId: this.collection.id};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeTypeModalComponent, config);
   }
 
-  public fireFunctionConfig(id: string, event: MouseEvent) {
+  public onAttributeFunctionClick(attribute: Attribute) {
     this.store$
       .pipe(
         select(selectServiceLimitsByWorkspace),
@@ -132,43 +139,67 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe(functionsCountLimit => {
         const functions = this.collection.attributes.filter(
-          attribute => attribute.id !== id && !!attribute.function && !!attribute.function.js
+          attr => attr.id !== attribute.id && !!attr.function && !!attr.function.js
         ).length;
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
-          // the original event closes the dialog immediately when not stopped
-          event.stopPropagation();
-          this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
+          this.showAttributeFunctionDialog(attribute);
         }
       });
   }
 
-  private notifyFunctionsLimit() {
-    this.store$
-      .pipe(
-        select(selectOrganizationByWorkspace),
-        map(organization => organization.code),
-        first()
-      )
-      .subscribe(code => {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-        const message = this.i18n({
-          id: 'function.create.serviceLimits',
-          value:
-            'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
-        });
-        this.store$.dispatch(
-          new NotificationsAction.Confirm({
-            title,
-            message,
-            action: new RouterAction.Go({
-              path: ['/organization', code, 'detail'],
-              extras: {fragment: 'orderService'},
-            }),
-            yesFirst: false,
-          })
-        );
-      });
+  private showAttributeFunctionDialog(attribute: Attribute) {
+    const initialState = {attributeId: attribute.id, collectionId: this.collection.id};
+    const config = {initialState, keyboard: false, class: 'modal-xxl'};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeFunctionModalComponent, config);
   }
+
+  private notifyFunctionsLimit() {
+    combineLatest([
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectOrganizationByWorkspace))
+    ]).pipe(
+      take(1)
+    ).subscribe(([curentUser, organization]) => {
+      if (userHasManageRoleInResource(curentUser, organization)) {
+        this.notifyFunctionsLimitWithRedirect(organization);
+      } else {
+        this.notifyFunctionsLimitWithoutRights();
+      }
+
+    });
+  }
+
+  private notifyFunctionsLimitWithRedirect(organization: Organization) {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits',
+      value:
+        'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
+    });
+    this.store$.dispatch(
+      new NotificationsAction.Confirm({
+        title,
+        message,
+        action: new RouterAction.Go({
+          path: ['/organization', organization.code, 'detail'],
+          extras: {fragment: 'orderService'},
+        }),
+        yesFirst: false,
+      })
+    );
+  }
+
+  private notifyFunctionsLimitWithoutRights() {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits.noRights',
+      value:
+        'You can have only a single function per table/link type in the Free Plan.',
+    });
+    this.store$.dispatch(new NotificationsAction.Info({title, message}));
+  }
+
 }
