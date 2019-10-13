@@ -20,12 +20,15 @@
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
 import {AttributesResourceType} from '../../model/resource';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
   if (!config) {
     return config;
   }
-  switch (config.version) {
+
+  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  switch (version) {
     case KanbanConfigVersion.V1:
       return convertKanbanConfigDtoToModelV1(config);
     default:
