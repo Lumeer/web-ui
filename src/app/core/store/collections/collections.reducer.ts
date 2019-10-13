@@ -74,7 +74,7 @@ function addCollections(state: CollectionsState, collections: Collection[]): Col
     return !oldCollection || isCollectionNewer(collection, oldCollection);
   });
 
-  return collectionsAdapter.addMany(filteredCollections, newState);
+  return collectionsAdapter.upsertMany(filteredCollections, newState);
 }
 
 function addOrUpdateCollection(state: CollectionsState, collection: Collection): CollectionsState {

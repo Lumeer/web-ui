@@ -109,7 +109,7 @@ export class CoordinatesDataInputComponent {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.coordinatesInput.nativeElement.value = this.value.format();
+        this.coordinatesInput && (this.coordinatesInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }

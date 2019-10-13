@@ -8,11 +8,16 @@
                   [constraintData]="constraintData"
                   [focus]="true"
                   [readonly]="!(keyEditing$ | async)"
+                  [placeholder]="placeholder"
                   (save)="onNewKey($event)"
                   (dblclick)="onKeyInputDblClick($event)"
+                  (keydown)="onInputKeyDown($event)"
                   (cancel)="onKeyInputCancel()"
                   (dataBlur)="onKeyInputBlur()"
-                  class="h-100 w-100 p-1 data-input"
+                  (onFocus)="onKeyFocus()"
+                  (clickOutside)="onKeyInputCancel()"
+                  [class.editing]="keyEditing$ | async"
+                  class="h-100 w-100 p-1 data-input key"
                   [class.cursor-pointer]="!data.readonly"
                   [class.read-only]="data.readonly">
       </data-input>
@@ -26,13 +31,16 @@
                   [value]="row.value"
                   [constraintData]="constraintData"
                   [focus]="true"
-                  [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === constraintType.Boolean)"
+                  [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
                   (save)="onNewValue($event)"
-                  (keydown)="onDataInputKeyDown($event)"
+                  (keydown)="onInputKeyDown($event)"
                   (dblclick)="onDataInputDblClick($event)"
                   (cancel)="onDataInputCancel()"
                   (dataBlur)="onDataInputBlur()"
-                  class="h-100 w-100 p-1 data-input"
+                  (onFocus)="onValueFocus()"
+                  (clickOutside)="onDataInputCancel()"
+                  [class.editing]="editing$ | async"
+                  class="h-100 w-100 p-1 data-input value"
                   [class.cursor-pointer]="!data.readonly"
                   [class.read-only]="data.readonly">
       </data-input>
@@ -41,7 +49,7 @@
 
   </div>
 
-  <document-data-row-icons class="d-flex flex-row flex-nowrap align-items-center justify-content-center"
+  <document-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
                            [row]="row"
                            [permissions]="permissions"
                            (delete)="deleteRow.emit()"

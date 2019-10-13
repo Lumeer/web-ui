@@ -54,6 +54,9 @@ export class TextDataInputComponent implements OnChanges {
   @Input()
   public value: TextDataValue | UnknownDataValue;
 
+  @Input()
+  public placeholder: string;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 
@@ -120,7 +123,7 @@ export class TextDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.textInput.nativeElement.value = this.value.format();
+        this.textInput && (this.textInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }

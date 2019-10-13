@@ -47,7 +47,7 @@ export function documentsReducer(
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.DUPLICATE_SUCCESS:
-      return documentsAdapter.addMany(action.payload.documents, state);
+      return documentsAdapter.upsertMany(action.payload.documents, state);
     case DocumentsActionType.ADD_FAVORITE_SUCCESS:
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
     case DocumentsActionType.REMOVE_FAVORITE_SUCCESS:
@@ -124,7 +124,7 @@ function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess)
     return !oldDocument || isDocumentNewer(document, oldDocument);
   });
 
-  return documentsAdapter.addMany(filteredDocuments, queriesState);
+  return documentsAdapter.upsertMany(filteredDocuments, queriesState);
 }
 
 function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): DocumentsState {

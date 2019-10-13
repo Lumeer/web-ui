@@ -1,4 +1,4 @@
-<document-data-row *ngFor="let row of (dataRowService.rows$ | async); let index = index"
+<document-data-row *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index"
                    [row]="row"
                    [permissions]="permissions"
                    [cursor]="document | dataCursor : row.attribute?.id"
@@ -8,7 +8,10 @@
                    (newKey)="onNewKey($event, index)"
                    (deleteRow)="onRemoveRow(index)"
                    (attributeFunctionClick)="onAttributeFunction(row)"
-                   (attributeTypeClick)="onAttributeType(row)">
+                   (attributeTypeClick)="onAttributeType(row)"
+                   (inputKeyDown)="onInputKeyDown($event)"
+                   (onFocus)="onFocus(index, $event)"
+                   (resetFocus)="resetFocus()">
 </document-data-row>
 
 <div *ngIf="permissions?.writeWithView" class="pt-2 border-top">

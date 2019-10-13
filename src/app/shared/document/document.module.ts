@@ -30,9 +30,19 @@ import {DocumentDataRowComponent} from './document-detail/data/row/document-data
 import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/document-data-row-icons.component';
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule, AttributeTypeModalModule, AttributeFunctionModalModule,],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    InputModule,
+    PipesModule,
+    PostItDocumentModule,
+    ClickOutsideModule,
+    AttributeTypeModalModule,
+    AttributeFunctionModalModule,
+  ],
   declarations: [
     DocumentDetailComponent,
     DocumentDetailHeaderComponent,

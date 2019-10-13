@@ -55,7 +55,7 @@ function addOrganizations(state: OrganizationsState, organizations: Organization
     return !oldOrganization || isOrganizationNewer(organization, oldOrganization);
   });
 
-  return organizationsAdapter.addMany(filteredOrganizations, newState);
+  return organizationsAdapter.upsertMany(filteredOrganizations, newState);
 }
 
 function addOrUpdateOrganization(state: OrganizationsState, organization: Organization): OrganizationsState {

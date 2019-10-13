@@ -17,13 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, EventEmitter, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
-import {KeyCode} from '../../../../key-code';
 import {DataRow} from '../../../../data/data-row.service';
 
 @Component({
@@ -63,16 +71,34 @@ export class DocumentDataRowComponent {
   @Output()
   public attributeFunctionClick = new EventEmitter();
 
+  @Output()
+  public inputKeyDown = new EventEmitter<KeyboardEvent>();
+
+  @Output()
+  public onFocus = new EventEmitter<number>();
+
+  @Output()
+  public resetFocus = new EventEmitter();
+
   @ViewChild('keyInput', {static: false})
   public keyInput: ElementRef<HTMLInputElement>;
+
+  @HostBinding('class.key-focused')
+  public keyFocused: boolean;
+
+  @HostBinding('class.value-focused')
+  public valueFocused: boolean;
+
+  public readonly booleanConstraintType = ConstraintType.Boolean;
 
   public placeholder: string;
 
   public keyEditing$ = new BehaviorSubject(false);
-
   public editing$ = new BehaviorSubject(false);
 
-  public readonly constraintType = ConstraintType;
+  public get constraintType(): ConstraintType {
+    return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
+  }
 
   constructor(private i18n: I18n) {
     this.placeholder = i18n({id: 'document.key-value.attribute.placeholder', value: 'Enter attribute name'});
@@ -88,44 +114,77 @@ export class DocumentDataRowComponent {
     this.editing$.next(false);
   }
 
-  public onDataInputKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case KeyCode.ArrowDown:
-      case KeyCode.ArrowUp:
-      case KeyCode.ArrowLeft:
-      case KeyCode.ArrowRight:
-      case KeyCode.F2:
-        console.log('arrow or f2');
-        if (!this.editing$.value) {
-          this.editing$.next(true);
-        }
-        return;
-    }
+  public onInputKeyDown(event: KeyboardEvent) {
+    this.inputKeyDown.emit(event);
+  }
+
+  public onValueFocus() {
+    this.onFocus.emit(1);
+  }
+
+  public onKeyFocus() {
+    this.onFocus.emit(0);
   }
 
   public onDataInputCancel() {
-    console.log('cancel');
-    this.editing$.next(false);
+    this.valueFocused = false;
+    if (this.editing$.value) {
+      this.editing$.next(false);
+      this.resetFocus.emit();
+    }
   }
 
   public onKeyInputCancel() {
-    this.keyEditing$.next(false);
+    this.keyFocused = false;
+    if (this.keyEditing$.value) {
+      this.keyEditing$.next(false);
+      this.resetFocus.emit();
+    }
   }
 
   public onDataInputBlur() {
-    console.log('blur');
-    this.editing$.next(false);
+    this.valueFocused = false;
+    if (this.editing$.value) {
+      this.editing$.next(false);
+      this.resetFocus.emit();
+    }
   }
 
   public onKeyInputBlur() {
-    this.editing$.next(false);
+    this.keyFocused = false;
+    if (this.keyEditing$.value) {
+      this.keyEditing$.next(false);
+      this.resetFocus.emit();
+    }
   }
 
   public onDataInputDblClick(event: MouseEvent) {
     event.preventDefault();
-    if (this.isEditable() && !this.editing$.getValue()) {
-      this.editing$.next(true);
+    this.startValueEditing();
+  }
+
+  public startValueEditing() {
+    if (this.isEditable() && !this.editing$.value) {
+      this.valueFocused = false;
+      this.keyFocused = false;
+      if (this.shouldDirectEditValue()) {
+        this.onNewValue(this.computeDirectEditValue());
+      } else {
+        this.editing$.next(true);
+      }
     }
+  }
+
+  private shouldDirectEditValue(): boolean {
+    return this.constraintType === ConstraintType.Boolean;
+  }
+
+  private computeDirectEditValue(): any {
+    if (this.constraintType === ConstraintType.Boolean) {
+      return !this.row.value;
+    }
+
+    return null;
   }
 
   private isEditable(): boolean {
@@ -134,12 +193,32 @@ export class DocumentDataRowComponent {
 
   public onKeyInputDblClick(event: MouseEvent) {
     event.preventDefault();
-    if (this.isManageable() && !this.keyEditing$.getValue()) {
+    this.startKeyEditing();
+  }
+
+  public startKeyEditing() {
+    if (this.isManageable() && !this.keyEditing$.value) {
+      this.keyFocused = false;
+      this.valueFocused = false;
       this.keyEditing$.next(true);
     }
   }
 
   private isManageable(): boolean {
     return this.permissions && this.permissions.manageWithView;
+  }
+
+  public focusKey(focus: boolean) {
+    if (focus && this.keyEditing$.value) {
+      return;
+    }
+    this.keyFocused = focus;
+  }
+
+  public focusValue(focus: boolean) {
+    if (focus && this.editing$.value) {
+      return;
+    }
+    this.valueFocused = focus;
   }
 }

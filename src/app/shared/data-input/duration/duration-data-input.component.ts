@@ -111,7 +111,7 @@ export class DurationDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.durationInput.nativeElement.value = this.value.format();
+        this.durationInput && (this.durationInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }

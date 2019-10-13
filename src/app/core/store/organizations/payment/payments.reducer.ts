@@ -61,5 +61,5 @@ function addPayments(state: PaymentsState, payments: Payment[]): PaymentsState {
     return !oldPayment || isPaymentNewer(payment, oldPayment);
   });
 
-  return paymentsAdapter.addMany(filteredPayments, state);
+  return paymentsAdapter.upsertMany(filteredPayments, state);
 }

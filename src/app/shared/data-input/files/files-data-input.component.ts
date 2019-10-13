@@ -66,6 +66,9 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   public fileAttachments$: Observable<FileAttachment[]>;
 
   public uploadProgress$ = new BehaviorSubject<number>(null);

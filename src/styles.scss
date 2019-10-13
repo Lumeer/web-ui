@@ -134,6 +134,10 @@ color-picker .color-picker .preset-area {
   }
 }
 
+typeahead-container {
+  z-index: 1100 !important;
+}
+
 .white-space-pre {
   white-space: pre;
 }

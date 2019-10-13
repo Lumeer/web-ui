@@ -36,7 +36,6 @@ import {CreateResourceDialogFormComponent} from '../create-resource/form/create-
 
 @Component({
   templateUrl: './attribute-type-modal.component.html',
-  styleUrls: ['./attribute-type-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeTypeModalComponent implements OnInit, OnDestroy {

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 
 @Component({
@@ -26,7 +26,7 @@ import {Collection} from '../../../core/store/collections/collection';
   styleUrls: ['./preview-results-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsTabsComponent implements OnInit {
+export class PreviewResultsTabsComponent {
   @Input()
   public collections: Collection[];
 
@@ -34,16 +34,10 @@ export class PreviewResultsTabsComponent implements OnInit {
   public selectedCollection: string;
 
   @Output()
-  public select = new EventEmitter<Collection>();
-
-  public ngOnInit() {
-    if (!this.selectedCollection) {
-      this.setActiveCollection(this.collections[0]);
-    }
-  }
+  public selectCollection = new EventEmitter<Collection>();
 
   public setActiveCollection(collection: Collection) {
     this.selectedCollection = collection.id;
-    this.select.emit(collection);
+    this.selectCollection.emit(collection);
   }
 }

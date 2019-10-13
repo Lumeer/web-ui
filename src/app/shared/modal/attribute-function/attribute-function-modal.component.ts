@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../blockly/blockly-editor/blockly-editor-toolbox';
@@ -39,6 +39,7 @@ import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissi
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -73,8 +74,6 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   public displayDebug: BlocklyDebugDisplay;
   public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
-
-  public saveClicked$ = new BehaviorSubject<boolean>(false);
 
   public js: string = '';
   private xml: string = '';
@@ -170,5 +169,12 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   public switchEditable() {
     this.editable$.next(!this.editable$.getValue());
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+      this.hideDialog();
+    }
   }
 }

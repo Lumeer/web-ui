@@ -241,11 +241,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
               if (attribute && attribute.constraint) {
                 const dataValue = attribute.constraint.createDataValue(this.editedValue);
                 if (dataValue.isValid()) {
-                  this.onValueSave(dataValue);
+                  this.onValueSave(dataValue.serialize());
                 }
               } else {
                 const dataValue = new UnknownDataValue(this.editedValue);
-                this.onValueSave(dataValue);
+                this.onValueSave(dataValue.serialize());
               }
             }
             this.editing$.next(false);

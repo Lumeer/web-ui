@@ -61,7 +61,7 @@ function addViews(state: ViewsState, views: View[]): ViewsState {
     const oldView = state.entities[view.id];
     return !oldView || isViewNewer(view, oldView);
   });
-  return viewsAdapter.addMany(filteredViews, newState);
+  return viewsAdapter.upsertMany(filteredViews, newState);
 }
 
 function addOrUpdateView(state: ViewsState, view: View): ViewsState {

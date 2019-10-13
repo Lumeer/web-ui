@@ -27,7 +27,6 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {debounceTime} from 'rxjs/operators';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
@@ -35,6 +34,7 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
 import {findAttributeByName} from '../utils/attribute.utils';
+import {skip} from 'rxjs/operators';
 
 export interface DataRow {
   id: string;
@@ -64,6 +64,7 @@ export class DataRowService {
   public init(collection: Collection, document: DocumentModel) {
     this.collection = collection;
     this.document = document;
+    this.rows$.next(this.createDataRows());
     this.refreshSubscription();
   }
 
@@ -72,11 +73,9 @@ export class DataRowService {
     this.subscriptions = new Subscription();
     this.subscriptions.add(
       combineLatest([
-        this.store$.pipe(select(selectDocumentById(this.document.id))),
-        this.store$.pipe(select(selectCollectionById(this.collection.id)))
-      ]).pipe(
-        debounceTime(100)
-      ).subscribe(([document, collection]) => {
+        this.store$.pipe(select(selectDocumentById(this.document.id)), skip(1)),
+        this.store$.pipe(select(selectCollectionById(this.collection.id)), skip(1))
+      ]).subscribe(([document, collection]) => {
         this.document = document;
         this.collection = collection;
         this.refreshRows();
@@ -108,11 +107,11 @@ export class DataRowService {
 
   private refreshRows() {
     const rows = this.createDataRows();
-    const rowNames = rows.map(row => row.key);
+    const rowNames = rows.map(row => row.attribute.name);
 
-    for (let i = 0; i < this.rows$.getValue().length; i++) {
-      const row = this.rows$.getValue()[i];
-      if (!rowNames.includes(row.key)) {
+    for (let i = 0; i < this.rows$.value.length; i++) {
+      const row = this.rows$.value[i];
+      if (!(row.attribute && row.attribute.id) && !rowNames.includes(row.key)) {
         if (i < rows.length) {
           rows.splice(i, 0, row);
         } else {
@@ -121,18 +120,18 @@ export class DataRowService {
       }
     }
 
-    if (!deepArrayEquals(rows, this.rows$.getValue())) {
+    if (!deepArrayEquals(rows, this.rows$.value)) {
       this.rows$.next(rows);
     }
   }
 
   public addRow() {
     const newRow: DataRow = {id: generateCorrelationId(), key: '', value: ''};
-    this.rows$.next([...this.rows$.getValue(), newRow]);
+    this.rows$.next([...this.rows$.value, newRow]);
   }
 
   public deleteRow(index: number) {
-    const row = this.rows$.getValue()[index];
+    const row = this.rows$.value[index];
     if (row) {
       if (row.attribute) {
         this.deleteExistingRow(row);
@@ -162,55 +161,74 @@ export class DataRowService {
   }
 
   private deleteNewRow(index: number) {
-    const rows = [...this.rows$.getValue()];
+    const rows = [...this.rows$.value];
     rows.splice(index, 1);
     this.rows$.next(rows);
   }
 
   public updateRow(index: number, key?: string, value?: any) {
-    const row = this.rows$.getValue()[index];
+    const row = this.rows$.value[index];
     if (row) {
       if ((key || '').trim().length > 0) {
-        this.updateAttribute(row, key.trim());
+        this.updateAttribute(row, index, key.trim());
       } else if (isNotNullOrUndefined(value)) {
         this.updateValue(row, index, value);
       }
     }
   }
 
-  private updateAttribute(row: DataRow, name: string) {
+  private updateAttribute(row: DataRow, index: number, name: string) {
     const existingAttribute = findAttributeByName(this.collection && this.collection.attributes, name);
     if (existingAttribute) {
-      this.updateExistingAttribute(row, existingAttribute);
+      this.updateExistingAttribute(row, index, existingAttribute);
     } else {
-      this.updateNewAttribute(row, name);
+      this.updateNewAttribute(row, index, name);
     }
   }
 
-  private updateExistingAttribute(row: DataRow, attribute: Attribute) {
+  private updateExistingAttribute(row: DataRow, index: number, attribute: Attribute) {
     const usedKeys = Object.keys(this.document && this.document.data || {});
     if (!this.document || usedKeys.includes(attribute.id)) {
       return; // attribute is already used in document
     }
 
-    const patchData = {[attribute.id]: row.value || ''};
-    const document = {...this.document, data: patchData};
-    this.store$.dispatch(new DocumentsAction.PatchData({document}))
+    const rows = [...this.rows$.value];
+    rows.splice(index, 1);
+    this.rows$.next(rows);
+
+    const data = {...this.document.data};
+    delete data[row.attribute.id];
+    data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
+    const newDocument = {...this.document, data};
+    this.store$.dispatch(new DocumentsAction.UpdateData({document: newDocument}))
   }
 
-  private updateNewAttribute(row: DataRow, name: string) {
-    const newData = {[name]: {value: row.value}};
-    let documentAction = null;
+  private updateNewAttribute(row: DataRow, index: number, name: string) {
+    const value = isNotNullOrUndefined(row.value) ? row.value : '';
+    const newAttribute = {name, constraint: row.attribute && row.attribute.constraint};
+    const rows = [...this.rows$.value];
+    rows.splice(index, 1);
+    rows.push({
+      attribute: newAttribute,
+      key: name,
+      value,
+      id: generateCorrelationId(),
+      isDefault: false,
+      creating: true
+    });
+    this.rows$.next(rows);
+
+    const newData = {[name]: {value}};
+    const data = {...this.document.data};
     if (row.attribute) {
-      const data = {...this.document.data};
       delete data[row.attribute.id];
-      const newDocument = {...this.document, newData, data};
-      documentAction = new DocumentsAction.UpdateData({document: newDocument})
     }
+    const newDocument = {...this.document, newData, data};
+    const documentAction = new DocumentsAction.UpdateData({document: newDocument});
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
-        attributes: [{name}],
+        attributes: [newAttribute],
         nextAction: documentAction,
       })
     );
@@ -232,7 +250,7 @@ export class DataRowService {
 
   private updateNewValue(row: DataRow, index: number, value: any) {
     const newRow = {...row, value};
-    const rows = [...this.rows$.getValue()];
+    const rows = [...this.rows$.value];
     rows[index] = newRow;
     this.rows$.next(rows);
   }

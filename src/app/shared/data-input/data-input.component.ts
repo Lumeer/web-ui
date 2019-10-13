@@ -68,6 +68,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public resizeToContent = false;
 
+  @Input()
+  public placeholder: string;
+
   @Output()
   public valueChange = new EventEmitter<any>();
 
@@ -88,7 +91,8 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.constraint || changes.constraintData) {
@@ -152,7 +156,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (this.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
-    this.save.emit(dataValue.serialize());
+    if (this.dataValue.serialize() !== dataValue.serialize()) {
+      this.save.emit(dataValue.serialize());
+    }
   }
 
   public onValueChange(dataValue: DataValue) {

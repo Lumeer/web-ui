@@ -99,7 +99,6 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    console.log('destroyyy');
     this.collectionSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
   }
@@ -172,8 +171,6 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
         this.selected$.next({collection, document});
       }
     });
-
-    console.log('select collection', collection, document);
 
     this.store$.dispatch(
       new NavigationAction.SetViewCursor({

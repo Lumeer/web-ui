@@ -63,6 +63,9 @@ export class ColorDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
+  @Output()
+  public onFocus = new EventEmitter<any>();
+
   @ViewChild('colorInput', {static: false})
   public colorInput: ElementRef<HTMLInputElement>;
 
@@ -169,6 +172,7 @@ export class ColorDataInputComponent implements OnChanges {
       return;
     }
 
+
     const dataValue = this.value.copy(color);
     this.save.emit(dataValue);
 
@@ -200,7 +204,7 @@ export class ColorDataInputComponent implements OnChanges {
 
   public onCancel() {
     this.preventSaving = true;
-    this.colorInput.nativeElement.value = this.value.format();
+    this.colorInput && (this.colorInput.nativeElement.value = this.value.format());
     this.cancel.emit();
   }
 }
