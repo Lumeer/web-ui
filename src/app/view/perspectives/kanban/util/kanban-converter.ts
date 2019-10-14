@@ -346,7 +346,7 @@ function createKanbanColumns(
           resourcesOrder: newResourcesOrder,
           createdFromAttributes: attributes || currentColumn.createdFromAttributes,
           constraintType: mergeConstraintType(currentColumn.constraintType, constraintTypes),
-          summary: summary.summary,
+          summary: summary && summary.summary,
         });
         newColumnsTitles = newColumnsTitles.filter(newColumnTitle => newColumnTitle !== title);
       }
@@ -362,7 +362,7 @@ function createKanbanColumns(
       resourcesOrder,
       createdFromAttributes: attributes,
       constraintType: constraintTypes.length === 1 ? constraintTypes[0] : null,
-      summary: summary.summary,
+      summary: summary && summary.summary,
     });
   }
 
