@@ -86,7 +86,7 @@
     "ngx-infinite-scroll": "^8.0.0",
     "plotly.js": "^1.50.0",
     "pusher-js": "^5.0.2",
-    "rxjs": "~6.5.3",
+    "rxjs": "~6.4.0",
     "smartlook-client": "^4.1.0",
     "zone.js": "~0.9.1"
   },
