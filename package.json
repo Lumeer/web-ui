@@ -64,7 +64,7 @@
     "big.js": "^5.2.2",
     "bootstrap": "^4.3.1",
     "coordinate-parser": "^1.0.2",
-    "core-js": "~3.3.2",
+    "core-js": "~3.2.1",
     "crc-32": "^1.2.0",
     "driver.js": "^0.9.8",
     "file-saver": "^2.0.2",
@@ -86,7 +86,7 @@
     "ngx-infinite-scroll": "^8.0.0",
     "plotly.js": "^1.50.0",
     "pusher-js": "^5.0.2",
-    "rxjs": "~6.5.3",
+    "rxjs": "~6.4.0",
     "smartlook-client": "^4.1.0",
     "zone.js": "~0.9.1"
   },
