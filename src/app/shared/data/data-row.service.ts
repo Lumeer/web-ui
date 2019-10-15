@@ -47,7 +47,6 @@ export interface DataRow {
 
 @Injectable()
 export class DataRowService {
-
   public rows$ = new BehaviorSubject<DataRow[]>([]);
 
   private collection: Collection;
@@ -55,11 +54,7 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>,
-              private i18n: I18n,
-              private notificationService: NotificationService
-  ) {
-  }
+  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
 
   public init(collection: Collection, document: DocumentModel) {
     this.collection = collection;
@@ -73,21 +68,26 @@ export class DataRowService {
     this.subscriptions = new Subscription();
     this.subscriptions.add(
       combineLatest([
-        this.store$.pipe(select(selectDocumentById(this.document.id)), skip(1)),
-        this.store$.pipe(select(selectCollectionById(this.collection.id)), skip(1))
+        this.store$.pipe(
+          select(selectDocumentById(this.document.id)),
+          skip(1)
+        ),
+        this.store$.pipe(
+          select(selectCollectionById(this.collection.id)),
+          skip(1)
+        ),
       ]).subscribe(([document, collection]) => {
         this.document = document;
         this.collection = collection;
         this.refreshRows();
       })
     );
-
   }
 
   public createDataRows(): DataRow[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const attributes = (this.collection && this.collection.attributes || []);
-    const data = this.document && this.document.data || {};
+    const attributes = (this.collection && this.collection.attributes) || [];
+    const data = (this.document && this.document.data) || {};
     const dataKeys = Object.keys(data);
     const rows = [];
 
@@ -97,7 +97,7 @@ export class DataRowService {
           id: attribute.id,
           attribute,
           isDefault: attribute.id === defaultAttributeId,
-          value: data[attribute.id]
+          value: data[attribute.id],
         };
         rows.push(row);
       }
@@ -187,7 +187,7 @@ export class DataRowService {
   }
 
   private updateExistingAttribute(row: DataRow, index: number, attribute: Attribute) {
-    const usedKeys = Object.keys(this.document && this.document.data || {});
+    const usedKeys = Object.keys((this.document && this.document.data) || {});
     if (!this.document || usedKeys.includes(attribute.id)) {
       return; // attribute is already used in document
     }
@@ -197,10 +197,12 @@ export class DataRowService {
     this.rows$.next(rows);
 
     const data = {...this.document.data};
-    delete data[row.attribute.id];
+    if (row.attribute) {
+      delete data[row.attribute.id];
+    }
     data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
     const newDocument = {...this.document, data};
-    this.store$.dispatch(new DocumentsAction.UpdateData({document: newDocument}))
+    this.store$.dispatch(new DocumentsAction.UpdateData({document: newDocument}));
   }
 
   private updateNewAttribute(row: DataRow, index: number, name: string) {
@@ -214,7 +216,7 @@ export class DataRowService {
       value,
       id: generateCorrelationId(),
       isDefault: false,
-      creating: true
+      creating: true,
     });
     this.rows$.next(rows);
 
@@ -245,7 +247,7 @@ export class DataRowService {
   private updateExistingValue(row: DataRow, value: any) {
     const patchData = {[row.attribute.id]: value};
     const document = {...this.document, data: patchData};
-    this.store$.dispatch(new DocumentsAction.PatchData({document}))
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
   private updateNewValue(row: DataRow, index: number, value: any) {
@@ -258,6 +260,4 @@ export class DataRowService {
   public destroy() {
     this.subscriptions.unsubscribe();
   }
-
-
 }

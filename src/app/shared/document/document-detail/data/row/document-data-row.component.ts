@@ -25,7 +25,7 @@ import {
   HostBinding,
   Input,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -33,6 +33,7 @@ import {DataCursor} from '../../../../data-input/data-cursor';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'document-data-row',
@@ -56,6 +57,9 @@ export class DocumentDataRowComponent {
   @Input()
   public readonly: boolean;
 
+  @Input()
+  public unusedAttributes: Attribute[];
+
   @Output()
   public newValue = new EventEmitter<any>();
 
@@ -72,13 +76,13 @@ export class DocumentDataRowComponent {
   public attributeFunctionClick = new EventEmitter();
 
   @Output()
-  public inputKeyDown = new EventEmitter<KeyboardEvent>();
-
-  @Output()
   public onFocus = new EventEmitter<number>();
 
   @Output()
-  public resetFocus = new EventEmitter();
+  public onEdit = new EventEmitter<number>();
+
+  @Output()
+  public resetFocusAndEdit = new EventEmitter<number>();
 
   @ViewChild('keyInput', {static: false})
   public keyInput: ElementRef<HTMLInputElement>;
@@ -94,7 +98,9 @@ export class DocumentDataRowComponent {
   public placeholder: string;
 
   public keyEditing$ = new BehaviorSubject(false);
+  public initialKey: any;
   public editing$ = new BehaviorSubject(false);
+  public initialValue: any;
 
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
@@ -105,17 +111,15 @@ export class DocumentDataRowComponent {
   }
 
   public onNewKey(value: string) {
+    this.initialKey = null;
     this.newKey.emit(value);
     this.keyEditing$.next(false);
   }
 
   public onNewValue(value: any) {
+    this.initialValue = null;
     this.newValue.emit(value);
     this.editing$.next(false);
-  }
-
-  public onInputKeyDown(event: KeyboardEvent) {
-    this.inputKeyDown.emit(event);
   }
 
   public onValueFocus() {
@@ -127,49 +131,24 @@ export class DocumentDataRowComponent {
   }
 
   public onDataInputCancel() {
-    this.valueFocused = false;
-    if (this.editing$.value) {
-      this.editing$.next(false);
-      this.resetFocus.emit();
-    }
+    this.resetFocusAndEdit.emit(1);
   }
 
   public onKeyInputCancel() {
-    this.keyFocused = false;
-    if (this.keyEditing$.value) {
-      this.keyEditing$.next(false);
-      this.resetFocus.emit();
-    }
-  }
-
-  public onDataInputBlur() {
-    this.valueFocused = false;
-    if (this.editing$.value) {
-      this.editing$.next(false);
-      this.resetFocus.emit();
-    }
-  }
-
-  public onKeyInputBlur() {
-    this.keyFocused = false;
-    if (this.keyEditing$.value) {
-      this.keyEditing$.next(false);
-      this.resetFocus.emit();
-    }
+    this.resetFocusAndEdit.emit(0);
   }
 
   public onDataInputDblClick(event: MouseEvent) {
     event.preventDefault();
-    this.startValueEditing();
+    this.onEdit.emit(1);
   }
 
-  public startValueEditing() {
+  public startValueEditing(value?: any) {
     if (this.isEditable() && !this.editing$.value) {
-      this.valueFocused = false;
-      this.keyFocused = false;
       if (this.shouldDirectEditValue()) {
         this.onNewValue(this.computeDirectEditValue());
       } else {
+        this.initialValue = value;
         this.editing$.next(true);
       }
     }
@@ -188,19 +167,32 @@ export class DocumentDataRowComponent {
   }
 
   private isEditable(): boolean {
-    return this.permissions && this.permissions.writeWithView;
+    return this.permissions && this.permissions.writeWithView && !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
     event.preventDefault();
-    this.startKeyEditing();
+    this.onEdit.emit(0);
   }
 
-  public startKeyEditing() {
+  public startKeyEditing(value?: any) {
     if (this.isManageable() && !this.keyEditing$.value) {
-      this.keyFocused = false;
-      this.valueFocused = false;
+      this.initialKey = value;
       this.keyEditing$.next(true);
+    }
+  }
+
+  public endValueEditing() {
+    this.initialValue = null;
+    if (this.editing$.value) {
+      this.editing$.next(false);
+    }
+  }
+
+  public endKeyEditing() {
+    this.initialKey = null;
+    if (this.keyEditing$.value) {
+      this.keyEditing$.next(false);
     }
   }
 

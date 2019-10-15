@@ -48,7 +48,6 @@ import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import {TranslationService} from '../../../core/service/translation.service';
 import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
 import {BsModalService} from 'ngx-bootstrap';
-import {ChooseLinkDocumentModalComponent} from '../kanban/modal/choose-link-document/choose-link-document-modal.component';
 import {DocumentDetailModalComponent} from '../../../shared/modal/document-detail/document-detail-modal.component';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';

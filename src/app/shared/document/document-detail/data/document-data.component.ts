@@ -25,7 +25,11 @@ import {
   SimpleChanges,
   EventEmitter,
   Output,
-  SimpleChange, OnDestroy, ViewChildren, QueryList
+  SimpleChange,
+  OnDestroy,
+  ViewChildren,
+  QueryList,
+  HostListener,
 } from '@angular/core';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -36,6 +40,13 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {KeyCode} from '../../../key-code';
 import {DocumentDataRowComponent} from './row/document-data-row.component';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../utils/common.utils';
+import {filterUnusedAttributes} from '../../../utils/attribute.utils';
+import {kebabToCamelCase} from 'codelyzer/util/utils';
+
+interface DataRowPosition {
+  row?: number;
+  column?: number;
+}
 
 @Component({
   selector: 'document-data',
@@ -71,16 +82,24 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
   @ViewChildren(DocumentDataRowComponent)
   public rows: QueryList<DocumentDataRowComponent>;
 
-  private focused: { row?: number, column?: number } = {};
+  public unusedAttributes: Attribute[] = [];
 
-  constructor(public dataRowService: DataRowService) {
-  }
+  private focused: DataRowPosition = {};
+  private edited: DataRowPosition = {};
+
+  constructor(public dataRowService: DataRowService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.objectChanged(changes.collection) || this.objectChanged(changes.document)) {
       if (this.collection && this.document) {
         this.dataRowService.init(this.collection, this.document);
       }
+    }
+    if (changes.collection || changes.document) {
+      this.unusedAttributes = filterUnusedAttributes(
+        this.collection && this.collection.attributes,
+        this.document && this.document.data
+      );
     }
   }
 
@@ -120,69 +139,16 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onInputKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case KeyCode.ArrowDown:
-      case KeyCode.ArrowUp:
-      case KeyCode.ArrowLeft:
-      case KeyCode.ArrowRight:
-        event.preventDefault();
-        event.stopPropagation();
-        const x = event.code === KeyCode.ArrowRight ? 1 : event.code === KeyCode.ArrowLeft ? -1 : 0;
-        const y = event.code === KeyCode.ArrowUp ? -1 : event.code === KeyCode.ArrowDown ? 1 : 0;
-        this.moveFocus(x, y);
-        return;
-      case KeyCode.Tab:
-        event.preventDefault();
-        event.stopPropagation();
-        const column = this.focused.column;
-        const row = this.focused.row;
-        let xTab = 0;
-        let yTab = 0;
-        if (event.shiftKey) {
-          xTab = isNotNullOrUndefined(column) ? (column === 0 ? (row > 0 ? 1 : 0) : -1) : 0;
-          yTab = isNotNullOrUndefined(column) ? (column === 0 ? -1 : 0) : 0;
-        } else {
-          const maxRowIndex = this.dataRowService.rows$.value.length - 1;
-          xTab = isNotNullOrUndefined(column) ? (column === 0 ? 1 : (row < maxRowIndex ? -1 : 0)) : 0;
-          yTab = isNotNullOrUndefined(column) ? (column === 0 ? 0 : 1) : 0;
-        }
-
-        this.moveFocus(xTab, yTab);
-        return;
-      case KeyCode.NumpadEnter:
-      case KeyCode.Enter:
-      case KeyCode.F2:
-        event.preventDefault();
-        event.stopPropagation();
-        this.emitEdit();
-        return;
-    }
+  public onFocus(row: number, column: number) {
+    this.emitFocus(row, column);
+    this.resetEdit();
   }
 
-  private moveFocus(x: number, y: number) {
-    const {row, column} = this.focused;
+  private emitFocus(row: number, column: number) {
     if (isNullOrUndefined(row) || isNullOrUndefined(column)) {
       return;
     }
 
-    const maxRowIndex = this.dataRowService.rows$.value.length - 1;
-    const maxColumnIndex = 1;
-
-    const newRow = Math.max(0, Math.min(row + y, maxRowIndex));
-    const newColumn = Math.max(0, Math.min(column + x, maxColumnIndex));
-
-    if (newRow !== row || newColumn !== column) {
-      this.emitFocus(newRow, newColumn);
-    }
-
-  }
-
-  public onFocus(row: number, column: number) {
-    this.emitFocus(row, column);
-  }
-
-  private emitFocus(row: number, column: number) {
     this.focused = {row, column};
     this.rows.forEach((component, index) => {
       if (index === row) {
@@ -192,32 +158,207 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
         component.focusKey(false);
         component.focusValue(false);
       }
-    })
+    });
   }
 
-  public emitEdit() {
-    const {row, column} = this.focused;
+  public onResetFocusAndEdit(row: number, column: number) {
+    const component = this.rows.toArray()[row];
+    if (!component) {
+      return;
+    }
+
+    if (this.isEditing() && this.edited.row === row && this.edited.column === column) {
+      this.edited = {};
+      if (column === 0) {
+        component.endKeyEditing();
+      } else if (column === 1) {
+        component.endValueEditing();
+      }
+    } else if (this.isFocusing() && this.focused.row === row && this.focused.column === column) {
+      this.focused = {};
+      if (column === 0) {
+        component.focusKey(false);
+      } else if (column === 1) {
+        component.focusValue(false);
+      }
+    }
+  }
+
+  private resetFocus() {
+    this.focused = {};
+    this.rows.forEach(component => {
+      component.focusKey(false);
+      component.focusValue(false);
+    });
+  }
+
+  private resetEdit() {
+    this.edited = {};
+    this.rows.forEach(component => {
+      component.endKeyEditing();
+      component.endValueEditing();
+    });
+  }
+
+  private onEdit(row: number, column: number) {
+    this.resetFocus();
+    this.emitEdit(row, column);
+  }
+
+  public emitEdit(row: number, column: number, value?: any) {
     if (isNullOrUndefined(row) || isNullOrUndefined(column)) {
       return;
     }
 
-    this.focused = {};
-    const documentDataRowComponent = this.rows.toArray()[row];
-    if (documentDataRowComponent) {
-      if (column === 0) {
-        documentDataRowComponent.startKeyEditing();
-      } else if (column === 1) {
-        documentDataRowComponent.startValueEditing();
+    this.edited = {row, column};
+    this.rows.forEach((component, index) => {
+      if (index === row) {
+        if (column === 0) {
+          component.startKeyEditing(value);
+          component.endValueEditing();
+        } else if (column === 1) {
+          component.endKeyEditing();
+          component.startValueEditing(value);
+        }
+      } else {
+        component.endKeyEditing();
+        component.endValueEditing();
       }
-    }
-
+    });
   }
 
-  public resetFocus() {
-    this.focused = {};
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowUp:
+      case KeyCode.ArrowLeft:
+      case KeyCode.ArrowRight:
+        return this.onArrowKeyDown(event);
+      case KeyCode.Tab:
+        return this.onTabKeyDown(event);
+      case KeyCode.NumpadEnter:
+      case KeyCode.Enter:
+        return this.onEnterKeyDown(event);
+      case KeyCode.F2:
+        return this.onF2KeyDown(event);
+      case KeyCode.Backspace:
+        return this.onBackSpaceKeyDown(event);
+    }
+  }
+
+  private onArrowKeyDown(event: KeyboardEvent) {
+    if (this.isEditing() || !this.isFocusing() || event.shiftKey || event.altKey || event.ctrlKey) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    const x = event.code === KeyCode.ArrowRight ? 1 : event.code === KeyCode.ArrowLeft ? -1 : 0;
+    const y = event.code === KeyCode.ArrowUp ? -1 : event.code === KeyCode.ArrowDown ? 1 : 0;
+    this.moveFocus(x, y);
+  }
+
+  private isFocusing(): boolean {
+    return this.focused && isNotNullOrUndefined(this.focused.row) && isNotNullOrUndefined(this.focused.column);
+  }
+
+  private isEditing(): boolean {
+    return this.edited && isNotNullOrUndefined(this.edited.row) && isNotNullOrUndefined(this.edited.column);
+  }
+
+  private moveFocus(x: number, y: number) {
+    const {newRow, newColumn} = this.computeMoveOffset(x, y, this.focused);
+
+    if (
+      isNotNullOrUndefined(newRow) &&
+      isNotNullOrUndefined(newColumn) &&
+      (newRow !== this.focused.row || newColumn !== this.focused.column)
+    ) {
+      this.emitFocus(newRow, newColumn);
+    }
+  }
+
+  private onTabKeyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.isEditing()) {
+      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.edited);
+      this.focused = {...this.edited};
+      this.resetEdit();
+      this.moveFocus(offsetX, offsetY);
+    } else if (this.isFocusing()) {
+      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.focused);
+      this.moveFocus(offsetX, offsetY);
+    }
+  }
+
+  private computeTabKeyDownOffset(event: KeyboardEvent, position: DataRowPosition): {offsetX: number; offsetY: number} {
+    const {column, row} = position;
+    let offsetX = 0;
+    let offsetY = 0;
+    if (event.shiftKey) {
+      offsetX = isNotNullOrUndefined(column) ? (column === 0 ? (row > 0 ? 1 : 0) : -1) : 0;
+      offsetY = isNotNullOrUndefined(column) ? (column === 0 ? -1 : 0) : 0;
+    } else {
+      const maxRowIndex = this.dataRowService.rows$.value.length - 1;
+      offsetX = isNotNullOrUndefined(column) ? (column === 0 ? 1 : row < maxRowIndex ? -1 : 0) : 0;
+      offsetY = isNotNullOrUndefined(column) ? (column === 0 ? 0 : 1) : 0;
+    }
+    return {offsetX, offsetY};
+  }
+
+  private computeMoveOffset(x: number, y: number, position: DataRowPosition): {newRow?: number; newColumn?: number} {
+    const {row, column} = position;
+    if (isNullOrUndefined(row) || isNullOrUndefined(column)) {
+      return {};
+    }
+
+    const maxRowIndex = this.dataRowService.rows$.value.length - 1;
+    const maxColumnIndex = 1;
+
+    const newRow = Math.max(0, Math.min(row + y, maxRowIndex));
+    const newColumn = Math.max(0, Math.min(column + x, maxColumnIndex));
+    return {newRow, newColumn};
+  }
+
+  private onEnterKeyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.isEditing()) {
+      const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.edited);
+      this.resetEdit();
+      this.emitFocus(newRow, newColumn);
+    } else if (this.isFocusing()) {
+      this.emitEdit(this.focused.row, this.focused.column);
+      this.resetFocus();
+    }
+  }
+
+  private onF2KeyDown(event: KeyboardEvent) {
+    if (this.isFocusing()) {
+      this.emitEdit(this.focused.row, this.focused.column);
+      this.resetFocus();
+    } else if (this.isEditing()) {
+      this.emitFocus(this.edited.row, this.edited.column);
+      this.resetEdit();
+    }
   }
 
   public trackByRow(index: number, row: DataRow): string {
     return row.id;
+  }
+
+  private onBackSpaceKeyDown(event: KeyboardEvent) {
+    if (!this.isFocusing()) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.emitEdit(this.focused.row, this.focused.column, '');
+    this.resetFocus();
   }
 }

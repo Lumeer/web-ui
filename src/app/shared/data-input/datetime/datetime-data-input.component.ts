@@ -84,7 +84,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
           this.dateTimeInput.nativeElement.value = this.value.format(false);

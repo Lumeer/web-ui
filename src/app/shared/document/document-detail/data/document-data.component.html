@@ -4,14 +4,15 @@
                    [cursor]="document | dataCursor : row.attribute?.id"
                    [constraintData]="constraintData"
                    [readonly]="!(collection | collectionAttributeEditable : row.id: permissions: query)"
+                   [unusedAttributes]="unusedAttributes"
                    (newValue)="onNewValue($event, row, index)"
                    (newKey)="onNewKey($event, index)"
                    (deleteRow)="onRemoveRow(index)"
                    (attributeFunctionClick)="onAttributeFunction(row)"
                    (attributeTypeClick)="onAttributeType(row)"
-                   (inputKeyDown)="onInputKeyDown($event)"
                    (onFocus)="onFocus(index, $event)"
-                   (resetFocus)="resetFocus()">
+                   (onEdit)="onEdit(index, $event)"
+                   (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
 </document-data-row>
 
 <div *ngIf="permissions?.writeWithView" class="pt-2 border-top">

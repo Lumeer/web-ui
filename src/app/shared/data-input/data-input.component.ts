@@ -36,6 +36,7 @@ import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
+import {DataSuggestion} from './data-suggestion';
 
 @Component({
   selector: 'data-input',
@@ -71,6 +72,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public placeholder: string;
 
+  @Input()
+  public suggestions: DataSuggestion[];
+
   @Output()
   public valueChange = new EventEmitter<any>();
 
@@ -91,8 +95,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
-  }
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.constraint || changes.constraintData) {

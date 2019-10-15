@@ -77,6 +77,7 @@ import {QueryColorPipe} from './query-color.pipe';
 import {DocumentsByCollectionPipe} from './documents-by-collection.pipe';
 import {PerspectiveNamePipe} from './perspective-name.pipe';
 import {ValueFilterPipe} from './value-filter.pipe';
+import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -137,6 +138,7 @@ import {ValueFilterPipe} from './value-filter.pipe';
     DocumentsByCollectionPipe,
     PerspectiveNamePipe,
     ValueFilterPipe,
+    IsNullOrUndefinedPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -197,6 +199,7 @@ import {ValueFilterPipe} from './value-filter.pipe';
     DocumentsByCollectionPipe,
     PerspectiveNamePipe,
     ValueFilterPipe,
+    IsNullOrUndefinedPipe,
   ],
 })
 export class PipesModule {}

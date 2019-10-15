@@ -23,7 +23,8 @@
   min-height: 40px;
 }
 
-:host.key-focused .data-input.key::ng-deep > *, :host.value-focused .data-input.value::ng-deep > * {
+:host.key-focused .data-input.key::ng-deep > *,
+:host.value-focused .data-input.value::ng-deep > * {
   border: 1px solid $gray-400;
   border-radius: 0.25rem;
 }
@@ -31,6 +32,10 @@
 .data-input.editing::ng-deep > * {
   border: 1px solid $success;
   border-radius: 0.25rem;
+}
+
+.data-input.key::ng-deep > * > * {
+  font-style: italic !important;
 }
 
 .data-input::ng-deep > boolean-data-input {

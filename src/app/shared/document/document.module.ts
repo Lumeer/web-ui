@@ -31,6 +31,7 @@ import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/do
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {AttributesToDataSuggestionsPipe} from './document-detail/pipes/attributes-to-data-suggestions.pipe';
 
 @NgModule({
   imports: [
@@ -49,8 +50,8 @@ import {ClickOutsideModule} from 'ng-click-outside';
     DocumentDataComponent,
     DocumentDataRowComponent,
     DocumentDataRowIconsComponent,
+    AttributesToDataSuggestionsPipe,
   ],
   exports: [DocumentDetailComponent, PostItDocumentModule],
 })
-export class DocumentModule {
-}
+export class DocumentModule {}

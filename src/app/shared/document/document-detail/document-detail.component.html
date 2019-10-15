@@ -1,9 +1,9 @@
-<ng-container *ngIf="{users: users$| async, durationUnitsMap: durationUnitsMap} as constraintData">
+<ng-container *ngIf="{constraintData: constraintData$ | async} as data">
 
   <document-detail-header [collection]="collection"
                           [document]="document"
                           [defaultAttribute]="defaultAttribute"
-                          [constraintData]="constraintData"
+                          [constraintData]="data.constraintData"
                           [permissions]="permissions"
                           [workspace]="workspace$ | async"
                           (switchToTable)="onSwitchToTable()"
@@ -14,7 +14,7 @@
                  [collection]="collection"
                  [document]="document"
                  [permissions]="permissions"
-                 [constraintData]="constraintData"
+                 [constraintData]="data.constraintData"
                  [query]="query"
                  (attributeTypeClick)="onAttributeTypeClick($event)"
                  (attributeFunctionCLick)="onAttributeFunctionClick($event)">

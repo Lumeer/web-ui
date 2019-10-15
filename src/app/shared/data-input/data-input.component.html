@@ -132,19 +132,9 @@
                    (dataBlur)="onDataBlur()">
   </user-data-input>
 
-  <text-data-input *ngSwitchDefault
-                   [focus]="focus"
-                   [readonly]="readonly"
-                   [skipValidation]="skipValidation"
-                   [value]="dataValue"
-                   [placeholder]="placeholder"
-                   (valueChange)="onValueChange($event)"
-                   (save)="onSaveValue($event)"
-                   (cancel)="onCancel()"
-                   (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()"
-                   class="d-block">
-  </text-data-input>
+  <ng-container *ngSwitchDefault
+                [ngTemplateOutlet]="textDataInput">
+  </ng-container>
 </ng-container>
 
 <ng-template #textDataInput>
@@ -153,6 +143,7 @@
                    [skipValidation]="skipValidation"
                    [value]="dataValue"
                    [placeholder]="placeholder"
+                   [suggestions]="suggestions"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
