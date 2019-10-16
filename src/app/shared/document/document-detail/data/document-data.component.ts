@@ -30,6 +30,7 @@ import {
   ViewChildren,
   QueryList,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -41,7 +42,7 @@ import {KeyCode} from '../../../key-code';
 import {DocumentDataRowComponent} from './row/document-data-row.component';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../utils/common.utils';
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
-import {kebabToCamelCase} from 'codelyzer/util/utils';
+import {DocumentDetailHiddenInputComponent} from '../hidden-input/document-detail-hidden-input.component';
 
 interface DataRowPosition {
   row?: number;
@@ -81,6 +82,9 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
 
   @ViewChildren(DocumentDataRowComponent)
   public rows: QueryList<DocumentDataRowComponent>;
+
+  @ViewChild(DocumentDetailHiddenInputComponent, {static: false})
+  public hiddenInputComponent: DocumentDetailHiddenInputComponent;
 
   public unusedAttributes: Attribute[] = [];
 
@@ -159,6 +163,7 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
         component.focusValue(false);
       }
     });
+    this.hiddenInputComponent && this.hiddenInputComponent.focus();
   }
 
   public onResetFocusAndEdit(row: number, column: number) {
@@ -210,6 +215,7 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    this.hiddenInputComponent && this.hiddenInputComponent.blur();
     this.edited = {row, column};
     this.rows.forEach((component, index) => {
       if (index === row) {
@@ -360,5 +366,12 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
 
     this.emitEdit(this.focused.row, this.focused.column, '');
     this.resetFocus();
+  }
+
+  public onNewHiddenInput(value: string) {
+    if (this.isFocusing()) {
+      this.emitEdit(this.focused.row, this.focused.column, value);
+      this.resetFocus();
+    }
   }
 }

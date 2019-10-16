@@ -29,11 +29,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {ColorPickerDirective} from 'ngx-color-picker';
 import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
-import {greyscale, palette, saturated} from '../../picker/icon-color/color/colors';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 
 @Component({
   selector: 'color-data-input',
@@ -69,23 +68,16 @@ export class ColorDataInputComponent implements OnChanges {
   @ViewChild('colorInput', {static: false})
   public colorInput: ElementRef<HTMLInputElement>;
 
+  @ViewChild(ColorPickerComponent, {static: false})
+  public colorPicker: ColorPickerComponent;
+
   public valid = true;
-  public dialogVisible = false;
   private preventSaving: boolean;
-  private preventClosing = false;
 
-  public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
-
-  @ViewChild(ColorPickerDirective, {static: false})
-  private colorPicker: ColorPickerDirective;
-
-  private refreshValid(value: any) {
-    this.valid = !value || this.value.copy(value).isValid();
-  }
+  constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.preventClosing = true;
       this.preventSaving = !!changes.value;
       setTimeout(() => {
         this.refreshValid(this.value);
@@ -96,10 +88,8 @@ export class ColorDataInputComponent implements OnChanges {
 
         HtmlModifier.setCursorAtTextContentEnd(this.colorInput.nativeElement);
         this.colorInput.nativeElement.focus();
+        this.openColorPicker();
       });
-      setTimeout(() => {
-        this.preventClosing = false;
-      }, 200);
     }
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
@@ -113,13 +103,18 @@ export class ColorDataInputComponent implements OnChanges {
     this.refreshValid(this.value);
   }
 
+  private refreshValid(value: ColorDataValue) {
+    const formattedValue = value.format();
+    this.valid = !formattedValue || this.value.copy(formattedValue).isValid();
+  }
+
   private openColorPicker() {
-    this.colorPicker.openDialog();
+    this.colorPicker.open();
   }
 
   private closeColorPicker() {
     if (this.colorPicker) {
-      this.colorPicker.closeDialog();
+      this.colorPicker.close();
     }
   }
 
@@ -151,17 +146,12 @@ export class ColorDataInputComponent implements OnChanges {
     }
   }
 
-  public onInput(value: string) {
+  public onValueChange(value: string) {
     const dataValue = this.value.parseInput(value);
     this.valueChange.emit(dataValue);
   }
 
-  public onValueChange(color: string) {
-    if (this.preventClosing) {
-      this.preventClosing = false;
-      return;
-    }
-
+  public onSave(color: string) {
     if (this.preventSaving) {
       this.preventSaving = false;
       return;
@@ -171,7 +161,6 @@ export class ColorDataInputComponent implements OnChanges {
       this.cancel.emit();
       return;
     }
-
 
     const dataValue = this.value.copy(color);
     this.save.emit(dataValue);
@@ -188,18 +177,6 @@ export class ColorDataInputComponent implements OnChanges {
       const dataValue = this.value.parseInput(value);
       this.save.emit(dataValue);
     }
-  }
-
-  public onTextInput(event: Event) {
-    const element = event.target as HTMLInputElement;
-    this.onInput(element.value);
-  }
-
-  public onDialogDisplay(visible: boolean) {
-    if (!visible && !this.readonly && this.preventClosing) {
-      this.openColorPicker();
-    }
-    this.dialogVisible = visible;
   }
 
   public onCancel() {

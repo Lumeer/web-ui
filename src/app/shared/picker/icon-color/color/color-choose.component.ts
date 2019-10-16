@@ -27,18 +27,18 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import * as colors from './colors';
+import * as colors from '../../colors';
 import {BehaviorSubject} from 'rxjs';
 import {shadeColor} from '../../../utils/html-modifier';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
-  selector: 'color-picker',
-  templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.scss'],
+  selector: 'color-choose',
+  templateUrl: './color-choose.component.html',
+  styleUrls: ['./color-choose.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorPickerComponent implements OnChanges {
+export class ColorChooseComponent implements OnChanges {
   @Input()
   public color: string;
 

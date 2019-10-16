@@ -5,16 +5,16 @@
 
   <div class="d-flex flex-column card">
 
-    <color-picker class="d-block w-100 bg-white p-3" [color]="this.selectedColor$ | async"
+    <color-choose class="d-block w-100 bg-white p-3" [color]="this.selectedColor$ | async"
                   (selected)="onColorSelected($event)"
                   (preview)="onColorPreview($event)">
-    </color-picker>
+    </color-choose>
     <hr/>
 
-    <icon-picker class="d-block w-100 bg-white p-3" [icon]="this.selectedIcon$ | async"
+    <icon-choose class="d-block w-100 bg-white p-3" [icon]="this.selectedIcon$ | async"
                  (selected)="onIconSelected($event)"
                  (preview)="onIconPreview($event)">
-    </icon-picker>
+    </icon-choose>
     <hr/>
 
     <div class="text-right p-3">

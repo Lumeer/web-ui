@@ -18,18 +18,18 @@
  */
 
 import {Component, ChangeDetectionStrategy, EventEmitter, Output, Input} from '@angular/core';
-import * as Icons from './icons';
+import * as Icons from '../../icons';
 import {BehaviorSubject} from 'rxjs';
 import {generateId} from '../../../utils/resource.utils';
-import {IconIdPipe} from './icon-id.pipe';
+import {IconIdPipe} from '../pipes/icon-id.pipe';
 
 @Component({
-  selector: 'icon-picker',
-  templateUrl: './icon-picker.component.html',
-  styleUrls: ['./icon-picker.component.scss'],
+  selector: 'icon-choose',
+  templateUrl: './icon-choose.component.html',
+  styleUrls: ['./icon-choose.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconPickerComponent {
+export class IconChooseComponent {
   @Input()
   public icon: string;
 

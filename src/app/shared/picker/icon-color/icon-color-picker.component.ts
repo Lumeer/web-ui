@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
-import {IconPickerComponent} from './icon/icon-picker.component';
+import {IconChooseComponent} from './icon/icon-choose.component';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -63,8 +63,8 @@ export class IconColorPickerComponent implements OnDestroy {
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
 
-  @ViewChild(IconPickerComponent, {static: false})
-  public iconPickerComponent: IconPickerComponent;
+  @ViewChild(IconChooseComponent, {static: false})
+  public iconPickerComponent: IconChooseComponent;
 
   private initialIcon: string;
   private initialColor: string;

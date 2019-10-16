@@ -1,3 +1,6 @@
+<document-detail-hidden-input (newInput)="onNewHiddenInput($event)">
+</document-detail-hidden-input>
+
 <document-data-row *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index"
                    [row]="row"
                    [permissions]="permissions"

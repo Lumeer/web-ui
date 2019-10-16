@@ -32,6 +32,8 @@ import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-m
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {AttributesToDataSuggestionsPipe} from './document-detail/pipes/attributes-to-data-suggestions.pipe';
+import {DocumentDetailHiddenInputComponent} from './document-detail/hidden-input/document-detail-hidden-input.component';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   imports: [
@@ -41,6 +43,7 @@ import {AttributesToDataSuggestionsPipe} from './document-detail/pipes/attribute
     PipesModule,
     PostItDocumentModule,
     ClickOutsideModule,
+    ColorPickerModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
   ],
@@ -51,6 +54,7 @@ import {AttributesToDataSuggestionsPipe} from './document-detail/pipes/attribute
     DocumentDataRowComponent,
     DocumentDataRowIconsComponent,
     AttributesToDataSuggestionsPipe,
+    DocumentDetailHiddenInputComponent,
   ],
   exports: [DocumentDetailComponent, PostItDocumentModule],
 })

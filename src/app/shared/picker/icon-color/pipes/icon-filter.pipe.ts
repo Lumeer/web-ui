@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {getPureIconName, searchIconsByMeta} from '../../../picker/icon-color/icon/icons';
+import {getPureIconName, searchIconsByMeta} from '../../icons';
 
 @Pipe({
   name: 'iconFilter',

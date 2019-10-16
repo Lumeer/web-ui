@@ -44,6 +44,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 @Component({
   selector: 'document-detail-header',
   templateUrl: './document-detail-header.component.html',
+  styleUrls: ['./document-detail-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
