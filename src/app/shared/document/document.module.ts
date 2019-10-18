@@ -23,7 +23,6 @@ import {DocumentDetailComponent} from './document-detail/document-detail.compone
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {PostItDocumentModule} from './post-it/post-it-document.module';
 import {DocumentDetailHeaderComponent} from './document-detail/header/document-detail-header.component';
 import {DocumentDataComponent} from './document-detail/data/document-data.component';
 import {DocumentDataRowComponent} from './document-detail/data/row/document-data-row.component';
@@ -31,7 +30,6 @@ import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/do
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {AttributesToDataSuggestionsPipe} from './document-detail/pipes/attributes-to-data-suggestions.pipe';
 import {DocumentDetailHiddenInputComponent} from './document-detail/hidden-input/document-detail-hidden-input.component';
 import {ColorPickerModule} from 'ngx-color-picker';
 
@@ -41,7 +39,6 @@ import {ColorPickerModule} from 'ngx-color-picker';
     DataInputModule,
     InputModule,
     PipesModule,
-    PostItDocumentModule,
     ClickOutsideModule,
     ColorPickerModule,
     AttributeTypeModalModule,
@@ -53,9 +50,8 @@ import {ColorPickerModule} from 'ngx-color-picker';
     DocumentDataComponent,
     DocumentDataRowComponent,
     DocumentDataRowIconsComponent,
-    AttributesToDataSuggestionsPipe,
     DocumentDetailHiddenInputComponent,
   ],
-  exports: [DocumentDetailComponent, PostItDocumentModule],
+  exports: [DocumentDetailComponent],
 })
 export class DocumentModule {}

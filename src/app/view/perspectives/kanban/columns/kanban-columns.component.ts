@@ -109,9 +109,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
 
-  @Output()
-  public removeDocument = new EventEmitter<DocumentModel>();
-
   public readonly dragDelay = DRAG_DELAY;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
@@ -153,10 +150,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public onColumnsChange(data: {columns: KanbanColumn[]; otherColumn: KanbanColumn}) {
     const config = {...this.config, columns: data.columns, otherColumn: data.otherColumn};
     this.configChange.next(config);
-  }
-
-  public onRemoveDocument(document: DocumentModel) {
-    this.removeDocument.emit(document);
   }
 
   public createObjectInResource(resourceCreate: KanbanResourceCreate, column: KanbanColumn) {

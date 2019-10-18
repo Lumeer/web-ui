@@ -20,4 +20,5 @@
 export interface DocumentHintColumn {
   attributeId: string;
   width: number;
+  hidden?: boolean;
 }

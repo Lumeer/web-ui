@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {DataSuggestion} from '../../../data-input/data-suggestion';
+import {Attribute} from '../../core/store/collections/collection';
+import {DataSuggestion} from '../data-input/data-suggestion';
 
 @Pipe({
   name: 'attributesToDataSuggestions',

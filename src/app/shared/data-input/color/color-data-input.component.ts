@@ -74,7 +74,8 @@ export class ColorDataInputComponent implements OnChanges {
   public valid = true;
   private preventSaving: boolean;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
@@ -163,10 +164,12 @@ export class ColorDataInputComponent implements OnChanges {
     }
 
     const dataValue = this.value.copy(color);
-    this.save.emit(dataValue);
 
-    this.closeColorPicker();
-    this.colorInput.nativeElement.blur();
+    if (dataValue.serialize() !== this.value.serialize()) {
+      this.save.emit(dataValue);
+    } else {
+      this.cancel.emit();
+    }
   }
 
   public onBlur() {

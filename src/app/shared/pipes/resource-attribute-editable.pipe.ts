@@ -18,21 +18,30 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../core/store/collections/collection';
-import {isCollectionAttributeEditable} from '../../core/store/collections/collection.util';
+import {isCollectionAttributeEditable, isLinkTypeAttributeEditable} from '../../core/store/collections/collection.util';
 import {Query} from '../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
-  name: 'collectionAttributeEditable',
+  name: 'resourceAttributeEditable',
 })
-export class CollectionAttributeEditablePipe implements PipeTransform {
+export class ResourceAttributeEditablePipe implements PipeTransform {
   public transform(
-    collection: Collection,
+    resource: AttributesResource,
     attributeId: string,
     permissions: AllowedPermissions,
     query?: Query
   ): boolean {
-    return isCollectionAttributeEditable(attributeId, collection, permissions, query);
+    if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
+      return isCollectionAttributeEditable(attributeId, resource as Collection, permissions, query);
+    } else if (getAttributesResourceType(resource) === AttributesResourceType.LinkType) {
+      return isLinkTypeAttributeEditable(attributeId, resource as LinkType, permissions, query);
+    }
+
+
   }
 }

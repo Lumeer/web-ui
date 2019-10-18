@@ -25,7 +25,6 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {BlocklyModule} from './blockly/blockly.module';
 import {BrowserWarningModule} from './browser-warning/browser-warning.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
-import {CommentsComponent} from './comments/comments.component';
 import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
@@ -87,7 +86,6 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
   ],
   declarations: [
     SizeSliderComponent,
-    CommentsComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
@@ -101,7 +99,6 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     ReactiveFormsModule,
     PostItCollectionsModule,
     SizeSliderComponent,
-    CommentsComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,

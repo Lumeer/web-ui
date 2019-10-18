@@ -17,30 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-} from '@angular/core';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DataCursor} from '../../../../data-input/data-cursor';
-import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostBinding} from '@angular/core';
+import {DataRowComponent} from '../../data/data-row-component';
+import {Attribute} from '../../../core/store/collections/collection';
+import {DataRow} from '../../data/data-row.service';
+import {DataCursor} from '../../data-input/data-cursor';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
-import {DataRow} from '../../../../data/data-row.service';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {DataRowComponent} from '../../../../data/data-row-component';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
-  selector: 'document-data-row',
-  templateUrl: './document-data-row.component.html',
-  styleUrls: ['./document-data-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'post-it-row',
+  templateUrl: './post-it-row.component.html',
+  styleUrls: ['./post-it-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentDataRowComponent implements DataRowComponent {
+export class PostItRowComponent implements DataRowComponent {
+
   @Input()
   public row: DataRow;
 
@@ -67,12 +61,6 @@ export class DocumentDataRowComponent implements DataRowComponent {
 
   @Output()
   public deleteRow = new EventEmitter();
-
-  @Output()
-  public attributeTypeClick = new EventEmitter();
-
-  @Output()
-  public attributeFunctionClick = new EventEmitter();
 
   @Output()
   public onFocus = new EventEmitter<number>();
@@ -103,7 +91,7 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   constructor(private i18n: I18n) {
-    this.placeholder = i18n({id: 'dataResource.attribute.placeholder', value: 'Enter attribute name'});
+    this.placeholder = i18n({id: 'dataResource.attribute.placeholder.short', value: 'Enter name'});
   }
 
   public onNewKey(value: string) {

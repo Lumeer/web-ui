@@ -173,6 +173,7 @@ function prepareDurationValue(value: any): string {
   return (value || '')
     .toString()
     .trim()
+    .toLowerCase()
     .replace(/\s/g, '');
 }
 

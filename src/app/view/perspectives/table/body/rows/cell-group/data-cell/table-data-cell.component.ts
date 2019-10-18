@@ -73,6 +73,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-data-cell',
@@ -160,7 +161,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     if (this.cursor.partIndex > 1) {
@@ -743,7 +745,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onValueSave(value: any) {
-    if (value !== null && value !== undefined) {
+    if (isNotNullOrUndefined(value)) {
       this.useSelectionOrSave(value);
     }
     this.editing$.next(false);

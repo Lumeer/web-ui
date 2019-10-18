@@ -18,6 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
+import {DataRowHiddenComponent} from '../../../data/data-row-component';
 
 @Component({
   selector: 'document-detail-hidden-input',
@@ -25,7 +26,7 @@ import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, Ele
   styleUrls: ['./document-detail-hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailHiddenInputComponent {
+export class DocumentDetailHiddenInputComponent implements DataRowHiddenComponent {
   @Output()
   public newInput = new EventEmitter<string>();
 

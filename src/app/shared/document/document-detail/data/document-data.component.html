@@ -1,4 +1,5 @@
-<document-detail-hidden-input (newInput)="onNewHiddenInput($event)">
+<document-detail-hidden-input (newInput)="onNewHiddenInput($event)"
+                              class="position-fixed">
 </document-detail-hidden-input>
 
 <document-data-row *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index"
@@ -6,7 +7,7 @@
                    [permissions]="permissions"
                    [cursor]="document | dataCursor : row.attribute?.id"
                    [constraintData]="constraintData"
-                   [readonly]="!(collection | collectionAttributeEditable : row.id: permissions: query)"
+                   [readonly]="!(collection | resourceAttributeEditable : row.id: permissions: query)"
                    [unusedAttributes]="unusedAttributes"
                    (newValue)="onNewValue($event, row, index)"
                    (newKey)="onNewKey($event, index)"

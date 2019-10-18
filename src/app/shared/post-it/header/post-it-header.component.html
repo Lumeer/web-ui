@@ -1,0 +1,26 @@
+<span *ngIf="tag" class="d-flex align-items-center mr-2">
+    <span class="text-white badge badge-pill align-text-bottom tag" [style.background-color]="tag?.color">
+      {{tag?.title}}
+    </span>
+  </span>
+
+<icons-presenter [colors]="colors" [icons]="icons">
+</icons-presenter>&nbsp;
+
+<span class="flex-grow-1 text-truncate">
+      {{ resource?.name }}
+</span>
+
+<div class="d-flex align-self-center ml-auto">
+  <i class="icon text-danger fas fa-trash p-1 cursor-pointer"
+     *ngIf="!allowedPermissions?.writeWithView"
+     title="Delete Record" i18n-title="@@document.button.remove"
+     (click)="onRemove()"></i>
+  <i *ngIf="allowedPermissions.read && resourceType === resourceTypeCollection"
+     class="icon text-warning fa-star button p-1 cursor-pointer"
+     [class.always-visible]="favorite"
+     title="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+     i18n-title="@@collection.document.favorite"
+     [ngClass]="favorite ? 'fas' : 'far'"
+     (click)="onToggleFavorite()"></i>
+</div>

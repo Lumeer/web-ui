@@ -17,20 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Wrapper around Window.localStorage of WebStorage API
- */
-export class LocalStorage {
-  public static get(key: string): any {
-    const data: string = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataResource} from '../../../core/model/resource';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+
+@Pipe({
+  name: 'dataResourceFavorite'
+})
+export class DataResourceFavoritePipe implements PipeTransform {
+
+  public transform(dataResource: DataResource): boolean {
+    if (!dataResource) {
+      return false;
+    }
+
+    return (<DocumentModel>dataResource).favorite;
   }
 
-  public static set(key: string, data: any) {
-    localStorage.setItem(key, JSON.stringify(data));
-  }
-
-  public static remove(key: string) {
-    localStorage.removeItem(key);
-  }
 }

@@ -18,88 +18,97 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  EventEmitter,
-  Output,
-  SimpleChange,
-  OnDestroy,
-  ViewChildren,
-  QueryList,
+  Component, EventEmitter,
   HostListener,
-  ViewChild,
+  Input,
+  OnDestroy, Output,
+  QueryList,
+  SimpleChange,
+  SimpleChanges,
+  ViewChildren
 } from '@angular/core';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {DataRow, DataRowService} from '../../../data/data-row.service';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {DocumentDataRowComponent} from './row/document-data-row.component';
-import {filterUnusedAttributes} from '../../../utils/attribute.utils';
-import {DocumentDetailHiddenInputComponent} from '../hidden-input/document-detail-hidden-input.component';
-import {DataRowFocusService} from '../../../data/data-row-focus-service';
+import {ConstraintData} from '../../core/model/data/constraint';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
+import {DataRow, DataRowService} from '../data/data-row.service';
+import {filterUnusedAttributes} from '../utils/attribute.utils';
+import {Attribute} from '../../core/store/collections/collection';
+import {DataRowFocusService} from '../data/data-row-focus-service';
+import {PostItRowComponent} from './row/post-it-row.component';
+import {Query} from '../../core/store/navigation/query/query';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {AppState} from '../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {DocumentModel} from '../../core/store/documents/document.model';
+
+export interface PostItTag {
+  title: string;
+  color: string;
+}
 
 @Component({
-  selector: 'document-data',
-  templateUrl: './document-data.component.html',
+  selector: 'post-it',
+  templateUrl: './post-it.component.html',
+  styleUrls: ['./post-it.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DataRowService],
+  host: {class: 'card'}
 })
-export class DocumentDataComponent implements OnChanges, OnDestroy {
-  @Input()
-  public collection: Collection;
+export class PostItComponent implements OnDestroy {
 
   @Input()
-  public document: DocumentModel;
+  public resource: AttributesResource;
 
   @Input()
-  public defaultAttribute: Attribute;
+  public dataResource: DataResource;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @Input()
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public tag: PostItTag;
 
   @Input()
   public query: Query;
 
-  @Output()
-  public attributeTypeClick = new EventEmitter<Attribute>();
+  @Input()
+  public canDrag: boolean;
 
   @Output()
-  public attributeFunctionCLick = new EventEmitter<Attribute>();
+  public toggleFavorite = new EventEmitter();
 
-  @ViewChildren(DocumentDataRowComponent)
-  public rows: QueryList<DocumentDataRowComponent>;
-
-  @ViewChild(DocumentDetailHiddenInputComponent, {static: false})
-  public hiddenInputComponent: DocumentDetailHiddenInputComponent;
+  @ViewChildren(PostItRowComponent)
+  public rows: QueryList<PostItRowComponent>;
 
   public unusedAttributes: Attribute[] = [];
 
   private dataRowFocusService: DataRowFocusService;
 
-  constructor(public dataRowService: DataRowService) {
+  public resourceType: AttributesResourceType;
+
+  constructor(public dataRowService: DataRowService,
+              private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(() => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => this.hiddenInputComponent)
+      () => null)
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.objectChanged(changes.collection) || this.objectChanged(changes.document)) {
-      if (this.collection && this.document) {
-        this.dataRowService.init(this.collection, this.document);
+    this.resourceType = getAttributesResourceType(this.resource);
+    if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
+      if (this.resource && this.dataResource) {
+        this.dataRowService.init(this.resource, this.dataResource);
       }
     }
-    if (changes.collection || changes.document) {
+    if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(
-        this.collection && this.collection.attributes,
-        this.document && this.document.data
+        this.resource && this.resource.attributes,
+        this.dataResource && this.dataResource.data
       );
     }
   }
@@ -128,18 +137,6 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
     this.dataRowService.addRow();
   }
 
-  public onAttributeFunction(row: DataRow) {
-    if (row.attribute) {
-      this.attributeFunctionCLick.emit(row.attribute);
-    }
-  }
-
-  public onAttributeType(row: DataRow) {
-    if (row.attribute) {
-      this.attributeTypeClick.emit(row.attribute);
-    }
-  }
-
   public onFocus(row: number, column: number) {
     this.dataRowFocusService.focus(row, column);
   }
@@ -164,4 +161,18 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
   public onNewHiddenInput(value: string) {
     this.dataRowFocusService.newHiddenInput(value);
   }
+
+  public onRemove() {
+    if(this.resourceType === AttributesResourceType.Collection){
+      this.store$.dispatch(
+        new DocumentsAction.DeleteConfirm({
+          collectionId: (<DocumentModel>this.dataResource).collectionId,
+          documentId: this.dataResource.id,
+        })
+      );
+    }
+
+  }
+
+
 }

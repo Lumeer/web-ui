@@ -23,7 +23,7 @@ import {AttributeEditablePipe} from './attribute-editable.pipe';
 import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {CanChangeRolesPipe} from './can-change-roles.pipe';
-import {CollectionAttributeEditablePipe} from './collection-attribute-editable.pipe';
+import {ResourceAttributeEditablePipe} from './resource-attribute-editable.pipe';
 import {CollectionAttributePipe} from './collection-attribute.pipe';
 import {CollectionByIdPipe} from './collection-by-id.pipe';
 import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
@@ -78,6 +78,7 @@ import {DocumentsByCollectionPipe} from './documents-by-collection.pipe';
 import {PerspectiveNamePipe} from './perspective-name.pipe';
 import {ValueFilterPipe} from './value-filter.pipe';
 import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
+import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -118,7 +119,7 @@ import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
     CollectionsSelectItemsPipe,
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
-    CollectionAttributeEditablePipe,
+    ResourceAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
@@ -139,6 +140,7 @@ import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
     PerspectiveNamePipe,
     ValueFilterPipe,
     IsNullOrUndefinedPipe,
+    AttributesToDataSuggestionsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -179,7 +181,7 @@ import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
     CollectionsSelectItemsPipe,
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
-    CollectionAttributeEditablePipe,
+    ResourceAttributeEditablePipe,
     AttributeEditablePipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
@@ -200,6 +202,7 @@ import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
     PerspectiveNamePipe,
     ValueFilterPipe,
     IsNullOrUndefinedPipe,
+    AttributesToDataSuggestionsPipe,
   ],
 })
 export class PipesModule {}
