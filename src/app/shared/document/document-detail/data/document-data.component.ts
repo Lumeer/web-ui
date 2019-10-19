@@ -85,9 +85,11 @@ export class DocumentDataComponent implements OnChanges, OnDestroy {
   private dataRowFocusService: DataRowFocusService;
 
   constructor(public dataRowService: DataRowService) {
-    this.dataRowFocusService = new DataRowFocusService(() => this.dataRowService.rows$.value.length,
+    this.dataRowFocusService = new DataRowFocusService(
+      () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => this.hiddenInputComponent)
+      () => this.hiddenInputComponent
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

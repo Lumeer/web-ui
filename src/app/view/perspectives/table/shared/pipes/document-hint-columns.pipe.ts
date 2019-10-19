@@ -37,7 +37,7 @@ export class DocumentHintColumnsPipe implements PipeTransform {
       .map(column => ({
         attributeId: column.attributeIds[0],
         width: getTableColumnWidth(column, showHiddenColumns),
-        hidden: column.type === TableColumnType.HIDDEN
+        hidden: column.type === TableColumnType.HIDDEN,
       }));
   }
 }

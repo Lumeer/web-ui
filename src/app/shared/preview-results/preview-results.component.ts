@@ -79,8 +79,11 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public loaded$: Observable<boolean>;
   public project$: Observable<Project>;
 
-  constructor(private store$: Store<AppState>, private router: Router, private constraintDataService: ConstraintDataService) {
-  }
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
     this.subscribeData();

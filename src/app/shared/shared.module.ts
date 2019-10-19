@@ -129,6 +129,6 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     PickerModule,
     SequencesModule,
     DataDropdownModule,
-  ]
+  ],
 })
 export class SharedModule {}

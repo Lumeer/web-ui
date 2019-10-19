@@ -28,9 +28,7 @@ import {AttributeFunctionModalComponent} from './attribute-function-modal.compon
 import {BlocklyModule} from '../../blockly/blockly.module';
 
 @NgModule({
-  declarations: [
-    AttributeFunctionModalComponent
-  ],
+  declarations: [AttributeFunctionModalComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -43,5 +41,4 @@ import {BlocklyModule} from '../../blockly/blockly.module';
   exports: [AttributeFunctionModalComponent],
   entryComponents: [AttributeFunctionModalComponent],
 })
-export class AttributeFunctionModalModule {
-}
+export class AttributeFunctionModalModule {}

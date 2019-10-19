@@ -30,9 +30,7 @@ import {LinksModule} from '../../links/links.module';
 import {DocumentModule} from '../../document/document.module';
 
 @NgModule({
-  declarations: [
-    DocumentDetailModalComponent
-  ],
+  declarations: [DocumentDetailModalComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -47,5 +45,4 @@ import {DocumentModule} from '../../document/document.module';
   exports: [DocumentDetailModalComponent],
   entryComponents: [DocumentDetailModalComponent],
 })
-export class DocumentDetailModalModule {
-}
+export class DocumentDetailModalModule {}

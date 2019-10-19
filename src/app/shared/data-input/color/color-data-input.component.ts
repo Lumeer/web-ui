@@ -74,8 +74,7 @@ export class ColorDataInputComponent implements OnChanges {
   public valid = true;
   private preventSaving: boolean;
 
-  constructor(public element: ElementRef) {
-  }
+  constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {

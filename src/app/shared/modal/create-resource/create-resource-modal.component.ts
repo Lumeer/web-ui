@@ -48,7 +48,6 @@ import {KeyCode} from '../../key-code';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceModalComponent implements OnInit, OnDestroy {
-
   @Input()
   public resourceType: ResourceType;
 

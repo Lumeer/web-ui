@@ -43,5 +43,4 @@ import {DocumentDetailModalModule} from './document-detail/document-detail-modal
     DocumentDetailModalModule,
   ],
 })
-export class ModalModule {
-}
+export class ModalModule {}

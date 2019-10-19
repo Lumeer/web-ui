@@ -22,10 +22,9 @@ import {DataResource} from '../../../core/model/resource';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 
 @Pipe({
-  name: 'dataResourceFavorite'
+  name: 'dataResourceFavorite',
 })
 export class DataResourceFavoritePipe implements PipeTransform {
-
   public transform(dataResource: DataResource): boolean {
     if (!dataResource) {
       return false;
@@ -33,5 +32,4 @@ export class DataResourceFavoritePipe implements PipeTransform {
 
     return (<DocumentModel>dataResource).favorite;
   }
-
 }

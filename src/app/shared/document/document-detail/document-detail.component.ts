@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable} from 'rxjs';
@@ -56,7 +56,7 @@ import {AttributeFunctionModalComponent} from '../../modal/attribute-function/at
   styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
+export class DocumentDetailComponent implements OnInit, OnChanges {
   @Input()
   public collection: Collection;
 
@@ -84,8 +84,7 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private perspectiveService: PerspectiveService,
     private modalService: BsModalService,
     private constraintDataService: ConstraintDataService
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.constraintDataService.observeConstraintData();
@@ -102,9 +101,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   private initDefaultAttribute() {
     const defaultAttributeId = this.collection && getDefaultAttributeId(this.collection);
     this.defaultAttribute = defaultAttributeId && findAttribute(this.collection.attributes, defaultAttributeId);
-  }
-
-  public ngOnDestroy() {
   }
 
   public onRemoveDocument() {
@@ -159,17 +155,16 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   private notifyFunctionsLimit() {
     combineLatest([
       this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectOrganizationByWorkspace))
-    ]).pipe(
-      take(1)
-    ).subscribe(([curentUser, organization]) => {
-      if (userHasManageRoleInResource(curentUser, organization)) {
-        this.notifyFunctionsLimitWithRedirect(organization);
-      } else {
-        this.notifyFunctionsLimitWithoutRights();
-      }
-
-    });
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+    ])
+      .pipe(take(1))
+      .subscribe(([curentUser, organization]) => {
+        if (userHasManageRoleInResource(curentUser, organization)) {
+          this.notifyFunctionsLimitWithRedirect(organization);
+        } else {
+          this.notifyFunctionsLimitWithoutRights();
+        }
+      });
   }
 
   private notifyFunctionsLimitWithRedirect(organization: Organization) {
@@ -196,10 +191,8 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
     const message = this.i18n({
       id: 'function.create.serviceLimits.noRights',
-      value:
-        'You can have only a single function per table/link type in the Free Plan.',
+      value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
-
 }

@@ -61,8 +61,7 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {
-  }
+  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -84,7 +83,6 @@ export class DataRowService {
     } else {
       this.subscribeLinkTypeAndLink();
     }
-
   }
 
   private subscribeCollectionAndDocument() {
@@ -187,11 +185,10 @@ export class DataRowService {
     delete data[row.attribute.id];
     let action;
     if (this.isCollectionResource) {
-      action = new DocumentsAction.UpdateData({document: {...<DocumentModel>this.dataResource, data}});
+      action = new DocumentsAction.UpdateData({document: {...(<DocumentModel>this.dataResource), data}});
     } else {
       // action = new LinkInstancesAction.UpdateData({linkInstance: {...<LinkInstance>this.dataResource, data}});
     }
-
 
     const message = this.i18n({
       id: 'dataResource.detail.attribute.remove.confirm',
@@ -286,7 +283,8 @@ export class DataRowService {
         })
       );
     } else {
-      this.store$.dispatch(new LinkTypesAction.CreateAttributes({
+      this.store$.dispatch(
+        new LinkTypesAction.CreateAttributes({
           linkTypeId: (<LinkInstance>this.dataResource).linkTypeId,
           attributes: [newAttribute],
           // TODO on success or next action

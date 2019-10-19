@@ -41,7 +41,5 @@ export class ResourceAttributeEditablePipe implements PipeTransform {
     } else if (getAttributesResourceType(resource) === AttributesResourceType.LinkType) {
       return isLinkTypeAttributeEditable(attributeId, resource as LinkType, permissions, query);
     }
-
-
   }
 }

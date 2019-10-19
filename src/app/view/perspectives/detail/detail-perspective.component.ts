@@ -52,13 +52,12 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public collectionPermission$: Observable<AllowedPermissions>;
   public workspace$: Observable<Workspace>;
 
-  public selected$ = new BehaviorSubject<{ collection?: Collection; document?: DocumentModel }>({});
+  public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
 
   private collectionSubscription = new Subscription();
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {
-  }
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
@@ -136,32 +135,32 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     this.loadLinkInstances(document);
   }
 
-  public selectCollectionAndDocument(data: { collection: Collection; document: DocumentModel }) {
+  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
     this.setQueryWithCollection(data.collection);
     this.select(data.collection, data.document);
   }
 
-  private select(collection: Collection, document?: DocumentModel) {
+  private select(selectedCollection: Collection, selectedDocument?: DocumentModel) {
     this.collectionPermission$ = this.collectionPermissionsPipe
-      .transform(collection)
+      .transform(selectedCollection)
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
 
     this.collectionSubscription.unsubscribe();
 
-    let documentObservable: Observable<{ document: DocumentModel, previousDocument: DocumentModel }>;
-    if (document) {
+    let documentObservable: Observable<{document: DocumentModel; previousDocument: DocumentModel}>;
+    if (selectedDocument) {
       documentObservable = this.store$.pipe(
-        select(selectDocumentById(document.id)),
+        select(selectDocumentById(selectedDocument.id)),
         startWith(null),
         pairwise(),
         map(doc => ({document: doc[1], previousDocument: doc[0]}))
       );
     } else {
-      documentObservable = of({document, previousDocument: null});
+      documentObservable = of({document: selectedDocument, previousDocument: null});
     }
 
     this.collectionSubscription = combineLatest([
-      this.store$.pipe(select(selectCollectionById(collection.id))),
+      this.store$.pipe(select(selectCollectionById(selectedCollection.id))),
       documentObservable,
     ]).subscribe(([collection, {document, previousDocument}]) => {
       if (!document && previousDocument) {
@@ -174,7 +173,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(
       new NavigationAction.SetViewCursor({
-        cursor: {collectionId: collection.id, documentId: document && document.id},
+        cursor: {collectionId: selectedCollection.id, documentId: selectedDocument && selectedDocument.id},
       })
     );
   }

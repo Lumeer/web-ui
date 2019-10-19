@@ -128,8 +128,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private modalService: BsModalService,
     private i18n: I18n,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.selected$ = this.bindSelected();
@@ -397,17 +396,16 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   private notifyFunctionsLimit() {
     combineLatest([
       this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectOrganizationByWorkspace))
-    ]).pipe(
-      take(1)
-    ).subscribe(([curentUser, organization]) => {
-      if (userHasManageRoleInResource(curentUser, organization)) {
-        this.notifyFunctionsLimitWithRedirect(organization);
-      } else {
-        this.notifyFunctionsLimitWithoutRights();
-      }
-
-    });
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+    ])
+      .pipe(take(1))
+      .subscribe(([curentUser, organization]) => {
+        if (userHasManageRoleInResource(curentUser, organization)) {
+          this.notifyFunctionsLimitWithRedirect(organization);
+        } else {
+          this.notifyFunctionsLimitWithoutRights();
+        }
+      });
   }
 
   private notifyFunctionsLimitWithRedirect(organization: Organization) {
@@ -434,8 +432,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
     const message = this.i18n({
       id: 'function.create.serviceLimits.noRights',
-      value:
-        'You can have only a single function per table/link type in the Free Plan.',
+      value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }

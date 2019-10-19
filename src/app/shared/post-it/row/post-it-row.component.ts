@@ -31,10 +31,9 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   selector: 'post-it-row',
   templateUrl: './post-it-row.component.html',
   styleUrls: ['./post-it-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItRowComponent implements DataRowComponent {
-
   @Input()
   public row: DataRow;
 

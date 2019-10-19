@@ -81,5 +81,4 @@ import {SelectModule} from '../../select/select.module';
   exports: [AttributeTypeModalComponent],
   entryComponents: [AttributeTypeModalComponent],
 })
-export class AttributeTypeModalModule {
-}
+export class AttributeTypeModalModule {}

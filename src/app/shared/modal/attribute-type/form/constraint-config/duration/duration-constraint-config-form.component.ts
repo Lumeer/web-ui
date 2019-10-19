@@ -26,12 +26,13 @@ import {
 import {
   DurationConstraintConfig,
   DurationType,
-  DurationUnit
+  DurationUnit,
 } from '../../../../../../core/model/data/constraint-config';
 import {TranslationService} from '../../../../../../core/service/translation.service';
 import {
-  durationConstraintUnitMaxValue, getDefaultDurationUnitConversion,
-  getPreviousDurationUnit
+  durationConstraintUnitMaxValue,
+  getDefaultDurationUnitConversion,
+  getPreviousDurationUnit,
 } from '../../../../../utils/constraint/duration-constraint.utils';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 

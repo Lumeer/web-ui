@@ -24,10 +24,9 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 @Component({
   selector: 'document-data-row-icons',
   templateUrl: './document-data-row-icons.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentDataRowIconsComponent {
-
   @Input()
   public row: DataRow;
 
@@ -54,5 +53,4 @@ export class DocumentDataRowIconsComponent {
   public onAttributeFunction() {
     this.attributeFunctionClick.emit();
   }
-
 }

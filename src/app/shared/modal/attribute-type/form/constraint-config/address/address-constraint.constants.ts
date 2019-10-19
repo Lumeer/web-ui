@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Address, AddressField} from '../../../../../../core/store/geocoding/address';
 import {environment} from '../../../../../../../environments/environment';
 

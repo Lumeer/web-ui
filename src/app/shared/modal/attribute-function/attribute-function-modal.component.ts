@@ -31,7 +31,7 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {
   selectAllCollections,
   selectCollectionById,
-  selectCollectionsByLinkType
+  selectCollectionsByLinkType,
 } from '../../../core/store/collections/collections.state';
 import {first, map} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
@@ -48,7 +48,6 @@ import {KeyCode} from '../../key-code';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeFunctionModalComponent implements OnInit {
-
   @Input()
   public collectionId: string;
 
@@ -79,24 +78,24 @@ export class AttributeFunctionModalComponent implements OnInit {
   private xml: string = '';
   public editable$ = new BehaviorSubject<boolean>(undefined);
 
-  constructor(
-    private bsModalRef: BsModalRef,
-    private store$: Store<AppState>
-  ) {
-  }
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.select(selectAllCollections);
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
-      this.attribute$ = this.collection$.pipe(map(collection => findAttribute(collection && collection.attributes, this.attributeId)))
+      this.attribute$ = this.collection$.pipe(
+        map(collection => findAttribute(collection && collection.attributes, this.attributeId))
+      );
       this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByCollectionId(this.collectionId)));
       this.variables = [{name: 'thisDocument', collectionId: this.collectionId} as RuleVariable];
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeById(this.linkTypeId)));
       this.linkTypeCollections$ = this.store$.pipe(select(selectCollectionsByLinkType(this.linkTypeId)));
-      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId)))
+      this.attribute$ = this.linkType$.pipe(
+        map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
+      );
       this.linkTypes$ = this.linkType$.pipe(map(linkType => [linkType]));
       this.variables = [{name: 'thisLink', linkTypeId: this.linkTypeId} as RuleVariable];
     }

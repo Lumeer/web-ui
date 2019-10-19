@@ -39,7 +39,6 @@ import {CreateResourceDialogFormComponent} from '../create-resource/form/create-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeTypeModalComponent implements OnInit, OnDestroy {
-
   @Input()
   public collectionId: string;
 
@@ -67,29 +66,31 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   public constraintForm: AttributeTypeFormComponent;
 
-  constructor(
-    private bsModalRef: BsModalRef,
-    private store$: Store<AppState>
-  ) {
-  }
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
-      this.attribute$ = this.collection$.pipe(map(collection => findAttribute(collection && collection.attributes, this.attributeId)))
+      this.attribute$ = this.collection$.pipe(
+        map(collection => findAttribute(collection && collection.attributes, this.attributeId))
+      );
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeById(this.linkTypeId)));
       this.linkCollections$ = this.store$.pipe(select(selectCollectionsByLinkType(this.linkTypeId)));
-      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId)))
+      this.attribute$ = this.linkType$.pipe(
+        map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
+      );
     }
   }
 
   public initFormStatusChanges() {
     const form = this.constraintForm.form;
     setTimeout(() => this.formInvalid$.next(form.invalid));
-    this.subscriptions.add(form.statusChanges.pipe(debounceTime(50)).subscribe(() => {
-      this.formInvalid$.next(form.invalid)
-    }));
+    this.subscriptions.add(
+      form.statusChanges.pipe(debounceTime(50)).subscribe(() => {
+        this.formInvalid$.next(form.invalid);
+      })
+    );
   }
 
   public onAttributeChange(attribute: Attribute) {
@@ -108,7 +109,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         attributeId: attribute.id,
         attribute,
         onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false)
+        onFailure: () => this.performingAction$.next(false),
       })
     );
   }
@@ -120,7 +121,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         attributeId: attribute.id,
         attribute,
         onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false)
+        onFailure: () => this.performingAction$.next(false),
       })
     );
   }

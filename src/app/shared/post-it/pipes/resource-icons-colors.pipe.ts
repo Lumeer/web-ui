@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
@@ -25,25 +24,22 @@ import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Pipe({
-  name: 'resourceIconsColors'
+  name: 'resourceIconsColors',
 })
 export class ResourceIconsColorsPipe implements PipeTransform {
-
-  public transform(resource: AttributesResource): { colors: string[], icons: string[] } {
+  public transform(resource: AttributesResource): {colors: string[]; icons: string[]} {
     if (!resource) {
       return {colors: [], icons: []};
     }
 
     if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
-      return {colors: [(<Collection>resource).color], icons: [(<Collection>resource).icon]}
+      return {colors: [(<Collection>resource).color], icons: [(<Collection>resource).icon]};
     } else if (getAttributesResourceType(resource) === AttributesResourceType.LinkType) {
       // collections must be set in resource object in order to work properly
-      const collections: Collection[] = ((<LinkType>resource).collections || []);
+      const collections: Collection[] = (<LinkType>resource).collections || [];
       return {colors: collections.map(coll => coll.color), icons: collections.map(coll => coll.icon)};
     }
 
-
     return {colors: [], icons: []};
   }
-
 }
