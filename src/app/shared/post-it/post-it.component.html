@@ -1,5 +1,10 @@
+<post-it-hidden-input (newInput)="onNewHiddenInput($event)"
+                              class="position-fixed">
+</post-it-hidden-input>
+
+
 <post-it-header *ngIf="(resource | resourceIconsColors) as data"
-                class="card-header px-2 py-1"
+                class="card-header p-2"
                 [class.cursor-move]="canDrag"
                 [resource]="resource"
                 [allowedPermissions]="allowedPermissions"
@@ -12,25 +17,28 @@
                 (toggleFavorite)="toggleFavorite.emit()">
 </post-it-header>
 
-<div class="card-body p-2">
+<div class="card-body px-2 py-0">
 
-  <post-it-row *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index"
-               [row]="row"
-               [permissions]="allowedPermissions"
-               [cursor]="dataResource | dataCursor : row.attribute?.id"
-               [constraintData]="constraintData"
-               [readonly]="!(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
-               [unusedAttributes]="unusedAttributes"
-               (newValue)="onNewValue($event, row, index)"
-               (newKey)="onNewKey($event, index)"
-               (deleteRow)="onRemoveRow(index)"
-               (onFocus)="onFocus(index, $event)"
-               (onEdit)="onEdit(index, $event)"
-               (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
+  <post-it-row
+    *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index; let first = first"
+    class="d-block"
+    [row]="row"
+    [class.border-top]="!first"
+    [permissions]="allowedPermissions"
+    [cursor]="dataResource | dataCursor : row.attribute?.id"
+    [constraintData]="constraintData"
+    [readonly]="!(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
+    [unusedAttributes]="unusedAttributes"
+    (newValue)="onNewValue($event, row, index)"
+    (newKey)="onNewKey($event, index)"
+    (deleteRow)="onRemoveRow(index)"
+    (onFocus)="onFocus(index, $event)"
+    (onEdit)="onEdit(index, $event)"
+    (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
   </post-it-row>
 
-  <div *ngIf="allowedPermissions?.writeWithView" class="pt-2 border-top clickable">
-    <i class="fas fa-plus" (click)="onCreateRow()"></i>
+  <div *ngIf="allowedPermissions?.writeWithView" class="py-2 border-top clickable" (click)="onCreateRow()">
+    <i class="fas fa-plus mx-1"></i>
   </div>
 
 </div>

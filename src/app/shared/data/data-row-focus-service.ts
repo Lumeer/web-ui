@@ -29,16 +29,14 @@ interface DataRowPosition {
 
 @Injectable()
 export class DataRowFocusService {
-
   private focused: DataRowPosition = {};
   private edited: DataRowPosition = {};
 
   constructor(
     private numRows: () => number,
     private rows: () => DataRowComponent[],
-    private hiddenComponent: () => DataRowHiddenComponent) {
-
-  }
+    private hiddenComponent?: () => DataRowHiddenComponent
+  ) {}
 
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
@@ -195,7 +193,7 @@ export class DataRowFocusService {
     }
   }
 
-  private computeTabKeyDownOffset(event: KeyboardEvent, position: DataRowPosition): { offsetX: number; offsetY: number } {
+  private computeTabKeyDownOffset(event: KeyboardEvent, position: DataRowPosition): {offsetX: number; offsetY: number} {
     const {column, row} = position;
     let offsetX = 0;
     let offsetY = 0;
@@ -210,7 +208,7 @@ export class DataRowFocusService {
     return {offsetX, offsetY};
   }
 
-  private computeMoveOffset(x: number, y: number, position: DataRowPosition): { newRow?: number; newColumn?: number } {
+  private computeMoveOffset(x: number, y: number, position: DataRowPosition): {newRow?: number; newColumn?: number} {
     const {row, column} = position;
     if (isNullOrUndefined(row) || isNullOrUndefined(column)) {
       return {};
@@ -231,7 +229,6 @@ export class DataRowFocusService {
     if (this.isEditing()) {
       const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.edited);
       this.emitFocus(newRow, newColumn);
-      this.edited = {};
     } else if (this.isFocusing()) {
       this.emitEdit(this.focused.row, this.focused.column);
       this.resetFocus();
@@ -266,5 +263,4 @@ export class DataRowFocusService {
       this.resetFocus();
     }
   }
-
 }

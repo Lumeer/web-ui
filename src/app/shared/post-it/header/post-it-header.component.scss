@@ -1,5 +1,16 @@
+@import '../../../../styles/variables';
+
 :host {
   display: inline-flex;
   width: 100%;
   flex-wrap: nowrap;
+}
+
+.icon {
+  opacity: 0;
+  transition: opacity $animation-color-duration;
+}
+
+.always-visible {
+  opacity: 1 !important;
 }

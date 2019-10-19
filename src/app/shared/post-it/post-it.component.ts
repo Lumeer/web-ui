@@ -19,14 +19,17 @@
 
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   HostListener,
   Input,
-  OnDestroy, Output,
+  OnDestroy,
+  Output,
   QueryList,
   SimpleChange,
   SimpleChanges,
-  ViewChildren
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {ConstraintData} from '../../core/model/data/constraint';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
@@ -42,6 +45,7 @@ import {AppState} from '../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {PostItHiddenInputComponent} from './hidden-input/post-it-hidden-input.component';
 
 export interface PostItTag {
   title: string;
@@ -54,10 +58,9 @@ export interface PostItTag {
   styleUrls: ['./post-it.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DataRowService],
-  host: {class: 'card'}
+  host: {class: 'card'},
 })
 export class PostItComponent implements OnDestroy {
-
   @Input()
   public resource: AttributesResource;
 
@@ -85,17 +88,21 @@ export class PostItComponent implements OnDestroy {
   @ViewChildren(PostItRowComponent)
   public rows: QueryList<PostItRowComponent>;
 
+  @ViewChild(PostItHiddenInputComponent, {static: false})
+  public hiddenInputComponent: PostItHiddenInputComponent;
+
   public unusedAttributes: Attribute[] = [];
 
   private dataRowFocusService: DataRowFocusService;
 
   public resourceType: AttributesResourceType;
 
-  constructor(public dataRowService: DataRowService,
-              private store$: Store<AppState>) {
-    this.dataRowFocusService = new DataRowFocusService(() => this.dataRowService.rows$.value.length,
+  constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
+    this.dataRowFocusService = new DataRowFocusService(
+      () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => null)
+      () => this.hiddenInputComponent
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -163,7 +170,7 @@ export class PostItComponent implements OnDestroy {
   }
 
   public onRemove() {
-    if(this.resourceType === AttributesResourceType.Collection){
+    if (this.resourceType === AttributesResourceType.Collection) {
       this.store$.dispatch(
         new DocumentsAction.DeleteConfirm({
           collectionId: (<DocumentModel>this.dataResource).collectionId,
@@ -171,8 +178,5 @@ export class PostItComponent implements OnDestroy {
         })
       );
     }
-
   }
-
-
 }

@@ -18,15 +18,7 @@
  */
 
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 
@@ -100,6 +92,9 @@ export class KanbanColumnComponent {
   @Output()
   public removeColumn = new EventEmitter();
 
+  @Output()
+  public toggleFavorite = new EventEmitter<DataResource>();
+
   public readonly dragDelay = DRAG_DELAY;
 
   public trackByCard(index: number, card: KanbanCard) {
@@ -167,5 +162,9 @@ export class KanbanColumnComponent {
 
   public onRemoveColumn() {
     this.removeColumn.emit();
+  }
+
+  public onToggleFavorite(card: KanbanCard) {
+    this.toggleFavorite.emit(card.dataResource);
   }
 }

@@ -25,7 +25,8 @@
              [query]="query"
              [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
              [allowedPermissions]="permissions[card.dataResource.collectionId] || {}"
-             [constraintData]="constraintData">
+             [constraintData]="constraintData"
+             (toggleFavorite)="onToggleFavorite(card)">
     </post-it>
 
   </div>

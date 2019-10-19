@@ -17,14 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
@@ -109,13 +102,13 @@ export class DocumentDataRowComponent implements DataRowComponent {
   public onNewKey(value: string) {
     this.initialKey = null;
     this.newKey.emit(value);
-    this.keyEditing$.next(false);
+    this.onKeyInputCancel();
   }
 
   public onNewValue(value: any) {
     this.initialValue = null;
     this.newValue.emit(value);
-    this.editing$.next(false);
+    this.onDataInputCancel();
   }
 
   public onValueFocus() {

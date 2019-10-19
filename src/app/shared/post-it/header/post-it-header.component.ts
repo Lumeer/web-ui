@@ -26,10 +26,9 @@ import {PostItTag} from '../post-it.component';
   selector: 'post-it-header',
   templateUrl: './post-it-header.component.html',
   styleUrls: ['./post-it-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItHeaderComponent {
-
   @Input()
   public resource: AttributesResource;
 
@@ -57,7 +56,7 @@ export class PostItHeaderComponent {
   @Output()
   public toggleFavorite = new EventEmitter();
 
-  public readonly resourceTypeCollection: AttributesResourceType.Collection;
+  public readonly resourceTypeCollection = AttributesResourceType.Collection;
 
   public onRemove() {
     this.remove.emit();

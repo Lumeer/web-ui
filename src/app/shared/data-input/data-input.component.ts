@@ -161,6 +161,8 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     }
     if (this.dataValue.serialize() !== dataValue.serialize()) {
       this.save.emit(dataValue.serialize());
+    } else {
+      this.cancel.emit();
     }
   }
 
